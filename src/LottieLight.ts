@@ -22,7 +22,6 @@ import { RendererType } from '@/enums'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { inBrowser, isServer } from '@/utils'
 import {
-  createElementID,
   registerRenderer,
   setIDPrefix,
   setLocationHref,
@@ -41,7 +40,6 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 const version = '[[BM_VERSION]]'
 
 export {
-  createElementID,
   inBrowser,
   setIDPrefix,
   setLocationHref,

@@ -1,9 +1,8 @@
 import type { ExpressionsPlugin } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
-import { inBrowser } from './utils';
-import { createElementID, setIDPrefix, setLocationHref, setQuality, setWebWorker } from './utils/getterSetter';
+import { setIDPrefix, setLocationHref, setQuality, setWebWorker } from './utils/getterSetter';
 declare const version = "[[BM_VERSION]]";
-export { createElementID, inBrowser, setIDPrefix, setLocationHref, setQuality, setWebWorker as useWebWorker, play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation, version, };
+export { setIDPrefix, setLocationHref, setQuality, setWebWorker as useWebWorker, play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation, version, };
 export declare function installPlugin(type: string, plugin: ExpressionsPlugin): void;
 export declare function setSubframeRendering(flag: boolean): void;
 declare const Lottie: {
@@ -11,7 +10,6 @@ declare const Lottie: {
     freeze: typeof freeze;
     getRegisteredAnimations: typeof getRegisteredAnimations;
     goToAndStop: typeof goToAndStop;
-    inBrowser: () => boolean;
     installPlugin: typeof installPlugin;
     loadAnimation: typeof loadAnimation;
     mute: typeof mute;
