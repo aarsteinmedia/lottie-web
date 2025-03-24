@@ -47,7 +47,6 @@ export default class SVGTextLottieElement extends TextElement {
     )
   }
 
-  // @ts-expect-error: Mixin issue
   override buildNewText() {
     this.addDynamicProperty(this)
     let i
@@ -321,7 +320,6 @@ export default class SVGTextLottieElement extends TextElement {
     textContents.push(currentTextContent)
     return textContents
   }
-  // @ts-expect-error: Mixin issue
   override createContent() {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')

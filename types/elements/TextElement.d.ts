@@ -8,9 +8,7 @@ import TextAnimatorProperty from '../utils/text/TextAnimatorProperty';
 import TextProperty from '../utils/text/TextProperty';
 export default class TextElement extends TransformElement {
     _mdf?: boolean;
-    buildNewText: any;
     createContainerElements: any;
-    createContent: any;
     createRenderableComponents: any;
     dynamicProperties?: DynamicPropertyContainer[];
     emptyProp?: LetterProps;
@@ -28,7 +26,9 @@ export default class TextElement extends TransformElement {
     textProperty?: TextProperty;
     applyTextPropertiesToMatrix(documentData: DocumentData, matrixHelper: Matrix, lineNumber: number, xPos: number, yPos: number): void;
     buildColor(colorData: Vector3): string;
+    buildNewText(): void;
     canResizeFont(_canResize: boolean): void;
+    createContent(): void;
     createPathShape(matrixHelper: Matrix, shapes: Shape[]): string;
     initElement(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect): void;
     prepareFrame(num: number): void;

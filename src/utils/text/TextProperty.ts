@@ -445,8 +445,7 @@ export default class TextProperty extends DynamicPropertyContainer {
   copyData(obj: DocumentData, data?: DocumentData | LetterProps) {
     for (const s in data) {
       if (Object.prototype.hasOwnProperty.call(data, s)) {
-        // @ts-expect-error: ignore
-        obj[s] = data[s]
+        ;(obj as any)[s] = (data as any)[s]
       }
     }
     return obj

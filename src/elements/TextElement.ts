@@ -19,11 +19,7 @@ import TextProperty from '@/utils/text/TextProperty'
 
 export default class TextElement extends TransformElement {
   _mdf?: boolean
-  buildNewText: any
   createContainerElements: any
-
-  createContent: any
-
   createRenderableComponents: any
 
   dynamicProperties?: DynamicPropertyContainer[]
@@ -47,7 +43,9 @@ export default class TextElement extends TransformElement {
   prepareProperties: any
 
   prepareRenderableFrame: any
+
   renderType?: RendererType
+
   textAnimator?: TextAnimatorProperty
   textProperty?: TextProperty
   applyTextPropertiesToMatrix(
@@ -95,8 +93,14 @@ export default class TextElement extends TransformElement {
       colorData[1] * 255
     )},${Math.round(colorData[2] * 255)})`
   }
+  buildNewText() {
+    // Nothing
+  }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
+  }
+  createContent() {
+    // nothing
   }
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     const jLen = shapes.length

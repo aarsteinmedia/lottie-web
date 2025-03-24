@@ -13,7 +13,7 @@ export type ShapeModifierInterface =
   | ZigZagModifier
   | OffsetPathModifier
 
-type Factory =
+type Modifier =
   | typeof TrimModifier
   | typeof PuckerAndBloatModifier
   | typeof RepeaterModifier
@@ -25,20 +25,19 @@ type Factory =
  */
 export function getModifier(
   nm: string,
-  elem?: ElementInterfaceIntersect,
-  data?: unknown
+  _elem?: ElementInterfaceIntersect,
+  _data?: unknown
 ) {
-  // @ts-expect-error: cant pass args - TODO: Find cases and test real behaviour
-  return new modifiers[nm](elem, data)
+  return new modifiers[nm]() // elem, data
 }
 
 /**
  *
  */
-export function registerModifier(nm: string, factory: Factory) {
+export function registerModifier(nm: string, factory: Modifier) {
   if (!modifiers[nm]) {
     modifiers[nm] = factory
   }
 }
 
-const modifiers: { [key: string]: Factory } = {}
+const modifiers: { [key: string]: Modifier } = {}
