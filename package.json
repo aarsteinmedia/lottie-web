@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -8,6 +8,16 @@
       "import": "./dist/lottie.js",
       "node": "./dist/lottie.js",
       "types": "./dist/lottie.d.ts"
+    },
+    "./light": {
+      "import": "./dist/lottie-light.js",
+      "node": "./dist/lottie-light.js",
+      "types": "./dist/lottie-light.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/lottie-utils.js",
+      "node": "./dist/lottie-utils.js",
+      "types": "./dist/lottie-utils.d.ts"
     }
   },
   "main": "./dist/lottie.js",
@@ -85,7 +95,7 @@
     ]
   },
   "files": [
-    "dist",
+    "dist", 
     "README.md"
   ],
   "keywords": [
