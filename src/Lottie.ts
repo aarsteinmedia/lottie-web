@@ -54,32 +54,6 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 
-export {
-  // getFactory as __getFactory,
-  setIDPrefix,
-  setLocationHref,
-  setQuality,
-  setWebWorker as useWebWorker,
-  play,
-  pause,
-  togglePause,
-  setSpeed,
-  setDirection,
-  stop,
-  registerAnimation,
-  resize,
-  goToAndStop,
-  destroy,
-  freeze,
-  unfreeze,
-  setVolume,
-  mute,
-  unmute,
-  getRegisteredAnimations,
-  loadAnimation,
-  version,
-}
-
 /**
  *
  */

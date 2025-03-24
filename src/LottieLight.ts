@@ -38,32 +38,6 @@ import TrimModifier from '@/utils/shapes/TrimModifier'
 import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
-
-export {
-  inBrowser,
-  setIDPrefix,
-  setLocationHref,
-  setQuality,
-  setWebWorker as useWebWorker,
-  play,
-  pause,
-  togglePause,
-  setSpeed,
-  setDirection,
-  stop,
-  registerAnimation,
-  resize,
-  goToAndStop,
-  destroy,
-  freeze,
-  unfreeze,
-  setVolume,
-  mute,
-  unmute,
-  getRegisteredAnimations,
-  loadAnimation,
-  version,
-}
 /**
  *
  */
