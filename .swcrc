@@ -1,0 +1,14 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "jsc": {
+    "baseUrl": "./src",
+    "loose": true,
+    "keepClassNames": true,
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "target": "es2022"
+  }
+}

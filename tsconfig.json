@@ -1,0 +1,53 @@
+{
+  "ts-node": {
+    "swc": true
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "types",
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist",
+    "plugins": [
+      {
+        "strict": true
+      }
+    ],
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "strict": true,
+    "target": "ES2022",
+    "useDefineForClassFields": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+  ]
+}

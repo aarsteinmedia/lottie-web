@@ -1,0 +1,117 @@
+{
+  "name": "@aarsteinmedia/lottie-web",
+  "version": "0.1.0",
+  "description": "Play animations generated in After Effects in the browser",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "node": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://www.aarstein.media/en/dotlottie-player",
+  "repository": {
+    "url": "git+https://github.com/aarsteinmedia/lottie-web.git",
+    "type": "git"
+  },
+  "bugs": "https://github.com/aarsteinmedia/lottie-web/issues",
+  "author": {
+    "name": "Johan Martin Aarstein",
+    "email": "johan@aarstein.media",
+    "url": "https://www.aarstein.media",
+    "organization": "Aarstein Media"
+  },
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "test": "wtr",
+    "prebuild": "rimraf ./dist",
+    "build": "rollup -c",
+    "prebuild:types": "rimraf ./types ",
+    "build:types": "tsc && tsc-alias",
+    "prod": "pnpm build:types && pnpm build",
+    "dev": "rollup -c -w --environment NODE_ENV:development",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.7",
+    "@eslint/js": "^9.23.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@swc/core": "^1.11.12",
+    "@types/chai": "^5.2.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.11",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-import-resolver-typescript": "^4.2.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^50.6.9",
+    "eslint-plugin-perfectionist": "^4.10.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.37.0",
+    "rollup-plugin-dts": "^6.2.1",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-serve": "^3.0.0",
+    "rollup-plugin-summary": "^3.0.0",
+    "rollup-plugin-swc3": "^0.12.1",
+    "rollup-plugin-typescript-paths": "^1.5.0",
+    "tsc-alias": "^1.8.11",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.27.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "defaults",
+      ">0.3%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "customElements": "custom-elements.json",
+  "files": [
+    "CHANGELOG.md",
+    "custom-elements.json",
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "lottie",
+    "animation",
+    "svg",
+    "vector",
+    "player"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 12.17.0"
+  },
+  "funding": {
+    "type": "paypal",
+    "url": "https://www.paypal.com/donate/?hosted_button_id=E7C7DMN8KSQ6A"
+  }
+}
