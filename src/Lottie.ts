@@ -1,3 +1,4 @@
+import type AnimationItem from '@/animation/AnimationItem'
 import type { ExpressionsPlugin } from '@/types'
 
 import {
@@ -128,5 +129,7 @@ registerEffect(25, SVGDropShadowEffect, true)
 registerEffect(28, SVGMatte3Effect, false)
 registerEffect(29, SVGGaussianBlurEffect, true)
 registerEffect(35, SVGTransformEffect, false)
+
+export type { AnimationItem }
 
 export default Lottie

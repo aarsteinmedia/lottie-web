@@ -1,3 +1,5 @@
+import type AnimationItem from '@/animation/AnimationItem'
+
 import {
   play,
   pause,
@@ -45,7 +47,7 @@ export function setSubframeRendering(flag: boolean) {
   setSubframeEnabled(flag)
 }
 
-const LottieLight = {
+const Lottie = {
   destroy,
   freeze,
   getRegisteredAnimations,
@@ -94,4 +96,6 @@ registerModifier('rd', RoundCornersModifier)
 registerModifier('zz', ZigZagModifier)
 registerModifier('op', OffsetPathModifier)
 
-export default LottieLight
+export type { AnimationItem }
+
+export default Lottie

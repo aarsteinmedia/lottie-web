@@ -1,6 +1,7 @@
+import type AnimationItem from './animation/AnimationItem';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
 export declare function setSubframeRendering(flag: boolean): void;
-declare const LottieLight: {
+declare const Lottie: {
     destroy: typeof destroy;
     freeze: typeof freeze;
     getRegisteredAnimations: typeof getRegisteredAnimations;
@@ -26,4 +27,5 @@ declare const LottieLight: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
-export default LottieLight;
+export type { AnimationItem };
+export default Lottie;

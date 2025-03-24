@@ -1,3 +1,4 @@
+import type AnimationItem from './animation/AnimationItem';
 import type { ExpressionsPlugin } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
 export declare function installPlugin(type: string, plugin: ExpressionsPlugin): void;
@@ -28,4 +29,5 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
+export type { AnimationItem };
 export default Lottie;
