@@ -26,7 +26,6 @@
   },
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "test": "wtr",
     "prebuild": "rimraf ./dist",
     "build": "rollup -c",
     "prebuild:types": "rimraf ./types ",
@@ -43,18 +42,15 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@swc/core": "^1.11.12",
-    "@types/chai": "^5.2.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.13.11",
-    "esbuild": "^0.25.1",
+    "@swc/core": "^1.11.13",
+    "@types/node": "^22.13.12",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-import-resolver-typescript": "^4.2.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.6.9",
     "eslint-plugin-perfectionist": "^4.10.1",
-    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-prettier": "^5.2.4",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
@@ -72,9 +68,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@swc/core",
-      "esbuild"
+      "@swc/core"
     ]
   },
   "browserslist": {
@@ -90,10 +84,7 @@
       "last 1 safari version"
     ]
   },
-  "customElements": "custom-elements.json",
   "files": [
-    "CHANGELOG.md",
-    "custom-elements.json",
     "dist",
     "README.md"
   ],
