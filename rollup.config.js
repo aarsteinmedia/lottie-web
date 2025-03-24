@@ -4,8 +4,8 @@ import { readFile } from 'fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dts } from 'rollup-plugin-dts'
-// import livereload from 'rollup-plugin-livereload'
-// import serve from 'rollup-plugin-serve'
+import livereload from 'rollup-plugin-livereload'
+import serve from 'rollup-plugin-serve'
 import { summary } from 'rollup-plugin-summary'
 import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
@@ -52,11 +52,11 @@ const isProd = process.env.NODE_ENV !== 'development',
     injectVersion(),
     swc(),
     isProd && summary(),
-    // !isProd &&
-    //   serve({
-    //     open: true,
-    //   }),
-    // !isProd && livereload(),
+    !isProd &&
+      serve({
+        open: true,
+      }),
+    !isProd && livereload(),
   ],
   inputs = [
     { file: path.resolve(__dirname, 'src', 'Lottie.ts'), name: 'lottie' },
@@ -95,5 +95,5 @@ const isProd = process.env.NODE_ENV !== 'development',
   })),
   output = outputs.concat(types)
 
-export default output
+export default isProd ? output : outputs[1]
 // export default isProd ? [module, types] : module

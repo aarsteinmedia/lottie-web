@@ -342,15 +342,19 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
-  // TODO: Find out why this doesn't work as a normal prototype
+
   renderInnerContent = function (this: SVGTextLottieElement) {
     this.validateText()
     if (this.data?.singleShape && !this._mdf) {
       return
     }
     if (!this.textProperty) {
-      throw new Error('SVGTextElement: Cannot access textProperty')
+      // this.textProperty = new TextElement().textProperty!
+      throw new Error('Goddamn!')
     }
+    // if (!this.textProperty) {
+    //   return
+    // }
     this.textAnimator?.getMeasures(
       this.textProperty.currentData,
       this.lettersChangedFlag

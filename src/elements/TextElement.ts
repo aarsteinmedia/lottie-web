@@ -93,15 +93,15 @@ export default class TextElement extends TransformElement {
       colorData[1] * 255
     )},${Math.round(colorData[2] * 255)})`
   }
-  buildNewText() {
-    // Nothing
-  }
+  // buildNewText() {
+  //   throw new Error('TextElement: Method buildNewText it not implemented')
+  // }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  createContent() {
-    // nothing
-  }
+  // createContent() {
+  //   throw new Error('TextElement: Method createContent it not implemented')
+  // }
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     const jLen = shapes.length
     let pathNodes: ShapePath
