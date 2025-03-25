@@ -450,4 +450,4 @@ export default class SVGShapeElement extends ShapeElement {
   }
 }
 
-extendPrototype([SVGBaseElement, FrameElement], SVGShapeElement)
+extendPrototype([SVGBaseElement], SVGShapeElement)
