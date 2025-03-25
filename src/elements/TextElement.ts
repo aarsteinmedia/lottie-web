@@ -17,13 +17,12 @@ import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
 export default class TextElement extends RenderableDOMElement {
-  buildNewText: any
-
   emptyProp?: LetterProps
 
   lettersChangedFlag?: boolean
 
   renderType?: RendererType
+
   textAnimator?: TextAnimatorProperty
   textProperty?: TextProperty
   applyTextPropertiesToMatrix(
@@ -71,9 +70,9 @@ export default class TextElement extends RenderableDOMElement {
       colorData[1] * 255
     )},${Math.round(colorData[2] * 255)})`
   }
-  // buildNewText() {
-  //   throw new Error('TextElement: Method buildNewText it not implemented')
-  // }
+  buildNewText() {
+    throw new Error('TextElement: Method buildNewText it not implemented')
+  }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
