@@ -7,6 +7,7 @@ import type {
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import { extendPrototype } from '@/utils/functionExtensions'
 
+// TODO: This is a mixin mess
 export default abstract class RenderableDOMElement extends RenderableElement {
   createContainerElements: any
 

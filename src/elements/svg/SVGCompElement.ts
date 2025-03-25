@@ -35,32 +35,75 @@ export default class SVGCompElement extends SVGBaseElement {
             this as any
           )
         : { _placeholder: true }
-    ) as any
+    ) as KeyframedValueProperty
   }
+
+  // checkParenting() {
+  //   throw new Error('SVGCompElement: Method checkParenting is not implemented')
+  // }
 
   override createComp(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGCompElement: Cannot access global data')
+      throw new Error(`${this.constructor.name}: Cannot access global data`)
     }
     return new SVGCompElement(data, this.globalData, this)
   }
 
+  createContent() {
+    // Override
+    throw new Error(
+      `${this.constructor.name}: Method createContent is not implemented`
+    )
+  }
+
+  // setMatte(_id: string) {
+  //   throw new Error(
+  //     `${this.constructor.name}: Method setMatte is not implemented`
+  //   )
+  // }
+
   destroy() {
-    throw new Error('SVGCompElement: Method destroy is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method destroy is not implemented`
+    )
   }
 
   initElement(
     _data: LottieLayer,
     _globalData: GlobalData,
     _comp: ElementInterfaceIntersect
-  ) {}
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method initElement is not implemented`
+    )
+  }
+
+  // initFrame() {
+  //   throw new Error('SVGCompElement: Method initFrame not implemented')
+  // }
+
+  // initHierarchy() {
+  //   throw new Error('SVGCompElement: Method initHierarchy is not implemented')
+  // }
+
+  // initRenderable() {
+  //   throw new Error('SVGCompElement: Method initRenderable is not implemented')
+  // }
+
+  // initTransform() {
+  //   throw new Error('SVGCompElement: Method initTransform is not implemented')
+  // }
 
   prepareFrame(_val: number) {
-    throw new Error('SVGCompElement: Method prepareFrame is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method prepareFrame is not implemented`
+    )
   }
 
   renderFrame() {
-    throw new Error('SVGCompElement: Method renderFrame is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method renderFrame is not implemented`
+    )
   }
 }
 

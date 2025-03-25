@@ -11,9 +11,8 @@ import type {
   ValueProperty,
 } from '@/utils/Properties'
 
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'
-
-import RenderableElement from './helpers/RenderableElement'
 
 export default class AudioElement extends RenderableElement {
   _canPlay: boolean
@@ -67,7 +66,7 @@ export default class AudioElement extends RenderableElement {
     ) as MultiDimensionalProperty<Vector2>
   }
 
-  getBaseElement() {
+  getBaseElement(): SVGGElement | null {
     return null
   }
 
@@ -121,7 +120,9 @@ export default class AudioElement extends RenderableElement {
   }
 
   setMatte(_id: string) {
-    throw new Error('AudioElement: Method setMatte is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
   }
   setRate(rateValue: number) {
     this.audio.rate(rateValue)

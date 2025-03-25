@@ -134,12 +134,12 @@ export default class PolynomialBezier {
     if (t >= 1) {
       return [this, singlePoint(this.points[this.points.length - 1])]
     }
-    const p10 = lerpPoint(this.points[0], this.points[1], t)
-    const p11 = lerpPoint(this.points[1], this.points[2], t)
-    const p12 = lerpPoint(this.points[2], this.points[3], t)
-    const p20 = lerpPoint(p10, p11, t)
-    const p21 = lerpPoint(p11, p12, t)
-    const p3 = lerpPoint(p20, p21, t)
+    const p10 = lerpPoint(this.points[0], this.points[1], t),
+      p11 = lerpPoint(this.points[1], this.points[2], t),
+      p12 = lerpPoint(this.points[2], this.points[3], t),
+      p20 = lerpPoint(p10, p11, t),
+      p21 = lerpPoint(p11, p12, t),
+      p3 = lerpPoint(p20, p21, t)
     return [
       new PolynomialBezier(this.points[0], p10, p20, p3, true),
       new PolynomialBezier(p3, p21, p12, this.points[3], true),
@@ -152,8 +152,8 @@ export default class PolynomialBezier {
   }
 
   private _extrema(bez: PolynomialBezier, comp: number) {
-    let min = bez.points[0][comp]
-    let max = bez.points[bez.points.length - 1][comp]
+    let min = bez.points[0][comp],
+      max = bez.points[bez.points.length - 1][comp]
     if (min > max) {
       const e = max
       max = min
@@ -161,7 +161,8 @@ export default class PolynomialBezier {
     }
     // Derivative roots to find min/max
     const f = quadRoots(3 * bez.a[comp], 2 * bez.b[comp], bez.c[comp])
-    for (let i = 0; i < f.length; i++) {
+    const { length } = f
+    for (let i = 0; i < length; i++) {
       if (f[i] > 0 && f[i] < 1) {
         const val = bez.point(f[i])[comp]
         if (val < min) {

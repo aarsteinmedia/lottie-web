@@ -26,7 +26,7 @@ export default class FootageElement extends FrameElement {
     this.initBaseData(data, globalData, comp)
   }
 
-  getBaseElement() {
+  getBaseElement(): SVGGElement | null {
     return null
   }
 
@@ -44,10 +44,14 @@ export default class FootageElement extends FrameElement {
   }
 
   initRenderable() {
-    throw new Error('FootageElement: Method initRenderable is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initRenderable is not implemented`
+    )
   }
 
   setMatte(_id: string) {
-    throw new Error('FootageElement: Method setMatte is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
   }
 }

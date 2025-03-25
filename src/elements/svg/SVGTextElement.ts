@@ -39,23 +39,19 @@ export default class SVGTextLottieElement extends TextElement {
     this.textSpans = []
     this.renderType = RendererType.SVG
     this.initElement(data, globalData, comp)
-  }
-
-  addDynamicProperty(_element: any) {
-    throw new Error(
-      'SVGTextLottieElement: Method addDynamicProperty is not implemented'
-    )
+    // const { renderFrame } = new RenderableDOMElement()
+    // this.renderFrame = renderFrame
   }
 
   override buildNewText() {
-    this.addDynamicProperty(this)
+    this.addDynamicProperty(this as any)
     let i
     let len
 
     const documentData = this.textProperty?.currentData
 
     if (!this.globalData || !this.layerElement || !documentData) {
-      throw new Error('SVGTextElement: Cannot access required data')
+      throw new Error(`${this.constructor.name}: Cannot access required data`)
     }
 
     this.renderedLetters = createSizedArray(documentData.l?.length || 0)
@@ -204,7 +200,7 @@ export default class SVGTextLottieElement extends TextElement {
             fontData?.fStyle,
             this.globalData.fontManager.getFontByName(documentData.f).fFamily
           )
-          let glyphElement
+          let glyphElement: SVGCompElement | SVGShapeElement
           // t === 1 means the character has been replaced with an animated shaped
           if (charData?.t === 1) {
             glyphElement = new SVGCompElement(
@@ -283,6 +279,7 @@ export default class SVGTextLottieElement extends TextElement {
 
     this._sizeChanged = true
   }
+
   buildShapeData(data: LottieLayer, scale: number) {
     // data should probably be cloned to apply scale separately to each instance of a text on different layers
     // but since text internal content gets only rendered once and then it's never rerendered,
@@ -320,17 +317,16 @@ export default class SVGTextLottieElement extends TextElement {
     textContents.push(currentTextContent)
     return textContents
   }
-  override createContent() {
+  createContent() {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
     }
   }
   getValue() {
-    let i
     const { length } = this.textSpans
     let glyphElement
     this.renderedFrame = this.comp?.renderedFrame
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       glyphElement = this.textSpans[i].glyph
       if (glyphElement) {
         glyphElement.prepareFrame?.(
@@ -342,6 +338,11 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
+  renderFrame() {
+    throw new Error(
+      'SVGTextLottieElement: Method renderFrame is not implemented'
+    )
+  }
 
   renderInnerContent = function (this: SVGTextLottieElement) {
     this.validateText()
@@ -350,7 +351,9 @@ export default class SVGTextLottieElement extends TextElement {
     }
     if (!this.textProperty) {
       // this.textProperty = new TextElement().textProperty!
-      throw new Error('Goddamn!')
+      throw new Error(
+        `${this.constructor.name}: textProperty is not initialized`
+      )
     }
     // if (!this.textProperty) {
     //   return
@@ -361,7 +364,6 @@ export default class SVGTextLottieElement extends TextElement {
     )
     if (this.lettersChangedFlag || this.textAnimator?.lettersChangedFlag) {
       this._sizeChanged = true
-      let i
       const renderedLetters = this.textAnimator?.renderedLetters
 
       const letters = this.textProperty.currentData.l
@@ -370,7 +372,7 @@ export default class SVGTextLottieElement extends TextElement {
       let renderedLetter
       let textSpan
       let glyphElement
-      for (i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
         if (letters?.[i].n) {
           continue
         }
@@ -399,6 +401,9 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
+  show() {
+    throw new Error('SVGTextElement: Method show is not implemented')
+  }
   sourceRectAtTime(): SourceRect | null {
     this.prepareFrame(Number(this.comp?.renderedFrame) - Number(this.data?.st))
     this.renderInnerContent()

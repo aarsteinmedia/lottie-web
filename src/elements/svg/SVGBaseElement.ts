@@ -100,8 +100,11 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     }
   }
   createRenderableComponents() {
-    if (!this.data || !this.globalData) {
-      throw new Error("Can't access Global Data")
+    if (!this.data) {
+      throw new Error(`${this.constructor.name}: layerData is not initialized`)
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not initialized`)
     }
     this.maskManager = new MaskElement(
       this.data,
@@ -120,7 +123,7 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     if (this.data?.hd) {
       return null
     }
-    return this.baseElement
+    return this.baseElement || null
   }
   getMatte(matteType = 1): string {
     // This should not be a common case. But for backward compatibility, we'll create the matte object.
@@ -184,7 +187,9 @@ export default abstract class SVGBaseElement extends BaseRenderer {
         this.globalData?.defs.appendChild(fil)
         const alphaRect = createNS<SVGRectElement>('rect')
         if (!alphaRect) {
-          throw new Error('Could not create RECT element')
+          throw new Error(
+            `${this.constructor.name}: Could not create RECT element`
+          )
         }
         alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
         alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
@@ -222,13 +227,18 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     this.layerElement = createNS('g')
   }
   renderElement() {
-    if (this.finalTransform?._localMatMdf) {
+    if (!this.finalTransform) {
+      throw new Error(
+        `${this.constructor.name}: finalTransform is not implemented`
+      )
+    }
+    if (this.finalTransform._localMatMdf) {
       this.transformedElement?.setAttribute(
         'transform',
         this.finalTransform.localMat.to2dCSS()
       )
     }
-    if (this.finalTransform?._opMdf) {
+    if (this.finalTransform._opMdf) {
       this.transformedElement?.setAttribute(
         'opacity',
         `${this.finalTransform.localOpacity}`

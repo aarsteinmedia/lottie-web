@@ -6,31 +6,26 @@ import type {
   Shape,
   Vector3,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import TransformElement from '@/elements/helpers/TransformElement'
 import { RendererType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
-export default class TextElement extends TransformElement {
-  _mdf?: boolean
-  createContainerElements: any
-  createRenderableComponents: any
+import FrameElement from './helpers/FrameElement'
 
-  dynamicProperties?: DynamicPropertyContainer[]
+export default class TextElement extends FrameElement {
+  buildNewText: any
+  createContainerElements: any
+
+  createRenderableComponents: any
 
   emptyProp?: LetterProps
 
   hide: any
-
-  initFrame: any
-
-  initHierarchy: any
 
   initRenderable: any
 
@@ -40,12 +35,9 @@ export default class TextElement extends TransformElement {
 
   lettersChangedFlag?: boolean
 
-  prepareProperties: any
-
   prepareRenderableFrame: any
 
   renderType?: RendererType
-
   textAnimator?: TextAnimatorProperty
   textProperty?: TextProperty
   applyTextPropertiesToMatrix(
@@ -99,18 +91,19 @@ export default class TextElement extends TransformElement {
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  // createContent() {
-  //   throw new Error('TextElement: Method createContent it not implemented')
-  // }
+  createContent() {
+    // throw new Error('TextElement: Method createContent it not implemented')
+  }
+
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
-    const jLen = shapes.length
-    let pathNodes: ShapePath
-    let shapeStr = ''
-    for (let j = 0; j < jLen; j++) {
-      if (shapes[j].ty !== 'sh' || !shapes[j].ks?.k) {
+    let pathNodes: ShapePath,
+      shapeStr = ''
+    const { length } = shapes
+    for (let i = 0; i < length; i++) {
+      if (shapes[i].ty !== 'sh' || !shapes[i].ks?.k) {
         continue
       }
-      pathNodes = shapes[j].ks!.k as ShapePath
+      pathNodes = shapes[i].ks!.k as ShapePath
       shapeStr += buildShapeString(
         pathNodes,
         pathNodes.i.length,
