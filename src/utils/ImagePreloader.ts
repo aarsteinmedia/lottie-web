@@ -57,7 +57,7 @@ export default class ImagePreloader {
     const path = this.getAssetsPath(assetData, this.assetsPath, this.path)
     const img = createNS<SVGImageElement>('image')
     if (!img) {
-      throw new Error('Could not generate SVG')
+      throw new Error(`${this.constructor.name}: Could not create SVG`)
     }
     if (isSafari()) {
       this.testImageLoaded(img)
@@ -171,7 +171,9 @@ export default class ImagePreloader {
     }
     const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
     if (!canvas) {
-      throw new Error('Could not create canvas element')
+      throw new Error(
+        `${this.constructor.name}: Could not create canvas element`
+      )
     }
     canvas.width = 1
     canvas.height = 1
@@ -186,7 +188,9 @@ export default class ImagePreloader {
     const path = this.getAssetsPath(assetData, this.assetsPath, this.path)
     const img = createTag<HTMLMediaElement>('img')
     if (!img) {
-      throw new Error('Could not create image element')
+      throw new Error(
+        `${this.constructor.name}: Could not create image element`
+      )
     }
     img.crossOrigin = 'anonymous'
     img.addEventListener('load', this._imageLoaded, false)

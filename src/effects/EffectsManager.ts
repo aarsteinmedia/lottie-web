@@ -89,7 +89,9 @@ export class GroupEffect extends DynamicPropertyContainer {
     }
   }
   renderFrame(_frame?: number | null) {
-    throw new Error('GroupEffect: Method renderFrame is not implemented yet')
+    throw new Error(
+      `${this.constructor.name}: Method renderFrame is not implemented yet`
+    )
   }
 }
 

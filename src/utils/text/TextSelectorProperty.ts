@@ -16,13 +16,13 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
   finalE: number
   finalS: number
   k: boolean
-  ne: any
-  o: any
+  ne: ValueProperty
+  o: ValueProperty
   rn?: number
   s: ValueProperty
-  sm: any
+  sm: ValueProperty
   totalChars?: number
-  xe: any
+  xe: ValueProperty
   constructor(elem: ElementInterfaceIntersect, data: TextRangeValue) {
     super()
     this._currentTextLength = -1
@@ -45,11 +45,36 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     } else {
       this.e = { v: 100 }
     }
-    this.o = PropertyFactory(elem, data.o || { k: 0 }, 0, 0, this)
-    this.xe = PropertyFactory(elem, data.xe || { k: 0 }, 0, 0, this)
-    this.ne = PropertyFactory(elem, data.ne || { k: 0 }, 0, 0, this)
-    this.sm = PropertyFactory(elem, data.sm || { k: 100 }, 0, 0, this)
+    this.o = PropertyFactory(
+      elem,
+      data.o || { k: 0 },
+      0,
+      0,
+      this
+    ) as ValueProperty
+    this.xe = PropertyFactory(
+      elem,
+      data.xe || { k: 0 },
+      0,
+      0,
+      this
+    ) as ValueProperty
+    this.ne = PropertyFactory(
+      elem,
+      data.ne || { k: 0 },
+      0,
+      0,
+      this
+    ) as ValueProperty
+    this.sm = PropertyFactory(
+      elem,
+      data.sm || { k: 100 },
+      0,
+      0,
+      this
+    ) as ValueProperty
     this.a = PropertyFactory(elem, data.a, 0, 0.01, this) as ValueProperty
+
     if (!this.dynamicProperties?.length) {
       this.getValue()
     }
@@ -62,19 +87,19 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     ) {
       this.getValue()
     }
-    let x1 = 0
-    let y1 = 0
-    let x2 = 1
-    let y2 = 1
-    if (this.ne.v > 0) {
-      x1 = this.ne.v / 100.0
+    let x1 = 0,
+      y1 = 0,
+      x2 = 1,
+      y2 = 1
+    if ((this.ne.v as number) > 0) {
+      x1 = (this.ne.v as number) / 100.0
     } else {
       y1 = -this.ne.v / 100.0
     }
-    if (this.xe.v > 0) {
-      x2 = 1.0 - this.xe.v / 100.0
+    if ((this.xe.v as number) > 0) {
+      x2 = 1.0 - (this.xe.v as number) / 100.0
     } else {
-      y2 = 1.0 + this.xe.v / 100.0
+      y2 = 1.0 + (this.xe.v as number) / 100.0
     }
     const easer = getBezierEasing(x1, y1, x2, y2).get
 
@@ -151,7 +176,7 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     //     - divide it by the smoothness (this will return the range to [0; 1])
     // Note: If it doesn't work on some scenarios, consider applying it before the easer.
     if (this.sm.v !== 100) {
-      let smoothness = this.sm.v * 0.01
+      let smoothness = (this.sm.v as number) * 0.01
       if (smoothness === 0) {
         smoothness = 0.00000001
       }
@@ -174,10 +199,10 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     if (newCharsFlag && this.data.r === 2 && this.e?.v) {
       this.e.v = this._currentTextLength
     }
-    const divisor = this.data.r === 2 ? 1 : 100 / this.data.totalChars
-    const o = Number(this.o?.v) / divisor
-    let s = Number(this.s?.v) / divisor + o
-    let e = Number(this.e?.v) / divisor + o
+    const divisor = this.data.r === 2 ? 1 : 100 / this.data.totalChars,
+      o = Number(this.o?.v) / divisor
+    let s = Number(this.s?.v) / divisor + o,
+      e = Number(this.e?.v) / divisor + o
     if (s > e) {
       const _s = s
       s = e

@@ -644,7 +644,7 @@ export default class AnimationItem extends BaseEvent {
       }
     } catch (err) {
       console.error(err)
-      throw new Error('Could not set data')
+      throw new Error(`${this.constructor.name}: Could not set data`)
     }
   }
   public setDirection(val: AnimationDirection, name?: string) {
@@ -724,7 +724,7 @@ export default class AnimationItem extends BaseEvent {
       }
     } catch (err) {
       console.error(err)
-      throw new Error('Could not set params')
+      throw new Error(`${this.constructor.name}: Could not set params`)
     }
   }
   public setSegment(init: number, end: number) {

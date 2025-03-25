@@ -487,7 +487,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
         }
       }
       if (keysCount === 0) {
-        throw new Error()
+        throw new Error('Could not parse markers')
       }
       return keys
     }

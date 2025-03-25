@@ -19,7 +19,9 @@ const workerProxy: Worker = {
       throw new Error('Function not implemented.')
     },
     onerror: null,
-    onmessage: (_: { data: string }) => {},
+    onmessage: (_: { data: string }) => {
+      throw new Error('workerProxy: Method onmessage not implemented')
+    },
     onmessageerror: null,
     postMessage: (data: WorkerEvent['data']) => {
       workerFn({
@@ -63,11 +65,11 @@ const workerProxy: Worker = {
         data: data,
         defaultPrevented: false,
         eventPhase: 0,
-        initEvent: function (
+        initEvent: (
           _type: string,
           _bubbles?: boolean,
           _cancelable?: boolean
-        ): void {
+        ): void => {
           throw new Error('Function not implemented.')
         },
         initMessageEvent: (

@@ -146,7 +146,7 @@ export class SVGStrokeEffect {
   }
   initialize() {
     if (!this.filterManager.effectElements) {
-      throw new Error('Missing Effects Elements')
+      throw new Error(`${this.constructor.name}: Missing Effects Elements`)
     }
     let elemChildren = Array.from(
       this.elem.layerElement?.children ||
@@ -211,7 +211,7 @@ export class SVGStrokeEffect {
 
   renderFrame(forceRender?: boolean) {
     if (!this.filterManager.effectElements) {
-      throw new Error('Missing Effect element')
+      throw new Error(`${this.constructor.name}: Missing Effect element`)
     }
     if (!this.initialized) {
       this.initialize()
@@ -391,7 +391,7 @@ export class SVGProLevelsFilter {
     const { effectElements } = this.filterManager
 
     if (!effectElements) {
-      throw new Error('Missing Effect Elements')
+      throw new Error(`${this.constructor.name}: Missing Effect Elements`)
     }
 
     let feComponentTransfer = createNS<SVGFEComponentTransferElement>(
