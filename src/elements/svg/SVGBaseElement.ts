@@ -1,8 +1,9 @@
-import type { ElementInterfaceIntersect, Transformer } from '@/types'
+import type { ElementInterfaceIntersect } from '@/types'
 
+import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGEffects from '@/elements/svg/SVGEffects'
-import BaseRenderer from '@/renderers/BaseRenderer'
+// import BaseRenderer from '@/renderers/BaseRenderer'
 import { createNS } from '@/utils'
 import {
   createAlphaToLuminanceFilter,
@@ -11,18 +12,18 @@ import {
 } from '@/utils/FiltersFactory'
 import { createElementID, getLocationHref } from '@/utils/getterSetter'
 
-export default abstract class SVGBaseElement extends BaseRenderer {
+export default abstract class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
-  finalTransform?: Transformer
+  // finalTransform?: Transformer
   maskedElement?: SVGGElement
   matteElement?: SVGGElement
   matteMasks?: {
     [key: number]: string
   }
-  renderableEffectsManager?: SVGEffects
-  searchEffectTransforms: any
+  // renderableEffectsManager?: SVGEffects
+  // searchEffectTransforms: any
   transformedElement?: SVGGElement
-  createContainerElements() {
+  override createContainerElements() {
     this.matteElement = createNS<SVGGElement>('g')
     this.transformedElement = this.layerElement
     this.maskedElement = this.layerElement
@@ -99,7 +100,7 @@ export default abstract class SVGBaseElement extends BaseRenderer {
       this.setBlendMode()
     }
   }
-  createRenderableComponents() {
+  override createRenderableComponents() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: layerData is not initialized`)
     }
@@ -114,7 +115,7 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     this.renderableEffectsManager = new SVGEffects(this as any)
     this.searchEffectTransforms()
   }
-  destroyBaseElement() {
+  override destroyBaseElement() {
     this.layerElement = null as any
     this.matteElement = null as any
     this.maskManager?.destroy()
@@ -223,10 +224,10 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     }
     return this.matteMasks[matteType]
   }
-  initRendererElement() {
+  override initRendererElement() {
     this.layerElement = createNS('g')
   }
-  renderElement() {
+  override renderElement() {
     if (!this.finalTransform) {
       throw new Error(
         `${this.constructor.name}: finalTransform is not implemented`

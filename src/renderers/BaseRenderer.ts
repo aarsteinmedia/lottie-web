@@ -14,7 +14,7 @@ import HierarchyElement from '@/elements/helpers/HierarchyElement'
 import FontManager from '@/utils/FontManager'
 import SlotManager from '@/utils/SlotManager'
 
-export default abstract class BaseRenderer extends BaseElement {
+export default class BaseRenderer extends BaseElement {
   animationItem?: AnimationItem
   completeLayers?: boolean
   elements?: ElementInterfaceIntersect[]
@@ -42,21 +42,29 @@ export default abstract class BaseRenderer extends BaseElement {
     const elements = this.elements
     const layers = this.layers
     let i = 0
-    const len = layers?.length || 0
-    while (i < len) {
+    const { length } = layers || []
+    while (i < length) {
       if (layers?.[i].ind === Number(parentName)) {
         if (!elements?.[i] || (elements as any)[i] === true) {
           this.buildItem(i)
-          this.addPendingElement(element)
-        } else {
-          hierarchy.push(elements[i])
-          ;(elements[i] as HierarchyElement).setAsParent?.()
-          if (layers[i].parent === undefined) {
-            element.setHierarchy(hierarchy)
-          } else {
-            this.buildElementParenting(element, layers[i].parent, hierarchy)
+
+          if (!this.addPendingElement) {
+            throw new Error(
+              `${this.constructor.name}: Method addPendingElement is not initialized`
+            )
           }
+          this.addPendingElement(element)
+          i++
+          continue
         }
+        hierarchy.push(elements[i])
+        ;(elements[i] as HierarchyElement).setAsParent?.()
+        if (layers[i].parent === undefined) {
+          element.setHierarchy(hierarchy)
+          i++
+          continue
+        }
+        this.buildElementParenting(element, layers[i].parent, hierarchy)
       }
       i++
     }

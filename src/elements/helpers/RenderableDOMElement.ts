@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
+import BaseRenderer from '@/renderers/BaseRenderer'
 import { extendPrototype } from '@/utils/functionExtensions'
 
 // TODO: This is a mixin mess
@@ -16,9 +17,27 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   initRendererElement: any
 
   innerElem?: SVGElement | null
+
   renderElement: any
+  constructor() {
+    super()
+    const { addPendingElement, checkLayers, createItem } = new BaseRenderer()
+    this.checkLayers = checkLayers
+    this.createItem = createItem
+    this.addPendingElement = addPendingElement
+  }
+  addPendingElement(_element: ElementInterfaceIntersect) {
+    throw new Error(
+      'RenderableDOMElement: Method addPendingElement is not implemented'
+    )
+  }
   createContent() {
     /** Fallback */
+  }
+  createItem(_data: LottieLayer) {
+    throw new Error(
+      'RenderableDOMElement: Method createItem is not implemented'
+    )
   }
   destroy() {
     this.innerElem = null

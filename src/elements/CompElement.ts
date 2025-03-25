@@ -125,6 +125,11 @@ CompElement.prototype.prepareFrame = function (val: number) {
   }
   const { length } = this.elements || []
   if (!this.completeLayers) {
+    if (!this.checkLayers) {
+      throw new Error(
+        `${this.constructor.name}: Method checkLayers is not implemented`
+      )
+    }
     this.checkLayers(this.renderedFrame)
   }
   // This iteration needs to be backwards because of how expressions connect between each other

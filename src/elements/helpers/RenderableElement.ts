@@ -10,11 +10,6 @@ export default class RenderableElement extends FrameElement {
   isInRange?: boolean
   isTransparent?: boolean
   private renderableComponents: ElementInterfaceIntersect[] = []
-  // constructor() {
-  //   super()
-  //   this.prepareRenderableFrame = this.prepareRenderableFrame.bind(this)
-  //   this.initRenderable = this.initRenderable.bind(this)
-  // }
   addRenderableComponent(component: ElementInterfaceIntersect) {
     if (this.renderableComponents.indexOf(component) === -1) {
       this.renderableComponents.push(component)
@@ -39,6 +34,9 @@ export default class RenderableElement extends FrameElement {
       this.isInRange = false
       this.hide()
     }
+  }
+  checkLayers(_val?: number) {
+    throw new Error('RenderableElement: Method checkLayers is not initialized')
   }
   checkTransparency() {
     if (!this.finalTransform) {

@@ -72,6 +72,11 @@ export default class SVGRendererBase extends BaseRenderer {
 
     elements![pos] = true as any
 
+    if (!this.createItem) {
+      throw new Error(
+        `${this.constructor.name}: Method createItem is not initialized`
+      )
+    }
     const element = this.createItem(this.layers[pos])
 
     if (!element) {
@@ -99,18 +104,23 @@ export default class SVGRendererBase extends BaseRenderer {
         this.elements[elementIndex] === (true as any)
       ) {
         this.buildItem(elementIndex)
+        if (!this.addPendingElement) {
+          throw new Error(
+            `${this.constructor.name}: Method addPendingElement is not initialized`
+          )
+        }
         this.addPendingElement(element as ElementInterfaceIntersect)
-      } else {
-        const matteElement = elements![elementIndex]
-        // if (!matteElement.getMatte) {
-        //   matteElement.getMatte = this.svgBaseElement.getMatte
-        // }
-        const matteMask = matteElement.getMatte(this.layers[pos].tt)
-        // if (!element.setMatte) {
-        //   element.setMatte = this.svgBaseElement.setMatte
-        // }
-        element.setMatte(matteMask)
+        return
       }
+      const matteElement = elements![elementIndex]
+      // if (!matteElement.getMatte) {
+      //   matteElement.getMatte = this.svgBaseElement.getMatte
+      // }
+      const matteMask = matteElement.getMatte(this.layers[pos].tt)
+      // if (!element.setMatte) {
+      //   element.setMatte = this.svgBaseElement.setMatte
+      // }
+      element.setMatte(matteMask)
     }
   }
 
