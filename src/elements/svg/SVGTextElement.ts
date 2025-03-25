@@ -406,4 +406,4 @@ export default class SVGTextLottieElement extends TextElement {
   }
 }
 
-extendPrototype([SVGBaseElement, TextElement], SVGTextLottieElement)
+extendPrototype([SVGBaseElement], SVGTextLottieElement)
