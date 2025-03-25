@@ -160,7 +160,9 @@ export default class TextProperty extends DynamicPropertyContainer {
     documentData.__complete = true
     const { fontManager } = this.elem.globalData
     if (!fontManager) {
-      throw new Error('FontManager not loaded')
+      throw new Error(
+        `${this.constructor.name}: FontManager not loaded to globalData`
+      )
     }
     const data = this.data
     const letters: Letter[] = []

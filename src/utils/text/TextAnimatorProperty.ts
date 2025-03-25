@@ -334,23 +334,25 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 }
               }
             }
-            if (animatorProps?.a.propType) {
-              animatorSelector = animators[j].s
-              mult = animatorSelector?.getMult(
-                Number(letters?.[i].anIndexes[j]),
-                textData.a?.[j].s?.totalChars
-              )
-              if (!mult) {
-                continue
-              }
-              if (Array.isArray(animatorProps.a.v)) {
-                if (Array.isArray(mult)) {
-                  animatorOffset += animatorProps.a.v[0] * mult[0]
-                } else {
-                  animatorOffset += animatorProps.a.v[0] * mult
-                }
-              }
+            if (!animatorProps?.a.propType) {
+              continue
             }
+            animatorSelector = animators[j].s
+            mult = animatorSelector?.getMult(
+              Number(letters?.[i].anIndexes[j]),
+              textData.a?.[j].s?.totalChars
+            )
+            if (!mult) {
+              continue
+            }
+            if (!Array.isArray(animatorProps.a.v)) {
+              continue
+            }
+            if (Array.isArray(mult)) {
+              animatorOffset += animatorProps.a.v[0] * mult[0]
+              continue
+            }
+            animatorOffset += animatorProps.a.v[0] * mult
           }
           flag = true
           // Force alignment only works with a single line for now
@@ -426,26 +428,30 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
         for (j = 0; j < jLen; j++) {
           animatorProps = animators[j].a
-          if (animatorProps?.t.propType) {
-            animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(
-              Number(letters?.[i].anIndexes[j]),
-              textData.a?.[j].s?.totalChars
-            )
-            // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
-            if (xPos !== 0 || documentData.j !== 0) {
-              if (this._hasMaskedPath) {
-                if (Array.isArray(mult)) {
-                  currentLength += Number(animatorProps.t.v) * mult[0]
-                } else {
-                  currentLength += Number(animatorProps.t.v) * Number(mult)
-                }
-              } else if (Array.isArray(mult)) {
-                xPos += Number(animatorProps.t.v) * mult[0]
+          if (!animatorProps?.t.propType) {
+            continue
+          }
+          animatorSelector = animators[j].s
+          mult = animatorSelector?.getMult(
+            Number(letters?.[i].anIndexes[j]),
+            textData.a?.[j].s?.totalChars
+          )
+          // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
+          if (xPos !== 0 || documentData.j !== 0) {
+            if (this._hasMaskedPath) {
+              if (Array.isArray(mult)) {
+                currentLength += Number(animatorProps.t.v) * mult[0]
               } else {
-                xPos += Number(animatorProps.t.v) * Number(mult)
+                currentLength += Number(animatorProps.t.v) * Number(mult)
               }
+              continue
             }
+
+            if (Array.isArray(mult)) {
+              xPos += Number(animatorProps.t.v) * mult[0]
+              continue
+            }
+            xPos += Number(animatorProps.t.v) * Number(mult)
           }
         }
         if (documentData.strokeWidthAnim) {
@@ -487,13 +493,13 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 -animatorProps.a.v[1] * mult[1],
                 animatorProps.a.v[2] * mult[2]
               )
-            } else {
-              matrixHelper.translate(
-                -animatorProps.a.v[0] * mult,
-                -animatorProps.a.v[1] * mult,
-                animatorProps.a.v[2] * mult
-              )
+              continue
             }
+            matrixHelper.translate(
+              -animatorProps.a.v[0] * mult,
+              -animatorProps.a.v[1] * mult,
+              animatorProps.a.v[2] * mult
+            )
           }
         }
         for (j = 0; j < jLen; j++) {
@@ -513,13 +519,13 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 1 + (animatorProps.s.v[1] - 1) * mult[1],
                 1
               )
-            } else {
-              matrixHelper.scale(
-                1 + (animatorProps.s.v[0] - 1) * mult,
-                1 + (animatorProps.s.v[1] - 1) * mult,
-                1
-              )
+              continue
             }
+            matrixHelper.scale(
+              1 + (animatorProps.s.v[0] - 1) * mult,
+              1 + (animatorProps.s.v[1] - 1) * mult,
+              1
+            )
           }
         }
         for (j = 0; j < jLen; j++) {
@@ -803,18 +809,19 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         this.renderedLetters.push(letterValue)
         renderedLettersCount += 1
         this.lettersChangedFlag = true
-      } else {
-        letterValue = this.renderedLetters[i]
-        this.lettersChangedFlag =
-          letterValue.update(
-            Number(letterO),
-            Number(letterSw),
-            letterSc as any,
-            letterFc as any,
-            letterM as any,
-            letterP
-          ) || this.lettersChangedFlag
+
+        continue
       }
+      letterValue = this.renderedLetters[i]
+      this.lettersChangedFlag =
+        letterValue.update(
+          Number(letterO),
+          Number(letterSw),
+          letterSc as any,
+          letterFc as any,
+          letterM as any,
+          letterP
+        ) || this.lettersChangedFlag
     }
   }
 
