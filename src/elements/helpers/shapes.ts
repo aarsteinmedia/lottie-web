@@ -244,7 +244,9 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
       const mask = createNS<SVGMaskElement>('mask'),
         maskElement = createNS<SVGPathElement>('path')
       if (!maskElement || !mask) {
-        throw new Error('Could not create svg element')
+        throw new Error(
+          `${this.constructor.name}: Could not create svg element`
+        )
       }
       mask.appendChild(maskElement)
       const opacityId = createElementID(),

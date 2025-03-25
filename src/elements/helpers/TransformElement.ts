@@ -32,9 +32,9 @@ export default class TransformElement extends BaseElement {
         flag = false
       }
     }
-    const len = transforms.length
+    const { length } = transforms
     let ptNew
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < length; i++) {
       ptNew = transforms[i]?.mat.applyToPointArray(0, 0, 0)
       // ptNew = transforms[i].mat.applyToPointArray(pt[0],pt[1],pt[2]);
       pt = [pt[0] - Number(ptNew?.[0]), pt[1] - Number(ptNew?.[1]), 0]
@@ -49,7 +49,7 @@ export default class TransformElement extends BaseElement {
       _opMdf: false,
       localMat: mat,
       localOpacity: 1,
-      mat: mat,
+      mat,
       mProp: this.data?.ks
         ? new TransformProperty(
             this as unknown as ElementInterfaceIntersect,
@@ -107,30 +107,35 @@ export default class TransformElement extends BaseElement {
     }
   }
   renderTransform() {
-    this.finalTransform!._opMdf = !!(
+    if (!this.finalTransform) {
+      throw new Error(
+        `${this.constructor.name}: finalTransform is not initialized`
+      )
+    }
+    this.finalTransform._opMdf = !!(
       this.finalTransform?.mProp.o?._mdf || this._isFirstFrame
     )
-    this.finalTransform!._matMdf = !!(
+    this.finalTransform._matMdf = !!(
       this.finalTransform?.mProp._mdf || this._isFirstFrame
     )
 
     if (this.hierarchy) {
       let mat
-      const finalMat = this.finalTransform?.mat
+      const finalMat = this.finalTransform.mat
       let i = 0
       const len = this.hierarchy.length
       // Checking if any of the transformation matrices in the hierarchy chain has changed.
-      if (!this.finalTransform?._matMdf) {
+      if (!this.finalTransform._matMdf) {
         while (i < len) {
           if (this.hierarchy[i].finalTransform?.mProp._mdf) {
-            this.finalTransform!._matMdf = true
+            this.finalTransform._matMdf = true
             break
           }
           i++
         }
       }
 
-      if (this.finalTransform?._matMdf) {
+      if (this.finalTransform._matMdf) {
         mat = this.finalTransform.mProp.v.props as unknown as number[]
         finalMat?.cloneFromProps(mat)
         for (i = 0; i < len; i++) {
@@ -140,10 +145,10 @@ export default class TransformElement extends BaseElement {
         }
       }
     }
-    if (this.finalTransform?._matMdf) {
+    if (this.finalTransform._matMdf) {
       this.finalTransform._localMatMdf = this.finalTransform._matMdf
     }
-    if (this.finalTransform?._opMdf) {
+    if (this.finalTransform._opMdf) {
       this.finalTransform.localOpacity = Number(this.finalTransform.mProp.o?.v)
     }
   }
