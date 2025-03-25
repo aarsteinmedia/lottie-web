@@ -8,6 +8,7 @@ import type {
 import ImageElement from '@/elements/ImageElement'
 import NullElement from '@/elements/NullElement'
 import SolidElement from '@/elements/SolidElement'
+// import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
@@ -24,9 +25,19 @@ export default class SVGRendererBase extends BaseRenderer {
   renderConfig?: SVGRendererConfig
   renderedFrame?: number
 
+  // svgBaseElement: SVGBaseElement
+
   svgElement?: SVGSVGElement
 
+  // constructor() {
+  //   super()
+  //   this.svgBaseElement = new SVGBaseElement()
+  // }
+
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
+    // if (!element.getBaseElement) {
+    //   element.getBaseElement = this.svgBaseElement.getBaseElement
+    // }
     const newElement = element.getBaseElement()
     if (!newElement) {
       return
@@ -52,7 +63,7 @@ export default class SVGRendererBase extends BaseRenderer {
 
   override buildItem(pos: number) {
     if (!this.layers) {
-      throw new Error('SVGRendererBase cannot access layers')
+      throw new Error(`${this.constructor.name}: Can't access layers`)
     }
     const elements = this.elements
     if (elements?.[pos] || this.layers?.[pos].ty === 99) {
@@ -64,7 +75,7 @@ export default class SVGRendererBase extends BaseRenderer {
     const element = this.createItem(this.layers[pos])
 
     if (!element) {
-      throw new Error('Could not create element')
+      throw new Error(`${this.constructor.name}: Could not create element`)
     }
 
     elements![pos] = element as ElementInterfaceIntersect
@@ -91,7 +102,13 @@ export default class SVGRendererBase extends BaseRenderer {
         this.addPendingElement(element as ElementInterfaceIntersect)
       } else {
         const matteElement = elements![elementIndex]
+        // if (!matteElement.getMatte) {
+        //   matteElement.getMatte = this.svgBaseElement.getMatte
+        // }
         const matteMask = matteElement.getMatte(this.layers[pos].tt)
+        // if (!element.setMatte) {
+        //   element.setMatte = this.svgBaseElement.setMatte
+        // }
         element.setMatte(matteMask)
       }
     }
@@ -105,27 +122,38 @@ export default class SVGRendererBase extends BaseRenderer {
         let i = 0
         const { length } = this.elements || []
         while (i < length) {
-          if (this.elements?.[i] === element) {
-            const elementIndex =
-                'tp' in element.data
-                  ? this.findIndexByInd(element.data.tp)
-                  : i - 1,
-              matteElement = this.elements[elementIndex],
-              matteMask = matteElement.getMatte(this.layers?.[i].tt)
-
-            element.setMatte(matteMask)
-            break
+          if (this.elements?.[i] !== element) {
+            i++
+            continue
           }
-          i++
+          const elementIndex =
+              'tp' in element.data
+                ? this.findIndexByInd(element.data.tp)
+                : i - 1,
+            matteElement = this.elements[elementIndex]
+          // if (!matteElement.getMatte) {
+          //   matteElement.getMatte = new SVGBaseElement().getMatte
+          // }
+          const matteMask = matteElement.getMatte(this.layers?.[i].tt)
+
+          // if (!element.setMatte) {
+          //   element.setMatte = new SVGBaseElement().setMatte
+          // }
+          element.setMatte(matteMask)
+          break
         }
+        i++
       }
     }
   }
 
   configAnimation(animData: AnimationData) {
     try {
-      if (!this.svgElement || !this.globalData) {
-        throw new Error('Missing SVG element and Global Data')
+      if (!this.svgElement) {
+        throw new Error(`${this.constructor.name}: Can't access svgElement`)
+      }
+      if (!this.globalData) {
+        throw new Error(`${this.constructor.name}: Can't access globalData`)
       }
       this.svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
       this.svgElement.setAttribute(
@@ -185,8 +213,8 @@ export default class SVGRendererBase extends BaseRenderer {
       this.globalData.progressiveLoad = this.renderConfig?.progressiveLoad
       this.data = animData as any
 
-      const maskElement = createNS('clipPath'),
-        rect = createNS('rect')
+      const maskElement = createNS<SVGClipPathElement>('clipPath'),
+        rect = createNS<SVGRectElement>('rect')
       rect.setAttribute('width', `${animData.w}`)
       rect.setAttribute('height', `${animData.h}`)
       rect.setAttribute('x', '0')
@@ -209,35 +237,35 @@ export default class SVGRendererBase extends BaseRenderer {
 
   override createImage(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGRendererBase cannotaccess Global Data')
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new ImageElement(data, this.globalData, this as any)
   }
 
   override createNull(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGRendererBase cannot access Global Data')
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new NullElement(data, this.globalData, this)
+    return new NullElement(data, this.globalData, this as any)
   }
 
   override createShape(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGRendererBase cannot access Global Data')
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new SVGShapeElement(data, this.globalData, this as any)
   }
 
   override createSolid(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGRendererBase cannot access Global Data')
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new SolidElement(data, this.globalData, this)
   }
 
   override createText(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error('SVGRendererBase cannot access Global Data')
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new SVGTextLottieElement(data, this.globalData, this)
   }
@@ -248,8 +276,8 @@ export default class SVGRendererBase extends BaseRenderer {
     }
     this.layerElement = null as any
     this.globalData!.defs = null as any
-    const len = this.layers ? this.layers.length : 0
-    for (let i = 0; i < len; i++) {
+    const { length } = this.layers || []
+    for (let i = 0; i < length; i++) {
       if (this.elements?.[i] && (this.elements[i].destroy as any)) {
         this.elements[i].destroy()
       }
@@ -325,5 +353,9 @@ export default class SVGRendererBase extends BaseRenderer {
     }
   }
 
-  updateContainerSize(_width?: number, _height?: number) {}
+  updateContainerSize(_width?: number, _height?: number) {
+    throw new Error(
+      'SVGRendererBase: Method updateContainerSize is not implemented'
+    )
+  }
 }

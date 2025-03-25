@@ -44,7 +44,9 @@ export default class RepeaterModifier extends ShapeModifier {
     inv?: boolean
   ) {
     if (!transform.s || !transform.p || !transform.a || !transform.r) {
-      throw new Error('Missing required data from Transform')
+      throw new Error(
+        `${this.constructor.name}: Missing required data from Transform`
+      )
     }
     const dir = inv ? -1 : 1,
       scaleX = transform.s.v[0] + (1 - transform.s.v[0]) * (1 - perc),
@@ -199,7 +201,7 @@ export default class RepeaterModifier extends ShapeModifier {
         !this.sMatrix ||
         !this.tMatrix
       ) {
-        throw new Error('RepeaterModifier: Could not set Matrix')
+        throw new Error(`${this.constructor.name}: Could not set Matrix`)
       }
 
       const offset = this.o.v

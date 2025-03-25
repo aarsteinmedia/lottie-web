@@ -80,7 +80,7 @@ export default class SVGRenderer extends SVGRendererBase {
 
   override createComp(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error("Can't access global data")
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new SVGCompElement(data, this.globalData, this)
   }

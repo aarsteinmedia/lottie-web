@@ -91,7 +91,7 @@ export default abstract class BaseRenderer extends BaseElement {
   }
   createAudio(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error("Can't access Global Data")
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new AudioElement(data, this.globalData, this as any)
   }
@@ -105,7 +105,7 @@ export default abstract class BaseRenderer extends BaseElement {
 
   createFootage(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error("Can't access Global Data")
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
     return new FootageElement(data, this.globalData, this as any)
   }

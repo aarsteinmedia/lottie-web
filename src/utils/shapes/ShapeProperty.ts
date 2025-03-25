@@ -99,7 +99,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     let vertexValue
     const kf = this.keyframes
     if (!kf) {
-      throw new Error('ShapeBaseProperty: Could not read keyframe data')
+      throw new Error(`${this.constructor.name}: Could not read keyframe data`)
     }
     if (frameNum < kf[0].t - this.offsetTime) {
       keyPropS = kf[0].s[0]
@@ -134,7 +134,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
         }
       }
       if (!keyData || !nextKeyData) {
-        throw new Error('ShapeBaseProperty: Could not set keyframe data')
+        throw new Error(`${this.constructor.name}: Could not set keyframe data`)
       }
       const keyframeMetadata = this.keyframesMetadata?.[i] || {}
       isHold = keyData.h === 1
@@ -197,7 +197,9 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   }
   interpolateShapeCurrentTime() {
     if (!this.pv) {
-      throw new Error('ShapeBaseProperty: Cannot parse ShapePath v value')
+      throw new Error(
+        `${this.constructor.name}: Cannot parse ShapePath v value`
+      )
     }
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
       initTime = Number(this.keyframes?.[0].t) - this.offsetTime,
@@ -255,7 +257,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   }
   setVValue(newPath: ShapePath) {
     if (!this.v) {
-      throw new Error('ShapeBaseProperty: ShapePath is not set')
+      throw new Error(`${this.constructor.name}: ShapePath is not set`)
     }
     if (!this.shapesEqual(this.v, newPath)) {
       this.v = clone(newPath)
@@ -706,7 +708,7 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
   convertToPath() {
     throw new Error(
-      'StarShapeProperty: Method convertToPath is not implemented'
+      `${this.constructor.name}: Method convertToPath is not implemented`
     )
   }
   override getValue() {
@@ -769,7 +771,9 @@ class EllShapeProperty extends ShapeBaseProperty {
       _v = this.v
 
     if (!_v) {
-      throw new Error('EllShapeProperty: Could not get value of ellipse')
+      throw new Error(
+        `${this.constructor.name}: Could not get value of ellipse`
+      )
     }
     _v.v[0][0] = p0
     _v.v[0][1] = p1 - s1
@@ -822,7 +826,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this._mdf = false
     const pathData = type === 3 ? data.pt?.k : data.ks?.k
     if (!pathData) {
-      throw new Error('Could now get Path Data')
+      throw new Error(`${this.constructor.name}: Could now get Path Data`)
     }
     this.v = clone(pathData as ShapePath)
     this.pv = clone(this.v)
