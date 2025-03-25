@@ -43,8 +43,7 @@ export default class SVGTextLottieElement extends TextElement {
 
   override buildNewText() {
     this.addDynamicProperty(this as any)
-    let i
-    let len
+    let i, len
 
     const documentData = this.textProperty?.currentData
 
@@ -76,24 +75,24 @@ export default class SVGTextLottieElement extends TextElement {
       if (fontData?.fFamily) {
         this.layerElement.setAttribute('font-family', fontData.fFamily)
       }
-      const fWeight = documentData.fWeight
-      const fStyle = documentData.fStyle
+      const fWeight = documentData.fWeight,
+        fStyle = documentData.fStyle
       this.layerElement.setAttribute('font-style', fStyle)
       this.layerElement.setAttribute('font-weight', fWeight)
     }
     this.layerElement.setAttribute('aria-label', `${documentData.t}`)
 
-    const letters = documentData.l || []
-    const usesGlyphs = !!this.globalData.fontManager?.chars
+    const letters = documentData.l || [],
+      usesGlyphs = !!this.globalData.fontManager?.chars
     len = letters.length
 
     let tSpan: SVGTextElement | SVGGElement | null = null
-    const matrixHelper = this.mHelper
-    const shapeStr = ''
-    const singleShape = this.data?.singleShape
-    let xPos = 0
-    let yPos = 0
-    let firstLine = true
+    const matrixHelper = this.mHelper,
+      shapeStr = '',
+      singleShape = this.data?.singleShape
+    let xPos = 0,
+      yPos = 0,
+      firstLine = true
     const trackingOffset =
       documentData.tr * 0.001 * Number(documentData.finalSize)
     if (singleShape && !usesGlyphs && !documentData.sz) {
