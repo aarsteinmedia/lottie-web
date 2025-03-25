@@ -6,11 +6,9 @@ import type {
   SourceRect,
 } from '@/types'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
-export default class ImageElement extends RenderableDOMElement {
+export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
 
   sourceRect: SourceRect | null
@@ -66,5 +64,3 @@ export default class ImageElement extends RenderableDOMElement {
     return this.sourceRect
   }
 }
-
-extendPrototype([SVGBaseElement], ImageElement)
