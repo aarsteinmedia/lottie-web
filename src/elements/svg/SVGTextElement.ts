@@ -1,7 +1,6 @@
 /* eslint-disable max-depth */
 import type { GlobalData, LottieLayer, SourceRect, Vector3 } from '@/types'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
@@ -335,13 +334,8 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
-  renderFrame() {
-    throw new Error(
-      'SVGTextLottieElement: Method renderFrame is not implemented'
-    )
-  }
 
-  renderInnerContent = function (this: SVGTextLottieElement) {
+  override renderInnerContent = function (this: SVGTextLottieElement) {
     this.validateText()
     if (this.data?.singleShape && !this._mdf) {
       return
@@ -392,10 +386,7 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
-  show() {
-    throw new Error('SVGTextElement: Method show is not implemented')
-  }
-  sourceRectAtTime(): SourceRect | null {
+  override sourceRectAtTime(): SourceRect | null {
     this.prepareFrame(Number(this.comp?.renderedFrame) - Number(this.data?.st))
     this.renderInnerContent()
     if (this._sizeChanged) {
@@ -415,7 +406,4 @@ export default class SVGTextLottieElement extends TextElement {
   }
 }
 
-extendPrototype(
-  [SVGBaseElement, RenderableDOMElement, TextElement],
-  SVGTextLottieElement
-)
+extendPrototype([SVGBaseElement, TextElement], SVGTextLottieElement)
