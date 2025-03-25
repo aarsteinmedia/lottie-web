@@ -1,8 +1,6 @@
 /* eslint-disable max-depth */
 import type { GlobalData, LottieLayer, SourceRect, Vector3 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
-import HierarchyElement from '@/elements/helpers/HierarchyElement'
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
@@ -317,7 +315,7 @@ export default class SVGTextLottieElement extends TextElement {
     textContents.push(currentTextContent)
     return textContents
   }
-  createContent() {
+  override createContent() {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
     }
@@ -350,14 +348,10 @@ export default class SVGTextLottieElement extends TextElement {
       return
     }
     if (!this.textProperty) {
-      // this.textProperty = new TextElement().textProperty!
       throw new Error(
         `${this.constructor.name}: textProperty is not initialized`
       )
     }
-    // if (!this.textProperty) {
-    //   return
-    // }
     this.textAnimator?.getMeasures(
       this.textProperty.currentData,
       this.lettersChangedFlag
@@ -369,9 +363,7 @@ export default class SVGTextLottieElement extends TextElement {
       const letters = this.textProperty.currentData.l
 
       const { length } = letters || []
-      let renderedLetter
-      let textSpan
-      let glyphElement
+      let renderedLetter, textSpan, glyphElement
       for (let i = 0; i < length; i++) {
         if (letters?.[i].n) {
           continue
@@ -425,12 +417,6 @@ export default class SVGTextLottieElement extends TextElement {
 }
 
 extendPrototype(
-  [
-    SVGBaseElement,
-    HierarchyElement,
-    FrameElement,
-    RenderableDOMElement,
-    TextElement,
-  ],
+  [SVGBaseElement, RenderableDOMElement, TextElement],
   SVGTextLottieElement
 )
