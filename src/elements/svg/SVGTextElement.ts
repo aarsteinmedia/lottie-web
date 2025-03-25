@@ -335,7 +335,7 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
-  override renderInnerContent = function (this: SVGTextLottieElement) {
+  override renderInnerContent(this: SVGTextLottieElement) {
     this.validateText()
     if (this.data?.singleShape && !this._mdf) {
       return
