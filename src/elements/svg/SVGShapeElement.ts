@@ -9,7 +9,6 @@ import type {
   Transformer,
 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
 import {
   ShapeGroupData,
   SVGFillStyleData,
@@ -317,13 +316,12 @@ export default class SVGShapeElement extends ShapeElement {
     renderFromProps: boolean
   ) {
     let render = renderFromProps
-    const ownTransformers: any[] = [].concat(transformers)
-    const ownStyles = []
-    const ownModifiers = []
-    let currentTransform
-    let modifier
-    let processedPos
-    for (let i = arr.length - 1; i >= 0; i--) {
+    const ownTransformers: any[] = [].concat(transformers),
+      ownStyles = [],
+      ownModifiers = []
+    let currentTransform, modifier, processedPos
+    const { length } = arr
+    for (let i = length - 1; i >= 0; i--) {
       processedPos = this.searchProcessedElement((arr as any)[i]) // TODO: Fix this
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
