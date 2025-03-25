@@ -9,33 +9,19 @@ import type {
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
+import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import { RendererType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
-import FrameElement from './helpers/FrameElement'
-
-export default class TextElement extends FrameElement {
+export default class TextElement extends RenderableDOMElement {
   buildNewText: any
-  createContainerElements: any
-
-  createRenderableComponents: any
 
   emptyProp?: LetterProps
 
-  hide: any
-
-  initRenderable: any
-
-  initRendererElement: any
-
-  isInRange?: boolean
-
   lettersChangedFlag?: boolean
-
-  prepareRenderableFrame: any
 
   renderType?: RendererType
   textAnimator?: TextAnimatorProperty
@@ -91,9 +77,9 @@ export default class TextElement extends FrameElement {
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  createContent() {
-    // throw new Error('TextElement: Method createContent it not implemented')
-  }
+  // createContent() {
+  //   // throw new Error('TextElement: Method createContent it not implemented')
+  // }
 
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     let pathNodes: ShapePath,
@@ -114,7 +100,7 @@ export default class TextElement extends FrameElement {
     return shapeStr
   }
 
-  initElement(
+  override initElement(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
@@ -140,7 +126,7 @@ export default class TextElement extends FrameElement {
     this.textAnimator.searchProperties(this.dynamicProperties || [])
   }
 
-  prepareFrame(num: number) {
+  override prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
