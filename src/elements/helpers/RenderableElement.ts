@@ -10,6 +10,11 @@ export default class RenderableElement extends FrameElement {
   isInRange?: boolean
   isTransparent?: boolean
   private renderableComponents: ElementInterfaceIntersect[] = []
+  // constructor() {
+  //   super()
+  //   this.prepareRenderableFrame = this.prepareRenderableFrame.bind(this)
+  //   this.initRenderable = this.initRenderable.bind(this)
+  // }
   addRenderableComponent(component: ElementInterfaceIntersect) {
     if (this.renderableComponents.indexOf(component) === -1) {
       this.renderableComponents.push(component)
@@ -36,7 +41,12 @@ export default class RenderableElement extends FrameElement {
     }
   }
   checkTransparency() {
-    if (Number(this.finalTransform?.mProp.o?.v) <= 0) {
+    if (!this.finalTransform) {
+      throw new Error(
+        `${this.constructor.name}: finalTransform is not implemented`
+      )
+    }
+    if (Number(this.finalTransform.mProp.o?.v) <= 0) {
       if (
         !this.isTransparent &&
         (this.globalData?.renderConfig as SVGRendererConfig)?.hideOnTransparent
@@ -94,8 +104,8 @@ export default class RenderableElement extends FrameElement {
     }
   }
   renderRenderable() {
-    const len = this.renderableComponents.length
-    for (let i = 0; i < len; i++) {
+    const { length } = this.renderableComponents
+    for (let i = 0; i < length; i++) {
       this.renderableComponents[i].renderFrame(Number(this._isFirstFrame))
     }
     /* this.maskManager.renderFrame(this.finalTransform.mat);
