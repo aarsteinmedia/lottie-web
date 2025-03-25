@@ -4,20 +4,48 @@ import type {
   LottieLayer,
 } from '@/types'
 
+import CompElement from '@/elements/CompElement'
 import RenderableElement from '@/elements/helpers/RenderableElement'
-import { extendPrototype } from '@/utils/functionExtensions'
+import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+// import TransformElement from './TransformElement'
+// import { extendPrototype } from '@/utils/functionExtensions'
 
-export default abstract class RenderableDOMElement extends RenderableElement {
-  createContainerElements: any
-
-  createRenderableComponents: any
-
-  initRendererElement: any
-
+export default class RenderableDOMElement extends RenderableElement {
   innerElem?: SVGElement | null
-  renderElement: any
+
+  constructor() {
+    super()
+    this.renderInnerContent = new CompElement().renderInnerContent
+    const {
+      createContainerElements,
+      createRenderableComponents,
+      initRendererElement,
+      renderElement,
+    } = new SVGBaseElement()
+    this.renderElement = renderElement
+    this.initRendererElement = initRendererElement
+    this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
+
+    // this.renderFrame = this.renderFrame.bind(this)
+  }
+
+  createContainerElements() {
+    throw new Error(
+      'RenderableDOMElement: Method createContainerElements in not implemented'
+    )
+  }
+
   createContent() {
-    /** Fallback */
+    throw new Error(
+      'RenderableDOMElement: Method createContent in not implemented'
+    )
+  }
+
+  createRenderableComponents(_data: LottieLayer, _globalData: GlobalData) {
+    throw new Error(
+      'RenderableDOMElement: Method createRenderableComponents in not implemented'
+    )
   }
   destroy() {
     this.innerElem = null
@@ -40,18 +68,25 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.initRenderable()
     this.initRendererElement()
     this.createContainerElements()
-    this.createRenderableComponents()
+    this.createRenderableComponents(data, globalData)
     this.createContent()
     this.hide()
   }
-  // initFrame() {
-  //   throw new Error('RenderableDOMElement: Method initFrame in not implemented')
-  // }
+  initRendererElement() {
+    throw new Error(
+      'RenderableDOMElement: Method initRendererElement in not implemented'
+    )
+  }
   prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
     this.checkTransparency()
+  }
+  renderElement() {
+    throw new Error(
+      'RenderableDOMElement: Method renderElement is not implemented'
+    )
   }
   renderFrame(_frame?: number | null) {
     // If it is exported as hidden (data.hd === true) no need to render
@@ -68,9 +103,14 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       this._isFirstFrame = false
     }
   }
-  renderInnerContent() {}
+
+  renderInnerContent() {
+    throw new Error(
+      'RenderableDOMElement: Method renderInnerContent is not implemented'
+    )
+  }
 }
 
 // TODO: TextElement needs this mixin
 
-extendPrototype([RenderableElement], RenderableDOMElement)
+// extendPrototype([RenderableElement], RenderableDOMElement)

@@ -1,8 +1,13 @@
-import type { ElementInterfaceIntersect, Transformer } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+} from '@/types'
 
+import FrameElement from '@/elements/helpers/FrameElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGEffects from '@/elements/svg/SVGEffects'
-import BaseRenderer from '@/renderers/BaseRenderer'
+// import BaseRenderer from '@/renderers/BaseRenderer'
 import { createNS } from '@/utils'
 import {
   createAlphaToLuminanceFilter,
@@ -11,17 +16,24 @@ import {
 } from '@/utils/FiltersFactory'
 import { createElementID, getLocationHref } from '@/utils/getterSetter'
 
-export default abstract class SVGBaseElement extends BaseRenderer {
+export default class SVGBaseElement extends FrameElement {
   _sizeChanged?: boolean
-  finalTransform?: Transformer
+  // finalTransform?: Transformer
   maskedElement?: SVGGElement
   matteElement?: SVGGElement
   matteMasks?: {
     [key: number]: string
   }
-  renderableEffectsManager?: SVGEffects
-  searchEffectTransforms: any
+  // renderableEffectsManager?: SVGEffects
+  // searchEffectTransforms: any
   transformedElement?: SVGGElement
+  constructor() {
+    super()
+    // this.initRendererElement = this.initRendererElement.bind(this)
+    this.createRenderableComponents = this.createRenderableComponents.bind(this)
+    this.createContainerElements = this.createContainerElements.bind(this)
+    this.getBaseElement = this.getBaseElement.bind(this)
+  }
   createContainerElements() {
     this.matteElement = createNS<SVGGElement>('g')
     this.transformedElement = this.layerElement
@@ -99,9 +111,12 @@ export default abstract class SVGBaseElement extends BaseRenderer {
       this.setBlendMode()
     }
   }
-  createRenderableComponents() {
-    if (!this.data || !this.globalData) {
-      throw new Error("Can't access Global Data")
+  createRenderableComponents(data: LottieLayer, globalData: GlobalData) {
+    if (!this.data) {
+      this.data = data
+    }
+    if (!this.globalData) {
+      this.globalData = globalData
     }
     this.maskManager = new MaskElement(
       this.data,
@@ -120,7 +135,7 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     if (this.data?.hd) {
       return null
     }
-    return this.baseElement
+    return this.baseElement || null
   }
   getMatte(matteType = 1): string {
     // This should not be a common case. But for backward compatibility, we'll create the matte object.
@@ -184,7 +199,9 @@ export default abstract class SVGBaseElement extends BaseRenderer {
         this.globalData?.defs.appendChild(fil)
         const alphaRect = createNS<SVGRectElement>('rect')
         if (!alphaRect) {
-          throw new Error('Could not create RECT element')
+          throw new Error(
+            `${this.constructor.name}: Could not create RECT element`
+          )
         }
         alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
         alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
@@ -222,13 +239,18 @@ export default abstract class SVGBaseElement extends BaseRenderer {
     this.layerElement = createNS('g')
   }
   renderElement() {
-    if (this.finalTransform?._localMatMdf) {
+    if (!this.finalTransform) {
+      throw new Error(
+        `${this.constructor.name}: finalTransform is not implemented`
+      )
+    }
+    if (this.finalTransform._localMatMdf) {
       this.transformedElement?.setAttribute(
         'transform',
         this.finalTransform.localMat.to2dCSS()
       )
     }
-    if (this.finalTransform?._opMdf) {
+    if (this.finalTransform._opMdf) {
       this.transformedElement?.setAttribute(
         'opacity',
         `${this.finalTransform.localOpacity}`

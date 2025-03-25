@@ -1,8 +1,16 @@
-import type { GlobalData, LottieLayer } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+} from '@/types'
 
 import FrameElement from '@/elements/helpers/FrameElement'
 export default class NullElement extends FrameElement {
-  constructor(data: LottieLayer, globalData: GlobalData, comp: any) {
+  constructor(
+    data: LottieLayer,
+    globalData: GlobalData,
+    comp: ElementInterfaceIntersect
+  ) {
     super()
     this.initFrame()
     this.initBaseData(data, globalData, comp)
@@ -10,7 +18,7 @@ export default class NullElement extends FrameElement {
     this.initHierarchy()
   }
 
-  getBaseElement() {
+  getBaseElement(): SVGGElement | null {
     return null
   }
 
@@ -19,6 +27,8 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    /** Fallback */
+    throw new Error(
+      `${this.constructor.name}: Method renderFrame is not implemented`
+    )
   }
 }

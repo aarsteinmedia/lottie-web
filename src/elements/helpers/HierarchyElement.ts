@@ -8,7 +8,7 @@ import type { ElementInterfaceIntersect } from '@/types'
 
 import TransformElement from '@/elements/helpers/TransformElement'
 
-export default abstract class HierarchyElement extends TransformElement {
+export default class HierarchyElement extends TransformElement {
   _isParent?: boolean
   /**
    * Searches layer's parenting chain

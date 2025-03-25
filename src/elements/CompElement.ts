@@ -5,33 +5,81 @@ import type {
 } from '@/types'
 
 import FrameElement from '@/elements/helpers/FrameElement'
-import HierarchyElement from '@/elements/helpers/HierarchyElement'
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import TransformElement from '@/elements/helpers/TransformElement'
-import SVGRendererBase from '@/renderers/SVGRendererBase'
-import { extendPrototype } from '@/utils/functionExtensions'
+import RenderableElement from '@/elements/helpers/RenderableElement'
+import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+// import FrameElement from '@/elements/helpers/FrameElement'
+// import HierarchyElement from '@/elements/helpers/HierarchyElement'
+// import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
+// import TransformElement from '@/elements/helpers/TransformElement'
+// import { extendPrototype } from '@/utils/functionExtensions'
 import { ValueProperty } from '@/utils/Properties'
 
-export default class CompElement extends SVGRendererBase {
-  _mdf?: boolean
-  createContainerElements: any
-  createRenderableComponents: any
-  initRendererElement: any
+export default class CompElement extends FrameElement {
+  completeLayers?: boolean
+
+  elements?: ElementInterfaceIntersect[]
+
   isInRange?: boolean
+  layers?: LottieLayer[]
+
+  renderedFrame?: number
 
   tm?: ValueProperty
 
-  // constructor() {
-  //   super()
-  //   this.initFrame = new FrameElement().initFrame
-  // }
-  override destroy() {
+  constructor() {
+    super()
+    const {
+      createContainerElements,
+      createRenderableComponents,
+      initRendererElement,
+    } = new SVGBaseElement()
+    this.initRendererElement = initRendererElement
+    this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
+    const { prepareRenderableFrame } = new RenderableElement()
+    this.prepareRenderableFrame = prepareRenderableFrame
+  }
+
+  buildAllItems() {
+    throw new Error(
+      `${this.constructor.name}: Method buildAllItems not implemented`
+    )
+  }
+
+  checkLayerLimits(_num: number) {
+    throw new Error(
+      `${this.constructor.name}: Method checkLayerLimits not implemented`
+    )
+  }
+
+  checkLayers(_frame: number) {
+    throw new Error(
+      `${this.constructor.name}: Method checkLayers not implemented`
+    )
+  }
+
+  createContainerElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createContainerElements not implemented`
+    )
+  }
+
+  createRenderableComponents(_data: LottieLayer, _globalData: GlobalData) {
+    throw new Error(
+      `${this.constructor.name}: Method createRenderableComponents not implemented`
+    )
+  }
+  destroy() {
     this.destroyElements()
     this.destroyBaseElement()
   }
+
   destroyBaseElement() {
-    throw new Error('CompElement: Method destroyBaseElement not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method destroyBaseElement not implemented`
+    )
   }
+
   destroyElements() {
     const { length } = this.layers || []
     for (let i = 0; i < length; i++) {
@@ -40,8 +88,17 @@ export default class CompElement extends SVGRendererBase {
       }
     }
   }
+
+  // prepareFrame(_val: number) {
+  //   throw new Error('CompElement: Method prepareFrame not implemented')
+  // }
+
   getElements(): ElementInterfaceIntersect[] | undefined {
     return this.elements
+  }
+
+  hide() {
+    throw new Error(`${this.constructor.name}: Method hide not implemented`)
   }
 
   initElement(
@@ -56,44 +113,71 @@ export default class CompElement extends SVGRendererBase {
     this.initHierarchy()
     this.initRendererElement()
     this.createContainerElements()
-    this.createRenderableComponents()
+    this.createRenderableComponents(data, globalData)
     if (this.data?.xt || !globalData.progressiveLoad) {
       this.buildAllItems()
     }
     this.hide()
   }
 
-  initFrame() {
-    throw new Error('CompElement: Method initFrame not implemented')
-  }
-
-  initHierarchy() {
-    throw new Error('CompElement: Method initHierarchy not implemented')
-  }
-
   initRenderable() {
-    throw new Error('CompElement: Method initRenderable not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initRenderable not implemented`
+    )
   }
 
-  initTransform() {
-    throw new Error('CompElement: Method initTransform not implemented')
+  initRendererElement() {
+    throw new Error(
+      `${this.constructor.name}: Method initRendererElement not implemented`
+    )
   }
 
-  prepareFrame(_val: number) {
-    throw new Error('CompElement: Method prepareFrame not implemented')
-  }
+  prepareFrame(val: number) {
+    this._mdf = false
+    this.prepareRenderableFrame(val)
+    this.prepareProperties(val, this.isInRange)
+    if (!this.isInRange && !this.data?.xt) {
+      return
+    }
 
-  prepareProperties(_val: number, _isInRange?: boolean) {
-    throw new Error('CompElement: Method prepareProperties not implemented')
+    if (this.tm?._placeholder) {
+      this.renderedFrame = val / Number(this.data?.sr)
+    } else {
+      let timeRemapped = this.tm?.v
+      if (timeRemapped === this.data?.op) {
+        timeRemapped = Number(this.data?.op) - 1
+      }
+      this.renderedFrame = Number(timeRemapped)
+    }
+    const { length } = this.elements || []
+    if (!this.completeLayers) {
+      this.checkLayers(this.renderedFrame)
+    }
+    // This iteration needs to be backwards because of how expressions connect between each other
+    for (let i = length - 1; i >= 0; i--) {
+      if (this.completeLayers || this.elements?.[i]) {
+        this.elements?.[i].prepareFrame?.(
+          this.renderedFrame - Number(this.layers?.[i].st)
+        )
+        if (this.elements?.[i]._mdf) {
+          this._mdf = true
+        }
+      }
+    }
   }
   prepareRenderableFrame(_val: number, _?: boolean) {
     throw new Error(
-      'CompElement: Method prepareRenderableFrame not implemented'
+      `${this.constructor.name}: Method prepareRenderableFrame not implemented`
     )
   }
 
   renderInnerContent() {
-    throw new Error('CompElement: Method renderInnerContent not implemented')
+    const { length } = this.layers || []
+    for (let i = 0; i < length; i++) {
+      if (this.completeLayers || this.elements?.[i]) {
+        this.elements?.[i].renderFrame()
+      }
+    }
   }
 
   setElements(elems: ElementInterfaceIntersect[]) {
@@ -101,50 +185,7 @@ export default class CompElement extends SVGRendererBase {
   }
 }
 
-extendPrototype(
-  [TransformElement, HierarchyElement, FrameElement, RenderableDOMElement],
-  CompElement
-)
-
-CompElement.prototype.prepareFrame = function (val: number) {
-  this._mdf = false
-  this.prepareRenderableFrame(val)
-  this.prepareProperties(val, this.isInRange)
-  if (!this.isInRange && !this.data?.xt) {
-    return
-  }
-
-  if (this.tm?._placeholder) {
-    this.renderedFrame = val / Number(this.data?.sr)
-  } else {
-    let timeRemapped = this.tm?.v
-    if (timeRemapped === this.data?.op) {
-      timeRemapped = Number(this.data?.op) - 1
-    }
-    this.renderedFrame = Number(timeRemapped)
-  }
-  const { length } = this.elements || []
-  if (!this.completeLayers) {
-    this.checkLayers(this.renderedFrame)
-  }
-  // This iteration needs to be backwards because of how expressions connect between each other
-  for (let i = length - 1; i >= 0; i--) {
-    if (this.completeLayers || this.elements?.[i]) {
-      this.elements?.[i].prepareFrame?.(
-        this.renderedFrame - Number(this.layers?.[i].st)
-      )
-      if (this.elements?.[i]._mdf) {
-        this._mdf = true
-      }
-    }
-  }
-}
-
-CompElement.prototype.renderInnerContent = function () {
-  const { length } = this.layers || []
-  for (let i = 0; i < length; i++) {
-    if (this.completeLayers || this.elements?.[i]) {
-      this.elements?.[i].renderFrame()
-    }
-  }
-}
+// extendPrototype(
+//   [TransformElement, HierarchyElement, FrameElement, RenderableDOMElement],
+//   CompElement
+// )

@@ -6,48 +6,34 @@ import type {
   Shape,
   Vector3,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import TransformElement from '@/elements/helpers/TransformElement'
+import CompElement from '@/elements/CompElement'
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import { RendererType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
-export default class TextElement extends TransformElement {
-  _mdf?: boolean
-  createContainerElements: any
-  createRenderableComponents: any
-
-  dynamicProperties?: DynamicPropertyContainer[]
-
+export default class TextElement extends CompElement {
   emptyProp?: LetterProps
-
-  hide: any
-
-  initFrame: any
-
-  initHierarchy: any
-
-  initRenderable: any
-
-  initRendererElement: any
-
-  isInRange?: boolean
-
   lettersChangedFlag?: boolean
-
-  prepareProperties: any
-
-  prepareRenderableFrame: any
 
   renderType?: RendererType
 
   textAnimator?: TextAnimatorProperty
+
   textProperty?: TextProperty
+
+  constructor() {
+    super()
+    const { hide, initRenderable } = new RenderableElement()
+    this.initRenderable = initRenderable
+    this.hide = hide
+  }
+
   applyTextPropertiesToMatrix(
     documentData: DocumentData,
     matrixHelper: Matrix,
@@ -88,29 +74,38 @@ export default class TextElement extends TransformElement {
     }
     matrixHelper.translate(xPos, yPos, 0)
   }
+
   buildColor(colorData: Vector3) {
     return `rgb(${Math.round(colorData[0] * 255)},${Math.round(
       colorData[1] * 255
     )},${Math.round(colorData[2] * 255)})`
   }
-  // buildNewText() {
-  //   throw new Error('TextElement: Method buildNewText it not implemented')
-  // }
+
+  buildNewText() {
+    throw new Error(
+      `${this.constructor.name}: Method buildNewText it not implemented`
+    )
+  }
+
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  // createContent() {
-  //   throw new Error('TextElement: Method createContent it not implemented')
-  // }
+
+  createContent() {
+    throw new Error(
+      `${this.constructor.name}: Method createContent it not implemented`
+    )
+  }
+
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
-    const jLen = shapes.length
-    let pathNodes: ShapePath
-    let shapeStr = ''
-    for (let j = 0; j < jLen; j++) {
-      if (shapes[j].ty !== 'sh' || !shapes[j].ks?.k) {
+    let pathNodes: ShapePath,
+      shapeStr = ''
+    const { length } = shapes
+    for (let i = 0; i < length; i++) {
+      if (shapes[i].ty !== 'sh' || !shapes[i].ks?.k) {
         continue
       }
-      pathNodes = shapes[j].ks!.k as ShapePath
+      pathNodes = shapes[i].ks!.k as ShapePath
       shapeStr += buildShapeString(
         pathNodes,
         pathNodes.i.length,
@@ -121,7 +116,7 @@ export default class TextElement extends TransformElement {
     return shapeStr
   }
 
-  initElement(
+  override initElement(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
@@ -141,13 +136,12 @@ export default class TextElement extends TransformElement {
     this.initRenderable()
     this.initRendererElement()
     this.createContainerElements()
-    this.createRenderableComponents()
+    this.createRenderableComponents(data, globalData)
     this.createContent()
     this.hide()
     this.textAnimator.searchProperties(this.dynamicProperties || [])
   }
-
-  prepareFrame(num: number) {
+  override prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)

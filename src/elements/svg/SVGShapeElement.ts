@@ -9,7 +9,7 @@ import type {
   Transformer,
 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
+// import FrameElement from '@/elements/helpers/FrameElement'
 import {
   ShapeGroupData,
   SVGFillStyleData,
@@ -22,11 +22,11 @@ import {
   SVGTransformData,
 } from '@/elements/helpers/shapes'
 import ShapeElement from '@/elements/ShapeElement'
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+// import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { lineCapEnum, lineJoinEnum } from '@/enums'
 import { createRenderFunction } from '@/renderers/SVGElementsRenderer'
 import { getBlendMode } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
+// import { extendPrototype } from '@/utils/functionExtensions'
 import { getLocationHref } from '@/utils/getterSetter'
 import { getModifier } from '@/utils/shapes/ShapeModifiers' // type ShapeModifierInterface,
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
@@ -57,6 +57,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of animated components
     this.animatedContents = []
     this.initElement(data, globalData, comp)
+    this.initRendererElement()
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
     // List of elements that have been created
     this.prevViewData = []
@@ -81,8 +82,11 @@ export default class SVGShapeElement extends ShapeElement {
     throw new Error('Method not yet implemented')
   }
   override createContent() {
-    if (!this.layerElement || !this.shapesData) {
-      throw new Error('SVGShapeElement: Could not access Layer or ShapesData')
+    if (!this.layerElement) {
+      throw new Error(`${this.constructor.name}: Could not access Layer`)
+    }
+    if (!this.shapesData) {
+      throw new Error(`${this.constructor.name}: Could not access ShapesData`)
     }
     this.searchShapes(
       this.shapesData,
@@ -195,7 +199,9 @@ export default class SVGShapeElement extends ShapeElement {
       this as any
     )
     if (!transformProperty.o) {
-      throw new Error('Missing required data in TransformProperty')
+      throw new Error(
+        `${this.constructor.name}: Missing required data in TransformProperty`
+      )
     }
     const elementData = new SVGTransformData(
       transformProperty,
@@ -235,11 +241,16 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
   initSecondaryElement() {
-    throw new Error('Method not yet implemented')
+    throw new Error(
+      'SVGShapeElement: Method initSecondaryElement not yet implemented'
+    )
   }
   reloadShapes() {
-    if (!this.layerElement || !this.shapesData) {
-      throw new Error('SVGShapeElement: Could not access required data')
+    if (!this.layerElement) {
+      throw new Error(`${this.constructor.name}: Could not access layerElement`)
+    }
+    if (!this.shapesData) {
+      throw new Error(`${this.constructor.name}: Could not access shapesData`)
     }
     this._isFirstFrame = true
     const { length } = this.itemsData || []
@@ -439,4 +450,4 @@ export default class SVGShapeElement extends ShapeElement {
   }
 }
 
-extendPrototype([SVGBaseElement, FrameElement], SVGShapeElement)
+// extendPrototype([SVGBaseElement, FrameElement], SVGShapeElement)

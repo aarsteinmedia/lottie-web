@@ -15,7 +15,7 @@ export default abstract class DynamicPropertyContainer {
   }
   getValue(_flag?: boolean) {
     throw new Error(
-      'DynamicPropertyContainer: Method getValue is not implemented'
+      `${this.constructor.name}: Method getValue is not implemented`
     )
   }
   initDynamicPropertyContainer(container: ElementInterfaceIntersect) {

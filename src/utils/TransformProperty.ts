@@ -393,7 +393,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
 
     if (!this.a) {
-      throw new Error('TransformProperty: Cannot read value')
+      throw new Error(`${this.constructor.name}: Cannot read 'a' value`)
     }
 
     this.pre.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
@@ -404,7 +404,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
 
     if (!this.s) {
-      throw new Error('TransformProperty: Cannot read value')
+      throw new Error(`${this.constructor.name}: Cannot read 's' value`)
     }
 
     this.pre.scale(this.s.v[0], this.s.v[1], this.s.v[2])

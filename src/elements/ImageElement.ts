@@ -7,9 +7,9 @@ import type {
 } from '@/types'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+// import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
+// import { extendPrototype } from '@/utils/functionExtensions'
 export default class ImageElement extends RenderableDOMElement {
   assetData?: LottieAsset | null
 
@@ -67,4 +67,4 @@ export default class ImageElement extends RenderableDOMElement {
   }
 }
 
-extendPrototype([SVGBaseElement], ImageElement)
+// extendPrototype([SVGBaseElement], ImageElement)
