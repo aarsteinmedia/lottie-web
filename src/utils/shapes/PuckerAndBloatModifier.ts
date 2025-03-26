@@ -5,8 +5,7 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-
-import { ShapeProperty } from './ShapeProperty'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class PuckerAndBloatModifier extends ShapeModifier {
   amount?: ValueProperty

@@ -25,8 +25,14 @@ import type BaseElement from '@/elements/BaseElement'
 import type CompElement from '@/elements/CompElement'
 import type HierarchyElement from '@/elements/helpers/HierarchyElement'
 import type {
+  SVGFillStyleData,
+  SVGGradientFillStyleData,
+  SVGGradientStrokeStyleData,
+  SVGNoStyleData,
+  SVGShapeData,
   SVGStrokeStyleData,
   SVGStyleData,
+  SVGTransformData,
 } from '@/elements/helpers/shapes'
 import type TransformElement from '@/elements/helpers/TransformElement'
 import type MaskElement from '@/elements/MaskElement'
@@ -79,6 +85,14 @@ export interface SVGGeometry {
   width: number
 }
 
+export type SVGElementInterface =
+  | SVGShapeData
+  | SVGTransformData
+  | SVGFillStyleData
+  | SVGStrokeStyleData
+  | SVGNoStyleData
+  | SVGGradientFillStyleData
+  | SVGGradientStrokeStyleData
 export interface Transformer {
   _localMatMdf: boolean
   _matMdf: boolean
@@ -196,7 +210,7 @@ export interface CompInterface extends AnimationItem {
 
 export interface AnimatedContent {
   data: Shape
-  element: ShapeDataInterface
+  element: ShapeDataInterface | SVGElementInterface
   fn: null | CreateRenderFunction
 }
 

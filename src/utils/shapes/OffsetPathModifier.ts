@@ -12,8 +12,7 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import ShapePath from '@/utils/shapes/ShapePath'
-
-import { ShapeProperty } from './ShapeProperty'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty

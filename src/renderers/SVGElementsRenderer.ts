@@ -1,14 +1,18 @@
 import type {
   SVGFillStyleData,
-  SVGStyleData,
+  SVGGradientFillStyleData,
+  SVGGradientStrokeStyleData,
+  SVGShapeData,
+  SVGStrokeStyleData,
   SVGTransformData,
 } from '@/elements/helpers/shapes'
 import type ShapeElement from '@/elements/ShapeElement'
-import type { ItemData, Shape, ShapeDataInterface } from '@/types'
+import type { Shape } from '@/types'
 
 import { ShapeType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import Matrix from '@/utils/Matrix'
+import ShapeCollection from '@/utils/shapes/ShapeCollection'
 import ShapePath from '@/utils/shapes/ShapePath'
 
 const _identityMatrix = new Matrix(),
@@ -45,7 +49,7 @@ export function createRenderFunction(data: Shape) {
  *
  */
 function renderContentTransform(
-  _: SVGStyleData,
+  _: Shape,
   itemData?: SVGTransformData,
   isFirstFrame?: boolean
 ) {
@@ -72,7 +76,7 @@ function renderContentTransform(
  *
  */
 function renderFill(
-  _: SVGStyleData,
+  _: Shape,
   itemData?: SVGFillStyleData,
   isFirstFrame?: boolean
 ) {
@@ -98,8 +102,8 @@ function renderFill(
  *
  */
 function renderGradient(
-  styleData: SVGStyleData,
-  itemData?: ItemData,
+  styleData: Shape,
+  itemData?: SVGGradientFillStyleData,
   isFirstFrame?: boolean
 ) {
   if (!itemData) {
@@ -108,33 +112,33 @@ function renderGradient(
     )
   }
   const gfill = itemData.gf,
-    hasOpacity = itemData.g._hasOpacity,
-    pt1 = itemData.s.v,
-    pt2 = itemData.e.v
+    hasOpacity = itemData.g?._hasOpacity,
+    pt1 = itemData.s?.v || [0, 0],
+    pt2 = itemData.e?.v || [0, 0]
 
-  if (itemData.o._mdf || isFirstFrame) {
+  if (itemData.o?._mdf || isFirstFrame) {
     const attr = styleData.ty === 'gf' ? 'fill-opacity' : 'stroke-opacity'
-    itemData.style.pElem.setAttribute(attr, `${itemData.o.v}`)
+    itemData.style?.pElem.setAttribute(attr, `${itemData.o?.v}`)
   }
-  if (itemData.s._mdf || isFirstFrame) {
-    const attr1 = styleData.t === 1 ? 'x1' : 'cx'
-    const attr2 = attr1 === 'x1' ? 'y1' : 'cy'
-    gfill.setAttribute(attr1, pt1[0])
-    gfill.setAttribute(attr2, pt1[1])
-    if (hasOpacity && !itemData.g._collapsable) {
-      itemData.of?.setAttribute(attr1, pt1[0])
-      itemData.of?.setAttribute(attr2, pt1[1])
+  if (itemData.s?._mdf || isFirstFrame) {
+    const attr1 = styleData.t === 1 ? 'x1' : 'cx',
+      attr2 = attr1 === 'x1' ? 'y1' : 'cy'
+    gfill?.setAttribute(attr1, `${pt1[0]}`)
+    gfill?.setAttribute(attr2, `${pt1[1]}`)
+    if (hasOpacity && !itemData.g?._collapsable) {
+      itemData.of?.setAttribute(attr1, `${pt1[0]}`)
+      itemData.of?.setAttribute(attr2, `${pt1[1]}`)
     }
   }
   let stops: SVGStopElement[]
   let i: number
   let len: number
   let stop: SVGStopElement
-  if (itemData.g._cmdf || isFirstFrame) {
+  if (itemData.g && (itemData.g._cmdf || isFirstFrame)) {
     stops = itemData.cst || []
-    const cValues = itemData.g.c
-    len = stops.length
-    for (i = 0; i < len; i += 1) {
+    const cValues = itemData.g.c,
+      { length } = stops
+    for (i = 0; i < length; i += 1) {
       stop = stops[i]
       stop.setAttribute('offset', `${cValues[i * 4]}%`)
       stop.setAttribute(
@@ -143,7 +147,7 @@ function renderGradient(
       )
     }
   }
-  if (hasOpacity && (itemData.g._omdf || isFirstFrame)) {
+  if (hasOpacity && itemData.g && (itemData.g._omdf || isFirstFrame)) {
     const oValues = itemData.g.o
     if (itemData.g._collapsable) {
       stops = itemData.cst || []
@@ -151,37 +155,37 @@ function renderGradient(
       stops = itemData.ost || []
     }
     len = stops.length
-    for (i = 0; i < len; i += 1) {
+    for (let i = 0; i < len; i += 1) {
       stop = stops[i]
       if (!itemData.g._collapsable) {
         stop.setAttribute('offset', `${oValues[i * 2]}%`)
       }
-      stop.setAttribute('stop-opacity', oValues[i * 2 + 1])
+      stop.setAttribute('stop-opacity', `${oValues[i * 2 + 1]}`)
     }
   }
   if (styleData.t === 1) {
-    if (itemData.e._mdf || isFirstFrame) {
-      gfill.setAttribute('x2', pt2[0])
-      gfill.setAttribute('y2', pt2[1])
-      if (hasOpacity && !itemData.g._collapsable) {
-        itemData.of?.setAttribute('x2', pt2[0])
-        itemData.of?.setAttribute('y2', pt2[1])
+    if (itemData.e?._mdf || isFirstFrame) {
+      gfill?.setAttribute('x2', `${pt2[0]}`)
+      gfill?.setAttribute('y2', `${pt2[1]}`)
+      if (hasOpacity && !itemData.g?._collapsable) {
+        itemData.of?.setAttribute('x2', `${pt2[0]}`)
+        itemData.of?.setAttribute('y2', `${pt2[1]}`)
       }
     }
   } else {
     let rad = 0
-    if (itemData.s._mdf || itemData.e._mdf || isFirstFrame) {
+    if (itemData.s?._mdf || itemData.e?._mdf || isFirstFrame) {
       rad = Math.sqrt(
         Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2)
       )
-      gfill.setAttribute('r', `${rad}`)
-      if (hasOpacity && !itemData.g._collapsable) {
+      gfill?.setAttribute('r', `${rad}`)
+      if (hasOpacity && !itemData.g?._collapsable) {
         itemData.of?.setAttribute('r', `${rad}`)
       }
     }
     if (
-      itemData.e._mdf ||
-      itemData.h._mdf ||
+      itemData.e?._mdf ||
+      itemData.h?._mdf ||
       itemData.a?._mdf ||
       isFirstFrame
     ) {
@@ -192,20 +196,20 @@ function renderGradient(
       }
       const ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
 
-      let percent = Number(itemData.h.v)
+      let percent = Number(itemData.h?.v)
       if (percent >= 1) {
         percent = 0.99
       } else if (percent <= -1) {
         percent = -0.99
       }
-      const dist = rad * percent
-      const x = Math.cos(ang + Number(itemData.a?.v)) * dist + pt1[0]
-      const y = Math.sin(ang + Number(itemData.a?.v)) * dist + pt1[1]
-      gfill.setAttribute('fx', x)
-      gfill.setAttribute('fy', y)
-      if (hasOpacity && !itemData.g._collapsable) {
-        itemData.of?.setAttribute('fx', x)
-        itemData.of?.setAttribute('fy', y)
+      const dist = rad * percent,
+        x = Math.cos(ang + Number(itemData.a?.v)) * dist + pt1[0],
+        y = Math.sin(ang + Number(itemData.a?.v)) * dist + pt1[1]
+      gfill?.setAttribute('fx', `${x}`)
+      gfill?.setAttribute('fy', `${y}`)
+      if (hasOpacity && !itemData.g?._collapsable) {
+        itemData.of?.setAttribute('fx', `${x}`)
+        itemData.of?.setAttribute('fy', `${y}`)
       }
     }
     // gfill.setAttribute('fy','200');
@@ -216,39 +220,37 @@ function renderGradient(
  *
  */
 function renderGradientStroke(
-  styleData: SVGStyleData,
-  itemData?: ItemData,
+  styleData: Shape,
+  itemData?: SVGGradientStrokeStyleData | SVGGradientFillStyleData,
   isFirstFrame?: boolean
 ) {
   renderGradient(styleData, itemData, isFirstFrame)
-  renderStroke(styleData, itemData, isFirstFrame)
+  renderStroke(styleData, itemData as SVGGradientStrokeStyleData, isFirstFrame)
 }
 
 /**
  *
  */
-function renderNoop(_: SVGStyleData) {}
+function renderNoop(_: Shape) {}
 
 /**
  *
  */
 function renderPath(
-  styleData: SVGStyleData,
-  itemData?: ShapeDataInterface,
+  styleData: Shape,
+  itemData?: SVGShapeData,
   isFirstFrame?: boolean
 ) {
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderPath is missing data')
   }
-  let pathStringTransformed
-  let redraw: boolean
-  let pathNodes: ShapePath | undefined
-  const { length } = itemData.styles
-  const lvl = itemData.lvl
-  let paths: ShapeElement
-  let mat: Matrix
-  let iterations
-  let k
+  let pathStringTransformed, redraw: boolean, pathNodes: ShapePath | undefined
+  const { length } = itemData.styles,
+    lvl = itemData.lvl
+  let paths: ShapeElement | ShapeCollection | undefined,
+    mat: Matrix,
+    iterations,
+    k
   for (let i = 0; i < length; i++) {
     redraw = itemData.sh?._mdf || !!isFirstFrame
     if (itemData.styles[i].lvl < lvl) {
@@ -273,11 +275,11 @@ function renderPath(
       mat = _identityMatrix
     }
     paths = itemData.sh.paths
-    const jLen = paths._length || 0
+    const jLen = paths?._length || 0
     if (redraw) {
       pathStringTransformed = ''
       for (let j = 0; j < jLen; j++) {
-        pathNodes = paths.shapes?.[j] as ShapePath
+        pathNodes = paths?.shapes?.[j] as ShapePath
         if (pathNodes && pathNodes._length) {
           pathStringTransformed += buildShapeString(
             pathNodes,
@@ -300,8 +302,8 @@ function renderPath(
  *
  */
 function renderStroke(
-  _: SVGStyleData,
-  itemData?: ItemData,
+  _: Shape,
+  itemData?: SVGStrokeStyleData | SVGGradientStrokeStyleData,
   isFirstFrame?: boolean
 ) {
   if (!itemData) {
@@ -310,24 +312,22 @@ function renderStroke(
   const styleElem = itemData.style
   const d = itemData.d
   if (d && (d._mdf || isFirstFrame) && d.dashStr) {
-    styleElem.pElem.setAttribute('stroke-dasharray', d.dashStr)
-    styleElem.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
+    styleElem?.pElem.setAttribute('stroke-dasharray', d.dashStr)
+    styleElem?.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
   if (itemData.c && (itemData.c._mdf || isFirstFrame)) {
-    styleElem.pElem.setAttribute(
+    styleElem?.pElem.setAttribute(
       'stroke',
       `rgb(${Math.floor((itemData.c.v as number[])[0])},${Math.floor((itemData.c.v as number[])[1])},${(itemData.c.v as number[])[2]})`
     )
   }
-  if (itemData.o._mdf || isFirstFrame) {
-    styleElem.pElem.setAttribute('stroke-opacity', itemData.o.v as string)
+  if (itemData.o?._mdf || isFirstFrame) {
+    styleElem?.pElem.setAttribute('stroke-opacity', itemData.o?.v as string)
   }
-  if (itemData.w._mdf || isFirstFrame) {
-    styleElem.pElem.setAttribute('stroke-width', itemData.w.v as string)
-    if (styleElem.msElem) {
-      styleElem.msElem.setAttribute('stroke-width', itemData.w.v as string)
-    }
+  if (itemData.w?._mdf || isFirstFrame) {
+    styleElem?.pElem.setAttribute('stroke-width', itemData.w?.v as string)
+    styleElem?.msElem?.setAttribute('stroke-width', itemData.w?.v as string)
   }
 }
 
-export type CreateRenderFunction = typeof createRenderFunction
+export type CreateRenderFunction = ReturnType<typeof createRenderFunction>

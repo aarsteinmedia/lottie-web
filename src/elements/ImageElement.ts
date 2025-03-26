@@ -6,10 +6,9 @@ import type {
   SourceRect,
 } from '@/types'
 
+import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
-
-import CompElement from './CompElement'
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
 

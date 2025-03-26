@@ -12,8 +12,7 @@ import { getProjectingAngle, setPoint } from '@/utils'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-
-import { ShapeProperty } from './ShapeProperty'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 /**
  *

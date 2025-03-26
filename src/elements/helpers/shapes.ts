@@ -43,7 +43,7 @@ export class SVGShapeData {
   lStr: string
   lvl: number
   sh: ShapeProperty
-  styles: any[]
+  styles: SVGStyleData[]
   transformers: Transformer[]
   ty?: ShapeType
   constructor(
@@ -138,7 +138,7 @@ export class ProcessedElement {
 
 export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: MultiDimensionalProperty
-  cst?: SVGElement[]
+  cst?: SVGStopElement[]
 
   e?: MultiDimensionalProperty
 
@@ -292,6 +292,7 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
 }
 
 export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
+  c?: MultiDimensionalProperty<Vector3>
   d: DashProperty
   w?: ValueProperty
   constructor(
@@ -324,6 +325,7 @@ export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
   o?: ValueProperty
   style: SVGStyleData
+  w?: ValueProperty
   constructor(
     elem: ElementInterfaceUnion,
     data: Shape,
@@ -352,7 +354,7 @@ export class SVGFillStyleData extends DynamicPropertyContainer {
 
 export class SVGStrokeStyleData extends SVGFillStyleData {
   d: DashProperty
-  w?: ValueProperty
+  // w?: ValueProperty
   constructor(
     elem: ElementInterfaceUnion,
     data: Shape,
