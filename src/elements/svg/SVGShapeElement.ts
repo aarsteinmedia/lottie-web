@@ -241,7 +241,7 @@ export default class SVGShapeElement extends ShapeElement {
   }
   initSecondaryElement() {
     throw new Error(
-      'SVGShapeElement: Method initSecondaryElement not yet implemented'
+      `${this.constructor.name}: Method initSecondaryElement not yet implemented`
     )
   }
   reloadShapes() {
@@ -410,12 +410,7 @@ export default class SVGShapeElement extends ShapeElement {
         } else {
           modifier = getModifier(arr[i].ty)
           itemsData[i] = modifier
-          modifier.init(
-            this as any,
-            arr as unknown as ShapeGroupData[],
-            i,
-            itemsData
-          )
+          modifier.init(this as any, arr, i, itemsData)
           this.shapeModifiers?.push(modifier)
           render = false
         }
