@@ -1,23 +1,29 @@
 import type {
+  AnimatedContent,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  Shape,
 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 
-import CompElement from '@/elements/CompElement'
+import { SVGStyleData } from '@/elements/helpers/shapes'
+// import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import SVGRendererBase from '@/renderers/SVGRendererBase'
-import { extendPrototype } from '@/utils/functionExtensions'
+import SVGShapeElement from '@/elements/svg/SVGShapeElement'
+// import SVGRendererBase from '@/renderers/SVGRendererBase'
+// import { extendPrototype } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export default class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
+  animatedContents: AnimatedContent[]
   completeLayers: boolean
   elements: ElementInterfaceIntersect[]
   layers: LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
+  stylesList: SVGStyleData[]
   supports3d: boolean
   tm?: KeyframedValueProperty
   constructor(
@@ -31,6 +37,26 @@ export default class SVGCompElement extends SVGBaseElement {
     this.completeLayers = false
     this.pendingElements = []
     this.elements = this.layers ? createSizedArray(this.layers.length) : []
+    const {
+      animatedContents,
+      createContent,
+      filterUniqueShapes,
+      renderInnerContent,
+      renderModifiers,
+      renderShape,
+      searchShapes,
+      shapesData,
+      stylesList,
+    } = new SVGShapeElement(data, globalData, comp)
+    this.animatedContents = animatedContents
+    this.createContent = createContent
+    this.filterUniqueShapes = filterUniqueShapes
+    this.renderInnerContent = renderInnerContent
+    this.renderModifiers = renderModifiers
+    this.renderShape = renderShape
+    this.searchShapes = searchShapes
+    this.shapesData = shapesData
+    this.stylesList = stylesList
     this.initElement(data, globalData, comp)
     this.tm = (
       data.tm
@@ -51,6 +77,38 @@ export default class SVGCompElement extends SVGBaseElement {
     }
     return new SVGCompElement(data, this.globalData, this as any)
   }
+
+  filterUniqueShapes() {
+    throw new Error(
+      `${this.constructor.name}: Method filterUniqueShapes is not implemented`
+    )
+  }
+
+  renderModifiers() {
+    throw new Error(
+      `${this.constructor.name}: Method renderModifiers is not implemented`
+    )
+  }
+
+  renderShape() {
+    throw new Error(
+      `${this.constructor.name}: Method renderShape is not implemented`
+    )
+  }
+
+  searchShapes(
+    _arr: Shape[],
+    _itemsData: any,
+    _prevViewData: any,
+    _container: SVGGElement,
+    _level: number,
+    _transformers: any,
+    _renderFromProps: boolean
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method searchShapes is not implemented`
+    )
+  }
 }
 
-extendPrototype([SVGRendererBase, CompElement], SVGCompElement)
+// extendPrototype([SVGRendererBase, CompElement], SVGCompElement)
