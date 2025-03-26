@@ -44,7 +44,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of drawable elements
     this.shapes = []
     // Full shape data
-    this.shapesData = data.shapes!
+    this.shapesData = data.shapes || []
     // List of styles that will be applied to shapes
     this.stylesList = []
     // List of modifiers that will be applied to shapes
@@ -57,6 +57,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.animatedContents = []
     const {
       createContainerElements,
+      createRenderableComponents,
       getBaseElement,
       getMatte,
       initRendererElement,
@@ -64,6 +65,7 @@ export default class SVGShapeElement extends ShapeElement {
       setMatte,
     } = new SVGBaseElement()
     this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
     this.getBaseElement = getBaseElement
     this.initRendererElement = initRendererElement
     this.renderElement = renderElement
@@ -336,21 +338,22 @@ export default class SVGShapeElement extends ShapeElement {
   }
   searchShapes(
     arr: Shape[],
-    itemsData: any,
-    prevViewData: any,
+    itemsData: (SVGElementInterface | null)[],
+    prevViewData: any[],
     container: SVGGElement,
     level: number,
-    transformers: any,
+    transformers: Transformer[],
     renderFromProps: boolean
   ) {
     let render = renderFromProps
-    const ownTransformers: Transformer[] = [].concat(transformers),
+    const ownTransformers: Transformer[] = [].concat(transformers as any),
       ownStyles = [],
       ownModifiers = []
     let currentTransform, modifier, processedPos
     const { length } = arr
     for (let i = length - 1; i >= 0; i--) {
-      processedPos = this.searchProcessedElement((arr as any)[i]) // TODO: Fix this
+      processedPos = this.searchProcessedElement(arr[i])
+      console.log(arr[i].ty === 'rp')
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
@@ -364,30 +367,30 @@ export default class SVGShapeElement extends ShapeElement {
         arr[i].ty === 'no'
       ) {
         if (processedPos) {
-          itemsData[i].style.closed = false
+          itemsData[i]!.style!.closed = false
         } else {
           itemsData[i] = this.createStyleElement(arr[i], level)
         }
         if (arr[i]._render) {
-          if (itemsData[i].style.pElem.parentNode !== container) {
-            container.appendChild(itemsData[i].style.pElem)
+          if (itemsData[i]?.style?.pElem.parentNode !== container) {
+            container.appendChild(itemsData[i]!.style!.pElem)
           }
         }
-        ownStyles.push(itemsData[i].style)
+        ownStyles.push(itemsData[i]?.style)
       } else if (arr[i].ty === 'gr') {
         if (processedPos) {
-          const { length } = itemsData[i].it
+          const { length } = itemsData[i]?.it || []
           for (let j = 0; j < length; j++) {
-            itemsData[i].prevViewData[j] = itemsData[i].it[j]
+            itemsData[i]!.prevViewData![j] = itemsData[i]!.it![j]
           }
         } else {
-          itemsData[i] = this.createGroupElement(arr[i])
+          itemsData[i] = this.createGroupElement(arr[i]) as any
         }
         this.searchShapes(
           arr[i].it as Shape[],
-          itemsData[i].it,
-          itemsData[i].prevViewData,
-          itemsData[i].gr,
+          itemsData[i]?.it || [],
+          itemsData[i]?.prevViewData || [],
+          itemsData[i]!.gr,
           level + 1,
           ownTransformers,
           render
@@ -423,10 +426,10 @@ export default class SVGShapeElement extends ShapeElement {
       ) {
         if (processedPos) {
           modifier = itemsData[i]
-          modifier.closed = false
+          ;(modifier as any).closed = false
         } else {
           modifier = getModifier(arr[i].ty)
-          modifier.init(this as any, (arr as any[])[i])
+          modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
           itemsData[i] = modifier
           this.shapeModifiers?.push(modifier)
         }

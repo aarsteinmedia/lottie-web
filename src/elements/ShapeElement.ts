@@ -73,13 +73,13 @@ export default class ShapeElement extends RenderableDOMElement {
       }
     }
   }
-  searchProcessedElement(elem: ElementInterfaceIntersect) {
+  searchProcessedElement(elem: unknown) {
     const elements = this.processedElements
     let i = 0
     const { length } = elements || []
     while (i < length) {
       if (elements?.[i].elem === elem) {
-        return elements[i].pos
+        return elements?.[i].pos
       }
       i++
     }

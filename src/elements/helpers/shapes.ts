@@ -41,9 +41,12 @@ export class SVGShapeData {
   _length?: number
   caches: unknown[]
   hd?: boolean
+  it?: ShapeDataInterface[]
   lStr: string
   lvl: number
+  prevViewData?: unknown[]
   sh: ShapeProperty
+  style?: SVGStyleData
   styles: SVGStyleData[]
   transformers: Transformer[]
   ty?: ShapeType
@@ -81,6 +84,9 @@ export class SVGShapeData {
 export class SVGTransformData {
   _isAnimated: boolean
   elements: ElementInterfaceIntersect[]
+  it?: ShapeDataInterface[]
+  prevViewData?: unknown[]
+  style?: SVGStyleData
   transform: Transformer
   constructor(
     mProps: TransformProperty,
@@ -106,10 +112,13 @@ export class SVGStyleData {
   d: string
   data: Shape
   hd?: boolean
+  it?: ShapeDataInterface[]
   lvl: number
   msElem: null | SVGMaskElement | SVGPathElement
   pElem: SVGPathElement
+  prevViewData?: unknown[]
   pt?: AnimatedProperty
+  style?: SVGStyleData
   t?: number
   ty?: ShapeType
   type?: ShapeType
@@ -147,12 +156,14 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
 
   gf?: SVGGradientElement
   h?: KeyframedValueProperty
+  it?: ShapeDataInterface[]
   maskId?: string
   ms?: SVGMaskElement
   o?: ValueProperty
-  of?: SVGElement
 
+  of?: SVGElement
   ost?: SVGStopElement[]
+  prevViewData?: unknown[]
   s?: MultiDimensionalProperty
   stops?: SVGStopElement[]
   style?: SVGStyleData
@@ -218,10 +229,10 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     this._isAnimated = !!this._isAnimated
   }
   setGradientData(pathElement: SVGElement, data: Shape) {
-    const gradientId = createElementID()
-    const gfill = createNS<SVGGradientElement>(
-      data.t === 1 ? 'linearGradient' : 'radialGradient'
-    )
+    const gradientId = createElementID(),
+      gfill = createNS<SVGGradientElement>(
+        data.t === 1 ? 'linearGradient' : 'radialGradient'
+      )
     gfill.setAttribute('id', gradientId)
     gfill.setAttribute('spreadMethod', 'pad')
     gfill.setAttribute('gradientUnits', 'userSpaceOnUse')
@@ -324,7 +335,9 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
 
 export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
+  it?: ShapeDataInterface[]
   o?: ValueProperty
+  prevViewData?: unknown[]
   style: SVGStyleData
   w?: ValueProperty
   constructor(
@@ -355,7 +368,6 @@ export class SVGFillStyleData extends DynamicPropertyContainer {
 
 export class SVGStrokeStyleData extends SVGFillStyleData {
   d: DashProperty
-  // w?: ValueProperty
   constructor(
     elem: ElementInterfaceUnion,
     data: Shape,
@@ -397,6 +409,8 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
 }
 
 export class SVGNoStyleData extends DynamicPropertyContainer {
+  it?: ShapeDataInterface[]
+  prevViewData?: unknown[]
   style: SVGStyleData
   constructor(
     elem: ElementInterfaceUnion,
