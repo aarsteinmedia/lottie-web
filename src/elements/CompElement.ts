@@ -8,24 +8,27 @@ import FrameElement from '@/elements/helpers/FrameElement'
 import HierarchyElement from '@/elements/helpers/HierarchyElement'
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import TransformElement from '@/elements/helpers/TransformElement'
-import SVGRendererBase from '@/renderers/SVGRendererBase'
+import BaseRenderer from '@/renderers/BaseRenderer'
+// import SVGRendererBase from '@/renderers/SVGRendererBase'
 import { extendPrototype } from '@/utils/functionExtensions'
 import { ValueProperty } from '@/utils/Properties'
 
-export default class CompElement extends SVGRendererBase {
+export default class CompElement extends BaseRenderer {
   _mdf?: boolean
   createContainerElements: any
   createRenderableComponents: any
   initRendererElement: any
   isInRange?: boolean
 
+  renderedFrame?: number
   tm?: ValueProperty
 
   // constructor() {
   //   super()
-  //   this.initFrame = new FrameElement().initFrame
+  //   this.initHierarchy = new HierarchyElement().initHierarchy
   // }
-  override destroy() {
+
+  destroy() {
     this.destroyElements()
     this.destroyBaseElement()
   }
@@ -42,6 +45,10 @@ export default class CompElement extends SVGRendererBase {
   }
   getElements(): ElementInterfaceIntersect[] | undefined {
     return this.elements
+  }
+
+  hide() {
+    throw new Error('CompElement: Method hide not implemented')
   }
 
   initElement(
@@ -69,36 +76,50 @@ export default class CompElement extends SVGRendererBase {
   }
 
   initFrame() {
-    throw new Error('CompElement: Method initFrame not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initFrame not implemented`
+    )
   }
 
   initHierarchy() {
-    throw new Error('CompElement: Method initHierarchy not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initHierarchy not implemented`
+    )
   }
 
   initRenderable() {
-    throw new Error('CompElement: Method initRenderable not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initRenderable not implemented`
+    )
   }
 
   initTransform() {
-    throw new Error('CompElement: Method initTransform not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method initTransform not implemented`
+    )
   }
 
   prepareFrame(_val: number) {
-    throw new Error('CompElement: Method prepareFrame not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method prepareFrame not implemented`
+    )
   }
 
   prepareProperties(_val: number, _isInRange?: boolean) {
-    throw new Error('CompElement: Method prepareProperties not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method prepareProperties not implemented`
+    )
   }
   prepareRenderableFrame(_val: number, _?: boolean) {
     throw new Error(
-      'CompElement: Method prepareRenderableFrame not implemented'
+      `${this.constructor.name}: Method prepareRenderableFrame not implemented`
     )
   }
 
   renderInnerContent() {
-    throw new Error('CompElement: Method renderInnerContent not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method renderInnerContent not implemented`
+    )
   }
 
   setElements(elems: ElementInterfaceIntersect[]) {
