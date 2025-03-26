@@ -11,6 +11,7 @@ import {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
   Shape,
+  ShapeDataInterface,
   Transformer,
   Vector3,
 } from '@/types'
@@ -25,7 +26,7 @@ import TransformProperty from '@/utils/TransformProperty'
 export class ShapeGroupData {
   _render?: boolean
   gr: SVGGElement
-  it: Shape[]
+  it: ShapeDataInterface[]
   prevViewData: unknown[]
   constructor() {
     this.it = []

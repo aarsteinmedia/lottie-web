@@ -19,7 +19,7 @@ export default class RepeaterModifier extends ShapeModifier {
 
   data?: Shape
 
-  elemsData?: ShapeGroupData
+  elemsData?: ShapeGroupData[]
 
   eo?: ValueProperty
   matrix?: Matrix
@@ -80,7 +80,7 @@ export default class RepeaterModifier extends ShapeModifier {
     elem: ElementInterfaceUnion,
     arr: Shape | Shape[],
     posFromProps?: number,
-    elemsData?: ShapeGroupData
+    elemsData?: ShapeGroupData[]
   ) {
     if (!Array.isArray(arr)) {
       throw new Error(
@@ -192,8 +192,8 @@ export default class RepeaterModifier extends ShapeModifier {
         hasReloaded = true
       }
       cont = 0
-      let renderFlag
-      const length = Number(this._groups?.length) - 1
+      let renderFlag = false
+      const length = (this._groups || []).length - 1
       for (i = 0; i <= length - 1; i++) {
         renderFlag = cont < copies
         if (this._groups?.[i]) {
@@ -202,8 +202,11 @@ export default class RepeaterModifier extends ShapeModifier {
 
         this.changeGroupRender(this._groups?.[i].it || [], renderFlag)
         if (!renderFlag) {
-          const elems = this.elemsData[i].it,
-            transformData = elems[elems.length - 1]
+          const elems = this.elemsData?.[i].it
+          if (!elems) {
+            continue
+          }
+          const transformData = elems[elems.length - 1]
           if (transformData.transform.op.v === 0) {
             transformData.transform.op._mdf = false
           } else {
@@ -226,7 +229,13 @@ export default class RepeaterModifier extends ShapeModifier {
         throw new Error(`${this.constructor.name}: Could not set Matrix`)
       }
 
-      const offset = this.o.v,
+      if (!this.tr) {
+        throw new Error(
+          `${this.constructor.name}: Transformproperty is not set`
+        )
+      }
+
+      const offset = Number(this.o?.v),
         offsetModulo = offset % 1,
         roundOffset = offset > 0 ? Math.floor(offset) : Math.ceil(offset),
         pProps = this.pMatrix.props,
@@ -286,22 +295,26 @@ export default class RepeaterModifier extends ShapeModifier {
           iteration -= offsetModulo
         }
       }
-      i = this.data.m === 1 ? 0 : this._currentCopies - 1
-      dir = this.data.m === 1 ? 1 : -1
+      i = this.data?.m === 1 ? 0 : this._currentCopies - 1
+      dir = this.data?.m === 1 ? 1 : -1
       cont = this._currentCopies
       let j
       let jLen
       while (cont) {
-        items = this.elemsData[i].it
+        items = this.elemsData?.[i].it
+        if (!items) {
+          continue
+        }
         itemsTransform = items[items.length - 1].transform.mProps.v.props
         jLen = itemsTransform.length
         items[items.length - 1].transform.mProps._mdf = true
         items[items.length - 1].transform.op._mdf = true
         items[items.length - 1].transform.op.v =
           this._currentCopies === 1
-            ? this.so.v
-            : this.so.v +
-              (this.eo.v - this.so.v) * (i / (this._currentCopies - 1))
+            ? Number(this.so?.v)
+            : Number(this.so?.v) +
+              (Number(this.eo?.v) - Number(this.so?.v)) *
+                (i / (this._currentCopies - 1))
 
         if (iteration === 0) {
           this.matrix.reset()
@@ -391,7 +404,10 @@ export default class RepeaterModifier extends ShapeModifier {
       i = 0
       dir = 1
       while (cont) {
-        items = this.elemsData[i].it
+        items = this.elemsData?.[i].it
+        if (!items) {
+          continue
+        }
         itemsTransform = items[items.length - 1].transform.mProps.v.props
         items[items.length - 1].transform.mProps._mdf = false
         items[items.length - 1].transform.op._mdf = false

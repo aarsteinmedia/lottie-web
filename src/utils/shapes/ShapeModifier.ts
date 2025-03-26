@@ -4,7 +4,7 @@ import type {
   Shape,
 } from '@/types'
 
-import { type SVGShapeData } from '@/elements/helpers/shapes'
+import { ShapeGroupData, type SVGShapeData } from '@/elements/helpers/shapes'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -37,7 +37,12 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
     // )
   }
-  init(elem: ElementInterfaceIntersect, data: Shape, _a?: any, _b?: any) {
+  init(
+    elem: ElementInterfaceIntersect,
+    data: Shape,
+    _posFromProps?: number,
+    _elemsData?: ShapeGroupData[]
+  ) {
     this.shapes = []
     this.elem = elem as ElementInterfaceIntersect
     this.initDynamicPropertyContainer(elem)
