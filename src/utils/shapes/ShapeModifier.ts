@@ -37,11 +37,11 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
     // )
   }
-  init(elem: ElementInterfaceIntersect, data?: Shape[], _a?: any, _b?: any) {
+  init(elem: ElementInterfaceIntersect, data: Shape, _a?: any, _b?: any) {
     this.shapes = []
     this.elem = elem as ElementInterfaceIntersect
     this.initDynamicPropertyContainer(elem)
-    this.initModifierProperties?.(elem, data)
+    this.initModifierProperties(elem, data)
     this.frameId = initialDefaultFrame
     this.closed = false
     this.k = false
@@ -51,7 +51,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       this.getValue(true)
     }
   }
-  initModifierProperties(_elem: ElementInterfaceUnion, _data?: Shape[]) {
+  initModifierProperties(_elem: ElementInterfaceUnion, _data: Shape) {
     throw new Error(
       `${this.constructor.name}: Method initModifierProperties is not implemented`
     )

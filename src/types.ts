@@ -457,6 +457,7 @@ export interface Shape {
   d?: number | StrokeData[]
   /** Endpoint for gradient */
   e?: VectorProperty<Vector2>
+  eo?: VectorProperty
   /** Gradient colors */
   g?: GradientColor
   /** Highlight length for radial gradient */
@@ -494,27 +495,31 @@ export interface Shape {
   sa?: VectorProperty
   /** Skew */
   sk?: VectorProperty
+  so?: VectorProperty
   /** Gradient type */
   t?: number
-  tr?: LottieTransform
+  tr?: Shape
   ty: ShapeType
   w?: VectorProperty
 }
 
-interface LottieTransform {
-  /** Anchor Point */
-  a: VectorProperty<Vector2>
-  /** End Opacity (for repeater) */
-  eo?: VectorProperty
-  /** Position */
-  p: VectorProperty<Vector2>
-  /** Rotation */
-  r: VectorProperty
-  /** Scale */
-  s: VectorProperty<Vector2>
-  /** Start Opacity (for repeater) */
-  so?: VectorProperty
-}
+// export interface LottieTransform {
+//   /** Anchor Point */
+//   a: VectorProperty<Vector2>
+//   /** End Opacity (for repeater) */
+//   eo?: VectorProperty
+//   or?: VectorProperty<{ ti: unknown; to: unknown }[]>
+//   /** Position */
+//   p: VectorProperty<Vector2>
+//   /** Rotation */
+//   r: VectorProperty
+//   ry?: VectorProperty
+//   rz?: VectorProperty
+//   /** Scale */
+//   s: VectorProperty<Vector2>
+//   /** Start Opacity (for repeater) */
+//   so?: VectorProperty
+// }
 
 export interface LottieAsset {
   __used?: boolean

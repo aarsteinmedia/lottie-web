@@ -117,7 +117,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
       }
       this.or = PropertyFactory(
         elem,
-        data.or as any,
+        data.or,
         1,
         degToRads,
         this

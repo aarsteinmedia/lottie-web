@@ -5,7 +5,6 @@ import type {
   Shape,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
-import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ShapeType } from '@/enums'
 import Matrix from '@/utils/Matrix'
@@ -14,27 +13,27 @@ import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import TransformProperty from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {
-  _currentCopies?: number
-
-  _elements?: Shape[]
-
-  _groups?: ShapeGroupData[]
-
-  arr?: ShapeGroupData[]
+  arr?: Shape[]
 
   c?: ValueProperty
-  data: any
-  elemsData?: any
-  eo: any
+
+  data?: Shape
+
+  elemsData?: ShapeGroupData
+
+  eo?: ValueProperty
   matrix?: Matrix
-  o: any
+  o?: ValueProperty
   pMatrix?: Matrix
   pos?: number
   rMatrix?: Matrix
   sMatrix?: Matrix
-  so: any
+  so?: ValueProperty
   tMatrix?: Matrix
-  tr: any
+  tr?: TransformProperty
+  private _currentCopies?: number
+  private _elements?: Shape[]
+  private _groups?: Shape[]
   applyTransforms(
     pMatrix: Matrix,
     rMatrix: Matrix,
@@ -79,10 +78,15 @@ export default class RepeaterModifier extends ShapeModifier {
   }
   override init(
     elem: ElementInterfaceUnion,
-    arr: Shape[],
+    arr: Shape | Shape[],
     posFromProps?: number,
-    elemsData?: ShapePath
+    elemsData?: ShapeGroupData
   ) {
+    if (!Array.isArray(arr)) {
+      throw new Error(
+        `${this.constructor.name}: Method init, param arr must be array`
+      )
+    }
     let pos = Number(posFromProps)
     this.elem = elem as ElementInterfaceIntersect
     this.arr = arr
@@ -105,13 +109,30 @@ export default class RepeaterModifier extends ShapeModifier {
     }
   }
 
-  override initModifierProperties(elem: ElementInterfaceIntersect, data: any) {
+  override initModifierProperties(
+    elem: ElementInterfaceIntersect,
+    data: Shape
+  ) {
     this.getValue = this.processKeys
     this.c = PropertyFactory(elem, data.c, 0, null, this) as ValueProperty
-    this.o = PropertyFactory(elem, data.o, 0, null, this)
-    this.tr = new TransformProperty(elem, data.tr, this as any)
-    this.so = PropertyFactory(elem, data.tr?.so, 0, 0.01, this)
-    this.eo = PropertyFactory(elem, data.tr?.eo, 0, 0.01, this)
+    this.o = PropertyFactory(elem, data.o, 0, null, this) as ValueProperty
+    if (data.tr) {
+      this.tr = new TransformProperty(elem, data.tr, this as any)
+      this.so = PropertyFactory(
+        elem,
+        data.tr.so,
+        0,
+        0.01,
+        this
+      ) as ValueProperty
+      this.eo = PropertyFactory(
+        elem,
+        data.tr.eo,
+        0,
+        0.01,
+        this
+      ) as ValueProperty
+    }
     this.data = data
     if (!this.dynamicProperties?.length) {
       this.getValue(true)
@@ -138,8 +159,8 @@ export default class RepeaterModifier extends ShapeModifier {
           const group = {
             it: this.cloneElements(this._elements || []),
             ty: 'gr',
-          } as unknown as ShapeGroupData
-          group.it.push({
+          } as Shape
+          group.it?.push({
             a: { a: 0, ix: 1, k: [0, 0] },
             nm: 'Transform',
             o: { a: 0, ix: 7, k: 100 },
@@ -160,6 +181,7 @@ export default class RepeaterModifier extends ShapeModifier {
 
           this.arr?.splice(0, 0, group)
           this._groups?.splice(0, 0, group)
+
           if (this._currentCopies) {
             this._currentCopies++
           } else {
