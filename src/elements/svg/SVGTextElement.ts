@@ -7,7 +7,7 @@ import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
 import { RendererType } from '@/enums'
 import { createNS } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
+// import { extendPrototype } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class SVGTextLottieElement extends TextElement {
@@ -35,9 +35,19 @@ export default class SVGTextLottieElement extends TextElement {
     super()
     this.textSpans = []
     this.renderType = RendererType.SVG
+    const {
+      createContainerElements,
+      createRenderableComponents,
+      getBaseElement,
+      initRendererElement,
+      renderElement,
+    } = new SVGBaseElement()
+    this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
+    this.getBaseElement = getBaseElement
+    this.initRendererElement = initRendererElement
+    this.renderElement = renderElement
     this.initElement(data, globalData, comp)
-    // const { renderFrame } = new RenderableDOMElement()
-    // this.renderFrame = renderFrame
   }
 
   override buildNewText() {
@@ -293,6 +303,7 @@ export default class SVGTextLottieElement extends TextElement {
     }
     return data
   }
+
   buildTextContents(textArray: string[]) {
     let i = 0
     const len = textArray.length
@@ -317,6 +328,11 @@ export default class SVGTextLottieElement extends TextElement {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
     }
+  }
+  getBaseElement(): SVGGElement | null {
+    throw new Error(
+      'SVGTextLottieElement: Method getBaseElement is not implemented'
+    )
   }
   getValue() {
     const { length } = this.textSpans
@@ -406,4 +422,4 @@ export default class SVGTextLottieElement extends TextElement {
   }
 }
 
-extendPrototype([SVGBaseElement], SVGTextLottieElement)
+// extendPrototype([SVGBaseElement], SVGTextLottieElement)

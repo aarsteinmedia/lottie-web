@@ -58,6 +58,11 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.initTransform()
     this.initHierarchy()
     this.initRenderable()
+    if (!this.initRendererElement) {
+      throw new Error(
+        `${this.constructor.name}: Method initRendererElement is not implemented`
+      )
+    }
     this.initRendererElement()
     this.createContainerElements()
     this.createRenderableComponents()
@@ -82,6 +87,11 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.renderTransform()
     this.renderRenderable()
     this.renderLocalTransform()
+    if (!this.renderElement) {
+      throw new Error(
+        `${this.constructor.name}: Method renderElement is not implemented`
+      )
+    }
     this.renderElement()
     this.renderInnerContent()
     if (this._isFirstFrame) {

@@ -54,6 +54,11 @@ export default class CompElement extends SVGRendererBase {
     this.initTransform()
     this.initRenderable()
     this.initHierarchy()
+    if (!this.initRendererElement) {
+      throw new Error(
+        `${this.constructor.name}: Method initRendererElement is not implemented`
+      )
+    }
     this.initRendererElement()
     this.createContainerElements()
     this.createRenderableComponents()

@@ -12,7 +12,7 @@ import {
 } from '@/utils/FiltersFactory'
 import { createElementID, getLocationHref } from '@/utils/getterSetter'
 
-export default abstract class SVGBaseElement extends RenderableDOMElement {
+export default class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
   // finalTransform?: Transformer
   maskedElement?: SVGGElement

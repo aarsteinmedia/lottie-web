@@ -35,9 +35,11 @@ export default class SVGRendererBase extends BaseRenderer {
   // }
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
-    // if (!element.getBaseElement) {
-    //   element.getBaseElement = this.svgBaseElement.getBaseElement
-    // }
+    if (!element.getBaseElement) {
+      throw new Error(
+        `${element.constructor.name}: Method getBaseElement is not implemented`
+      )
+    }
     const newElement = element.getBaseElement()
     if (!newElement) {
       return
