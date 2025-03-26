@@ -409,12 +409,11 @@ export default class AnimationItem extends BaseEvent {
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
     }
     const layers = this.animationData.layers || []
-    let i
-    let len = layers.length
-    const newLayers = data.layers
-    let j
-    const jLen = newLayers.length
-    for (j = 0; j < jLen; j++) {
+    let i,
+      len = layers.length
+    const newLayers = data.layers,
+      { length: jLen } = newLayers
+    for (let j = 0; j < jLen; j++) {
       i = 0
       while (i < len) {
         if (layers[i].id === newLayers[j].id) {

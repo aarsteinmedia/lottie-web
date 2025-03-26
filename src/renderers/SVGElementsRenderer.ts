@@ -130,15 +130,12 @@ function renderGradient(
       itemData.of?.setAttribute(attr2, `${pt1[1]}`)
     }
   }
-  let stops: SVGStopElement[]
-  let i: number
-  let len: number
-  let stop: SVGStopElement
+  let stops: SVGStopElement[], stop: SVGStopElement
   if (itemData.g && (itemData.g._cmdf || isFirstFrame)) {
     stops = itemData.cst || []
     const cValues = itemData.g.c,
       { length } = stops
-    for (i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i += 1) {
       stop = stops[i]
       stop.setAttribute('offset', `${cValues[i * 4]}%`)
       stop.setAttribute(
@@ -154,8 +151,8 @@ function renderGradient(
     } else {
       stops = itemData.ost || []
     }
-    len = stops.length
-    for (let i = 0; i < len; i += 1) {
+    const { length: sLen } = stops
+    for (let i = 0; i < sLen; i += 1) {
       stop = stops[i]
       if (!itemData.g._collapsable) {
         stop.setAttribute('offset', `${oValues[i * 2]}%`)

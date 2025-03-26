@@ -24,15 +24,13 @@ export function buildBezierData(
     pt3[1]
   }_${pt4[0]}_${pt4[1]}`.replace(/\./g, 'p')
   if (!storedData[bezierName]) {
-    let curveSegments = getDefaultCurveSegments()
-    let k
-    let i
-    let ptCoord
-    let perc
-    let addedLength = 0
-    let ptDistance
-    let point
-    let lastPoint = null
+    let curveSegments = getDefaultCurveSegments(),
+      ptCoord,
+      perc,
+      addedLength = 0,
+      ptDistance,
+      point,
+      lastPoint = null
     if (
       pt1.length === 2 &&
       (pt1[0] !== pt2[0] || pt1[1] !== pt2[1]) &&
@@ -57,11 +55,11 @@ export function buildBezierData(
     }
     const bezierData = new BezierData(curveSegments),
       { length } = pt3
-    for (k = 0; k < curveSegments; k += 1) {
+    for (let k = 0; k < curveSegments; k += 1) {
       point = createSizedArray(length) as Vector2
       perc = k / (curveSegments - 1)
       ptDistance = 0
-      for (i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
         ptCoord =
           Math.pow(1 - perc, 3) * pt1[i] +
           3 * Math.pow(1 - perc, 2) * perc * (pt1[i] + pt3[i]) +

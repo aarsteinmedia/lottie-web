@@ -39,10 +39,6 @@ export function completeLayers(
   comps: (LottieLayer | LottieAsset)[]
 ) {
   const { length } = layers
-  let j
-  let jLen
-  let k
-  let kLen
   for (let i = 0; i < length; i++) {
     if (!('ks' in layers[i]) || layers[i].completed) {
       continue
@@ -52,8 +48,8 @@ export function completeLayers(
       if (!layers[i].masksProperties) {
         continue
       }
-      jLen = layers[i].masksProperties!.length
-      for (j = 0; j < jLen; j++) {
+      const { length: jLen } = layers[i].masksProperties || []
+      for (let j = 0; j < jLen; j++) {
         if ((layers[i].masksProperties![j].pt.k as MaskData).i) {
           convertPathsToAbsoluteValues(layers[i].masksProperties![j].pt.k)
           continue
@@ -61,8 +57,9 @@ export function completeLayers(
         if (!layers[i].masksProperties![j]) {
           continue
         }
-        kLen = (layers[i].masksProperties![j].pt.k as MaskData[]).length
-        for (k = 0; k < kLen; k++) {
+        const { length: kLen } =
+          (layers[i].masksProperties?.[j].pt.k as MaskData[]) || []
+        for (let k = 0; k < kLen; k++) {
           if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].s) {
             convertPathsToAbsoluteValues(
               (layers[i].masksProperties![j].pt.k as MaskData[])[k].s[0]
@@ -92,15 +89,13 @@ export function completeLayers(
  */
 export function completeShapes(arr: Shape[]) {
   const { length } = arr
-  let j
-  let jLen
   for (let i = length - 1; i >= 0; i--) {
     if (arr[i].ty === 'sh') {
       if ((arr[i].ks?.k as ShapePath).i) {
         convertPathsToAbsoluteValues(arr[i].ks?.k)
       } else {
-        jLen = (arr[i].ks?.k.length as unknown as number) || 0
-        for (j = 0; j < jLen; j++) {
+        const jLen = (arr[i].ks?.k.length as unknown as number) || 0
+        for (let j = 0; j < jLen; j++) {
           if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
             convertPathsToAbsoluteValues(
               (arr[i].ks?.k as ShapePath[])[j]?.s?.[0]
@@ -222,9 +217,8 @@ class CheckText {
     if (checkVersion(this.minimumVersion, animationData.v)) {
       this.iterateLayers(animationData.layers)
       if (animationData.assets) {
-        let i
-        const len = animationData.assets.length
-        for (i = 0; i < len; i++) {
+        const { length } = animationData.assets
+        for (let i = 0; i < length; i++) {
           if (animationData.assets[i].layers) {
             this.iterateLayers(animationData.assets[i].layers!)
           }
@@ -385,8 +379,6 @@ class CheckColors {
       return
     }
     const { length } = shapes
-    let j
-    let jLen
     for (let i = 0; i < length; i++) {
       if (shapes[i].ty === 'gr') {
         this.iterateShapes(shapes[i].it)
@@ -396,8 +388,8 @@ class CheckColors {
         continue
       }
       if (shapes[i].c?.k && (shapes[i].c?.k as ShapeColorValue[])[0].i) {
-        jLen = (shapes[i].c?.k as ShapeColorValue[]).length || 0
-        for (j = 0; j < jLen; j++) {
+        const { length: jLen } = (shapes[i].c?.k as ShapeColorValue[]) || []
+        for (let j = 0; j < jLen; j++) {
           if ((shapes[i].c?.k as ShapeColorValue[])[j].s) {
             ;(shapes[i].c?.k as ShapeColorValue[])[j].s[0] /= 255
             ;(shapes[i].c?.k as ShapeColorValue[])[j].s[1] /= 255
@@ -440,8 +432,6 @@ class CheckShapes {
 
   private completeClosingShapes(arr: Shape[]) {
     const { length } = arr
-    let j
-    let jLen
     for (let i = length - 1; i >= 0; i--) {
       if (arr[i].ty === 'gr') {
         this.completeClosingShapes(arr[i].it as Shape[])
@@ -454,8 +444,8 @@ class CheckShapes {
         ;(arr[i].ks?.k as ShapePath).c = !!arr[i].closed
         continue
       }
-      jLen = (arr[i].ks?.k as ShapePath[]).length || 0
-      for (j = 0; j < jLen; j++) {
+      const { length: jLen } = (arr[i].ks?.k as ShapePath[]) || []
+      for (let j = 0; j < jLen; j++) {
         if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
           ;(arr[i].ks?.k as ShapePath[])[j].s![0].c = !!arr[i].closed
         }

@@ -41,26 +41,21 @@ export default class MaskElement {
     this.storedData = []
     this.masksProperties = this.data.masksProperties || []
     this.maskElement = null
-    const defs = this.globalData.defs
-    let i,
-      len = this.masksProperties ? this.masksProperties.length : 0
-    this.viewData = createSizedArray(len)
+    const defs = this.globalData.defs,
+      { length } = this.masksProperties || []
+    this.viewData = createSizedArray(length)
     this.solidPath = ''
 
-    let path
     const properties = this.masksProperties
     let count = 0
-    const currentMasks = []
-    let j
-    let jLen
-    const layerId = createElementID()
-    let rect
-    let expansor
-    let feMorph
-    let x
-    let maskType = 'clipPath'
-    let maskRef = 'clip-path'
-    for (i = 0; i < len; i++) {
+    const currentMasks = [],
+      layerId = createElementID()
+    let rect,
+      feMorph,
+      x: ValueProperty | null,
+      maskType = 'clipPath',
+      maskRef = 'clip-path'
+    for (let i = 0; i < length; i++) {
       if (
         (properties[i].mode !== 'a' && properties[i].mode !== 'n') ||
         properties[i].inv ||
@@ -84,7 +79,7 @@ export default class MaskElement {
         rect = null
       }
 
-      path = createNS<SVGPathElement>('path')
+      const path = createNS<SVGPathElement>('path')
       if (properties[i].mode === 'n') {
         // TODO: move this to a factory or to a constructor
         this.viewData[i] = {
@@ -100,106 +95,99 @@ export default class MaskElement {
           prop: getShapeProp(this.element, properties[i] as any, 3),
         }
         defs?.appendChild(path)
-      } else {
-        count += 1
+        continue
+      }
+      count += 1
 
+      path.setAttribute(
+        'fill',
+        properties[i].mode === 's' ? '#000000' : '#ffffff'
+      )
+      path.setAttribute('clip-rule', 'nonzero')
+      let filterID
+
+      if (properties[i].x.k === 0) {
+        feMorph = null
+        x = null
+      } else {
+        maskType = 'mask'
+        maskRef = 'mask'
+        x = PropertyFactory(
+          this.element,
+          properties[i].x,
+          0,
+          null,
+          this.element
+        ) as ValueProperty
+        filterID = createElementID()
+        const expansor = createNS<SVGFilterElement>('filter')
+        expansor.setAttribute('id', filterID)
+        feMorph = createNS<SVGFEMorphologyElement>('feMorphology')
+        feMorph.setAttribute('operator', 'erode')
+        feMorph.setAttribute('in', 'SourceGraphic')
+        feMorph.setAttribute('radius', '0')
+        expansor.appendChild(feMorph)
+        defs?.appendChild(expansor)
         path.setAttribute(
-          'fill',
+          'stroke',
           properties[i].mode === 's' ? '#000000' : '#ffffff'
         )
-        path.setAttribute('clip-rule', 'nonzero')
-        let filterID
+      }
 
-        if (properties[i].x.k === 0) {
-          feMorph = null
-          x = null
-        } else {
-          maskType = 'mask'
-          maskRef = 'mask'
-          x = PropertyFactory(
-            this.element,
-            properties[i].x,
-            0,
-            null,
-            this.element
-          )
-          filterID = createElementID()
-          expansor = createNS('filter')
-          expansor.setAttribute('id', filterID)
-          feMorph = createNS<SVGFEMorphologyElement>('feMorphology')
-          feMorph.setAttribute('operator', 'erode')
-          feMorph.setAttribute('in', 'SourceGraphic')
-          feMorph.setAttribute('radius', '0')
-          expansor.appendChild(feMorph)
-          defs?.appendChild(expansor)
-          path.setAttribute(
-            'stroke',
-            properties[i].mode === 's' ? '#000000' : '#ffffff'
-          )
+      // TODO: move this to a factory or to a constructor
+      this.storedData[i] = {
+        elem: path,
+        expan: feMorph,
+        filterId: filterID,
+        lastOperator: '',
+        lastPath: '',
+        lastRadius: 0,
+        x,
+      }
+      if (properties[i].mode === 'i') {
+        const { length: jLen } = currentMasks,
+          g = createNS<SVGGElement>('g')
+        for (let j = 0; j < jLen; j++) {
+          g.appendChild(currentMasks[j])
         }
+        const mask = createNS<SVGMaskElement>('mask')
+        mask.setAttribute('mask-type', 'alpha')
+        mask.id = `${layerId}_${count}`
+        mask.appendChild(path)
+        defs?.appendChild(mask)
+        g.setAttribute('mask', `url(${getLocationHref()}#${layerId}_${count})`)
 
-        // TODO: move this to a factory or to a constructor
-        this.storedData[i] = {
-          elem: path,
-          expan: feMorph,
-          filterId: filterID,
-          lastOperator: '',
-          lastPath: '',
-          lastRadius: 0,
-          x: x as any,
-        }
-        if (properties[i].mode === 'i') {
-          jLen = currentMasks.length
-          const g = createNS<SVGGElement>('g')
-          for (j = 0; j < jLen; j++) {
-            g.appendChild(currentMasks[j])
-          }
-          const mask = createNS<SVGMaskElement>('mask')
-          mask.setAttribute('mask-type', 'alpha')
-          mask.id = `${layerId}_${count}`
-          mask.appendChild(path)
-          defs?.appendChild(mask)
-          g.setAttribute(
-            'mask',
-            `url(${getLocationHref()}#${layerId}_${count})`
-          )
-
-          currentMasks.length = 0
-          currentMasks.push(g)
-        } else {
-          currentMasks.push(path)
-        }
-        if (properties[i].inv && !this.solidPath) {
-          this.solidPath = this.createLayerSolidPath()
-        }
-        // TODO move this to a factory or to a constructor
-        this.viewData[i] = {
-          elem: path,
-          invRect: rect,
-          lastPath: '',
-          op: PropertyFactory(
-            this.element,
-            properties[i].o,
-            0,
-            0.01,
-            this.element
-          ),
-          prop: getShapeProp(this.element, properties[i] as any, 3),
-        }
-        if (!this.viewData[i].prop.k) {
-          this.drawPath(
-            properties[i],
-            this.viewData[i].prop.v,
-            this.viewData[i]
-          )
-        }
+        currentMasks.length = 0
+        currentMasks.push(g)
+      } else {
+        currentMasks.push(path)
+      }
+      if (properties[i].inv && !this.solidPath) {
+        this.solidPath = this.createLayerSolidPath()
+      }
+      // TODO: move this to a factory or to a constructor
+      this.viewData[i] = {
+        elem: path,
+        invRect: rect,
+        lastPath: '',
+        op: PropertyFactory(
+          this.element,
+          properties[i].o,
+          0,
+          0.01,
+          this.element
+        ),
+        prop: getShapeProp(this.element, properties[i] as any, 3),
+      }
+      if (!this.viewData[i].prop.k) {
+        this.drawPath(properties[i], this.viewData[i].prop.v, this.viewData[i])
       }
     }
 
     this.maskElement = createNS(maskType)
 
-    len = currentMasks.length
-    for (i = 0; i < len; i++) {
+    const { length: cLen } = currentMasks
+    for (let i = 0; i < cLen; i++) {
       this.maskElement.appendChild(currentMasks[i])
     }
 
