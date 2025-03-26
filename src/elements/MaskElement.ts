@@ -3,6 +3,8 @@ import type {
   GlobalData,
   LottieLayer,
   Mask,
+  StoredData,
+  ViewData,
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -20,16 +22,8 @@ export default class MaskElement {
   maskElement: SVGElement | null
   masksProperties: null | Mask[]
   solidPath: string
-  storedData: {
-    elem: SVGPathElement
-    expan: SVGFEMorphologyElement | null
-    filterId?: string
-    lastOperator: string
-    lastPath: string
-    lastRadius: number
-    x: ValueProperty | null
-  }[]
-  viewData: any[]
+  storedData: StoredData[]
+  viewData: ViewData[]
   constructor(
     data: LottieLayer,
     element: ElementInterfaceIntersect,
@@ -91,7 +85,7 @@ export default class MaskElement {
             0,
             0.01,
             this.element
-          ),
+          ) as ValueProperty,
           prop: getShapeProp(this.element, properties[i] as any, 3),
         }
         defs?.appendChild(path)
@@ -176,11 +170,15 @@ export default class MaskElement {
           0,
           0.01,
           this.element
-        ),
+        ) as ValueProperty,
         prop: getShapeProp(this.element, properties[i] as any, 3),
       }
-      if (!this.viewData[i].prop.k) {
-        this.drawPath(properties[i], this.viewData[i].prop.v, this.viewData[i])
+      if (!this.viewData[i].prop?.k) {
+        this.drawPath(
+          properties[i],
+          this.viewData[i].prop!.v!,
+          this.viewData[i]
+        )
       }
     }
 
@@ -200,7 +198,9 @@ export default class MaskElement {
       defs?.appendChild(this.maskElement)
     }
     if (this.viewData.length) {
-      this.element.addRenderableComponent(this as any)
+      this.element.addRenderableComponent(
+        this as unknown as ElementInterfaceIntersect
+      )
     }
   }
 
@@ -214,16 +214,16 @@ export default class MaskElement {
   }
 
   destroy() {
-    this.element = null as any
-    this.globalData = null as any
+    this.element = null as unknown as ElementInterfaceIntersect
+    this.globalData = null as unknown as GlobalData
     this.maskElement = null
-    this.data = null as any
+    this.data = null as unknown as LottieLayer
     this.masksProperties = null
   }
 
-  drawPath(pathData: null | Mask, pathNodes: ShapePath, viewData: any) {
-    let i
-    let pathString = ` M${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
+  drawPath(pathData: null | Mask, pathNodes: ShapePath, viewData: ViewData) {
+    let i,
+      pathString = ` M${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
     const len = pathNodes._length || 0
     for (i = 1; i < len; i++) {
       // pathString += " C"+pathNodes.o[i-1][0]+','+pathNodes.o[i-1][1] + " "+pathNodes.i[i][0]+','+pathNodes.i[i][1] + " "+pathNodes.v[i][0]+','+pathNodes.v[i][1];
@@ -265,17 +265,17 @@ export default class MaskElement {
     const finalMat = this.element.finalTransform?.mat,
       { length } = this.masksProperties || []
     for (let i = 0; i < length; i++) {
-      if (this.viewData[i].prop._mdf || frame) {
+      if (this.viewData[i].prop?._mdf || frame) {
         this.drawPath(
           this.masksProperties?.[i] || null,
-          this.viewData[i].prop.v,
+          this.viewData[i].prop!.v!,
           this.viewData[i]
         )
       }
       if (this.viewData[i].op._mdf || frame) {
         this.viewData[i].elem.setAttribute(
           'fill-opacity',
-          this.viewData[i].op.v
+          `${this.viewData[i].op.v}`
         )
       }
       if (this.masksProperties?.[i].mode === 'n') {
@@ -285,9 +285,9 @@ export default class MaskElement {
         this.viewData[i].invRect &&
         (this.element.finalTransform?.mProp._mdf || frame)
       ) {
-        this.viewData[i].invRect.setAttribute(
+        this.viewData[i].invRect?.setAttribute(
           'transform',
-          finalMat?.getInverseMatrix().to2dCSS()
+          `${finalMat?.getInverseMatrix().to2dCSS()}`
         )
       }
       if (

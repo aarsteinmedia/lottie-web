@@ -45,7 +45,10 @@ export default class BaseRenderer extends BaseElement {
     const { length } = layers || []
     while (i < length) {
       if (layers?.[i].ind === Number(parentName)) {
-        if (!elements?.[i] || (elements as any)[i] === true) {
+        if (
+          !elements?.[i] ||
+          elements[i] === (true as unknown as ElementInterfaceIntersect)
+        ) {
           this.buildItem(i)
 
           if (!this.addPendingElement) {
@@ -103,7 +106,11 @@ export default class BaseRenderer extends BaseElement {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new AudioElement(data, this.globalData, this as any)
+    return new AudioElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
   createCamera(_data: LottieLayer) {
     throw new Error("You're using a 3d camera. Try the html renderer.")
@@ -119,7 +126,11 @@ export default class BaseRenderer extends BaseElement {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new FootageElement(data, this.globalData, this as any)
+    return new FootageElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
   createImage(_layer: LottieLayer) {
     throw new Error(
@@ -238,7 +249,9 @@ export default class BaseRenderer extends BaseElement {
       return
     }
     this.globalData.fontManager = new FontManager()
-    this.globalData.slotManager = new SlotManager(animData as any)
+    this.globalData.slotManager = new SlotManager(
+      animData as unknown as LottieLayer
+    )
     this.globalData.fontManager.addChars(animData.chars)
     this.globalData.fontManager.addFonts(animData.fonts, fontsContainer)
     this.globalData.getAssetData = this.animationItem?.getAssetData.bind(

@@ -36,7 +36,11 @@ export default class SVGTextLottieElement extends TextElement {
     shapes: [],
   } as unknown as LottieLayer
 
-  constructor(data: LottieLayer, globalData: GlobalData, comp: any) {
+  constructor(
+    data: LottieLayer,
+    globalData: GlobalData,
+    comp: ElementInterfaceIntersect
+  ) {
     super()
     this.textSpans = []
     this.renderType = RendererType.SVG

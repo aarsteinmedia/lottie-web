@@ -38,7 +38,7 @@ export default abstract class BaseElement {
     while (i < length) {
       if (
         this.data?.masksProperties?.[i].mode !== 'n' &&
-        this.data?.masksProperties?.[i].cl !== (false as any)
+        this.data?.masksProperties?.[i].cl !== (false as unknown as string)
       ) {
         return true
       }
@@ -65,7 +65,7 @@ export default abstract class BaseElement {
     }
     this.effectsManager = new EffectsManager(
       this.data,
-      this as any
+      this as unknown as ElementInterfaceIntersect
       // this.dynamicProperties
     )
   }

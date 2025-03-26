@@ -35,11 +35,11 @@ export default class SVGCompElement extends SVGBaseElement {
     this.tm = (
       data.tm
         ? PropertyFactory(
-            this as any,
-            data.tm as any,
+            this as unknown as ElementInterfaceIntersect,
+            data.tm,
             0,
             globalData.frameRate,
-            this as any
+            this as unknown as ElementInterfaceIntersect
           )
         : { _placeholder: true }
     ) as KeyframedValueProperty
@@ -49,7 +49,11 @@ export default class SVGCompElement extends SVGBaseElement {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Cannot access global data`)
     }
-    return new SVGCompElement(data, this.globalData, this as any)
+    return new SVGCompElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 }
 

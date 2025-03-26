@@ -49,8 +49,8 @@ export default class AudioElement extends RenderableElement {
     this.tm = (
       data.tm
         ? PropertyFactory(
-            this as any,
-            data.tm as any,
+            this as unknown as ElementInterfaceIntersect,
+            data.tm,
             0,
             globalData.frameRate,
             this
@@ -58,8 +58,8 @@ export default class AudioElement extends RenderableElement {
         : { _placeholder: true }
     ) as ValueProperty
     this.lv = PropertyFactory(
-      this as any,
-      (data.au && data.au.lv ? data.au.lv : { k: [100] }) as any,
+      this as unknown as ElementInterfaceIntersect,
+      data.au && data.au.lv ? data.au.lv : { k: [100] },
       1,
       0.01,
       this

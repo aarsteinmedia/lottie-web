@@ -217,15 +217,17 @@ export class SVGStrokeEffect {
       this.initialize()
     }
     const { length } = this.paths
-    let mask
-    let path
+    let mask, path
     for (let i = 0; i < length; i++) {
       if (this.paths[i].m === -1) {
         continue
       }
       mask = this.elem.maskManager?.viewData[this.paths[i].m]
       path = this.paths[i].p
-      if (forceRender || this.filterManager._mdf || mask.prop._mdf) {
+      if (
+        mask &&
+        (forceRender || this.filterManager._mdf || mask?.prop?._mdf)
+      ) {
         path.setAttribute('d', mask.lastPath)
       }
       if (
@@ -234,7 +236,7 @@ export class SVGStrokeEffect {
         this.filterManager.effectElements[4].p._mdf ||
         this.filterManager.effectElements[7].p._mdf ||
         this.filterManager.effectElements[8].p._mdf ||
-        mask.prop._mdf
+        mask?.prop?._mdf
       ) {
         let dasharrayValue
         if (
@@ -920,7 +922,7 @@ export class SVGGaussianBlurEffect {
 }
 
 export class SVGTransformEffect extends TransformEffect {
-  constructor(_: any, filterManager: GroupEffect) {
+  constructor(_: SVGFilterElement, filterManager: GroupEffect) {
     super()
     this.init(filterManager)
   }

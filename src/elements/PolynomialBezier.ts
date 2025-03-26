@@ -74,10 +74,10 @@ export default class PolynomialBezier {
       return []
     }
     const tcusp =
-      (-0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1])) / denom
-    const square =
-      tcusp * tcusp -
-      ((1 / 3) * (this.b[1] * this.c[0] - this.b[0] * this.c[1])) / denom
+        (-0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1])) / denom,
+      square =
+        tcusp * tcusp -
+        ((1 / 3) * (this.b[1] * this.c[0] - this.b[0] * this.c[1])) / denom
     if (square < 0) {
       return []
     }
@@ -96,8 +96,8 @@ export default class PolynomialBezier {
     toleranceFromProps: number,
     maxRecursionFromProps: number
   ) {
-    let tolerance = toleranceFromProps
-    let maxRecursion = maxRecursionFromProps
+    let tolerance = toleranceFromProps,
+      maxRecursion = maxRecursionFromProps
     if (tolerance === undefined) {
       tolerance = 2
     }
@@ -160,8 +160,8 @@ export default class PolynomialBezier {
       min = e
     }
     // Derivative roots to find min/max
-    const f = quadRoots(3 * bez.a[comp], 2 * bez.b[comp], bez.c[comp])
-    const { length } = f
+    const f = quadRoots(3 * bez.a[comp], 2 * bez.b[comp], bez.c[comp]),
+      { length } = f
     for (let i = 0; i < length; i++) {
       if (f[i] > 0 && f[i] < 1) {
         const val = bez.point(f[i])[comp]

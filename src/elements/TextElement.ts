@@ -108,11 +108,14 @@ export default class TextElement extends RenderableDOMElement {
     this.lettersChangedFlag = true
     this.initFrame()
     this.initBaseData(data, globalData, comp)
-    this.textProperty = new TextProperty(this as any, data.t)
+    this.textProperty = new TextProperty(
+      this as unknown as ElementInterfaceIntersect,
+      data.t
+    )
     this.textAnimator = new TextAnimatorProperty(
       data.t!,
       this.renderType || RendererType.SVG,
-      this as any
+      this as unknown as ElementInterfaceIntersect
     )
     this.initTransform()
     this.initHierarchy()

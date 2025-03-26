@@ -204,16 +204,16 @@ export function getPointInSegment(
  */
 export function getSegmentsLength(shapeData: ShapePath) {
   const segmentsLength: {
-    lengths: any[]
-    totalLength: number
-  } = segmentsLengthPool.newElement()
-  const closed = shapeData.c
-  const pathV = shapeData.v
-  const pathO = shapeData.o
-  const pathI = shapeData.i
+      lengths: any[]
+      totalLength: number
+    } = segmentsLengthPool.newElement(),
+    closed = shapeData.c,
+    pathV = shapeData.v,
+    pathO = shapeData.o,
+    pathI = shapeData.i
   let i
-  const len = shapeData._length || 0
-  const lengths = segmentsLength.lengths
+  const len = shapeData._length || 0,
+    lengths = segmentsLength.lengths
   let totalLength = 0
   for (i = 0; i < len - 1; i++) {
     lengths[i] = getBezierLength(

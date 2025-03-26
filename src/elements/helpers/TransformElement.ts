@@ -153,20 +153,21 @@ export default class TransformElement extends BaseElement {
     }
   }
   searchEffectTransforms() {
-    if (this.renderableEffectsManager) {
-      const transformEffects = this.renderableEffectsManager.getEffects(
-        effectTypes.TRANSFORM_EFFECT
-      )
-      if (transformEffects.length) {
-        this.localTransforms = []
-        if (this.finalTransform) {
-          this.finalTransform.localMat = new Matrix()
-        }
+    if (!this.renderableEffectsManager) {
+      return
+    }
+    const transformEffects = this.renderableEffectsManager.getEffects(
+      effectTypes.TRANSFORM_EFFECT
+    )
+    if (transformEffects.length) {
+      this.localTransforms = []
+      if (this.finalTransform) {
+        this.finalTransform.localMat = new Matrix()
+      }
 
-        const len = transformEffects.length
-        for (let i = 0; i < len; i++) {
-          this.localTransforms.push(transformEffects[i] as any)
-        }
+      const { length } = transformEffects
+      for (let i = 0; i < length; i++) {
+        this.localTransforms.push(transformEffects[i] as unknown as Transformer)
       }
     }
   }

@@ -56,6 +56,8 @@ import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty
 import type TextProperty from '@/utils/text/TextProperty'
 import type TransformProperty from '@/utils/TransformProperty'
 
+import { getShapeProp } from './utils/shapes/ShapeProperty'
+
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
   | 'drawnFrame'
@@ -534,6 +536,24 @@ export interface Shape {
 //   /** Start Opacity (for repeater) */
 //   so?: VectorProperty
 // }
+
+export interface StoredData {
+  elem: SVGPathElement
+  expan: SVGFEMorphologyElement | null
+  filterId?: string
+  lastOperator: string
+  lastPath: string
+  lastRadius: number
+  x: ValueProperty | null
+}
+
+export interface ViewData {
+  elem: SVGPathElement
+  invRect?: SVGRectElement | null
+  lastPath: string
+  op: ValueProperty
+  prop: ReturnType<typeof getShapeProp>
+}
 
 export interface LottieAsset {
   __used?: boolean

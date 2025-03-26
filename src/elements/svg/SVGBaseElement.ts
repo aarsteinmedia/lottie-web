@@ -112,12 +112,14 @@ export default class SVGBaseElement extends RenderableDOMElement {
       this as unknown as ElementInterfaceIntersect,
       this.globalData
     )
-    this.renderableEffectsManager = new SVGEffects(this as any)
+    this.renderableEffectsManager = new SVGEffects(
+      this as unknown as ElementInterfaceIntersect
+    )
     this.searchEffectTransforms()
   }
   override destroyBaseElement() {
-    this.layerElement = null as any
-    this.matteElement = null as any
+    this.layerElement = null as unknown as SVGGElement
+    this.matteElement = null as unknown as SVGGElement
     this.maskManager?.destroy()
   }
   getBaseElement() {

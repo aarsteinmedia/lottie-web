@@ -12,6 +12,7 @@ import {
   ElementInterfaceUnion,
   Shape,
   ShapeDataInterface,
+  StrokeData,
   Transformer,
   Vector3,
 } from '@/types'
@@ -193,14 +194,14 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     ) as MultiDimensionalProperty
     this.h = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.h || ({ k: 0 } as any),
+      data.h || { k: 0 },
       0,
       0.01,
       this
     ) as KeyframedValueProperty
     this.a = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.a || ({ k: 0 } as any),
+      data.a || { k: 0 },
       0,
       degToRads,
       this
@@ -312,9 +313,9 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
     ) as ValueProperty
     this.d = new DashProperty(
       elem as ElementInterfaceIntersect,
-      (data.d || []) as any,
+      (data.d || []) as StrokeData[],
       RendererType.SVG,
-      this as any
+      this as unknown as ElementInterfaceIntersect
     ) // TODO
     this.initGradientData(elem, data, styleData)
     this._isAnimated = !!this._isAnimated
@@ -379,13 +380,13 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
     ) as ValueProperty
     this.d = new DashProperty(
       elem as ElementInterfaceIntersect,
-      (data.d || []) as any,
+      (data.d || []) as StrokeData[],
       RendererType.SVG,
-      this as any
+      this as unknown as ElementInterfaceIntersect
     )
     this.c = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.c as any,
+      data.c,
       1,
       255,
       this

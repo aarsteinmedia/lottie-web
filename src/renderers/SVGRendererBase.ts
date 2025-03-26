@@ -1,3 +1,4 @@
+import type { AnimationItem } from '@/Lottie'
 import type {
   AnimationData,
   ElementInterfaceIntersect,
@@ -49,7 +50,7 @@ export default class SVGRendererBase extends BaseRenderer {
     while (i < pos) {
       if (
         this.elements?.[i] &&
-        this.elements?.[i] !== (true as any) &&
+        this.elements?.[i] !== (true as unknown as ElementInterfaceIntersect) &&
         this.elements?.[i].getBaseElement()
       ) {
         nextElement = this.elements[i].getBaseElement()
@@ -72,7 +73,7 @@ export default class SVGRendererBase extends BaseRenderer {
       return
     }
 
-    elements![pos] = true as any
+    elements![pos] = true as unknown as ElementInterfaceIntersect
 
     if (!this.createItem) {
       throw new Error(
@@ -103,7 +104,8 @@ export default class SVGRendererBase extends BaseRenderer {
       }
       if (
         !this.elements?.[elementIndex] ||
-        this.elements[elementIndex] === (true as any)
+        this.elements[elementIndex] ===
+          (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
         if (!this.addPendingElement) {
@@ -220,7 +222,7 @@ export default class SVGRendererBase extends BaseRenderer {
 
       this.setupGlobalData(animData, defs)
       this.globalData.progressiveLoad = this.renderConfig?.progressiveLoad
-      this.data = animData as any
+      this.data = animData as unknown as LottieLayer
 
       const maskElement = createNS<SVGClipPathElement>('clipPath'),
         rect = createNS<SVGRectElement>('rect')
@@ -269,31 +271,37 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new SolidElement(data, this.globalData, this)
+    return new SolidElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createText(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new SVGTextLottieElement(data, this.globalData, this)
+    return new SVGTextLottieElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   destroy() {
     if (this.animationItem?.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
-    this.layerElement = null as any
-    this.globalData!.defs = null as any
+    this.layerElement = null as unknown as SVGGElement
+    this.globalData!.defs = null as unknown as SVGDefsElement
     const { length } = this.layers || []
     for (let i = 0; i < length; i++) {
-      if (this.elements?.[i] && (this.elements[i].destroy as any)) {
-        this.elements[i].destroy()
-      }
+      this.elements?.[i].destroy?.()
     }
     this.elements!.length = 0
     this.destroyed = true
-    this.animationItem = null as any
+    this.animationItem = null as unknown as AnimationItem
   }
 
   findIndexByInd(ind?: number) {

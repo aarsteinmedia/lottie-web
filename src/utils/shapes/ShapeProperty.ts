@@ -724,10 +724,10 @@ class StarShapeProperty extends ShapeBaseProperty {
 }
 
 class EllShapeProperty extends ShapeBaseProperty {
+  _cPoint = roundCorner
   d?: number
   p: MultiDimensionalProperty<Vector2>
   s: MultiDimensionalProperty<Vector2>
-  private _cPoint = roundCorner
 
   constructor(elem: ElementInterfaceIntersect, data: Merge<Shape, Mask>) {
     super()

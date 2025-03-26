@@ -87,7 +87,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.animatedContents.push({
       data,
       element,
-      fn: createRenderFunction(data) as any,
+      fn: createRenderFunction(data),
     })
   }
   buildExpressionInterface() {
@@ -344,7 +344,7 @@ export default class SVGShapeElement extends ShapeElement {
     renderFromProps: boolean
   ) {
     let render = renderFromProps
-    const ownTransformers: any[] = [].concat(transformers),
+    const ownTransformers: Transformer[] = [].concat(transformers),
       ownStyles = [],
       ownModifiers = []
     let currentTransform, modifier, processedPos

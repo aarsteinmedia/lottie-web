@@ -1,5 +1,10 @@
 import type AnimationItem from '@/animation/AnimationItem'
-import type { GlobalData, LottieLayer, SVGRendererConfig } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+  SVGRendererConfig,
+} from '@/types'
 
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import { RendererType } from '@/enums'
@@ -82,6 +87,10 @@ export default class SVGRenderer extends SVGRendererBase {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new SVGCompElement(data, this.globalData, this as any)
+    return new SVGCompElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 }

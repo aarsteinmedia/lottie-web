@@ -5,6 +5,7 @@ import type {
   AnimationEventName,
   DocumentData,
   LottieAsset,
+  LottieLayer,
   MarkerData,
   Vector2,
 } from '@/types'
@@ -265,7 +266,7 @@ export default class AnimationItem extends BaseEvent {
       if (typeof this.animationData.fr !== 'undefined') {
         this.frameMult = this.animationData.fr / 1000
       }
-      this.renderer.searchExtraCompositions(animData.assets as any)
+      this.renderer.searchExtraCompositions(animData.assets as LottieLayer[])
       this.markers = markerParser(animData.markers || []) as MarkerData[]
       this.trigger('config_ready')
       this.preloadImages()

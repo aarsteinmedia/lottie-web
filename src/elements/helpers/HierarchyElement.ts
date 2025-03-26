@@ -15,7 +15,11 @@ export default class HierarchyElement extends TransformElement {
    */
   checkParenting() {
     if ('parent' in (this.data || {})) {
-      this.comp?.buildElementParenting(this as any, this.data?.parent, [])
+      this.comp?.buildElementParenting(
+        this as unknown as ElementInterfaceIntersect,
+        this.data?.parent,
+        []
+      )
     }
   }
   /**
