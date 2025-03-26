@@ -10,7 +10,14 @@ import TSESlint from 'typescript-eslint'
 
 export default TSESlint.config(
   {
-    ignores: ['**/node_modules', 'types/**/*', 'dist/**/*', 'dev/**/*', '_*', './player'],
+    ignores: [
+      '**/node_modules',
+      'types/**/*',
+      'dist/**/*',
+      'dev/**/*',
+      '_*',
+      'player.js',
+    ],
   },
   ESLint.configs.recommended,
   ...TSESlint.configs.recommended,
