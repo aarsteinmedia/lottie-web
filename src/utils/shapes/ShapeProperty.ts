@@ -814,6 +814,15 @@ class EllShapeProperty extends ShapeBaseProperty {
 }
 
 export class ShapeProperty extends ShapeBaseProperty {
+  pathsData?: ShapePath[] | ShapePath
+  shape?: {
+    _mdf?: boolean
+    paths?: {
+      shapes: ShapePath[]
+      _length: number
+    }
+  }
+  totalShapeLength?: number
   constructor(elem: ShapeElement, data: Partial<Shape & Mask>, type: number) {
     super()
     this.propType = 'shape'

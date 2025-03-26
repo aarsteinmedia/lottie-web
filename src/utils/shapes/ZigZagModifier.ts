@@ -13,6 +13,8 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 
+import { ShapeProperty } from './ShapeProperty'
+
 /**
  *
  */
@@ -190,6 +192,10 @@ export default class ZigZagModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
+    if (!this.shapes) {
+      throw new Error(`${this.constructor.name}: shapes is not initialized`)
+    }
+
     const amplitude = Number(this.amplitude?.v),
       frequency = Math.max(0, Math.round(Number(this.frequency?.v))),
       pointType = Number(this.pointsType?.v)
@@ -198,20 +204,20 @@ export default class ZigZagModifier extends ShapeModifier {
       let shapeData, localShapeCollection, shapePaths
       const { length } = this.shapes || []
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i]
+        shapeData = (this.shapes as unknown as ShapeProperty[])[i]
         localShapeCollection = shapeData.localShapeCollection
-        if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
+        if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape._mdf = true
-          shapePaths = shapeData.shape.paths.shapes
-          const { _length } = shapeData.shape.paths
+          shapeData.shape!._mdf = true
+          shapePaths = shapeData.shape?.paths?.shapes || []
+          const { _length } = shapeData.shape?.paths || { _length: 0 }
           for (let j = 0; j < _length; j++) {
             localShapeCollection?.addShape(
               this.processPath(shapePaths[j], amplitude, frequency, pointType)
             )
           }
         }
-        shapeData.shape.paths = shapeData.localShapeCollection
+        shapeData.shape!.paths = shapeData.localShapeCollection
       }
     }
     if (!this.dynamicProperties?.length) {

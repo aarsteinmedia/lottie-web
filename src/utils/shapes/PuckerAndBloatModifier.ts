@@ -6,6 +6,8 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 
+import { ShapeProperty } from './ShapeProperty'
+
 export default class PuckerAndBloatModifier extends ShapeModifier {
   amount?: ValueProperty
   override initModifierProperties(
@@ -62,21 +64,21 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     if (amount !== 0) {
       let shapePaths, shapeData, localShapeCollection
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i]
+        shapeData = this.shapes?.[i] as unknown as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
-        if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
+        if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape._mdf = true
-          shapePaths = shapeData.shape.paths.shapes
-          const jLen = shapeData.shape.paths._length
+          shapeData.shape!._mdf = true
+          shapePaths = shapeData.shape?.paths?.shapes
+          const jLen = shapeData.shape?.paths?._length || 0
           for (let j = 0; j < jLen; j++) {
             localShapeCollection?.addShape(
-              this.processPath(shapePaths[j], amount as number)
+              this.processPath(shapePaths![j], amount as number)
             )
           }
         }
         if (shapeData.localShapeCollection) {
-          shapeData.shape.paths = shapeData.localShapeCollection
+          shapeData.shape!.paths = shapeData.localShapeCollection
         }
       }
     }
