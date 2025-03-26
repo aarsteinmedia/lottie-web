@@ -29,6 +29,7 @@ export class ShapeGroupData {
   gr: SVGGElement
   it: ShapeDataInterface[]
   prevViewData: unknown[]
+  transform?: Transformer
   constructor() {
     this.it = []
     this.prevViewData = []
@@ -40,6 +41,7 @@ export class SVGShapeData {
   _isAnimated: boolean
   _length?: number
   caches: unknown[]
+  gr?: SVGGElement
   hd?: boolean
   it?: ShapeDataInterface[]
   lStr: string
@@ -48,6 +50,7 @@ export class SVGShapeData {
   sh: ShapeProperty
   style?: SVGStyleData
   styles: SVGStyleData[]
+  transform?: Transformer
   transformers: Transformer[]
   ty?: ShapeType
   constructor(
@@ -84,6 +87,7 @@ export class SVGShapeData {
 export class SVGTransformData {
   _isAnimated: boolean
   elements: ElementInterfaceIntersect[]
+  gr?: SVGGElement
   it?: ShapeDataInterface[]
   prevViewData?: unknown[]
   style?: SVGStyleData
@@ -111,6 +115,7 @@ export class SVGStyleData {
   closed: boolean
   d: string
   data: Shape
+  gr?: SVGGElement
   hd?: boolean
   it?: ShapeDataInterface[]
   lvl: number
@@ -120,6 +125,7 @@ export class SVGStyleData {
   pt?: AnimatedProperty
   style?: SVGStyleData
   t?: number
+  transform?: Transformer
   ty?: ShapeType
   type?: ShapeType
   constructor(data: Shape, level: number) {
@@ -155,18 +161,19 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   g?: GradientProperty
 
   gf?: SVGGradientElement
+  gr?: SVGGElement
   h?: KeyframedValueProperty
   it?: ShapeDataInterface[]
   maskId?: string
   ms?: SVGMaskElement
   o?: ValueProperty
-
   of?: SVGElement
   ost?: SVGStopElement[]
   prevViewData?: unknown[]
   s?: MultiDimensionalProperty
   stops?: SVGStopElement[]
   style?: SVGStyleData
+  transform?: Transformer
   constructor(
     elem: ElementInterfaceUnion,
     data: Shape,
@@ -335,10 +342,12 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
 
 export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
+  gr?: SVGGElement
   it?: ShapeDataInterface[]
   o?: ValueProperty
   prevViewData?: unknown[]
   style: SVGStyleData
+  transform?: Transformer
   w?: ValueProperty
   constructor(
     elem: ElementInterfaceUnion,
@@ -409,9 +418,11 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
 }
 
 export class SVGNoStyleData extends DynamicPropertyContainer {
+  gr?: SVGGElement
   it?: ShapeDataInterface[]
   prevViewData?: unknown[]
   style: SVGStyleData
+  transform?: Transformer
   constructor(
     elem: ElementInterfaceUnion,
     _data: SVGShapeData,

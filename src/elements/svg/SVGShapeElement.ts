@@ -27,13 +27,15 @@ import { lineCapEnum, lineJoinEnum } from '@/enums'
 import { createRenderFunction } from '@/renderers/SVGElementsRenderer'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
+import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import { getModifier } from '@/utils/shapes/ShapeModifiers' // type ShapeModifierInterface,
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import TrimModifier from '@/utils/shapes/TrimModifier'
 import TransformProperty from '@/utils/TransformProperty'
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   animatedContents: AnimatedContent[]
-  prevViewData: ItemsData['prevViewData']
+  prevViewData: ItemsData[]
   stylesList: SVGStyleData[]
   constructor(
     data: LottieLayer,
@@ -104,7 +106,7 @@ export default class SVGShapeElement extends ShapeElement {
     }
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
+      this.itemsData as SVGElementInterface[],
       this.prevViewData,
       this.layerElement,
       0,
@@ -285,7 +287,7 @@ export default class SVGShapeElement extends ShapeElement {
     }
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
+      this.itemsData as SVGElementInterface[],
       this.prevViewData,
       this.layerElement,
       0,
@@ -358,106 +360,129 @@ export default class SVGShapeElement extends ShapeElement {
       } else {
         arr[i]._render = render
       }
-      if (
-        arr[i].ty === 'fl' ||
-        arr[i].ty === 'st' ||
-        arr[i].ty === 'gf' ||
-        arr[i].ty === 'gs' ||
-        arr[i].ty === 'no'
-      ) {
-        if (processedPos) {
-          itemsData[i]!.style!.closed = false
-        } else {
-          itemsData[i] = this.createStyleElement(arr[i], level)
-        }
-        if (arr[i]._render) {
-          if (itemsData[i]?.style?.pElem.parentNode !== container) {
-            container.appendChild(itemsData[i]!.style!.pElem)
+
+      // TODO: Here's the modifier that blanks
+      // console.log(arr[i].ty === 'rp')
+
+      switch (arr[i].ty) {
+        case 'fl':
+        case 'st':
+        case 'gf':
+        case 'gs':
+        case 'no': {
+          if (processedPos) {
+            itemsData[i]!.style!.closed = false
+          } else {
+            itemsData[i] = this.createStyleElement(arr[i], level)
           }
-        }
-        ownStyles.push(itemsData[i]?.style)
-      } else if (arr[i].ty === 'gr') {
-        if (processedPos) {
-          const { length } = itemsData[i]?.it || []
-          for (let j = 0; j < length; j++) {
-            itemsData[i]!.prevViewData![j] = itemsData[i]!.it![j]
+          if (arr[i]._render) {
+            if (itemsData[i]?.style?.pElem.parentNode !== container) {
+              container.appendChild(itemsData[i]!.style!.pElem)
+            }
           }
-        } else {
-          itemsData[i] = this.createGroupElement(arr[i]) as any
+          ownStyles.push(itemsData[i]?.style)
+          break
         }
-        this.searchShapes(
-          arr[i].it as Shape[],
-          itemsData[i]?.it || [],
-          itemsData[i]?.prevViewData || [],
-          itemsData[i]!.gr,
-          level + 1,
-          ownTransformers,
-          render
-        )
-        if (arr[i]._render) {
-          if (itemsData[i].gr.parentNode !== container) {
-            container.appendChild(itemsData[i].gr)
+        case 'gr': {
+          if (processedPos) {
+            const { length } = itemsData[i]?.it || []
+            for (let j = 0; j < length; j++) {
+              itemsData[i]!.prevViewData![j] = itemsData[i]!.it![j]
+            }
+          } else {
+            itemsData[i] = this.createGroupElement(arr[i]) as any
           }
+          this.searchShapes(
+            arr[i].it as Shape[],
+            itemsData[i]?.it || [],
+            itemsData[i]?.prevViewData || [],
+            itemsData[i]!.gr!,
+            level + 1,
+            ownTransformers,
+            render
+          )
+          if (arr[i]._render) {
+            if (itemsData[i]?.gr?.parentNode !== container) {
+              container.appendChild(itemsData[i]!.gr!)
+            }
+          }
+          break
         }
-      } else if (arr[i].ty === 'tr') {
-        if (!processedPos) {
-          itemsData[i] = this.createTransformElement(arr[i], container)
+        case 'tr': {
+          if (!processedPos) {
+            itemsData[i] = this.createTransformElement(arr[i], container)
+          }
+          currentTransform = itemsData[i]?.transform
+          if (currentTransform) {
+            ownTransformers.push(currentTransform)
+          }
+
+          break
         }
-        currentTransform = itemsData[i].transform
-        ownTransformers.push(currentTransform)
-      } else if (
-        arr[i].ty === 'sh' ||
-        arr[i].ty === 'rc' ||
-        arr[i].ty === 'el' ||
-        arr[i].ty === 'sr'
-      ) {
-        if (!processedPos) {
-          itemsData[i] = this.createShapeElement(arr[i], ownTransformers, level)
+        case 'sh':
+        case 'rc':
+        case 'el':
+        case 'sr': {
+          if (!processedPos) {
+            itemsData[i] = this.createShapeElement(
+              arr[i],
+              ownTransformers,
+              level
+            )
+          }
+          this.setElementStyles(itemsData[i] as SVGShapeData)
+          break
         }
-        this.setElementStyles(itemsData[i])
-      } else if (
-        arr[i].ty === 'tm' ||
-        arr[i].ty === 'rd' ||
-        arr[i].ty === 'ms' ||
-        arr[i].ty === 'pb' ||
-        arr[i].ty === 'zz' ||
-        arr[i].ty === 'op'
-      ) {
-        if (processedPos) {
-          modifier = itemsData[i]
-          ;(modifier as any).closed = false
-        } else {
-          modifier = getModifier(arr[i].ty)
-          modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
-          itemsData[i] = modifier
-          this.shapeModifiers?.push(modifier)
+        case 'tm':
+        case 'rd':
+        case 'ms':
+        case 'pb':
+        case 'zz':
+        case 'op': {
+          if (processedPos) {
+            modifier = itemsData[i] as unknown as TrimModifier
+            modifier.closed = false
+          } else {
+            modifier = getModifier<TrimModifier>(arr[i].ty)
+            modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
+            ;(itemsData as unknown as TrimModifier[])[i] = modifier
+            this.shapeModifiers?.push(modifier)
+          }
+          ownModifiers.push(modifier)
+          break
         }
-        ownModifiers.push(modifier)
-      } else if (arr[i].ty === 'rp') {
-        if (processedPos) {
-          modifier = itemsData[i]
-          modifier.closed = true
-        } else {
-          modifier = getModifier(arr[i].ty)
-          itemsData[i] = modifier
-          modifier.init(this as any, arr, i, itemsData)
-          this.shapeModifiers?.push(modifier)
-          render = false
+        case 'rp': {
+          if (processedPos) {
+            modifier = itemsData[i] as unknown as RepeaterModifier
+            modifier.closed = true
+          } else {
+            modifier = getModifier<RepeaterModifier>(arr[i].ty)
+            ;(itemsData as unknown as RepeaterModifier[])[i] = modifier
+            modifier.init(
+              this as unknown as ElementInterfaceIntersect,
+              arr,
+              i,
+              itemsData as ShapeGroupData[]
+            )
+            this.shapeModifiers?.push(modifier)
+            render = false
+          }
+          ownModifiers.push(modifier)
         }
-        ownModifiers.push(modifier)
       }
+
       this.addProcessedElement(arr[i] as any, i + 1)
     }
     const { length: sLen } = ownStyles
     for (let i = 0; i < sLen; i++) {
-      ownStyles[i].closed = true
+      ownStyles[i]!.closed = true
     }
     const { length: mLen } = ownModifiers
     for (let i = 0; i < mLen; i++) {
       ownModifiers[i].closed = true
     }
   }
-  setElementStyles(elementData: any) {
+  setElementStyles(elementData: SVGShapeData) {
     const { length } = this.stylesList
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {

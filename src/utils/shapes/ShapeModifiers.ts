@@ -23,12 +23,12 @@ type Modifier =
 /**
  *
  */
-export function getModifier(
+export function getModifier<T extends ShapeModifierInterface>(
   nm: string,
   _elem?: ElementInterfaceIntersect,
   _data?: unknown
 ) {
-  return new modifiers[nm]() // elem, data
+  return new modifiers[nm]() as T
 }
 
 /**
