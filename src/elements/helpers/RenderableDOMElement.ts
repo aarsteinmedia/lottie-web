@@ -6,17 +6,9 @@ import type {
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import { extendPrototype } from '@/utils/functionExtensions'
-
-// TODO: This is a mixin mess
+// import { extendPrototype } from '@/utils/functionExtensions'
 export default abstract class RenderableDOMElement extends RenderableElement {
-  createContainerElements: any
-
-  initRendererElement: any
-
   innerElem?: SVGElement | null
-
-  renderElement: any
 
   constructor() {
     super()
@@ -25,21 +17,33 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.createItem = createItem
     this.addPendingElement = addPendingElement
   }
+
   addPendingElement(_element: ElementInterfaceIntersect) {
     throw new Error(
-      'RenderableDOMElement: Method addPendingElement is not implemented'
+      `${this.constructor.name}: Method addPendingElement is not implemented`
     )
   }
+
+  createContainerElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createContainerElements is not implemented`
+    )
+  }
+
   createContent() {
-    /** Fallback */
+    throw new Error(
+      `${this.constructor.name}: Method createContent is not implemented`
+    )
   }
   createItem(_data: LottieLayer) {
     throw new Error(
-      'RenderableDOMElement: Method createItem is not implemented'
+      `${this.constructor.name}: Method createItem is not implemented`
     )
   }
   createRenderableComponents() {
-    // throw new Error()
+    throw new Error(
+      `${this.constructor.name}: Method createRenderableComponents is not implemented`
+    )
   }
   destroy() {
     this.innerElem = null
@@ -47,7 +51,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
   destroyBaseElement() {
     throw new Error(
-      'RenderableDOMElement: Method destroyBaseElement in not implemented'
+      `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
   }
   initElement(
@@ -60,16 +64,16 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.initTransform()
     this.initHierarchy()
     this.initRenderable()
-    if (!this.initRendererElement) {
-      throw new Error(
-        `${this.constructor.name}: Method initRendererElement is not implemented`
-      )
-    }
     this.initRendererElement()
     this.createContainerElements()
     this.createRenderableComponents()
     this.createContent()
     this.hide()
+  }
+  initRendererElement() {
+    throw new Error(
+      `${this.constructor.name}: Method initRendererElement is not implemented`
+    )
   }
   // initFrame() {
   //   throw new Error('RenderableDOMElement: Method initFrame in not implemented')
@@ -79,6 +83,11 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
     this.checkTransparency()
+  }
+  renderElement() {
+    throw new Error(
+      `${this.constructor.name}: Method renderElement is not implemented`
+    )
   }
   renderFrame(_frame?: number | null) {
     // If it is exported as hidden (data.hd === true) no need to render
@@ -101,10 +110,8 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     }
   }
   renderInnerContent() {
-    // throw new Error()
+    throw new Error(
+      `${this.constructor.name}: Method renderInnerContent is not implemented`
+    )
   }
 }
-
-// TODO: TextElement needs this mixin
-
-extendPrototype([RenderableElement], RenderableDOMElement)
