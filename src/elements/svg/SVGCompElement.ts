@@ -14,10 +14,17 @@ import PropertyFactory from '@/utils/PropertyFactory'
 
 export default class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
-  _mdf?: boolean
+  completeLayers: boolean
+  elements: ElementInterfaceIntersect[]
+  layers: LottieLayer[]
+  pendingElements: ElementInterfaceIntersect[]
   supports3d: boolean
   tm?: KeyframedValueProperty
-  constructor(data: LottieLayer, globalData: GlobalData, comp: any) {
+  constructor(
+    data: LottieLayer,
+    globalData: GlobalData,
+    comp: ElementInterfaceIntersect
+  ) {
     super()
     this.layers = data.layers!
     this.supports3d = true
@@ -38,72 +45,11 @@ export default class SVGCompElement extends SVGBaseElement {
     ) as KeyframedValueProperty
   }
 
-  // checkParenting() {
-  //   throw new Error('SVGCompElement: Method checkParenting is not implemented')
-  // }
-
-  override createComp(data: LottieLayer) {
+  createComp(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Cannot access global data`)
     }
-    return new SVGCompElement(data, this.globalData, this)
-  }
-
-  createContent() {
-    // Override
-    throw new Error(
-      `${this.constructor.name}: Method createContent is not implemented`
-    )
-  }
-
-  // setMatte(_id: string) {
-  //   throw new Error(
-  //     `${this.constructor.name}: Method setMatte is not implemented`
-  //   )
-  // }
-
-  destroy() {
-    throw new Error(
-      `${this.constructor.name}: Method destroy is not implemented`
-    )
-  }
-
-  initElement(
-    _data: LottieLayer,
-    _globalData: GlobalData,
-    _comp: ElementInterfaceIntersect
-  ) {
-    throw new Error(
-      `${this.constructor.name}: Method initElement is not implemented`
-    )
-  }
-
-  // initFrame() {
-  //   throw new Error('SVGCompElement: Method initFrame not implemented')
-  // }
-
-  // initHierarchy() {
-  //   throw new Error('SVGCompElement: Method initHierarchy is not implemented')
-  // }
-
-  // initRenderable() {
-  //   throw new Error('SVGCompElement: Method initRenderable is not implemented')
-  // }
-
-  // initTransform() {
-  //   throw new Error('SVGCompElement: Method initTransform is not implemented')
-  // }
-
-  prepareFrame(_val: number) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareFrame is not implemented`
-    )
-  }
-
-  renderFrame() {
-    throw new Error(
-      `${this.constructor.name}: Method renderFrame is not implemented`
-    )
+    return new SVGCompElement(data, this.globalData, this as any)
   }
 }
 

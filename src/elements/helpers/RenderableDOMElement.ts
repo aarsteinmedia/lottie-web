@@ -12,13 +12,12 @@ import { extendPrototype } from '@/utils/functionExtensions'
 export default abstract class RenderableDOMElement extends RenderableElement {
   createContainerElements: any
 
-  createRenderableComponents: any
-
   initRendererElement: any
 
   innerElem?: SVGElement | null
 
   renderElement: any
+
   constructor() {
     super()
     const { addPendingElement, checkLayers, createItem } = new BaseRenderer()
@@ -38,6 +37,9 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     throw new Error(
       'RenderableDOMElement: Method createItem is not implemented'
     )
+  }
+  createRenderableComponents() {
+    // throw new Error()
   }
   destroy() {
     this.innerElem = null
@@ -98,7 +100,9 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       this._isFirstFrame = false
     }
   }
-  renderInnerContent() {}
+  renderInnerContent() {
+    // throw new Error()
+  }
 }
 
 // TODO: TextElement needs this mixin

@@ -7,7 +7,6 @@ import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
 import { RendererType } from '@/enums'
 import { createNS } from '@/utils'
-// import { extendPrototype } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class SVGTextLottieElement extends TextElement {
@@ -421,5 +420,3 @@ export default class SVGTextLottieElement extends TextElement {
     return null
   }
 }
-
-// extendPrototype([SVGBaseElement], SVGTextLottieElement)

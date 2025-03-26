@@ -82,6 +82,6 @@ export default class SVGRenderer extends SVGRendererBase {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new SVGCompElement(data, this.globalData, this)
+    return new SVGCompElement(data, this.globalData, this as any)
   }
 }
