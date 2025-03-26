@@ -46,8 +46,8 @@ export default class OffsetPathModifier extends ShapeModifier {
     if (!inputBezier.c) {
       count -= 1
     }
-    let segment
-    let multiSegments = []
+    let segment,
+      multiSegments = []
 
     for (let i = 0; i < count; i++) {
       segment = shapeSegment(inputBezier, i)
@@ -64,8 +64,8 @@ export default class OffsetPathModifier extends ShapeModifier {
     multiSegments = pruneIntersections(multiSegments)
 
     // Add bezier segments to the output and apply line joints
-    let lastPoint = null
-    let lastSeg = null
+    let lastPoint = null,
+      lastSeg = null
 
     const { length } = multiSegments
     for (let i = 0; i < length; i++) {
@@ -134,18 +134,15 @@ export default class OffsetPathModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    let i
+    let shapePaths, i
     const { length } = this.shapes || []
-    let j
-    let jLen: number
-    const amount = Number(this.amount?.v)
-    const miterLimit = Number(this.miterLimit?.v)
-    const lineJoin = Number(this.lineJoin)
+    let j, jLen: number
+    const amount = Number(this.amount?.v),
+      miterLimit = Number(this.miterLimit?.v),
+      lineJoin = Number(this.lineJoin)
 
     if (amount !== 0) {
-      let shapeData
-      let localShapeCollection
+      let shapeData, localShapeCollection
       for (i = 0; i < length; i++) {
         shapeData = this.shapes?.[i]
         localShapeCollection = shapeData.localShapeCollection

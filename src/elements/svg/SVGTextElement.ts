@@ -1,5 +1,11 @@
 /* eslint-disable max-depth */
-import type { GlobalData, LottieLayer, SourceRect, Vector3 } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+  SourceRect,
+  Vector3,
+} from '@/types'
 
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
@@ -211,7 +217,7 @@ export default class SVGTextLottieElement extends TextElement {
             glyphElement = new SVGCompElement(
               charData.data,
               this.globalData,
-              this
+              this as unknown as ElementInterfaceIntersect
             )
           } else {
             let data = this.emptyShapeData

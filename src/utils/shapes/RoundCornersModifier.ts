@@ -22,19 +22,19 @@ export default class RoundCornersModifier extends ShapeModifier {
     const clonedPath = newElement<ShapePath>()
     clonedPath.c = path.c
     const len = Number(path._length)
-    let currentV
-    let currentI
-    let currentO
-    let closerV
-    let distance
-    let newPosPerc
-    let index = 0
-    let vX
-    let vY
-    let oX
-    let oY
-    let iX
-    let iY
+    let currentV,
+      currentI,
+      currentO,
+      closerV,
+      distance,
+      newPosPerc,
+      index = 0,
+      vX,
+      vY,
+      oX,
+      oY,
+      iX,
+      iY
     for (let i = 0; i < len; i++) {
       currentV = path.v[i]
       currentO = path.o[i]

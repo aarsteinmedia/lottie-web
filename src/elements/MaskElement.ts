@@ -42,8 +42,8 @@ export default class MaskElement {
     this.masksProperties = this.data.masksProperties || []
     this.maskElement = null
     const defs = this.globalData.defs
-    let i
-    let len = this.masksProperties ? this.masksProperties.length : 0
+    let i,
+      len = this.masksProperties ? this.masksProperties.length : 0
     this.viewData = createSizedArray(len)
     this.solidPath = ''
 

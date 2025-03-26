@@ -25,7 +25,7 @@ import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { lineCapEnum, lineJoinEnum } from '@/enums'
 import { createRenderFunction } from '@/renderers/SVGElementsRenderer'
 import { getBlendMode } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
+// import { extendPrototype } from '@/utils/functionExtensions'
 import { getLocationHref } from '@/utils/getterSetter'
 import { getModifier } from '@/utils/shapes/ShapeModifiers' // type ShapeModifierInterface,
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
@@ -44,7 +44,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of drawable elements
     this.shapes = []
     // Full shape data
-    this.shapesData = data.shapes!
+    this.shapesData = data.shapes || []
     // List of styles that will be applied to shapes
     this.stylesList = []
     // List of modifiers that will be applied to shapes
@@ -55,8 +55,21 @@ export default class SVGShapeElement extends ShapeElement {
     this.processedElements = []
     // List of animated components
     this.animatedContents = []
+    const {
+      createContainerElements,
+      createRenderableComponents,
+      getBaseElement,
+      getMatte,
+      initRendererElement,
+      renderElement,
+    } = new SVGBaseElement()
+    this.initRendererElement = initRendererElement
+    this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
+    this.getBaseElement = getBaseElement
+    this.getMatte = getMatte
+    this.renderElement = renderElement
     this.initElement(data, globalData, comp)
-    // this.initRendererElement()
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
     // List of elements that have been created
     this.prevViewData = []
@@ -87,6 +100,11 @@ export default class SVGShapeElement extends ShapeElement {
     if (!this.shapesData) {
       throw new Error(`${this.constructor.name}: Could not access ShapesData`)
     }
+    // if (!this.searchShapes) {
+    //   throw new Error(
+    //     `${this.constructor.name}: Method searchShapes is not implemented`
+    //   )
+    // }
     this.searchShapes(
       this.shapesData,
       this.itemsData,
@@ -124,12 +142,12 @@ export default class SVGShapeElement extends ShapeElement {
     } else if (data.ty === 'sr') {
       ty = 7
     }
-    const shapeProperty = getShapeProp(this, data as any, ty, this)
-    const elementData = new SVGShapeData(
-      ownTransformers,
-      level,
-      shapeProperty as ShapeProperty
-    )
+    const shapeProperty = getShapeProp(this, data as any, ty, this),
+      elementData = new SVGShapeData(
+        ownTransformers,
+        level,
+        shapeProperty as ShapeProperty
+      )
     this.shapes?.push(elementData as any)
     this.addShapeToModifiers(elementData)
     this.addToAnimatedContents(data, elementData)
@@ -138,31 +156,39 @@ export default class SVGShapeElement extends ShapeElement {
   createStyleElement(data: Shape, level: number) {
     // TODO: prevent drawing of hidden styles
     let elementData
-    const styleOb = new SVGStyleData(data, level)
+    const styleOb = new SVGStyleData(data, level),
+      pathElement = styleOb.pElem
 
-    const pathElement = styleOb.pElem
-    if (data.ty === 'st') {
-      elementData = new SVGStrokeStyleData(this, data, styleOb)
-    } else if (data.ty === 'fl') {
-      elementData = new SVGFillStyleData(this, data, styleOb)
-    } else if (data.ty === 'gf' || data.ty === 'gs') {
-      const GradientConstructor =
-        data.ty === 'gf' ? SVGGradientFillStyleData : SVGGradientStrokeStyleData
-      elementData = new GradientConstructor(this, data, styleOb)
-      if (elementData.gf) {
-        this.globalData?.defs.appendChild(elementData.gf)
-      }
+    switch (data.ty) {
+      case 'st':
+        elementData = new SVGStrokeStyleData(this, data, styleOb)
+        break
+      case 'fl':
+        elementData = new SVGFillStyleData(this, data, styleOb)
+        break
+      case 'gf':
+      case 'gs': {
+        const GradientConstructor =
+          data.ty === 'gf'
+            ? SVGGradientFillStyleData
+            : SVGGradientStrokeStyleData
+        elementData = new GradientConstructor(this, data, styleOb)
+        if (elementData.gf) {
+          this.globalData?.defs.appendChild(elementData.gf)
+        }
 
-      if (elementData.maskId && elementData.ms && elementData.of) {
-        this.globalData?.defs.appendChild(elementData.ms)
-        this.globalData?.defs.appendChild(elementData.of)
-        pathElement.setAttribute(
-          'mask',
-          `url(${getLocationHref()}#${elementData.maskId})`
-        )
+        if (elementData.maskId && elementData.ms && elementData.of) {
+          this.globalData?.defs.appendChild(elementData.ms)
+          this.globalData?.defs.appendChild(elementData.of)
+          pathElement.setAttribute(
+            'mask',
+            `url(${getLocationHref()}#${elementData.maskId})`
+          )
+        }
+        break
       }
-    } else if (data.ty === 'no') {
-      elementData = new SVGNoStyleData(this, data as any, styleOb)
+      case 'no':
+        elementData = new SVGNoStyleData(this, data as any, styleOb)
     }
 
     if (data.ty === 'st' || data.ty === 'gs') {
@@ -210,16 +236,14 @@ export default class SVGShapeElement extends ShapeElement {
     this.addToAnimatedContents(data, elementData)
     return elementData
   }
-
   override destroy() {
     this.destroyBaseElement()
     this.shapesData = null as any
     this.itemsData = null as any
   }
-
   filterUniqueShapes() {
-    const { length } = this.shapes || []
-    const jLen = this.stylesList.length
+    const { length } = this.shapes || [],
+      jLen = this.stylesList.length
     let style
     const tempShapes = []
     let areAnimated = false
@@ -239,6 +263,18 @@ export default class SVGShapeElement extends ShapeElement {
       }
     }
   }
+
+  getBaseElement(): SVGGElement | null {
+    throw new Error(
+      `${this.constructor.name}: Method getBaseElement is not implemented`
+    )
+  }
+
+  getMatte(_matteType?: number) {
+    throw new Error(
+      `${this.constructor.name}: Method getMatte is not implemented`
+    )
+  }
   initSecondaryElement() {
     throw new Error(
       'SVGShapeElement: Method initSecondaryElement not yet implemented'
@@ -256,6 +292,11 @@ export default class SVGShapeElement extends ShapeElement {
     for (let i = 0; i < length; i++) {
       this.prevViewData![i] = this.itemsData![i]
     }
+    // if (!this.searchShapes) {
+    //   throw new Error(
+    //     `${this.constructor.name}: Method searchShapes is not implemented`
+    //   )
+    // }
     this.searchShapes(
       this.shapesData,
       this.itemsData,
@@ -355,6 +396,11 @@ export default class SVGShapeElement extends ShapeElement {
         } else {
           itemsData[i] = this.createGroupElement(arr[i])
         }
+        // if (!this.searchShapes) {
+        //   throw new Error(
+        //     `${this.constructor.name}: Method searchShapes is not implemented`
+        //   )
+        // }
         this.searchShapes(
           arr[i].it as Shape[],
           itemsData[i].it,
@@ -448,4 +494,4 @@ export default class SVGShapeElement extends ShapeElement {
   }
 }
 
-extendPrototype([SVGBaseElement], SVGShapeElement)
+// extendPrototype([SVGBaseElement], SVGShapeElement)

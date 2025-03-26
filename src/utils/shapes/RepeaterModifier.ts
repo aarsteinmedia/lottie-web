@@ -125,12 +125,12 @@ export default class RepeaterModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let items
-    let itemsTransform
-    let i
-    let dir
-    let cont: number
-    let hasReloaded = false
+    let items,
+      itemsTransform,
+      i,
+      dir,
+      cont: number,
+      hasReloaded = false
     if (this._mdf || _isFirstFrame) {
       const copies = Math.ceil(Number(this.c?.v))
       if (Number(this._groups?.length) < copies) {

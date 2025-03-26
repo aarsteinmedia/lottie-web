@@ -30,12 +30,7 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     centerPoint[1] /= pathLength
     const clonedPath = newElement<ShapePath>()
     clonedPath.c = path.c
-    let vX
-    let vY
-    let oX
-    let oY
-    let iX
-    let iY
+    let vX, vY, oX, oY, iX, iY
     for (i = 0; i < pathLength; i++) {
       vX =
         Number(path.v[i]?.[0]) +
