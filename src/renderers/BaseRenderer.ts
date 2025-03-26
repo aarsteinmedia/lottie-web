@@ -71,7 +71,9 @@ export default class BaseRenderer extends BaseElement {
   }
 
   buildItem(_val: number) {
-    throw new Error('BaseRenderer: Method buildItem not yet implemented') // TODO:
+    throw new Error(
+      `${this.constructor.name}: Method buildItem not yet implemented`
+    )
   }
 
   checkLayers(val?: number) {
@@ -94,7 +96,7 @@ export default class BaseRenderer extends BaseElement {
   }
   checkPendingElements() {
     throw new Error(
-      'BaseRenderer: Method checkPendingElements not yet implemented'
+      `${this.constructor.name}: Method checkPendingElements not yet implemented`
     )
   }
   createAudio(data: LottieLayer) {
@@ -108,7 +110,9 @@ export default class BaseRenderer extends BaseElement {
   }
 
   createComp(_data: LottieLayer): SVGCompElement {
-    throw new Error('BaseRenderer: Method createComp not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createComp not yet implemented`
+    )
   }
 
   createFootage(data: LottieLayer) {
@@ -118,7 +122,9 @@ export default class BaseRenderer extends BaseElement {
     return new FootageElement(data, this.globalData, this as any)
   }
   createImage(_layer: LottieLayer) {
-    throw new Error('BaseRenderer: Method createImage not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createImage is not implemented`
+    )
   }
   createItem(layer: LottieLayer) {
     switch (layer.ty) {

@@ -221,7 +221,9 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
   }
   autoOrient() {
-    /** Nothing */
+    throw new Error(
+      `${this.constructor.name}: Method autoOrient not implemented`
+    )
   }
 
   override getValue(forceRender?: boolean) {

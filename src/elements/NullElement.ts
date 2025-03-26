@@ -27,8 +27,9 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    throw new Error(
-      `${this.constructor.name}: Method renderFrame is not implemented`
-    )
+    // TODO:
+    // throw new Error(
+    //   `${this.constructor.name}: Method renderFrame is not implemented`
+    // )
   }
 }

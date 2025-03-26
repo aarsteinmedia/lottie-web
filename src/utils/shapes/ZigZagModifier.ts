@@ -190,27 +190,22 @@ export default class ZigZagModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    let i
-    const { length } = this.shapes || []
-    let j
-    let jLen
-    const amplitude = Number(this.amplitude?.v)
-    const frequency = Math.max(0, Math.round(Number(this.frequency?.v)))
-    const pointType = Number(this.pointsType?.v)
+    const amplitude = Number(this.amplitude?.v),
+      frequency = Math.max(0, Math.round(Number(this.frequency?.v))),
+      pointType = Number(this.pointsType?.v)
 
     if (amplitude !== 0) {
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
+      let shapeData, localShapeCollection, shapePaths
+      const { length } = this.shapes || []
+      for (let i = 0; i < length; i++) {
         shapeData = this.shapes?.[i]
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
           shapeData.shape._mdf = true
           shapePaths = shapeData.shape.paths.shapes
-          jLen = shapeData.shape.paths._length
-          for (j = 0; j < jLen; j++) {
+          const { _length } = shapeData.shape.paths
+          for (let j = 0; j < _length; j++) {
             localShapeCollection?.addShape(
               this.processPath(shapePaths[j], amplitude, frequency, pointType)
             )

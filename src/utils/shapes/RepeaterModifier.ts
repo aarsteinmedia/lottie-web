@@ -16,7 +16,7 @@ import TransformProperty from '@/utils/TransformProperty'
 export default class RepeaterModifier extends ShapeModifier {
   _currentCopies?: number
 
-  _elements?: ShapeGroupData[]
+  _elements?: Shape[]
 
   _groups?: ShapeGroupData[]
 
@@ -72,14 +72,14 @@ export default class RepeaterModifier extends ShapeModifier {
       }
     }
   }
-  cloneElements(elements: any[]) {
+  cloneElements(elements: Shape[]): Shape[] {
     const newElements = JSON.parse(JSON.stringify(elements))
     this.resetElements(newElements)
     return newElements
   }
   override init(
     elem: ElementInterfaceUnion,
-    arr: ShapeGroupData[],
+    arr: Shape[],
     posFromProps?: number,
     elemsData?: ShapePath
   ) {
@@ -125,12 +125,12 @@ export default class RepeaterModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let items
-    let itemsTransform
-    let i
-    let dir
-    let cont: number
-    let hasReloaded = false
+    let items,
+      itemsTransform,
+      i,
+      dir,
+      cont: number,
+      hasReloaded = false
     if (this._mdf || _isFirstFrame) {
       const copies = Math.ceil(Number(this.c?.v))
       if (Number(this._groups?.length) < copies) {
@@ -180,8 +180,8 @@ export default class RepeaterModifier extends ShapeModifier {
 
         this.changeGroupRender(this._groups?.[i].it || [], renderFlag)
         if (!renderFlag) {
-          const elems = this.elemsData[i].it
-          const transformData = elems[elems.length - 1]
+          const elems = this.elemsData[i].it,
+            transformData = elems[elems.length - 1]
           if (transformData.transform.op.v === 0) {
             transformData.transform.op._mdf = false
           } else {
@@ -204,12 +204,12 @@ export default class RepeaterModifier extends ShapeModifier {
         throw new Error(`${this.constructor.name}: Could not set Matrix`)
       }
 
-      const offset = this.o.v
-      const offsetModulo = offset % 1
-      const roundOffset = offset > 0 ? Math.floor(offset) : Math.ceil(offset)
-      const pProps = this.pMatrix.props
-      const rProps = this.rMatrix.props
-      const sProps = this.sMatrix.props
+      const offset = this.o.v,
+        offsetModulo = offset % 1,
+        roundOffset = offset > 0 ? Math.floor(offset) : Math.ceil(offset),
+        pProps = this.pMatrix.props,
+        rProps = this.rMatrix.props,
+        sProps = this.sMatrix.props
       this.pMatrix.reset()
       this.rMatrix.reset()
       this.sMatrix.reset()

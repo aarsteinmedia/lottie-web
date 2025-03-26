@@ -22,19 +22,19 @@ export default class RoundCornersModifier extends ShapeModifier {
     const clonedPath = newElement<ShapePath>()
     clonedPath.c = path.c
     const len = Number(path._length)
-    let currentV
-    let currentI
-    let currentO
-    let closerV
-    let distance
-    let newPosPerc
-    let index = 0
-    let vX
-    let vY
-    let oX
-    let oY
-    let iX
-    let iY
+    let currentV,
+      currentI,
+      currentO,
+      closerV,
+      distance,
+      newPosPerc,
+      index = 0,
+      vX,
+      vY,
+      oX,
+      oY,
+      iX,
+      iY
     for (let i = 0; i < len; i++) {
       currentV = path.v[i]
       currentO = path.o[i]
@@ -123,25 +123,20 @@ export default class RoundCornersModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    let i
-    const { length } = this.shapes || []
-    let j
-    let jLen
-    const rd = this.rd?.v
+    const { length } = this.shapes || [],
+      rd = this.rd?.v
 
     if (rd !== 0) {
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
+      let shapeData, shapePaths, localShapeCollection
+      for (let i = 0; i < length; i++) {
         shapeData = this.shapes?.[i]
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
           shapeData.shape._mdf = true
           shapePaths = shapeData.shape.paths.shapes
-          jLen = shapeData.shape.paths._length
-          for (j = 0; j < jLen; j++) {
+          const jLen = shapeData.shape.paths._length
+          for (let j = 0; j < jLen; j++) {
             localShapeCollection?.addShape(
               this.processPath(shapePaths[j], rd as number)
             )

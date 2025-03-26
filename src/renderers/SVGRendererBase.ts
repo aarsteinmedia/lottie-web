@@ -119,9 +119,6 @@ export default class SVGRendererBase extends BaseRenderer {
       //   matteElement.getMatte = this.svgBaseElement.getMatte
       // }
       const matteMask = matteElement.getMatte(this.layers[pos].tt)
-      // if (!element.setMatte) {
-      //   element.setMatte = this.svgBaseElement.setMatte
-      // }
       element.setMatte(matteMask)
     }
   }
@@ -149,7 +146,7 @@ export default class SVGRendererBase extends BaseRenderer {
           const matteMask = matteElement.getMatte(this.layers?.[i].tt)
 
           // if (!element.setMatte) {
-          //   element.setMatte = new SVGBaseElement().setMatte
+          //   console.log(element.constructor.name)
           // }
           element.setMatte(matteMask)
           break

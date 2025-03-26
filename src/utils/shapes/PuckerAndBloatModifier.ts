@@ -30,12 +30,7 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     centerPoint[1] /= pathLength
     const clonedPath = newElement<ShapePath>()
     clonedPath.c = path.c
-    let vX
-    let vY
-    let oX
-    let oY
-    let iX
-    let iY
+    let vX, vY, oX, oY, iX, iY
     for (i = 0; i < pathLength; i++) {
       vX =
         Number(path.v[i]?.[0]) +
@@ -61,14 +56,11 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    const { length } = this.shapes || []
-    let jLen: number
-    const amount = this.amount?.v
+    const { length } = this.shapes || [],
+      amount = this.amount?.v
 
     if (amount !== 0) {
-      let shapeData
-      let localShapeCollection
+      let shapePaths, shapeData, localShapeCollection
       for (let i = 0; i < length; i++) {
         shapeData = this.shapes?.[i]
         localShapeCollection = shapeData.localShapeCollection
@@ -76,7 +68,7 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
           localShapeCollection?.releaseShapes()
           shapeData.shape._mdf = true
           shapePaths = shapeData.shape.paths.shapes
-          jLen = shapeData.shape.paths._length
+          const jLen = shapeData.shape.paths._length
           for (let j = 0; j < jLen; j++) {
             localShapeCollection?.addShape(
               this.processPath(shapePaths[j], amount as number)

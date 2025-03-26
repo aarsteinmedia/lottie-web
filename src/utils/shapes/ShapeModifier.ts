@@ -14,7 +14,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
   elem?: ElementInterfaceIntersect
   frameId?: number
   k?: boolean
-  shapes?: any[]
+  shapes?: SVGShapeData[]
   addShape(data: SVGShapeData) {
     if (!this.closed) {
       // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
@@ -31,8 +31,13 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       }
     }
   }
-  addShapeToModifier(_shapeData: SVGShapeData) {}
-  init(elem: ElementInterfaceIntersect, data?: any, _a?: any, _b?: any) {
+  addShapeToModifier(_shapeData: SVGShapeData) {
+    // TODO:
+    // throw new Error(
+    //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
+    // )
+  }
+  init(elem: ElementInterfaceIntersect, data?: Shape[], _a?: any, _b?: any) {
     this.shapes = []
     this.elem = elem as ElementInterfaceIntersect
     this.initDynamicPropertyContainer(elem)
@@ -46,8 +51,16 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       this.getValue(true)
     }
   }
-  initModifierProperties(_elem: ElementInterfaceUnion, _data: Shape) {}
-  isAnimatedWithShape(_data: Shape) {}
+  initModifierProperties(_elem: ElementInterfaceUnion, _data?: Shape[]) {
+    throw new Error(
+      `${this.constructor.name}: Method initModifierProperties is not implemented`
+    )
+  }
+  isAnimatedWithShape(_data: Shape) {
+    throw new Error(
+      `${this.constructor.name}: Method isAnimatedWithShape is not implemented`
+    )
+  }
 
   processKeys() {
     if (this.elem?.globalData.frameId === this.frameId) {
