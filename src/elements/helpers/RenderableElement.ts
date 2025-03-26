@@ -36,7 +36,9 @@ export default class RenderableElement extends FrameElement {
     }
   }
   checkLayers(_val?: number) {
-    throw new Error('RenderableElement: Method checkLayers is not initialized')
+    throw new Error(
+      `${this.constructor.name}: Method checkLayers is not implemented`
+    )
   }
   checkTransparency() {
     if (!this.finalTransform) {

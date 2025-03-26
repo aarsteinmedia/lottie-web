@@ -27,7 +27,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
   addPendingElement(_element: ElementInterfaceIntersect) {
     throw new Error(
-      'RenderableDOMElement: Method addPendingElement is not implemented'
+      `${this.constructor.name}: Method addPendingElement is not implemented`
     )
   }
   createContent() {
@@ -35,7 +35,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
   createItem(_data: LottieLayer) {
     throw new Error(
-      'RenderableDOMElement: Method createItem is not implemented'
+      `${this.constructor.name}: Method createItem is not implemented`
     )
   }
   createRenderableComponents() {
@@ -47,7 +47,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
   destroyBaseElement() {
     throw new Error(
-      'RenderableDOMElement: Method destroyBaseElement in not implemented'
+      `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
   }
   initElement(
@@ -60,11 +60,6 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.initTransform()
     this.initHierarchy()
     this.initRenderable()
-    if (!this.initRendererElement) {
-      throw new Error(
-        `${this.constructor.name}: Method initRendererElement is not implemented`
-      )
-    }
     this.initRendererElement()
     this.createContainerElements()
     this.createRenderableComponents()

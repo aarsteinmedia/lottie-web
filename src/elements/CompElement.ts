@@ -33,7 +33,9 @@ export default class CompElement extends BaseRenderer {
     this.destroyBaseElement()
   }
   destroyBaseElement() {
-    throw new Error('CompElement: Method destroyBaseElement not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method destroyBaseElement is not implemented`
+    )
   }
   destroyElements() {
     const { length } = this.layers || []
@@ -48,7 +50,7 @@ export default class CompElement extends BaseRenderer {
   }
 
   hide() {
-    throw new Error('CompElement: Method hide not implemented')
+    throw new Error(`${this.constructor.name}: Method hide is not implemented`)
   }
 
   initElement(
@@ -61,11 +63,6 @@ export default class CompElement extends BaseRenderer {
     this.initTransform()
     this.initRenderable()
     this.initHierarchy()
-    if (!this.initRendererElement) {
-      throw new Error(
-        `${this.constructor.name}: Method initRendererElement is not implemented`
-      )
-    }
     this.initRendererElement()
     this.createContainerElements()
     this.createRenderableComponents()
