@@ -353,7 +353,6 @@ export default class SVGShapeElement extends ShapeElement {
     const { length } = arr
     for (let i = length - 1; i >= 0; i--) {
       processedPos = this.searchProcessedElement(arr[i])
-      console.log(arr[i].ty === 'rp')
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
