@@ -327,16 +327,22 @@ export class RectShapeProperty extends ShapeBaseProperty {
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     this.s = PropertyFactory(
       elem,
       data.s,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(elem, data.r, 0, 0, this) as ValueProperty
+    this.r = PropertyFactory(
+      elem,
+      data.r,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     if (this.dynamicProperties?.length) {
       this.k = true
     } else {
@@ -607,23 +613,59 @@ class StarShapeProperty extends ShapeBaseProperty {
     this.d = data.d
     this.initDynamicPropertyContainer(elem)
     if (data.sy === 1) {
-      this.ir = PropertyFactory(elem, data.ir, 0, 0, this) as ValueProperty
-      this.is = PropertyFactory(elem, data.is, 0, 0.01, this) as ValueProperty
+      this.ir = PropertyFactory(
+        elem,
+        data.ir,
+        0,
+        0,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
+      this.is = PropertyFactory(
+        elem,
+        data.is,
+        0,
+        0.01,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
       this.convertToPath = this.convertStarToPath
     } else {
       this.convertToPath = this.convertPolygonToPath
     }
-    this.pt = PropertyFactory(elem, data.pt, 0, 0, this) as ValueProperty
+    this.pt = PropertyFactory(
+      elem,
+      data.pt,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.p = PropertyFactory(
       elem,
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(elem, data.r, 0, degToRads, this) as ValueProperty
-    this.or = PropertyFactory(elem, data.or, 0, 0, this) as ValueProperty
-    this.os = PropertyFactory(elem, data.os, 0, 0.01, this) as ValueProperty
+    this.r = PropertyFactory(
+      elem,
+      data.r,
+      0,
+      degToRads,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.or = PropertyFactory(
+      elem,
+      data.or,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.os = PropertyFactory(
+      elem,
+      data.os,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.localShapeCollection = newShapeCollection()
     this.localShapeCollection.addShape(this.v)
     this.paths = this.localShapeCollection
@@ -757,14 +799,14 @@ class EllShapeProperty extends ShapeBaseProperty {
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     this.s = PropertyFactory(
       elem,
       data.s,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     if (this.dynamicProperties?.length) {
       this.k = true

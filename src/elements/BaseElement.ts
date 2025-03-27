@@ -70,15 +70,15 @@ export default abstract class BaseElement {
     )
   }
   initExpressions() {
-    const expressionsInterfaces = getExpressionInterfaces()
-    if (!expressionsInterfaces) {
+    const ExpressionsInterfaces = getExpressionInterfaces()
+    if (!ExpressionsInterfaces) {
       return
     }
-    const LayerExpressionInterface = new expressionsInterfaces('layer'),
-      EffectsExpressionInterface = new expressionsInterfaces('effects'),
-      ShapeExpressionInterface = new expressionsInterfaces('shape'),
-      TextExpressionInterface = new expressionsInterfaces('text'),
-      CompExpressionInterface = new expressionsInterfaces('comp')
+    const LayerExpressionInterface = new ExpressionsInterfaces('layer'),
+      EffectsExpressionInterface = new ExpressionsInterfaces('effects'),
+      ShapeExpressionInterface = new ExpressionsInterfaces('shape'),
+      TextExpressionInterface = new ExpressionsInterfaces('text'),
+      CompExpressionInterface = new ExpressionsInterfaces('comp')
     this.layerInterface = (LayerExpressionInterface as any)(this) // TODO:
     if (this.data?.hasMask && this.maskManager) {
       this.layerInterface?.registerMaskInterface?.(this.maskManager)

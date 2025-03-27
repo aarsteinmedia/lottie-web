@@ -18,8 +18,16 @@ export default class NullElement extends FrameElement {
     this.initHierarchy()
   }
 
+  destroy() {
+    //
+  }
+
   getBaseElement(): SVGGElement | null {
     return null
+  }
+
+  hide() {
+    //
   }
 
   prepareFrame(num: number) {
@@ -27,9 +35,9 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    // TODO:
-    // throw new Error(
-    //   `${this.constructor.name}: Method renderFrame is not implemented`
-    // )
+    //
+  }
+  sourceRectAtTime() {
+    //
   }
 }

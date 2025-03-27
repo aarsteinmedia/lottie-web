@@ -13,7 +13,7 @@ import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import TransformProperty from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {
-  arr?: Shape[]
+  arr: Shape[] = []
 
   c?: ValueProperty
 
@@ -32,8 +32,8 @@ export default class RepeaterModifier extends ShapeModifier {
   tMatrix?: Matrix
   tr?: TransformProperty
   private _currentCopies?: number
-  private _elements?: Shape[]
-  private _groups?: Shape[]
+  private _elements: Shape[] = []
+  private _groups: Shape[] = []
   applyTransforms(
     pMatrix: Matrix,
     rMatrix: Matrix,
@@ -96,7 +96,7 @@ export default class RepeaterModifier extends ShapeModifier {
     this._elements = []
     this._groups = []
     this.frameId = -1
-    this.initDynamicPropertyContainer(elem as any)
+    this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
     this.initModifierProperties(elem as ElementInterfaceIntersect, arr[pos])
     while (pos > 0) {
       pos--
@@ -114,8 +114,20 @@ export default class RepeaterModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.c = PropertyFactory(elem, data.c, 0, null, this) as ValueProperty
-    this.o = PropertyFactory(elem, data.o, 0, null, this) as ValueProperty
+    this.c = PropertyFactory(
+      elem,
+      data.c,
+      0,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.o = PropertyFactory(
+      elem,
+      data.o,
+      0,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     if (data.tr) {
       this.tr = new TransformProperty(elem, data.tr, this as any)
       this.so = PropertyFactory(
@@ -123,21 +135,21 @@ export default class RepeaterModifier extends ShapeModifier {
         data.tr.so,
         0,
         0.01,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.eo = PropertyFactory(
         elem,
         data.tr.eo,
         0,
         0.01,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
     this.data = data
     if (!this.dynamicProperties?.length) {
       this.getValue(true)
     }
-    this._isAnimated = !!this.dynamicProperties?.length
+    this._isAnimated = !!this.dynamicProperties.length
     this.pMatrix = new Matrix()
     this.rMatrix = new Matrix()
     this.sMatrix = new Matrix()
@@ -154,10 +166,10 @@ export default class RepeaterModifier extends ShapeModifier {
       hasReloaded = false
     if (this._mdf || _isFirstFrame) {
       const copies = Math.ceil(Number(this.c?.v))
-      if (Number(this._groups?.length) < copies) {
-        while (Number(this._groups?.length) < copies) {
+      if (Number(this._groups.length) < copies) {
+        while (Number(this._groups.length) < copies) {
           const group = {
-            it: this.cloneElements(this._elements || []),
+            it: this.cloneElements(this._elements),
             ty: 'gr',
           } as Shape
           group.it?.push({
@@ -179,8 +191,8 @@ export default class RepeaterModifier extends ShapeModifier {
             ty: ShapeType.Transform,
           } as Shape)
 
-          this.arr?.splice(0, 0, group)
-          this._groups?.splice(0, 0, group)
+          this.arr.splice(0, 0, group)
+          this._groups.splice(0, 0, group)
 
           if (this._currentCopies) {
             this._currentCopies++
@@ -193,14 +205,14 @@ export default class RepeaterModifier extends ShapeModifier {
       }
       cont = 0
       let renderFlag = false
-      const length = (this._groups || []).length - 1
+      const length = this._groups.length - 1
       for (i = 0; i <= length - 1; i++) {
         renderFlag = cont < copies
-        if (this._groups?.[i]) {
+        if (this._groups[i]) {
           this._groups[i]._render = renderFlag
         }
 
-        this.changeGroupRender(this._groups?.[i].it || [], renderFlag)
+        this.changeGroupRender(this._groups[i].it || [], renderFlag)
         if (!renderFlag) {
           const elems = this.elemsData?.[i].it
           if (!elems) {

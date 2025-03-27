@@ -35,11 +35,11 @@ export default class AudioElement extends RenderableElement {
     super()
     this.initFrame()
     this.initRenderable()
-    this.assetData = globalData.getAssetData?.(data.refId) || null
+    this.assetData = globalData.getAssetData(data.refId) || null
     this.initBaseData(data, globalData, comp)
     this._isPlaying = false
     this._canPlay = false
-    const assetPath = this.globalData?.getAssetsPath?.(this.assetData)
+    const assetPath = this.globalData?.getAssetsPath(this.assetData)
     this.audio = this.globalData?.audioController?.createAudio(assetPath)
     this._currentTime = 0
     this.globalData?.audioController?.addAudio(this)
@@ -53,7 +53,7 @@ export default class AudioElement extends RenderableElement {
             data.tm,
             0,
             globalData.frameRate,
-            this
+            this as unknown as ElementInterfaceIntersect
           )
         : { _placeholder: true }
     ) as ValueProperty
@@ -62,7 +62,7 @@ export default class AudioElement extends RenderableElement {
       data.au && data.au.lv ? data.au.lv : { k: [100] },
       1,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
   }
 

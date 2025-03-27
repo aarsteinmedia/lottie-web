@@ -56,7 +56,7 @@ export default class ShapeElement extends RenderableDOMElement {
     }
     const { length } = this.shapes
     for (let i = 0; i < length; i++) {
-      ;(this.shapes[i] as SVGShapeData).sh.reset()
+      this.shapes[i].sh.reset()
     }
 
     const { length: len } = this.shapeModifiers

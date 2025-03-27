@@ -59,14 +59,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
         (data.p as any).x,
         0,
         0,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.py = PropertyFactory(
         elem,
         (data.p as any).y,
         0,
         0,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       if ('z' in data.p) {
         this.pz = PropertyFactory(
@@ -74,7 +74,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
           data.p.z as any,
           0,
           0,
-          this
+          this as unknown as ElementInterfaceIntersect
         ) as ValueProperty
       }
     } else {
@@ -83,7 +83,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         data.p || ({ k: [0, 0, 0] } as any),
         1,
         0,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as MultiDimensionalProperty<Vector3>
     }
     if ('rx' in data) {
@@ -92,21 +92,21 @@ export default class TransformProperty extends DynamicPropertyContainer {
         data.rx,
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.ry = PropertyFactory(
         elem,
         data.ry,
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.rz = PropertyFactory(
         elem,
         data.rz,
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       if (data.or?.k[0].ti) {
         const { length } = data.or.k
@@ -120,7 +120,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         data.or,
         1,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as MultiDimensionalProperty<Vector3>
       this.or.sh = true as any
     } else {
@@ -129,7 +129,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         data.r || ({ k: 0 } as any),
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
     if (data.sk) {
@@ -138,14 +138,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
         data.sk,
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.sa = PropertyFactory(
         elem,
         data.sa,
         0,
         degToRads,
-        this
+        this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
     this.a = PropertyFactory(
@@ -153,14 +153,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
       data.a || ({ k: [0, 0, 0] } as any),
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     this.s = PropertyFactory(
       elem,
       data.s || ({ k: [100, 100, 100] } as any),
       1,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     // Opacity is not part of the transform properties, that's why it won't use this.dynamicProperties. That way transforms won't get updated if opacity changes.
     if (data.o) {
@@ -390,7 +390,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
     this.appliedTransformations = 0
     this.pre.reset()
 
-    if (this.a?.effectsSequence.length) {
+    if (this.a?.effectsSequence?.length) {
       return
     }
 
@@ -401,7 +401,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
     this.pre.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
     this.appliedTransformations = 1
 
-    if (this.s?.effectsSequence.length) {
+    if (this.s?.effectsSequence?.length) {
       return
     }
 
@@ -413,14 +413,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
     this.appliedTransformations = 2
 
     if (this.sk) {
-      if (this.sk.effectsSequence.length || this.sa?.effectsSequence.length) {
+      if (this.sk.effectsSequence?.length || this.sa?.effectsSequence?.length) {
         return
       }
       this.pre.skewFromAxis(-this.sk.v, Number(this.sa?.v))
       this.appliedTransformations = 3
     }
     if (this.r) {
-      if (!this.r.effectsSequence.length) {
+      if (!this.r.effectsSequence?.length) {
         this.pre.rotate(-Number(this.r.v))
         this.appliedTransformations = 4
       }
@@ -428,10 +428,10 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
 
     if (
-      !this.rz?.effectsSequence.length &&
-      !this.ry?.effectsSequence.length &&
-      !this.rx?.effectsSequence.length &&
-      !this.or?.effectsSequence.length
+      !this.rz?.effectsSequence?.length &&
+      !this.ry?.effectsSequence?.length &&
+      !this.rx?.effectsSequence?.length &&
+      !this.or?.effectsSequence?.length
     ) {
       this.pre
         .rotateZ(-Number(this.rz?.v))

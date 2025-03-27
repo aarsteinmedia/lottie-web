@@ -23,6 +23,12 @@ export default class SVGBaseElement extends RenderableDOMElement {
   // renderableEffectsManager?: SVGEffects
   // searchEffectTransforms: any
   transformedElement?: SVGGElement
+  // constructor() {
+  //   super()
+  //   this.initRendererElement = this.initRendererElement.bind(this)
+  //   this.createContainerElements = this.createContainerElements.bind(this)
+  //   this.createRenderableComponents = this.createRenderableComponents.bind(this)
+  // }
   override createContainerElements() {
     this.matteElement = createNS<SVGGElement>('g')
     this.transformedElement = this.layerElement

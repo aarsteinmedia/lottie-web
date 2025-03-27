@@ -28,7 +28,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   comp?: ElementInterfaceIntersect
   data?: VectorProperty<number | number[] | Keyframe[]>
   e?: unknown
-  effectsSequence?: ((arg: unknown) => any)[]
+  effectsSequence: ((arg: unknown) => any)[] = []
   elem?: ElementInterfaceIntersect
   frameId?: number
   g?: unknown
@@ -50,7 +50,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   v?: string | number | any[]
   vel?: number | any[]
   addEffect(effectFunction: any) {
-    this.effectsSequence?.push(effectFunction)
+    this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
   }
   getValueAtCurrentTime() {
@@ -309,7 +309,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   processEffectsSequence() {
     if (
       this.elem?.globalData.frameId === this.frameId ||
-      !this.effectsSequence?.length
+      !this.effectsSequence.length
     ) {
       return
     }

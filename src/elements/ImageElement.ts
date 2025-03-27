@@ -11,7 +11,7 @@ import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
-  layers: LottieLayer[]
+  layers: LottieLayer[] = []
   sourceRect: SourceRect | null
 
   constructor(
@@ -26,8 +26,7 @@ export default class ImageElement extends SVGBaseElement {
     if (this.assetData && this.assetData.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
-    const { layers, renderInnerContent } = new CompElement()
-    this.layers = layers
+    const { renderInnerContent } = new CompElement()
     this.renderInnerContent = renderInnerContent
     this.initElement(data, globalData, comp)
     this.sourceRect = {

@@ -78,9 +78,6 @@ export default class TextElement extends RenderableDOMElement {
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  // createContent() {
-  //   // throw new Error('TextElement: Method createContent it not implemented')
-  // }
 
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     let pathNodes: ShapePath,

@@ -1191,8 +1191,8 @@ export interface GlobalData {
   frameId: number
   frameNum?: number
   frameRate: number
-  getAssetData?: AnimationItem['getAssetData']
-  getAssetsPath?: AnimationItem['getAssetsPath']
+  getAssetData: AnimationItem['getAssetData']
+  getAssetsPath: AnimationItem['getAssetsPath']
   imageLoader?: any
   nm?: string
   progressiveLoad?: boolean

@@ -4,47 +4,34 @@ import type {
   LottieLayer,
 } from '@/types'
 
+import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 // import FrameElement from '@/elements/helpers/FrameElement'
 // import HierarchyElement from '@/elements/helpers/HierarchyElement'
 // import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 // import TransformElement from '@/elements/helpers/TransformElement'
-import BaseRenderer from '@/renderers/BaseRenderer'
+// import BaseRenderer from '@/renderers/BaseRenderer'
 // import SVGRendererBase from '@/renderers/SVGRendererBase'
 // import { extendPrototype } from '@/utils/functionExtensions'
 import { ValueProperty } from '@/utils/Properties'
 
-export default class CompElement extends BaseRenderer {
-  // _mdf?: boolean
-  isInRange?: boolean
+export default class CompElement extends RenderableDOMElement {
+  completeLayers?: boolean
+  elements: ElementInterfaceIntersect[] = []
+  layers: LottieLayer[] = []
   renderedFrame?: number
+
   tm?: ValueProperty
-  // constructor() {
-  //   super()
-  //   const { initFrame } = new FrameElement()
-  //   this.initFrame = initFrame
-  // }
 
-  createContainerElements() {
+  buildAllItems() {
     throw new Error(
-      `${this.constructor.name}: Method createContainerElements is not implemented`
+      `${this.constructor.name}: Method buildAllItems not yet implemented`
     )
   }
-  createRenderableComponents() {
-    throw new Error(
-      `${this.constructor.name}: Method createRenderableComponents is not implemented`
-    )
-  }
-
-  destroy() {
+  override destroy() {
     this.destroyElements()
     this.destroyBaseElement()
   }
 
-  destroyBaseElement() {
-    throw new Error(
-      `${this.constructor.name}: Method destroyBaseElement is not implemented`
-    )
-  }
   destroyElements() {
     const { length } = this.layers
     for (let i = 0; i < length; i++) {
@@ -53,14 +40,12 @@ export default class CompElement extends BaseRenderer {
       }
     }
   }
+
   getElements(): ElementInterfaceIntersect[] | undefined {
     return this.elements
   }
-  hide() {
-    throw new Error(`${this.constructor.name}: Method hide is not implemented`)
-  }
 
-  initElement(
+  override initElement(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
@@ -79,37 +64,7 @@ export default class CompElement extends BaseRenderer {
     this.hide()
   }
 
-  // initFrame() {
-  //   throw new Error(
-  //     `${this.constructor.name}: Method initFrame not implemented`
-  //   )
-  // }
-
-  // initHierarchy() {
-  //   throw new Error(
-  //     `${this.constructor.name}: Method initHierarchy not implemented`
-  //   )
-  // }
-
-  initRenderable() {
-    throw new Error(
-      `${this.constructor.name}: Method initRenderable not implemented`
-    )
-  }
-
-  initRendererElement() {
-    throw new Error(
-      `${this.constructor.name}: Method initRendererElement is not implemented`
-    )
-  }
-
-  // initTransform() {
-  //   throw new Error(
-  //     `${this.constructor.name}: Method initTransform not implemented`
-  //   )
-  // }
-
-  prepareFrame(val: number) {
+  override prepareFrame(val: number) {
     this._mdf = false
     this.prepareRenderableFrame(val)
     this.prepareProperties(val, this.isInRange)
@@ -137,29 +92,18 @@ export default class CompElement extends BaseRenderer {
     }
     // This iteration needs to be backwards because of how expressions connect between each other
     for (let i = length - 1; i >= 0; i--) {
-      if (this.completeLayers || this.elements?.[i]) {
-        this.elements?.[i].prepareFrame?.(
-          this.renderedFrame - Number(this.layers?.[i].st)
+      if (this.completeLayers || this.elements[i]) {
+        this.elements[i].prepareFrame(
+          this.renderedFrame - Number(this.layers[i].st)
         )
-        if (this.elements?.[i]._mdf) {
+        if (this.elements[i]._mdf) {
           this._mdf = true
         }
       }
     }
   }
 
-  // prepareProperties(_val: number, _isInRange?: boolean) {
-  //   throw new Error(
-  //     `${this.constructor.name}: Method prepareProperties not implemented`
-  //   )
-  // }
-  prepareRenderableFrame(_val: number, _?: boolean) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareRenderableFrame not implemented`
-    )
-  }
-
-  renderInnerContent() {
+  override renderInnerContent() {
     if (!this.layers) {
       throw new Error(`${this.constructor.name}: Layers are implemented`)
     }

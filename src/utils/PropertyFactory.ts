@@ -21,7 +21,7 @@ export default function PropertyFactory(
   dataFromProps?: any, // VectorProperty<T>,
   type?: number,
   mult?: null | number,
-  container?: any // ElementInterfaceIntersect | GroupEffect
+  container?: ElementInterfaceIntersect // ElementInterfaceIntersect | GroupEffect
 ) {
   let data = dataFromProps
   if (data && 'sid' in data && data.sid) {
@@ -32,19 +32,19 @@ export default function PropertyFactory(
     p = new ValueProperty(elem, data as VectorProperty, mult, container as any)
   } else if (typeof (data?.k as number[])[0] === 'number') {
     p = new MultiDimensionalProperty(
-      elem as any,
+      elem as ElementInterfaceIntersect,
       data as VectorProperty<number[]>,
       mult,
-      container as any
+      container as ElementInterfaceIntersect
     )
   } else {
     switch (type) {
       case 0:
         p = new KeyframedValueProperty(
-          elem as any,
+          elem as ElementInterfaceIntersect,
           data as unknown as VectorProperty<Keyframe[]>,
           mult,
-          container as any
+          container as ElementInterfaceIntersect
         )
         break
       case 1:
@@ -52,7 +52,7 @@ export default function PropertyFactory(
           elem,
           data as VectorProperty<number[]>,
           mult,
-          container as any
+          container as ElementInterfaceIntersect
         )
         break
       default:
@@ -63,7 +63,7 @@ export default function PropertyFactory(
     p = new NoProperty()
   }
   if (p?.effectsSequence.length) {
-    container?.addDynamicProperty?.(p)
+    container?.addDynamicProperty(p)
   }
   return p
 }

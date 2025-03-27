@@ -59,15 +59,18 @@ export default class SVGShapeElement extends ShapeElement {
     const {
       createContainerElements,
       createRenderableComponents,
+      destroyBaseElement,
       getBaseElement,
       getMatte,
       initRendererElement,
       renderElement,
       setMatte,
     } = new SVGBaseElement()
-    this.searchShapes = this.searchShapes.bind(this) // TODO: Evaluate this
+    // this.searchShapes = this.searchShapes.bind(this) // TODO: Evaluate this
+    // this.renderModifiers = this.renderModifiers.bind(this)
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
+    this.destroyBaseElement = destroyBaseElement
     this.getBaseElement = getBaseElement
     this.initRendererElement = initRendererElement
     this.renderElement = renderElement
@@ -136,13 +139,18 @@ export default class SVGShapeElement extends ShapeElement {
     level: number
   ) {
     let ty = 4
-    if (data.ty === 'rc') {
-      ty = 5
-    } else if (data.ty === 'el') {
-      ty = 6
-    } else if (data.ty === 'sr') {
-      ty = 7
+
+    switch (data.ty) {
+      case 'rc':
+        ty = 5
+        break
+      case 'el':
+        ty = 6
+        break
+      case 'sr':
+        ty = 7
     }
+
     const shapeProperty = getShapeProp(this, data, ty),
       elementData = new SVGShapeData(
         ownTransformers,

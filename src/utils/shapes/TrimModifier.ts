@@ -203,7 +203,7 @@ export default class TrimModifier extends ShapeModifier {
     return shapes
   }
   override addShapeToModifier(shapeData: SVGShapeData) {
-    ;(shapeData as any).pathsData = [] // TODO: Find cases and drill for types
+    shapeData.pathsData = []
   }
   calculateShapeEdges(
     s: any,
@@ -269,17 +269,35 @@ export default class TrimModifier extends ShapeModifier {
     elem: ElementInterfaceIntersect,
     data: Shape
   ) {
-    this.s = PropertyFactory(elem, data.s, 0, 0.01, this) as ValueProperty
-    this.e = PropertyFactory(elem, data.e, 0, 0.01, this) as ValueProperty
-    this.o = PropertyFactory(elem, data.o, 0, 0, this) as ValueProperty
+    this.s = PropertyFactory(
+      elem,
+      data.s,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.e = PropertyFactory(
+      elem,
+      data.e,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.o = PropertyFactory(
+      elem,
+      data.o,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.sValue = 0
     this.eValue = 0
     this.getValue = this.processKeys
     this.m = data.m
     this._isAnimated =
-      !!this.s.effectsSequence.length ||
-      !!this.e.effectsSequence.length ||
-      !!this.o.effectsSequence.length
+      !!this.s.effectsSequence?.length ||
+      !!this.e.effectsSequence?.length ||
+      !!this.o.effectsSequence?.length
   }
 
   processShapes(_isFirstFrame: boolean) {

@@ -26,16 +26,16 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       localShapeCollection: newShapeCollection(),
       shape: data.sh,
     } as unknown as SVGShapeData
-    this.shapes?.push(shapeData)
+    this.shapes.push(shapeData)
     this.addShapeToModifier(shapeData)
     if (this._isAnimated) {
       data.setAsAnimated()
     }
   }
   addShapeToModifier(_shapeData: SVGShapeData) {
-    throw new Error(
-      `${this.constructor.name}: Method addShapeToModifier is not implemented`
-    )
+    // throw new Error(
+    //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
+    // )
   }
   init(
     elem: ElementInterfaceIntersect,
@@ -50,7 +50,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     this.frameId = initialDefaultFrame
     this.closed = false
     this.k = false
-    if (this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length) {
       this.k = true
     } else {
       this.getValue(true)
