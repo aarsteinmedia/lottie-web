@@ -14,7 +14,7 @@ import { extendPrototype } from '@/utils/functionExtensions'
 import { ValueProperty } from '@/utils/Properties'
 
 export default class CompElement extends BaseRenderer {
-  _mdf?: boolean
+  // _mdf?: boolean
   createContainerElements: any
   createRenderableComponents: any
   initRendererElement: any
@@ -72,27 +72,9 @@ export default class CompElement extends BaseRenderer {
     this.hide()
   }
 
-  initFrame() {
-    throw new Error(
-      `${this.constructor.name}: Method initFrame not implemented`
-    )
-  }
-
-  initHierarchy() {
-    throw new Error(
-      `${this.constructor.name}: Method initHierarchy not implemented`
-    )
-  }
-
   initRenderable() {
     throw new Error(
       `${this.constructor.name}: Method initRenderable not implemented`
-    )
-  }
-
-  initTransform() {
-    throw new Error(
-      `${this.constructor.name}: Method initTransform not implemented`
     )
   }
 
@@ -102,11 +84,6 @@ export default class CompElement extends BaseRenderer {
     )
   }
 
-  prepareProperties(_val: number, _isInRange?: boolean) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareProperties not implemented`
-    )
-  }
   prepareRenderableFrame(_val: number, _?: boolean) {
     throw new Error(
       `${this.constructor.name}: Method prepareRenderableFrame not implemented`

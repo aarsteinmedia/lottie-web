@@ -348,7 +348,6 @@ export default class SVGShapeElement extends ShapeElement {
     transformers: Transformer[],
     renderFromProps: boolean
   ) {
-    console.log(this.constructor.name)
     let render = renderFromProps
     const ownTransformers: Transformer[] = [].concat(transformers as any),
       ownStyles = [],
