@@ -8,37 +8,37 @@ import { ProcessedElement, type SVGShapeData } from '@/elements/helpers/shapes'
 export default class ShapeElement extends RenderableDOMElement {
   _length?: number
 
-  processedElements?: ProcessedElement[]
+  processedElements: ProcessedElement[] = []
 
-  shapeModifiers?: ShapeModifierInterface[]
+  shapeModifiers: ShapeModifierInterface[] = []
 
-  shapes?: SVGShapeData[] | ShapePath[]
+  shapes: SVGShapeData[] | ShapePath[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
     const elements = this.processedElements
-    let i = elements?.length
+    let i = elements.length
     while (i) {
       i--
-      if (elements?.[i].elem === elem) {
-        elements![i].pos = pos
+      if (elements[i].elem === elem) {
+        elements[i].pos = pos
         return
       }
     }
-    elements?.push(new ProcessedElement(elem, pos))
+    elements.push(new ProcessedElement(elem, pos))
   }
 
   addShapeToModifiers(data: SVGShapeData) {
-    const { length } = this.shapeModifiers || []
+    const { length } = this.shapeModifiers
     for (let i = 0; i < length; i++) {
-      this.shapeModifiers?.[i].addShape?.(data)
+      this.shapeModifiers[i].addShape(data)
     }
   }
 
   isShapeInAnimatedModifiers(data: Shape) {
     let i = 0
-    const { length } = this.shapeModifiers || []
+    const { length } = this.shapeModifiers
     while (i < length) {
-      if (this.shapeModifiers?.[i].isAnimatedWithShape(data)) {
+      if (this.shapeModifiers[i].isAnimatedWithShape(data)) {
         return true
       }
       i++
@@ -52,18 +52,19 @@ export default class ShapeElement extends RenderableDOMElement {
   }
 
   renderModifiers() {
-    if (!this.shapeModifiers?.length) {
+    console.log(this.shapeModifiers)
+    if (!this.shapeModifiers.length) {
       return
     }
-    const { length } = this.shapes || []
+    const { length } = this.shapes
     for (let i = 0; i < length; i++) {
-      ;(this.shapes?.[i] as SVGShapeData).sh.reset()
+      ;(this.shapes[i] as SVGShapeData).sh.reset()
     }
 
-    const { length: len } = this.shapeModifiers || []
+    const { length: len } = this.shapeModifiers
     let shouldBreakProcess
     for (let i = len - 1; i >= 0; i--) {
-      shouldBreakProcess = this.shapeModifiers?.[i].processShapes(
+      shouldBreakProcess = this.shapeModifiers[i].processShapes(
         !!this._isFirstFrame
       )
       // workaround to fix cases where a repeater resets the shape so the following processes get called twice
@@ -76,10 +77,10 @@ export default class ShapeElement extends RenderableDOMElement {
   searchProcessedElement(elem: unknown) {
     const elements = this.processedElements
     let i = 0
-    const { length } = elements || []
+    const { length } = elements
     while (i < length) {
-      if (elements?.[i].elem === elem) {
-        return elements?.[i].pos
+      if (elements[i].elem === elem) {
+        return elements[i].pos
       }
       i++
     }
