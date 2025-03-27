@@ -26,12 +26,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _isFirstFrame?: boolean
   _placeholder?: boolean
   comp?: ElementInterfaceIntersect
-  data?: any
-  e?: any
-  effectsSequence?: any
-  elem?: any
+  data?: VectorProperty<number | number[] | Keyframe[]>
+  e?: unknown
+  effectsSequence?: ((arg: unknown) => any)[]
+  elem?: ElementInterfaceIntersect
   frameId?: number
-  g?: any
+  g?: unknown
   getValueAtTime?: (a: number, b?: number) => any
   initFrame = initialDefaultFrame
   k?: boolean
@@ -45,13 +45,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   mult?: number
   offsetTime?: number
   pv?: string | number | any[]
-  s?: any
+  s?: unknown
   sh?: Shape
   v?: string | number | any[]
   vel?: number | any[]
   addEffect(effectFunction: any) {
-    this.effectsSequence.push(effectFunction)
-    ;(this.container as any)?.addDynamicProperty?.(this)
+    this.effectsSequence?.push(effectFunction)
+    this.container?.addDynamicProperty(this)
   }
   getValueAtCurrentTime() {
     const offsetTime = Number(this.offsetTime),
@@ -308,8 +308,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   }
   processEffectsSequence() {
     if (
-      this.elem.globalData.frameId === this.frameId ||
-      !this.effectsSequence.length
+      this.elem?.globalData.frameId === this.frameId ||
+      !this.effectsSequence?.length
     ) {
       return
     }
@@ -320,14 +320,14 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this.lock = true
     this._mdf = !!this._isFirstFrame
     const len = this.effectsSequence.length
-    let finalValue = this.kf ? this.pv : this.data.k
+    let finalValue = this.kf ? this.pv : this.data?.k
     for (let i = 0; i < len; i++) {
       finalValue = this.effectsSequence[i](finalValue)
     }
-    this.setVValue(finalValue)
+    this.setVValue(finalValue as number)
     this._isFirstFrame = false
     this.lock = false
-    this.frameId = this.elem.globalData.frameId
+    this.frameId = this.elem?.globalData.frameId
   }
   setVValue(val: number | number[]) {
     let multipliedValue
