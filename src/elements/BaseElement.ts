@@ -2,9 +2,9 @@ import type MaskElement from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
-  ItemsData,
   LottieLayer,
   Shape,
+  SVGElementInterface,
 } from '@/types'
 
 import EffectsManager from '@/effects/EffectsManager'
@@ -20,7 +20,7 @@ export default abstract class BaseElement {
   effectsManager?: EffectsManager
 
   globalData?: GlobalData
-  itemsData: ItemsData[] = []
+  itemsData: SVGElementInterface[] = []
   layerElement?: SVGGElement
   layerId?: string
 

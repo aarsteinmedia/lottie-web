@@ -2,7 +2,6 @@ import type {
   AnimatedContent,
   ElementInterfaceIntersect,
   GlobalData,
-  ItemsData,
   LottieLayer,
   Shape,
   ShapeDataInterface,
@@ -35,7 +34,7 @@ import TransformProperty from '@/utils/TransformProperty'
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   animatedContents: AnimatedContent[]
-  prevViewData: ItemsData[]
+  prevViewData: SVGElementInterface[]
   stylesList: SVGStyleData[]
   constructor(
     data: LottieLayer,
@@ -109,7 +108,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.searchShapes(
       this.shapesData,
       this.itemsData as SVGElementInterface[],
-      this.prevViewData,
+      this.prevViewData || [],
       this.layerElement,
       0,
       [],
@@ -285,7 +284,7 @@ export default class SVGShapeElement extends ShapeElement {
     this._isFirstFrame = true
     const { length } = this.itemsData || []
     for (let i = 0; i < length; i++) {
-      this.prevViewData![i] = this.itemsData![i]
+      this.prevViewData[i] = this.itemsData![i]
     }
     this.searchShapes(
       this.shapesData,
@@ -342,8 +341,8 @@ export default class SVGShapeElement extends ShapeElement {
   }
   searchShapes(
     arr: Shape[],
-    itemsData: (SVGElementInterface | null)[],
-    prevViewData: any[],
+    itemsData: SVGElementInterface[],
+    prevViewData: SVGElementInterface[],
     container: SVGGElement,
     level: number,
     transformers: Transformer[],
@@ -353,7 +352,7 @@ export default class SVGShapeElement extends ShapeElement {
     const ownTransformers: Transformer[] = [].concat(transformers as any),
       ownStyles = [],
       ownModifiers = []
-    let currentTransform, modifier, processedPos
+    let currentTransform, modifier, processedPos: number
     const { length } = arr
     for (let i = length - 1; i >= 0; i--) {
       processedPos = this.searchProcessedElement(arr[i])
@@ -375,11 +374,14 @@ export default class SVGShapeElement extends ShapeElement {
           if (processedPos) {
             itemsData[i]!.style!.closed = false
           } else {
-            itemsData[i] = this.createStyleElement(arr[i], level)
+            itemsData[i] = this.createStyleElement(
+              arr[i],
+              level
+            ) as SVGElementInterface
           }
           if (arr[i]._render) {
             if (itemsData[i]?.style?.pElem.parentNode !== container) {
-              container.appendChild(itemsData[i]!.style!.pElem)
+              container.appendChild(itemsData[i].style!.pElem)
             }
           }
           ownStyles.push(itemsData[i]?.style)
@@ -392,7 +394,9 @@ export default class SVGShapeElement extends ShapeElement {
               itemsData[i]!.prevViewData![j] = itemsData[i]!.it![j]
             }
           } else {
-            itemsData[i] = this.createGroupElement(arr[i]) as any
+            itemsData[i] = this.createGroupElement(
+              arr[i]
+            ) as SVGElementInterface
           }
           this.searchShapes(
             arr[i].it as Shape[],
@@ -448,7 +452,7 @@ export default class SVGShapeElement extends ShapeElement {
             modifier = getModifier<TrimModifier>(arr[i].ty)
             modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
             ;(itemsData as unknown as TrimModifier[])[i] = modifier
-            this.shapeModifiers?.push(modifier)
+            this.shapeModifiers.push(modifier)
           }
           ownModifiers.push(modifier)
           break
@@ -466,14 +470,17 @@ export default class SVGShapeElement extends ShapeElement {
               i,
               itemsData as ShapeGroupData[]
             )
-            this.shapeModifiers?.push(modifier)
+            this.shapeModifiers.push(modifier)
             render = false
           }
           ownModifiers.push(modifier)
         }
       }
 
-      this.addProcessedElement(arr[i] as any, i + 1)
+      this.addProcessedElement(
+        arr[i] as unknown as ElementInterfaceIntersect,
+        i + 1
+      )
     }
     const { length: sLen } = ownStyles
     for (let i = 0; i < sLen; i++) {

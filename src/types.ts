@@ -160,7 +160,7 @@ export interface CompInterface extends AnimationItem {
   configAnimation: (animData: AnimationData) => void
   data: LottieLayer
   destroy: () => void
-  dynamicProperties: unknown[]
+  dynamicProperties: DynamicPropertyContainer[]
   effectsManager: unknown
   elements: CompInterface[]
   getBaseElement: () => SVGElement
@@ -192,7 +192,7 @@ export interface CompInterface extends AnimationItem {
   maskedElement: SVGGElement
   maskManager: MaskElement
   matteElement: SVGGElement
-  pendingElements: unknown[]
+  pendingElements: ElementInterfaceIntersect[]
   prepareFrame?: (val: number) => void
   renderConfig: SVGRendererConfig
   renderedFrame: number
