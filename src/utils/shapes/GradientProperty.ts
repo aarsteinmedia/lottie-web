@@ -5,6 +5,8 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 
+import { isArrayOfNum } from '..'
+
 export default class GradientProperty extends DynamicPropertyContainer {
   _cmdf: boolean
   _collapsable: boolean
@@ -12,9 +14,9 @@ export default class GradientProperty extends DynamicPropertyContainer {
   _omdf: boolean
   c: Uint8ClampedArray
   data: GradientColor
-  k: any
+  k?: boolean
   o: Float32Array
-  prop: any
+  prop: ReturnType<typeof PropertyFactory>
   constructor(
     elem: ElementInterfaceIntersect,
     data: GradientColor,
@@ -75,31 +77,31 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this._mdf = false
     this._cmdf = false
     this._omdf = false
-    if (this.prop._mdf || forceRender) {
-      let i
-      let len = this.data.p * 4
-      let mult
-      let val
-      for (i = 0; i < len; i++) {
-        mult = i % 4 === 0 ? 100 : 255
-        val = Math.round(this.prop.v[i] * mult)
-        if (this.c[i] !== val) {
-          this.c[i] = val
-          this._cmdf = !forceRender
-        }
-      }
-      if (this.o.length) {
-        len = this.prop.v.length
-        for (i = this.data.p * 4; i < len; i++) {
-          mult = i % 2 === 0 ? 100 : 1
-          val = i % 2 === 0 ? Math.round(this.prop.v[i] * 100) : this.prop.v[i]
-          if (this.o[i - this.data.p * 4] !== val) {
-            this.o[i - this.data.p * 4] = val
-            this._omdf = !forceRender
-          }
-        }
-      }
-      this._mdf = !forceRender
+    if ((!this.prop._mdf && !forceRender) || !isArrayOfNum(this.prop.v)) {
+      return
     }
+    const len = this.data.p * 4
+    let mult
+    let val
+    for (let i = 0; i < len; i++) {
+      mult = i % 4 === 0 ? 100 : 255
+      val = Math.round(this.prop.v[i] * mult)
+      if (this.c[i] !== val) {
+        this.c[i] = val
+        this._cmdf = !forceRender
+      }
+    }
+    if (this.o.length) {
+      const { length } = this.prop.v
+      for (let i = this.data.p * 4; i < length; i++) {
+        mult = i % 2 === 0 ? 100 : 1
+        val = i % 2 === 0 ? Math.round(this.prop.v[i] * 100) : this.prop.v[i]
+        if (this.o[i - this.data.p * 4] !== val) {
+          this.o[i - this.data.p * 4] = val
+          this._omdf = !forceRender
+        }
+      }
+    }
+    this._mdf = !forceRender
   }
 }

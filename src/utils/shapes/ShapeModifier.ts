@@ -61,7 +61,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       `${this.constructor.name}: Method initModifierProperties is not implemented`
     )
   }
-  isAnimatedWithShape(_data: Shape) {
+  isAnimatedWithShape(_data: Shape): boolean {
     throw new Error(
       `${this.constructor.name}: Method isAnimatedWithShape is not implemented`
     )

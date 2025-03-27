@@ -52,7 +52,6 @@ export default class ShapeElement extends RenderableDOMElement {
   }
 
   renderModifiers() {
-    console.log(this.shapeModifiers)
     if (!this.shapeModifiers.length) {
       return
     }

@@ -354,6 +354,17 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       maxRecursion
     )
   },
+  /** Check if value is array. Made to work with typed arrays as well as regular */
+  isArrayOfNum = (input: unknown): input is number[] => {
+    if (
+      !(Symbol.iterator in Object(input)) ||
+      ((input as unknown[]).length &&
+        typeof (input as unknown[])[0] !== 'number')
+    ) {
+      return false
+    }
+    return true
+  },
   isBase64 = (str?: string) => {
     if (!str) {
       return false

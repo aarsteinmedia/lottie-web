@@ -6,6 +6,7 @@ import type {
   SourceRect,
   Vector3,
 } from '@/types'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
@@ -25,7 +26,7 @@ export default class SVGTextLottieElement extends TextElement {
   }
   renderedFrame?: number
 
-  renderedLetters?: string[]
+  renderedLetters: string[] = []
   textContainer?: SVGTextElement
   textSpans: {
     childSpan?: null | SVGTextElement | SVGGElement
@@ -60,7 +61,7 @@ export default class SVGTextLottieElement extends TextElement {
   }
 
   override buildNewText() {
-    this.addDynamicProperty(this as any)
+    this.addDynamicProperty(this as unknown as DynamicPropertyContainer)
     let i, len
 
     const documentData = this.textProperty?.currentData

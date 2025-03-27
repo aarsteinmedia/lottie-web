@@ -20,14 +20,14 @@ export default abstract class BaseElement {
   effectsManager?: EffectsManager
 
   globalData?: GlobalData
-  itemsData?: ItemsData[]
+  itemsData: ItemsData[] = []
   layerElement?: SVGGElement
   layerId?: string
 
   layerInterface?: ProjectInterface
 
   maskManager?: MaskElement
-  shapesData?: Shape[]
+  shapesData: Shape[] = []
   type?: unknown
   checkMasks() {
     if (!this.data?.hasMask) {
