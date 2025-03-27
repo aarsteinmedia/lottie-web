@@ -320,25 +320,21 @@ export default class TrimModifier extends ShapeModifier {
     }
     let shapePaths
     let i
-    const { length } = this.shapes || []
-    let j
-    let jLen
-    let pathsData
-    let pathData
-    let totalShapeLength
-    let totalModifierLength = 0
+    const { length } = this.shapes
+    let j,
+      jLen,
+      pathsData,
+      pathData,
+      totalShapeLength,
+      totalModifierLength = 0
 
     if (e === s) {
       for (i = 0; i < length; i++) {
-        ;(this.shapes as any[])?.[i].localShapeCollection.releaseShapes()
-        if (this.shapes) {
-          ;(this.shapes as any[])[i].shape._mdf = true
-          ;(this.shapes as any[])[i].shape.paths = (this.shapes as any[])?.[
-            i
-          ].localShapeCollection
-          if (this._mdf) {
-            ;(this.shapes as any[])[i].pathsData.length = 0
-          }
+        this.shapes[i].localShapeCollection.releaseShapes()
+        this.shapes[i].shape._mdf = true
+        this.shapes[i].shape.paths = this.shapes[i].localShapeCollection
+        if (this._mdf) {
+          this.shapes[i].pathsData.length = 0
         }
       }
     } else if (!((e === 1 && s === 0) || (e === 0 && s === 1))) {
@@ -379,10 +375,10 @@ export default class TrimModifier extends ShapeModifier {
           shapeData.shape!._mdf = true
         }
       }
-      let shapeS = s
-      let shapeE = e
-      let addedLength = 0
-      let edges
+      let shapeS = s,
+        shapeE = e,
+        addedLength = 0,
+        edges
       for (i = length - 1; i >= 0; i--) {
         shapeData = this.shapes?.[i] as unknown as ShapeProperty
         if (shapeData.shape?._mdf) {
@@ -460,18 +456,15 @@ export default class TrimModifier extends ShapeModifier {
       for (i = 0; i < length; i++) {
         // Releasign Trim Cached paths data when no trim applied in case shapes are modified inbetween.
         // Don't remove this even if it's losing cached info.
-        if (!this.shapes) {
-          continue
-        }
-        ;(this.shapes as any[])[i].pathsData.length = 0
-        ;(this.shapes as any[])[i].shape._mdf = true
+        this.shapes[i].pathsData.length = 0
+        this.shapes[i].shape._mdf = true
       }
     }
   }
 
-  releasePathsData(pathsData: any) {
-    const len = pathsData.length
-    for (let i = 0; i < len; i++) {
+  releasePathsData(pathsData: ShapePath[]) {
+    const { length } = pathsData
+    for (let i = 0; i < length; i++) {
       segmentsLengthPool.release(pathsData[i])
     }
     pathsData.length = 0

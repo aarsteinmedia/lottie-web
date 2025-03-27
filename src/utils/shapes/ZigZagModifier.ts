@@ -201,7 +201,7 @@ export default class ZigZagModifier extends ShapeModifier {
 
     if (amplitude !== 0) {
       let shapeData, localShapeCollection, shapePaths
-      const { length } = this.shapes || []
+      const { length } = this.shapes
       for (let i = 0; i < length; i++) {
         shapeData = (this.shapes as unknown as ShapeProperty[])[i]
         localShapeCollection = shapeData.localShapeCollection

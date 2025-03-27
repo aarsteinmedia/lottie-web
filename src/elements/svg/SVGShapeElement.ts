@@ -95,7 +95,9 @@ export default class SVGShapeElement extends ShapeElement {
     })
   }
   buildExpressionInterface() {
-    throw new Error('Method not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method buildExpressionInterface not implemented`
+    )
   }
   override createContent() {
     if (!this.layerElement) {

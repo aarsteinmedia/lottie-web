@@ -69,7 +69,6 @@ export default class RenderableElement extends FrameElement {
     return { h: Number(this.data?.height), w: Number(this.data?.width) }
   }
   hide() {
-    // console.log('HIDE', this);
     if (!this.hidden && (!this.isInRange || this.isTransparent)) {
       const elem = this.baseElement || this.layerElement
       if (elem) {
@@ -113,7 +112,6 @@ export default class RenderableElement extends FrameElement {
   }
 
   show() {
-    // console.log('SHOW', this);
     if (this.isInRange && !this.isTransparent) {
       if (!this.data?.hd) {
         const elem = this.baseElement || this.layerElement
@@ -125,9 +123,7 @@ export default class RenderableElement extends FrameElement {
       this._isFirstFrame = true
     }
   }
-  // show() {
-  //   throw new Error('RenderableElement: Method show not implemented yet')
-  // }
+
   sourceRectAtTime(): SourceRect | null {
     return {
       height: 100,

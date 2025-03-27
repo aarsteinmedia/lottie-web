@@ -162,16 +162,24 @@ export default class BaseRenderer extends FrameElement {
     }
   }
   createNull(_layer: LottieLayer) {
-    throw new Error('BaseRenderer: Method createNull not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createNull not implemented`
+    )
   }
   createShape(_layer: LottieLayer) {
-    throw new Error('BaseRenderer: Method createShape not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createShape not implemented`
+    )
   }
   createSolid(_layer: LottieLayer) {
-    throw new Error('BaseRenderer: Method createSolid not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createSolid not implemented`
+    )
   }
   createText(_layer: LottieLayer) {
-    throw new Error('BaseRenderer: Method createText not yet implemented')
+    throw new Error(
+      `${this.constructor.name}: Method createText not implemented`
+    )
   }
   getElementById(ind: number) {
     const { length } = this.elements || []

@@ -14,28 +14,28 @@ export default class ShapeModifier extends DynamicPropertyContainer {
   elem?: ElementInterfaceIntersect
   frameId?: number
   k?: boolean
-  shapes?: SVGShapeData[]
+  shapes: SVGShapeData[] = []
   addShape(data: SVGShapeData) {
-    if (!this.closed) {
-      // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
-      data.sh.container?.addDynamicProperty(data.sh as any)
-      const shapeData = {
-        data: data,
-        localShapeCollection: newShapeCollection(),
-        shape: data.sh,
-      } as unknown as SVGShapeData
-      this.shapes?.push(shapeData)
-      this.addShapeToModifier(shapeData)
-      if (this._isAnimated) {
-        data.setAsAnimated()
-      }
+    if (this.closed) {
+      return
+    }
+    // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
+    data.sh.container?.addDynamicProperty(data.sh as DynamicPropertyContainer)
+    const shapeData = {
+      data: data,
+      localShapeCollection: newShapeCollection(),
+      shape: data.sh,
+    } as unknown as SVGShapeData
+    this.shapes?.push(shapeData)
+    this.addShapeToModifier(shapeData)
+    if (this._isAnimated) {
+      data.setAsAnimated()
     }
   }
   addShapeToModifier(_shapeData: SVGShapeData) {
-    // TODO:
-    // throw new Error(
-    //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
-    // )
+    throw new Error(
+      `${this.constructor.name}: Method addShapeToModifier is not implemented`
+    )
   }
   init(
     elem: ElementInterfaceIntersect,

@@ -1,11 +1,10 @@
 import type { ElementInterfaceIntersect, GradientColor } from '@/types'
 
 import { ArrayType } from '@/enums'
+import { isArrayOfNum } from '@/utils'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
-
-import { isArrayOfNum } from '..'
 
 export default class GradientProperty extends DynamicPropertyContainer {
   _cmdf: boolean

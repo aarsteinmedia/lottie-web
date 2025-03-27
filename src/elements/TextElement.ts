@@ -71,7 +71,9 @@ export default class TextElement extends RenderableDOMElement {
     )},${Math.round(colorData[2] * 255)})`
   }
   buildNewText() {
-    throw new Error('TextElement: Method buildNewText it not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method buildNewText it not implemented`
+    )
   }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
