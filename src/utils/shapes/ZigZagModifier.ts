@@ -108,21 +108,21 @@ export default class ZigZagModifier extends ShapeModifier {
       data.s,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.frequency = PropertyFactory(
       elem,
       data.r,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.pointsType = PropertyFactory(
       elem,
       data.pt,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this._isAnimated =
       this.amplitude?.effectsSequence.length !== 0 ||

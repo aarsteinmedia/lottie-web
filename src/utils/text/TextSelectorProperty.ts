@@ -38,10 +38,16 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
       data.s || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     if ('e' in data) {
-      this.e = PropertyFactory(elem, data.e, 0, 0, this) as ValueProperty
+      this.e = PropertyFactory(
+        elem,
+        data.e,
+        0,
+        0,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
     } else {
       this.e = { v: 100 }
     }
@@ -50,30 +56,36 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
       data.o || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.xe = PropertyFactory(
       elem,
       data.xe || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.ne = PropertyFactory(
       elem,
       data.ne || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.sm = PropertyFactory(
       elem,
       data.sm || { k: 100 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.a = PropertyFactory(elem, data.a, 0, 0.01, this) as ValueProperty
+    this.a = PropertyFactory(
+      elem,
+      data.a,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
 
     if (!this.dynamicProperties?.length) {
       this.getValue()

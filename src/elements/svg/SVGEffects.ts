@@ -38,7 +38,7 @@ export default class SVGEffects {
         const Effect = registeredEffects[elem.data.ef![i].ty].effect
 
         filterManager = new Effect(
-          fil,
+          fil as any,
           elem.effectsManager?.effectElements[i] as any,
           elem as any,
           idPrefix + count,

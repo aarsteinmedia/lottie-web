@@ -23,13 +23,19 @@ export default class OffsetPathModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.amount = PropertyFactory(elem, data.a, 0, null, this) as ValueProperty
+    this.amount = PropertyFactory(
+      elem,
+      data.a,
+      0,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.miterLimit = PropertyFactory(
       elem,
       data.ml,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.lineJoin = data.lj
     this._isAnimated = this.amount?.effectsSequence.length !== 0
