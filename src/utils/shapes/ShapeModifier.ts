@@ -22,7 +22,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
     data.sh.container?.addDynamicProperty(data.sh as DynamicPropertyContainer)
     const shapeData = {
-      data: data,
+      data,
       localShapeCollection: newShapeCollection(),
       shape: data.sh,
     } as unknown as SVGShapeData

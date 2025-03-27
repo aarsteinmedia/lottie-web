@@ -318,30 +318,28 @@ export default class TrimModifier extends ShapeModifier {
       s = this.sValue
       e = this.eValue
     }
-    let shapePaths
-    let i
-    const { length } = this.shapes
-    let j,
+    let shapePaths,
+      j,
       jLen,
       pathsData,
       pathData,
       totalShapeLength,
       totalModifierLength = 0
 
+    const { length } = this.shapes
     if (e === s) {
-      for (i = 0; i < length; i++) {
-        this.shapes[i].localShapeCollection.releaseShapes()
-        this.shapes[i].shape._mdf = true
-        this.shapes[i].shape.paths = this.shapes[i].localShapeCollection
+      for (let i = 0; i < length; i++) {
+        this.shapes[i].localShapeCollection?.releaseShapes()
+        this.shapes[i].shape!._mdf = true
+        this.shapes[i].shape!.paths = this.shapes[i].localShapeCollection
         if (this._mdf) {
-          this.shapes[i].pathsData.length = 0
+          this.shapes[i].pathsData!.length = 0
         }
       }
     } else if (!((e === 1 && s === 0) || (e === 0 && s === 1))) {
       const segments: { e: number; s: number }[] = []
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
+      let shapeData, localShapeCollection
+      for (let i = 0; i < length; i++) {
         shapeData = this.shapes?.[i] as unknown as ShapeProperty
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
@@ -358,13 +356,15 @@ export default class TrimModifier extends ShapeModifier {
           if (!shapeData.shape?._mdf && shapeData.pathsData?.length) {
             totalShapeLength = shapeData.totalShapeLength
           } else {
-            pathsData = this.releasePathsData(shapeData.pathsData)
+            pathsData = this.releasePathsData(
+              shapeData.pathsData as ShapePath[]
+            )
             for (j = 0; j < jLen; j++) {
               if (!shapePaths) {
                 continue
               }
               pathData = getSegmentsLength(shapePaths.shapes[j])
-              pathsData.push(pathData)
+              pathsData.push(pathData as unknown as ShapePath)
               totalShapeLength += pathData.totalLength
             }
             shapeData.totalShapeLength = totalShapeLength
@@ -379,7 +379,7 @@ export default class TrimModifier extends ShapeModifier {
         shapeE = e,
         addedLength = 0,
         edges
-      for (i = length - 1; i >= 0; i--) {
+      for (let i = length - 1; i >= 0; i--) {
         shapeData = this.shapes?.[i] as unknown as ShapeProperty
         if (shapeData.shape?._mdf) {
           localShapeCollection = shapeData.localShapeCollection
@@ -453,11 +453,11 @@ export default class TrimModifier extends ShapeModifier {
         }
       }
     } else if (this._mdf) {
-      for (i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
         // Releasign Trim Cached paths data when no trim applied in case shapes are modified inbetween.
         // Don't remove this even if it's losing cached info.
-        this.shapes[i].pathsData.length = 0
-        this.shapes[i].shape._mdf = true
+        this.shapes[i].pathsData!.length = 0
+        this.shapes[i].shape!._mdf = true
       }
     }
   }

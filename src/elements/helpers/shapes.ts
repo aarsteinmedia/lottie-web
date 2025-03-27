@@ -22,6 +22,8 @@ import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
+import ShapeCollection from '@/utils/shapes/ShapeCollection'
+import ShapePath from '@/utils/shapes/ShapePath'
 import TransformProperty from '@/utils/TransformProperty'
 
 export class ShapeGroupData {
@@ -41,13 +43,17 @@ export class SVGShapeData {
   _isAnimated: boolean
   _length?: number
   caches: unknown[]
+  data?: SVGShapeData
   gr?: SVGGElement
   hd?: boolean
   it?: ShapeDataInterface[]
+  localShapeCollection?: ShapeCollection
   lStr: string
   lvl: number
+  pathsData?: ShapePath[]
   prevViewData?: unknown[]
   sh: ShapeProperty
+  shape?: ShapeProperty
   style?: SVGStyleData
   styles: SVGStyleData[]
   transform?: Transformer
