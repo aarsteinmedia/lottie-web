@@ -480,6 +480,7 @@ export interface Shape {
   h?: GenericAnimatedProperty
   hd?: boolean
   ind?: number
+  inv?: boolean
   it?: Shape[]
   ix?: number
   ks?: ShapeDataProperty
@@ -490,10 +491,17 @@ export interface Shape {
   m?: 1 | 2
   ml?: number
   mn?: string
+  mode?: string
   nm?: string
   /** Number of properties */
   np?: number
-  o?: VectorProperty
+  // o?: VectorProperty
+  o?: {
+    a: 0 | 1
+    k: number
+    ix?: number
+    x?: number
+  }
   or?: {
     k: any[]
   }
@@ -515,8 +523,14 @@ export interface Shape {
   /** Gradient type */
   t?: number
   tr?: Shape
+
   ty: ShapeType
   w?: VectorProperty
+  x?: {
+    a: 0 | 1
+    k: number
+    ix?: number
+  }
 }
 
 // export interface LottieTransform {
@@ -600,6 +614,8 @@ export interface AnimationSettings {
 interface Animation extends AnimationSettings {
   id: string
 }
+
+export type ValueOf<T> = T[keyof T]
 
 export interface AnimationConfig extends Animation {
   url: string
@@ -1022,7 +1038,7 @@ export interface LottieLayer {
   ks: Shape
   layers?: LottieLayer[] & { __used?: boolean }
   ln?: string
-  masksProperties?: Mask[]
+  masksProperties?: Shape[]
   nm: string
   /** Out point */
   op: number

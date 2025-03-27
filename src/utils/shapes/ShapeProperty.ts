@@ -42,27 +42,35 @@ export function getKeyframedConstructorFunction() {
 export function getShapeProp(
   elem: ShapeElement,
   data: Shape,
-  type: number,
-  _?: unknown
-) {
-  let prop
-  if (type === 3 || type === 4) {
-    const dataProp = type === 3 ? data.pt : data.ks
-    const keys = dataProp?.k
-    if (keys?.length) {
-      prop = new KeyframedShapeProperty(elem, data, type)
-    } else {
+  type: number
+  // _?: unknown
+): null | ShapeProperty {
+  let prop = null
+
+  switch (type) {
+    case 3:
+    case 4: {
+      const dataProp = type === 3 ? data.pt : data.ks,
+        keys = dataProp?.k
+      if (keys?.length) {
+        prop = new KeyframedShapeProperty(elem, data, type)
+        break
+      }
       prop = new ShapeProperty(elem, data, type)
+      break
     }
-  } else if (type === 5) {
-    prop = new RectShapeProperty(elem as ElementInterfaceIntersect, data)
-  } else if (type === 6) {
-    prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
-  } else if (type === 7) {
-    prop = new StarShapeProperty(elem, data)
+    case 5:
+      prop = new RectShapeProperty(elem as ElementInterfaceIntersect, data)
+      break
+    case 6:
+      prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
+      break
+    case 7:
+      prop = new StarShapeProperty(elem, data)
   }
+
   if (prop?.k) {
-    elem.addDynamicProperty(prop as any)
+    elem.addDynamicProperty(prop)
   }
   return prop
 }
@@ -258,9 +266,14 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       throw new Error(`${this.constructor.name}: ShapePath is not set`)
     }
     if (!this.shapesEqual(this.v, newPath)) {
+      if (!this.localShapeCollection) {
+        throw new Error(
+          `${this.constructor.name}: localShapeCollection is not set`
+        )
+      }
       this.v = clone(newPath)
-      this.localShapeCollection?.releaseShapes()
-      this.localShapeCollection?.addShape(this.v)
+      this.localShapeCollection.releaseShapes()
+      this.localShapeCollection.addShape(this.v)
       this._mdf = true
       this.paths = this.localShapeCollection
     }
@@ -332,12 +345,12 @@ export class RectShapeProperty extends ShapeBaseProperty {
     }
   }
   convertRectToPath() {
-    const p0 = this.p.v[0]
-    const p1 = this.p.v[1]
-    const v0 = this.s.v[0] / 2
-    const v1 = this.s.v[1] / 2
-    const round = Math.min(v0, v1, Number(this.r?.v))
-    const cPoint = round * (1 - roundCorner)
+    const p0 = this.p.v[0],
+      p1 = this.p.v[1],
+      v0 = this.s.v[0] / 2,
+      v1 = this.s.v[1] / 2,
+      round = Math.min(v0, v1, Number(this.r?.v)),
+      cPoint = round * (1 - roundCorner)
     this.v!._length = 0
 
     if (this.d === 2 || this.d === 1) {

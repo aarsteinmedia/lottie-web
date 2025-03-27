@@ -19,6 +19,7 @@ import {
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
+type EffectFunction = (data: DocumentData, value: string) => DocumentData
 export default class TextProperty extends DynamicPropertyContainer {
   _frameId: number
   _isFirstFrame: boolean
@@ -27,7 +28,7 @@ export default class TextProperty extends DynamicPropertyContainer {
   currentData: DocumentData
   data?: TextData
   defaultBoxWidth: Vector2 = [0, 0]
-  effectsSequence: any[]
+  effectsSequence: EffectFunction[]
   elem: ElementInterfaceIntersect
   frameId?: number
   keysIndex: number
@@ -90,7 +91,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     }
   }
 
-  addEffect(effectFunction: unknown) {
+  addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
     this.elem.addDynamicProperty(this)
   }
@@ -453,8 +454,8 @@ export default class TextProperty extends DynamicPropertyContainer {
     return obj
   }
   getKeyframeValue() {
-    const textKeys = this.data?.d?.k
-    const frameNum = Number(this.elem.comp?.renderedFrame)
+    const textKeys = this.data?.d?.k,
+      frameNum = Number(this.elem.comp?.renderedFrame)
     let i = 0
     const len = textKeys?.length || 0
     while (i <= len - 1) {
@@ -476,9 +477,11 @@ export default class TextProperty extends DynamicPropertyContainer {
     ) {
       return
     }
-    this.currentData.t = this.data?.d?.k[this.keysIndex].s.t as any
-    const currentValue = this.currentData
-    const currentIndex = this.keysIndex
+    if (this.data?.d?.k[this.keysIndex].s.t) {
+      this.currentData.t = this.data.d.k[this.keysIndex].s.t!
+    }
+    const currentValue = this.currentData,
+      currentIndex = this.keysIndex
     if (this.lock) {
       this.setCurrentData(this.currentData)
       return
@@ -491,9 +494,15 @@ export default class TextProperty extends DynamicPropertyContainer {
     for (let i = 0; i < length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
-        finalValue = this.effectsSequence[i](this.currentData, finalValue?.t)
+        finalValue = this.effectsSequence[i](
+          this.currentData,
+          finalValue?.t as string
+        )
       } else {
-        finalValue = this.effectsSequence[i](finalValue, finalValue?.t)
+        finalValue = this.effectsSequence[i](
+          finalValue,
+          finalValue?.t as string
+        )
       }
     }
     if (currentValue !== finalValue) {
@@ -519,7 +528,7 @@ export default class TextProperty extends DynamicPropertyContainer {
   searchKeyframes() {
     this.kf = Number(this.data?.d!.k.length) > 1
     if (this.kf) {
-      this.addEffect(this.getKeyframeValue.bind(this))
+      this.addEffect(this.getKeyframeValue.bind(this) as EffectFunction)
     }
     return this.kf
   }

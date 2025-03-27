@@ -171,7 +171,7 @@ export default class ZigZagModifier extends ShapeModifier {
       )
 
       if (i === count - 1 && !path.c) {
-        segment = null as any
+        segment = null as unknown as PolynomialBezier
       } else {
         segment = shapeSegment(path, (i + 1) % count)
       }

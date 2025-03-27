@@ -8,7 +8,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 export default class TextSelectorProperty extends DynamicPropertyContainer {
   _currentTextLength: number
   a: ValueProperty
-  b?: any
+  b?: ValueProperty
   comp?: ElementInterfaceIntersect
   data: TextRangeValue
   e: ValueProperty | { v: number }

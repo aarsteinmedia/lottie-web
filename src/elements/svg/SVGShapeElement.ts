@@ -143,13 +143,13 @@ export default class SVGShapeElement extends ShapeElement {
     } else if (data.ty === 'sr') {
       ty = 7
     }
-    const shapeProperty = getShapeProp(this, data as any, ty, this)
-    const elementData = new SVGShapeData(
-      ownTransformers,
-      level,
-      shapeProperty as ShapeProperty
-    )
-    this.shapes?.push(elementData as any)
+    const shapeProperty = getShapeProp(this, data, ty),
+      elementData = new SVGShapeData(
+        ownTransformers,
+        level,
+        shapeProperty as ShapeProperty
+      )
+    this.shapes.push(elementData)
     this.addShapeToModifiers(elementData)
     this.addToAnimatedContents(data, elementData)
     return elementData

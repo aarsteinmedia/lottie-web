@@ -1,6 +1,5 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
 import type { ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
-import type ShapePath from '@/utils/shapes/ShapePath'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import { ProcessedElement, type SVGShapeData } from '@/elements/helpers/shapes'
@@ -12,7 +11,7 @@ export default class ShapeElement extends RenderableDOMElement {
 
   shapeModifiers: ShapeModifierInterface[] = []
 
-  shapes: SVGShapeData[] | ShapePath[] = []
+  shapes: SVGShapeData[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
     const elements = this.processedElements

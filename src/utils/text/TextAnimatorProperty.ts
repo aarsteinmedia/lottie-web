@@ -12,6 +12,7 @@ import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import Matrix from '@/utils/Matrix'
+import { MultiDimensionalProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
@@ -29,7 +30,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   private _elem: ElementInterfaceIntersect
   private _hasMaskedPath: boolean
   private _moreOptions: {
-    alignment: any
+    alignment: MultiDimensionalProperty
   }
   private _pathData: any
   private _renderType: RendererType
@@ -53,7 +54,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     this._animatorsData = createSizedArray(Number(this._textData.a?.length))
     this._pathData = {}
     this._moreOptions = {
-      alignment: {},
+      alignment: {} as MultiDimensionalProperty,
     }
     this.renderedLetters = []
     this.lettersChangedFlag = false
@@ -76,30 +77,30 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     const textData = this._textData
     const matrixHelper = this.mHelper
     const renderType = this._renderType
-    let renderedLettersCount = this.renderedLetters.length
-    let xPos
-    let yPos
-    let i
-    let len
+    let renderedLettersCount = this.renderedLetters.length,
+      xPos,
+      yPos,
+      i,
+      len
     const letters = documentData.l
     let pathInfo: {
-      segments: BezierData[]
-      tLength: number
-    }
-    let currentLength = 0
-    let currentPoint
-    let segmentLength = 0
-    let flag
-    let pointInd = 0
-    let segmentInd = 0
-    let prevPoint
-    let points: null | BezierData['points'] = null
-    let segments
-    let partialLength = 0
-    let totalLength = 0
-    let perc = 0
-    let tanAngle
-    let mask
+        segments: BezierData[]
+        tLength: number
+      },
+      currentLength = 0,
+      currentPoint,
+      segmentLength = 0,
+      flag,
+      pointInd = 0,
+      segmentInd = 0,
+      prevPoint,
+      points: null | BezierData['points'] = null,
+      segments,
+      partialLength = 0,
+      totalLength = 0,
+      perc = 0,
+      tanAngle,
+      mask
     if (this._hasMaskedPath) {
       mask = this._pathData.m
       if (!this._pathData.n || this._pathData._mdf) {
@@ -185,26 +186,26 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
     const jLen = animators.length
 
-    let mult: number | number[] | undefined
-    let ind = -1
-    let offf
-    let xPathPos
-    let yPathPos
-    const initPathPos = currentLength
-    const initSegmentInd = segmentInd
-    const initPointInd = pointInd
-    let currentLine = -1
-    let elemOpacity
-    let sc: Vector3 = [0, 0, 0]
-    let sw = 0
-    let fc: Vector3 = [0, 0, 0]
-    let k
-    let letterSw
-    let letterSc
-    let letterFc
-    let letterM = ''
-    let letterP = this.defaultPropsArray
-    let letterO
+    let mult: number | number[] | undefined,
+      ind = -1,
+      offf,
+      xPathPos,
+      yPathPos
+    const initPathPos = currentLength,
+      initSegmentInd = segmentInd,
+      initPointInd = pointInd
+    let currentLine = -1,
+      elemOpacity,
+      sc: Vector3 = [0, 0, 0],
+      sw = 0,
+      fc: Vector3 = [0, 0, 0],
+      k,
+      letterSw,
+      letterSc,
+      letterFc,
+      letterM = '',
+      letterP = this.defaultPropsArray,
+      letterO
 
     if (documentData.j === 2 || documentData.j === 1) {
       let animatorJustifyOffset = 0
@@ -838,7 +839,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       this._animatorsData[i] = new TextAnimatorDataProperty(
         this._elem,
         this._textData.a?.[i],
-        this as any
+        this as unknown as ElementInterfaceIntersect
       )
     }
     if (this._textData.p && this._textData.p.m) {
@@ -860,6 +861,6 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       1,
       0,
       this
-    )
+    ) as MultiDimensionalProperty
   }
 }

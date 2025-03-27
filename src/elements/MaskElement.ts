@@ -2,7 +2,7 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
-  Mask,
+  Shape,
   StoredData,
   ViewData,
 } from '@/types'
@@ -20,7 +20,7 @@ export default class MaskElement {
   element: ElementInterfaceIntersect
   globalData: GlobalData
   maskElement: SVGElement | null
-  masksProperties: null | Mask[]
+  masksProperties: null | Shape[]
   solidPath: string
   storedData: StoredData[]
   viewData: ViewData[]
@@ -53,8 +53,8 @@ export default class MaskElement {
       if (
         (properties[i].mode !== 'a' && properties[i].mode !== 'n') ||
         properties[i].inv ||
-        properties[i].o.k !== 100 ||
-        properties[i].o.x
+        properties[i].o?.k !== 100 ||
+        properties[i].o?.x
       ) {
         maskType = 'mask'
         maskRef = 'mask'
@@ -86,7 +86,7 @@ export default class MaskElement {
             0.01,
             this.element
           ) as ValueProperty,
-          prop: getShapeProp(this.element, properties[i] as any, 3),
+          prop: getShapeProp(this.element, properties[i], 3),
         }
         defs?.appendChild(path)
         continue
@@ -100,7 +100,7 @@ export default class MaskElement {
       path.setAttribute('clip-rule', 'nonzero')
       let filterID
 
-      if (properties[i].x.k === 0) {
+      if (properties[i].x?.k === 0) {
         feMorph = null
         x = null
       } else {
@@ -171,7 +171,7 @@ export default class MaskElement {
           0.01,
           this.element
         ) as ValueProperty,
-        prop: getShapeProp(this.element, properties[i] as any, 3),
+        prop: getShapeProp(this.element, properties[i], 3),
       }
       if (!this.viewData[i].prop?.k) {
         this.drawPath(
@@ -221,7 +221,7 @@ export default class MaskElement {
     this.masksProperties = null
   }
 
-  drawPath(pathData: null | Mask, pathNodes: ShapePath, viewData: ViewData) {
+  drawPath(pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData) {
     let i,
       pathString = ` M${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
     const len = pathNodes._length || 0
