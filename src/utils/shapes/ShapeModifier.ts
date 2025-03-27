@@ -3,11 +3,25 @@ import type {
   ElementInterfaceUnion,
   Shape,
 } from '@/types'
+import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
+import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
+import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
+import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 import { ShapeGroupData, type SVGShapeData } from '@/elements/helpers/shapes'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
+
+export type ModifierInterface =
+  | OffsetPathModifier
+  | PuckerAndBloatModifier
+  | RepeaterModifier
+  | RoundCornersModifier
+  | TrimModifier
+  | ZigZagModifier
 
 export default class ShapeModifier extends DynamicPropertyContainer {
   closed?: boolean

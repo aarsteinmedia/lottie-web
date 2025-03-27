@@ -49,7 +49,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of styles that will be applied to shapes
     this.stylesList = []
     // List of modifiers that will be applied to shapes
-    this.shapeModifiers = []
+    this.shapes = []
     // List of items in shape tree
     this.itemsData = []
     // List of items in previous shape tree
@@ -67,7 +67,7 @@ export default class SVGShapeElement extends ShapeElement {
       setMatte,
     } = new SVGBaseElement()
     // this.searchShapes = this.searchShapes.bind(this) // TODO: Evaluate this
-    // this.renderModifiers = this.renderModifiers.bind(this)
+    // this.renders = this.renders.bind(this)
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.destroyBaseElement = destroyBaseElement
@@ -241,11 +241,11 @@ export default class SVGShapeElement extends ShapeElement {
   }
   override destroy() {
     this.destroyBaseElement()
-    this.shapesData = null as any
-    this.itemsData = null as any
+    this.shapesData = null as unknown as Shape[]
+    this.itemsData = null as unknown as SVGElementInterface[]
   }
   filterUniqueShapes() {
-    const { length } = this.shapes || [],
+    const { length } = this.shapes,
       jLen = this.stylesList.length,
       tempShapes = []
     let style,
@@ -255,14 +255,13 @@ export default class SVGShapeElement extends ShapeElement {
       areAnimated = false
       tempShapes.length = 0
       for (let i = 0; i < length; i++) {
-        if ((this.shapes?.[i] as SVGShapeData).styles.indexOf(style) !== -1) {
-          tempShapes.push(this.shapes?.[i])
-          areAnimated =
-            (this.shapes?.[i] as SVGShapeData)._isAnimated || areAnimated
+        if ((this.shapes[i] as SVGShapeData).styles.indexOf(style) !== -1) {
+          tempShapes.push(this.shapes[i])
+          areAnimated = this.shapes[i]._isAnimated || areAnimated
         }
       }
       if (tempShapes.length > 1 && areAnimated) {
-        this.setShapesAsAnimated(tempShapes as any)
+        this.setShapesAsAnimated(tempShapes as unknown as ShapeDataInterface[])
       }
     }
   }
@@ -361,7 +360,9 @@ export default class SVGShapeElement extends ShapeElement {
     const ownTransformers: Transformer[] = [].concat(transformers as any),
       ownStyles = [],
       ownModifiers = []
-    let currentTransform, modifier, processedPos: number
+    let currentTransform,
+      Modifier: TrimModifier | RepeaterModifier,
+      processedPos: number
     const { length } = arr
     for (let i = length - 1; i >= 0; i--) {
       processedPos = this.searchProcessedElement(arr[i])
@@ -370,9 +371,6 @@ export default class SVGShapeElement extends ShapeElement {
       } else {
         arr[i]._render = render
       }
-
-      // TODO: Here's the modifier that blanks
-      // console.log(arr[i].ty === 'rp')
 
       switch (arr[i].ty) {
         case 'fl':
@@ -455,34 +453,35 @@ export default class SVGShapeElement extends ShapeElement {
         case 'zz':
         case 'op': {
           if (processedPos) {
-            modifier = itemsData[i] as unknown as TrimModifier
-            modifier.closed = false
+            Modifier = itemsData[i] as unknown as TrimModifier
+            Modifier.closed = false
           } else {
-            modifier = getModifier<TrimModifier>(arr[i].ty)
-            modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
-            ;(itemsData as unknown as TrimModifier[])[i] = modifier
-            this.shapeModifiers.push(modifier)
+            Modifier = getModifier<TrimModifier>(arr[i].ty)
+            Modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
+            ;(itemsData as unknown as TrimModifier[])[i] = Modifier
+            this.shapeModifiers.push(Modifier)
           }
-          ownModifiers.push(modifier)
+          ownModifiers.push(Modifier)
           break
         }
         case 'rp': {
           if (processedPos) {
-            modifier = itemsData[i] as unknown as RepeaterModifier
-            modifier.closed = true
+            Modifier = itemsData[i] as unknown as RepeaterModifier
+            Modifier.closed = true
           } else {
-            modifier = getModifier<RepeaterModifier>(arr[i].ty)
-            ;(itemsData as unknown as RepeaterModifier[])[i] = modifier
-            modifier.init(
+            Modifier = getModifier<RepeaterModifier>(arr[i].ty)
+            ;(itemsData as unknown as RepeaterModifier[])[i] = Modifier
+            Modifier.init(
               this as unknown as ElementInterfaceIntersect,
               arr,
               i,
               itemsData as ShapeGroupData[]
             )
-            this.shapeModifiers.push(modifier)
+            this.shapeModifiers.push(Modifier)
+
             render = false
           }
-          ownModifiers.push(modifier)
+          ownModifiers.push(Modifier)
         }
       }
 

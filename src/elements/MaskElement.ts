@@ -20,7 +20,7 @@ export default class MaskElement {
   element: ElementInterfaceIntersect
   globalData: GlobalData
   maskElement: SVGElement | null
-  masksProperties: null | Shape[]
+  masksProperties: Shape[] = []
   solidPath: string
   storedData: StoredData[]
   viewData: ViewData[]
@@ -36,7 +36,7 @@ export default class MaskElement {
     this.masksProperties = this.data.masksProperties || []
     this.maskElement = null
     const defs = this.globalData.defs,
-      { length } = this.masksProperties || []
+      { length } = this.masksProperties
     this.viewData = createSizedArray(length)
     this.solidPath = ''
 
@@ -218,7 +218,7 @@ export default class MaskElement {
     this.globalData = null as unknown as GlobalData
     this.maskElement = null
     this.data = null as unknown as LottieLayer
-    this.masksProperties = null
+    this.masksProperties = null as unknown as Shape[]
   }
 
   drawPath(pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData) {
@@ -267,7 +267,7 @@ export default class MaskElement {
     for (let i = 0; i < length; i++) {
       if (this.viewData[i].prop?._mdf || frame) {
         this.drawPath(
-          this.masksProperties?.[i] || null,
+          this.masksProperties[i] || null,
           this.viewData[i].prop!.v!,
           this.viewData[i]
         )
