@@ -58,22 +58,24 @@ export default class TrimModifier extends ShapeModifier {
     }
     shapePath.setXYAt(points[3], points[7], 'v', pos + 1)
   }
-  addShapes(shapeData: any, shapeSegment: any, shapePathFromProps?: ShapePath) {
+  addShapes(
+    shapeData: any, // ShapeProperty? Contains Matrix
+    shapeSegment: any,
+    shapePathFromProps?: ShapePath
+  ) {
     let shapePath = shapePathFromProps
-    const pathsData = shapeData.pathsData
-    const shapePaths = shapeData.shape.paths.shapes
-    let i
-    const len = shapeData.shape.paths._length
-    let j
-    let jLen
-    let addedLength = 0
-    let currentLengthData
-    let segmentCount
-    let lengths
-    let segment: number[]
+    const { pathsData = [] } = shapeData,
+      shapePaths = shapeData.shape?.paths?.shapes || [],
+      len = shapeData.shape?.paths?._length || 0
+    let j,
+      jLen,
+      addedLength = 0,
+      currentLengthData,
+      segmentCount,
+      segment: number[]
     const shapes: ShapePath[] = []
-    let initPos
-    let newShape = true
+    let initPos,
+      newShape = true
     if (shapePath) {
       segmentCount = shapePath._length
       initPos = shapePath._length
@@ -86,11 +88,11 @@ export default class TrimModifier extends ShapeModifier {
       shapes.push(shapePath)
     }
 
-    for (i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       if (!shapePath) {
         continue
       }
-      lengths = pathsData[i].lengths
+      const { lengths } = pathsData[i]
       shapePath.c = shapePaths[i].c
       jLen = shapePaths[i].c ? lengths.length : lengths.length + 1
       for (j = 1; j < jLen; j++) {

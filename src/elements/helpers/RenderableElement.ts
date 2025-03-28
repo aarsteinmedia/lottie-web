@@ -68,19 +68,11 @@ export default class RenderableElement extends FrameElement {
     }
     return { h: Number(this.data?.height), w: Number(this.data?.width) }
   }
-  hide() {
-    if (!this.hidden && (!this.isInRange || this.isTransparent)) {
-      const elem = this.baseElement || this.layerElement
-      if (elem) {
-        elem.style.display = 'none'
-      }
 
-      this.hidden = true
-    }
+  hide() {
+    throw new Error('RenderableElement: Method hide not implemented yet')
   }
-  // hide() {
-  //   throw new Error('RenderableElement: Method hide not implemented yet')
-  // }
+
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
     this.isInRange = false
@@ -91,6 +83,7 @@ export default class RenderableElement extends FrameElement {
     // list of animated components
     this.renderableComponents = []
   }
+
   prepareRenderableFrame(num: number, _?: boolean) {
     this.checkLayerLimits(num)
   }
@@ -110,18 +103,8 @@ export default class RenderableElement extends FrameElement {
     /* this.maskManager.renderFrame(this.finalTransform.mat);
       this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
   }
-
   show() {
-    if (this.isInRange && !this.isTransparent) {
-      if (!this.data?.hd) {
-        const elem = this.baseElement || this.layerElement
-        if (elem) {
-          elem.style.display = 'block'
-        }
-      }
-      this.hidden = false
-      this._isFirstFrame = true
-    }
+    throw new Error('RenderableElement: Method show not implemented yet')
   }
 
   sourceRectAtTime(): SourceRect | null {

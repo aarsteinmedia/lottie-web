@@ -6,7 +6,6 @@ import type {
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-// import { extendPrototype } from '@/utils/functionExtensions'
 export default abstract class RenderableDOMElement extends RenderableElement {
   innerElem?: SVGElement | null
 
@@ -35,11 +34,13 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method createContent is not implemented`
     )
   }
+
   createItem(_data: LottieLayer) {
     throw new Error(
       `${this.constructor.name}: Method createItem is not implemented`
     )
   }
+
   createRenderableComponents() {
     throw new Error(
       `${this.constructor.name}: Method createRenderableComponents is not implemented`
@@ -53,6 +54,16 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     throw new Error(
       `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
+  }
+  override hide() {
+    if (!this.hidden && (!this.isInRange || this.isTransparent)) {
+      const elem = this.baseElement || this.layerElement
+      if (elem) {
+        elem.style.display = 'none'
+      }
+
+      this.hidden = true
+    }
   }
   initElement(
     data: LottieLayer,
@@ -109,6 +120,16 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method renderInnerContent is not implemented`
     )
   }
+  override show() {
+    if (this.isInRange && !this.isTransparent) {
+      if (!this.data?.hd) {
+        const elem = this.baseElement || this.layerElement
+        if (elem) {
+          elem.style.display = 'block'
+        }
+      }
+      this.hidden = false
+      this._isFirstFrame = true
+    }
+  }
 }
-
-// extendPrototype([RenderableElement], RenderableDOMElement)
