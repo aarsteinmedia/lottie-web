@@ -163,13 +163,17 @@ export default class PolynomialBezier {
     const f = quadRoots(3 * bez.a[comp], 2 * bez.b[comp], bez.c[comp]),
       { length } = f
     for (let i = 0; i < length; i++) {
-      if (f[i] > 0 && f[i] < 1) {
-        const val = bez.point(f[i])[comp]
-        if (val < min) {
-          min = val
-        } else if (val > max) {
-          max = val
-        }
+      if (f[i] <= 0 || f[i] >= 1) {
+        continue
+      }
+      const val = bez.point(f[i])[comp]
+      if (val < min) {
+        min = val
+        continue
+      }
+
+      if (val > max) {
+        max = val
       }
     }
     return {

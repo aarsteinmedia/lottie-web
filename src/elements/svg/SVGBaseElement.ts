@@ -148,85 +148,95 @@ export default class SVGBaseElement extends RenderableDOMElement {
       let fil
       let useElement
       let gg
-      if (matteType === 1 || matteType === 3) {
-        const masker = createNS('mask')
-        masker?.setAttribute('id', id)
-        masker?.setAttribute(
-          'mask-type',
-          matteType === 3 ? 'luminance' : 'alpha'
-        )
-        useElement = createNS('use')
-        useElement?.setAttributeNS(
-          'http://www.w3.org/1999/xlink',
-          'href',
-          `#${this.layerId}`
-        )
-        masker.appendChild(useElement)
-        this.globalData?.defs.appendChild(masker)
-        if (!featureSupport.maskType && matteType === 1) {
-          masker.setAttribute('mask-type', 'luminance')
+
+      switch (matteType) {
+        case 1:
+        case 3:
+          {
+            const masker = createNS('mask')
+            masker?.setAttribute('id', id)
+            masker?.setAttribute(
+              'mask-type',
+              matteType === 3 ? 'luminance' : 'alpha'
+            )
+            useElement = createNS('use')
+            useElement?.setAttributeNS(
+              'http://www.w3.org/1999/xlink',
+              'href',
+              `#${this.layerId}`
+            )
+            masker.appendChild(useElement)
+            this.globalData?.defs.appendChild(masker)
+            if (!featureSupport.maskType && matteType === 1) {
+              masker.setAttribute('mask-type', 'luminance')
+              filId = createElementID()
+              fil = createFilter(filId)
+              this.globalData?.defs.appendChild(fil)
+              fil.appendChild(createAlphaToLuminanceFilter())
+              gg = createNS<SVGGElement>('g')
+              gg?.appendChild(useElement)
+              masker.appendChild(gg)
+              gg?.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
+            }
+          }
+          break
+        case 2: {
+          const maskGroup = createNS('mask')
+          maskGroup.setAttribute('id', id)
+          maskGroup.setAttribute('mask-type', 'alpha')
+          const maskGrouper = createNS('g')
+          maskGroup.appendChild(maskGrouper)
           filId = createElementID()
           fil = createFilter(filId)
-          this.globalData?.defs.appendChild(fil)
-          fil.appendChild(createAlphaToLuminanceFilter())
-          gg = createNS<SVGGElement>('g')
-          gg?.appendChild(useElement)
-          masker.appendChild(gg)
-          gg?.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
-        }
-      } else if (matteType === 2) {
-        const maskGroup = createNS('mask')
-        maskGroup.setAttribute('id', id)
-        maskGroup.setAttribute('mask-type', 'alpha')
-        const maskGrouper = createNS('g')
-        maskGroup.appendChild(maskGrouper)
-        filId = createElementID()
-        fil = createFilter(filId)
-        // / /
-        const feCTr = createNS<SVGFEComponentTransferElement>(
-          'feComponentTransfer'
-        )
-        feCTr.setAttribute('in', 'SourceGraphic')
-        fil.appendChild(feCTr)
-        const feFunc = createNS('feFuncA')
-        feFunc.setAttribute('type', 'table')
-        feFunc.setAttribute('tableValues', '1.0 0.0')
-        feCTr.appendChild(feFunc)
-        // / /
-        this.globalData?.defs.appendChild(fil)
-        const alphaRect = createNS<SVGRectElement>('rect')
-        if (!alphaRect) {
-          throw new Error(
-            `${this.constructor.name}: Could not create RECT element`
+          // / /
+          const feCTr = createNS<SVGFEComponentTransferElement>(
+            'feComponentTransfer'
           )
-        }
-        alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
-        alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
-        alphaRect.setAttribute('x', '0')
-        alphaRect.setAttribute('y', '0')
-        alphaRect.setAttribute('fill', '#ffffff')
-        alphaRect.setAttribute('opacity', '0')
-        maskGrouper.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
-        maskGrouper.appendChild(alphaRect)
-        useElement = createNS('use')
-        useElement.setAttributeNS(
-          'http://www.w3.org/1999/xlink',
-          'href',
-          `#${this.layerId}`
-        )
-        maskGrouper.appendChild(useElement)
-        if (!featureSupport.maskType) {
-          maskGroup.setAttribute('mask-type', 'luminance')
-          fil.appendChild(createAlphaToLuminanceFilter())
-          gg = createNS('g')
-          maskGrouper.appendChild(alphaRect)
-          if (this.layerElement) {
-            gg.appendChild(this.layerElement)
+          feCTr.setAttribute('in', 'SourceGraphic')
+          fil.appendChild(feCTr)
+          const feFunc = createNS('feFuncA')
+          feFunc.setAttribute('type', 'table')
+          feFunc.setAttribute('tableValues', '1.0 0.0')
+          feCTr.appendChild(feFunc)
+          // / /
+          this.globalData?.defs.appendChild(fil)
+          const alphaRect = createNS<SVGRectElement>('rect')
+          if (!alphaRect) {
+            throw new Error(
+              `${this.constructor.name}: Could not create RECT element`
+            )
           }
+          alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
+          alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
+          alphaRect.setAttribute('x', '0')
+          alphaRect.setAttribute('y', '0')
+          alphaRect.setAttribute('fill', '#ffffff')
+          alphaRect.setAttribute('opacity', '0')
+          maskGrouper.setAttribute(
+            'filter',
+            `url(${getLocationHref()}#${filId})`
+          )
+          maskGrouper.appendChild(alphaRect)
+          useElement = createNS('use')
+          useElement.setAttributeNS(
+            'http://www.w3.org/1999/xlink',
+            'href',
+            `#${this.layerId}`
+          )
+          maskGrouper.appendChild(useElement)
+          if (!featureSupport.maskType) {
+            maskGroup.setAttribute('mask-type', 'luminance')
+            fil.appendChild(createAlphaToLuminanceFilter())
+            gg = createNS('g')
+            maskGrouper.appendChild(alphaRect)
+            if (this.layerElement) {
+              gg.appendChild(this.layerElement)
+            }
 
-          maskGrouper.appendChild(gg)
+            maskGrouper.appendChild(gg)
+          }
+          this.globalData?.defs.appendChild(maskGroup)
         }
-        this.globalData?.defs.appendChild(maskGroup)
       }
       this.matteMasks[matteType] = id
     }

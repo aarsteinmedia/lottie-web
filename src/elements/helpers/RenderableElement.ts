@@ -54,7 +54,10 @@ export default class RenderableElement extends FrameElement {
         this.isTransparent = true
         this.hide()
       }
-    } else if (this.isTransparent) {
+      return
+    }
+
+    if (this.isTransparent) {
       this.isTransparent = false
       this.show()
     }

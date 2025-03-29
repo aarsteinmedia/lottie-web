@@ -261,8 +261,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
           .rotateX(Number(this.or?.v[0]))
       }
       if (this.autoOriented) {
-        let v1
-        let v2
+        let v1: Vector2, v2: Vector2
         frameRate = this.elem.globalData.frameRate
         if (this.p?.keyframes) {
           if (
@@ -291,7 +290,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
               0
             )
           } else {
-            v1 = this.p.pv
+            v1 = this.p.pv as Vector2
             v2 = this.p.getValueAtTime?.(
               (Number(this.p._caching?.lastFrame) +
                 Number(this.p.offsetTime) -
@@ -301,10 +300,10 @@ export default class TransformProperty extends DynamicPropertyContainer {
             )
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
-          v1 = []
-          v2 = []
-          const px = this.px
-          const py = this.py
+          v1 = [0, 0] // TODO: Used to be []. Check if works
+          v2 = [0, 0] // TODO: Used to be []. Check if works
+          const px = this.px,
+            py = this.py
           if (
             Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
             Number(px.keyframes?.[0].t)

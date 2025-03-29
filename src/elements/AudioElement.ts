@@ -98,20 +98,24 @@ export default class AudioElement extends RenderableElement {
   }
 
   renderFrame(_frame?: number | null) {
-    if (this.isInRange && this._canPlay) {
-      if (!this._isPlaying) {
-        this.audio.play()
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-        this._isPlaying = true
-      } else if (
-        !this.audio.playing() ||
-        Math.abs(
-          this._currentTime / Number(this.globalData?.frameRate) -
-            this.audio.seek()
-        ) > 0.1
-      ) {
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-      }
+    if (!this.isInRange || !this._canPlay) {
+      return
+    }
+    if (!this._isPlaying) {
+      this.audio.play()
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
+      this._isPlaying = true
+      return
+    }
+
+    if (
+      !this.audio.playing() ||
+      Math.abs(
+        this._currentTime / Number(this.globalData?.frameRate) -
+          this.audio.seek()
+      ) > 0.1
+    ) {
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }
   }
 

@@ -417,15 +417,6 @@ export interface GradientColor {
 
 type BoolInt = 0 | 1
 
-interface PathData {
-  _length: number
-  _maxLength: number
-  c: boolean
-  i: Float32Array
-  o: Float32Array
-  v: Float32Array
-}
-
 interface ShapeDataProperty {
   _mdf?: boolean
   a: 1 | 0
@@ -434,7 +425,7 @@ interface ShapeDataProperty {
   paths: {
     _length: number
     _maxLength: number
-    shapes: PathData[]
+    shapes: ShapePath[]
   }
 }
 
@@ -507,7 +498,7 @@ export interface Shape {
   }
   /** Position */
   p?: VectorProperty<Vector2> // { s: number; x: VectorProperty; y: VectorProperty; z: VectorProperty }
-  pt?: VectorProperty<ShapePath>
+  pt?: VectorProperty<ShapePath | ShapePath[]>
   /** Rotation (for transforms) | Fill-rule (for fills) */
   r?: VectorProperty<{ e: number; s: number; t: number }[]>
   rx?: VectorProperty

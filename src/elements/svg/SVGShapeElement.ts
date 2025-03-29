@@ -165,31 +165,39 @@ export default class SVGShapeElement extends ShapeElement {
   createStyleElement(data: Shape, level: number) {
     // TODO: prevent drawing of hidden styles
     let elementData: SVGElementInterface | null = null
-    const styleOb = new SVGStyleData(data, level)
+    const styleOb = new SVGStyleData(data, level),
+      pathElement = styleOb.pElem
 
-    const pathElement = styleOb.pElem
-    if (data.ty === 'st') {
-      elementData = new SVGStrokeStyleData(this, data, styleOb)
-    } else if (data.ty === 'fl') {
-      elementData = new SVGFillStyleData(this, data, styleOb)
-    } else if (data.ty === 'gf' || data.ty === 'gs') {
-      const GradientConstructor =
-        data.ty === 'gf' ? SVGGradientFillStyleData : SVGGradientStrokeStyleData
-      elementData = new GradientConstructor(this, data, styleOb)
-      if (elementData.gf) {
-        this.globalData?.defs.appendChild(elementData.gf)
-      }
+    switch (data.ty) {
+      case 'st':
+        elementData = new SVGStrokeStyleData(this, data, styleOb)
+        break
+      case 'fl':
+        elementData = new SVGFillStyleData(this, data, styleOb)
+        break
+      case 'gf':
+      case 'gs': {
+        const GradientConstructor =
+          data.ty === 'gf'
+            ? SVGGradientFillStyleData
+            : SVGGradientStrokeStyleData
+        elementData = new GradientConstructor(this, data, styleOb)
+        if (elementData.gf) {
+          this.globalData?.defs.appendChild(elementData.gf)
+        }
 
-      if (elementData.maskId && elementData.ms && elementData.of) {
-        this.globalData?.defs.appendChild(elementData.ms)
-        this.globalData?.defs.appendChild(elementData.of)
-        pathElement.setAttribute(
-          'mask',
-          `url(${getLocationHref()}#${elementData.maskId})`
-        )
+        if (elementData.maskId && elementData.ms && elementData.of) {
+          this.globalData?.defs.appendChild(elementData.ms)
+          this.globalData?.defs.appendChild(elementData.of)
+          pathElement.setAttribute(
+            'mask',
+            `url(${getLocationHref()}#${elementData.maskId})`
+          )
+        }
+        break
       }
-    } else if (data.ty === 'no') {
-      elementData = new SVGNoStyleData(this, data as any, styleOb)
+      case 'no':
+        elementData = new SVGNoStyleData(this, data as any, styleOb)
     }
 
     if (data.ty === 'st' || data.ty === 'gs') {
@@ -468,19 +476,20 @@ export default class SVGShapeElement extends ShapeElement {
           if (processedPos) {
             Modifier = itemsData[i] as unknown as RepeaterModifier
             Modifier.closed = true
-          } else {
-            Modifier = getModifier<RepeaterModifier>(arr[i].ty)
-            ;(itemsData as unknown as RepeaterModifier[])[i] = Modifier
-            Modifier.init(
-              this as unknown as ElementInterfaceIntersect,
-              arr,
-              i,
-              itemsData as ShapeGroupData[]
-            )
-            this.shapeModifiers.push(Modifier)
-
-            render = false
+            ownModifiers.push(Modifier)
+            break
           }
+          Modifier = getModifier<RepeaterModifier>(arr[i].ty)
+          ;(itemsData as unknown as RepeaterModifier[])[i] = Modifier
+          Modifier.init(
+            this as unknown as ElementInterfaceIntersect,
+            arr,
+            i,
+            itemsData as ShapeGroupData[]
+          )
+          this.shapeModifiers.push(Modifier)
+
+          render = false
           ownModifiers.push(Modifier)
         }
       }

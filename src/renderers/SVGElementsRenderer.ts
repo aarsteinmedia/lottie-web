@@ -318,12 +318,12 @@ function renderStroke(
       `rgb(${Math.floor((itemData.c.v as number[])[0])},${Math.floor((itemData.c.v as number[])[1])},${(itemData.c.v as number[])[2]})`
     )
   }
-  if (itemData.o?._mdf || isFirstFrame) {
-    styleElem?.pElem.setAttribute('stroke-opacity', itemData.o?.v as string)
+  if (itemData.o && (itemData.o?._mdf || isFirstFrame)) {
+    styleElem?.pElem.setAttribute('stroke-opacity', `${itemData.o.v}`)
   }
-  if (itemData.w?._mdf || isFirstFrame) {
-    styleElem?.pElem.setAttribute('stroke-width', itemData.w?.v as string)
-    styleElem?.msElem?.setAttribute('stroke-width', itemData.w?.v as string)
+  if (itemData.w && (itemData.w?._mdf || isFirstFrame)) {
+    styleElem?.pElem.setAttribute('stroke-width', `${itemData.w.v}`)
+    styleElem?.msElem?.setAttribute('stroke-width', `${itemData.w.v}`)
   }
 }
 

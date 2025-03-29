@@ -19,7 +19,7 @@ export default class NullElement extends FrameElement {
   }
 
   destroy() {
-    //
+    // Pass Through
   }
 
   getBaseElement(): SVGGElement | null {
@@ -27,7 +27,7 @@ export default class NullElement extends FrameElement {
   }
 
   hide() {
-    //
+    // Pass Through
   }
 
   prepareFrame(num: number) {
@@ -35,9 +35,9 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    //
+    // Pass Through
   }
   sourceRectAtTime() {
-    //
+    // Pass Through
   }
 }
