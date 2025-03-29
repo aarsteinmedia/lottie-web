@@ -50,36 +50,46 @@ export function completeLayers(
       }
       const { length: jLen } = layers[i].masksProperties || []
       for (let j = 0; j < jLen; j++) {
-        if ((layers[i].masksProperties![j].pt.k as MaskData).i) {
-          convertPathsToAbsoluteValues(layers[i].masksProperties![j].pt.k)
+        if (layers[i].masksProperties![j].pt?.k.i) {
+          convertPathsToAbsoluteValues(layers[i].masksProperties?.[j].pt?.k)
           continue
         }
         if (!layers[i].masksProperties![j]) {
           continue
         }
         const { length: kLen } =
-          (layers[i].masksProperties?.[j].pt.k as MaskData[]) || []
+          (layers[i].masksProperties?.[j].pt?.k as unknown as MaskData[]) || []
         for (let k = 0; k < kLen; k++) {
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].s) {
+          if (
+            (layers[i].masksProperties?.[j].pt?.k as unknown as MaskData[])[k].s
+          ) {
             convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].s[0]
+              (layers[i].masksProperties?.[j].pt?.k as unknown as MaskData[])[k]
+                .s[0]
             )
           }
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].e) {
+          if (
+            (layers[i].masksProperties?.[j].pt?.k as unknown as MaskData[])[k].e
+          ) {
             convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].e?.[0]
+              (layers[i].masksProperties?.[j].pt?.k as unknown as MaskData[])[k]
+                .e?.[0]
             )
           }
         }
       }
     }
-    if (layers[i].ty === 0) {
-      layers[i].layers = findCompLayers(layers[i].refId, comps)
-      completeLayers(layers[i].layers as LottieLayer[], comps)
-    } else if (layers[i].ty === 4) {
-      completeShapes(layers[i].shapes || [])
-    } else if (layers[i].ty === 5) {
-      // completeText(layers[i]) TODO:
+
+    switch (layers[i].ty) {
+      case 0:
+        layers[i].layers = findCompLayers(layers[i].refId, comps)
+        completeLayers(layers[i].layers as LottieLayer[], comps)
+        break
+      case 4:
+        completeShapes(layers[i].shapes || [])
+        break
+      case 5:
+        console.warn('Handle ty 5')
     }
   }
 }
@@ -466,17 +476,19 @@ class CheckShapes {
           if (!maskProps) {
             continue
           }
-          if ((maskProps[j].pt.k as MaskData).i) {
-            ;(maskProps[j].pt.k as MaskData).c = !!maskProps[j].cl
+          if (maskProps[j].pt?.k.i) {
+            maskProps[j].pt!.k.c = !!maskProps[j].cl
             continue
           }
-          const { length: kLen } = (maskProps[j].pt.k as MaskData[]) || []
+          const { length: kLen } =
+            (maskProps[j].pt?.k as unknown as MaskData[]) || []
           for (let k = 0; k < kLen; k++) {
-            if ((maskProps[j].pt.k as MaskData[])[k].s) {
-              ;(maskProps[j].pt.k as MaskData[])[k].s[0].c = !!maskProps?.[j].cl
+            if ((maskProps[j].pt?.k as unknown as MaskData[])[k].s) {
+              ;(maskProps[j].pt?.k as unknown as MaskData[])[k].s[0].c =
+                !!maskProps?.[j].cl
             }
-            if ((maskProps[j].pt.k as MaskData[])[k].e) {
-              ;(maskProps[j].pt.k as MaskData[])[k].e![0].c =
+            if ((maskProps[j].pt?.k as unknown as MaskData[])[k].e) {
+              ;(maskProps[j].pt?.k as unknown as MaskData[])[k].e![0].c =
                 !!maskProps?.[j].cl
             }
           }
