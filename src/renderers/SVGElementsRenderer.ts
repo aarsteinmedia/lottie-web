@@ -228,7 +228,9 @@ function renderGradientStroke(
 /**
  *
  */
-function renderNoop(_: Shape) {}
+function renderNoop(_: Shape) {
+  // Pass Through
+}
 
 /**
  *
