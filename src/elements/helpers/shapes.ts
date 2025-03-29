@@ -47,12 +47,12 @@ export class SVGShapeData {
   data?: SVGShapeData
   gr?: SVGGElement
   hd?: boolean
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   localShapeCollection?: ShapeCollection
   lStr: string
   lvl: number
-  pathsData?: ShapePath[]
-  prevViewData?: SVGElementInterface[]
+  pathsData: ShapePath[] = []
+  prevViewData: SVGElementInterface[] = []
   sh: ShapeProperty
   shape?: ShapeProperty
   style?: SVGStyleData
@@ -161,7 +161,7 @@ export class ProcessedElement {
 
 export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: MultiDimensionalProperty
-  cst?: SVGStopElement[]
+  cst: SVGStopElement[] = []
 
   e?: MultiDimensionalProperty
 
@@ -170,15 +170,15 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   gf?: SVGGradientElement
   gr?: SVGGElement
   h?: KeyframedValueProperty
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   maskId?: string
   ms?: SVGMaskElement
   o?: ValueProperty
   of?: SVGElement
-  ost?: SVGStopElement[]
-  prevViewData?: SVGElementInterface[]
+  ost: SVGStopElement[] = []
+  prevViewData: SVGElementInterface[] = []
   s?: MultiDimensionalProperty
-  stops?: SVGStopElement[]
+  stops: SVGStopElement[] = []
   style?: SVGStyleData
   transform?: Transformer
   constructor(
@@ -350,9 +350,9 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
 export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
   gr?: SVGGElement
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   o?: ValueProperty
-  prevViewData?: SVGElementInterface[]
+  prevViewData: SVGElementInterface[] = []
   style: SVGStyleData
   transform?: Transformer
   w?: ValueProperty
@@ -426,8 +426,8 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
 
 export class SVGNoStyleData extends DynamicPropertyContainer {
   gr?: SVGGElement
-  it?: ShapeDataInterface[]
-  prevViewData?: SVGElementInterface[]
+  it: ShapeDataInterface[] = []
+  prevViewData: SVGElementInterface[] = []
   style: SVGStyleData
   transform?: Transformer
   constructor(

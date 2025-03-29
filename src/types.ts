@@ -579,7 +579,7 @@ export interface LottieAsset {
   /** id/slug of asset – e.g. image_0 / audio_0 */
   id?: string
 
-  layers?: LottieLayer[] & { __used?: boolean }
+  layers: LottieLayer[] & { __used?: boolean }
 
   /** Name of asset – e.g. "Black Mouse Ears" */
   nm?: string
@@ -745,7 +745,7 @@ export interface DocumentData extends FontList {
   }[]
   l?: Letter[]
   lh: number
-  lineWidths?: number[]
+  lineWidths: number[]
   ls?: number
   of?: string
   ps?: Vector2 | null
@@ -964,7 +964,7 @@ export interface AnimationData {
   ao?: boolean | 0 | 1
   assets: LottieAsset[]
   /** Characters */
-  chars?: Characacter[]
+  chars: Characacter[]
   /** Is three dimensional */
   ddd: 0 | 1
   fonts: {
@@ -1047,7 +1047,7 @@ export interface LottieLayer {
   refId?: string
   sc?: string
   sh?: number
-  shapes?: Shape[] // Readonly<Shape[]>
+  shapes: Shape[] // Readonly<Shape[]>
   singleShape?: boolean
   slots?: {
     [key: string]: {

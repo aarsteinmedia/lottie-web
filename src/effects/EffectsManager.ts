@@ -33,7 +33,7 @@ export default class EffectsManager {
 
 export class GroupEffect extends DynamicPropertyContainer {
   data?: Effect
-  effectElements?: EFXElement[]
+  effectElements: EFXElement[] = []
   override getValue = this.iterateDynamicProperties
   type?: string
   constructor(

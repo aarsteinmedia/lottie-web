@@ -113,6 +113,7 @@ export default class RepeaterModifier extends ShapeModifier {
     elem: ElementInterfaceIntersect,
     data: Shape
   ) {
+    // console.log('foo')
     this.getValue = this.processKeys
     this.c = PropertyFactory(
       elem,
