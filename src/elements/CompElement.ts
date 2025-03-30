@@ -5,13 +5,6 @@ import type {
 } from '@/types'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-// import FrameElement from '@/elements/helpers/FrameElement'
-// import HierarchyElement from '@/elements/helpers/HierarchyElement'
-// import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-// import TransformElement from '@/elements/helpers/TransformElement'
-// import BaseRenderer from '@/renderers/BaseRenderer'
-// import SVGRendererBase from '@/renderers/SVGRendererBase'
-// import { extendPrototype } from '@/utils/functionExtensions'
 import { ValueProperty } from '@/utils/Properties'
 
 export default class CompElement extends RenderableDOMElement {
@@ -120,8 +113,3 @@ export default class CompElement extends RenderableDOMElement {
     this.elements = elems
   }
 }
-
-// extendPrototype(
-//   [TransformElement, HierarchyElement, FrameElement, RenderableDOMElement],
-//   CompElement
-// )
