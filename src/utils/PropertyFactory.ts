@@ -25,11 +25,16 @@ export default function PropertyFactory(
 ) {
   let data = dataFromProps
   if (data && 'sid' in data && data.sid) {
-    data = elem.globalData?.slotManager?.getProp(data as VectorProperty)
+    data = elem.globalData?.slotManager?.getProp(data)
   }
   let p
   if (!(data?.k as number[]).length) {
-    p = new ValueProperty(elem, data as VectorProperty, mult, container as any)
+    p = new ValueProperty(
+      elem,
+      data as VectorProperty,
+      mult,
+      container as ElementInterfaceIntersect
+    )
   } else if (typeof (data?.k as number[])[0] === 'number') {
     p = new MultiDimensionalProperty(
       elem as ElementInterfaceIntersect,
