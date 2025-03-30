@@ -47,10 +47,10 @@ export function completeLayers(
       if (!layers[i].masksProperties) {
         continue
       }
-      jLen = layers[i].masksProperties!.length
-      for (j = 0; j < jLen; j++) {
-        if ((layers[i].masksProperties![j].pt.k as MaskData).i) {
-          convertPathsToAbsoluteValues(layers[i].masksProperties![j].pt.k)
+      const { length: jLen } = layers[i].masksProperties || []
+      for (let j = 0; j < jLen; j++) {
+        if ((layers[i].masksProperties![j].pt?.k as MaskData).i) {
+          convertPathsToAbsoluteValues(layers[i].masksProperties[j].pt.k)
           continue
         }
         if (!layers[i].masksProperties![j]) {
