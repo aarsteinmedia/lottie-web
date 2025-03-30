@@ -78,7 +78,6 @@ export type AnimationEventName =
   | '_active'
   | 'configError'
   | 'renderFrameError'
-export type AnimationEventCallback<T = unknown> = (args: T) => void
 
 export interface SVGGeometry {
   cx: number
@@ -220,111 +219,8 @@ export interface EFXElement {
   p: BaseProperty
 }
 
-export interface ItemsData {
-  gr: SVGGElement
-  it: ShapeDataInterface[]
-  prevViewData: ItemsData[]
-}
-
 export interface KeyframesMetadata {
   __fnct?: (val: number) => number
-}
-export interface ItemData {
-  _caching: Caching
-  _frameId?: number
-  _isFirstFrame: boolean
-  _mdf?: boolean
-  a?: VectorProperty
-  addEffect: (effect: Effect) => void
-  c: ItemData
-  canResize?: boolean
-  comp: any
-  completeTextData: (data?: Partial<DocumentData>) => void
-  container?: unknown
-  copyData: (data?: Partial<DocumentData>, b?: any) => void
-  cst?: SVGStopElement[]
-  currentData?: Partial<DocumentData>
-  d: ItemData
-  dashoffset: Float32Array
-  dashStr: string
-  data: any
-  defaultBoxWidth?: number
-  e: any
-  effectsSequence: any
-  elem: any
-  frameId: number
-  g: any
-  getValue: (val?: unknown) => unknown
-  gf: SVGElement
-  h: VectorProperty
-  interpolateValue: BaseProperty['interpolateValue']
-  k: boolean
-  keyframes: number[]
-  keyframesMetadata: KeyframesMetadata[]
-  keysIndex?: number
-  kf: boolean
-  minimumFontSize?: number
-  mult: number
-  o: ItemData
-  of?: SVGGradientElement
-  offsetTime: number
-  ost?: SVGStopElement[]
-  pos: number
-  propType: 'multidimensional' | 'unidimensional'
-  pv: string | number[] | number
-  s: any
-  searchProperty: () => boolean
-  setVValue: (val: any) => void
-  style: SVGStyleData
-  v: string | number[] | number
-  vel: number | number[]
-  w: ItemData
-}
-
-export interface AnimationEvents {
-  complete: BMCompleteEvent
-  config_ready: undefined
-  data_failed: undefined
-  data_ready: undefined
-  destroy: BMDestroyEvent
-  DOMLoaded: undefined
-  drawnFrame: BMEnterFrameEvent
-  enterFrame: BMEnterFrameEvent
-  error: undefined
-  loaded_images: undefined
-  loopComplete: BMCompleteLoopEvent
-  segmentStart: BMSegmentStartEvent
-}
-
-export interface BMCompleteLoopEvent {
-  currentLoop: number
-  direction: number
-  totalLoops: number
-  type: 'loopComplete'
-}
-
-export interface BMSegmentStartEvent {
-  firstFrame: number
-  totalFrames: number
-  type: 'segmentStart'
-}
-
-export interface BMCompleteEvent {
-  direction: number
-  type: 'complete'
-}
-
-export interface BMDestroyEvent {
-  type: 'destroy'
-}
-
-export interface BMEnterFrameEvent {
-  /** The current time in frames. */
-  currentTime: number
-  direction: number
-  /** The total number of frames. */
-  totalTime: number
-  type: 'enterFrame'
 }
 
 type BaseRendererConfig = {

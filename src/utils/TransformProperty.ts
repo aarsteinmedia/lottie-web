@@ -427,10 +427,10 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
 
     if (
-      !this.rz?.effectsSequence?.length &&
-      !this.ry?.effectsSequence?.length &&
-      !this.rx?.effectsSequence?.length &&
-      !this.or?.effectsSequence?.length
+      !this.rz?.effectsSequence.length &&
+      !this.ry?.effectsSequence.length &&
+      !this.rx?.effectsSequence.length &&
+      !this.or?.effectsSequence.length
     ) {
       this.pre
         .rotateZ(-Number(this.rz?.v))

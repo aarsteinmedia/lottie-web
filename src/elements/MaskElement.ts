@@ -291,31 +291,32 @@ export default class MaskElement {
         )
       }
       if (
-        this.storedData[i] &&
-        this.storedData[i].x &&
-        (this.storedData[i].x?._mdf || frame)
+        !this.storedData[i] ||
+        !this.storedData[i].x ||
+        !(this.storedData[i].x?._mdf || frame)
       ) {
-        const feMorph = this.storedData[i].expan
-        if (Number(this.storedData[i].x?.v) < 0) {
-          if (this.storedData[i].lastOperator !== 'erode') {
-            this.storedData[i].lastOperator = 'erode'
-            this.storedData[i].elem.setAttribute(
-              'filter',
-              `url(${getLocationHref()}#${this.storedData[i].filterId})`
-            )
-          }
-          feMorph?.setAttribute('radius', `${-Number(this.storedData[i].x?.v)}`)
-        } else {
-          if (this.storedData[i].lastOperator !== 'dilate') {
-            this.storedData[i].lastOperator = 'dilate'
-            this.storedData[i].elem.removeAttribute('filter')
-          }
+        continue
+      }
+      const feMorph = this.storedData[i].expan
+      if (Number(this.storedData[i].x?.v) < 0) {
+        if (this.storedData[i].lastOperator !== 'erode') {
+          this.storedData[i].lastOperator = 'erode'
           this.storedData[i].elem.setAttribute(
-            'stroke-width',
-            `${Number(this.storedData[i].x?.v) * 2}`
+            'filter',
+            `url(${getLocationHref()}#${this.storedData[i].filterId})`
           )
         }
+        feMorph?.setAttribute('radius', `${-Number(this.storedData[i].x?.v)}`)
+        continue
       }
+      if (this.storedData[i].lastOperator !== 'dilate') {
+        this.storedData[i].lastOperator = 'dilate'
+        this.storedData[i].elem.removeAttribute('filter')
+      }
+      this.storedData[i].elem.setAttribute(
+        'stroke-width',
+        `${Number(this.storedData[i].x?.v) * 2}`
+      )
     }
   }
 }

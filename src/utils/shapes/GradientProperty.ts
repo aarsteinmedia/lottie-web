@@ -19,7 +19,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
   constructor(
     elem: ElementInterfaceIntersect,
     data: GradientColor,
-    container: any
+    container: ElementInterfaceIntersect
   ) {
     super()
     this.data = data

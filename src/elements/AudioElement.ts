@@ -87,7 +87,7 @@ export default class AudioElement extends RenderableElement {
     if (this.tm._placeholder) {
       this._currentTime = num / Number(this.data?.sr)
     } else {
-      this._currentTime = Number(this.tm.v)
+      this._currentTime = this.tm.v
     }
     this._volume = Number(this.lv?.v[0])
     const totalVolume = this._volume * Number(this._volumeMultiplier)

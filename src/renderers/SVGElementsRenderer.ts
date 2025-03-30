@@ -59,7 +59,7 @@ function renderContentTransform(
     )
   }
   if (isFirstFrame || itemData.transform.op._mdf) {
-    itemData.transform.container?.setAttribute(
+    itemData.transform.container.setAttribute(
       'opacity',
       `${itemData.transform.op.v ?? 1}`
     )

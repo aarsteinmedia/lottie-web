@@ -234,7 +234,7 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     this.g = new GradientProperty(
       elem as ElementInterfaceIntersect,
       data.g!,
-      this
+      this as unknown as ElementInterfaceIntersect
     )
     this.style = styleData
     this.stops = []

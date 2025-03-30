@@ -44,31 +44,33 @@ export default class BaseRenderer extends FrameElement {
     let i = 0
     const { length } = layers
     while (i < length) {
-      if (layers[i].ind === Number(parentName)) {
-        if (
-          !elements[i] ||
-          elements[i] === (true as unknown as ElementInterfaceIntersect)
-        ) {
-          this.buildItem(i)
-
-          if (!this.addPendingElement) {
-            throw new Error(
-              `${this.constructor.name}: Method addPendingElement is not initialized`
-            )
-          }
-          this.addPendingElement(element)
-          i++
-          continue
-        }
-        hierarchy.push(elements[i])
-        ;(elements[i] as HierarchyElement).setAsParent()
-        if (layers[i].parent === undefined) {
-          element.setHierarchy(hierarchy)
-          i++
-          continue
-        }
-        this.buildElementParenting(element, layers[i].parent, hierarchy)
+      if (layers[i].ind !== parentName) {
+        i++
+        continue
       }
+      if (
+        !elements[i] ||
+        elements[i] === (true as unknown as ElementInterfaceIntersect)
+      ) {
+        this.buildItem(i)
+
+        if (!this.addPendingElement) {
+          throw new Error(
+            `${this.constructor.name}: Method addPendingElement is not initialized`
+          )
+        }
+        this.addPendingElement(element)
+        i++
+        continue
+      }
+      hierarchy.push(elements[i])
+      ;(elements[i] as HierarchyElement).setAsParent()
+      if (layers[i].parent === undefined) {
+        element.setHierarchy(hierarchy)
+        i++
+        continue
+      }
+      this.buildElementParenting(element, layers[i].parent, hierarchy)
       i++
     }
   }

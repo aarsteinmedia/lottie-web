@@ -1,11 +1,11 @@
-import type { LottieLayer } from '@/types'
+import type { LottieAsset, LottieLayer } from '@/types'
 
 export default class SlotManager {
   animationData: LottieLayer
   constructor(animationData: LottieLayer) {
     this.animationData = animationData
   }
-  getProp(data: any) {
+  getProp(data: LottieAsset) {
     if (
       data.sid &&
       this.animationData.slots &&

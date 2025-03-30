@@ -208,8 +208,8 @@ export default class TrimModifier extends ShapeModifier {
     shapeData.pathsData = []
   }
   calculateShapeEdges(
-    s: any,
-    e: any,
+    s: number,
+    e: number,
     shapeLength: number,
     addedLength: number,
     totalModifierLength: number
@@ -303,8 +303,7 @@ export default class TrimModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let s
-    let e
+    let s: number, e: number
     if (this._mdf || _isFirstFrame) {
       let o = (Number(this.o?.v) % 360) / 360
       if (o < 0) {
@@ -335,8 +334,8 @@ export default class TrimModifier extends ShapeModifier {
       this.sValue = s
       this.eValue = e
     } else {
-      s = this.sValue
-      e = this.eValue
+      s = this.sValue || 0
+      e = this.eValue || 0
     }
     let shapePaths,
       j,
@@ -423,8 +422,8 @@ export default class TrimModifier extends ShapeModifier {
           }
           jLen = edges.length
           for (j = 0; j < jLen; j++) {
-            shapeS = Number(edges[j][0])
-            shapeE = Number(edges[j][1])
+            shapeS = edges[j][0]
+            shapeE = edges[j][1]
             segments.length = 0
             if (shapeE <= 1) {
               segments.push({

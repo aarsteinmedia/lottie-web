@@ -97,7 +97,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     previousValue: ShapePath,
     caching?: Caching
   ) {
-    let iterationIndex = caching?.lastIndex,
+    let iterationIndex = caching?.lastIndex || 0,
       keyPropS,
       keyPropE,
       isHold,
@@ -122,7 +122,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
             } */
       isHold = true
     } else {
-      let i = Number(iterationIndex)
+      let i = iterationIndex
       const len = kf.length - 1
       let flag = true
       let keyData
@@ -182,7 +182,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     }
     const jLen = previousValue._length
     const kLen = keyPropS.i[0].length
-    caching!.lastIndex = Number(iterationIndex)
+    caching!.lastIndex = iterationIndex
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
@@ -208,10 +208,8 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       )
     }
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
-      initTime = Number(this.keyframes?.[0].t) - this.offsetTime,
-      endTime =
-        Number(this.keyframes?.[Number(this.keyframes.length) - 1].t) -
-        this.offsetTime,
+      initTime = this.keyframes[0].t - this.offsetTime,
+      endTime = this.keyframes[this.keyframes.length - 1].t - this.offsetTime,
       lastFrame = Number(this._caching?.lastFrame)
     if (
       !(
@@ -355,7 +353,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
       p1 = this.p.v[1],
       v0 = this.s.v[0] / 2,
       v1 = this.s.v[1] / 2,
-      round = Math.min(v0, v1, Number(this.r?.v)),
+      round = Math.min(v0, v1, this.r.v),
       cPoint = round * (1 - roundCorner)
     this.v!._length = 0
 
@@ -678,15 +676,15 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
 
   convertPolygonToPath() {
-    const numPts = Math.floor(Number(this.pt?.v))
+    const numPts = Math.floor(this.pt.v)
     const angle = (Math.PI * 2) / numPts
-    const rad = Number(this.or?.v)
-    const roundness = Number(this.os?.v)
+    const rad = this.or.v
+    const roundness = this.os.v
     const perimSegment = (2 * Math.PI * rad) / (numPts * 4)
     let i
     let currentAng = -Math.PI * 0.5
     const dir = this.data?.d === 3 ? -1 : 1
-    currentAng += Number(this.r?.v)
+    currentAng += this.r.v
     this.v!._length = 0
     for (i = 0; i < numPts; i++) {
       let x = rad * Math.cos(currentAng)
@@ -711,15 +709,15 @@ class StarShapeProperty extends ShapeBaseProperty {
     ;(this.paths as any)[0] = this.v // TODO:
   }
   convertStarToPath() {
-    const numPts = Math.floor(Number(this.pt?.v)) * 2
+    const numPts = Math.floor(this.pt.v) * 2
     const angle = (Math.PI * 2) / numPts
     /* this.v.v.length = numPts;
               this.v.i.length = numPts;
               this.v.o.length = numPts; */
     let longFlag = true
-    const longRad = Number(this.or?.v),
+    const longRad = this.or.v,
       shortRad = Number(this.ir?.v),
-      longRound = Number(this.os?.v),
+      longRound = this.os.v,
       shortRound = Number(this.is?.v),
       longPerimSegment = (2 * Math.PI * longRad) / (numPts * 2),
       shortPerimSegment = (2 * Math.PI * shortRad) / (numPts * 2)
@@ -727,7 +725,7 @@ class StarShapeProperty extends ShapeBaseProperty {
       roundness,
       perimSegment,
       currentAng = -Math.PI / 2
-    currentAng += Number(this.r?.v)
+    currentAng += this.r.v
     const dir = this.data?.d === 3 ? -1 : 1
     this.v!._length = 0
     for (let i = 0; i < numPts; i++) {

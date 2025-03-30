@@ -343,7 +343,7 @@ export default class SVGShapeElement extends ShapeElement {
       if (
         (!this._isFirstFrame &&
           !this.animatedContents[i].element._isAnimated) ||
-        this.animatedContents[i].data === (true as any) ||
+        this.animatedContents[i].data === (true as unknown as Shape) ||
         !this.animatedContents[i].fn
       ) {
         continue

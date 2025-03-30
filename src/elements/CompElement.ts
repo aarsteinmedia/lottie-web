@@ -18,7 +18,7 @@ export default class CompElement extends RenderableDOMElement {
   completeLayers?: boolean
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
-  renderedFrame?: number
+  renderedFrame: number = 0
 
   tm?: ValueProperty
 
@@ -41,7 +41,7 @@ export default class CompElement extends RenderableDOMElement {
     }
   }
 
-  getElements(): ElementInterfaceIntersect[] | undefined {
+  getElements() {
     return this.elements
   }
 
@@ -65,21 +65,24 @@ export default class CompElement extends RenderableDOMElement {
   }
 
   override prepareFrame(val: number) {
+    if (!this.data) {
+      throw new Error(`${this.constructor.name}: Cannot Access data`)
+    }
     this._mdf = false
     this.prepareRenderableFrame(val)
     this.prepareProperties(val, this.isInRange)
-    if (!this.isInRange && !this.data?.xt) {
+    if (!this.isInRange && !this.data.xt) {
       return
     }
 
     if (this.tm?._placeholder) {
-      this.renderedFrame = val / Number(this.data?.sr)
+      this.renderedFrame = val / Number(this.data.sr)
     } else {
-      let timeRemapped = this.tm?.v
-      if (timeRemapped === this.data?.op) {
-        timeRemapped = Number(this.data?.op) - 1
+      let timeRemapped = this.tm?.v || 0
+      if (timeRemapped === this.data.op) {
+        timeRemapped = this.data.op - 1
       }
-      this.renderedFrame = Number(timeRemapped)
+      this.renderedFrame = timeRemapped
     }
     const { length } = this.elements
     if (!this.completeLayers) {
@@ -93,9 +96,7 @@ export default class CompElement extends RenderableDOMElement {
     // This iteration needs to be backwards because of how expressions connect between each other
     for (let i = length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {
-        this.elements[i].prepareFrame(
-          this.renderedFrame - Number(this.layers[i].st)
-        )
+        this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st)
         if (this.elements[i]._mdf) {
           this._mdf = true
         }

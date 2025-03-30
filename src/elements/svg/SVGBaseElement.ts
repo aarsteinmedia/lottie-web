@@ -144,10 +144,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
     const featureSupport = new FeatureSupport()
     if (!this.matteMasks[matteType]) {
       const id = `${this.layerId}_${matteType}`
-      let filId
-      let fil
-      let useElement
-      let gg
+      let filId, fil, useElement, gg
 
       switch (matteType) {
         case 1:
@@ -181,10 +178,10 @@ export default class SVGBaseElement extends RenderableDOMElement {
           }
           break
         case 2: {
-          const maskGroup = createNS('mask')
+          const maskGroup = createNS<SVGMaskElement>('mask')
           maskGroup.setAttribute('id', id)
           maskGroup.setAttribute('mask-type', 'alpha')
-          const maskGrouper = createNS('g')
+          const maskGrouper = createNS<SVGGElement>('g')
           maskGroup.appendChild(maskGrouper)
           filId = createElementID()
           fil = createFilter(filId)
@@ -227,7 +224,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
           if (!featureSupport.maskType) {
             maskGroup.setAttribute('mask-type', 'luminance')
             fil.appendChild(createAlphaToLuminanceFilter())
-            gg = createNS('g')
+            gg = createNS<SVGGElement>('g')
             maskGrouper.appendChild(alphaRect)
             if (this.layerElement) {
               gg.appendChild(this.layerElement)
