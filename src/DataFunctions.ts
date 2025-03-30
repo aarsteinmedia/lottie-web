@@ -5,7 +5,6 @@ import type {
   DocumentData,
   LottieAsset,
   LottieLayer,
-  MaskData,
   Shape,
   ShapeColorValue,
   Vector3,
@@ -39,10 +38,6 @@ export function completeLayers(
   comps: (LottieLayer | LottieAsset)[]
 ) {
   const { length } = layers
-  let j
-  let jLen
-  let k
-  let kLen
   for (let i = 0; i < length; i++) {
     if (!('ks' in layers[i]) || layers[i].completed) {
       continue
@@ -52,37 +47,40 @@ export function completeLayers(
       if (!layers[i].masksProperties) {
         continue
       }
-      jLen = layers[i].masksProperties!.length
-      for (j = 0; j < jLen; j++) {
-        if ((layers[i].masksProperties![j].pt.k as MaskData).i) {
-          convertPathsToAbsoluteValues(layers[i].masksProperties![j].pt.k)
+      const { length: jLen } = layers[i].masksProperties || []
+      for (let j = 0; j < jLen; j++) {
+        if ((layers[i].masksProperties?.[j].pt?.k as ShapePath).i) {
+          convertPathsToAbsoluteValues(
+            layers[i].masksProperties?.[j].pt?.k as ShapePath
+          )
           continue
         }
         if (!layers[i].masksProperties![j]) {
           continue
         }
-        kLen = (layers[i].masksProperties![j].pt.k as MaskData[]).length
-        for (k = 0; k < kLen; k++) {
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].s) {
-            convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].s[0]
-            )
-          }
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].e) {
-            convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].e?.[0]
-            )
-          }
+        const { length: kLen } =
+          (layers[i].masksProperties?.[j].pt?.k as ShapePath[]) || []
+        for (let k = 0; k < kLen; k++) {
+          convertPathsToAbsoluteValues(
+            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].s?.[0]
+          )
+          convertPathsToAbsoluteValues(
+            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].e?.[0]
+          )
         }
       }
     }
-    if (layers[i].ty === 0) {
-      layers[i].layers = findCompLayers(layers[i].refId, comps)
-      completeLayers(layers[i].layers as LottieLayer[], comps)
-    } else if (layers[i].ty === 4) {
-      completeShapes(layers[i].shapes || [])
-    } else if (layers[i].ty === 5) {
-      // completeText(layers[i]) TODO:
+
+    switch (layers[i].ty) {
+      case 0: // Precomposition Layer
+        layers[i].layers = findCompLayers(layers[i].refId, comps)
+        completeLayers(layers[i].layers as LottieLayer[], comps)
+        break
+      case 4: // Shape Layer
+        completeShapes(layers[i].shapes || [])
+        break
+      case 5: // TextLayer
+      //
     }
   }
 }
@@ -92,31 +90,21 @@ export function completeLayers(
  */
 export function completeShapes(arr: Shape[]) {
   const { length } = arr
-  let j
-  let jLen
   for (let i = length - 1; i >= 0; i--) {
-    if (arr[i].ty === 'sh') {
-      if ((arr[i].ks?.k as ShapePath).i) {
-        convertPathsToAbsoluteValues(arr[i].ks?.k)
-      } else {
-        jLen = (arr[i].ks?.k.length as unknown as number) || 0
-        for (j = 0; j < jLen; j++) {
-          if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
-            convertPathsToAbsoluteValues(
-              (arr[i].ks?.k as ShapePath[])[j]?.s?.[0]
-            )
-          }
-          if ((arr[i].ks?.k as ShapePath[])[j]?.e) {
-            convertPathsToAbsoluteValues(
-              (arr[i].ks?.k as ShapePath[])[j]?.e?.[0]
-            )
-          }
-        }
-      }
-      continue
-    }
     if (arr[i].ty === 'gr') {
       completeShapes(arr[i].it as Shape[])
+      continue
+    }
+    if (arr[i].ty === 'sh') {
+      if ((arr[i].ks?.k as ShapePath).i) {
+        convertPathsToAbsoluteValues(arr[i].ks?.k as ShapePath)
+        continue
+      }
+      const { length: jLen } = (arr[i].ks?.k as ShapePath[]) || []
+      for (let j = 0; j < jLen; j++) {
+        convertPathsToAbsoluteValues((arr[i].ks?.k as ShapePath[])[j]?.s?.[0])
+        convertPathsToAbsoluteValues((arr[i].ks?.k as ShapePath[])[j]?.e?.[0])
+      }
     }
   }
 }
@@ -144,7 +132,10 @@ function completeChars(
 /**
  *
  */
-function convertPathsToAbsoluteValues(path: any) {
+function convertPathsToAbsoluteValues(path?: ShapePath) {
+  if (!path) {
+    return
+  }
   const { length } = path.i
   for (let i = 0; i < length; i++) {
     path.i[i][0] += path.v[i][0]
@@ -222,9 +213,8 @@ class CheckText {
     if (checkVersion(this.minimumVersion, animationData.v)) {
       this.iterateLayers(animationData.layers)
       if (animationData.assets) {
-        let i
-        const len = animationData.assets.length
-        for (i = 0; i < len; i++) {
+        const { length } = animationData.assets
+        for (let i = 0; i < length; i++) {
           if (animationData.assets[i].layers) {
             this.iterateLayers(animationData.assets[i].layers!)
           }
@@ -385,8 +375,6 @@ class CheckColors {
       return
     }
     const { length } = shapes
-    let j
-    let jLen
     for (let i = 0; i < length; i++) {
       if (shapes[i].ty === 'gr') {
         this.iterateShapes(shapes[i].it)
@@ -396,8 +384,8 @@ class CheckColors {
         continue
       }
       if (shapes[i].c?.k && (shapes[i].c?.k as ShapeColorValue[])[0].i) {
-        jLen = (shapes[i].c?.k as ShapeColorValue[]).length || 0
-        for (j = 0; j < jLen; j++) {
+        const { length: jLen } = (shapes[i].c?.k as ShapeColorValue[]) || []
+        for (let j = 0; j < jLen; j++) {
           if ((shapes[i].c?.k as ShapeColorValue[])[j].s) {
             ;(shapes[i].c?.k as ShapeColorValue[])[j].s[0] /= 255
             ;(shapes[i].c?.k as ShapeColorValue[])[j].s[1] /= 255
@@ -440,8 +428,6 @@ class CheckShapes {
 
   private completeClosingShapes(arr: Shape[]) {
     const { length } = arr
-    let j
-    let jLen
     for (let i = length - 1; i >= 0; i--) {
       if (arr[i].ty === 'gr') {
         this.completeClosingShapes(arr[i].it as Shape[])
@@ -454,8 +440,8 @@ class CheckShapes {
         ;(arr[i].ks?.k as ShapePath).c = !!arr[i].closed
         continue
       }
-      jLen = (arr[i].ks?.k as ShapePath[]).length || 0
-      for (j = 0; j < jLen; j++) {
+      const { length: jLen } = (arr[i].ks?.k as ShapePath[]) || []
+      for (let j = 0; j < jLen; j++) {
         if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
           ;(arr[i].ks?.k as ShapePath[])[j].s![0].c = !!arr[i].closed
         }
@@ -476,17 +462,18 @@ class CheckShapes {
           if (!maskProps) {
             continue
           }
-          if ((maskProps[j].pt.k as MaskData).i) {
-            ;(maskProps[j].pt.k as MaskData).c = !!maskProps[j].cl
+          if ((maskProps[j].pt?.k as ShapePath).i) {
+            ;(maskProps[j].pt!.k as ShapePath).c = !!maskProps[j].cl
             continue
           }
-          const { length: kLen } = (maskProps[j].pt.k as MaskData[]) || []
+          const { length: kLen } = (maskProps[j].pt?.k as ShapePath[]) || []
           for (let k = 0; k < kLen; k++) {
-            if ((maskProps[j].pt.k as MaskData[])[k].s) {
-              ;(maskProps[j].pt.k as MaskData[])[k].s[0].c = !!maskProps?.[j].cl
+            if ((maskProps[j].pt?.k as ShapePath[])[k].s) {
+              ;(maskProps[j].pt?.k as ShapePath[])[k].s![0].c =
+                !!maskProps?.[j].cl
             }
-            if ((maskProps[j].pt.k as MaskData[])[k].e) {
-              ;(maskProps[j].pt.k as MaskData[])[k].e![0].c =
+            if ((maskProps[j].pt?.k as ShapePath[])[k].e) {
+              ;(maskProps[j].pt?.k as ShapePath[])[k].e![0].c =
                 !!maskProps?.[j].cl
             }
           }

@@ -293,20 +293,20 @@ export default class Matrix {
   }
 
   skewFromAxis(ax: number, angle: number): this {
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
+    const mCos = Math.cos(angle),
+      mSin = Math.sin(angle)
     return this._t(mCos, mSin, 0, 0, -mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
       ._t(1, 0, 0, 0, Math.tan(ax), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
       ._t(mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
   }
 
   to2dCSS(): string {
-    const _a = this.roundMatrixProperty(this.props[0])
-    const _b = this.roundMatrixProperty(this.props[1])
-    const _c = this.roundMatrixProperty(this.props[4])
-    const _d = this.roundMatrixProperty(this.props[5])
-    const _e = this.roundMatrixProperty(this.props[12])
-    const _f = this.roundMatrixProperty(this.props[13])
+    const _a = this.roundMatrixProperty(this.props[0]),
+      _b = this.roundMatrixProperty(this.props[1]),
+      _c = this.roundMatrixProperty(this.props[4]),
+      _d = this.roundMatrixProperty(this.props[5]),
+      _e = this.roundMatrixProperty(this.props[12]),
+      _f = this.roundMatrixProperty(this.props[13])
     return `matrix(${_a},${_b},${_c},${_d},${_e},${_f})`
   }
 
@@ -362,22 +362,22 @@ export default class Matrix {
       return this
     }
 
-    const a1 = _p[0]
-    const b1 = _p[1]
-    const c1 = _p[2]
-    const d1 = _p[3]
-    const e1 = _p[4]
-    const f1 = _p[5]
-    const g1 = _p[6]
-    const h1 = _p[7]
-    const i1 = _p[8]
-    const j1 = _p[9]
-    const k1 = _p[10]
-    const l1 = _p[11]
-    const m1 = _p[12]
-    const n1 = _p[13]
-    const o1 = _p[14]
-    const p1 = _p[15]
+    const a1 = _p[0],
+      b1 = _p[1],
+      c1 = _p[2],
+      d1 = _p[3],
+      e1 = _p[4],
+      f1 = _p[5],
+      g1 = _p[6],
+      h1 = _p[7],
+      i1 = _p[8],
+      j1 = _p[9],
+      k1 = _p[10],
+      l1 = _p[11],
+      m1 = _p[12],
+      n1 = _p[13],
+      o1 = _p[14],
+      p1 = _p[15]
 
     _p[0] = a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2
     _p[1] = a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2

@@ -26,39 +26,39 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _isFirstFrame?: boolean
   _placeholder?: boolean
   comp?: ElementInterfaceIntersect
-  data?: any
-  e?: any
-  effectsSequence?: any
-  elem?: any
+  data?: VectorProperty<number | number[] | Keyframe[]>
+  e?: unknown
+  effectsSequence: ((arg: unknown) => any)[] = []
+  elem?: ElementInterfaceIntersect
   frameId?: number
-  g?: any
+  g?: unknown
   getValueAtTime?: (a: number, b?: number) => any
   initFrame = initialDefaultFrame
   k?: boolean
-  keyframes?: Keyframe[]
-  keyframesMetadata?: {
+  keyframes: Keyframe[] = []
+  keyframesMetadata: {
     bezierData?: BezierData
     __fnct?: ((val: number) => number) | ((val: number) => number)[]
-  }[]
+  }[] = []
   kf?: boolean
   lock?: boolean
   mult?: number
   offsetTime?: number
-  pv?: string | number | any[]
-  s?: any
+  pv?: any
+  s?: unknown
   sh?: Shape
-  v?: string | number | any[]
+  v?: any
   vel?: number | any[]
   addEffect(effectFunction: any) {
     this.effectsSequence.push(effectFunction)
-    ;(this.container as any)?.addDynamicProperty?.(this)
+    this.container?.addDynamicProperty(this)
   }
   getValueAtCurrentTime() {
     const offsetTime = Number(this.offsetTime),
       frameNum = Number(this.comp?.renderedFrame) - offsetTime,
-      initTime = Number(this.keyframes?.[0].t) - offsetTime,
-      length = Number(this.keyframes?.length) - 1,
-      endTime = Number(this.keyframes?.[length].t) - offsetTime,
+      initTime = this.keyframes[0].t - offsetTime,
+      length = this.keyframes.length - 1,
+      endTime = this.keyframes[length].t - offsetTime,
       lastFrame = Number(this._caching?.lastFrame)
     if (
       !(
@@ -90,22 +90,22 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
     let iterationIndex = caching?.lastIndex || 0
     let i = iterationIndex
-    let len = Number(this.keyframes?.length) - 1
+    let len = this.keyframes.length - 1
     let flag = true
-    let keyData
-    let nextKeyData
+    let keyData = this.keyframes[0]
+    let nextKeyData = this.keyframes[1]
 
     while (flag) {
-      keyData = this.keyframes?.[i]
-      nextKeyData = this.keyframes?.[i + 1]
-      if (i === len - 1 && frameNum >= Number(nextKeyData?.t) - offsetTime) {
-        if (keyData?.h) {
+      keyData = this.keyframes[i]
+      nextKeyData = this.keyframes[i + 1]
+      if (i === len - 1 && frameNum >= nextKeyData.t - offsetTime) {
+        if (keyData.h) {
           keyData = nextKeyData
         }
         iterationIndex = 0
         break
       }
-      if (Number(nextKeyData?.t) - offsetTime > frameNum) {
+      if (nextKeyData.t - offsetTime > frameNum) {
         iterationIndex = i
         break
       }
@@ -116,16 +116,15 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         flag = false
       }
     }
-    const keyframeMetadata = this.keyframesMetadata?.[i] || {}
+    const keyframeMetadata = this.keyframesMetadata[i] || {}
 
-    let k
     let kLen
     let perc
     let jLen
     let j
     let fnc: null | ((val: number) => number) = null
-    const nextKeyTime = Number(nextKeyData?.t) - offsetTime
-    const keyTime = Number(keyData?.t) - offsetTime
+    const nextKeyTime = nextKeyData.t - offsetTime,
+      keyTime = keyData.t - offsetTime
     let endValue
     if (keyData?.to) {
       if (!keyframeMetadata.bezierData) {
@@ -140,7 +139,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       if (frameNum >= nextKeyTime || frameNum < keyTime) {
         const ind = frameNum >= nextKeyTime ? bezierData.points.length - 1 : 0
         kLen = bezierData.points[ind].point.length
-        for (k = 0; k < kLen; k++) {
+        for (let k = 0; k < kLen; k++) {
           newValue[k] = bezierData.points[ind].point[k]
         }
         // caching._lastKeyframeIndex = -1;
@@ -160,12 +159,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         perc = fnc((frameNum - keyTime) / (nextKeyTime - keyTime))
         const distanceInLine = bezierData.segmentLength * perc
 
-        let segmentPerc
-        let addedLength =
-          Number(caching?.lastFrame) < frameNum &&
-          caching?._lastKeyframeIndex === i
-            ? caching._lastAddedLength
-            : 0
+        let segmentPerc,
+          addedLength =
+            Number(caching?.lastFrame) < frameNum &&
+            caching?._lastKeyframeIndex === i
+              ? caching._lastAddedLength
+              : 0
         j =
           Number(caching?.lastFrame) < frameNum &&
           caching?._lastKeyframeIndex === i
@@ -181,7 +180,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
             j === bezierData.points.length - 1
           ) {
             kLen = bezierData.points[j].point.length
-            for (k = 0; k < kLen; k++) {
+            for (let k = 0; k < kLen; k++) {
               newValue[k] = bezierData.points[j].point[k]
             }
             break
@@ -194,7 +193,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               (distanceInLine - addedLength) /
               bezierData.points[j + 1].partialLength
             kLen = bezierData.points[j].point.length
-            for (k = 0; k < kLen; k++) {
+            for (let k = 0; k < kLen; k++) {
               newValue[k] =
                 bezierData.points[j].point[k] +
                 (bezierData.points[j + 1].point[k] -
@@ -228,9 +227,9 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           newValue[1] = endValue[1]
           newValue[2] = endValue[2]
         } else if (frameNum <= keyTime) {
-          newValue[0] = Number(keyData?.s[0])
-          newValue[1] = Number(keyData?.s[1])
-          newValue[2] = Number(keyData?.s[2])
+          newValue[0] = keyData.s[0]
+          newValue[1] = keyData.s[1]
+          newValue[2] = keyData.s[2]
         } else {
           const quatStart = createQuaternion(keyData?.s)
           const quatEnd = createQuaternion(endValue)
@@ -278,10 +277,10 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               } else if (keyframeMetadata.__fnct) {
                 fnc = keyframeMetadata.__fnct as any
               } else {
-                outX = Number(keyData?.o.x)
-                outY = Number(keyData?.o.y)
-                inX = Number(keyData?.i.x)
-                inY = Number(keyData?.i.y)
+                outX = keyData.o.x as number
+                outY = keyData.o.y as number
+                inX = keyData.i.x as number
+                inY = keyData.i.y as number
                 fnc = getBezierEasing(outX, outY, inX, inY).get
                 keyData!.keyframeMetadata = fnc
               }
@@ -289,7 +288,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
             }
           }
 
-          endValue = nextKeyData?.s || keyData?.e
+          endValue = nextKeyData.s || keyData.e
           keyValue =
             keyData?.h === 1
               ? keyData.s[i]
@@ -308,26 +307,26 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   }
   processEffectsSequence() {
     if (
-      this.elem.globalData.frameId === this.frameId ||
+      this.elem?.globalData.frameId === this.frameId ||
       !this.effectsSequence.length
     ) {
       return
     }
     if (this.lock) {
-      this.setVValue(this.pv as any)
+      this.setVValue(this.pv as number)
       return
     }
     this.lock = true
     this._mdf = !!this._isFirstFrame
     const len = this.effectsSequence.length
-    let finalValue = this.kf ? this.pv : this.data.k
+    let finalValue = this.kf ? this.pv : this.data?.k
     for (let i = 0; i < len; i++) {
       finalValue = this.effectsSequence[i](finalValue)
     }
-    this.setVValue(finalValue)
+    this.setVValue(finalValue as number)
     this._isFirstFrame = false
     this.lock = false
-    this.frameId = this.elem.globalData.frameId
+    this.frameId = this.elem?.globalData.frameId
   }
   setVValue(val: number | number[]) {
     let multipliedValue
@@ -351,9 +350,9 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
   }
 }
-export class ValueProperty extends BaseProperty {
-  override pv: number | string
-  override v: number | string
+export class ValueProperty<T = number> extends BaseProperty {
+  override pv: T
+  override v: T
   constructor(
     elem: ElementInterfaceIntersect,
     data: VectorProperty,
@@ -364,8 +363,8 @@ export class ValueProperty extends BaseProperty {
     this.propType = 'unidimensional'
     this.mult = mult || 1
     this.data = data
-    this.v = data.k * (mult || 1)
-    this.pv = data.k
+    this.v = (data.k * (mult || 1)) as T
+    this.pv = data.k as T
     this._mdf = false
     this.elem = elem
     this.container = container

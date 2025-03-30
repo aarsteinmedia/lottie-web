@@ -3,8 +3,6 @@ import type {
   ElementInterfaceIntersect,
   Keyframe,
   KeyframesMetadata,
-  Mask,
-  Merge,
   Shape,
   StrokeData,
   Vector2,
@@ -43,28 +41,36 @@ export function getKeyframedConstructorFunction() {
  */
 export function getShapeProp(
   elem: ShapeElement,
-  data: Merge<Shape, Mask>,
-  type: number,
-  _?: unknown
-) {
-  let prop
-  if (type === 3 || type === 4) {
-    const dataProp = type === 3 ? data.pt : data.ks
-    const keys = dataProp?.k
-    if (keys?.length) {
-      prop = new KeyframedShapeProperty(elem, data, type)
-    } else {
+  data: Shape,
+  type: number
+  // _?: unknown
+): null | ShapeProperty {
+  let prop = null
+
+  switch (type) {
+    case 3:
+    case 4: {
+      const dataProp = type === 3 ? data.pt : data.ks,
+        keys = dataProp?.k
+      if (keys?.length) {
+        prop = new KeyframedShapeProperty(elem, data, type)
+        break
+      }
       prop = new ShapeProperty(elem, data, type)
+      break
     }
-  } else if (type === 5) {
-    prop = new RectShapeProperty(elem as ElementInterfaceIntersect, data)
-  } else if (type === 6) {
-    prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
-  } else if (type === 7) {
-    prop = new StarShapeProperty(elem, data)
+    case 5:
+      prop = new RectShapeProperty(elem as ElementInterfaceIntersect, data)
+      break
+    case 6:
+      prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
+      break
+    case 7:
+      prop = new StarShapeProperty(elem, data)
   }
+
   if (prop?.k) {
-    elem.addDynamicProperty(prop as any)
+    elem.addDynamicProperty(prop)
   }
   return prop
 }
@@ -72,13 +78,13 @@ export function getShapeProp(
 abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   public comp?: ElementInterfaceIntersect
-  public data?: Partial<Shape & Mask>
-  public effectsSequence?: any[]
+  public data?: Shape
+  public effectsSequence: ((arg: unknown) => ShapePath)[] = []
   public elem?: ShapeElement
   frameId?: number
   public k?: boolean
-  keyframes?: Keyframe[]
-  keyframesMetadata?: KeyframesMetadata[]
+  keyframes: Keyframe[] = []
+  keyframesMetadata: KeyframesMetadata[] = []
   public kf?: boolean
   public localShapeCollection?: ShapeCollection
   lock?: boolean
@@ -91,15 +97,15 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     previousValue: ShapePath,
     caching?: Caching
   ) {
-    let iterationIndex = caching?.lastIndex
-    let keyPropS
-    let keyPropE
-    let isHold
-    let perc = 0
-    let vertexValue
+    let iterationIndex = caching?.lastIndex || 0,
+      keyPropS,
+      keyPropE,
+      isHold,
+      perc = 0,
+      vertexValue
     const kf = this.keyframes
     if (!kf) {
-      throw new Error('ShapeBaseProperty: Could not read keyframe data')
+      throw new Error(`${this.constructor.name}: Could not read keyframe data`)
     }
     if (frameNum < kf[0].t - this.offsetTime) {
       keyPropS = kf[0].s[0]
@@ -116,7 +122,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
             } */
       isHold = true
     } else {
-      let i = Number(iterationIndex)
+      let i = iterationIndex
       const len = kf.length - 1
       let flag = true
       let keyData
@@ -134,7 +140,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
         }
       }
       if (!keyData || !nextKeyData) {
-        throw new Error('ShapeBaseProperty: Could not set keyframe data')
+        throw new Error(`${this.constructor.name}: Could not set keyframe data`)
       }
       const keyframeMetadata = this.keyframesMetadata?.[i] || {}
       isHold = keyData.h === 1
@@ -176,7 +182,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     }
     const jLen = previousValue._length
     const kLen = keyPropS.i[0].length
-    caching!.lastIndex = Number(iterationIndex)
+    caching!.lastIndex = iterationIndex
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
@@ -197,13 +203,13 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   }
   interpolateShapeCurrentTime() {
     if (!this.pv) {
-      throw new Error('ShapeBaseProperty: Cannot parse ShapePath v value')
+      throw new Error(
+        `${this.constructor.name}: Cannot parse ShapePath v value`
+      )
     }
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
-      initTime = Number(this.keyframes?.[0].t) - this.offsetTime,
-      endTime =
-        Number(this.keyframes?.[Number(this.keyframes.length) - 1].t) -
-        this.offsetTime,
+      initTime = this.keyframes[0].t - this.offsetTime,
+      endTime = this.keyframes[this.keyframes.length - 1].t - this.offsetTime,
       lastFrame = Number(this._caching?.lastFrame)
     if (
       !(
@@ -246,21 +252,26 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     for (i = 0; i < len; i++) {
       finalValue = this.effectsSequence?.[i](finalValue)
     }
-    this.setVValue(finalValue)
+    this.setVValue(finalValue as ShapePath)
     this.lock = false
     this.frameId = this.elem?.globalData?.frameId || 0
   }
   reset() {
     this.paths = this.localShapeCollection
   }
-  setVValue(newPath: ShapePath) {
-    if (!this.v) {
-      throw new Error('ShapeBaseProperty: ShapePath is not set')
+  setVValue(newPath?: ShapePath) {
+    if (!this.v || !newPath) {
+      throw new Error(`${this.constructor.name}: ShapePath is not set`)
     }
     if (!this.shapesEqual(this.v, newPath)) {
+      if (!this.localShapeCollection) {
+        throw new Error(
+          `${this.constructor.name}: localShapeCollection is not set`
+        )
+      }
       this.v = clone(newPath)
-      this.localShapeCollection?.releaseShapes()
-      this.localShapeCollection?.addShape(this.v)
+      this.localShapeCollection.releaseShapes()
+      this.localShapeCollection.addShape(this.v)
       this._mdf = true
       this.paths = this.localShapeCollection
     }
@@ -297,7 +308,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
   r: ValueProperty
   s: MultiDimensionalProperty<Vector2>
 
-  constructor(elem: ElementInterfaceIntersect, data: Merge<Shape, Mask>) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
     this.v = newElement()
     this.v.c = true
@@ -314,16 +325,22 @@ export class RectShapeProperty extends ShapeBaseProperty {
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     this.s = PropertyFactory(
       elem,
       data.s,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(elem, data.r, 0, 0, this) as ValueProperty
+    this.r = PropertyFactory(
+      elem,
+      data.r,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     if (this.dynamicProperties?.length) {
       this.k = true
     } else {
@@ -332,12 +349,12 @@ export class RectShapeProperty extends ShapeBaseProperty {
     }
   }
   convertRectToPath() {
-    const p0 = this.p.v[0]
-    const p1 = this.p.v[1]
-    const v0 = this.s.v[0] / 2
-    const v1 = this.s.v[1] / 2
-    const round = Math.min(v0, v1, Number(this.r?.v))
-    const cPoint = round * (1 - roundCorner)
+    const p0 = this.p.v[0],
+      p1 = this.p.v[1],
+      v0 = this.s.v[0] / 2,
+      v1 = this.s.v[1] / 2,
+      round = Math.min(v0, v1, this.r.v),
+      cPoint = round * (1 - roundCorner)
     this.v!._length = 0
 
     if (this.d === 2 || this.d === 1) {
@@ -594,23 +611,59 @@ class StarShapeProperty extends ShapeBaseProperty {
     this.d = data.d
     this.initDynamicPropertyContainer(elem)
     if (data.sy === 1) {
-      this.ir = PropertyFactory(elem, data.ir, 0, 0, this) as ValueProperty
-      this.is = PropertyFactory(elem, data.is, 0, 0.01, this) as ValueProperty
+      this.ir = PropertyFactory(
+        elem,
+        data.ir,
+        0,
+        0,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
+      this.is = PropertyFactory(
+        elem,
+        data.is,
+        0,
+        0.01,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
       this.convertToPath = this.convertStarToPath
     } else {
       this.convertToPath = this.convertPolygonToPath
     }
-    this.pt = PropertyFactory(elem, data.pt, 0, 0, this) as ValueProperty
+    this.pt = PropertyFactory(
+      elem,
+      data.pt,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.p = PropertyFactory(
       elem,
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(elem, data.r, 0, degToRads, this) as ValueProperty
-    this.or = PropertyFactory(elem, data.or, 0, 0, this) as ValueProperty
-    this.os = PropertyFactory(elem, data.os, 0, 0.01, this) as ValueProperty
+    this.r = PropertyFactory(
+      elem,
+      data.r,
+      0,
+      degToRads,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.or = PropertyFactory(
+      elem,
+      data.or,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.os = PropertyFactory(
+      elem,
+      data.os,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.localShapeCollection = newShapeCollection()
     this.localShapeCollection.addShape(this.v)
     this.paths = this.localShapeCollection
@@ -623,15 +676,15 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
 
   convertPolygonToPath() {
-    const numPts = Math.floor(Number(this.pt?.v))
+    const numPts = Math.floor(this.pt.v)
     const angle = (Math.PI * 2) / numPts
-    const rad = Number(this.or?.v)
-    const roundness = Number(this.os?.v)
+    const rad = this.or.v
+    const roundness = this.os.v
     const perimSegment = (2 * Math.PI * rad) / (numPts * 4)
     let i
     let currentAng = -Math.PI * 0.5
     const dir = this.data?.d === 3 ? -1 : 1
-    currentAng += Number(this.r?.v)
+    currentAng += this.r.v
     this.v!._length = 0
     for (i = 0; i < numPts; i++) {
       let x = rad * Math.cos(currentAng)
@@ -656,33 +709,33 @@ class StarShapeProperty extends ShapeBaseProperty {
     ;(this.paths as any)[0] = this.v // TODO:
   }
   convertStarToPath() {
-    const numPts = Math.floor(Number(this.pt?.v)) * 2
+    const numPts = Math.floor(this.pt.v) * 2
     const angle = (Math.PI * 2) / numPts
     /* this.v.v.length = numPts;
               this.v.i.length = numPts;
               this.v.o.length = numPts; */
     let longFlag = true
-    const longRad = Number(this.or?.v)
-    const shortRad = Number(this.ir?.v)
-    const longRound = Number(this.os?.v)
-    const shortRound = Number(this.is?.v)
-    const longPerimSegment = (2 * Math.PI * longRad) / (numPts * 2)
-    const shortPerimSegment = (2 * Math.PI * shortRad) / (numPts * 2)
-    let rad
-    let roundness
-    let perimSegment
-    let currentAng = -Math.PI / 2
-    currentAng += Number(this.r?.v)
+    const longRad = this.or.v,
+      shortRad = Number(this.ir?.v),
+      longRound = this.os.v,
+      shortRound = Number(this.is?.v),
+      longPerimSegment = (2 * Math.PI * longRad) / (numPts * 2),
+      shortPerimSegment = (2 * Math.PI * shortRad) / (numPts * 2)
+    let rad,
+      roundness,
+      perimSegment,
+      currentAng = -Math.PI / 2
+    currentAng += this.r.v
     const dir = this.data?.d === 3 ? -1 : 1
     this.v!._length = 0
     for (let i = 0; i < numPts; i++) {
       rad = longFlag ? longRad : shortRad
       roundness = longFlag ? longRound : shortRound
       perimSegment = longFlag ? longPerimSegment : shortPerimSegment
-      let x = rad * Math.cos(currentAng)
-      let y = rad * Math.sin(currentAng)
-      const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y)
-      const oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
+      let x = rad * Math.cos(currentAng),
+        y = rad * Math.sin(currentAng)
+      const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
+        oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
       x += +this.p.v[0]
       y += +this.p.v[1]
       this.v?.setTripleAt(
@@ -706,7 +759,7 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
   convertToPath() {
     throw new Error(
-      'StarShapeProperty: Method convertToPath is not implemented'
+      `${this.constructor.name}: Method convertToPath is not implemented`
     )
   }
   override getValue() {
@@ -722,12 +775,12 @@ class StarShapeProperty extends ShapeBaseProperty {
 }
 
 class EllShapeProperty extends ShapeBaseProperty {
+  _cPoint = roundCorner
   d?: number
   p: MultiDimensionalProperty<Vector2>
   s: MultiDimensionalProperty<Vector2>
-  private _cPoint = roundCorner
 
-  constructor(elem: ElementInterfaceIntersect, data: Merge<Shape, Mask>) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
     this.v = newElement()
     this.v.setPathData(true, 4)
@@ -744,14 +797,14 @@ class EllShapeProperty extends ShapeBaseProperty {
       data.p,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     this.s = PropertyFactory(
       elem,
       data.s,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
     if (this.dynamicProperties?.length) {
       this.k = true
@@ -769,7 +822,9 @@ class EllShapeProperty extends ShapeBaseProperty {
       _v = this.v
 
     if (!_v) {
-      throw new Error('EllShapeProperty: Could not get value of ellipse')
+      throw new Error(
+        `${this.constructor.name}: Could not get value of ellipse`
+      )
     }
     _v.v[0][0] = p0
     _v.v[0][1] = p1 - s1
@@ -810,7 +865,16 @@ class EllShapeProperty extends ShapeBaseProperty {
 }
 
 export class ShapeProperty extends ShapeBaseProperty {
-  constructor(elem: ShapeElement, data: Partial<Shape & Mask>, type: number) {
+  pathsData?: ShapePath[] | ShapePath
+  shape?: {
+    _mdf?: boolean
+    paths?: {
+      shapes: ShapePath[]
+      _length: number
+    }
+  }
+  totalShapeLength?: number
+  constructor(elem: ShapeElement, data: Shape, type: number) {
     super()
     this.propType = 'shape'
     this.comp = elem.comp
@@ -822,7 +886,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this._mdf = false
     const pathData = type === 3 ? data.pt?.k : data.ks?.k
     if (!pathData) {
-      throw new Error('Could now get Path Data')
+      throw new Error(`${this.constructor.name}: Could now get Path Data`)
     }
     this.v = clone(pathData as ShapePath)
     this.pv = clone(this.v)
@@ -836,20 +900,22 @@ export class ShapeProperty extends ShapeBaseProperty {
 
 class KeyframedShapeProperty extends ShapeBaseProperty {
   public lastFrame
-  constructor(elem: ShapeElement, data: Partial<Shape & Mask>, type: number) {
+  constructor(elem: ShapeElement, data: Shape, type: number) {
     super()
     this.propType = 'shape'
     this.comp = elem.comp
     this.elem = elem
-    this.container = elem as any
+    this.container = elem as ElementInterfaceIntersect
     this.offsetTime = elem.data?.st || 0
-    this.keyframes = (type === 3 ? data.pt?.k : (data.ks?.k ?? [])) as any
+    this.keyframes = (type === 3
+      ? data.pt?.k
+      : (data.ks?.k ?? [])) as unknown as Keyframe[]
     this.keyframesMetadata = []
     this.k = true
     this.kf = true
-    const len = this.keyframes?.[0]?.s?.[0].i.length || 0
+    const { length } = this.keyframes[0]?.s?.[0].i || []
     this.v = newElement()
-    this.v.setPathData(!!this.keyframes?.[0].s?.[0].c, len)
+    this.v.setPathData(!!this.keyframes[0].s?.[0].c, length)
     this.pv = clone(this.v)
     this.localShapeCollection = newShapeCollection()
     this.paths = this.localShapeCollection

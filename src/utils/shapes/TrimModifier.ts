@@ -9,6 +9,7 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import ShapePath from '@/utils/shapes/ShapePath'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class TrimModifier extends ShapeModifier {
   e?: ValueProperty
@@ -57,22 +58,24 @@ export default class TrimModifier extends ShapeModifier {
     }
     shapePath.setXYAt(points[3], points[7], 'v', pos + 1)
   }
-  addShapes(shapeData: any, shapeSegment: any, shapePathFromProps?: ShapePath) {
+  addShapes(
+    shapeData: any, // ShapeProperty? Contains Matrix
+    shapeSegment: any,
+    shapePathFromProps?: ShapePath
+  ) {
     let shapePath = shapePathFromProps
-    const pathsData = shapeData.pathsData
-    const shapePaths = shapeData.shape.paths.shapes
-    let i
-    const len = shapeData.shape.paths._length
-    let j
-    let jLen
-    let addedLength = 0
-    let currentLengthData
-    let segmentCount
-    let lengths
-    let segment: number[]
+    const { pathsData = [] } = shapeData,
+      shapePaths = shapeData.shape?.paths?.shapes || [],
+      len = shapeData.shape?.paths?._length || 0
+    let j,
+      jLen,
+      addedLength = 0,
+      currentLengthData,
+      segmentCount,
+      segment: number[]
     const shapes: ShapePath[] = []
-    let initPos
-    let newShape = true
+    let initPos,
+      newShape = true
     if (shapePath) {
       segmentCount = shapePath._length
       initPos = shapePath._length
@@ -85,11 +88,11 @@ export default class TrimModifier extends ShapeModifier {
       shapes.push(shapePath)
     }
 
-    for (i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       if (!shapePath) {
         continue
       }
-      lengths = pathsData[i].lengths
+      const { lengths } = pathsData[i]
       shapePath.c = shapePaths[i].c
       jLen = shapePaths[i].c ? lengths.length : lengths.length + 1
       for (j = 1; j < jLen; j++) {
@@ -202,11 +205,11 @@ export default class TrimModifier extends ShapeModifier {
     return shapes
   }
   override addShapeToModifier(shapeData: SVGShapeData) {
-    ;(shapeData as any).pathsData = [] // TODO: Find cases and drill for types
+    shapeData.pathsData = []
   }
   calculateShapeEdges(
-    s: any,
-    e: any,
+    s: number,
+    e: number,
     shapeLength: number,
     addedLength: number,
     totalModifierLength: number
@@ -268,22 +271,39 @@ export default class TrimModifier extends ShapeModifier {
     elem: ElementInterfaceIntersect,
     data: Shape
   ) {
-    this.s = PropertyFactory(elem, data.s, 0, 0.01, this) as ValueProperty
-    this.e = PropertyFactory(elem, data.e, 0, 0.01, this) as ValueProperty
-    this.o = PropertyFactory(elem, data.o, 0, 0, this) as ValueProperty
+    this.s = PropertyFactory(
+      elem,
+      data.s,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.e = PropertyFactory(
+      elem,
+      data.e,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.o = PropertyFactory(
+      elem,
+      data.o,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.sValue = 0
     this.eValue = 0
     this.getValue = this.processKeys
     this.m = data.m
     this._isAnimated =
-      !!this.s.effectsSequence.length ||
-      !!this.e.effectsSequence.length ||
-      !!this.o.effectsSequence.length
+      !!this.s.effectsSequence?.length ||
+      !!this.e.effectsSequence?.length ||
+      !!this.o.effectsSequence?.length
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let s
-    let e
+    let s: number, e: number
     if (this._mdf || _isFirstFrame) {
       let o = (Number(this.o?.v) % 360) / 360
       if (o < 0) {
@@ -314,108 +334,114 @@ export default class TrimModifier extends ShapeModifier {
       this.sValue = s
       this.eValue = e
     } else {
-      s = this.sValue
-      e = this.eValue
+      s = this.sValue || 0
+      e = this.eValue || 0
     }
-    let shapePaths
-    let i
-    const { length } = this.shapes || []
-    let j
-    let jLen
-    let pathsData
-    let pathData
-    let totalShapeLength
-    let totalModifierLength = 0
+    let shapePaths,
+      j,
+      jLen,
+      pathsData,
+      pathData,
+      totalShapeLength,
+      totalModifierLength = 0
 
+    const { length } = this.shapes
     if (e === s) {
-      for (i = 0; i < length; i++) {
-        this.shapes?.[i].localShapeCollection.releaseShapes()
-        if (this.shapes) {
-          this.shapes[i].shape._mdf = true
-          this.shapes[i].shape.paths = this.shapes?.[i].localShapeCollection
-          if (this._mdf) {
-            this.shapes[i].pathsData.length = 0
-          }
+      for (let i = 0; i < length; i++) {
+        this.shapes[i].localShapeCollection?.releaseShapes()
+        this.shapes[i].shape!._mdf = true
+        this.shapes[i].shape!.paths = this.shapes[i].localShapeCollection
+        if (this._mdf) {
+          this.shapes[i].pathsData!.length = 0
         }
       }
     } else if (!((e === 1 && s === 0) || (e === 0 && s === 1))) {
-      const segments = []
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i]
+      const segments: { e: number; s: number }[] = []
+      let shapeData, localShapeCollection
+      for (let i = 0; i < length; i++) {
+        shapeData = this.shapes?.[i] as unknown as ShapeProperty
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
-          !shapeData.shape._mdf &&
+          !shapeData.shape?._mdf &&
           !this._mdf &&
           !_isFirstFrame &&
           this.m !== 2
         ) {
-          shapeData.shape.paths = shapeData.localShapeCollection
+          shapeData.shape!.paths = shapeData.localShapeCollection
         } else {
-          shapePaths = shapeData.shape.paths
-          jLen = shapePaths._length
+          shapePaths = shapeData.shape?.paths
+          jLen = shapePaths?._length || 0
           totalShapeLength = 0
-          if (!shapeData.shape._mdf && shapeData.pathsData.length) {
+          if (!shapeData.shape?._mdf && shapeData.pathsData?.length) {
             totalShapeLength = shapeData.totalShapeLength
           } else {
-            pathsData = this.releasePathsData(shapeData.pathsData)
+            pathsData = this.releasePathsData(
+              shapeData.pathsData as ShapePath[]
+            )
             for (j = 0; j < jLen; j++) {
+              if (!shapePaths) {
+                continue
+              }
               pathData = getSegmentsLength(shapePaths.shapes[j])
-              pathsData.push(pathData)
+              pathsData.push(pathData as unknown as ShapePath)
               totalShapeLength += pathData.totalLength
             }
             shapeData.totalShapeLength = totalShapeLength
             shapeData.pathsData = pathsData
           }
 
-          totalModifierLength += totalShapeLength
-          shapeData.shape._mdf = true
+          totalModifierLength += Number(totalShapeLength)
+          shapeData.shape!._mdf = true
         }
       }
-      let shapeS = s
-      let shapeE = e
-      let addedLength = 0
-      let edges
-      for (i = length - 1; i >= 0; i--) {
-        shapeData = this.shapes?.[i]
-        if (shapeData.shape._mdf) {
+      let shapeS = s,
+        shapeE = e,
+        addedLength = 0,
+        edges
+      for (let i = length - 1; i >= 0; i--) {
+        shapeData = this.shapes?.[i] as unknown as ShapeProperty
+        if (shapeData.shape?._mdf) {
           localShapeCollection = shapeData.localShapeCollection
+          if (!localShapeCollection) {
+            throw new Error(
+              `${this.constructor.name}: Could not set localShapeCollection`
+            )
+          }
           localShapeCollection.releaseShapes()
           if (this.m === 2 && length > 1) {
             edges = this.calculateShapeEdges(
               s,
               e,
-              shapeData.totalShapeLength,
+              shapeData.totalShapeLength || 0,
               addedLength,
               totalModifierLength
             )
-            addedLength += shapeData.totalShapeLength
+            addedLength += Number(shapeData.totalShapeLength)
           } else {
             edges = [[shapeS, shapeE]]
           }
           jLen = edges.length
           for (j = 0; j < jLen; j++) {
-            shapeS = Number(edges[j][0])
-            shapeE = Number(edges[j][1])
+            shapeS = edges[j][0]
+            shapeE = edges[j][1]
             segments.length = 0
             if (shapeE <= 1) {
               segments.push({
-                e: shapeData.totalShapeLength * shapeE,
-                s: shapeData.totalShapeLength * shapeS,
+                e: Number(shapeData.totalShapeLength) * shapeE,
+                s: Number(shapeData.totalShapeLength) * shapeS,
               })
             } else if (shapeS >= 1) {
               segments.push({
-                e: shapeData.totalShapeLength * (shapeE - 1),
-                s: shapeData.totalShapeLength * (shapeS - 1),
+                e: Number(shapeData.totalShapeLength) * (shapeE - 1),
+                s: Number(shapeData.totalShapeLength) * (shapeS - 1),
               })
             } else {
               segments.push({
-                e: shapeData.totalShapeLength,
-                s: shapeData.totalShapeLength * shapeS,
+                e: Number(shapeData.totalShapeLength),
+                s: Number(shapeData.totalShapeLength) * shapeS,
               })
               segments.push({
-                e: shapeData.totalShapeLength * (shapeE - 1),
+                e: Number(shapeData.totalShapeLength) * (shapeE - 1),
                 s: 0,
               })
             }
@@ -423,10 +449,10 @@ export default class TrimModifier extends ShapeModifier {
             if (segments[0].s !== segments[0].e) {
               if (segments.length > 1) {
                 const lastShapeInCollection =
-                  shapeData.shape.paths.shapes[
+                  shapeData.shape.paths?.shapes[
                     shapeData.shape.paths._length - 1
                   ]
-                if (lastShapeInCollection.c) {
+                if (lastShapeInCollection?.c) {
                   const lastShape = newShapesData.pop()
                   this.addPaths(newShapesData, localShapeCollection)
                   newShapesData = this.addShapes(
@@ -446,21 +472,18 @@ export default class TrimModifier extends ShapeModifier {
         }
       }
     } else if (this._mdf) {
-      for (i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
         // Releasign Trim Cached paths data when no trim applied in case shapes are modified inbetween.
         // Don't remove this even if it's losing cached info.
-        if (!this.shapes) {
-          continue
-        }
-        this.shapes[i].pathsData.length = 0
-        this.shapes[i].shape._mdf = true
+        this.shapes[i].pathsData!.length = 0
+        this.shapes[i].shape!._mdf = true
       }
     }
   }
 
-  releasePathsData(pathsData: any) {
-    const len = pathsData.length
-    for (let i = 0; i < len; i++) {
+  releasePathsData(pathsData: ShapePath[]) {
+    const { length } = pathsData
+    for (let i = 0; i < length; i++) {
       segmentsLengthPool.release(pathsData[i])
     }
     pathsData.length = 0

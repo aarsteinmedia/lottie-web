@@ -12,6 +12,7 @@ import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import Matrix from '@/utils/Matrix'
+import { MultiDimensionalProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
@@ -29,7 +30,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   private _elem: ElementInterfaceIntersect
   private _hasMaskedPath: boolean
   private _moreOptions: {
-    alignment: any
+    alignment: MultiDimensionalProperty
   }
   private _pathData: any
   private _renderType: RendererType
@@ -53,7 +54,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     this._animatorsData = createSizedArray(Number(this._textData.a?.length))
     this._pathData = {}
     this._moreOptions = {
-      alignment: {},
+      alignment: {} as MultiDimensionalProperty,
     }
     this.renderedLetters = []
     this.lettersChangedFlag = false
@@ -76,30 +77,30 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     const textData = this._textData
     const matrixHelper = this.mHelper
     const renderType = this._renderType
-    let renderedLettersCount = this.renderedLetters.length
-    let xPos
-    let yPos
-    let i
-    let len
+    let renderedLettersCount = this.renderedLetters.length,
+      xPos,
+      yPos,
+      i,
+      len
     const letters = documentData.l
     let pathInfo: {
-      segments: BezierData[]
-      tLength: number
-    }
-    let currentLength = 0
-    let currentPoint
-    let segmentLength = 0
-    let flag
-    let pointInd = 0
-    let segmentInd = 0
-    let prevPoint
-    let points: null | BezierData['points'] = null
-    let segments
-    let partialLength = 0
-    let totalLength = 0
-    let perc = 0
-    let tanAngle
-    let mask
+        segments: BezierData[]
+        tLength: number
+      },
+      currentLength = 0,
+      currentPoint,
+      segmentLength = 0,
+      flag,
+      pointInd = 0,
+      segmentInd = 0,
+      prevPoint,
+      points: null | BezierData['points'] = null,
+      segments,
+      partialLength = 0,
+      totalLength = 0,
+      perc = 0,
+      tanAngle,
+      mask
     if (this._hasMaskedPath) {
       mask = this._pathData.m
       if (!this._pathData.n || this._pathData._mdf) {
@@ -185,26 +186,26 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
     const jLen = animators.length
 
-    let mult: number | number[] | undefined
-    let ind = -1
-    let offf
-    let xPathPos
-    let yPathPos
-    const initPathPos = currentLength
-    const initSegmentInd = segmentInd
-    const initPointInd = pointInd
-    let currentLine = -1
-    let elemOpacity
-    let sc: Vector3 = [0, 0, 0]
-    let sw = 0
-    let fc: Vector3 = [0, 0, 0]
-    let k
-    let letterSw
-    let letterSc
-    let letterFc
-    let letterM = ''
-    let letterP = this.defaultPropsArray
-    let letterO
+    let mult: number | number[] | undefined,
+      ind = -1,
+      offf,
+      xPathPos,
+      yPathPos
+    const initPathPos = currentLength,
+      initSegmentInd = segmentInd,
+      initPointInd = pointInd
+    let currentLine = -1,
+      elemOpacity,
+      sc: Vector3 = [0, 0, 0],
+      sw = 0,
+      fc: Vector3 = [0, 0, 0],
+      k,
+      letterSw,
+      letterSc,
+      letterFc,
+      letterM = '',
+      letterP = this.defaultPropsArray,
+      letterO
 
     if (documentData.j === 2 || documentData.j === 1) {
       let animatorJustifyOffset = 0
@@ -334,23 +335,25 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 }
               }
             }
-            if (animatorProps?.a.propType) {
-              animatorSelector = animators[j].s
-              mult = animatorSelector?.getMult(
-                Number(letters?.[i].anIndexes[j]),
-                textData.a?.[j].s?.totalChars
-              )
-              if (!mult) {
-                continue
-              }
-              if (Array.isArray(animatorProps.a.v)) {
-                if (Array.isArray(mult)) {
-                  animatorOffset += animatorProps.a.v[0] * mult[0]
-                } else {
-                  animatorOffset += animatorProps.a.v[0] * mult
-                }
-              }
+            if (!animatorProps?.a.propType) {
+              continue
             }
+            animatorSelector = animators[j].s
+            mult = animatorSelector?.getMult(
+              Number(letters?.[i].anIndexes[j]),
+              textData.a?.[j].s?.totalChars
+            )
+            if (!mult) {
+              continue
+            }
+            if (!Array.isArray(animatorProps.a.v)) {
+              continue
+            }
+            if (Array.isArray(mult)) {
+              animatorOffset += animatorProps.a.v[0] * mult[0]
+              continue
+            }
+            animatorOffset += animatorProps.a.v[0] * mult
           }
           flag = true
           // Force alignment only works with a single line for now
@@ -426,26 +429,30 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
         for (j = 0; j < jLen; j++) {
           animatorProps = animators[j].a
-          if (animatorProps?.t.propType) {
-            animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(
-              Number(letters?.[i].anIndexes[j]),
-              textData.a?.[j].s?.totalChars
-            )
-            // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
-            if (xPos !== 0 || documentData.j !== 0) {
-              if (this._hasMaskedPath) {
-                if (Array.isArray(mult)) {
-                  currentLength += Number(animatorProps.t.v) * mult[0]
-                } else {
-                  currentLength += Number(animatorProps.t.v) * Number(mult)
-                }
-              } else if (Array.isArray(mult)) {
-                xPos += Number(animatorProps.t.v) * mult[0]
+          if (!animatorProps?.t.propType) {
+            continue
+          }
+          animatorSelector = animators[j].s
+          mult = animatorSelector?.getMult(
+            Number(letters?.[i].anIndexes[j]),
+            textData.a?.[j].s?.totalChars
+          )
+          // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
+          if (xPos !== 0 || documentData.j !== 0) {
+            if (this._hasMaskedPath) {
+              if (Array.isArray(mult)) {
+                currentLength += Number(animatorProps.t.v) * mult[0]
               } else {
-                xPos += Number(animatorProps.t.v) * Number(mult)
+                currentLength += Number(animatorProps.t.v) * Number(mult)
               }
+              continue
             }
+
+            if (Array.isArray(mult)) {
+              xPos += Number(animatorProps.t.v) * mult[0]
+              continue
+            }
+            xPos += Number(animatorProps.t.v) * Number(mult)
           }
         }
         if (documentData.strokeWidthAnim) {
@@ -487,13 +494,13 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 -animatorProps.a.v[1] * mult[1],
                 animatorProps.a.v[2] * mult[2]
               )
-            } else {
-              matrixHelper.translate(
-                -animatorProps.a.v[0] * mult,
-                -animatorProps.a.v[1] * mult,
-                animatorProps.a.v[2] * mult
-              )
+              continue
             }
+            matrixHelper.translate(
+              -animatorProps.a.v[0] * mult,
+              -animatorProps.a.v[1] * mult,
+              animatorProps.a.v[2] * mult
+            )
           }
         }
         for (j = 0; j < jLen; j++) {
@@ -513,13 +520,13 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 1 + (animatorProps.s.v[1] - 1) * mult[1],
                 1
               )
-            } else {
-              matrixHelper.scale(
-                1 + (animatorProps.s.v[0] - 1) * mult,
-                1 + (animatorProps.s.v[1] - 1) * mult,
-                1
-              )
+              continue
             }
+            matrixHelper.scale(
+              1 + (animatorProps.s.v[0] - 1) * mult,
+              1 + (animatorProps.s.v[1] - 1) * mult,
+              1
+            )
           }
         }
         for (j = 0; j < jLen; j++) {
@@ -803,18 +810,19 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         this.renderedLetters.push(letterValue)
         renderedLettersCount += 1
         this.lettersChangedFlag = true
-      } else {
-        letterValue = this.renderedLetters[i]
-        this.lettersChangedFlag =
-          letterValue.update(
-            Number(letterO),
-            Number(letterSw),
-            letterSc as any,
-            letterFc as any,
-            letterM as any,
-            letterP
-          ) || this.lettersChangedFlag
+
+        continue
       }
+      letterValue = this.renderedLetters[i]
+      this.lettersChangedFlag =
+        letterValue.update(
+          Number(letterO),
+          Number(letterSw),
+          letterSc as any,
+          letterFc as any,
+          letterM as any,
+          letterP
+        ) || this.lettersChangedFlag
     }
   }
 
@@ -831,17 +839,47 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       this._animatorsData[i] = new TextAnimatorDataProperty(
         this._elem,
         this._textData.a?.[i],
-        this as any
+        this as unknown as ElementInterfaceIntersect
       )
     }
     if (this._textData.p && this._textData.p.m) {
       this._pathData = {
-        a: PropertyFactory(this._elem, this._textData.p.a, 0, 0, this),
-        f: PropertyFactory(this._elem, this._textData.p.f, 0, 0, this),
-        l: PropertyFactory(this._elem, this._textData.p.l, 0, 0, this),
+        a: PropertyFactory(
+          this._elem,
+          this._textData.p.a,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        f: PropertyFactory(
+          this._elem,
+          this._textData.p.f,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        l: PropertyFactory(
+          this._elem,
+          this._textData.p.l,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
         m: this._elem.maskManager?.getMaskProperty(this._textData.p.m),
-        p: PropertyFactory(this._elem, this._textData.p.p, 0, 0, this),
-        r: PropertyFactory(this._elem, this._textData.p.r, 0, 0, this),
+        p: PropertyFactory(
+          this._elem,
+          this._textData.p.p,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        r: PropertyFactory(
+          this._elem,
+          this._textData.p.r,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
       }
       this._hasMaskedPath = true
     } else {
@@ -852,7 +890,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       this._textData.m?.a,
       1,
       0,
-      this
-    )
+      this as unknown as ElementInterfaceIntersect
+    ) as MultiDimensionalProperty
   }
 }

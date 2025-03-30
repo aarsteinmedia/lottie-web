@@ -12,6 +12,7 @@ import { getProjectingAngle, setPoint } from '@/utils'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 /**
  *
@@ -107,21 +108,21 @@ export default class ZigZagModifier extends ShapeModifier {
       data.s,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.frequency = PropertyFactory(
       elem,
       data.r,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.pointsType = PropertyFactory(
       elem,
       data.pt,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this._isAnimated =
       this.amplitude?.effectsSequence.length !== 0 ||
@@ -170,7 +171,7 @@ export default class ZigZagModifier extends ShapeModifier {
       )
 
       if (i === count - 1 && !path.c) {
-        segment = null as any
+        segment = null as unknown as PolynomialBezier
       } else {
         segment = shapeSegment(path, (i + 1) % count)
       }
@@ -190,33 +191,32 @@ export default class ZigZagModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    let i
-    const { length } = this.shapes || []
-    let j
-    let jLen
-    const amplitude = Number(this.amplitude?.v)
-    const frequency = Math.max(0, Math.round(Number(this.frequency?.v)))
-    const pointType = Number(this.pointsType?.v)
+    if (!this.shapes) {
+      throw new Error(`${this.constructor.name}: shapes is not initialized`)
+    }
+
+    const amplitude = Number(this.amplitude?.v),
+      frequency = Math.max(0, Math.round(Number(this.frequency?.v))),
+      pointType = Number(this.pointsType?.v)
 
     if (amplitude !== 0) {
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i]
+      let shapeData, localShapeCollection, shapePaths
+      const { length } = this.shapes
+      for (let i = 0; i < length; i++) {
+        shapeData = (this.shapes as unknown as ShapeProperty[])[i]
         localShapeCollection = shapeData.localShapeCollection
-        if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
+        if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape._mdf = true
-          shapePaths = shapeData.shape.paths.shapes
-          jLen = shapeData.shape.paths._length
-          for (j = 0; j < jLen; j++) {
+          shapeData.shape!._mdf = true
+          shapePaths = shapeData.shape?.paths?.shapes || []
+          const { _length } = shapeData.shape?.paths || { _length: 0 }
+          for (let j = 0; j < _length; j++) {
             localShapeCollection?.addShape(
               this.processPath(shapePaths[j], amplitude, frequency, pointType)
             )
           }
         }
-        shapeData.shape.paths = shapeData.localShapeCollection
+        shapeData.shape!.paths = shapeData.localShapeCollection
       }
     }
     if (!this.dynamicProperties?.length) {
