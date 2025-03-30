@@ -78,7 +78,6 @@ export type AnimationEventName =
   | '_active'
   | 'configError'
   | 'renderFrameError'
-export type AnimationEventCallback<T = unknown> = (args: T) => void
 
 export interface SVGGeometry {
   cx: number
@@ -220,111 +219,8 @@ export interface EFXElement {
   p: BaseProperty
 }
 
-export interface ItemsData {
-  gr: SVGGElement
-  it: ShapeDataInterface[]
-  prevViewData: ItemsData[]
-}
-
 export interface KeyframesMetadata {
   __fnct?: (val: number) => number
-}
-export interface ItemData {
-  _caching: Caching
-  _frameId?: number
-  _isFirstFrame: boolean
-  _mdf?: boolean
-  a?: VectorProperty
-  addEffect: (effect: Effect) => void
-  c: ItemData
-  canResize?: boolean
-  comp: any
-  completeTextData: (data?: Partial<DocumentData>) => void
-  container?: unknown
-  copyData: (data?: Partial<DocumentData>, b?: any) => void
-  cst?: SVGStopElement[]
-  currentData?: Partial<DocumentData>
-  d: ItemData
-  dashoffset: Float32Array
-  dashStr: string
-  data: any
-  defaultBoxWidth?: number
-  e: any
-  effectsSequence: any
-  elem: any
-  frameId: number
-  g: any
-  getValue: (val?: unknown) => unknown
-  gf: SVGElement
-  h: VectorProperty
-  interpolateValue: BaseProperty['interpolateValue']
-  k: boolean
-  keyframes: number[]
-  keyframesMetadata: KeyframesMetadata[]
-  keysIndex?: number
-  kf: boolean
-  minimumFontSize?: number
-  mult: number
-  o: ItemData
-  of?: SVGGradientElement
-  offsetTime: number
-  ost?: SVGStopElement[]
-  pos: number
-  propType: 'multidimensional' | 'unidimensional'
-  pv: string | number[] | number
-  s: any
-  searchProperty: () => boolean
-  setVValue: (val: any) => void
-  style: SVGStyleData
-  v: string | number[] | number
-  vel: number | number[]
-  w: ItemData
-}
-
-export interface AnimationEvents {
-  complete: BMCompleteEvent
-  config_ready: undefined
-  data_failed: undefined
-  data_ready: undefined
-  destroy: BMDestroyEvent
-  DOMLoaded: undefined
-  drawnFrame: BMEnterFrameEvent
-  enterFrame: BMEnterFrameEvent
-  error: undefined
-  loaded_images: undefined
-  loopComplete: BMCompleteLoopEvent
-  segmentStart: BMSegmentStartEvent
-}
-
-export interface BMCompleteLoopEvent {
-  currentLoop: number
-  direction: number
-  totalLoops: number
-  type: 'loopComplete'
-}
-
-export interface BMSegmentStartEvent {
-  firstFrame: number
-  totalFrames: number
-  type: 'segmentStart'
-}
-
-export interface BMCompleteEvent {
-  direction: number
-  type: 'complete'
-}
-
-export interface BMDestroyEvent {
-  type: 'destroy'
-}
-
-export interface BMEnterFrameEvent {
-  /** The current time in frames. */
-  currentTime: number
-  direction: number
-  /** The total number of frames. */
-  totalTime: number
-  type: 'enterFrame'
 }
 
 type BaseRendererConfig = {
@@ -417,15 +313,6 @@ export interface GradientColor {
 
 type BoolInt = 0 | 1
 
-interface PathData {
-  _length: number
-  _maxLength: number
-  c: boolean
-  i: Float32Array
-  o: Float32Array
-  v: Float32Array
-}
-
 interface ShapeDataProperty {
   _mdf?: boolean
   a: 1 | 0
@@ -434,7 +321,7 @@ interface ShapeDataProperty {
   paths: {
     _length: number
     _maxLength: number
-    shapes: PathData[]
+    shapes: ShapePath[]
   }
 }
 
@@ -507,7 +394,7 @@ export interface Shape {
   }
   /** Position */
   p?: VectorProperty<Vector2> // { s: number; x: VectorProperty; y: VectorProperty; z: VectorProperty }
-  pt?: VectorProperty<ShapePath>
+  pt?: VectorProperty<ShapePath | ShapePath[]>
   /** Rotation (for transforms) | Fill-rule (for fills) */
   r?: VectorProperty<{ e: number; s: number; t: number }[]>
   rx?: VectorProperty
@@ -579,7 +466,7 @@ export interface LottieAsset {
   /** id/slug of asset – e.g. image_0 / audio_0 */
   id?: string
 
-  layers?: LottieLayer[] & { __used?: boolean }
+  layers: LottieLayer[] & { __used?: boolean }
 
   /** Name of asset – e.g. "Black Mouse Ears" */
   nm?: string
@@ -745,7 +632,7 @@ export interface DocumentData extends FontList {
   }[]
   l?: Letter[]
   lh: number
-  lineWidths?: number[]
+  lineWidths: number[]
   ls?: number
   of?: string
   ps?: Vector2 | null
@@ -964,7 +851,7 @@ export interface AnimationData {
   ao?: boolean | 0 | 1
   assets: LottieAsset[]
   /** Characters */
-  chars?: Characacter[]
+  chars: Characacter[]
   /** Is three dimensional */
   ddd: 0 | 1
   fonts: {
@@ -1047,7 +934,7 @@ export interface LottieLayer {
   refId?: string
   sc?: string
   sh?: number
-  shapes?: Shape[] // Readonly<Shape[]>
+  shapes: Shape[] // Readonly<Shape[]>
   singleShape?: boolean
   slots?: {
     [key: string]: {
@@ -1191,8 +1078,8 @@ export interface GlobalData {
   frameId: number
   frameNum?: number
   frameRate: number
-  getAssetData?: AnimationItem['getAssetData']
-  getAssetsPath?: AnimationItem['getAssetsPath']
+  getAssetData: AnimationItem['getAssetData']
+  getAssetsPath: AnimationItem['getAssetsPath']
   imageLoader?: any
   nm?: string
   progressiveLoad?: boolean

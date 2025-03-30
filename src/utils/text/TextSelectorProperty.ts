@@ -38,10 +38,16 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
       data.s || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     if ('e' in data) {
-      this.e = PropertyFactory(elem, data.e, 0, 0, this) as ValueProperty
+      this.e = PropertyFactory(
+        elem,
+        data.e,
+        0,
+        0,
+        this as unknown as ElementInterfaceIntersect
+      ) as ValueProperty
     } else {
       this.e = { v: 100 }
     }
@@ -50,30 +56,36 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
       data.o || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.xe = PropertyFactory(
       elem,
       data.xe || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.ne = PropertyFactory(
       elem,
       data.ne || { k: 0 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.sm = PropertyFactory(
       elem,
       data.sm || { k: 100 },
       0,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.a = PropertyFactory(elem, data.a, 0, 0.01, this) as ValueProperty
+    this.a = PropertyFactory(
+      elem,
+      data.a,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
 
     if (!this.dynamicProperties?.length) {
       this.getValue()
@@ -104,66 +116,81 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     const easer = getBezierEasing(x1, y1, x2, y2).get
 
     let mult = 0
-    const s = this.finalS
-    const e = this.finalE
-    const type = this.data.sh
-    if (type === 2) {
-      if (e === s) {
-        mult = ind >= e ? 1 : 0
-      } else {
-        mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+    const s = this.finalS,
+      e = this.finalE,
+      type = this.data.sh
+
+    switch (type) {
+      case 2: {
+        if (e === s) {
+          mult = ind >= e ? 1 : 0
+        } else {
+          mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+        }
+        mult = easer(mult)
+        break
       }
-      mult = easer(mult)
-    } else if (type === 3) {
-      if (e === s) {
-        mult = ind >= e ? 0 : 1
-      } else {
-        mult = 1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+      case 3: {
+        if (e === s) {
+          mult = ind >= e ? 0 : 1
+        } else {
+          mult =
+            1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+        }
+
+        mult = easer(mult)
+        break
+      }
+      case 4: {
+        if (e === s) {
+          mult = 0
+        } else {
+          mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+          if (mult < 0.5) {
+            mult *= 2
+          } else {
+            mult = 1 - 2 * (mult - 0.5)
+          }
+        }
+        mult = easer(mult)
+        break
+      }
+      case 5: {
+        if (e === s) {
+          mult = 0
+        } else {
+          const tot = e - s
+          /* ind += 0.5;
+                  mult = -4/(tot*tot)*(ind*ind)+(4/tot)*ind; */
+          ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
+          const x = -tot / 2 + ind
+          const a = tot / 2
+          mult = Math.sqrt(1 - (x * x) / (a * a))
+        }
+        mult = easer(mult)
+        break
+      }
+      case 6: {
+        if (e === s) {
+          mult = 0
+        } else {
+          ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
+          mult = (1 + Math.cos(Math.PI + (Math.PI * 2 * ind) / (e - s))) / 2
+        }
+        mult = easer(mult)
+        break
       }
 
-      mult = easer(mult)
-    } else if (type === 4) {
-      if (e === s) {
-        mult = 0
-      } else {
-        mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
-        if (mult < 0.5) {
-          mult *= 2
-        } else {
-          mult = 1 - 2 * (mult - 0.5)
+      default: {
+        if (ind >= Math.floor(s)) {
+          if (ind - s < 0) {
+            mult = Math.max(0, Math.min(Math.min(e, 1) - (s - ind), 1))
+          } else {
+            mult = Math.max(0, Math.min(e - ind, 1))
+          }
         }
+        mult = easer(mult)
       }
-      mult = easer(mult)
-    } else if (type === 5) {
-      if (e === s) {
-        mult = 0
-      } else {
-        const tot = e - s
-        /* ind += 0.5;
-                  mult = -4/(tot*tot)*(ind*ind)+(4/tot)*ind; */
-        ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
-        const x = -tot / 2 + ind
-        const a = tot / 2
-        mult = Math.sqrt(1 - (x * x) / (a * a))
-      }
-      mult = easer(mult)
-    } else if (type === 6) {
-      if (e === s) {
-        mult = 0
-      } else {
-        ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
-        mult = (1 + Math.cos(Math.PI + (Math.PI * 2 * ind) / (e - s))) / 2
-      }
-      mult = easer(mult)
-    } else {
-      if (ind >= Math.floor(s)) {
-        if (ind - s < 0) {
-          mult = Math.max(0, Math.min(Math.min(e, 1) - (s - ind), 1))
-        } else {
-          mult = Math.max(0, Math.min(e - ind, 1))
-        }
-      }
-      mult = easer(mult)
     }
     // Smoothness implementation.
     // The smoothness represents a reduced range of the original [0; 1] range.

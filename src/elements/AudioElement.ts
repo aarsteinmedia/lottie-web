@@ -35,11 +35,11 @@ export default class AudioElement extends RenderableElement {
     super()
     this.initFrame()
     this.initRenderable()
-    this.assetData = globalData.getAssetData?.(data.refId) || null
+    this.assetData = globalData.getAssetData(data.refId) || null
     this.initBaseData(data, globalData, comp)
     this._isPlaying = false
     this._canPlay = false
-    const assetPath = this.globalData?.getAssetsPath?.(this.assetData)
+    const assetPath = this.globalData?.getAssetsPath(this.assetData)
     this.audio = this.globalData?.audioController?.createAudio(assetPath)
     this._currentTime = 0
     this.globalData?.audioController?.addAudio(this)
@@ -53,7 +53,7 @@ export default class AudioElement extends RenderableElement {
             data.tm,
             0,
             globalData.frameRate,
-            this
+            this as unknown as ElementInterfaceIntersect
           )
         : { _placeholder: true }
     ) as ValueProperty
@@ -62,7 +62,7 @@ export default class AudioElement extends RenderableElement {
       data.au && data.au.lv ? data.au.lv : { k: [100] },
       1,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
   }
 
@@ -87,7 +87,7 @@ export default class AudioElement extends RenderableElement {
     if (this.tm._placeholder) {
       this._currentTime = num / Number(this.data?.sr)
     } else {
-      this._currentTime = Number(this.tm.v)
+      this._currentTime = this.tm.v
     }
     this._volume = Number(this.lv?.v[0])
     const totalVolume = this._volume * Number(this._volumeMultiplier)
@@ -98,20 +98,24 @@ export default class AudioElement extends RenderableElement {
   }
 
   renderFrame(_frame?: number | null) {
-    if (this.isInRange && this._canPlay) {
-      if (!this._isPlaying) {
-        this.audio.play()
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-        this._isPlaying = true
-      } else if (
-        !this.audio.playing() ||
-        Math.abs(
-          this._currentTime / Number(this.globalData?.frameRate) -
-            this.audio.seek()
-        ) > 0.1
-      ) {
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-      }
+    if (!this.isInRange || !this._canPlay) {
+      return
+    }
+    if (!this._isPlaying) {
+      this.audio.play()
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
+      this._isPlaying = true
+      return
+    }
+
+    if (
+      !this.audio.playing() ||
+      Math.abs(
+        this._currentTime / Number(this.globalData?.frameRate) -
+          this.audio.seek()
+      ) > 0.1
+    ) {
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }
   }
 

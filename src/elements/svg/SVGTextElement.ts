@@ -48,15 +48,21 @@ export default class SVGTextLottieElement extends TextElement {
     const {
       createContainerElements,
       createRenderableComponents,
+      destroyBaseElement,
       getBaseElement,
+      getMatte,
       initRendererElement,
       renderElement,
+      setMatte,
     } = new SVGBaseElement()
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.getBaseElement = getBaseElement
+    this.getMatte = getMatte
+    this.destroyBaseElement = destroyBaseElement
     this.initRendererElement = initRendererElement
     this.renderElement = renderElement
+    this.setMatte = setMatte
     this.initElement(data, globalData, comp)
   }
 
@@ -334,6 +340,7 @@ export default class SVGTextLottieElement extends TextElement {
     textContents.push(currentTextContent)
     return textContents
   }
+
   override createContent() {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
@@ -341,7 +348,12 @@ export default class SVGTextLottieElement extends TextElement {
   }
   getBaseElement(): SVGGElement | null {
     throw new Error(
-      'SVGTextLottieElement: Method getBaseElement is not implemented'
+      `${this.constructor.name}: Method getBaseElement is not implemented`
+    )
+  }
+  getMatte(_type?: number): string {
+    throw new Error(
+      `${this.constructor.name}: Method getMatte is not implemented`
     )
   }
   getValue() {
@@ -351,7 +363,7 @@ export default class SVGTextLottieElement extends TextElement {
     for (let i = 0; i < length; i++) {
       glyphElement = this.textSpans[i].glyph
       if (glyphElement) {
-        glyphElement.prepareFrame?.(
+        glyphElement.prepareFrame(
           Number(this.comp?.renderedFrame) - Number(this.data?.st)
         )
         if (glyphElement._mdf) {
@@ -360,7 +372,6 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
-
   override renderInnerContent(this: SVGTextLottieElement) {
     this.validateText()
     if (this.data?.singleShape && !this._mdf) {
@@ -410,6 +421,12 @@ export default class SVGTextLottieElement extends TextElement {
         }
       }
     }
+  }
+
+  setMatte(_id: string) {
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
   }
 
   override sourceRectAtTime(): SourceRect | null {

@@ -5,7 +5,6 @@ import type {
   DocumentData,
   LottieAsset,
   LottieLayer,
-  MaskData,
   Shape,
   ShapeColorValue,
   Vector3,
@@ -48,8 +47,8 @@ export function completeLayers(
       if (!layers[i].masksProperties) {
         continue
       }
-      const { length: jLen } = layers[i].masksProperties || []
-      for (let j = 0; j < jLen; j++) {
+      jLen = layers[i].masksProperties!.length
+      for (j = 0; j < jLen; j++) {
         if ((layers[i].masksProperties![j].pt.k as MaskData).i) {
           convertPathsToAbsoluteValues(layers[i].masksProperties![j].pt.k)
           continue
@@ -58,28 +57,28 @@ export function completeLayers(
           continue
         }
         const { length: kLen } =
-          (layers[i].masksProperties?.[j].pt.k as MaskData[]) || []
+          (layers[i].masksProperties?.[j].pt?.k as ShapePath[]) || []
         for (let k = 0; k < kLen; k++) {
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].s) {
-            convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].s[0]
-            )
-          }
-          if ((layers[i].masksProperties![j].pt.k as MaskData[])[k].e) {
-            convertPathsToAbsoluteValues(
-              (layers[i].masksProperties![j].pt.k as MaskData[])[k].e?.[0]
-            )
-          }
+          convertPathsToAbsoluteValues(
+            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].s?.[0]
+          )
+          convertPathsToAbsoluteValues(
+            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].e?.[0]
+          )
         }
       }
     }
-    if (layers[i].ty === 0) {
-      layers[i].layers = findCompLayers(layers[i].refId, comps)
-      completeLayers(layers[i].layers as LottieLayer[], comps)
-    } else if (layers[i].ty === 4) {
-      completeShapes(layers[i].shapes || [])
-    } else if (layers[i].ty === 5) {
-      // completeText(layers[i]) TODO:
+
+    switch (layers[i].ty) {
+      case 0: // Precomposition Layer
+        layers[i].layers = findCompLayers(layers[i].refId, comps)
+        completeLayers(layers[i].layers as LottieLayer[], comps)
+        break
+      case 4: // Shape Layer
+        completeShapes(layers[i].shapes || [])
+        break
+      case 5: // TextLayer
+      //
     }
   }
 }
@@ -90,28 +89,20 @@ export function completeLayers(
 export function completeShapes(arr: Shape[]) {
   const { length } = arr
   for (let i = length - 1; i >= 0; i--) {
-    if (arr[i].ty === 'sh') {
-      if ((arr[i].ks?.k as ShapePath).i) {
-        convertPathsToAbsoluteValues(arr[i].ks?.k)
-      } else {
-        const jLen = (arr[i].ks?.k.length as unknown as number) || 0
-        for (let j = 0; j < jLen; j++) {
-          if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
-            convertPathsToAbsoluteValues(
-              (arr[i].ks?.k as ShapePath[])[j]?.s?.[0]
-            )
-          }
-          if ((arr[i].ks?.k as ShapePath[])[j]?.e) {
-            convertPathsToAbsoluteValues(
-              (arr[i].ks?.k as ShapePath[])[j]?.e?.[0]
-            )
-          }
-        }
-      }
-      continue
-    }
     if (arr[i].ty === 'gr') {
       completeShapes(arr[i].it as Shape[])
+      continue
+    }
+    if (arr[i].ty === 'sh') {
+      if ((arr[i].ks?.k as ShapePath).i) {
+        convertPathsToAbsoluteValues(arr[i].ks?.k as ShapePath)
+        continue
+      }
+      const { length: jLen } = (arr[i].ks?.k as ShapePath[]) || []
+      for (let j = 0; j < jLen; j++) {
+        convertPathsToAbsoluteValues((arr[i].ks?.k as ShapePath[])[j]?.s?.[0])
+        convertPathsToAbsoluteValues((arr[i].ks?.k as ShapePath[])[j]?.e?.[0])
+      }
     }
   }
 }
@@ -139,7 +130,10 @@ function completeChars(
 /**
  *
  */
-function convertPathsToAbsoluteValues(path: any) {
+function convertPathsToAbsoluteValues(path?: ShapePath) {
+  if (!path) {
+    return
+  }
   const { length } = path.i
   for (let i = 0; i < length; i++) {
     path.i[i][0] += path.v[i][0]
@@ -466,17 +460,18 @@ class CheckShapes {
           if (!maskProps) {
             continue
           }
-          if ((maskProps[j].pt.k as MaskData).i) {
-            ;(maskProps[j].pt.k as MaskData).c = !!maskProps[j].cl
+          if ((maskProps[j].pt?.k as ShapePath).i) {
+            ;(maskProps[j].pt!.k as ShapePath).c = !!maskProps[j].cl
             continue
           }
-          const { length: kLen } = (maskProps[j].pt.k as MaskData[]) || []
+          const { length: kLen } = (maskProps[j].pt?.k as ShapePath[]) || []
           for (let k = 0; k < kLen; k++) {
-            if ((maskProps[j].pt.k as MaskData[])[k].s) {
-              ;(maskProps[j].pt.k as MaskData[])[k].s[0].c = !!maskProps?.[j].cl
+            if ((maskProps[j].pt?.k as ShapePath[])[k].s) {
+              ;(maskProps[j].pt?.k as ShapePath[])[k].s![0].c =
+                !!maskProps?.[j].cl
             }
-            if ((maskProps[j].pt.k as MaskData[])[k].e) {
-              ;(maskProps[j].pt.k as MaskData[])[k].e![0].c =
+            if ((maskProps[j].pt?.k as ShapePath[])[k].e) {
+              ;(maskProps[j].pt?.k as ShapePath[])[k].e![0].c =
                 !!maskProps?.[j].cl
             }
           }

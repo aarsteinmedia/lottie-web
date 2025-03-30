@@ -28,7 +28,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   comp?: ElementInterfaceIntersect
   data?: VectorProperty<number | number[] | Keyframe[]>
   e?: unknown
-  effectsSequence?: ((arg: unknown) => any)[]
+  effectsSequence: ((arg: unknown) => any)[] = []
   elem?: ElementInterfaceIntersect
   frameId?: number
   g?: unknown
@@ -44,13 +44,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   lock?: boolean
   mult?: number
   offsetTime?: number
-  pv?: string | number | any[]
+  pv?: any
   s?: unknown
   sh?: Shape
-  v?: string | number | any[]
+  v?: any
   vel?: number | any[]
   addEffect(effectFunction: any) {
-    this.effectsSequence?.push(effectFunction)
+    this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
   }
   getValueAtCurrentTime() {
@@ -118,14 +118,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
     const keyframeMetadata = this.keyframesMetadata[i] || {}
 
-    let k
     let kLen
     let perc
     let jLen
     let j
     let fnc: null | ((val: number) => number) = null
-    const nextKeyTime = nextKeyData.t - offsetTime
-    const keyTime = keyData.t - offsetTime
+    const nextKeyTime = nextKeyData.t - offsetTime,
+      keyTime = keyData.t - offsetTime
     let endValue
     if (keyData?.to) {
       if (!keyframeMetadata.bezierData) {
@@ -140,7 +139,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       if (frameNum >= nextKeyTime || frameNum < keyTime) {
         const ind = frameNum >= nextKeyTime ? bezierData.points.length - 1 : 0
         kLen = bezierData.points[ind].point.length
-        for (k = 0; k < kLen; k++) {
+        for (let k = 0; k < kLen; k++) {
           newValue[k] = bezierData.points[ind].point[k]
         }
         // caching._lastKeyframeIndex = -1;
@@ -160,12 +159,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         perc = fnc((frameNum - keyTime) / (nextKeyTime - keyTime))
         const distanceInLine = bezierData.segmentLength * perc
 
-        let segmentPerc
-        let addedLength =
-          Number(caching?.lastFrame) < frameNum &&
-          caching?._lastKeyframeIndex === i
-            ? caching._lastAddedLength
-            : 0
+        let segmentPerc,
+          addedLength =
+            Number(caching?.lastFrame) < frameNum &&
+            caching?._lastKeyframeIndex === i
+              ? caching._lastAddedLength
+              : 0
         j =
           Number(caching?.lastFrame) < frameNum &&
           caching?._lastKeyframeIndex === i
@@ -181,7 +180,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
             j === bezierData.points.length - 1
           ) {
             kLen = bezierData.points[j].point.length
-            for (k = 0; k < kLen; k++) {
+            for (let k = 0; k < kLen; k++) {
               newValue[k] = bezierData.points[j].point[k]
             }
             break
@@ -194,7 +193,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               (distanceInLine - addedLength) /
               bezierData.points[j + 1].partialLength
             kLen = bezierData.points[j].point.length
-            for (k = 0; k < kLen; k++) {
+            for (let k = 0; k < kLen; k++) {
               newValue[k] =
                 bezierData.points[j].point[k] +
                 (bezierData.points[j + 1].point[k] -
@@ -309,7 +308,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   processEffectsSequence() {
     if (
       this.elem?.globalData.frameId === this.frameId ||
-      !this.effectsSequence?.length
+      !this.effectsSequence.length
     ) {
       return
     }
@@ -351,9 +350,9 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
   }
 }
-export class ValueProperty extends BaseProperty {
-  override pv: number | string
-  override v: number | string
+export class ValueProperty<T = number> extends BaseProperty {
+  override pv: T
+  override v: T
   constructor(
     elem: ElementInterfaceIntersect,
     data: VectorProperty,
@@ -364,8 +363,8 @@ export class ValueProperty extends BaseProperty {
     this.propType = 'unidimensional'
     this.mult = mult || 1
     this.data = data
-    this.v = data.k * (mult || 1)
-    this.pv = data.k
+    this.v = (data.k * (mult || 1)) as T
+    this.pv = data.k as T
     this._mdf = false
     this.elem = elem
     this.container = container

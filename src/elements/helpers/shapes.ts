@@ -8,7 +8,6 @@ import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import { lineCapEnum, lineJoinEnum, RendererType, ShapeType } from '@/enums'
 import {
   AnimatedProperty,
-  Caching,
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
   Shape,
@@ -44,16 +43,16 @@ export class ShapeGroupData {
 export class SVGShapeData {
   _isAnimated: boolean
   _length?: number
-  caches: Caching[]
+  caches: string[]
   data?: SVGShapeData
   gr?: SVGGElement
   hd?: boolean
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   localShapeCollection?: ShapeCollection
   lStr: string
   lvl: number
-  pathsData?: ShapePath[]
-  prevViewData?: SVGElementInterface[]
+  pathsData: ShapePath[] = []
+  prevViewData: SVGElementInterface[] = []
   sh: ShapeProperty
   shape?: ShapeProperty
   style?: SVGStyleData
@@ -162,7 +161,7 @@ export class ProcessedElement {
 
 export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: MultiDimensionalProperty
-  cst?: SVGStopElement[]
+  cst: SVGStopElement[] = []
 
   e?: MultiDimensionalProperty
 
@@ -171,15 +170,15 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   gf?: SVGGradientElement
   gr?: SVGGElement
   h?: KeyframedValueProperty
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   maskId?: string
   ms?: SVGMaskElement
   o?: ValueProperty
   of?: SVGElement
-  ost?: SVGStopElement[]
-  prevViewData?: SVGElementInterface[]
+  ost: SVGStopElement[] = []
+  prevViewData: SVGElementInterface[] = []
   s?: MultiDimensionalProperty
-  stops?: SVGStopElement[]
+  stops: SVGStopElement[] = []
   style?: SVGStyleData
   transform?: Transformer
   constructor(
@@ -202,40 +201,40 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
       data.o,
       0,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.s = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.s,
       1,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.e = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.e,
       1,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.h = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.h || { k: 0 },
       0,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as KeyframedValueProperty
     this.a = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.a || { k: 0 },
       0,
       degToRads,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.g = new GradientProperty(
       elem as ElementInterfaceIntersect,
       data.g!,
-      this
+      this as unknown as ElementInterfaceIntersect
     )
     this.style = styleData
     this.stops = []
@@ -335,7 +334,7 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
       data.w,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.d = new DashProperty(
       elem as ElementInterfaceIntersect,
@@ -351,9 +350,9 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
 export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
   gr?: SVGGElement
-  it?: ShapeDataInterface[]
+  it: ShapeDataInterface[] = []
   o?: ValueProperty
-  prevViewData?: SVGElementInterface[]
+  prevViewData: SVGElementInterface[] = []
   style: SVGStyleData
   transform?: Transformer
   w?: ValueProperty
@@ -370,14 +369,14 @@ export class SVGFillStyleData extends DynamicPropertyContainer {
       data.o,
       0,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.c = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.c,
       1,
       255,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     this.style = styleObj
   }
@@ -398,14 +397,14 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
       data.o,
       0,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.w = PropertyFactory(
       elem as ElementInterfaceIntersect,
       data.w,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.d = new DashProperty(
       elem as ElementInterfaceIntersect,
@@ -418,7 +417,7 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
       data.c,
       1,
       255,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     this.style = styleObj
     this._isAnimated = !!this._isAnimated
@@ -427,8 +426,8 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
 
 export class SVGNoStyleData extends DynamicPropertyContainer {
   gr?: SVGGElement
-  it?: ShapeDataInterface[]
-  prevViewData?: SVGElementInterface[]
+  it: ShapeDataInterface[] = []
+  prevViewData: SVGElementInterface[] = []
   style: SVGStyleData
   transform?: Transformer
   constructor(

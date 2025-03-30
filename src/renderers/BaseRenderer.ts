@@ -44,31 +44,33 @@ export default class BaseRenderer extends FrameElement {
     let i = 0
     const { length } = layers
     while (i < length) {
-      if (layers[i].ind === Number(parentName)) {
-        if (
-          !elements[i] ||
-          elements[i] === (true as unknown as ElementInterfaceIntersect)
-        ) {
-          this.buildItem(i)
-
-          if (!this.addPendingElement) {
-            throw new Error(
-              `${this.constructor.name}: Method addPendingElement is not initialized`
-            )
-          }
-          this.addPendingElement(element)
-          i++
-          continue
-        }
-        hierarchy.push(elements[i])
-        ;(elements[i] as HierarchyElement).setAsParent?.()
-        if (layers[i].parent === undefined) {
-          element.setHierarchy(hierarchy)
-          i++
-          continue
-        }
-        this.buildElementParenting(element, layers[i].parent, hierarchy)
+      if (layers[i].ind !== parentName) {
+        i++
+        continue
       }
+      if (
+        !elements[i] ||
+        elements[i] === (true as unknown as ElementInterfaceIntersect)
+      ) {
+        this.buildItem(i)
+
+        if (!this.addPendingElement) {
+          throw new Error(
+            `${this.constructor.name}: Method addPendingElement is not initialized`
+          )
+        }
+        this.addPendingElement(element)
+        i++
+        continue
+      }
+      hierarchy.push(elements[i])
+      ;(elements[i] as HierarchyElement).setAsParent()
+      if (layers[i].parent === undefined) {
+        element.setHierarchy(hierarchy)
+        i++
+        continue
+      }
+      this.buildElementParenting(element, layers[i].parent, hierarchy)
       i++
     }
   }
@@ -208,7 +210,7 @@ export default class BaseRenderer extends FrameElement {
     if (path.length === 0) {
       return element
     }
-    return (element as BaseRenderer)?.getElementByPath?.(path)
+    return (element as BaseRenderer)?.getElementByPath(path)
   }
 
   includeLayers(newLayers: LottieLayer[]) {
@@ -253,7 +255,12 @@ export default class BaseRenderer extends FrameElement {
 
   setupGlobalData(animData: AnimationData, fontsContainer: SVGDefsElement) {
     if (!this.globalData) {
-      return
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (!this.animationItem) {
+      throw new Error(
+        `${this.constructor.name}: animationItem is not implemented`
+      )
     }
     this.globalData.fontManager = new FontManager()
     this.globalData.slotManager = new SlotManager(
@@ -261,14 +268,15 @@ export default class BaseRenderer extends FrameElement {
     )
     this.globalData.fontManager.addChars(animData.chars)
     this.globalData.fontManager.addFonts(animData.fonts, fontsContainer)
-    this.globalData.getAssetData = this.animationItem?.getAssetData.bind(
+    this.globalData.getAssetData = this.animationItem.getAssetData.bind(
       this.animationItem
     )
-    this.globalData.getAssetsPath = this.animationItem?.getAssetsPath.bind(
+    this.globalData.getAssetsPath = this.animationItem.getAssetsPath.bind(
       this.animationItem
     )
-    this.globalData.imageLoader = this.animationItem?.imagePreloader
-    this.globalData.audioController = this.animationItem?.audioController
+
+    this.globalData.imageLoader = this.animationItem.imagePreloader
+    this.globalData.audioController = this.animationItem.audioController
     this.globalData.frameId = 0
     this.globalData.frameRate = animData.fr || 60
     this.globalData.nm = animData.nm

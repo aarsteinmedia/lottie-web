@@ -3,11 +3,25 @@ import type {
   ElementInterfaceUnion,
   Shape,
 } from '@/types'
+import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
+import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
+import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
+import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 import { ShapeGroupData, type SVGShapeData } from '@/elements/helpers/shapes'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
+
+export type ModifierInterface =
+  | OffsetPathModifier
+  | PuckerAndBloatModifier
+  | RepeaterModifier
+  | RoundCornersModifier
+  | TrimModifier
+  | ZigZagModifier
 
 export default class ShapeModifier extends DynamicPropertyContainer {
   closed?: boolean
@@ -26,16 +40,16 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       localShapeCollection: newShapeCollection(),
       shape: data.sh,
     } as unknown as SVGShapeData
-    this.shapes?.push(shapeData)
+    this.shapes.push(shapeData)
     this.addShapeToModifier(shapeData)
     if (this._isAnimated) {
       data.setAsAnimated()
     }
   }
   addShapeToModifier(_shapeData: SVGShapeData) {
-    throw new Error(
-      `${this.constructor.name}: Method addShapeToModifier is not implemented`
-    )
+    // throw new Error(
+    //   `${this.constructor.name}: Method addShapeToModifier is not implemented`
+    // )
   }
   init(
     elem: ElementInterfaceIntersect,
@@ -50,7 +64,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     this.frameId = initialDefaultFrame
     this.closed = false
     this.k = false
-    if (this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length) {
       this.k = true
     } else {
       this.getValue(true)

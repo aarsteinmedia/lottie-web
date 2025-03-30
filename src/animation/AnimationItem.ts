@@ -918,8 +918,8 @@ export default class AnimationItem extends BaseEvent {
     }
     if (this.renderer?.globalData?.fontManager?.isLoaded) {
       this.checkLoaded()
-    } else {
-      setTimeout(this.waitForFontsLoaded.bind(this), 20)
+      return
     }
+    setTimeout(this.waitForFontsLoaded.bind(this), 20)
   }
 }

@@ -23,7 +23,7 @@ export default class ProjectInterface {
     while (i < length) {
       if (compositions[i].data && compositions[i].data.nm === name) {
         if (compositions[i].prepareFrame && compositions[i].data.xt) {
-          compositions[i].prepareFrame?.(currentFrame)
+          compositions[i].prepareFrame!(currentFrame)
         }
         for (const [key, value] of Object.entries(
           compositions[i].compInterface

@@ -49,9 +49,9 @@ export default class SVGRendererBase extends BaseRenderer {
     let nextElement
     while (i < pos) {
       if (
-        this.elements?.[i] &&
-        this.elements?.[i] !== (true as unknown as ElementInterfaceIntersect) &&
-        this.elements?.[i].getBaseElement()
+        this.elements[i] &&
+        this.elements[i] !== (true as unknown as ElementInterfaceIntersect) &&
+        this.elements[i].getBaseElement()
       ) {
         nextElement = this.elements[i].getBaseElement()
       }
@@ -69,11 +69,11 @@ export default class SVGRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: Can't access layers`)
     }
     const elements = this.elements
-    if (elements?.[pos] || this.layers?.[pos].ty === 99) {
+    if (elements[pos] || this.layers[pos].ty === 99) {
       return
     }
 
-    elements![pos] = true as unknown as ElementInterfaceIntersect
+    elements[pos] = true as unknown as ElementInterfaceIntersect
 
     if (!this.createItem) {
       throw new Error(
@@ -86,15 +86,15 @@ export default class SVGRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: Could not create element`)
     }
 
-    elements![pos] = element as ElementInterfaceIntersect
+    elements[pos] = element as ElementInterfaceIntersect
     if (getExpressionsPlugin()) {
-      if (this.layers?.[pos].ty === 0) {
+      if (this.layers[pos].ty === 0) {
         this.globalData?.projectInterface.registerComposition(element)
       }
       element.initExpressions()
     }
     this.appendElementInPos(element as ElementInterfaceIntersect, pos)
-    if (this.layers?.[pos].tt) {
+    if (this.layers[pos].tt) {
       const elementIndex =
         'tp' in this.layers[pos]
           ? this.findIndexByInd(this.layers[pos].tp)
@@ -103,7 +103,7 @@ export default class SVGRendererBase extends BaseRenderer {
         return
       }
       if (
-        !this.elements?.[elementIndex] ||
+        !this.elements[elementIndex] ||
         this.elements[elementIndex] ===
           (true as unknown as ElementInterfaceIntersect)
       ) {
@@ -133,7 +133,7 @@ export default class SVGRendererBase extends BaseRenderer {
         let i = 0
         const { length } = this.elements || []
         while (i < length) {
-          if (this.elements?.[i] !== element) {
+          if (this.elements[i] !== element) {
             i++
             continue
           }
@@ -145,7 +145,7 @@ export default class SVGRendererBase extends BaseRenderer {
           // if (!matteElement.getMatte) {
           //   matteElement.getMatte = new SVGBaseElement().getMatte
           // }
-          const matteMask = matteElement.getMatte(this.layers?.[i].tt)
+          const matteMask = matteElement.getMatte(this.layers[i].tt)
 
           // if (!element.setMatte) {
           //   console.log(element.constructor.name)
@@ -240,7 +240,7 @@ export default class SVGRendererBase extends BaseRenderer {
 
       defs.appendChild(maskElement)
       this.layers = animData.layers || []
-      this.elements = createSizedArray(animData.layers?.length || 0)
+      this.elements = createSizedArray(animData.layers.length)
     } catch (err) {
       console.error(err)
     }
@@ -250,21 +250,33 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new ImageElement(data, this.globalData, this as any)
+    return new ImageElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createNull(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new NullElement(data, this.globalData, this as any)
+    return new NullElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createShape(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
-    return new SVGShapeElement(data, this.globalData, this as any)
+    return new SVGShapeElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createSolid(data: LottieLayer) {
@@ -297,7 +309,7 @@ export default class SVGRendererBase extends BaseRenderer {
     this.globalData!.defs = null as unknown as SVGDefsElement
     const { length } = this.layers || []
     for (let i = 0; i < length; i++) {
-      this.elements?.[i].destroy?.()
+      this.elements[i].destroy()
     }
     this.elements!.length = 0
     this.destroyed = true
@@ -307,7 +319,7 @@ export default class SVGRendererBase extends BaseRenderer {
   findIndexByInd(ind?: number) {
     const { length } = this.layers || []
     for (let i = 0; i < length; i++) {
-      if (this.layers?.[i].ind === ind) {
+      if (this.layers[i].ind === ind) {
         return i
       }
     }
@@ -346,16 +358,14 @@ export default class SVGRendererBase extends BaseRenderer {
         this.checkLayers(num)
       }
       for (let i = length - 1; i >= 0; i--) {
-        if (this.completeLayers || this.elements?.[i]) {
-          this.elements?.[i].prepareFrame?.(
-            Number(num) - Number(this.layers?.[i].st)
-          )
+        if (this.completeLayers || this.elements[i]) {
+          this.elements[i].prepareFrame(Number(num) - Number(this.layers[i].st))
         }
       }
       if (this.globalData._mdf) {
         for (let i = 0; i < length; i++) {
-          if (this.completeLayers || this.elements?.[i]) {
-            this.elements?.[i].renderFrame()
+          if (this.completeLayers || this.elements[i]) {
+            this.elements[i].renderFrame()
           }
         }
       }

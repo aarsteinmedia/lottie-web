@@ -14,18 +14,24 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.amount = PropertyFactory(elem, data.a, 0, null, this) as ValueProperty
+    this.amount = PropertyFactory(
+      elem,
+      data.a,
+      0,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this._isAnimated = !!this.amount?.effectsSequence.length
   }
 
   processPath(path: ShapePath, amount: number) {
     const percent = amount / 100
     const centerPoint = [0, 0]
-    const pathLength = Number(path._length)
+    const pathLength = path._length
     let i = 0
     for (i = 0; i < pathLength; i++) {
-      centerPoint[0] += Number(path.v[i]?.[0])
-      centerPoint[1] += Number(path.v[i]?.[1])
+      centerPoint[0] += path.v[i][0]
+      centerPoint[1] += path.v[i][1]
     }
     centerPoint[0] /= pathLength
     centerPoint[1] /= pathLength
@@ -33,24 +39,12 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     clonedPath.c = path.c
     let vX, vY, oX, oY, iX, iY
     for (i = 0; i < pathLength; i++) {
-      vX =
-        Number(path.v[i]?.[0]) +
-        (centerPoint[0] - Number(path.v[i]?.[0])) * percent
-      vY =
-        Number(path.v[i]?.[1]) +
-        (centerPoint[1] - Number(path.v[i]?.[1])) * percent
-      oX =
-        Number(path.o[i]?.[0]) +
-        (centerPoint[0] - Number(path.o[i]?.[0])) * -percent
-      oY =
-        Number(path.o[i]?.[1]) +
-        (centerPoint[1] - Number(path.o[i]?.[1])) * -percent
-      iX =
-        Number(path.i[i]?.[0]) +
-        (centerPoint[0] - Number(path.i[i]?.[0])) * -percent
-      iY =
-        Number(path.i[i]?.[1]) +
-        (centerPoint[1] - Number(path.i[i]?.[1])) * -percent
+      vX = path.v[i][0] + (centerPoint[0] - path.v[i][0]) * percent
+      vY = path.v[i][1] + (centerPoint[1] - path.v[i][1]) * percent
+      oX = path.o[i][0] + (centerPoint[0] - path.o[i][0]) * -percent
+      oY = path.o[i][1] + (centerPoint[1] - path.o[i][1]) * -percent
+      iX = path.i[i][0] + (centerPoint[0] - path.i[i][0]) * -percent
+      iY = path.i[i][1] + (centerPoint[1] - path.i[i][1]) * -percent
       clonedPath.setTripleAt(vX, vY, oX, oY, iX, iY, i)
     }
     return clonedPath

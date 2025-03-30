@@ -1,14 +1,3 @@
-// import type {
-//   AngleEffect,
-//   CheckboxEffect,
-//   ColorEffect,
-//   LayerIndexEffect,
-//   MaskIndexEffect,
-//   NoValueEffect,
-//   PointEffect,
-//   SliderEffect,
-// } from '@/effects'
-
 import { GroupEffect } from '@/effects/EffectsManager'
 import { ElementInterfaceIntersect } from '@/types'
 import { createFilter } from '@/utils/FiltersFactory'
@@ -38,7 +27,7 @@ export default class SVGEffects {
         const Effect = registeredEffects[elem.data.ef![i].ty].effect
 
         filterManager = new Effect(
-          fil,
+          fil as any,
           elem.effectsManager?.effectElements[i] as any,
           elem as any,
           idPrefix + count,

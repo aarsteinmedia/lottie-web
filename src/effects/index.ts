@@ -12,7 +12,13 @@ export class SliderEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 0, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      0,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -24,7 +30,13 @@ export class AngleEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 0, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      0,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -36,7 +48,13 @@ export class ColorEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 1, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      1,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -48,7 +66,13 @@ export class PointEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 1, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      1,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -60,7 +84,13 @@ export class LayerIndexEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 0, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      0,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -72,7 +102,13 @@ export class MaskIndexEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 0, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      0,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 
@@ -84,7 +120,13 @@ export class CheckboxEffect {
     elem: ElementInterfaceIntersect,
     container: GroupEffect
   ) {
-    this.p = PropertyFactory(elem, data.v, 0, 0, container) as ValueProperty
+    this.p = PropertyFactory(
+      elem,
+      data.v,
+      0,
+      0,
+      container as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
   }
 }
 

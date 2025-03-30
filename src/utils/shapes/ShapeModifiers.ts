@@ -28,16 +28,16 @@ export function getModifier<T extends ShapeModifierInterface>(
   _elem?: ElementInterfaceIntersect,
   _data?: unknown
 ) {
-  return new modifiers[nm]() as T
+  return new Modifiers[nm]() as T
 }
 
 /**
  *
  */
 export function registerModifier(nm: string, factory: Modifier) {
-  if (!modifiers[nm]) {
-    modifiers[nm] = factory
+  if (!Modifiers[nm]) {
+    Modifiers[nm] = factory
   }
 }
 
-const modifiers: { [key: string]: Modifier } = {}
+const Modifiers: { [key: string]: Modifier } = {}

@@ -58,22 +58,24 @@ export default class TrimModifier extends ShapeModifier {
     }
     shapePath.setXYAt(points[3], points[7], 'v', pos + 1)
   }
-  addShapes(shapeData: any, shapeSegment: any, shapePathFromProps?: ShapePath) {
+  addShapes(
+    shapeData: any, // ShapeProperty? Contains Matrix
+    shapeSegment: any,
+    shapePathFromProps?: ShapePath
+  ) {
     let shapePath = shapePathFromProps
-    const pathsData = shapeData.pathsData
-    const shapePaths = shapeData.shape.paths.shapes
-    let i
-    const len = shapeData.shape.paths._length
-    let j
-    let jLen
-    let addedLength = 0
-    let currentLengthData
-    let segmentCount
-    let lengths
-    let segment: number[]
+    const { pathsData = [] } = shapeData,
+      shapePaths = shapeData.shape?.paths?.shapes || [],
+      len = shapeData.shape?.paths?._length || 0
+    let j,
+      jLen,
+      addedLength = 0,
+      currentLengthData,
+      segmentCount,
+      segment: number[]
     const shapes: ShapePath[] = []
-    let initPos
-    let newShape = true
+    let initPos,
+      newShape = true
     if (shapePath) {
       segmentCount = shapePath._length
       initPos = shapePath._length
@@ -86,11 +88,11 @@ export default class TrimModifier extends ShapeModifier {
       shapes.push(shapePath)
     }
 
-    for (i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       if (!shapePath) {
         continue
       }
-      lengths = pathsData[i].lengths
+      const { lengths } = pathsData[i]
       shapePath.c = shapePaths[i].c
       jLen = shapePaths[i].c ? lengths.length : lengths.length + 1
       for (j = 1; j < jLen; j++) {
@@ -203,11 +205,11 @@ export default class TrimModifier extends ShapeModifier {
     return shapes
   }
   override addShapeToModifier(shapeData: SVGShapeData) {
-    ;(shapeData as any).pathsData = [] // TODO: Find cases and drill for types
+    shapeData.pathsData = []
   }
   calculateShapeEdges(
-    s: any,
-    e: any,
+    s: number,
+    e: number,
     shapeLength: number,
     addedLength: number,
     totalModifierLength: number
@@ -269,22 +271,39 @@ export default class TrimModifier extends ShapeModifier {
     elem: ElementInterfaceIntersect,
     data: Shape
   ) {
-    this.s = PropertyFactory(elem, data.s, 0, 0.01, this) as ValueProperty
-    this.e = PropertyFactory(elem, data.e, 0, 0.01, this) as ValueProperty
-    this.o = PropertyFactory(elem, data.o, 0, 0, this) as ValueProperty
+    this.s = PropertyFactory(
+      elem,
+      data.s,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.e = PropertyFactory(
+      elem,
+      data.e,
+      0,
+      0.01,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
+    this.o = PropertyFactory(
+      elem,
+      data.o,
+      0,
+      0,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.sValue = 0
     this.eValue = 0
     this.getValue = this.processKeys
     this.m = data.m
     this._isAnimated =
-      !!this.s.effectsSequence.length ||
-      !!this.e.effectsSequence.length ||
-      !!this.o.effectsSequence.length
+      !!this.s.effectsSequence?.length ||
+      !!this.e.effectsSequence?.length ||
+      !!this.o.effectsSequence?.length
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let s
-    let e
+    let s: number, e: number
     if (this._mdf || _isFirstFrame) {
       let o = (Number(this.o?.v) % 360) / 360
       if (o < 0) {
@@ -315,8 +334,8 @@ export default class TrimModifier extends ShapeModifier {
       this.sValue = s
       this.eValue = e
     } else {
-      s = this.sValue
-      e = this.eValue
+      s = this.sValue || 0
+      e = this.eValue || 0
     }
     let shapePaths,
       j,
@@ -403,8 +422,8 @@ export default class TrimModifier extends ShapeModifier {
           }
           jLen = edges.length
           for (j = 0; j < jLen; j++) {
-            shapeS = Number(edges[j][0])
-            shapeE = Number(edges[j][1])
+            shapeS = edges[j][0]
+            shapeE = edges[j][1]
             segments.length = 0
             if (shapeE <= 1) {
               segments.push({

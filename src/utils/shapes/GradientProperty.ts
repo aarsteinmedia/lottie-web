@@ -19,7 +19,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
   constructor(
     elem: ElementInterfaceIntersect,
     data: GradientColor,
-    container: any
+    container: ElementInterfaceIntersect
   ) {
     super()
     this.data = data
@@ -33,7 +33,13 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this._collapsable = this.checkCollapsable()
     this._hasOpacity = cLength
     this.initDynamicPropertyContainer(container)
-    this.prop = PropertyFactory(elem, data.k, 1, null, this)
+    this.prop = PropertyFactory(
+      elem,
+      data.k,
+      1,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    )
     this.k = this.prop.k
     this.getValue(true)
   }

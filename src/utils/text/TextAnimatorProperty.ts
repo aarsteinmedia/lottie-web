@@ -844,12 +844,42 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     }
     if (this._textData.p && this._textData.p.m) {
       this._pathData = {
-        a: PropertyFactory(this._elem, this._textData.p.a, 0, 0, this),
-        f: PropertyFactory(this._elem, this._textData.p.f, 0, 0, this),
-        l: PropertyFactory(this._elem, this._textData.p.l, 0, 0, this),
+        a: PropertyFactory(
+          this._elem,
+          this._textData.p.a,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        f: PropertyFactory(
+          this._elem,
+          this._textData.p.f,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        l: PropertyFactory(
+          this._elem,
+          this._textData.p.l,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
         m: this._elem.maskManager?.getMaskProperty(this._textData.p.m),
-        p: PropertyFactory(this._elem, this._textData.p.p, 0, 0, this),
-        r: PropertyFactory(this._elem, this._textData.p.r, 0, 0, this),
+        p: PropertyFactory(
+          this._elem,
+          this._textData.p.p,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
+        r: PropertyFactory(
+          this._elem,
+          this._textData.p.r,
+          0,
+          0,
+          this as unknown as ElementInterfaceIntersect
+        ),
       }
       this._hasMaskedPath = true
     } else {
@@ -860,7 +890,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       this._textData.m?.a,
       1,
       0,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
   }
 }
