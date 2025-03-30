@@ -5,6 +5,7 @@ import type {
   AnimationEventName,
   DocumentData,
   LottieAsset,
+  LottieLayer,
   MarkerData,
   Vector2,
 } from '@/types'
@@ -265,7 +266,7 @@ export default class AnimationItem extends BaseEvent {
       if (typeof this.animationData.fr !== 'undefined') {
         this.frameMult = this.animationData.fr / 1000
       }
-      this.renderer.searchExtraCompositions(animData.assets as any)
+      this.renderer.searchExtraCompositions(animData.assets as LottieLayer[])
       this.markers = markerParser(animData.markers || []) as MarkerData[]
       this.trigger('config_ready')
       this.preloadImages()
@@ -409,12 +410,11 @@ export default class AnimationItem extends BaseEvent {
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
     }
     const layers = this.animationData.layers || []
-    let i
-    let len = layers.length
-    const newLayers = data.layers
-    let j
-    const jLen = newLayers.length
-    for (j = 0; j < jLen; j++) {
+    let i,
+      len = layers.length
+    const newLayers = data.layers,
+      { length: jLen } = newLayers
+    for (let j = 0; j < jLen; j++) {
       i = 0
       while (i < len) {
         if (layers[i].id === newLayers[j].id) {
@@ -918,8 +918,8 @@ export default class AnimationItem extends BaseEvent {
     }
     if (this.renderer?.globalData?.fontManager?.isLoaded) {
       this.checkLoaded()
-    } else {
-      setTimeout(this.waitForFontsLoaded.bind(this), 20)
+      return
     }
+    setTimeout(this.waitForFontsLoaded.bind(this), 20)
   }
 }

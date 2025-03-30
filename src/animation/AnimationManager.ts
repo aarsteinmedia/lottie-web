@@ -279,7 +279,7 @@ function resume(nowTime: number) {
  *
  */
 function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
-  animItem.addEventListener('destroy', removeElement as any)
+  animItem.addEventListener('destroy', removeElement as () => void)
   animItem.addEventListener('_active', addPlayingCount)
   animItem.addEventListener('_idle', subtractPlayingCount)
   registeredAnimations.push({ animation: animItem, elem: element })
