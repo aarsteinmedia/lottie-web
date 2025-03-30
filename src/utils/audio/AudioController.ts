@@ -7,8 +7,10 @@ export default class AudioController {
   public audioFactory?: AudioFactory
 
   public audios: AudioElement[]
+  isPlaying?: boolean
   private _isMuted: boolean
   private _volume: number
+
   constructor(audioFactory?: AudioFactory) {
     this.audios = []
     this.audioFactory = audioFactory
@@ -30,15 +32,27 @@ export default class AudioController {
     }
     return {
       isPlaying: false,
-      play: function () {
+      play: () => {
         this.isPlaying = true
       },
-      playing: () => {},
-      rate: () => {},
-      seek: function () {
+      playing: () => {
+        throw new Error(
+          `${this.constructor.name}: Method playing is not implemented`
+        )
+      },
+      rate: () => {
+        throw new Error(
+          `${this.constructor.name}: Method rate is not implemented`
+        )
+      },
+      seek: () => {
         this.isPlaying = false
       },
-      setVolume: () => {},
+      setVolume: () => {
+        throw new Error(
+          `${this.constructor.name}: Method setVolume is not implemented`
+        )
+      },
     }
   }
   public getVolume() {
