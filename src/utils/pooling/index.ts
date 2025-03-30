@@ -67,9 +67,8 @@ export const pointPool = (() =>
         totalLength: 0,
       }),
       (element: any) => {
-        let i
-        const len = element.lengths.length
-        for (i = 0; i < len; i++) {
+        const { length } = element.lengths
+        for (let i = 0; i < length; i++) {
           bezierLengthPool.release(element.lengths[i])
         }
         element.lengths.length = 0

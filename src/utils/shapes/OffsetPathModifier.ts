@@ -12,6 +12,7 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import ShapePath from '@/utils/shapes/ShapePath'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty
@@ -22,13 +23,19 @@ export default class OffsetPathModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.amount = PropertyFactory(elem, data.a, 0, null, this) as ValueProperty
+    this.amount = PropertyFactory(
+      elem,
+      data.a,
+      0,
+      null,
+      this as unknown as ElementInterfaceIntersect
+    ) as ValueProperty
     this.miterLimit = PropertyFactory(
       elem,
       data.ml,
       0,
       null,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.lineJoin = data.lj
     this._isAnimated = this.amount?.effectsSequence.length !== 0
@@ -46,8 +53,8 @@ export default class OffsetPathModifier extends ShapeModifier {
     if (!inputBezier.c) {
       count -= 1
     }
-    let segment
-    let multiSegments = []
+    let segment,
+      multiSegments = []
 
     for (let i = 0; i < count; i++) {
       segment = shapeSegment(inputBezier, i)
@@ -64,8 +71,8 @@ export default class OffsetPathModifier extends ShapeModifier {
     multiSegments = pruneIntersections(multiSegments)
 
     // Add bezier segments to the output and apply line joints
-    let lastPoint = null
-    let lastSeg = null
+    let lastPoint = null,
+      lastSeg = null
 
     const { length } = multiSegments
     for (let i = 0; i < length; i++) {
@@ -134,33 +141,28 @@ export default class OffsetPathModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    let shapePaths
-    let i
-    const { length } = this.shapes || []
-    let j
-    let jLen: number
-    const amount = Number(this.amount?.v)
-    const miterLimit = Number(this.miterLimit?.v)
-    const lineJoin = Number(this.lineJoin)
+    const { length } = this.shapes || [],
+      amount = Number(this.amount?.v),
+      miterLimit = Number(this.miterLimit?.v),
+      lineJoin = Number(this.lineJoin)
 
     if (amount !== 0) {
-      let shapeData
-      let localShapeCollection
-      for (i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i]
+      let shapePaths, shapeData, localShapeCollection
+      for (let i = 0; i < length; i++) {
+        shapeData = this.shapes?.[i] as unknown as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
-        if (!(!shapeData.shape._mdf && !this._mdf && !_isFirstFrame)) {
+        if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape._mdf = true
-          shapePaths = shapeData.shape.paths.shapes
-          jLen = shapeData.shape.paths._length
-          for (j = 0; j < jLen; j++) {
+          shapeData.shape!._mdf = true
+          shapePaths = shapeData.shape?.paths?.shapes
+          const jLen = shapeData.shape?.paths?._length || 0
+          for (let j = 0; j < jLen; j++) {
             localShapeCollection?.addShape(
-              this.processPath(shapePaths[j], amount, lineJoin, miterLimit)
+              this.processPath(shapePaths![j], amount, lineJoin, miterLimit)
             )
           }
         }
-        shapeData.shape.paths = shapeData.localShapeCollection
+        shapeData.shape!.paths = shapeData.localShapeCollection
       }
     }
     if (!this.dynamicProperties?.length) {

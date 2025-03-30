@@ -33,11 +33,16 @@ export default class DashProperty extends DynamicPropertyContainer {
     ) as Float32Array
     this.dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
     this.initDynamicPropertyContainer(container)
-    let i
     const len = data.length || 0
     let prop
-    for (i = 0; i < len; i++) {
-      prop = PropertyFactory(elem, data[i].v, 0, 0, this)
+    for (let i = 0; i < len; i++) {
+      prop = PropertyFactory(
+        elem,
+        data[i].v,
+        0,
+        0,
+        this as unknown as ElementInterfaceIntersect
+      )
       this.k = prop?.k || this.k
       this.dataProps[i] = { n: data[i].n, p: prop }
     }
@@ -47,14 +52,10 @@ export default class DashProperty extends DynamicPropertyContainer {
     this._isAnimated = this.k
   }
   override getValue(forceRender?: boolean) {
-    if (
-      'globalData' in this.elem &&
-      this.elem.globalData.frameId === this.frameId &&
-      !forceRender
-    ) {
+    if (this.elem.globalData.frameId === this.frameId && !forceRender) {
       return
     }
-    if ('globalData' in this.elem && this.elem.globalData.frameId) {
+    if (this.elem.globalData.frameId) {
       this.frameId = this.elem.globalData.frameId
     }
 

@@ -9,6 +9,7 @@ export default class ShapePath {
   c: boolean
   e?: ShapePath[]
   i: Vector2[]
+  lengths: number[] = []
   o: Vector2[]
   s?: ShapePath[]
   v: Vector2[]
@@ -35,9 +36,9 @@ export default class ShapePath {
   reverse() {
     const newPath = new ShapePath()
     newPath.setPathData(this.c, this._length)
-    const vertices = this.v
-    const outPoints = this.o
-    const inPoints = this.i
+    const vertices = this.v,
+      outPoints = this.o,
+      inPoints = this.i
     let init = 0
     if (this.c) {
       newPath.setTripleAt(
