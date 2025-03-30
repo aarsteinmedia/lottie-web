@@ -1,8 +1,16 @@
-import type { GlobalData, LottieLayer } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+} from '@/types'
 
 import FrameElement from '@/elements/helpers/FrameElement'
 export default class NullElement extends FrameElement {
-  constructor(data: LottieLayer, globalData: GlobalData, comp: any) {
+  constructor(
+    data: LottieLayer,
+    globalData: GlobalData,
+    comp: ElementInterfaceIntersect
+  ) {
     super()
     this.initFrame()
     this.initBaseData(data, globalData, comp)
@@ -10,8 +18,16 @@ export default class NullElement extends FrameElement {
     this.initHierarchy()
   }
 
-  getBaseElement() {
+  destroy() {
+    // Pass Through
+  }
+
+  getBaseElement(): SVGGElement | null {
     return null
+  }
+
+  hide() {
+    // Pass Through
   }
 
   prepareFrame(num: number) {
@@ -19,6 +35,9 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    /** Fallback */
+    // Pass Through
+  }
+  sourceRectAtTime() {
+    // Pass Through
   }
 }

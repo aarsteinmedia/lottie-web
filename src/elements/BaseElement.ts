@@ -2,9 +2,9 @@ import type MaskElement from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
-  ItemsData,
   LottieLayer,
   Shape,
+  SVGElementInterface,
 } from '@/types'
 
 import EffectsManager from '@/effects/EffectsManager'
@@ -20,14 +20,14 @@ export default abstract class BaseElement {
   effectsManager?: EffectsManager
 
   globalData?: GlobalData
-  itemsData?: ItemsData[]
+  itemsData: SVGElementInterface[] = []
   layerElement?: SVGGElement
   layerId?: string
 
   layerInterface?: ProjectInterface
 
   maskManager?: MaskElement
-  shapesData?: Shape[]
+  shapesData: Shape[] = []
   type?: unknown
   checkMasks() {
     if (!this.data?.hasMask) {
@@ -38,7 +38,7 @@ export default abstract class BaseElement {
     while (i < length) {
       if (
         this.data?.masksProperties?.[i].mode !== 'n' &&
-        this.data?.masksProperties?.[i].cl !== (false as any)
+        this.data?.masksProperties?.[i].cl !== (false as unknown as string)
       ) {
         return true
       }
@@ -65,20 +65,20 @@ export default abstract class BaseElement {
     }
     this.effectsManager = new EffectsManager(
       this.data,
-      this as any
+      this as unknown as ElementInterfaceIntersect
       // this.dynamicProperties
     )
   }
   initExpressions() {
-    const expressionsInterfaces = getExpressionInterfaces()
-    if (!expressionsInterfaces) {
+    const ExpressionsInterfaces = getExpressionInterfaces()
+    if (!ExpressionsInterfaces) {
       return
     }
-    const LayerExpressionInterface = new expressionsInterfaces('layer')
-    const EffectsExpressionInterface = new expressionsInterfaces('effects')
-    const ShapeExpressionInterface = new expressionsInterfaces('shape')
-    const TextExpressionInterface = new expressionsInterfaces('text')
-    const CompExpressionInterface = new expressionsInterfaces('comp')
+    const LayerExpressionInterface = new ExpressionsInterfaces('layer'),
+      EffectsExpressionInterface = new ExpressionsInterfaces('effects'),
+      ShapeExpressionInterface = new ExpressionsInterfaces('shape'),
+      TextExpressionInterface = new ExpressionsInterfaces('text'),
+      CompExpressionInterface = new ExpressionsInterfaces('comp')
     this.layerInterface = (LayerExpressionInterface as any)(this) // TODO:
     if (this.data?.hasMask && this.maskManager) {
       this.layerInterface?.registerMaskInterface?.(this.maskManager)
@@ -92,14 +92,18 @@ export default abstract class BaseElement {
 
     if (this.data?.ty === 0 || this.data?.xt) {
       this.compInterface = (CompExpressionInterface as any)(this)
-    } else if (this.data?.ty === 4) {
+      return
+    }
+    if (this.data?.ty === 4) {
       this.layerInterface!.shapeInterface = (ShapeExpressionInterface as any)(
         this.shapesData,
         this.itemsData,
         this.layerInterface
       )
       this.layerInterface!.content = this.layerInterface?.shapeInterface
-    } else if (this.data?.ty === 5) {
+      return
+    }
+    if (this.data?.ty === 5) {
       this.layerInterface!.textInterface = (TextExpressionInterface as any)(
         this
       )
@@ -107,8 +111,8 @@ export default abstract class BaseElement {
     }
   }
   setBlendMode() {
-    const blendModeValue = getBlendMode(this.data?.bm)
-    const elem = this.baseElement || this.layerElement
+    const blendModeValue = getBlendMode(this.data?.bm),
+      elem = this.baseElement || this.layerElement
 
     if (elem) {
       elem.style.mixBlendMode = blendModeValue

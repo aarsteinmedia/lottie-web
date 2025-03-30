@@ -5,10 +5,9 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import { getExpressionInterfaces } from '@/utils/getterSetter'
-
-export default class FootageElement extends FrameElement {
+export default class FootageElement extends RenderableElement {
   assetData: null | LottieAsset = null
   footageData: SVGElement
   constructor(
@@ -26,7 +25,7 @@ export default class FootageElement extends FrameElement {
     this.initBaseData(data, globalData, comp)
   }
 
-  getBaseElement() {
+  getBaseElement(): SVGGElement | null {
     return null
   }
 
@@ -43,11 +42,9 @@ export default class FootageElement extends FrameElement {
     this.layerInterface = (FootageInterface as any)(this)
   }
 
-  initRenderable() {
-    throw new Error('FootageElement: Method initRenderable is not implemented')
-  }
-
   setMatte(_id: string) {
-    throw new Error('FootageElement: Method setMatte is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
   }
 }

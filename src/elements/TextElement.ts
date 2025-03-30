@@ -6,43 +6,20 @@ import type {
   Shape,
   Vector3,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import TransformElement from '@/elements/helpers/TransformElement'
+import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import { RendererType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
-export default class TextElement extends TransformElement {
-  _mdf?: boolean
-  createContainerElements: any
-  createRenderableComponents: any
-
-  dynamicProperties?: DynamicPropertyContainer[]
-
+export default class TextElement extends RenderableDOMElement {
   emptyProp?: LetterProps
 
-  hide: any
-
-  initFrame: any
-
-  initHierarchy: any
-
-  initRenderable: any
-
-  initRendererElement: any
-
-  isInRange?: boolean
-
   lettersChangedFlag?: boolean
-
-  prepareProperties: any
-
-  prepareRenderableFrame: any
 
   renderType?: RendererType
 
@@ -93,24 +70,24 @@ export default class TextElement extends TransformElement {
       colorData[1] * 255
     )},${Math.round(colorData[2] * 255)})`
   }
-  // buildNewText() {
-  //   throw new Error('TextElement: Method buildNewText it not implemented')
-  // }
+  buildNewText() {
+    throw new Error(
+      `${this.constructor.name}: Method buildNewText it not implemented`
+    )
+  }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-  // createContent() {
-  //   throw new Error('TextElement: Method createContent it not implemented')
-  // }
+
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
-    const jLen = shapes.length
-    let pathNodes: ShapePath
-    let shapeStr = ''
-    for (let j = 0; j < jLen; j++) {
-      if (shapes[j].ty !== 'sh' || !shapes[j].ks?.k) {
+    let pathNodes: ShapePath,
+      shapeStr = ''
+    const { length } = shapes
+    for (let i = 0; i < length; i++) {
+      if (shapes[i].ty !== 'sh' || !shapes[i].ks?.k) {
         continue
       }
-      pathNodes = shapes[j].ks!.k as ShapePath
+      pathNodes = shapes[i].ks!.k as ShapePath
       shapeStr += buildShapeString(
         pathNodes,
         pathNodes.i.length,
@@ -121,7 +98,7 @@ export default class TextElement extends TransformElement {
     return shapeStr
   }
 
-  initElement(
+  override initElement(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
@@ -130,16 +107,29 @@ export default class TextElement extends TransformElement {
     this.lettersChangedFlag = true
     this.initFrame()
     this.initBaseData(data, globalData, comp)
-    this.textProperty = new TextProperty(this as any, data.t)
+    this.textProperty = new TextProperty(
+      this as unknown as ElementInterfaceIntersect,
+      data.t
+    )
     this.textAnimator = new TextAnimatorProperty(
       data.t!,
       this.renderType || RendererType.SVG,
-      this as any
+      this as unknown as ElementInterfaceIntersect
     )
     this.initTransform()
     this.initHierarchy()
     this.initRenderable()
+    if (!this.initRendererElement) {
+      throw new Error(
+        `${this.constructor.name}: Method initRendererElement is not implemented`
+      )
+    }
     this.initRendererElement()
+    if (!this.createContainerElements) {
+      throw new Error(
+        `${this.constructor.name}: Method createContainerElements is not implemented`
+      )
+    }
     this.createContainerElements()
     this.createRenderableComponents()
     this.createContent()
@@ -147,7 +137,7 @@ export default class TextElement extends TransformElement {
     this.textAnimator.searchProperties(this.dynamicProperties || [])
   }
 
-  prepareFrame(num: number) {
+  override prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)

@@ -1,16 +1,19 @@
 /* eslint-disable max-depth */
-import type { GlobalData, LottieLayer, SourceRect, Vector3 } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+  SourceRect,
+  Vector3,
+} from '@/types'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
-import FrameElement from '@/elements/helpers/FrameElement'
-import HierarchyElement from '@/elements/helpers/HierarchyElement'
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
 import { RendererType } from '@/enums'
 import { createNS } from '@/utils'
-import { extendPrototype } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class SVGTextLottieElement extends TextElement {
@@ -23,7 +26,7 @@ export default class SVGTextLottieElement extends TextElement {
   }
   renderedFrame?: number
 
-  renderedLetters?: string[]
+  renderedLetters: string[] = []
   textContainer?: SVGTextElement
   textSpans: {
     childSpan?: null | SVGTextElement | SVGGElement
@@ -34,28 +37,43 @@ export default class SVGTextLottieElement extends TextElement {
     shapes: [],
   } as unknown as LottieLayer
 
-  constructor(data: LottieLayer, globalData: GlobalData, comp: any) {
+  constructor(
+    data: LottieLayer,
+    globalData: GlobalData,
+    comp: ElementInterfaceIntersect
+  ) {
     super()
     this.textSpans = []
     this.renderType = RendererType.SVG
+    const {
+      createContainerElements,
+      createRenderableComponents,
+      destroyBaseElement,
+      getBaseElement,
+      getMatte,
+      initRendererElement,
+      renderElement,
+      setMatte,
+    } = new SVGBaseElement()
+    this.createContainerElements = createContainerElements
+    this.createRenderableComponents = createRenderableComponents
+    this.getBaseElement = getBaseElement
+    this.getMatte = getMatte
+    this.destroyBaseElement = destroyBaseElement
+    this.initRendererElement = initRendererElement
+    this.renderElement = renderElement
+    this.setMatte = setMatte
     this.initElement(data, globalData, comp)
   }
 
-  addDynamicProperty(_element: any) {
-    throw new Error(
-      'SVGTextLottieElement: Method addDynamicProperty is not implemented'
-    )
-  }
-
   override buildNewText() {
-    this.addDynamicProperty(this)
-    let i
-    let len
+    this.addDynamicProperty(this as unknown as DynamicPropertyContainer)
+    let i, len
 
     const documentData = this.textProperty?.currentData
 
     if (!this.globalData || !this.layerElement || !documentData) {
-      throw new Error('SVGTextElement: Cannot access required data')
+      throw new Error(`${this.constructor.name}: Cannot access required data`)
     }
 
     this.renderedLetters = createSizedArray(documentData.l?.length || 0)
@@ -82,24 +100,24 @@ export default class SVGTextLottieElement extends TextElement {
       if (fontData?.fFamily) {
         this.layerElement.setAttribute('font-family', fontData.fFamily)
       }
-      const fWeight = documentData.fWeight
-      const fStyle = documentData.fStyle
+      const fWeight = documentData.fWeight,
+        fStyle = documentData.fStyle
       this.layerElement.setAttribute('font-style', fStyle)
       this.layerElement.setAttribute('font-weight', fWeight)
     }
     this.layerElement.setAttribute('aria-label', `${documentData.t}`)
 
-    const letters = documentData.l || []
-    const usesGlyphs = !!this.globalData.fontManager?.chars
+    const letters = documentData.l || [],
+      usesGlyphs = !!this.globalData.fontManager?.chars
     len = letters.length
 
     let tSpan: SVGTextElement | SVGGElement | null = null
-    const matrixHelper = this.mHelper
-    const shapeStr = ''
-    const singleShape = this.data?.singleShape
-    let xPos = 0
-    let yPos = 0
-    let firstLine = true
+    const matrixHelper = this.mHelper,
+      shapeStr = '',
+      singleShape = this.data?.singleShape
+    let xPos = 0,
+      yPos = 0,
+      firstLine = true
     const trackingOffset =
       documentData.tr * 0.001 * Number(documentData.finalSize)
     if (singleShape && !usesGlyphs && !documentData.sz) {
@@ -204,13 +222,13 @@ export default class SVGTextLottieElement extends TextElement {
             fontData?.fStyle,
             this.globalData.fontManager.getFontByName(documentData.f).fFamily
           )
-          let glyphElement
+          let glyphElement: SVGCompElement | SVGShapeElement
           // t === 1 means the character has been replaced with an animated shaped
           if (charData?.t === 1) {
             glyphElement = new SVGCompElement(
               charData.data,
               this.globalData,
-              this
+              this as unknown as ElementInterfaceIntersect
             )
           } else {
             let data = this.emptyShapeData
@@ -283,6 +301,7 @@ export default class SVGTextLottieElement extends TextElement {
 
     this._sizeChanged = true
   }
+
   buildShapeData(data: LottieLayer, scale: number) {
     // data should probably be cloned to apply scale separately to each instance of a text on different layers
     // but since text internal content gets only rendered once and then it's never rerendered,
@@ -300,6 +319,7 @@ export default class SVGTextLottieElement extends TextElement {
     }
     return data
   }
+
   buildTextContents(textArray: string[]) {
     let i = 0
     const len = textArray.length
@@ -320,20 +340,30 @@ export default class SVGTextLottieElement extends TextElement {
     textContents.push(currentTextContent)
     return textContents
   }
+
   override createContent() {
     if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
     }
   }
+  getBaseElement(): SVGGElement | null {
+    throw new Error(
+      `${this.constructor.name}: Method getBaseElement is not implemented`
+    )
+  }
+  getMatte(_type?: number): string {
+    throw new Error(
+      `${this.constructor.name}: Method getMatte is not implemented`
+    )
+  }
   getValue() {
-    let i
     const { length } = this.textSpans
     let glyphElement
     this.renderedFrame = this.comp?.renderedFrame
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       glyphElement = this.textSpans[i].glyph
       if (glyphElement) {
-        glyphElement.prepareFrame?.(
+        glyphElement.prepareFrame(
           Number(this.comp?.renderedFrame) - Number(this.data?.st)
         )
         if (glyphElement._mdf) {
@@ -342,35 +372,29 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
-
-  renderInnerContent = function (this: SVGTextLottieElement) {
+  override renderInnerContent(this: SVGTextLottieElement) {
     this.validateText()
     if (this.data?.singleShape && !this._mdf) {
       return
     }
     if (!this.textProperty) {
-      // this.textProperty = new TextElement().textProperty!
-      throw new Error('Goddamn!')
+      throw new Error(
+        `${this.constructor.name}: textProperty is not initialized`
+      )
     }
-    // if (!this.textProperty) {
-    //   return
-    // }
     this.textAnimator?.getMeasures(
       this.textProperty.currentData,
       this.lettersChangedFlag
     )
     if (this.lettersChangedFlag || this.textAnimator?.lettersChangedFlag) {
       this._sizeChanged = true
-      let i
       const renderedLetters = this.textAnimator?.renderedLetters
 
       const letters = this.textProperty.currentData.l
 
       const { length } = letters || []
-      let renderedLetter
-      let textSpan
-      let glyphElement
-      for (i = 0; i < length; i++) {
+      let renderedLetter, textSpan, glyphElement
+      for (let i = 0; i < length; i++) {
         if (letters?.[i].n) {
           continue
         }
@@ -399,7 +423,13 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
-  sourceRectAtTime(): SourceRect | null {
+  setMatte(_id: string) {
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
+  }
+
+  override sourceRectAtTime(): SourceRect | null {
     this.prepareFrame(Number(this.comp?.renderedFrame) - Number(this.data?.st))
     this.renderInnerContent()
     if (this._sizeChanged) {
@@ -418,14 +448,3 @@ export default class SVGTextLottieElement extends TextElement {
     return null
   }
 }
-
-extendPrototype(
-  [
-    SVGBaseElement,
-    HierarchyElement,
-    FrameElement,
-    RenderableDOMElement,
-    TextElement,
-  ],
-  SVGTextLottieElement
-)

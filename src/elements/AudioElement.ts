@@ -11,9 +11,8 @@ import type {
   ValueProperty,
 } from '@/utils/Properties'
 
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'
-
-import RenderableElement from './helpers/RenderableElement'
 
 export default class AudioElement extends RenderableElement {
   _canPlay: boolean
@@ -36,11 +35,11 @@ export default class AudioElement extends RenderableElement {
     super()
     this.initFrame()
     this.initRenderable()
-    this.assetData = globalData.getAssetData?.(data.refId) || null
+    this.assetData = globalData.getAssetData(data.refId) || null
     this.initBaseData(data, globalData, comp)
     this._isPlaying = false
     this._canPlay = false
-    const assetPath = this.globalData?.getAssetsPath?.(this.assetData)
+    const assetPath = this.globalData?.getAssetsPath(this.assetData)
     this.audio = this.globalData?.audioController?.createAudio(assetPath)
     this._currentTime = 0
     this.globalData?.audioController?.addAudio(this)
@@ -50,24 +49,24 @@ export default class AudioElement extends RenderableElement {
     this.tm = (
       data.tm
         ? PropertyFactory(
-            this as any,
-            data.tm as any,
+            this as unknown as ElementInterfaceIntersect,
+            data.tm,
             0,
             globalData.frameRate,
-            this
+            this as unknown as ElementInterfaceIntersect
           )
         : { _placeholder: true }
     ) as ValueProperty
     this.lv = PropertyFactory(
-      this as any,
-      (data.au && data.au.lv ? data.au.lv : { k: [100] }) as any,
+      this as unknown as ElementInterfaceIntersect,
+      data.au && data.au.lv ? data.au.lv : { k: [100] },
       1,
       0.01,
-      this
+      this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
   }
 
-  getBaseElement() {
+  getBaseElement(): SVGGElement | null {
     return null
   }
 
@@ -88,7 +87,7 @@ export default class AudioElement extends RenderableElement {
     if (this.tm._placeholder) {
       this._currentTime = num / Number(this.data?.sr)
     } else {
-      this._currentTime = Number(this.tm.v)
+      this._currentTime = this.tm.v
     }
     this._volume = Number(this.lv?.v[0])
     const totalVolume = this._volume * Number(this._volumeMultiplier)
@@ -99,20 +98,24 @@ export default class AudioElement extends RenderableElement {
   }
 
   renderFrame(_frame?: number | null) {
-    if (this.isInRange && this._canPlay) {
-      if (!this._isPlaying) {
-        this.audio.play()
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-        this._isPlaying = true
-      } else if (
-        !this.audio.playing() ||
-        Math.abs(
-          this._currentTime / Number(this.globalData?.frameRate) -
-            this.audio.seek()
-        ) > 0.1
-      ) {
-        this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-      }
+    if (!this.isInRange || !this._canPlay) {
+      return
+    }
+    if (!this._isPlaying) {
+      this.audio.play()
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
+      this._isPlaying = true
+      return
+    }
+
+    if (
+      !this.audio.playing() ||
+      Math.abs(
+        this._currentTime / Number(this.globalData?.frameRate) -
+          this.audio.seek()
+      ) > 0.1
+    ) {
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }
   }
 
@@ -121,7 +124,9 @@ export default class AudioElement extends RenderableElement {
   }
 
   setMatte(_id: string) {
-    throw new Error('AudioElement: Method setMatte is not implemented')
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
   }
   setRate(rateValue: number) {
     this.audio.rate(rateValue)
