@@ -1,8 +1,5 @@
 import { createNS, inBrowser } from '@/utils'
 
-/**
- *
- */
 export function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
   if (!feColorMatrix) {
@@ -17,9 +14,6 @@ export function createAlphaToLuminanceFilter() {
   return feColorMatrix
 }
 
-/**
- *
- */
 export function createFilter(filId: string, skipCoordinates?: boolean) {
   const fil = createNS<SVGFilterElement>('filter')
   if (!fil) {

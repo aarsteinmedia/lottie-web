@@ -34,16 +34,10 @@ const A_TAG_CODE_POINT = 917601,
   Z_TAG_CODE_POINT = 917626,
   ZERO_WIDTH_JOINER_CODE_POINT = 8205
 
-/**
- *
- */
 export function isCombinedCharacter(char: number): boolean {
   return combinedCharacters.indexOf(char) !== -1
 }
 
-/**
- *
- */
 export function isFlagEmoji(string: string): boolean {
   return (
     isRegionalCode(string.substring(0, 2)) &&
@@ -51,9 +45,6 @@ export function isFlagEmoji(string: string): boolean {
   )
 }
 
-/**
- *
- */
 export function isModifier(
   firstCharCode: number,
   secondCharCode: number
@@ -62,9 +53,6 @@ export function isModifier(
   return surrogateModifiers.indexOf(sum) !== -1
 }
 
-/**
- *
- */
 export function isRegionalCode(string: string): boolean {
   const codePoint = getCodePoint(string)
   return (
@@ -73,9 +61,6 @@ export function isRegionalCode(string: string): boolean {
   )
 }
 
-/**
- *
- */
 export function isRegionalFlag(text: string, indexFromProps: number): boolean {
   let index = indexFromProps
   let codePoint = getCodePoint(text.substring(index, 2))
@@ -95,23 +80,14 @@ export function isRegionalFlag(text: string, indexFromProps: number): boolean {
   return getCodePoint(text.substr(index, 2)) === CANCEL_TAG_CODE_POINT
 }
 
-/**
- *
- */
 export function isVariationSelector(charCode: number): boolean {
   return charCode === VARIATION_SELECTOR_16_CODE_POINT
 }
 
-/**
- *
- */
 export function isZeroWidthJoiner(charCode: number): boolean {
   return charCode === ZERO_WIDTH_JOINER_CODE_POINT
 }
 
-/**
- *
- */
 function getCodePoint(string: string): number {
   let codePoint = 0
   const first = string.charCodeAt(0)
@@ -124,9 +100,6 @@ function getCodePoint(string: string): number {
   return codePoint
 }
 
-/**
- *
- */
 function setUpNode(
   font: string,
   family: string
@@ -155,9 +128,6 @@ function setUpNode(
   return { node, parent: parentNode, w: width }
 }
 
-/**
- *
- */
 function trimFontOptions(font: string): string {
   const familyArray = font.split(',')
   const len = familyArray.length
@@ -491,9 +461,6 @@ export default class FontManager {
   }
 }
 
-/**
- *
- */
 export function getFontProperties(fontData: FontList) {
   const styles = fontData.fStyle ? fontData.fStyle.split(' ') : []
 

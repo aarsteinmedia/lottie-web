@@ -18,9 +18,6 @@ import ShapePath from '@/utils/shapes/ShapePath'
 const _identityMatrix = new Matrix(),
   _matrixHelper = new Matrix()
 
-/**
- *
- */
 export function createRenderFunction(data: Shape) {
   switch (data.ty) {
     case ShapeType.Fill:
@@ -45,9 +42,6 @@ export function createRenderFunction(data: Shape) {
   }
 }
 
-/**
- *
- */
 function renderContentTransform(
   _: Shape,
   itemData?: SVGTransformData,
@@ -72,9 +66,6 @@ function renderContentTransform(
   }
 }
 
-/**
- *
- */
 function renderFill(
   _: Shape,
   itemData?: SVGFillStyleData,
@@ -98,9 +89,6 @@ function renderFill(
   }
 }
 
-/**
- *
- */
 function renderGradient(
   styleData: Shape,
   itemData?: SVGGradientFillStyleData,
@@ -213,9 +201,6 @@ function renderGradient(
   }
 }
 
-/**
- *
- */
 function renderGradientStroke(
   styleData: Shape,
   itemData?: SVGGradientStrokeStyleData | SVGGradientFillStyleData,
@@ -225,16 +210,10 @@ function renderGradientStroke(
   renderStroke(styleData, itemData as SVGGradientStrokeStyleData, isFirstFrame)
 }
 
-/**
- *
- */
 function renderNoop(_: Shape) {
   // Pass Through
 }
 
-/**
- *
- */
 function renderPath(
   styleData: Shape,
   itemData?: SVGShapeData,
@@ -297,9 +276,6 @@ function renderPath(
   }
 }
 
-/**
- *
- */
 function renderStroke(
   _: Shape,
   itemData?: SVGStrokeStyleData | SVGGradientStrokeStyleData,

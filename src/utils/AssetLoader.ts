@@ -1,8 +1,5 @@
 import type { AnimationData } from '@/types'
 
-/**
- *
- */
 export function loadAsset(
   path: string,
   fullPath: string,
@@ -46,9 +43,6 @@ export function loadAsset(
   xhr.send()
 }
 
-/**
- *
- */
 function formatResponse(xhr: XMLHttpRequest) {
   // using typeof doubles the time of execution of this method,
   // so if available, it's better to use the header to validate the type

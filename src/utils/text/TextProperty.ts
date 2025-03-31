@@ -100,11 +100,11 @@ export default class TextProperty extends DynamicPropertyContainer {
     const charactersArray = []
     let i = 0
     const len = text.length
-    let charCode
-    let secondCharCode
-    let shouldCombine = false
-    let shouldCombineNext = false
-    let currentChars = ''
+    let charCode,
+      secondCharCode,
+      shouldCombine = false,
+      shouldCombineNext = false,
+      currentChars = ''
     while (i < len) {
       shouldCombine = shouldCombineNext
       shouldCombineNext = false
@@ -167,20 +167,20 @@ export default class TextProperty extends DynamicPropertyContainer {
     }
     const data = this.data
     const letters: Letter[] = []
-    let len: number
-    let newLineFlag
-    let index = 0
-    let val
+    let len: number,
+      newLineFlag,
+      index = 0,
+      val
     const anchorGrouping = data?.m?.g
-    let currentSize = 0
-    let currentPos = 0
-    let currentLine = 0
+    let currentSize = 0,
+      currentPos = 0,
+      currentLine = 0
     const lineWidths = []
-    let lineWidth = 0
-    let maxLineWidth = 0
+    let lineWidth = 0,
+      maxLineWidth = 0
     const fontData = fontManager?.getFontByName(documentData.f)
-    let charData
-    let cLength = 0
+    let charData,
+      cLength = 0
 
     const fontProps = getFontProperties(fontData)
     documentData.fWeight = fontProps.weight
@@ -316,7 +316,7 @@ export default class TextProperty extends DynamicPropertyContainer {
         n: newLineFlag,
         val: val,
       })
-      if (Number(anchorGrouping) === 2) {
+      if (anchorGrouping === 2) {
         currentSize += cLength
         if (val === '' || val === ' ' || i === len - 1) {
           if (val === '' || val === ' ') {
@@ -331,7 +331,7 @@ export default class TextProperty extends DynamicPropertyContainer {
           index += 1
           currentSize = 0
         }
-      } else if (Number(anchorGrouping) === 3) {
+      } else if (anchorGrouping === 3) {
         currentSize += cLength
         if (val === '' || i === len - 1) {
           if (val === '') {
@@ -374,11 +374,9 @@ export default class TextProperty extends DynamicPropertyContainer {
     documentData.lineWidths = lineWidths
 
     const animators = data?.a
-    let animatorData
-    let letterData
+    let animatorData, letterData
     const jLen = animators?.length || 0
-    let based
-    let ind
+    let based, ind
     const indexes = []
     for (let j = 0; j < jLen; j++) {
       animatorData = animators?.[j]
@@ -420,8 +418,8 @@ export default class TextProperty extends DynamicPropertyContainer {
       if (data?.a && data.a[j].s) {
         data.a[j].s!.totalChars = ind
       }
-      let currentInd = -1
-      let newInd
+      let currentInd = -1,
+        newInd
       if (animatorData.s?.rn === 1) {
         for (let i = 0; i < len; i++) {
           letterData = letters[i]

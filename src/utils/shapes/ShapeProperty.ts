@@ -23,23 +23,15 @@ import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePath from '@/utils/shapes/ShapePath'
-/**
- *
- */
+
 export function getConstructorFunction() {
   return ShapeProperty
 }
 
-/**
- *
- */
 export function getKeyframedConstructorFunction() {
   return KeyframedShapeProperty
 }
 
-/**
- *
- */
 export function getShapeProp(
   elem: ShapeElement,
   data: Shape,

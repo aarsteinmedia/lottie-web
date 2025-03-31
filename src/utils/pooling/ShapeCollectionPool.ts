@@ -6,9 +6,7 @@ import ShapeCollection from '@/utils/shapes/ShapeCollection'
 let _length = 0,
   _maxLength = 4,
   pool = createSizedArray(_maxLength)
-/**
- *
- */
+
 export function newShapeCollection() {
   let shapeCollection
   if (_length) {
@@ -19,9 +17,7 @@ export function newShapeCollection() {
   }
   return shapeCollection as ShapeCollection
 }
-/**
- *
- */
+
 export function releaseShape(shapeCollection: ShapeCollection) {
   for (let i = 0; i < shapeCollection._length; i++) {
     release(shapeCollection.shapes[i])

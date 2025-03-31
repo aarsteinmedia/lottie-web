@@ -18,9 +18,7 @@ const registeredAnimations: {
   animation: AnimationItem
   elem: HTMLElement | null
 }[] = []
-/**
- *
- */
+
 export function destroy(animation?: string) {
   for (let i = len - 1; i >= 0; i--) {
     registeredAnimations[i].animation.destroy(animation)
@@ -29,9 +27,7 @@ export function destroy(animation?: string) {
 export function freeze() {
   _isFrozen = true
 }
-/**
- *
- */
+
 export function getRegisteredAnimations() {
   const lenAnims = registeredAnimations.length,
     animations = []
@@ -40,9 +36,7 @@ export function getRegisteredAnimations() {
   }
   return animations
 }
-/**
- *
- */
+
 export function goToAndStop(
   value: number,
   isFrame?: boolean,
@@ -52,9 +46,7 @@ export function goToAndStop(
     registeredAnimations[i].animation.goToAndStop(value, isFrame, animation)
   }
 }
-/**
- *
- */
+
 export function loadAnimation(params: AnimationConfiguration) {
   try {
     const animItem = new AnimationItem()
@@ -66,33 +58,25 @@ export function loadAnimation(params: AnimationConfiguration) {
     throw new Error('Could not load animation')
   }
 }
-/**
- *
- */
+
 export function mute(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.mute(animation)
   }
 }
-/**
- *
- */
+
 export function pause(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.pause(animation)
   }
 }
-/**
- *
- */
+
 export function play(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.play(animation)
   }
 }
-/**
- *
- */
+
 export function registerAnimation(
   element: HTMLElement | null,
   animationData?: AnimationData
@@ -125,9 +109,7 @@ export function resize() {
     registeredAnimations[i].animation.resize()
   }
 }
-/**
- *
- */
+
 export function searchAnimations(
   animationData?: AnimationData,
   standalone?: boolean,
@@ -165,41 +147,31 @@ export function searchAnimations(
     registerAnimation(div, animationData)
   }
 }
-/**
- *
- */
+
 export function setDirection(val: AnimationDirection, animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.setDirection(val, animation)
   }
 }
-/**
- *
- */
+
 export function setSpeed(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.setSpeed(val, animation)
   }
 }
-/**
- *
- */
+
 export function setVolume(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.setVolume(val, animation)
   }
 }
-/**
- *
- */
+
 export function stop(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.stop(animation)
   }
 }
-/**
- *
- */
+
 export function togglePause(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.togglePause(animation)
@@ -209,9 +181,7 @@ export function unfreeze() {
   _isFrozen = false
   activate()
 }
-/**
- *
- */
+
 export function unmute(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.unmute(animation)
@@ -229,18 +199,14 @@ function addPlayingCount() {
   playingAnimationsNum++
   activate()
 }
-/**
- *
- */
+
 function first(nowTime: number) {
   initTime = nowTime
   if (!isServer()) {
     window.requestAnimationFrame(resume)
   }
 }
-/**
- *
- */
+
 function removeElement({ target: animItem }: LottieEvent) {
   let i = 0
   if (!animItem) {
@@ -258,9 +224,7 @@ function removeElement({ target: animItem }: LottieEvent) {
     i++
   }
 }
-/**
- *
- */
+
 function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
   for (let i = 0; i < len; i++) {
@@ -275,9 +239,7 @@ function resume(nowTime: number) {
     _stopped = true
   }
 }
-/**
- *
- */
+
 function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
   animItem.addEventListener('destroy', removeElement as () => void)
   animItem.addEventListener('_active', addPlayingCount)

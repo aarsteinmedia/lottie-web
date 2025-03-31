@@ -13,9 +13,6 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ShapeType } from '@/enums'
 
-/**
- *
- */
 export function completeData(animationData: AnimationData) {
   if (animationData.__complete) {
     return
@@ -30,9 +27,6 @@ export function completeData(animationData: AnimationData) {
   animationData.__complete = true
 }
 
-/**
- *
- */
 export function completeLayers(
   layers: LottieLayer[],
   comps: (LottieLayer | LottieAsset)[]
@@ -85,9 +79,6 @@ export function completeLayers(
   }
 }
 
-/**
- *
- */
 export function completeShapes(arr: Shape[]) {
   const { length } = arr
   for (let i = length - 1; i >= 0; i--) {
@@ -109,9 +100,6 @@ export function completeShapes(arr: Shape[]) {
   }
 }
 
-/**
- *
- */
 function completeChars(
   chars: Characacter[],
   assets: (LottieLayer | LottieAsset)[]
@@ -129,9 +117,6 @@ function completeChars(
   }
 }
 
-/**
- *
- */
 function convertPathsToAbsoluteValues(path?: ShapePath) {
   if (!path) {
     return
@@ -145,9 +130,6 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
   }
 }
 
-/**
- *
- */
 function findComp(id: string, comps: (LottieLayer | LottieAsset)[]) {
   let i = 0
   const len = comps.length
@@ -160,9 +142,6 @@ function findComp(id: string, comps: (LottieLayer | LottieAsset)[]) {
   return null
 }
 
-/**
- *
- */
 function findCompLayers(id?: string, comps?: (LottieLayer | LottieAsset)[]) {
   if (!id || !comps) {
     return
@@ -178,9 +157,6 @@ function findCompLayers(id?: string, comps?: (LottieLayer | LottieAsset)[]) {
   return null
 }
 
-/**
- *
- */
 export function checkVersion(minimum: Vector3, animVersionString: string) {
   const animVersion = animVersionString
     ? animVersionString.split('.').map((str) => Number(str))

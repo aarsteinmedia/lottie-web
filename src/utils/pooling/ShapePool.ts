@@ -7,9 +7,6 @@ const _factory = new PoolFactory(4, _create, _release as any)
 export const newElement = _factory.newElement,
   release = _factory.release
 
-/**
- *
- */
 export function clone(shape: ShapePath) {
   const cloned = newElement<ShapePath>()
   const len = shape._length === undefined ? shape.v.length : shape._length
@@ -30,16 +27,10 @@ export function clone(shape: ShapePath) {
   return cloned
 }
 
-/**
- *
- */
 function _create() {
   return new ShapePath()
 }
 
-/**
- *
- */
 function _release(shapePath: ShapePath) {
   const len = shapePath._length
   for (let i = 0; i < len; i++) {

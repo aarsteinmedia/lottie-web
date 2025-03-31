@@ -17,9 +17,6 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 
-/**
- *
- */
 export default class TextAnimatorProperty extends DynamicPropertyContainer {
   _frameId: number
   _isFirstFrame: boolean

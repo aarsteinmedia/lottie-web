@@ -15,9 +15,6 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-/**
- *
- */
 function zigZagCorner(
   outputBezier: ShapePath,
   path: ShapePath,
@@ -56,9 +53,7 @@ function zigZagCorner(
     prevDist / ((frequency + 1) * 2)
   )
 }
-/**
- *
- */
+
 function zigZagSegment(
   outputBezier: ShapePath,
   segment: PolynomialBezier,

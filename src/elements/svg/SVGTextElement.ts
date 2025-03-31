@@ -246,13 +246,11 @@ export default class SVGTextLottieElement extends TextElement {
           }
           if (this.textSpans[i].glyph) {
             const glyph = this.textSpans[i].glyph
-            if (glyph) {
-              if (glyph.layerElement) {
-                this.textSpans[i].childSpan?.removeChild(glyph.layerElement)
-              }
-
-              glyph.destroy()
+            if (glyph?.layerElement) {
+              this.textSpans[i].childSpan?.removeChild(glyph.layerElement)
             }
+
+            glyph?.destroy()
           }
           this.textSpans[i].glyph = glyphElement
           glyphElement._debug = true
@@ -272,23 +270,23 @@ export default class SVGTextLottieElement extends TextElement {
               })`
             )
           }
-        } else {
-          if (singleShape) {
-            tSpan?.setAttribute(
-              'transform',
-              `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`
-            )
-          }
-          if (tSpan) {
-            tSpan.textContent = letters[i].val
-          }
-
-          tSpan?.setAttributeNS(
-            'http://www.w3.org/XML/1998/namespace',
-            'xml:space',
-            'preserve'
+          continue
+        }
+        if (singleShape) {
+          tSpan?.setAttribute(
+            'transform',
+            `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`
           )
         }
+        if (tSpan) {
+          tSpan.textContent = letters[i].val
+        }
+
+        tSpan?.setAttributeNS(
+          'http://www.w3.org/XML/1998/namespace',
+          'xml:space',
+          'preserve'
+        )
       }
       if (singleShape && tSpan) {
         tSpan.setAttribute('d', shapeStr)

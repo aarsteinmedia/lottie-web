@@ -183,9 +183,6 @@ export default class PolynomialBezier {
   }
 }
 
-/**
- *
- */
 export function shapeSegment(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
   return new PolynomialBezier(
@@ -196,9 +193,7 @@ export function shapeSegment(shapePath: ShapePath, index: number) {
     true
   )
 }
-/**
- *
- */
+
 export function shapeSegmentInverted(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
   return new PolynomialBezier(

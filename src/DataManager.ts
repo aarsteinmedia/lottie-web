@@ -114,9 +114,7 @@ const workerProxy: Worker = {
     }
   } = {}
 let workerInstance: Worker
-/**
- *
- */
+
 export function completeAnimation(
   animation: AnimationData,
   onComplete: (data: AnimationData) => void,
@@ -130,9 +128,7 @@ export function completeAnimation(
     type: 'complete',
   })
 }
-/**
- *
- */
+
 export function loadAnimation(
   path: string,
   onComplete: (data: AnimationData) => void,
@@ -152,9 +148,7 @@ export function loadAnimation(
     type: 'loadAnimation',
   })
 }
-/**
- *
- */
+
 export function loadData(
   path: string,
   onComplete: (data: AnimationData) => void,
@@ -171,9 +165,7 @@ export function loadData(
     type: 'loadData',
   })
 }
-/**
- *
- */
+
 function createProcess(
   onComplete: (data: AnimationData) => void,
   onError?: (error?: unknown) => void
@@ -191,9 +183,7 @@ function createProcess(
     throw new Error('Could not create animation proccess')
   }
 }
-/**
- *
- */
+
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
   if (!isServer() && window.Worker && window.Blob && getWebWorker()) {
     const blob = new Blob(

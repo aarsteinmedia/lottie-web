@@ -8,9 +8,6 @@ import { bezierLengthPool, segmentsLengthPool } from '@/utils/pooling'
 
 const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8)
 
-/**
- *
- */
 export function buildBezierData(
   pt1: Vector2,
   pt2: Vector2,
@@ -81,9 +78,6 @@ export function buildBezierData(
   return storedData[bezierName]
 }
 
-/**
- *
- */
 export function getNewSegment(
   pt1: number[],
   pt2: number[],
@@ -163,9 +157,6 @@ export function getNewSegment(
   return bezierSegmentPoints
 }
 
-/**
- *
- */
 export function getPointInSegment(
   pt1: Vector2,
   pt2: Vector2,
@@ -195,9 +186,6 @@ export function getPointInSegment(
   return [ptX, ptY]
 }
 
-/**
- *
- */
 export function getSegmentsLength(shapeData: ShapePath) {
   const segmentsLength: {
       lengths: ReturnType<typeof getBezierLength>[]
@@ -233,9 +221,6 @@ export function getSegmentsLength(shapeData: ShapePath) {
   return segmentsLength
 }
 
-/**
- *
- */
 export function pointOnLine2D(
   x1: number,
   y1: number,
@@ -248,9 +233,6 @@ export function pointOnLine2D(
   return det1 > -0.001 && det1 < 0.001
 }
 
-/**
- *
- */
 export function pointOnLine3D(
   x1: number,
   y1: number,
@@ -289,9 +271,6 @@ export function pointOnLine3D(
   return diffDist > -0.0001 && diffDist < 0.0001
 }
 
-/**
- *
- */
 function getBezierLength(
   pt1: Vector2,
   pt2: Vector2,
@@ -337,9 +316,6 @@ function getBezierLength(
   return lengthData
 }
 
-/**
- *
- */
 function getDistancePerc(
   perc: number,
   { addedLength, lengths, percents }: ReturnType<typeof getBezierLength>

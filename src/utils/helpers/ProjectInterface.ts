@@ -3,9 +3,6 @@ import type { CompInterface } from '@/types'
 export const compositions: CompInterface[] = [],
   currentFrame = 0
 
-/**
- *
- */
 export function registerComposition(comp: CompInterface) {
   compositions.push(comp)
 }

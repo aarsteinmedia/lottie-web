@@ -44,9 +44,6 @@ export default class PoolFactory {
   }
 }
 
-/**
- *
- */
 export function double(arr: unknown[]) {
   return arr.concat(createSizedArray(arr.length))
 }

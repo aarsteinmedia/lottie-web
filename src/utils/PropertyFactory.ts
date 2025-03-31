@@ -13,9 +13,6 @@ import {
   ValueProperty,
 } from '@/utils/Properties'
 
-/**
- *
- */
 export default function PropertyFactory(
   elem: ElementInterfaceIntersect,
   dataFromProps?: VectorProperty<number | number[]>,

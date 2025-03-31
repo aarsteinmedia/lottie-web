@@ -903,11 +903,9 @@ export class SVGGaussianBlurEffect {
       //   2 -> horizontal only
       //   3 -> vertical only
       //
-      dimensions = this.filterManager.effectElements[1].p.v,
-      sigmaX = dimensions == 3 ? 0 : sigma, // eslint-disable-line eqeqeq
-      sigmaY = dimensions == 2 ? 0 : sigma // eslint-disable-line eqeqeq
-
-    // console.log(this.filterManager.effectElements.map((el) => el.p.v))
+      dimensions = Number(this.filterManager.effectElements[1].p.v),
+      sigmaX = dimensions === 3 ? 0 : sigma,
+      sigmaY = dimensions === 2 ? 0 : sigma
 
     this.feGaussianBlur.setAttribute('stdDeviation', `${sigmaX} ${sigmaY}`)
 
@@ -916,7 +914,9 @@ export class SVGGaussianBlurEffect {
     //   0 -> off -> duplicate
     //   1 -> on  -> wrap
     const edgeMode =
-      this.filterManager.effectElements[2].p.v == 1 ? 'wrap' : 'duplicate' // eslint-disable-line eqeqeq
+      Number(this.filterManager.effectElements[2].p.v) === 1
+        ? 'wrap'
+        : 'duplicate'
     this.feGaussianBlur.setAttribute('edgeMode', edgeMode)
   }
 }

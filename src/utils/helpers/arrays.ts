@@ -45,9 +45,6 @@ const createTypedArray = (() => {
   return createRegularArray
 })()
 
-/**
- *
- */
 function createSizedArray<T = unknown>(length: number) {
   return Array.from<T>({ length })
 }

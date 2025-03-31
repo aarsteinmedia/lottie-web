@@ -131,12 +131,13 @@ export default TSESlint.config(
 
       'jsdoc/no-undefined-types': 0,
 
-      'jsdoc/require-jsdoc': [
-        'warn',
-        {
-          exemptEmptyFunctions: true,
-        },
-      ],
+      'jsdoc/require-jsdoc': 0,
+      // [
+      //   'warn',
+      //   {
+      //     exemptEmptyFunctions: true,
+      //   },
+      // ],
 
       'jsdoc/require-param-description': 0,
       'jsdoc/require-property-description': 0,

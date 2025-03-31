@@ -20,9 +20,6 @@ type Modifier =
   | typeof ZigZagModifier
   | typeof OffsetPathModifier
 
-/**
- *
- */
 export function getModifier<T extends ShapeModifierInterface>(
   nm: string,
   _elem?: ElementInterfaceIntersect,
@@ -31,9 +28,6 @@ export function getModifier<T extends ShapeModifierInterface>(
   return new Modifiers[nm]() as T
 }
 
-/**
- *
- */
 export function registerModifier(nm: string, factory: Modifier) {
   if (!Modifiers[nm]) {
     Modifiers[nm] = factory

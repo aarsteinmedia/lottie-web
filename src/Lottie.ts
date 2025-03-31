@@ -55,17 +55,12 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 
-/**
- *
- */
 export function installPlugin(type: string, plugin: ExpressionsPlugin) {
   if (type === 'expressions') {
     setExpressionsPlugin(plugin)
   }
 }
-/**
- *
- */
+
 export function setSubframeRendering(flag: boolean) {
   setSubframeEnabled(flag)
 }

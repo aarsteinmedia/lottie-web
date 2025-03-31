@@ -40,9 +40,7 @@ import TrimModifier from '@/utils/shapes/TrimModifier'
 import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
-/**
- *
- */
+
 export function setSubframeRendering(flag: boolean) {
   setSubframeEnabled(flag)
 }
