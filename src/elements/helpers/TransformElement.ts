@@ -131,13 +131,12 @@ export default class TransformElement extends BaseElement {
     )
 
     if (this.hierarchy) {
-      let mat
       const finalMat = this.finalTransform.mat
       let i = 0
-      const len = this.hierarchy.length
+      const { length } = this.hierarchy
       // Checking if any of the transformation matrices in the hierarchy chain has changed.
       if (!this.finalTransform._matMdf) {
-        while (i < len) {
+        while (i < length) {
           if (this.hierarchy[i].finalTransform?.mProp._mdf) {
             this.finalTransform._matMdf = true
             break
@@ -147,9 +146,9 @@ export default class TransformElement extends BaseElement {
       }
 
       if (this.finalTransform._matMdf) {
-        mat = this.finalTransform.mProp.v.props as unknown as number[]
-        finalMat?.cloneFromProps(mat)
-        for (i = 0; i < len; i++) {
+        const mat = this.finalTransform.mProp.v.props as unknown as number[]
+        finalMat.cloneFromProps(mat)
+        for (i = 0; i < length; i++) {
           if (this.hierarchy[i].finalTransform?.mProp.v) {
             finalMat?.multiply(this.hierarchy[i].finalTransform!.mProp.v)
           }
@@ -170,16 +169,17 @@ export default class TransformElement extends BaseElement {
     const transformEffects = this.renderableEffectsManager.getEffects(
       effectTypes.TRANSFORM_EFFECT
     )
-    if (transformEffects.length) {
-      this.localTransforms = []
-      if (this.finalTransform) {
-        this.finalTransform.localMat = new Matrix()
-      }
+    if (!transformEffects.length) {
+      return
+    }
+    this.localTransforms = []
+    if (this.finalTransform) {
+      this.finalTransform.localMat = new Matrix()
+    }
 
-      const { length } = transformEffects
-      for (let i = 0; i < length; i++) {
-        this.localTransforms.push(transformEffects[i] as unknown as Transformer)
-      }
+    const { length } = transformEffects
+    for (let i = 0; i < length; i++) {
+      this.localTransforms.push(transformEffects[i] as unknown as Transformer)
     }
   }
 }

@@ -909,7 +909,7 @@ export default class AnimationItem extends BaseEvent {
       const element = this.renderer?.getElementByPath(path)
       element?.updateDocumentData([], documentData, index)
     } catch (_error) {
-      // TODO: decide how to handle catch case
+      console.warn(_error)
     }
   }
   public waitForFontsLoaded() {

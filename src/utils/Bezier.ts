@@ -91,7 +91,7 @@ export function getNewSegment(
   pt4: number[],
   startPerc: number,
   endPerc: number,
-  bezierData: unknown
+  bezierData: ReturnType<typeof getBezierLength>
 ) {
   if (startPerc < 0) {
     // TODO:
@@ -106,29 +106,29 @@ export function getNewSegment(
   // TODO:
   // eslint-disable-next-line no-param-reassign
   endPerc = endPerc > 1 ? 1 : endPerc
-  const t1 = getDistancePerc(endPerc, bezierData)
-  const u0 = 1 - t0
-  const u1 = 1 - t1
-  const u0u0u0 = u0 * u0 * u0
-  const t0u0u0_3 = t0 * u0 * u0 * 3
-  const t0t0u0_3 = t0 * t0 * u0 * 3
-  const t0t0t0 = t0 * t0 * t0
-  //
-  const u0u0u1 = u0 * u0 * u1
-  const t0u0u1_3 = t0 * u0 * u1 + u0 * t0 * u1 + u0 * u0 * t1
-  const t0t0u1_3 = t0 * t0 * u1 + u0 * t0 * t1 + t0 * u0 * t1
-  const t0t0t1 = t0 * t0 * t1
-  //
-  const u0u1u1 = u0 * u1 * u1
-  const t0u1u1_3 = t0 * u1 * u1 + u0 * t1 * u1 + u0 * u1 * t1
-  const t0t1u1_3 = t0 * t1 * u1 + u0 * t1 * t1 + t0 * u1 * t1
-  const t0t1t1 = t0 * t1 * t1
-  //
-  const u1u1u1 = u1 * u1 * u1
-  const t1u1u1_3 = t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1
-  const t1t1u1_3 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1
-  const t1t1t1 = t1 * t1 * t1
-  const { length } = pt1
+  const t1 = getDistancePerc(endPerc, bezierData),
+    u0 = 1 - t0,
+    u1 = 1 - t1,
+    u0u0u0 = u0 * u0 * u0,
+    t0u0u0_3 = t0 * u0 * u0 * 3,
+    t0t0u0_3 = t0 * t0 * u0 * 3,
+    t0t0t0 = t0 * t0 * t0,
+    //
+    u0u0u1 = u0 * u0 * u1,
+    t0u0u1_3 = t0 * u0 * u1 + u0 * t0 * u1 + u0 * u0 * t1,
+    t0t0u1_3 = t0 * t0 * u1 + u0 * t0 * t1 + t0 * u0 * t1,
+    t0t0t1 = t0 * t0 * t1,
+    //
+    u0u1u1 = u0 * u1 * u1,
+    t0u1u1_3 = t0 * u1 * u1 + u0 * t1 * u1 + u0 * u1 * t1,
+    t0t1u1_3 = t0 * t1 * u1 + u0 * t1 * t1 + t0 * u1 * t1,
+    t0t1t1 = t0 * t1 * t1,
+    //
+    u1u1u1 = u1 * u1 * u1,
+    t1u1u1_3 = t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1,
+    t1t1u1_3 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1,
+    t1t1t1 = t1 * t1 * t1,
+    { length } = pt1
   for (let i = 0; i < length; i++) {
     bezierSegmentPoints[i * 4] =
       Math.round(
@@ -176,26 +176,26 @@ export function getPointInSegment(
   pt3: Vector2,
   pt4: Vector2,
   percent: number,
-  bezierData: unknown
+  bezierData: ReturnType<typeof getBezierLength>
 ): Vector2 {
-  const t1 = getDistancePerc(percent, bezierData)
-  const u1 = 1 - t1
-  const ptX =
-    Math.round(
-      (u1 * u1 * u1 * pt1[0] +
-        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
-        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
-        t1 * t1 * t1 * pt2[0]) *
-        1000
-    ) / 1000
-  const ptY =
-    Math.round(
-      (u1 * u1 * u1 * pt1[1] +
-        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
-        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
-        t1 * t1 * t1 * pt2[1]) *
-        1000
-    ) / 1000
+  const t1 = getDistancePerc(percent, bezierData),
+    u1 = 1 - t1,
+    ptX =
+      Math.round(
+        (u1 * u1 * u1 * pt1[0] +
+          (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
+          (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
+          t1 * t1 * t1 * pt2[0]) *
+          1000
+      ) / 1000,
+    ptY =
+      Math.round(
+        (u1 * u1 * u1 * pt1[1] +
+          (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
+          (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
+          t1 * t1 * t1 * pt2[1]) *
+          1000
+      ) / 1000
   return [ptX, ptY]
 }
 
@@ -270,14 +270,14 @@ export function pointOnLine3D(
     return pointOnLine2D(x1, y1, x2, y2, x3, y3)
   }
   const dist1 = Math.sqrt(
-    Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)
-  )
-  const dist2 = Math.sqrt(
-    Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2) + Math.pow(z3 - z1, 2)
-  )
-  const dist3 = Math.sqrt(
-    Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) + Math.pow(z3 - z2, 2)
-  )
+      Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)
+    ),
+    dist2 = Math.sqrt(
+      Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2) + Math.pow(z3 - z1, 2)
+    ),
+    dist3 = Math.sqrt(
+      Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) + Math.pow(z3 - z2, 2)
+    )
   let diffDist: number
   if (dist1 > dist2) {
     if (dist1 > dist3) {
@@ -303,18 +303,18 @@ function getBezierLength(
   pt4: Vector2
 ) {
   const curveSegments = getDefaultCurveSegments()
-  let ptCoord
-  let perc
-  let addedLength = 0
-  let ptDistance
-  const point = []
-  const lastPoint = []
-  const lengthData: {
-    percents: number[]
-    lengths: number[]
-    addedLength: number
-  } = bezierLengthPool.newElement()
-  const len = pt3.length
+  let ptCoord,
+    perc,
+    addedLength = 0,
+    ptDistance
+  const point = [],
+    lastPoint = [],
+    lengthData: {
+      percents: number[]
+      lengths: number[]
+      addedLength: number
+    } = bezierLengthPool.newElement(),
+    len = pt3.length
   for (let k = 0; k < curveSegments; k++) {
     perc = k / (curveSegments - 1)
     ptDistance = 0
@@ -344,14 +344,19 @@ function getBezierLength(
 /**
  *
  */
-function getDistancePerc(perc: number, bezierData: any) {
-  const percents = bezierData.percents
-  const lengths = bezierData.lengths
-  const len = percents.length
-  let initPos = Math.floor((len - 1) * perc)
-  const lengthPos = perc * bezierData.addedLength
+function getDistancePerc(
+  perc: number,
+  { addedLength, lengths, percents }: ReturnType<typeof getBezierLength>
+) {
+  const { length } = percents
+  let initPos = Math.floor((length - 1) * perc)
+  const lengthPos = perc * addedLength
   let lPerc = 0
-  if (initPos === len - 1 || initPos === 0 || lengthPos === lengths[initPos]) {
+  if (
+    initPos === length - 1 ||
+    initPos === 0 ||
+    lengthPos === lengths[initPos]
+  ) {
     return percents[initPos]
   }
   const dir = lengths[initPos] > lengthPos ? -1 : 1
@@ -365,9 +370,9 @@ function getDistancePerc(perc: number, bezierData: any) {
     } else {
       initPos += dir
     }
-    if (initPos < 0 || initPos >= len - 1) {
+    if (initPos < 0 || initPos >= length - 1) {
       // FIX for TypedArrays that don't store floating point values with enough accuracy
-      if (initPos === len - 1) {
+      if (initPos === length - 1) {
         return percents[initPos]
       }
       flag = false

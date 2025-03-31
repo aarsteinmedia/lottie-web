@@ -57,8 +57,13 @@ export default class SVGRendererBase extends BaseRenderer {
 
   override buildItem(pos: number) {
     if (!this.layers) {
-      throw new Error(`${this.constructor.name}: Can't access layers`)
+      throw new Error(`${this.constructor.name}: layers it not implemented`)
     }
+
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData it not implemented`)
+    }
+
     const elements = this.elements
     if (elements[pos] || this.layers[pos].ty === 99) {
       return
@@ -66,11 +71,6 @@ export default class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    if (!this.createItem) {
-      throw new Error(
-        `${this.constructor.name}: Method createItem is not initialized`
-      )
-    }
     const element = this.createItem(this.layers[pos])
 
     if (!element) {
@@ -80,7 +80,7 @@ export default class SVGRendererBase extends BaseRenderer {
     elements[pos] = element as ElementInterfaceIntersect
     if (getExpressionsPlugin()) {
       if (this.layers[pos].ty === 0) {
-        this.globalData?.projectInterface.registerComposition(element)
+        this.globalData.projectInterface.registerComposition(element)
       }
       element.initExpressions()
     }
@@ -99,25 +99,17 @@ export default class SVGRendererBase extends BaseRenderer {
           (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
-        if (!this.addPendingElement) {
-          throw new Error(
-            `${this.constructor.name}: Method addPendingElement is not initialized`
-          )
-        }
         this.addPendingElement(element as ElementInterfaceIntersect)
         return
       }
-      const matteElement = elements![elementIndex]
-      // if (!matteElement.getMatte) {
-      //   matteElement.getMatte = this.svgBaseElement.getMatte
-      // }
-      const matteMask = matteElement.getMatte(this.layers[pos].tt)
+      const matteElement = elements![elementIndex],
+        matteMask = matteElement.getMatte(this.layers[pos].tt)
       element.setMatte(matteMask)
     }
   }
 
   override checkPendingElements() {
-    while (this.pendingElements?.length) {
+    while (this.pendingElements.length) {
       const element = this.pendingElements.pop()
       element?.checkParenting()
       if (element?.data?.tt) {
