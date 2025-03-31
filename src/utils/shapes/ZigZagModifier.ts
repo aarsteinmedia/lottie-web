@@ -7,6 +7,7 @@ import {
   ElementInterfaceIntersect,
   Shape,
   Vector2,
+  VectorProperty,
 } from '@/types'
 import { getProjectingAngle, setPoint } from '@/utils'
 import { newElement } from '@/utils/pooling/ShapePool'
@@ -112,14 +113,14 @@ export default class ZigZagModifier extends ShapeModifier {
     ) as ValueProperty
     this.frequency = PropertyFactory(
       elem,
-      data.r,
+      data.r as unknown as VectorProperty<number>, // TODO: Fix typing
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.pointsType = PropertyFactory(
       elem,
-      data.pt,
+      data.pt as unknown as VectorProperty<number>, // TODO: Fix typing
       0,
       null,
       this as unknown as ElementInterfaceIntersect

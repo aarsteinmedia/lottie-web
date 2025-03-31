@@ -6,6 +6,7 @@ import type {
   Shape,
   StrokeData,
   Vector2,
+  VectorProperty,
 } from '@/types'
 import type {
   MultiDimensionalProperty,
@@ -336,7 +337,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
     ) as MultiDimensionalProperty<Vector2>
     this.r = PropertyFactory(
       elem,
-      data.r,
+      data.r as unknown as VectorProperty<number[]>, // TODO: Find out if typing is wrong
       0,
       0,
       this as unknown as ElementInterfaceIntersect
@@ -878,7 +879,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     super()
     this.propType = 'shape'
     this.comp = elem.comp
-    this.container = elem as any
+    this.container = elem as ElementInterfaceIntersect
     this.elem = elem
     this.data = data
     this.k = false

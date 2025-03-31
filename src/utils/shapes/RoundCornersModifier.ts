@@ -1,4 +1,9 @@
-import type { ElementInterfaceIntersect, Shape, Vector2 } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  Shape,
+  Vector2,
+  VectorProperty,
+} from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -17,7 +22,7 @@ export default class RoundCornersModifier extends ShapeModifier {
     this.getValue = this.processKeys
     this.rd = PropertyFactory(
       elem,
-      data.r,
+      data.r as unknown as VectorProperty, // TODO: Find out if typing is wrong
       0,
       null,
       this as unknown as ElementInterfaceIntersect

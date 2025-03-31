@@ -70,6 +70,11 @@ export default abstract class BaseElement {
     )
   }
   initExpressions() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     const ExpressionsInterfaces = getExpressionInterfaces()
     if (!ExpressionsInterfaces) {
       return
@@ -90,11 +95,11 @@ export default abstract class BaseElement {
       )
     this.layerInterface?.registerEffectsInterface?.(effectsInterface)
 
-    if (this.data?.ty === 0 || this.data?.xt) {
+    if (this.data.ty === 0 || this.data.xt) {
       this.compInterface = (CompExpressionInterface as any)(this)
       return
     }
-    if (this.data?.ty === 4) {
+    if (this.data.ty === 4) {
       this.layerInterface!.shapeInterface = (ShapeExpressionInterface as any)(
         this.shapesData,
         this.itemsData,
@@ -103,7 +108,7 @@ export default abstract class BaseElement {
       this.layerInterface!.content = this.layerInterface?.shapeInterface
       return
     }
-    if (this.data?.ty === 5) {
+    if (this.data.ty === 5) {
       this.layerInterface!.textInterface = (TextExpressionInterface as any)(
         this
       )
@@ -114,8 +119,11 @@ export default abstract class BaseElement {
     const blendModeValue = getBlendMode(this.data?.bm),
       elem = this.baseElement || this.layerElement
 
-    if (elem) {
-      elem.style.mixBlendMode = blendModeValue
+    if (!elem) {
+      throw new Error(
+        `${this.constructor.name}: Both baseElement and layerElement are not implemented`
+      )
     }
+    elem.style.mixBlendMode = blendModeValue
   }
 }

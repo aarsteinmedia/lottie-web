@@ -112,21 +112,3 @@ export default class CompElement extends RenderableDOMElement {
     this.elements = elems
   }
 }
-
-// const props = Object.getOwnPropertyNames(TransformElement.prototype),
-//   sorted = props.sort((a, b) => {
-//     if (a < b) {
-//       return -1
-//     }
-//     if (a > b) {
-//       return 1
-//     }
-//     return 0
-//   })
-
-// for (const s of sorted) {
-//   if (s === 'constructor') {
-//     continue
-//   }
-//   console.log(s)
-// }

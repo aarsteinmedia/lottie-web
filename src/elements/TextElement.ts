@@ -119,17 +119,7 @@ export default class TextElement extends RenderableDOMElement {
     this.initTransform()
     this.initHierarchy()
     this.initRenderable()
-    if (!this.initRendererElement) {
-      throw new Error(
-        `${this.constructor.name}: Method initRendererElement is not implemented`
-      )
-    }
     this.initRendererElement()
-    if (!this.createContainerElements) {
-      throw new Error(
-        `${this.constructor.name}: Method createContainerElements is not implemented`
-      )
-    }
     this.createContainerElements()
     this.createRenderableComponents()
     this.createContent()

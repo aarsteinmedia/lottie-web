@@ -1,4 +1,8 @@
-import type { ElementInterfaceIntersect, Vector2 } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  Vector2,
+  VectorProperty,
+} from '@/types'
 import type {
   MultiDimensionalProperty,
   NoProperty,
@@ -40,7 +44,7 @@ export default class TextAnimatorDataProperty {
       a: textAnimatorAnimatables?.a
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.a,
+            textAnimatorAnimatables.a as unknown as VectorProperty,
             1,
             0,
             container
@@ -49,7 +53,7 @@ export default class TextAnimatorDataProperty {
       fb: textAnimatorAnimatables?.fb
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.fb,
+            textAnimatorAnimatables.fb as unknown as VectorProperty,
             0,
             0.01,
             container
@@ -58,7 +62,7 @@ export default class TextAnimatorDataProperty {
       fc: textAnimatorAnimatables?.fc
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.fc,
+            textAnimatorAnimatables.fc as unknown as VectorProperty,
             1,
             0,
             container
@@ -67,7 +71,7 @@ export default class TextAnimatorDataProperty {
       fh: textAnimatorAnimatables?.fh
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.fh,
+            textAnimatorAnimatables.fh as unknown as VectorProperty,
             0,
             0,
             container
@@ -76,7 +80,7 @@ export default class TextAnimatorDataProperty {
       fs: textAnimatorAnimatables?.fs
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.fs,
+            textAnimatorAnimatables.fs as unknown as VectorProperty,
             0,
             0.01,
             container
@@ -85,7 +89,7 @@ export default class TextAnimatorDataProperty {
       o: textAnimatorAnimatables?.o
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.o,
+            textAnimatorAnimatables.o as unknown as VectorProperty,
             0,
             0.01,
             container
@@ -94,7 +98,7 @@ export default class TextAnimatorDataProperty {
       p: textAnimatorAnimatables?.p
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.p,
+            textAnimatorAnimatables.p as unknown as VectorProperty,
             1,
             0,
             container
@@ -103,7 +107,7 @@ export default class TextAnimatorDataProperty {
       r: textAnimatorAnimatables?.r
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.r,
+            textAnimatorAnimatables.r as unknown as VectorProperty,
             0,
             degToRads,
             container
@@ -112,7 +116,7 @@ export default class TextAnimatorDataProperty {
       rx: textAnimatorAnimatables?.rx
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.rx,
+            textAnimatorAnimatables.rx as unknown as VectorProperty,
             0,
             degToRads,
             container
@@ -121,7 +125,7 @@ export default class TextAnimatorDataProperty {
       ry: textAnimatorAnimatables?.ry
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.ry,
+            textAnimatorAnimatables.ry as unknown as VectorProperty,
             0,
             degToRads,
             container
@@ -130,7 +134,7 @@ export default class TextAnimatorDataProperty {
       s: textAnimatorAnimatables?.s
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.s,
+            textAnimatorAnimatables.s as unknown as VectorProperty,
             1,
             0.01,
             container
@@ -139,7 +143,7 @@ export default class TextAnimatorDataProperty {
       sa: textAnimatorAnimatables?.sa
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.sa,
+            textAnimatorAnimatables.sa as unknown as VectorProperty,
             0,
             degToRads,
             container
@@ -148,7 +152,7 @@ export default class TextAnimatorDataProperty {
       sc: textAnimatorAnimatables?.sc
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.sc,
+            textAnimatorAnimatables.sc as unknown as VectorProperty,
             1,
             0,
             container
@@ -157,7 +161,7 @@ export default class TextAnimatorDataProperty {
       sk: textAnimatorAnimatables?.sk
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.sk,
+            textAnimatorAnimatables.sk as unknown as VectorProperty,
             0,
             degToRads,
             container
@@ -166,7 +170,7 @@ export default class TextAnimatorDataProperty {
       sw: textAnimatorAnimatables?.sw
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.sw,
+            textAnimatorAnimatables.sw as unknown as VectorProperty,
             0,
             0,
             container
@@ -175,7 +179,7 @@ export default class TextAnimatorDataProperty {
       t: textAnimatorAnimatables?.t
         ? (PropertyFactory(
             elem,
-            textAnimatorAnimatables.t,
+            textAnimatorAnimatables.t as unknown as VectorProperty,
             0,
             0,
             container

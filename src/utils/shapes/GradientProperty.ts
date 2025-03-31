@@ -1,4 +1,9 @@
-import type { ElementInterfaceIntersect, GradientColor } from '@/types'
+import type {
+  ElementInterfaceIntersect,
+  GradientColor,
+  Stop,
+  VectorProperty,
+} from '@/types'
 
 import { ArrayType } from '@/enums'
 import { isArrayOfNum } from '@/utils'
@@ -24,8 +29,8 @@ export default class GradientProperty extends DynamicPropertyContainer {
     super()
     this.data = data
     this.c = createTypedArray(ArrayType.Uint8c, data.p * 4) as Uint8ClampedArray
-    const cLength = data.k.k[0].s
-      ? data.k.k[0].s.length - data.p * 4
+    const cLength = (data.k.k as Stop[])[0].s
+      ? (data.k.k as Stop[])[0].s.length - data.p * 4
       : data.k.k.length - data.p * 4
     this.o = createTypedArray(ArrayType.Float32, cLength) as Float32Array
     this._cmdf = false
@@ -35,7 +40,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this.initDynamicPropertyContainer(container)
     this.prop = PropertyFactory(
       elem,
-      data.k,
+      data.k as VectorProperty<number[]>,
       1,
       null,
       this as unknown as ElementInterfaceIntersect
@@ -48,16 +53,18 @@ export default class GradientProperty extends DynamicPropertyContainer {
     if (this.o.length / 2 !== this.c.length / 4) {
       return false
     }
-    if (this.data.k.k[0].s) {
+    if ((this.data.k.k as Stop[])[0].s) {
       let i = 0
       const len = this.data.k.k.length
       while (i < len) {
-        if (!this.comparePoints(this.data.k.k[i].s, this.data.p)) {
+        if (!this.comparePoints((this.data.k.k as Stop[])[i].s, this.data.p)) {
           return false
         }
         i++
       }
-    } else if (!this.comparePoints(this.data.k.k as any, this.data.p)) {
+    } else if (
+      !this.comparePoints(this.data.k.k as unknown as number[], this.data.p)
+    ) {
       return false
     }
     return true

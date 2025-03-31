@@ -1,4 +1,4 @@
-import type { ElementInterfaceIntersect, Shape } from '@/types'
+import type { ElementInterfaceIntersect, Shape, VectorProperty } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
 import { shapeSegment, shapeSegmentInverted } from '@/elements/PolynomialBezier'
@@ -32,7 +32,7 @@ export default class OffsetPathModifier extends ShapeModifier {
     ) as ValueProperty
     this.miterLimit = PropertyFactory(
       elem,
-      data.ml,
+      data.ml as unknown as VectorProperty, // TODO: Find if typing is wrong
       0,
       null,
       this as unknown as ElementInterfaceIntersect

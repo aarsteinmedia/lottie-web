@@ -3,7 +3,6 @@ import type { ElementInterfaceIntersect } from '@/types'
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGEffects from '@/elements/svg/SVGEffects'
-// import BaseRenderer from '@/renderers/BaseRenderer'
 import { createNS } from '@/utils'
 import {
   createAlphaToLuminanceFilter,
@@ -144,102 +143,101 @@ export default class SVGBaseElement extends RenderableDOMElement {
     if (!this.matteMasks) {
       this.matteMasks = {}
     }
-    const featureSupport = new FeatureSupport()
-    if (!this.matteMasks[matteType]) {
-      const id = `${this.layerId}_${matteType}`
-      let filId, fil, useElement, gg
+    if (this.matteMasks[matteType]) {
+      return this.matteMasks[matteType]
+    }
+    const featureSupport = new FeatureSupport(),
+      id = `${this.layerId}_${matteType}`
+    let filId, fil, useElement, gg
 
-      switch (matteType) {
-        case 1:
-        case 3:
-          {
-            const masker = createNS('mask')
-            masker?.setAttribute('id', id)
-            masker?.setAttribute(
-              'mask-type',
-              matteType === 3 ? 'luminance' : 'alpha'
-            )
-            useElement = createNS('use')
-            useElement?.setAttributeNS(
-              'http://www.w3.org/1999/xlink',
-              'href',
-              `#${this.layerId}`
-            )
-            masker.appendChild(useElement)
-            this.globalData?.defs.appendChild(masker)
-            if (!featureSupport.maskType && matteType === 1) {
-              masker.setAttribute('mask-type', 'luminance')
-              filId = createElementID()
-              fil = createFilter(filId)
-              this.globalData?.defs.appendChild(fil)
-              fil.appendChild(createAlphaToLuminanceFilter())
-              gg = createNS<SVGGElement>('g')
-              gg?.appendChild(useElement)
-              masker.appendChild(gg)
-              gg?.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
-            }
-          }
-          break
-        case 2: {
-          const maskGroup = createNS<SVGMaskElement>('mask')
-          maskGroup.setAttribute('id', id)
-          maskGroup.setAttribute('mask-type', 'alpha')
-          const maskGrouper = createNS<SVGGElement>('g')
-          maskGroup.appendChild(maskGrouper)
-          filId = createElementID()
-          fil = createFilter(filId)
-          // / /
-          const feCTr = createNS<SVGFEComponentTransferElement>(
-            'feComponentTransfer'
+    switch (matteType) {
+      case 1:
+      case 3:
+        {
+          const masker = createNS('mask')
+          masker?.setAttribute('id', id)
+          masker?.setAttribute(
+            'mask-type',
+            matteType === 3 ? 'luminance' : 'alpha'
           )
-          feCTr.setAttribute('in', 'SourceGraphic')
-          fil.appendChild(feCTr)
-          const feFunc = createNS('feFuncA')
-          feFunc.setAttribute('type', 'table')
-          feFunc.setAttribute('tableValues', '1.0 0.0')
-          feCTr.appendChild(feFunc)
-          // / /
-          this.globalData?.defs.appendChild(fil)
-          const alphaRect = createNS<SVGRectElement>('rect')
-          if (!alphaRect) {
-            throw new Error(
-              `${this.constructor.name}: Could not create RECT element`
-            )
-          }
-          alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
-          alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
-          alphaRect.setAttribute('x', '0')
-          alphaRect.setAttribute('y', '0')
-          alphaRect.setAttribute('fill', '#ffffff')
-          alphaRect.setAttribute('opacity', '0')
-          maskGrouper.setAttribute(
-            'filter',
-            `url(${getLocationHref()}#${filId})`
-          )
-          maskGrouper.appendChild(alphaRect)
           useElement = createNS('use')
-          useElement.setAttributeNS(
+          useElement?.setAttributeNS(
             'http://www.w3.org/1999/xlink',
             'href',
             `#${this.layerId}`
           )
-          maskGrouper.appendChild(useElement)
-          if (!featureSupport.maskType) {
-            maskGroup.setAttribute('mask-type', 'luminance')
-            fil.appendChild(createAlphaToLuminanceFilter())
-            gg = createNS<SVGGElement>('g')
-            maskGrouper.appendChild(alphaRect)
-            if (this.layerElement) {
-              gg.appendChild(this.layerElement)
-            }
-
-            maskGrouper.appendChild(gg)
+          masker.appendChild(useElement)
+          this.globalData?.defs.appendChild(masker)
+          if (featureSupport.maskType || matteType !== 1) {
+            break
           }
-          this.globalData?.defs.appendChild(maskGroup)
+          masker.setAttribute('mask-type', 'luminance')
+          filId = createElementID()
+          fil = createFilter(filId)
+          this.globalData?.defs.appendChild(fil)
+          fil.appendChild(createAlphaToLuminanceFilter())
+          gg = createNS<SVGGElement>('g')
+          gg?.appendChild(useElement)
+          masker.appendChild(gg)
+          gg?.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
         }
+        break
+      case 2: {
+        const maskGroup = createNS<SVGMaskElement>('mask')
+        maskGroup.setAttribute('id', id)
+        maskGroup.setAttribute('mask-type', 'alpha')
+        const maskGrouper = createNS<SVGGElement>('g')
+        maskGroup.appendChild(maskGrouper)
+        filId = createElementID()
+        fil = createFilter(filId)
+        // / /
+        const feCTr = createNS<SVGFEComponentTransferElement>(
+          'feComponentTransfer'
+        )
+        feCTr.setAttribute('in', 'SourceGraphic')
+        fil.appendChild(feCTr)
+        const feFunc = createNS('feFuncA')
+        feFunc.setAttribute('type', 'table')
+        feFunc.setAttribute('tableValues', '1.0 0.0')
+        feCTr.appendChild(feFunc)
+        // / /
+        this.globalData?.defs.appendChild(fil)
+        const alphaRect = createNS<SVGRectElement>('rect')
+        if (!alphaRect) {
+          throw new Error(
+            `${this.constructor.name}: Could not create RECT element`
+          )
+        }
+        alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
+        alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
+        alphaRect.setAttribute('x', '0')
+        alphaRect.setAttribute('y', '0')
+        alphaRect.setAttribute('fill', '#ffffff')
+        alphaRect.setAttribute('opacity', '0')
+        maskGrouper.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
+        maskGrouper.appendChild(alphaRect)
+        useElement = createNS('use')
+        useElement.setAttributeNS(
+          'http://www.w3.org/1999/xlink',
+          'href',
+          `#${this.layerId}`
+        )
+        maskGrouper.appendChild(useElement)
+        if (!featureSupport.maskType) {
+          maskGroup.setAttribute('mask-type', 'luminance')
+          fil.appendChild(createAlphaToLuminanceFilter())
+          gg = createNS<SVGGElement>('g')
+          maskGrouper.appendChild(alphaRect)
+          if (this.layerElement) {
+            gg.appendChild(this.layerElement)
+          }
+
+          maskGrouper.appendChild(gg)
+        }
+        this.globalData?.defs.appendChild(maskGroup)
       }
-      this.matteMasks[matteType] = id
     }
+    this.matteMasks[matteType] = id
     return this.matteMasks[matteType]
   }
   override initRendererElement() {

@@ -8,7 +8,6 @@ import type {
 import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 import AudioElement from '@/elements/AudioElement'
-// import BaseElement from '@/elements/BaseElement'
 import FootageElement from '@/elements/FootageElement'
 import FrameElement from '@/elements/helpers/FrameElement'
 import HierarchyElement from '@/elements/helpers/HierarchyElement'
@@ -248,7 +247,7 @@ export default class BaseRenderer extends FrameElement {
 
   setProjectInterface(pInterface: typeof ProjectInterface | null) {
     if (!this.globalData) {
-      return
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     this.globalData.projectInterface = pInterface
   }

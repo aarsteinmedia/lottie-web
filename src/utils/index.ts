@@ -60,11 +60,11 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     if (length === 0) {
       return ''
     }
-    const _o = pathNodes.o
-    const _i = pathNodes.i
-    const _v = pathNodes.v
-    let i
-    let shapeString = ` M${mat.applyToPointStringified(_v[0][0], _v[0][1])}`
+    const _o = pathNodes.o,
+      _i = pathNodes.i,
+      _v = pathNodes.v
+    let i,
+      shapeString = ` M${mat.applyToPointStringified(_v[0][0], _v[0][1])}`
     for (i = 1; i < length; i++) {
       shapeString += ` C${mat.applyToPointStringified(
         _o[i - 1][0],
@@ -111,19 +111,19 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return document.createElement(type) as T
   },
   createQuaternion = (values: Vector3): Vector4 => {
-    const heading = values[0] * degToRads
-    const attitude = values[1] * degToRads
-    const bank = values[2] * degToRads
-    const c1 = Math.cos(heading / 2)
-    const c2 = Math.cos(attitude / 2)
-    const c3 = Math.cos(bank / 2)
-    const s1 = Math.sin(heading / 2)
-    const s2 = Math.sin(attitude / 2)
-    const s3 = Math.sin(bank / 2)
-    const w = c1 * c2 * c3 - s1 * s2 * s3
-    const x = s1 * s2 * c3 + c1 * c2 * s3
-    const y = s1 * c2 * c3 + c1 * s2 * s3
-    const z = c1 * s2 * c3 - s1 * c2 * s3
+    const heading = values[0] * degToRads,
+      attitude = values[1] * degToRads,
+      bank = values[2] * degToRads,
+      c1 = Math.cos(heading / 2),
+      c2 = Math.cos(attitude / 2),
+      c3 = Math.cos(bank / 2),
+      s1 = Math.sin(heading / 2),
+      s2 = Math.sin(attitude / 2),
+      s3 = Math.sin(bank / 2),
+      w = c1 * c2 * c3 - s1 * s2 * s3,
+      x = s1 * s2 * c3 + c1 * c2 * s3,
+      y = s1 * c2 * c3 + c1 * s2 * s3,
+      z = c1 * s2 * c3 - s1 * c2 * s3
 
     return [x, y, z, w]
   },
@@ -190,10 +190,10 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   //       return null
   //   }
   // },
-  getIntersection = (a: any, b: any) => {
+  getIntersection = (a: PolynomialBezier, b: PolynomialBezier) => {
     const intersect = a.intersections(b)
 
-    if (intersect.length && floatEqual(intersect[0][0], 1)) {
+    if (intersect.length && floatEqual((intersect as any)[0][0], 1)) {
       intersect.shift()
     }
 
@@ -204,20 +204,20 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return null
   },
   getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
-    const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]]
-    const rot = -Math.PI * 0.5
-    const rotatedVector = [
-      Math.cos(rot) * vector[0] - Math.sin(rot) * vector[1],
-      Math.sin(rot) * vector[0] + Math.cos(rot) * vector[1],
-    ]
+    const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
+      rot = -Math.PI * 0.5,
+      rotatedVector = [
+        Math.cos(rot) * vector[0] - Math.sin(rot) * vector[1],
+        Math.sin(rot) * vector[0] + Math.cos(rot) * vector[1],
+      ]
     return rotatedVector
   },
   getProjectingAngle = (path: ShapePath, cur: number) => {
-    const prevIndex = cur === 0 ? path.length() - 1 : cur - 1
-    const nextIndex = (cur + 1) % path.length()
-    const prevPoint = path.v[prevIndex]
-    const nextPoint = path.v[nextIndex]
-    const pVector = getPerpendicularVector(prevPoint!, nextPoint!)
+    const prevIndex = cur === 0 ? path.length() - 1 : cur - 1,
+      nextIndex = (cur + 1) % path.length(),
+      prevPoint = path.v[prevIndex],
+      nextPoint = path.v[nextIndex],
+      pVector = getPerpendicularVector(prevPoint!, nextPoint!)
     return Math.atan2(0, 1) - Math.atan2(pVector[1], pVector[0])
   },
   handleErrors = (err: unknown) => {
@@ -240,14 +240,14 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return (lastDotIndex ?? 0) > 1 && path.length - 1 > (lastDotIndex ?? 0)
   },
   HSVtoRGB = (h: number, s: number, v: number): Vector3 => {
-    let r = 0
-    let g = 0
-    let b = 0
-    const i = Math.floor(h * 6)
-    const f = h * 6 - i
-    const p = v * (1 - s)
-    const q = v * (1 - f * s)
-    const t = v * (1 - (1 - f) * s)
+    let r = 0,
+      g = 0,
+      b = 0
+    const i = Math.floor(h * 6),
+      f = h * 6 - i,
+      p = v * (1 - s),
+      q = v * (1 - f * s),
+      t = v * (1 - (1 - f) * s)
     switch (i % 6) {
       case 0:
         r = v
@@ -285,7 +285,11 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return [r, g, b]
   },
   inBrowser = () => typeof navigator !== 'undefined',
-  intersectData = (bez: any, t1: number, t2: number): IntersectData => {
+  intersectData = (
+    bez: PolynomialBezier,
+    t1: number,
+    t2: number
+  ): IntersectData => {
     const box = bez.boundingBox()
     return {
       bez,
@@ -388,8 +392,8 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     lineJoin: number,
     miterLimit: number
   ) => {
-    const p0: Vector2 = seg1.points[3]
-    const p1: Vector2 = seg2.points[0]
+    const p0: Vector2 = seg1.points[3],
+      p1: Vector2 = seg2.points[0]
 
     // Bevel
     if (lineJoin === 3) {
@@ -403,17 +407,15 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     // Round
     if (lineJoin === 2) {
-      const angleOut = -seg1.tangentAngle(1)
-      const angleIn = -seg2.tangentAngle(0) + Math.PI
-      const center = lineIntersection(
-        p0,
-        polarOffset(p0, angleOut + Math.PI / 2, 100) as Vector2,
-        p1,
-        polarOffset(p1, angleOut + Math.PI / 2, 100) as Vector2
-      )
-      const radius = center
-        ? pointDistance(center, p0)
-        : pointDistance(p0, p1) / 2
+      const angleOut = -seg1.tangentAngle(1),
+        angleIn = -seg2.tangentAngle(0) + Math.PI,
+        center = lineIntersection(
+          p0,
+          polarOffset(p0, angleOut + Math.PI / 2, 100) as Vector2,
+          p1,
+          polarOffset(p1, angleOut + Math.PI / 2, 100) as Vector2
+        ),
+        radius = center ? pointDistance(center, p0) : pointDistance(p0, p1) / 2
 
       let tan = polarOffset(p0, angleOut, 2 * radius * roundCorner)
       outputBezier.setXYAt(tan[0], tan[1], 'o', outputBezier.length() - 1)
@@ -467,12 +469,12 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     start2: Vector2,
     end2: Vector2
   ): Vector2 | null => {
-    const v1 = [start1[0], start1[1], 1]
-    const v2 = [end1[0], end1[1], 1]
-    const v3 = [start2[0], start2[1], 1]
-    const v4 = [end2[0], end2[1], 1]
-
-    const r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
+    const v1 = [start1[0], start1[1], 1],
+      v2 = [end1[0], end1[1], 1],
+      v3 = [start2[0], start2[1], 1],
+      v4 = [end2[0], end2[1], 1],
+      //
+      r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
 
     if (floatZero(r[2])) {
       return null
@@ -638,20 +640,21 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return segments
   },
+  // TODO: Find use case and test
   pruneSegmentIntersection = (a: any[], b: any[]) => {
-    const outa = a.slice()
-    const outb = b.slice()
+    const outa = a.slice(),
+      outb = b.slice()
     let intersect = getIntersection(a[a.length - 1], b[0])
     if (intersect) {
-      outa[a.length - 1] = a[a.length - 1].split(intersect[0])[0]
-      outb[0] = b[0].split(intersect[1])[1]
+      outa[a.length - 1] = a[a.length - 1].split((intersect as any)[0])[0]
+      outb[0] = b[0].split((intersect as any)[1])[1]
     }
     if (a.length > 1 && b.length > 1) {
       intersect = getIntersection(a[0], b[b.length - 1])
       if (intersect) {
         return [
-          [a[0].split(intersect[0])[0]],
-          [b[b.length - 1].split(intersect[1])[1]],
+          [a[0].split((intersect as any)[0])[0]],
+          [b[b.length - 1].split((intersect as any)[1])[1]],
         ]
       }
     }
@@ -773,21 +776,21 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   singlePoint = (p: Vector2) => new PolynomialBezier(p, p, p, p, false),
   // based on @Toji's https://github.com/toji/gl-matrix/
   slerp = (a: Vector4, b: Vector4, t: number): Vector4 => {
-    const out: Vector4 = [0, 0, 0, 0]
-    const ax = a[0]
-    const ay = a[1]
-    const az = a[2]
-    const aw = a[3]
-    let bx = b[0]
-    let by = b[1]
-    let bz = b[2]
-    let bw = b[3]
-
-    let omega
-    let cosom: number
-    let sinom
-    let scale0
-    let scale1
+    const out: Vector4 = [0, 0, 0, 0],
+      ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3]
+    let bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3],
+      //
+      omega,
+      cosom: number,
+      sinom,
+      scale0,
+      scale1
 
     cosom = ax * bx + ay * by + az * bz + aw * bw
     if (cosom < 0.0) {

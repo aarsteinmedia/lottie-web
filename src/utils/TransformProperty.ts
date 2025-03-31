@@ -3,6 +3,7 @@ import type {
   Shape,
   Vector2,
   Vector3,
+  VectorProperty,
 } from '@/types'
 import type {
   MultiDimensionalProperty,
@@ -117,7 +118,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
       }
       this.or = PropertyFactory(
         elem,
-        data.or,
+        data.or as VectorProperty<number[]>,
         1,
         degToRads,
         this as unknown as ElementInterfaceIntersect

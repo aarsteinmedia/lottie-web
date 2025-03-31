@@ -61,22 +61,23 @@ export default class DashProperty extends DynamicPropertyContainer {
 
     this.iterateDynamicProperties()
     this._mdf = this._mdf || !!forceRender
-    if (this._mdf) {
-      const len = this.dataProps.length
+    if (!this._mdf) {
+      return
+    }
+    const len = this.dataProps.length
+    if (this.renderer === RendererType.SVG) {
+      this.dashStr = ''
+    }
+    for (let i = 0; i < len; i++) {
+      if (this.dataProps[i].n === 'o') {
+        this.dashoffset[0] = this.dataProps[i].p.v as number
+        continue
+      }
       if (this.renderer === RendererType.SVG) {
-        this.dashStr = ''
+        this.dashStr += ` ${this.dataProps[i].p.v}`
+        continue
       }
-      for (let i = 0; i < len; i++) {
-        if (this.dataProps[i].n === 'o') {
-          this.dashoffset[0] = this.dataProps[i].p.v as number
-          continue
-        }
-        if (this.renderer === RendererType.SVG) {
-          this.dashStr += ` ${this.dataProps[i].p.v}`
-          continue
-        }
-        this.dashArray[i] = this.dataProps[i].p.v as number
-      }
+      this.dashArray[i] = this.dataProps[i].p.v as number
     }
   }
 }

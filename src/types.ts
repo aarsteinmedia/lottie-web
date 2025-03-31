@@ -56,7 +56,7 @@ import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty
 import type TextProperty from '@/utils/text/TextProperty'
 import type TransformProperty from '@/utils/TransformProperty'
 
-import { getShapeProp } from './utils/shapes/ShapeProperty'
+import { getShapeProp } from '@/utils/shapes/ShapeProperty'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -300,12 +300,13 @@ export type AnimationConfiguration<T extends RendererType = RendererType.SVG> =
     prerender?: boolean
   }
 
+export interface Stop {
+  s: number[]
+}
 export interface GradientColor {
   k: {
     a: 1 | 0
-    k: {
-      s: number[]
-    }[]
+    k: number[] | Stop[]
   }
   /** Number of colors */
   p: number

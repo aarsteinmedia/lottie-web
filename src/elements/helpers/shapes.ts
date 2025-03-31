@@ -12,10 +12,12 @@ import {
   ElementInterfaceUnion,
   Shape,
   ShapeDataInterface,
+  Stop,
   StrokeData,
   SVGElementInterface,
   Transformer,
   Vector3,
+  VectorProperty,
 } from '@/types'
 import { createNS, degToRads } from '@/utils'
 import { createElementID, getLocationHref } from '@/utils/getterSetter'
@@ -219,14 +221,14 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     ) as MultiDimensionalProperty
     this.h = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.h || { k: 0 },
+      data.h || ({ k: 0 } as VectorProperty),
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as KeyframedValueProperty
     this.a = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.a || { k: 0 },
+      data.a || ({ k: 0 } as VectorProperty),
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
@@ -286,7 +288,9 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
       opFill.setAttribute('spreadMethod', 'pad')
       opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
       const jLen =
-          (data.g?.k.k[0].s ? data.g.k.k[0].s.length : data.g?.k.k.length) || 0,
+          ((data.g?.k.k as Stop[])[0].s
+            ? (data.g?.k.k as Stop[])[0].s.length
+            : data.g?.k.k.length) || 0,
         stops = this.stops || []
       for (let j = (data.g?.p || 1) * 4; j < jLen; j += 2) {
         stop = createNS<SVGStopElement>('stop')
@@ -373,7 +377,7 @@ export class SVGFillStyleData extends DynamicPropertyContainer {
     ) as ValueProperty
     this.c = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.c,
+      data.c as VectorProperty,
       1,
       255,
       this as unknown as ElementInterfaceIntersect
@@ -414,7 +418,7 @@ export class SVGStrokeStyleData extends SVGFillStyleData {
     )
     this.c = PropertyFactory(
       elem as ElementInterfaceIntersect,
-      data.c,
+      data.c as VectorProperty,
       1,
       255,
       this as unknown as ElementInterfaceIntersect

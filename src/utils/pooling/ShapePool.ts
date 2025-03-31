@@ -1,3 +1,4 @@
+import { Vector2 } from '@/types'
 import PoolFactory, { pointPool } from '@/utils/pooling'
 import ShapePath from '@/utils/shapes/ShapePath'
 
@@ -45,9 +46,9 @@ function _release(shapePath: ShapePath) {
     pointPool.release(shapePath.v[i])
     pointPool.release(shapePath.i[i])
     pointPool.release(shapePath.o[i])
-    shapePath.v[i] = null as any
-    shapePath.i[i] = null as any
-    shapePath.o[i] = null as any
+    shapePath.v[i] = null as unknown as Vector2
+    shapePath.i[i] = null as unknown as Vector2
+    shapePath.o[i] = null as unknown as Vector2
   }
   shapePath._length = 0
   shapePath.c = false

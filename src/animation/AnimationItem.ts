@@ -405,6 +405,9 @@ export default class AnimationItem extends BaseEvent {
     this.checkLoaded()
   }
   public includeLayers(data: AnimationData) {
+    if (!this.renderer) {
+      throw new Error(`${this.constructor.name}: renderer is not implemented`)
+    }
     if (this.animationData.op && data.op > this.animationData.op) {
       this.animationData.op = data.op
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
@@ -425,8 +428,8 @@ export default class AnimationItem extends BaseEvent {
       }
     }
     if (data.chars || data.fonts) {
-      this.renderer?.globalData?.fontManager?.addChars(data.chars)
-      this.renderer?.globalData?.fontManager?.addFonts(
+      this.renderer.globalData?.fontManager?.addChars(data.chars)
+      this.renderer.globalData?.fontManager?.addFonts(
         data.fonts,
         this.renderer.globalData.defs
       )

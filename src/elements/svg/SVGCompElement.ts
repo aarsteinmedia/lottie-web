@@ -3,6 +3,7 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  VectorProperty,
 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 
@@ -76,7 +77,7 @@ export default class SVGCompElement extends SVGBaseElement {
       data.tm
         ? PropertyFactory(
             this as unknown as ElementInterfaceIntersect,
-            data.tm,
+            data.tm as VectorProperty,
             0,
             globalData.frameRate,
             this as unknown as ElementInterfaceIntersect

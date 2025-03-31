@@ -93,8 +93,8 @@ export default class PolynomialBezier {
 
   intersections(
     other: PolynomialBezier,
-    toleranceFromProps: number,
-    maxRecursionFromProps: number
+    toleranceFromProps?: number,
+    maxRecursionFromProps?: number
   ) {
     let tolerance = toleranceFromProps,
       maxRecursion = maxRecursionFromProps

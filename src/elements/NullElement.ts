@@ -18,16 +18,8 @@ export default class NullElement extends FrameElement {
     this.initHierarchy()
   }
 
-  destroy() {
-    // Pass Through
-  }
-
   getBaseElement(): SVGGElement | null {
     return null
-  }
-
-  hide() {
-    // Pass Through
   }
 
   prepareFrame(num: number) {
@@ -35,9 +27,6 @@ export default class NullElement extends FrameElement {
   }
 
   renderFrame(_frame?: number | null) {
-    // Pass Through
-  }
-  sourceRectAtTime() {
-    // Pass Through
+    return null
   }
 }

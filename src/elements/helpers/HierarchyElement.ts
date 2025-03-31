@@ -14,13 +14,14 @@ export default class HierarchyElement extends TransformElement {
    * Searches layer's parenting chain
    */
   checkParenting() {
-    if ('parent' in (this.data || {})) {
-      this.comp?.buildElementParenting(
-        this as unknown as ElementInterfaceIntersect,
-        this.data?.parent,
-        []
-      )
+    if (!('parent' in (this.data || {}))) {
+      return
     }
+    this.comp?.buildElementParenting(
+      this as unknown as ElementInterfaceIntersect,
+      this.data?.parent,
+      []
+    )
   }
   /**
    * Initializes hierarchy properties

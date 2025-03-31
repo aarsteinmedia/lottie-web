@@ -3,6 +3,7 @@ import type {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
   Shape,
+  VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
@@ -14,13 +15,9 @@ import TransformProperty from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []
-
   c?: ValueProperty
-
   data?: Shape
-
   elemsData: ShapeGroupData[] = []
-
   eo?: ValueProperty
   matrix?: Matrix
   o?: ValueProperty
@@ -121,7 +118,7 @@ export default class RepeaterModifier extends ShapeModifier {
     this.getValue = this.processKeys
     this.c = PropertyFactory(
       elem,
-      data.c,
+      data.c as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect

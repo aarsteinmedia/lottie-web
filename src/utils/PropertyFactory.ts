@@ -1,6 +1,7 @@
 import type {
   ElementInterfaceIntersect,
   Keyframe,
+  LottieLayer,
   VectorProperty,
 } from '@/types'
 
@@ -16,16 +17,15 @@ import {
  *
  */
 export default function PropertyFactory(
-  // <T = number>
   elem: ElementInterfaceIntersect,
-  dataFromProps?: any, // VectorProperty<T>,
+  dataFromProps?: VectorProperty<number | number[]>,
   type?: number,
   mult?: null | number,
-  container?: ElementInterfaceIntersect // ElementInterfaceIntersect | GroupEffect
+  container?: ElementInterfaceIntersect
 ) {
   let data = dataFromProps
   if (data && 'sid' in data && data.sid) {
-    data = elem.globalData?.slotManager?.getProp(data)
+    data = elem.globalData.slotManager?.getProp(data as unknown as LottieLayer)
   }
   let p
   if (!(data?.k as number[]).length) {

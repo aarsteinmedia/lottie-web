@@ -5,6 +5,7 @@ import type {
   LottieAsset,
   LottieLayer,
   Vector2,
+  VectorProperty,
 } from '@/types'
 import type {
   MultiDimensionalProperty,
@@ -50,7 +51,7 @@ export default class AudioElement extends RenderableElement {
       data.tm
         ? PropertyFactory(
             this as unknown as ElementInterfaceIntersect,
-            data.tm,
+            data.tm as VectorProperty,
             0,
             globalData.frameRate,
             this as unknown as ElementInterfaceIntersect
@@ -59,7 +60,9 @@ export default class AudioElement extends RenderableElement {
     ) as ValueProperty
     this.lv = PropertyFactory(
       this as unknown as ElementInterfaceIntersect,
-      data.au && data.au.lv ? data.au.lv : { k: [100] },
+      (data.au && data.au.lv ? data.au.lv : { k: [100] }) as VectorProperty<
+        number[]
+      >,
       1,
       0.01,
       this as unknown as ElementInterfaceIntersect

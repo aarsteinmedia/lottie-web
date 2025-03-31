@@ -173,8 +173,8 @@ export class SVGStrokeEffect {
       this.paths.push({ m: i, p: path })
     }
     if (this.filterManager.effectElements[10].p.v === 3) {
-      const mask = createNS<SVGMaskElement>('mask')
-      const id = createElementID()
+      const mask = createNS<SVGMaskElement>('mask'),
+        id = createElementID()
       mask.setAttribute('id', id)
       mask.setAttribute('mask-type', 'alpha')
       mask.appendChild(groupPath)
@@ -255,13 +255,13 @@ export class SVGStrokeEffect {
             ) * 0.01
           const l = path.getTotalLength()
           dasharrayValue = `0 0 0 ${l * s} `
-          const lineLength = l * (e - s)
-          const segment =
-            1 +
-            (this.filterManager.effectElements[4].p.v as number) *
-              2 *
-              (this.filterManager.effectElements[9].p.v as number) *
-              0.01
+          const lineLength = l * (e - s),
+            segment =
+              1 +
+              (this.filterManager.effectElements[4].p.v as number) *
+                2 *
+                (this.filterManager.effectElements[9].p.v as number) *
+                0.01
           const units = Math.floor(lineLength / segment)
           for (let j = 0; j < units; j++) {
             dasharrayValue += `1 ${
@@ -510,13 +510,13 @@ export class SVGProLevelsFilter {
     let cnt = 0
     const segments = 256
     let perc
-    const min = Math.min(inputBlack, inputWhite)
-    const max = Math.max(inputBlack, inputWhite)
-    const table = Array.call(null, { length: segments })
-    let colorValue
-    let pos = 0
-    const outputDelta = outputWhite - outputBlack
-    const inputDelta = inputWhite - inputBlack
+    const min = Math.min(inputBlack, inputWhite),
+      max = Math.max(inputBlack, inputWhite),
+      table = Array.call(null, { length: segments })
+    let colorValue,
+      pos = 0
+    const outputDelta = outputWhite - outputBlack,
+      inputDelta = inputWhite - inputBlack
     while (cnt <= 256) {
       perc = cnt / 256
       if (perc <= min) {
@@ -838,8 +838,8 @@ export class SVGMatte3Effect {
     mask: ElementInterfaceIntersect
   ) {
     if (!this.findSymbol(mask)) {
-      const symbolId = createElementID()
-      const masker = createNS<SVGMaskElement>('mask')
+      const symbolId = createElementID(),
+        masker = createNS<SVGMaskElement>('mask')
       masker.setAttribute('id', mask.layerId || '')
       masker.setAttribute('mask-type', 'alpha')
       _svgMatteSymbols.push(mask)

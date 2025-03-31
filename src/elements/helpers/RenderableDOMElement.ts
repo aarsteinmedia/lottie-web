@@ -139,21 +139,3 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this._isFirstFrame = true
   }
 }
-
-// const props = Object.getOwnPropertyNames(RenderableElement.prototype),
-//   sorted = props.sort((a, b) => {
-//     if (a < b) {
-//       return -1
-//     }
-//     if (a > b) {
-//       return 1
-//     }
-//     return 0
-//   })
-
-// for (const s of sorted) {
-//   if (s === 'constructor') {
-//     continue
-//   }
-//   console.log(s)
-// }
