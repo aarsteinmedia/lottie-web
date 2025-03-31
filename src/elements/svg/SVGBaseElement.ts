@@ -14,61 +14,64 @@ import { createElementID, getLocationHref } from '@/utils/getterSetter'
 
 export default class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
-  // finalTransform?: Transformer
   maskedElement?: SVGGElement
   matteElement?: SVGGElement
   matteMasks?: {
     [key: number]: string
   }
-  // renderableEffectsManager?: SVGEffects
-  // searchEffectTransforms: any
   transformedElement?: SVGGElement
-  // constructor() {
-  //   super()
-  //   this.initRendererElement = this.initRendererElement.bind(this)
-  //   this.createContainerElements = this.createContainerElements.bind(this)
-  //   this.createRenderableComponents = this.createRenderableComponents.bind(this)
-  // }
   override createContainerElements() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+
+    if (!this.layerElement) {
+      throw new Error(
+        `${this.constructor.name}: layerElement is not implemented`
+      )
+    }
+
     this.matteElement = createNS<SVGGElement>('g')
     this.transformedElement = this.layerElement
     this.maskedElement = this.layerElement
     this._sizeChanged = false
     let layerElementParent = null
     // If this layer acts as a mask for the following layer
-    if (this.data?.td) {
+    if (this.data.td) {
       this.matteMasks = {}
       const gg = createNS<SVGGElement>('g')
       if (this.layerId) {
         gg.setAttribute('id', this.layerId)
       }
-      if (this.layerElement) {
-        gg.appendChild(this.layerElement)
-      }
+      gg.appendChild(this.layerElement)
 
       layerElementParent = gg
-      this.globalData?.defs.appendChild(gg)
-    } else if (this.data?.tt) {
-      if (this.layerElement) {
-        this.matteElement.appendChild(this.layerElement)
-      }
+      this.globalData.defs.appendChild(gg)
+    } else if (this.data.tt) {
+      this.matteElement.appendChild(this.layerElement)
 
       layerElementParent = this.matteElement
       this.baseElement = this.matteElement
     } else {
       this.baseElement = this.layerElement
     }
-    if (this.data?.ln) {
+    if (this.data.ln) {
       this.layerElement?.setAttribute('id', this.data.ln)
     }
-    if (this.data?.cl) {
+    if (this.data.cl) {
       this.layerElement?.setAttribute('class', this.data.cl)
     }
     /**
      * Clipping compositions to hide content that exceeds boundaries.
      * If collapsed transformations is on, component should not be clipped
      * */
-    if (this.data?.ty === 0 && !this.data.hd) {
+    if (this.data.ty === 0 && !this.data.hd) {
       const cp = createNS<SVGClipPathElement>('clipPath'),
         pt = createNS<SVGPathElement>('path')
       pt.setAttribute(
@@ -80,7 +83,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
       const clipId = createElementID()
       cp.setAttribute('id', clipId)
       cp.appendChild(pt)
-      this.globalData?.defs.appendChild(cp)
+      this.globalData.defs.appendChild(cp)
 
       if (this.checkMasks()) {
         const cpGroup = createNS<SVGGElement>('g')
@@ -96,13 +99,13 @@ export default class SVGBaseElement extends RenderableDOMElement {
           this.baseElement = this.transformedElement
         }
       } else {
-        this.layerElement?.setAttribute(
+        this.layerElement.setAttribute(
           'clip-path',
           `url(${getLocationHref()}#${clipId})`
         )
       }
     }
-    if (this.data?.bm !== 0) {
+    if (this.data.bm !== 0) {
       this.setBlendMode()
     }
   }
