@@ -6,12 +6,11 @@ import type {
   SourceRect,
 } from '@/types'
 
-import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
-  layers: LottieLayer[]
+  layers: LottieLayer[] = []
   sourceRect: SourceRect | null
 
   constructor(
@@ -26,9 +25,6 @@ export default class ImageElement extends SVGBaseElement {
     if (this.assetData && this.assetData.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
-    const { layers, renderInnerContent } = new CompElement()
-    this.layers = layers
-    this.renderInnerContent = renderInnerContent
     this.initElement(data, globalData, comp)
     this.sourceRect = {
       height: Number(this.assetData?.h),
