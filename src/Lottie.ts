@@ -5,6 +5,8 @@ import type {
   AnimationDirection,
   AnimationSettings,
   ExpressionsPlugin,
+  LottieAsset,
+  LottieManifest,
   Vector2,
 } from '@/types'
 
@@ -138,6 +140,8 @@ export type {
   AnimationData,
   AnimationDirection,
   AnimationSettings,
+  LottieAsset,
+  LottieManifest,
   Vector2,
 }
 
