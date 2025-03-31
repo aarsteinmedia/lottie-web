@@ -25,15 +25,7 @@ export default class SVGRendererBase extends BaseRenderer {
   destroyed?: boolean
   renderConfig?: SVGRendererConfig
   renderedFrame?: number
-
-  // svgBaseElement: SVGBaseElement
-
   svgElement?: SVGSVGElement
-
-  // constructor() {
-  //   super()
-  //   this.svgBaseElement = new SVGBaseElement()
-  // }
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
     if (!element.getBaseElement) {
