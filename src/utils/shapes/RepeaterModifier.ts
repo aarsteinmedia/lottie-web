@@ -1,4 +1,4 @@
-import type { ShapeGroupData } from '@/elements/helpers/shapes'
+import type { ShapeGroupData, SVGShapeData } from '@/elements/helpers/shapes'
 import type {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
@@ -34,6 +34,11 @@ export default class RepeaterModifier extends ShapeModifier {
   private _currentCopies?: number
   private _elements: Shape[] = []
   private _groups: Shape[] = []
+
+  override addShapeToModifier(shapeData: SVGShapeData) {
+    shapeData.pathsData = []
+  }
+
   applyTransforms(
     pMatrix: Matrix,
     rMatrix: Matrix,

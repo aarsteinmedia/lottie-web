@@ -6,6 +6,7 @@ import type {
   SourceRect,
 } from '@/types'
 
+import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
 export default class ImageElement extends SVGBaseElement {
@@ -25,6 +26,8 @@ export default class ImageElement extends SVGBaseElement {
     if (this.assetData && this.assetData.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
+    const { renderInnerContent } = new CompElement()
+    this.renderInnerContent = renderInnerContent
     this.initElement(data, globalData, comp)
     this.sourceRect = {
       height: Number(this.assetData?.h),

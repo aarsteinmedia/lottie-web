@@ -89,22 +89,18 @@ export function getNewSegment(
   pt2: number[],
   pt3: number[],
   pt4: number[],
-  startPerc: number,
-  endPerc: number,
+  startPercFromProps: number,
+  endPercFromProps: number,
   bezierData: ReturnType<typeof getBezierLength>
 ) {
+  let startPerc = startPercFromProps,
+    endPerc = endPercFromProps
   if (startPerc < 0) {
-    // TODO:
-    // eslint-disable-next-line no-param-reassign
     startPerc = 0
   } else if (startPerc > 1) {
-    // TODO:
-    // eslint-disable-next-line no-param-reassign
     startPerc = 1
   }
   const t0 = getDistancePerc(startPerc, bezierData)
-  // TODO:
-  // eslint-disable-next-line no-param-reassign
   endPerc = endPerc > 1 ? 1 : endPerc
   const t1 = getDistancePerc(endPerc, bezierData),
     u0 = 1 - t0,

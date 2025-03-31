@@ -41,11 +41,8 @@ export default class SVGCompElement extends SVGBaseElement {
         createShape,
         createSolid,
         createText,
-        // destroy,
         findIndexByInd,
         hide,
-        // renderFrame,
-        // show,
       } = new SVGRendererBase(),
       {
         destroy,
@@ -74,8 +71,6 @@ export default class SVGCompElement extends SVGBaseElement {
     this.prepareFrame = prepareFrame
     this.renderInnerContent = renderInnerContent
     this.setElements = setElements
-    // this.renderFrame = renderFrame
-    // this.show = show
     this.initElement(data, globalData, comp)
     this.tm = (
       data.tm
@@ -179,21 +174,3 @@ export default class SVGCompElement extends SVGBaseElement {
     )
   }
 }
-
-// const props = Object.getOwnPropertyNames(CompElement.prototype),
-//   sorted = props.sort((a, b) => {
-//     if (a < b) {
-//       return -1
-//     }
-//     if (a > b) {
-//       return 1
-//     }
-//     return 0
-//   })
-
-// for (const s of sorted) {
-//   if (s === 'constructor') {
-//     continue
-//   }
-//   console.log(s)
-// }

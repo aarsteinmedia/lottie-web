@@ -66,8 +66,6 @@ export default class SVGShapeElement extends ShapeElement {
       renderElement,
       setMatte,
     } = new SVGBaseElement()
-    // this.searchShapes = this.searchShapes.bind(this) // TODO: Evaluate this
-    // this.renders = this.renders.bind(this)
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.destroyBaseElement = destroyBaseElement
@@ -196,7 +194,11 @@ export default class SVGShapeElement extends ShapeElement {
         break
       }
       case 'no':
-        elementData = new SVGNoStyleData(this, data as any, styleOb)
+        elementData = new SVGNoStyleData(
+          this,
+          data as unknown as SVGShapeData,
+          styleOb
+        )
     }
 
     if (data.ty === 'st' || data.ty === 'gs') {
@@ -364,15 +366,14 @@ export default class SVGShapeElement extends ShapeElement {
     renderFromProps: boolean
   ) {
     let render = renderFromProps
-    const ownTransformers: Transformer[] = [].concat(transformers as any),
+    // Make a clone of transfomers
+    const ownTransformers = [...transformers],
       ownStyles = [],
       ownModifiers = []
-    let currentTransform,
-      Modifier: TrimModifier | RepeaterModifier,
-      processedPos: number
+    let currentTransform, Modifier: TrimModifier | RepeaterModifier
     const { length } = arr
     for (let i = length - 1; i >= 0; i--) {
-      processedPos = this.searchProcessedElement(arr[i])
+      const processedPos = this.searchProcessedElement(arr[i])
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
