@@ -42,6 +42,11 @@ export default class TransformElement extends BaseElement {
     return pt
   }
   initTransform() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: LottiePlayer is not initialized`
+      )
+    }
     const mat = new Matrix()
     this.finalTransform = {
       _localMatMdf: false,
@@ -50,7 +55,7 @@ export default class TransformElement extends BaseElement {
       localMat: mat,
       localOpacity: 1,
       mat,
-      mProp: this.data?.ks
+      mProp: this.data.ks
         ? new TransformProperty(
             this as unknown as ElementInterfaceIntersect,
             this.data.ks,
@@ -58,14 +63,14 @@ export default class TransformElement extends BaseElement {
           )
         : ({ o: 0 } as unknown as TransformProperty),
     } as Transformer
-    if (this.data?.ao && this.finalTransform) {
+    if (this.data.ao) {
       this.finalTransform.mProp.autoOriented = true
     }
 
     // TODO: check TYPE 11: Guided elements
-    if (this.data?.ty !== 11) {
-      // this.createElements();
-    }
+    // if (this.data.ty !== 11) {
+    //   // this.createElements();
+    // }
   }
   renderLocalTransform() {
     if (!this.localTransforms) {
