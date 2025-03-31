@@ -13,7 +13,7 @@ import type ShapeElement from './elements/ShapeElement';
 import type SVGBaseElement from './elements/svg/SVGBaseElement';
 import type SVGShapeElement from './elements/svg/SVGShapeElement';
 import type TextElement from './elements/TextElement';
-import type { RendererType, PlayMode, ShapeType } from './enums';
+import type { PlayMode, ShapeType, RendererType } from './enums';
 import type BaseRenderer from './renderers/BaseRenderer';
 import type { CreateRenderFunction } from './renderers/SVGElementsRenderer';
 import type AudioController from './utils/audio/AudioController';
@@ -163,7 +163,7 @@ export type CanvasRendererConfig = BaseRendererConfig & {
 export type HTMLRendererConfig = BaseRendererConfig & {
     hideOnTransparent?: boolean;
 };
-export type AnimationConfiguration<T extends RendererType = RendererType.SVG> = {
+export type AnimationConfiguration<T extends RendererType = RendererType.Canvas | RendererType.HTML | RendererType.SVG> = {
     animationData?: AnimationData;
     animType?: RendererType;
     container?: HTMLElement;

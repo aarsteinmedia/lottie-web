@@ -17,6 +17,7 @@ export default TSESlint.config(
       'dev/**/*',
       '_*',
       'player.js',
+      'player-light.js',
     ],
   },
   ESLint.configs.recommended,
