@@ -5,6 +5,7 @@ export default class ShapePath {
     c: boolean;
     e?: ShapePath[];
     i: Vector2[];
+    lengths: number[];
     o: Vector2[];
     s?: ShapePath[];
     v: Vector2[];

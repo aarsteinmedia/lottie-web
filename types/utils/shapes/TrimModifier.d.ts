@@ -16,8 +16,8 @@ export default class TrimModifier extends ShapeModifier {
     addSegmentFromArray(points: number[], shapePath: ShapePath, pos: number, newShape?: boolean): void;
     addShapes(shapeData: any, shapeSegment: any, shapePathFromProps?: ShapePath): ShapePath[];
     addShapeToModifier(shapeData: SVGShapeData): void;
-    calculateShapeEdges(s: any, e: any, shapeLength: number, addedLength: number, totalModifierLength: number): number[][];
+    calculateShapeEdges(s: number, e: number, shapeLength: number, addedLength: number, totalModifierLength: number): number[][];
     initModifierProperties(elem: ElementInterfaceIntersect, data: Shape): void;
     processShapes(_isFirstFrame: boolean): void;
-    releasePathsData(pathsData: any): any;
+    releasePathsData(pathsData: ShapePath[]): ShapePath[];
 }

@@ -6,17 +6,17 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _isFirstFrame?: boolean;
     _placeholder?: boolean;
     comp?: ElementInterfaceIntersect;
-    data?: any;
-    e?: any;
-    effectsSequence?: any;
-    elem?: any;
+    data?: VectorProperty<number | number[] | Keyframe[]>;
+    e?: unknown;
+    effectsSequence: ((arg: unknown) => any)[];
+    elem?: ElementInterfaceIntersect;
     frameId?: number;
-    g?: any;
+    g?: unknown;
     getValueAtTime?: (a: number, b?: number) => any;
     initFrame: number;
     k?: boolean;
-    keyframes?: Keyframe[];
-    keyframesMetadata?: {
+    keyframes: Keyframe[];
+    keyframesMetadata: {
         bezierData?: BezierData;
         __fnct?: ((val: number) => number) | ((val: number) => number)[];
     }[];
@@ -24,20 +24,20 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     lock?: boolean;
     mult?: number;
     offsetTime?: number;
-    pv?: string | number | any[];
-    s?: any;
+    pv?: any;
+    s?: unknown;
     sh?: Shape;
-    v?: string | number | any[];
+    v?: any;
     vel?: number | any[];
     addEffect(effectFunction: any): void;
-    getValueAtCurrentTime(): string | number | any[] | undefined;
+    getValueAtCurrentTime(): any;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
     processEffectsSequence(): void;
     setVValue(val: number | number[]): void;
 }
-export declare class ValueProperty extends BaseProperty {
-    pv: number | string;
-    v: number | string;
+export declare class ValueProperty<T = number> extends BaseProperty {
+    pv: T;
+    v: T;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }
 export declare class MultiDimensionalProperty<T extends Array<any> = Vector2> extends BaseProperty {

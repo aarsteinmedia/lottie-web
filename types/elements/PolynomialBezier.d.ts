@@ -29,7 +29,7 @@ export default class PolynomialBezier {
     };
     derivative(t: number): number[];
     inflectionPoints(): number[];
-    intersections(other: PolynomialBezier, toleranceFromProps: number, maxRecursionFromProps: number): IntersectData[];
+    intersections(other: PolynomialBezier, toleranceFromProps?: number, maxRecursionFromProps?: number): IntersectData[];
     normalAngle(t: number): number;
     point(t: number): number[];
     split(t: number): PolynomialBezier[];

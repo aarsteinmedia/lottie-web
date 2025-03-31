@@ -5,7 +5,7 @@ import type AudioElement from './elements/AudioElement';
 import type BaseElement from './elements/BaseElement';
 import type CompElement from './elements/CompElement';
 import type HierarchyElement from './elements/helpers/HierarchyElement';
-import type { SVGStrokeStyleData, SVGStyleData } from './elements/helpers/shapes';
+import type { SVGFillStyleData, SVGGradientFillStyleData, SVGGradientStrokeStyleData, SVGNoStyleData, SVGShapeData, SVGStrokeStyleData, SVGStyleData, SVGTransformData } from './elements/helpers/shapes';
 import type TransformElement from './elements/helpers/TransformElement';
 import type MaskElement from './elements/MaskElement';
 import type PolynomialBezier from './elements/PolynomialBezier';
@@ -27,15 +27,16 @@ import type LetterProps from './utils/text/LetterProps';
 import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
 import type TextProperty from './utils/text/TextProperty';
 import type TransformProperty from './utils/TransformProperty';
+import { getShapeProp } from './utils/shapes/ShapeProperty';
 export type AnimationDirection = 1 | -1;
 export type AnimationEventName = 'drawnFrame' | 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images' | '_play' | '_pause' | '_idle' | '_active' | 'configError' | 'renderFrameError';
-export type AnimationEventCallback<T = unknown> = (args: T) => void;
 export interface SVGGeometry {
     cx: number;
     cy: number;
     height: number;
     width: number;
 }
+export type SVGElementInterface = SVGShapeData | SVGTransformData | SVGFillStyleData | SVGStrokeStyleData | SVGNoStyleData | SVGGradientFillStyleData | SVGGradientStrokeStyleData;
 export interface Transformer {
     _localMatMdf: boolean;
     _matMdf: boolean;
@@ -67,7 +68,7 @@ export interface CompInterface extends AnimationItem {
     configAnimation: (animData: AnimationData) => void;
     data: LottieLayer;
     destroy: () => void;
-    dynamicProperties: unknown[];
+    dynamicProperties: DynamicPropertyContainer[];
     effectsManager: unknown;
     elements: CompInterface[];
     getBaseElement: () => SVGElement;
@@ -87,7 +88,7 @@ export interface CompInterface extends AnimationItem {
     maskedElement: SVGGElement;
     maskManager: MaskElement;
     matteElement: SVGGElement;
-    pendingElements: unknown[];
+    pendingElements: ElementInterfaceIntersect[];
     prepareFrame?: (val: number) => void;
     renderConfig: SVGRendererConfig;
     renderedFrame: number;
@@ -106,108 +107,14 @@ export interface CompInterface extends AnimationItem {
 }
 export interface AnimatedContent {
     data: Shape;
-    element: ShapeDataInterface;
+    element: ShapeDataInterface | SVGElementInterface;
     fn: null | CreateRenderFunction;
 }
 export interface EFXElement {
     p: BaseProperty;
 }
-export interface ItemsData {
-    gr: SVGGElement;
-    it: ShapeDataInterface[];
-    prevViewData: ItemsData[];
-}
 export interface KeyframesMetadata {
     __fnct?: (val: number) => number;
-}
-export interface ItemData {
-    _caching: Caching;
-    _frameId?: number;
-    _isFirstFrame: boolean;
-    _mdf?: boolean;
-    a?: VectorProperty;
-    addEffect: (effect: Effect) => void;
-    c: ItemData;
-    canResize?: boolean;
-    comp: any;
-    completeTextData: (data?: Partial<DocumentData>) => void;
-    container?: unknown;
-    copyData: (data?: Partial<DocumentData>, b?: any) => void;
-    cst?: SVGStopElement[];
-    currentData?: Partial<DocumentData>;
-    d: ItemData;
-    dashoffset: Float32Array;
-    dashStr: string;
-    data: any;
-    defaultBoxWidth?: number;
-    e: any;
-    effectsSequence: any;
-    elem: any;
-    frameId: number;
-    g: any;
-    getValue: (val?: unknown) => unknown;
-    gf: SVGElement;
-    h: VectorProperty;
-    interpolateValue: BaseProperty['interpolateValue'];
-    k: boolean;
-    keyframes: number[];
-    keyframesMetadata: KeyframesMetadata[];
-    keysIndex?: number;
-    kf: boolean;
-    minimumFontSize?: number;
-    mult: number;
-    o: ItemData;
-    of?: SVGGradientElement;
-    offsetTime: number;
-    ost?: SVGStopElement[];
-    pos: number;
-    propType: 'multidimensional' | 'unidimensional';
-    pv: string | number[] | number;
-    s: any;
-    searchProperty: () => boolean;
-    setVValue: (val: any) => void;
-    style: SVGStyleData;
-    v: string | number[] | number;
-    vel: number | number[];
-    w: ItemData;
-}
-export interface AnimationEvents {
-    complete: BMCompleteEvent;
-    config_ready: undefined;
-    data_failed: undefined;
-    data_ready: undefined;
-    destroy: BMDestroyEvent;
-    DOMLoaded: undefined;
-    drawnFrame: BMEnterFrameEvent;
-    enterFrame: BMEnterFrameEvent;
-    error: undefined;
-    loaded_images: undefined;
-    loopComplete: BMCompleteLoopEvent;
-    segmentStart: BMSegmentStartEvent;
-}
-export interface BMCompleteLoopEvent {
-    currentLoop: number;
-    direction: number;
-    totalLoops: number;
-    type: 'loopComplete';
-}
-export interface BMSegmentStartEvent {
-    firstFrame: number;
-    totalFrames: number;
-    type: 'segmentStart';
-}
-export interface BMCompleteEvent {
-    direction: number;
-    type: 'complete';
-}
-export interface BMDestroyEvent {
-    type: 'destroy';
-}
-export interface BMEnterFrameEvent {
-    currentTime: number;
-    direction: number;
-    totalTime: number;
-    type: 'enterFrame';
 }
 type BaseRendererConfig = {
     imagePreserveAspectRatio?: string;
@@ -277,24 +184,17 @@ export type AnimationConfiguration<T extends RendererType = RendererType.SVG> = 
     path?: string;
     prerender?: boolean;
 };
+export interface Stop {
+    s: number[];
+}
 export interface GradientColor {
     k: {
         a: 1 | 0;
-        k: {
-            s: number[];
-        }[];
+        k: number[] | Stop[];
     };
     p: number;
 }
 type BoolInt = 0 | 1;
-interface PathData {
-    _length: number;
-    _maxLength: number;
-    c: boolean;
-    i: Float32Array;
-    o: Float32Array;
-    v: Float32Array;
-}
 interface ShapeDataProperty {
     _mdf?: boolean;
     a: 1 | 0;
@@ -303,7 +203,7 @@ interface ShapeDataProperty {
     paths: {
         _length: number;
         _maxLength: number;
-        shapes: PathData[];
+        shapes: ShapePath[];
     };
 }
 export interface StrokeData {
@@ -334,10 +234,12 @@ export interface Shape {
     closed?: boolean;
     d?: number | StrokeData[];
     e?: VectorProperty<Vector2>;
+    eo?: VectorProperty;
     g?: GradientColor;
     h?: GenericAnimatedProperty;
     hd?: boolean;
     ind?: number;
+    inv?: boolean;
     it?: Shape[];
     ix?: number;
     ks?: ShapeDataProperty;
@@ -347,14 +249,20 @@ export interface Shape {
     m?: 1 | 2;
     ml?: number;
     mn?: string;
+    mode?: string;
     nm?: string;
     np?: number;
-    o?: VectorProperty;
+    o?: {
+        a: 0 | 1;
+        k: number;
+        ix?: number;
+        x?: number;
+    };
     or?: {
         k: any[];
     };
     p?: VectorProperty<Vector2>;
-    pt?: VectorProperty<ShapePath>;
+    pt?: VectorProperty<ShapePath | ShapePath[]>;
     r?: VectorProperty<{
         e: number;
         s: number;
@@ -366,25 +274,39 @@ export interface Shape {
     s?: VectorProperty<Vector2 | Vector3>;
     sa?: VectorProperty;
     sk?: VectorProperty;
+    so?: VectorProperty;
     t?: number;
-    tr?: LottieTransform;
+    tr?: Shape;
     ty: ShapeType;
     w?: VectorProperty;
+    x?: {
+        a: 0 | 1;
+        k: number;
+        ix?: number;
+    };
 }
-interface LottieTransform {
-    a: VectorProperty<Vector2>;
-    eo?: VectorProperty;
-    p: VectorProperty<Vector2>;
-    r: VectorProperty;
-    s: VectorProperty<Vector2>;
-    so?: VectorProperty;
+export interface StoredData {
+    elem: SVGPathElement;
+    expan: SVGFEMorphologyElement | null;
+    filterId?: string;
+    lastOperator: string;
+    lastPath: string;
+    lastRadius: number;
+    x: ValueProperty | null;
+}
+export interface ViewData {
+    elem: SVGPathElement;
+    invRect?: SVGRectElement | null;
+    lastPath: string;
+    op: ValueProperty;
+    prop: ReturnType<typeof getShapeProp>;
 }
 export interface LottieAsset {
     __used?: boolean;
     e?: BoolInt;
     h?: number;
     id?: string;
-    layers?: LottieLayer[] & {
+    layers: LottieLayer[] & {
         __used?: boolean;
     };
     nm?: string;
@@ -406,6 +328,7 @@ export interface AnimationSettings {
 interface Animation extends AnimationSettings {
     id: string;
 }
+export type ValueOf<T> = T[keyof T];
 export interface AnimationConfig extends Animation {
     url: string;
 }
@@ -525,7 +448,7 @@ export interface DocumentData extends FontList {
     }[];
     l?: Letter[];
     lh: number;
-    lineWidths?: number[];
+    lineWidths: number[];
     ls?: number;
     of?: string;
     ps?: Vector2 | null;
@@ -700,7 +623,7 @@ export interface AnimationData {
     $schema?: string;
     ao?: boolean | 0 | 1;
     assets: LottieAsset[];
-    chars?: Characacter[];
+    chars: Characacter[];
     ddd: 0 | 1;
     fonts: {
         list: DocumentData[];
@@ -763,14 +686,14 @@ export interface LottieLayer {
         __used?: boolean;
     };
     ln?: string;
-    masksProperties?: Mask[];
+    masksProperties?: Shape[];
     nm: string;
     op: number;
     parent?: number;
     refId?: string;
     sc?: string;
     sh?: number;
-    shapes?: Shape[];
+    shapes: Shape[];
     singleShape?: boolean;
     slots?: {
         [key: string]: {
@@ -888,8 +811,8 @@ export interface GlobalData {
     frameId: number;
     frameNum?: number;
     frameRate: number;
-    getAssetData?: AnimationItem['getAssetData'];
-    getAssetsPath?: AnimationItem['getAssetsPath'];
+    getAssetData: AnimationItem['getAssetData'];
+    getAssetsPath: AnimationItem['getAssetsPath'];
     imageLoader?: any;
     nm?: string;
     progressiveLoad?: boolean;

@@ -8,7 +8,7 @@ export default class EffectsManager {
 }
 export declare class GroupEffect extends DynamicPropertyContainer {
     data?: Effect;
-    effectElements?: EFXElement[];
+    effectElements: EFXElement[];
     getValue: () => void;
     type?: string;
     constructor(data: Effect, element: ElementInterfaceIntersect, layer: LottieLayer);

@@ -1,26 +1,13 @@
 import type { DocumentData, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, Vector3 } from '../types';
-import type DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 import type Matrix from '../utils/Matrix';
-import TransformElement from '../elements/helpers/TransformElement';
+import RenderableDOMElement from '../elements/helpers/RenderableDOMElement';
 import { RendererType } from '../enums';
 import LetterProps from '../utils/text/LetterProps';
 import TextAnimatorProperty from '../utils/text/TextAnimatorProperty';
 import TextProperty from '../utils/text/TextProperty';
-export default class TextElement extends TransformElement {
-    _mdf?: boolean;
-    createContainerElements: any;
-    createRenderableComponents: any;
-    dynamicProperties?: DynamicPropertyContainer[];
+export default class TextElement extends RenderableDOMElement {
     emptyProp?: LetterProps;
-    hide: any;
-    initFrame: any;
-    initHierarchy: any;
-    initRenderable: any;
-    initRendererElement: any;
-    isInRange?: boolean;
     lettersChangedFlag?: boolean;
-    prepareProperties: any;
-    prepareRenderableFrame: any;
     renderType?: RendererType;
     textAnimator?: TextAnimatorProperty;
     textProperty?: TextProperty;
@@ -28,7 +15,6 @@ export default class TextElement extends TransformElement {
     buildColor(colorData: Vector3): string;
     buildNewText(): void;
     canResizeFont(_canResize: boolean): void;
-    createContent(): void;
     createPathShape(matrixHelper: Matrix, shapes: Shape[]): string;
     initElement(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect): void;
     prepareFrame(num: number): void;

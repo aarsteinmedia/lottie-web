@@ -1,21 +1,16 @@
-import type { Transformer } from '../../types';
-import SVGEffects from '../../elements/svg/SVGEffects';
-import BaseRenderer from '../../renderers/BaseRenderer';
-export default abstract class SVGBaseElement extends BaseRenderer {
+import RenderableDOMElement from '../../elements/helpers/RenderableDOMElement';
+export default class SVGBaseElement extends RenderableDOMElement {
     _sizeChanged?: boolean;
-    finalTransform?: Transformer;
     maskedElement?: SVGGElement;
     matteElement?: SVGGElement;
     matteMasks?: {
         [key: number]: string;
     };
-    renderableEffectsManager?: SVGEffects;
-    searchEffectTransforms: any;
     transformedElement?: SVGGElement;
     createContainerElements(): void;
     createRenderableComponents(): void;
     destroyBaseElement(): void;
-    getBaseElement(): SVGGElement | null | undefined;
+    getBaseElement(): SVGGElement | null;
     getMatte(matteType?: number): string;
     initRendererElement(): void;
     renderElement(): void;

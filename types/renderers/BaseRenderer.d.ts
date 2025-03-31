@@ -3,14 +3,14 @@ import type SVGCompElement from '../elements/svg/SVGCompElement';
 import type { AnimationData, ElementInterfaceIntersect, LottieLayer } from '../types';
 import type ProjectInterface from '../utils/helpers/ProjectInterface';
 import AudioElement from '../elements/AudioElement';
-import BaseElement from '../elements/BaseElement';
 import FootageElement from '../elements/FootageElement';
-export default abstract class BaseRenderer extends BaseElement {
+import FrameElement from '../elements/helpers/FrameElement';
+export default class BaseRenderer extends FrameElement {
     animationItem?: AnimationItem;
     completeLayers?: boolean;
-    elements?: ElementInterfaceIntersect[];
-    layers?: LottieLayer[];
-    pendingElements?: ElementInterfaceIntersect[];
+    elements: ElementInterfaceIntersect[];
+    layers: LottieLayer[];
+    pendingElements: ElementInterfaceIntersect[];
     addPendingElement(element: ElementInterfaceIntersect): void;
     buildAllItems(): void;
     buildElementParenting(element: ElementInterfaceIntersect, parentName?: number, hierarchy?: ElementInterfaceIntersect[]): void;

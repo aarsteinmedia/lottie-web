@@ -7,6 +7,7 @@ export default class RenderableElement extends FrameElement {
     private renderableComponents;
     addRenderableComponent(component: ElementInterfaceIntersect): void;
     checkLayerLimits(num: number): void;
+    checkLayers(_val?: number): void;
     checkTransparency(): void;
     getLayerSize(): {
         h: number;

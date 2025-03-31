@@ -2,7 +2,7 @@ import type DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyCo
 import HierarchyElement from '../../elements/helpers/HierarchyElement';
 export default class FrameElement extends HierarchyElement {
     _mdf?: boolean;
-    dynamicProperties?: DynamicPropertyContainer[];
+    dynamicProperties: DynamicPropertyContainer[];
     addDynamicProperty(prop: DynamicPropertyContainer): void;
     initFrame(): void;
     prepareProperties(_: number, isVisible?: boolean): void;

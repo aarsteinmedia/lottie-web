@@ -3,6 +3,7 @@ import type { AudioFactory } from '../../types';
 export default class AudioController {
     audioFactory?: AudioFactory;
     audios: AudioElement[];
+    isPlaying?: boolean;
     private _isMuted;
     private _volume;
     constructor(audioFactory?: AudioFactory);

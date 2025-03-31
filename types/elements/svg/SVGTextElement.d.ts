@@ -1,4 +1,4 @@
-import type { GlobalData, LottieLayer, SourceRect } from '../../types';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect } from '../../types';
 import SVGCompElement from '../../elements/svg/SVGCompElement';
 import SVGShapeElement from '../../elements/svg/SVGShapeElement';
 import TextElement from '../../elements/TextElement';
@@ -11,7 +11,7 @@ export default class SVGTextLottieElement extends TextElement {
         width: number;
     };
     renderedFrame?: number;
-    renderedLetters?: string[];
+    renderedLetters: string[];
     textContainer?: SVGTextElement;
     textSpans: {
         childSpan?: null | SVGTextElement | SVGGElement;
@@ -19,13 +19,15 @@ export default class SVGTextLottieElement extends TextElement {
         span: null | SVGTextElement | SVGGElement;
     }[];
     private emptyShapeData;
-    constructor(data: LottieLayer, globalData: GlobalData, comp: any);
-    addDynamicProperty(_element: any): void;
+    constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     buildNewText(): void;
     buildShapeData(data: LottieLayer, scale: number): LottieLayer;
     buildTextContents(textArray: string[]): string[];
     createContent(): void;
+    getBaseElement(): SVGGElement | null;
+    getMatte(_type?: number): string;
     getValue(): void;
-    renderInnerContent: (this: SVGTextLottieElement) => void;
+    renderInnerContent(this: SVGTextLottieElement): void;
+    setMatte(_id: string): void;
     sourceRectAtTime(): SourceRect | null;
 }

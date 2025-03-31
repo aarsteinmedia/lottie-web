@@ -1,6 +1,7 @@
 import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect } from '../../types';
 import type LetterProps from '../../utils/text/LetterProps';
 import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
+type EffectFunction = (data: DocumentData, value: string) => DocumentData;
 export default class TextProperty extends DynamicPropertyContainer {
     _frameId: number;
     _isFirstFrame: boolean;
@@ -9,7 +10,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     currentData: DocumentData;
     data?: TextData;
     defaultBoxWidth: Vector2;
-    effectsSequence: any[];
+    effectsSequence: EffectFunction[];
     elem: ElementInterfaceIntersect;
     frameId?: number;
     keysIndex: number;
@@ -19,7 +20,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     pv: DocumentData | string;
     v: DocumentData | string;
     constructor(elem: ElementInterfaceIntersect, data?: TextData);
-    addEffect(effectFunction: unknown): void;
+    addEffect(effectFunction: EffectFunction): void;
     buildFinalText(text: string): string[];
     canResizeFont(_canResize: boolean): void;
     completeTextData(documentData: DocumentData): void;
@@ -33,3 +34,4 @@ export default class TextProperty extends DynamicPropertyContainer {
     setMinimumFontSize(_fontValue: number): void;
     updateDocumentData(newData: DocumentData, indexFromProps: number): void;
 }
+export {};

@@ -4,7 +4,7 @@ import { ValueProperty } from '../../utils/Properties';
 export default class TextSelectorProperty extends DynamicPropertyContainer {
     _currentTextLength: number;
     a: ValueProperty;
-    b?: any;
+    b?: ValueProperty;
     comp?: ElementInterfaceIntersect;
     data: TextRangeValue;
     e: ValueProperty | {
@@ -14,13 +14,13 @@ export default class TextSelectorProperty extends DynamicPropertyContainer {
     finalE: number;
     finalS: number;
     k: boolean;
-    ne: any;
-    o: any;
+    ne: ValueProperty;
+    o: ValueProperty;
     rn?: number;
     s: ValueProperty;
-    sm: any;
+    sm: ValueProperty;
     totalChars?: number;
-    xe: any;
+    xe: ValueProperty;
     constructor(elem: ElementInterfaceIntersect, data: TextRangeValue);
     getMult(indFromProps: number, _val?: number): number | number[];
     getValue(newCharsFlag?: boolean): void;

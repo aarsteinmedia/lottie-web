@@ -81,6 +81,6 @@ export declare class SVGGaussianBlurEffect {
     renderFrame(forceRender?: boolean): void;
 }
 export declare class SVGTransformEffect extends TransformEffect {
-    constructor(_: any, filterManager: GroupEffect);
+    constructor(_: SVGFilterElement, filterManager: GroupEffect);
 }
 export {};

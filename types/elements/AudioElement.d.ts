@@ -1,6 +1,6 @@
 import type { Audio, ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer, Vector2 } from '../types';
 import type { MultiDimensionalProperty, ValueProperty } from '../utils/Properties';
-import RenderableElement from './helpers/RenderableElement';
+import RenderableElement from '../elements/helpers/RenderableElement';
 export default class AudioElement extends RenderableElement {
     _canPlay: boolean;
     _currentTime: number;
@@ -13,7 +13,7 @@ export default class AudioElement extends RenderableElement {
     lv: MultiDimensionalProperty<Vector2>;
     tm: ValueProperty;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
-    getBaseElement(): null;
+    getBaseElement(): SVGGElement | null;
     hide(): void;
     pause(): void;
     prepareFrame(num: number): void;
