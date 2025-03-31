@@ -6,17 +6,8 @@ import type {
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import { extendPrototype } from '@/utils/functionExtensions'
-
-// TODO: This is a mixin mess
 export default abstract class RenderableDOMElement extends RenderableElement {
-  createContainerElements: any
-
-  initRendererElement: any
-
   innerElem?: SVGElement | null
-
-  renderElement: any
 
   constructor() {
     super()
@@ -30,8 +21,15 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method addPendingElement is not implemented`
     )
   }
+  createContainerElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createContainerElements is not implemented`
+    )
+  }
   createContent() {
-    /** Fallback */
+    throw new Error(
+      `${this.constructor.name}: Method createContent is not implemented`
+    )
   }
   createItem(_data: LottieLayer) {
     throw new Error(
@@ -39,7 +37,9 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     )
   }
   createRenderableComponents() {
-    // throw new Error()
+    throw new Error(
+      `${this.constructor.name}: Method createRenderableComponents is not implemented`
+    )
   }
   destroy() {
     this.innerElem = null
@@ -50,7 +50,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
   }
-  hide() {
+  override hide() {
     if (!this.hidden && (!this.isInRange || this.isTransparent)) {
       const elem = this.baseElement || this.layerElement
       if (elem) {
@@ -76,14 +76,21 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.createContent()
     this.hide()
   }
-  // initFrame() {
-  //   throw new Error('RenderableDOMElement: Method initFrame in not implemented')
-  // }
+  initRendererElement() {
+    throw new Error(
+      `${this.constructor.name}: Method initRendererElement is not implemented`
+    )
+  }
   prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
     this.checkTransparency()
+  }
+  renderElement() {
+    throw new Error(
+      `${this.constructor.name}: Method renderElement is not implemented`
+    )
   }
   renderFrame(_frame?: number | null) {
     // If it is exported as hidden (data.hd === true) no need to render
@@ -106,9 +113,12 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     }
   }
   renderInnerContent() {
-    // throw new Error()
+    // TODO:
+    // throw new Error(
+    //   `${this.constructor.name}: Method renderInnerContent is not implemented`
+    // )
   }
-  show() {
+  override show() {
     if (!this.data) {
       throw new Error(
         `${this.constructor.name}: data (LottieLayer) is not implemented`
@@ -131,10 +141,22 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
 }
 
-// TODO: TextElement needs this mixin
+// const props = Object.getOwnPropertyNames(RenderableElement.prototype),
+//   sorted = props.sort((a, b) => {
+//     if (a < b) {
+//       return -1
+//     }
+//     if (a > b) {
+//       return 1
+//     }
+//     return 0
+//   })
 
-// for (const proto of Object.getOwnPropertyNames(RenderableElement.prototype)) {
-//   console.log(proto)
+// for (const s of sorted) {
+//   if (s === 'constructor') {
+//     continue
+//   }
+//   console.log(s)
 // }
 
-extendPrototype([RenderableElement], RenderableDOMElement)
+// extendPrototype([RenderableElement], RenderableDOMElement)

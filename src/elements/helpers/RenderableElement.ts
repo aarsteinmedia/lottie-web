@@ -10,11 +10,13 @@ export default class RenderableElement extends FrameElement {
   isInRange?: boolean
   isTransparent?: boolean
   private renderableComponents: ElementInterfaceIntersect[] = []
+
   addRenderableComponent(component: ElementInterfaceIntersect) {
     if (this.renderableComponents.indexOf(component) === -1) {
       this.renderableComponents.push(component)
     }
   }
+
   checkLayerLimits(num: number) {
     if (!this.data || !this.globalData) {
       return
@@ -35,11 +37,13 @@ export default class RenderableElement extends FrameElement {
       this.hide()
     }
   }
+
   checkLayers(_val?: number) {
     throw new Error(
       `${this.constructor.name}: Method checkLayers is not implemented`
     )
   }
+
   checkTransparency() {
     if (!this.finalTransform) {
       throw new Error(
@@ -62,6 +66,7 @@ export default class RenderableElement extends FrameElement {
       this.show()
     }
   }
+
   getLayerSize() {
     if (this.data?.ty === 5) {
       return {
@@ -71,9 +76,11 @@ export default class RenderableElement extends FrameElement {
     }
     return { h: Number(this.data?.height), w: Number(this.data?.width) }
   }
-  // hide() {
-  //   throw new Error(`${this.constructor.name}: Method hide not implemented yet`)
-  // }
+
+  hide() {
+    throw new Error(`${this.constructor.name}: Method hide not implemented yet`)
+  }
+
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
     this.isInRange = false
@@ -104,9 +111,9 @@ export default class RenderableElement extends FrameElement {
       this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
   }
 
-  // show() {
-  // throw new Error(`${this.constructor.name}: Method show not implemented yet`)
-  // }
+  show() {
+    throw new Error(`${this.constructor.name}: Method show not implemented yet`)
+  }
 
   sourceRectAtTime(): SourceRect | null {
     return {
