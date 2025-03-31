@@ -158,5 +158,3 @@ export default abstract class RenderableDOMElement extends RenderableElement {
 //   }
 //   console.log(s)
 // }
-
-// extendPrototype([RenderableElement], RenderableDOMElement)

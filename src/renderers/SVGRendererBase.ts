@@ -9,7 +9,6 @@ import type {
 import ImageElement from '@/elements/ImageElement'
 import NullElement from '@/elements/NullElement'
 import SolidElement from '@/elements/SolidElement'
-// import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
@@ -133,15 +132,9 @@ export default class SVGRendererBase extends BaseRenderer {
               'tp' in element.data
                 ? this.findIndexByInd(element.data.tp)
                 : i - 1,
-            matteElement = this.elements[elementIndex]
-          // if (!matteElement.getMatte) {
-          //   matteElement.getMatte = new SVGBaseElement().getMatte
-          // }
-          const matteMask = matteElement.getMatte(this.layers[i].tt)
+            matteElement = this.elements[elementIndex],
+            matteMask = matteElement.getMatte(this.layers[i].tt)
 
-          // if (!element.setMatte) {
-          //   console.log(element.constructor.name)
-          // }
           element.setMatte(matteMask)
           break
         }
@@ -152,18 +145,25 @@ export default class SVGRendererBase extends BaseRenderer {
 
   configAnimation(animData: AnimationData) {
     try {
-      if (!this.svgElement) {
-        throw new Error(`${this.constructor.name}: Can't access svgElement`)
+      if (!this.animationItem) {
+        throw new Error(`${this.constructor.name}: Can't access animationItem`)
       }
       if (!this.globalData) {
         throw new Error(`${this.constructor.name}: Can't access globalData`)
       }
+      if (!this.renderConfig) {
+        throw new Error(`${this.constructor.name}: Can't access renderConfig`)
+      }
+      if (!this.svgElement) {
+        throw new Error(`${this.constructor.name}: Can't access svgElement`)
+      }
+
       this.svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
       this.svgElement.setAttribute(
         'xmlns:xlink',
         'http://www.w3.org/1999/xlink'
       )
-      if (this.renderConfig?.viewBoxSize) {
+      if (this.renderConfig.viewBoxSize) {
         this.svgElement.setAttribute('viewBox', this.renderConfig.viewBoxSize)
       } else {
         this.svgElement.setAttribute(
@@ -172,7 +172,7 @@ export default class SVGRendererBase extends BaseRenderer {
         )
       }
 
-      if (!this.renderConfig?.viewBoxOnly) {
+      if (!this.renderConfig.viewBoxOnly) {
         this.svgElement.setAttribute('width', `${animData.w}`)
         this.svgElement.setAttribute('height', `${animData.h}`)
         this.svgElement.style.width = '100%'
@@ -183,37 +183,37 @@ export default class SVGRendererBase extends BaseRenderer {
             this.renderConfig.contentVisibility
         }
       }
-      if (this.renderConfig?.width) {
+      if (this.renderConfig.width) {
         this.svgElement.setAttribute('width', `${this.renderConfig.width}`)
       }
-      if (this.renderConfig?.height) {
+      if (this.renderConfig.height) {
         this.svgElement.setAttribute('height', `${this.renderConfig.height}`)
       }
-      if (this.renderConfig?.className) {
+      if (this.renderConfig.className) {
         this.svgElement.setAttribute('class', this.renderConfig.className)
       }
-      if (this.renderConfig?.id) {
+      if (this.renderConfig.id) {
         this.svgElement.setAttribute('id', this.renderConfig.id)
       }
-      if (this.renderConfig?.focusable !== undefined) {
+      if (this.renderConfig.focusable !== undefined) {
         this.svgElement.setAttribute(
           'focusable',
           `${this.renderConfig.focusable}`
         )
       }
-      if (this.renderConfig?.preserveAspectRatio) {
+      if (this.renderConfig.preserveAspectRatio) {
         this.svgElement.setAttribute(
           'preserveAspectRatio',
           this.renderConfig.preserveAspectRatio
         )
       }
 
-      this.animationItem?.wrapper?.appendChild(this.svgElement)
+      this.animationItem.wrapper?.appendChild(this.svgElement)
       // Mask animation
       const defs = this.globalData.defs
 
       this.setupGlobalData(animData, defs)
-      this.globalData.progressiveLoad = this.renderConfig?.progressiveLoad
+      this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
       this.data = animData as unknown as LottieLayer
 
       const maskElement = createNS<SVGClipPathElement>('clipPath'),
@@ -231,7 +231,7 @@ export default class SVGRendererBase extends BaseRenderer {
       )
 
       defs.appendChild(maskElement)
-      this.layers = animData.layers || []
+      this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
     } catch (err) {
       console.error(err)
@@ -294,22 +294,29 @@ export default class SVGRendererBase extends BaseRenderer {
   }
 
   destroy() {
-    if (this.animationItem?.wrapper) {
+    if (!this.animationItem) {
+      throw new Error(`${this.constructor.name}: Can't access animationItem`)
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
+    }
+
+    if (this.animationItem.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
     this.layerElement = null as unknown as SVGGElement
-    this.globalData!.defs = null as unknown as SVGDefsElement
-    const { length } = this.layers || []
+    this.globalData.defs = null as unknown as SVGDefsElement
+    const { length } = this.layers
     for (let i = 0; i < length; i++) {
       this.elements[i].destroy()
     }
-    this.elements!.length = 0
+    this.elements.length = 0
     this.destroyed = true
     this.animationItem = null as unknown as AnimationItem
   }
 
   findIndexByInd(ind?: number) {
-    const { length } = this.layers || []
+    const { length } = this.layers
     for (let i = 0; i < length; i++) {
       if (this.layers[i].ind === ind) {
         return i
@@ -345,7 +352,7 @@ export default class SVGRendererBase extends BaseRenderer {
       this.globalData.frameId += 1
       this.globalData.projectInterface.currentFrame = num
       this.globalData._mdf = false
-      const { length } = this.layers || []
+      const { length } = this.layers
       if (!this.completeLayers) {
         this.checkLayers(num)
       }
@@ -367,14 +374,17 @@ export default class SVGRendererBase extends BaseRenderer {
   }
 
   show() {
-    if (this.layerElement) {
-      this.layerElement.style.display = 'block'
+    if (!this.layerElement) {
+      throw new Error(
+        `${this.constructor.name}: layerElement is not implemented`
+      )
     }
+    this.layerElement.style.display = 'block'
   }
 
   updateContainerSize(_width?: number, _height?: number) {
     throw new Error(
-      'SVGRendererBase: Method updateContainerSize is not implemented'
+      `${this.constructor.name}: Method updateContainerSize is not implemented`
     )
   }
 }
