@@ -1,5 +1,5 @@
 import type AnimationItem from './animation/AnimationItem';
-import type { ExpressionsPlugin } from './types';
+import type { AnimationData, AnimationDirection, AnimationSettings, ExpressionsPlugin, Vector2 } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
 export declare function installPlugin(type: string, plugin: ExpressionsPlugin): void;
 export declare function setSubframeRendering(flag: boolean): void;
@@ -29,5 +29,5 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
-export type { AnimationItem };
+export type { AnimationItem, AnimationData, AnimationDirection, AnimationSettings, Vector2, };
 export default Lottie;

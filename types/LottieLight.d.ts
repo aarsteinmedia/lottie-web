@@ -1,4 +1,5 @@
 import type AnimationItem from './animation/AnimationItem';
+import type { AnimationData, AnimationDirection, AnimationSettings, Vector2 } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
 export declare function setSubframeRendering(flag: boolean): void;
 declare const Lottie: {
@@ -27,5 +28,5 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
-export type { AnimationItem };
+export type { AnimationItem, AnimationData, AnimationDirection, AnimationSettings, Vector2, };
 export default Lottie;

@@ -340,11 +340,8 @@ export interface LottieManifest {
     keywords?: string;
     version?: string;
 }
-export type AnimateOnScroll = boolean | '' | null;
-export type Autoplay = boolean | '' | 'autoplay' | null;
-export type Controls = boolean | '' | 'controls' | null;
-export type Loop = boolean | '' | 'loop' | null | number;
-export type Subframe = boolean | '' | null;
+type Autoplay = boolean | '' | 'autoplay' | null;
+type Loop = boolean | '' | 'loop' | null | number;
 type Vector1 = number;
 export type Vector2 = [number, number];
 export type Vector3 = [number, number, number];

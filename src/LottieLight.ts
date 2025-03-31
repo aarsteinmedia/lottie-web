@@ -1,4 +1,10 @@
 import type AnimationItem from '@/animation/AnimationItem'
+import type {
+  AnimationData,
+  AnimationDirection,
+  AnimationSettings,
+  Vector2,
+} from '@/types'
 
 import {
   play,
@@ -94,6 +100,12 @@ registerModifier('rd', RoundCornersModifier)
 registerModifier('zz', ZigZagModifier)
 registerModifier('op', OffsetPathModifier)
 
-export type { AnimationItem }
+export type {
+  AnimationItem,
+  AnimationData,
+  AnimationDirection,
+  AnimationSettings,
+  Vector2,
+}
 
 export default Lottie
