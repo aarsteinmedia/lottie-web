@@ -27,7 +27,7 @@ import { createRenderFunction } from '@/renderers/SVGElementsRenderer'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import { getModifier } from '@/utils/shapes/ShapeModifiers' // type ShapeModifierInterface,
+import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TrimModifier from '@/utils/shapes/TrimModifier'
 import TransformProperty from '@/utils/TransformProperty'

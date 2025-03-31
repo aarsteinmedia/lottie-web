@@ -107,7 +107,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     if (isServer()) {
       return null as unknown as T
     }
-    // return {appendChild:function(){},setAttribute:function(){},style:{}}
     return document.createElement(type) as T
   },
   createQuaternion = (values: Vector3): Vector4 => {
@@ -178,18 +177,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
     return str.split('.').pop()?.toLowerCase()
   },
-  // getFactory = (name: string) => {
-  //   switch (name) {
-  //     case 'propertyFactory':
-  //       return PropertyFactory
-  //     case 'shapePropertyFactory':
-  //       return ShapePropertyFactory
-  //     case 'matrix':
-  //       return Matrix
-  //     default:
-  //       return null
-  //   }
-  // },
   getIntersection = (a: PolynomialBezier, b: PolynomialBezier) => {
     const intersect = a.intersections(b)
 

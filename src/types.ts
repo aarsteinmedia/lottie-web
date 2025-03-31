@@ -394,7 +394,7 @@ export interface Shape {
     k: any[]
   }
   /** Position */
-  p?: VectorProperty<Vector2> // { s: number; x: VectorProperty; y: VectorProperty; z: VectorProperty }
+  p?: VectorProperty<Vector2>
   pt?: VectorProperty<ShapePath | ShapePath[]>
   /** Rotation (for transforms) | Fill-rule (for fills) */
   r?: VectorProperty<{ e: number; s: number; t: number }[]>
@@ -555,7 +555,7 @@ export interface MaskData {
 
 export interface Mask {
   cl?: string
-  d?: number // StrokeData
+  d?: number
   inv: boolean
   mode: string
   nm: string
@@ -628,7 +628,7 @@ export interface DocumentData extends FontList {
   j?: number
   justifyOffset?: number
   k: {
-    s: LetterProps | DocumentData // TODO: This may be a workarount, idk
+    s: LetterProps | DocumentData
     t: number
   }[]
   l?: Letter[]
@@ -935,7 +935,7 @@ export interface LottieLayer {
   refId?: string
   sc?: string
   sh?: number
-  shapes: Shape[] // Readonly<Shape[]>
+  shapes: Shape[]
   singleShape?: boolean
   slots?: {
     [key: string]: {

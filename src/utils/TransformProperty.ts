@@ -302,7 +302,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
           v1 = [0, 0] // TODO: Used to be []. Check if works
-          v2 = [0, 0] // TODO: Used to be []. Check if works
+          v2 = [0, 0]
           const px = this.px,
             py = this.py
           if (

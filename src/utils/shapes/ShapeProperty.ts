@@ -699,7 +699,7 @@ class StarShapeProperty extends ShapeBaseProperty {
       currentAng += angle * dir
     }
     ;(this.paths as any).length = 0 // TODO: Check if values are different in star shapes
-    ;(this.paths as any)[0] = this.v // TODO:
+    ;(this.paths as any)[0] = this.v
   }
   convertStarToPath() {
     const numPts = Math.floor(this.pt.v) * 2

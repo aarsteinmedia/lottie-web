@@ -61,23 +61,29 @@ export default class CompElement extends RenderableDOMElement {
   }
 
   override prepareFrame(val: number) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+
     this._mdf = false
     this.prepareRenderableFrame(val)
     this.prepareProperties(val, this.isInRange)
-    if (!this.isInRange && !this.data?.xt) {
+    if (!this.isInRange && !this.data.xt) {
       return
     }
 
     if (this.tm?._placeholder) {
-      this.renderedFrame = val / Number(this.data?.sr)
+      this.renderedFrame = val / Number(this.data.sr)
     } else {
       let timeRemapped = this.tm?.v
-      if (timeRemapped === this.data?.op) {
-        timeRemapped = Number(this.data?.op) - 1
+      if (timeRemapped === this.data.op) {
+        timeRemapped = this.data.op - 1
       }
       this.renderedFrame = Number(timeRemapped)
     }
-    const { length } = this.elements || []
+    const { length } = this.elements
     if (!this.completeLayers) {
       if (!this.checkLayers) {
         throw new Error(
@@ -88,11 +94,9 @@ export default class CompElement extends RenderableDOMElement {
     }
     // This iteration needs to be backwards because of how expressions connect between each other
     for (let i = length - 1; i >= 0; i--) {
-      if (this.completeLayers || this.elements?.[i]) {
-        this.elements?.[i].prepareFrame?.(
-          this.renderedFrame - Number(this.layers?.[i].st)
-        )
-        if (this.elements?.[i]._mdf) {
+      if (this.completeLayers || this.elements[i]) {
+        this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st)
+        if (this.elements[i]._mdf) {
           this._mdf = true
         }
       }
@@ -100,7 +104,7 @@ export default class CompElement extends RenderableDOMElement {
   }
 
   override renderInnerContent() {
-    const { length } = this.layers || []
+    const { length } = this.layers
     for (let i = 0; i < length; i++) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i].renderFrame()
