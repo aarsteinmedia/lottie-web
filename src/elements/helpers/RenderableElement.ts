@@ -54,7 +54,10 @@ export default class RenderableElement extends FrameElement {
         this.isTransparent = true
         this.hide()
       }
-    } else if (this.isTransparent) {
+      return
+    }
+
+    if (this.isTransparent) {
       this.isTransparent = false
       this.show()
     }
@@ -67,16 +70,6 @@ export default class RenderableElement extends FrameElement {
       }
     }
     return { h: Number(this.data?.height), w: Number(this.data?.width) }
-  }
-  hide() {
-    if (!this.hidden && (!this.isInRange || this.isTransparent)) {
-      const elem = this.baseElement || this.layerElement
-      if (elem) {
-        elem.style.display = 'none'
-      }
-
-      this.hidden = true
-    }
   }
   // hide() {
   //   throw new Error('RenderableElement: Method hide not implemented yet')

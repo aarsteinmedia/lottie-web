@@ -50,6 +50,16 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
   }
+  hide() {
+    if (!this.hidden && (!this.isInRange || this.isTransparent)) {
+      const elem = this.baseElement || this.layerElement
+      if (elem) {
+        elem.style.display = 'none'
+      }
+
+      this.hidden = true
+    }
+  }
   initElement(
     data: LottieLayer,
     globalData: GlobalData,
