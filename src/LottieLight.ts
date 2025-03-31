@@ -1,5 +1,6 @@
 import type AnimationItem from '@/animation/AnimationItem'
 import type {
+  AnimationConfiguration,
   AnimationData,
   AnimationDirection,
   AnimationSettings,
@@ -101,6 +102,7 @@ registerModifier('zz', ZigZagModifier)
 registerModifier('op', OffsetPathModifier)
 
 export type {
+  AnimationConfiguration,
   AnimationItem,
   AnimationData,
   AnimationDirection,

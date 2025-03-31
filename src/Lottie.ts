@@ -1,5 +1,6 @@
 import type AnimationItem from '@/animation/AnimationItem'
 import type {
+  AnimationConfiguration,
   AnimationData,
   AnimationDirection,
   AnimationSettings,
@@ -132,6 +133,7 @@ registerEffect(29, SVGGaussianBlurEffect, true)
 registerEffect(35, SVGTransformEffect, false)
 
 export type {
+  AnimationConfiguration,
   AnimationItem,
   AnimationData,
   AnimationDirection,
