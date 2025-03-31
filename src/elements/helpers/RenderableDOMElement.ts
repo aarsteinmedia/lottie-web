@@ -108,8 +108,33 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   renderInnerContent() {
     // throw new Error()
   }
+  show() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (!this.isInRange && this.isTransparent) {
+      return
+    }
+    if (!this.data.hd) {
+      const elem = this.baseElement || this.layerElement
+      if (!elem) {
+        throw new Error(
+          `${this.constructor.name}: Neither baseElement or layerElement is implemented`
+        )
+      }
+      elem.style.display = 'block'
+    }
+    this.hidden = false
+    this._isFirstFrame = true
+  }
 }
 
 // TODO: TextElement needs this mixin
+
+// for (const proto of Object.getOwnPropertyNames(RenderableElement.prototype)) {
+//   console.log(proto)
+// }
 
 extendPrototype([RenderableElement], RenderableDOMElement)

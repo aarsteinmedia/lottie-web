@@ -72,7 +72,7 @@ export default class RenderableElement extends FrameElement {
     return { h: Number(this.data?.height), w: Number(this.data?.width) }
   }
   // hide() {
-  //   throw new Error('RenderableElement: Method hide not implemented yet')
+  //   throw new Error(`${this.constructor.name}: Method hide not implemented yet`)
   // }
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
@@ -104,18 +104,9 @@ export default class RenderableElement extends FrameElement {
       this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
   }
 
-  show() {
-    if (this.isInRange && !this.isTransparent) {
-      if (!this.data?.hd) {
-        const elem = this.baseElement || this.layerElement
-        if (elem) {
-          elem.style.display = 'block'
-        }
-      }
-      this.hidden = false
-      this._isFirstFrame = true
-    }
-  }
+  // show() {
+  // throw new Error(`${this.constructor.name}: Method show not implemented yet`)
+  // }
 
   sourceRectAtTime(): SourceRect | null {
     return {
