@@ -38,7 +38,7 @@ export default class TextProperty extends DynamicPropertyContainer {
   pv: DocumentData | string
   v: DocumentData | string
 
-  constructor(elem: ElementInterfaceIntersect, data?: TextData) {
+  constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
     this._frameId = initialDefaultFrame
     this.pv = ''
@@ -84,7 +84,8 @@ export default class TextProperty extends DynamicPropertyContainer {
       tr: 0,
       yOffset: 0,
     } as unknown as DocumentData
-    this.copyData(this.currentData, this.data?.d?.k[0].s)
+
+    this.copyData(this.currentData, this.data.d?.k[0].s)
 
     if (!this.searchProperty()) {
       this.completeTextData(this.currentData)
@@ -452,12 +453,18 @@ export default class TextProperty extends DynamicPropertyContainer {
     return obj
   }
   getKeyframeValue() {
-    const textKeys = this.data?.d?.k,
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
+
+    const textKeys = this.data.d?.k || [],
       frameNum = Number(this.elem.comp?.renderedFrame)
     let i = 0
-    const len = textKeys?.length || 0
+    const len = textKeys.length
     while (i <= len - 1) {
-      if (i === len - 1 || Number(textKeys?.[i + 1].t) > frameNum) {
+      if (i === len - 1 || Number(textKeys[i + 1].t) > frameNum) {
         break
       }
       i++
@@ -465,9 +472,15 @@ export default class TextProperty extends DynamicPropertyContainer {
     if (this.keysIndex !== i) {
       this.keysIndex = i
     }
-    return this.data?.d?.k[this.keysIndex].s
+    return this.data.d?.k[this.keysIndex].s
   }
   override getValue(_finalValue: unknown) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (TextData) is not implemented`
+      )
+    }
+
     if (
       (this.elem.globalData.frameId === this.frameId ||
         !this.effectsSequence.length) &&
@@ -475,7 +488,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     ) {
       return
     }
-    if (this.data?.d?.k[this.keysIndex].s.t) {
+    if (this.data.d?.k[this.keysIndex].s.t) {
       this.currentData.t = this.data.d.k[this.keysIndex].s.t!
     }
     const currentValue = this.currentData,
@@ -488,7 +501,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     this._mdf = false
     const { length } = this.effectsSequence
     let finalValue =
-      (_finalValue as DocumentData) || this.data?.d?.k[this.keysIndex].s
+      (_finalValue as DocumentData) || this.data.d?.k[this.keysIndex].s
     for (let i = 0; i < length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
@@ -513,7 +526,13 @@ export default class TextProperty extends DynamicPropertyContainer {
   }
 
   recalculate(index: number) {
-    const dData = this.data?.d!.k[index].s
+    if (!this.data?.d) {
+      throw new Error(
+        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
+      )
+    }
+
+    const dData = this.data.d.k[index].s
     if (dData) {
       dData.__complete = false
     }
@@ -524,7 +543,13 @@ export default class TextProperty extends DynamicPropertyContainer {
   }
 
   searchKeyframes() {
-    this.kf = Number(this.data?.d!.k.length) > 1
+    if (!this.data?.d) {
+      throw new Error(
+        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
+      )
+    }
+
+    this.kf = this.data.d.k.length > 1
     if (this.kf) {
       this.addEffect(this.getKeyframeValue.bind(this) as EffectFunction)
     }
@@ -552,11 +577,16 @@ export default class TextProperty extends DynamicPropertyContainer {
   }
 
   updateDocumentData(newData: DocumentData, indexFromProps: number) {
+    if (!this.data?.d) {
+      throw new Error(
+        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
+      )
+    }
     let index = indexFromProps
     index = index === undefined ? this.keysIndex : index
-    let dData = this.copyData({} as DocumentData, this.data?.d?.k[index].s)
+    let dData = this.copyData({} as DocumentData, this.data.d.k[index].s)
     dData = this.copyData(dData, newData)
-    if (this.data?.d?.k[index].s) {
+    if (this.data.d.k[index].s) {
       this.data.d.k[index].s = dData
     }
 

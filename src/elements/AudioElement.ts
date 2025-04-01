@@ -85,10 +85,15 @@ export default class AudioElement extends RenderableElement {
   }
 
   prepareFrame(num: number) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     this.prepareRenderableFrame(num, true)
     this.prepareProperties(num, true)
     if (this.tm._placeholder) {
-      this._currentTime = num / Number(this.data?.sr)
+      this._currentTime = num / Number(this.data.sr)
     } else {
       this._currentTime = this.tm.v
     }

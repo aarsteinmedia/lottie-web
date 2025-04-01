@@ -93,19 +93,19 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     )
   }
   renderFrame(_frame?: number | null) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     // If it is exported as hidden (data.hd === true) no need to render
     // If it is not visible no need to render
-    if (this.data?.hd || this.hidden) {
+    if (this.data.hd || this.hidden) {
       return
     }
     this.renderTransform()
     this.renderRenderable()
     this.renderLocalTransform()
-    if (!this.renderElement) {
-      throw new Error(
-        `${this.constructor.name}: Method renderElement is not implemented`
-      )
-    }
     this.renderElement()
     this.renderInnerContent()
     if (this._isFirstFrame) {

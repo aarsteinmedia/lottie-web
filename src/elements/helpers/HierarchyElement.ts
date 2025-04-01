@@ -14,12 +14,22 @@ export default class HierarchyElement extends TransformElement {
    * Searches layer's parenting chain
    */
   checkParenting() {
-    if (!('parent' in (this.data || {}))) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (!this.comp) {
+      throw new Error(
+        `${this.constructor.name}: comp (ElementInterface) is not implemented`
+      )
+    }
+    if (!this.data.parent) {
       return
     }
-    this.comp?.buildElementParenting(
+    this.comp.buildElementParenting(
       this as unknown as ElementInterfaceIntersect,
-      this.data?.parent,
+      this.data.parent,
       []
     )
   }

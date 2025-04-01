@@ -103,6 +103,11 @@ export default class TextElement extends RenderableDOMElement {
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
+    if (!data.t) {
+      throw new Error(
+        `${this.constructor.name}: data.t (LottieLayer -> TextData) can't be undefined`
+      )
+    }
     this.emptyProp = new LetterProps()
     this.lettersChangedFlag = true
     this.initFrame()
@@ -112,7 +117,7 @@ export default class TextElement extends RenderableDOMElement {
       data.t
     )
     this.textAnimator = new TextAnimatorProperty(
-      data.t!,
+      data.t,
       this.renderType || RendererType.SVG,
       this as unknown as ElementInterfaceIntersect
     )

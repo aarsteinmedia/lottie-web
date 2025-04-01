@@ -67,14 +67,32 @@ export default class SVGTextLottieElement extends TextElement {
   }
 
   override buildNewText() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+
+    if (!this.layerElement) {
+      throw new Error(
+        `${this.constructor.name}: layerElement is not implemented`
+      )
+    }
+
+    if (!this.textProperty?.currentData) {
+      throw new Error(
+        `${this.constructor.name}: DocumentData is not implemented`
+      )
+    }
+
     this.addDynamicProperty(this as unknown as DynamicPropertyContainer)
     let i, len
 
-    const documentData = this.textProperty?.currentData
-
-    if (!this.globalData || !this.layerElement || !documentData) {
-      throw new Error(`${this.constructor.name}: Cannot access required data`)
-    }
+    const documentData = this.textProperty.currentData
 
     this.renderedLetters = createSizedArray(documentData.l?.length || 0)
     if (documentData.fc) {
@@ -114,7 +132,7 @@ export default class SVGTextLottieElement extends TextElement {
     let tSpan: SVGTextElement | SVGGElement | null = null
     const matrixHelper = this.mHelper,
       shapeStr = '',
-      singleShape = this.data?.singleShape
+      singleShape = this.data.singleShape
     let xPos = 0,
       yPos = 0,
       firstLine = true
@@ -241,7 +259,7 @@ export default class SVGTextLottieElement extends TextElement {
             glyphElement = new SVGShapeElement(
               data,
               this.globalData,
-              this as any
+              this as unknown as ElementInterfaceIntersect
             )
           }
           if (this.textSpans[i].glyph) {
@@ -288,8 +306,8 @@ export default class SVGTextLottieElement extends TextElement {
           'preserve'
         )
       }
-      if (singleShape && tSpan) {
-        tSpan.setAttribute('d', shapeStr)
+      if (singleShape) {
+        tSpan?.setAttribute('d', shapeStr)
       }
     }
     while (i < this.textSpans.length && this.textSpans[i].span) {
@@ -340,7 +358,15 @@ export default class SVGTextLottieElement extends TextElement {
   }
 
   override createContent() {
-    if (this.data?.singleShape && !this.globalData?.fontManager?.chars) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (this.data.singleShape && !this.globalData.fontManager?.chars) {
       this.textContainer = createNS<SVGTextElement>('text')
     }
   }
@@ -355,6 +381,11 @@ export default class SVGTextLottieElement extends TextElement {
     )
   }
   getValue() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     const { length } = this.textSpans
     let glyphElement
     this.renderedFrame = this.comp?.renderedFrame
@@ -362,7 +393,7 @@ export default class SVGTextLottieElement extends TextElement {
       glyphElement = this.textSpans[i].glyph
       if (glyphElement) {
         glyphElement.prepareFrame(
-          Number(this.comp?.renderedFrame) - Number(this.data?.st)
+          Number(this.comp?.renderedFrame) - Number(this.data.st)
         )
         if (glyphElement._mdf) {
           this._mdf = true
@@ -371,8 +402,13 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
   override renderInnerContent(this: SVGTextLottieElement) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     this.validateText()
-    if (this.data?.singleShape && !this._mdf) {
+    if (this.data.singleShape && !this._mdf) {
       return
     }
     if (!this.textProperty) {
@@ -428,20 +464,33 @@ export default class SVGTextLottieElement extends TextElement {
   }
 
   override sourceRectAtTime(): SourceRect | null {
-    this.prepareFrame(Number(this.comp?.renderedFrame) - Number(this.data?.st))
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (!this.comp) {
+      throw new Error(
+        `${this.constructor.name}: comp (ElementInterface) is not implemented`
+      )
+    }
+    if (!this.layerElement) {
+      throw new Error(
+        `${this.constructor.name}: layerElement is not implemented`
+      )
+    }
+    this.prepareFrame(Number(this.comp.renderedFrame) - Number(this.data.st))
     this.renderInnerContent()
     if (this._sizeChanged) {
       this._sizeChanged = false
-      const textBox = this.layerElement?.getBBox()
-      if (textBox) {
-        this.bbox = {
-          height: textBox.height,
-          left: textBox.x,
-          top: textBox.y,
-          width: textBox.width,
-        }
-        return this.bbox
+      const textBox = this.layerElement.getBBox()
+      this.bbox = {
+        height: textBox.height,
+        left: textBox.x,
+        top: textBox.y,
+        width: textBox.width,
       }
+      return this.bbox
     }
     return null
   }

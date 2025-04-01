@@ -131,7 +131,12 @@ export default class SVGBaseElement extends RenderableDOMElement {
     this.maskManager?.destroy()
   }
   getBaseElement() {
-    if (this.data?.hd) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (this.data.hd) {
       return null
     }
     return this.baseElement || null

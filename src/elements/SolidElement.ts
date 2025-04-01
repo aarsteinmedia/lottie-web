@@ -18,10 +18,15 @@ export default class SolidElement extends ImageElement {
   }
 
   override createContent() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     const rect = createNS<SVGRectElement>('rect')
-    rect.width.baseVal.value = Number(this.data?.sw)
-    rect.height.baseVal.value = Number(this.data?.sh)
-    if (this.data?.sc) {
+    rect.width.baseVal.value = Number(this.data.sw)
+    rect.height.baseVal.value = Number(this.data.sh)
+    if (this.data.sc) {
       rect.setAttribute('fill', `${this.data.sc}`)
     }
     this.layerElement?.appendChild(rect)

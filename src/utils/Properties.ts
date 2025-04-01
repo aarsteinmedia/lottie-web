@@ -306,24 +306,34 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     return newValue
   }
   processEffectsSequence() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (!this.elem) {
+      throw new Error(
+        `${this.constructor.name}: elem (ElementInterface) is not implemented`
+      )
+    }
     if (
-      this.elem?.globalData.frameId === this.frameId ||
+      this.elem.globalData.frameId === this.frameId ||
       !this.effectsSequence.length
     ) {
       return
     }
     if (this.lock) {
-      this.setVValue(this.pv as number)
+      this.setVValue(this.pv)
       return
     }
     this.lock = true
     this._mdf = !!this._isFirstFrame
     const len = this.effectsSequence.length
-    let finalValue = this.kf ? this.pv : this.data?.k
+    let finalValue = this.kf ? this.pv : this.data.k
     for (let i = 0; i < len; i++) {
       finalValue = this.effectsSequence[i](finalValue)
     }
-    this.setVValue(finalValue as number)
+    this.setVValue(finalValue)
     this._isFirstFrame = false
     this.lock = false
     this.frameId = this.elem?.globalData.frameId

@@ -219,6 +219,12 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     return this.pv
   }
   processEffectsSequence() {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
+
     if (this.elem?.globalData?.frameId === this.frameId || 0) {
       return
     }
@@ -235,10 +241,10 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     let finalValue
     if (this.kf) {
       finalValue = this.pv
-    } else if (this.data?.ks) {
+    } else if (this.data.ks) {
       finalValue = this.data.ks.k
     } else {
-      finalValue = this.data?.pt?.k
+      finalValue = this.data.pt?.k
     }
     let i
     const len = this.effectsSequence.length
@@ -256,12 +262,12 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     if (!this.v || !newPath) {
       throw new Error(`${this.constructor.name}: ShapePath is not set`)
     }
+    if (!this.localShapeCollection) {
+      throw new Error(
+        `${this.constructor.name}: localShapeCollection is not set`
+      )
+    }
     if (!this.shapesEqual(this.v, newPath)) {
-      if (!this.localShapeCollection) {
-        throw new Error(
-          `${this.constructor.name}: localShapeCollection is not set`
-        )
-      }
       this.v = clone(newPath)
       this.localShapeCollection.releaseShapes()
       this.localShapeCollection.addShape(this.v)
@@ -669,17 +675,21 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
 
   convertPolygonToPath() {
-    const numPts = Math.floor(this.pt.v)
-    const angle = (Math.PI * 2) / numPts
-    const rad = this.or.v
-    const roundness = this.os.v
-    const perimSegment = (2 * Math.PI * rad) / (numPts * 4)
-    let i
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
+    const numPts = Math.floor(this.pt.v),
+      angle = (Math.PI * 2) / numPts,
+      rad = this.or.v,
+      roundness = this.os.v,
+      perimSegment = (2 * Math.PI * rad) / (numPts * 4)
     let currentAng = -Math.PI * 0.5
-    const dir = this.data?.d === 3 ? -1 : 1
+    const dir = this.data.d === 3 ? -1 : 1
     currentAng += this.r.v
     this.v!._length = 0
-    for (i = 0; i < numPts; i++) {
+    for (let i = 0; i < numPts; i++) {
       let x = rad * Math.cos(currentAng)
       let y = rad * Math.sin(currentAng)
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y)
@@ -702,8 +712,20 @@ class StarShapeProperty extends ShapeBaseProperty {
     ;(this.paths as any)[0] = this.v
   }
   convertStarToPath() {
-    const numPts = Math.floor(this.pt.v) * 2
-    const angle = (Math.PI * 2) / numPts
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
+
+    if (!this.v) {
+      throw new Error(
+        `${this.constructor.name}: v (ShapePath) is not implemented`
+      )
+    }
+
+    const numPts = Math.floor(this.pt.v) * 2,
+      angle = (Math.PI * 2) / numPts
     /* this.v.v.length = numPts;
               this.v.i.length = numPts;
               this.v.o.length = numPts; */
@@ -719,8 +741,8 @@ class StarShapeProperty extends ShapeBaseProperty {
       perimSegment,
       currentAng = -Math.PI / 2
     currentAng += this.r.v
-    const dir = this.data?.d === 3 ? -1 : 1
-    this.v!._length = 0
+    const dir = this.data.d === 3 ? -1 : 1
+    this.v._length = 0
     for (let i = 0; i < numPts; i++) {
       rad = longFlag ? longRad : shortRad
       roundness = longFlag ? longRound : shortRound
@@ -895,6 +917,7 @@ class KeyframedShapeProperty extends ShapeBaseProperty {
   public lastFrame
   constructor(elem: ShapeElement, data: Shape, type: number) {
     super()
+    this.data = data
     this.propType = 'shape'
     this.comp = elem.comp
     this.elem = elem
@@ -906,7 +929,7 @@ class KeyframedShapeProperty extends ShapeBaseProperty {
     this.keyframesMetadata = []
     this.k = true
     this.kf = true
-    const { length } = this.keyframes[0]?.s?.[0].i || []
+    const { length } = this.keyframes[0].s?.[0].i || []
     this.v = newElement()
     this.v.setPathData(!!this.keyframes[0].s?.[0].c, length)
     this.pv = clone(this.v)

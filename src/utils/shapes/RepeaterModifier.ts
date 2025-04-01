@@ -164,6 +164,12 @@ export default class RepeaterModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
+
     let items,
       itemsTransform,
       i,
@@ -325,8 +331,8 @@ export default class RepeaterModifier extends ShapeModifier {
         iteration -= offsetModulo
       }
     }
-    i = this.data?.m === 1 ? 0 : this._currentCopies - 1
-    dir = this.data?.m === 1 ? 1 : -1
+    i = this.data.m === 1 ? 0 : this._currentCopies - 1
+    dir = this.data.m === 1 ? 1 : -1
     cont = this._currentCopies
     let j
     while (cont) {

@@ -180,6 +180,11 @@ export default class TransformProperty extends DynamicPropertyContainer {
     this._isDirty = true
   }
   applyToMatrix(mat: Matrix) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (Shape) is not implemented`
+      )
+    }
     const _mdf = this._mdf
     this.iterateDynamicProperties()
     this._mdf = this._mdf || _mdf
@@ -203,7 +208,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         .rotateY(Number(this.or?.v[1]))
         .rotateX(Number(this.or?.v[0]))
     }
-    if (this.data?.p && 's' in this.data.p) {
+    if (this.data.p && 's' in this.data.p) {
       if ('z' in this.data.p) {
         mat.translate(
           Number(this.px?.v),

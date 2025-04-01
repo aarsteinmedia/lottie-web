@@ -68,13 +68,18 @@ export default class RenderableElement extends FrameElement {
   }
 
   getLayerSize() {
-    if (this.data?.ty === 5) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    if (this.data.ty === 5) {
       return {
         h: Number(this.data.textData?.height),
         w: Number(this.data.textData?.width),
       }
     }
-    return { h: Number(this.data?.height), w: Number(this.data?.width) }
+    return { h: Number(this.data.height), w: Number(this.data.width) }
   }
 
   hide() {

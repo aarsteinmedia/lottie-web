@@ -30,15 +30,20 @@ export default abstract class BaseElement {
   shapesData: Shape[] = []
   type?: unknown
   checkMasks() {
-    if (!this.data?.hasMask) {
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not initialized`
+      )
+    }
+    if (!this.data.hasMask) {
       return false
     }
     let i = 0
-    const { length } = this.data?.masksProperties || []
+    const { length } = this.data.masksProperties || []
     while (i < length) {
       if (
-        this.data?.masksProperties?.[i].mode !== 'n' &&
-        this.data?.masksProperties?.[i].cl !== (false as unknown as string)
+        this.data.masksProperties?.[i].mode !== 'n' &&
+        this.data.masksProperties?.[i].cl !== (false as unknown as string)
       ) {
         return true
       }
@@ -85,7 +90,7 @@ export default abstract class BaseElement {
       TextExpressionInterface = new ExpressionsInterfaces('text'),
       CompExpressionInterface = new ExpressionsInterfaces('comp')
     this.layerInterface = (LayerExpressionInterface as any)(this) // TODO:
-    if (this.data?.hasMask && this.maskManager) {
+    if (this.data.hasMask && this.maskManager) {
       this.layerInterface?.registerMaskInterface?.(this.maskManager)
     }
     const effectsInterface =
@@ -116,7 +121,12 @@ export default abstract class BaseElement {
     }
   }
   setBlendMode() {
-    const blendModeValue = getBlendMode(this.data?.bm),
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+    const blendModeValue = getBlendMode(this.data.bm),
       elem = this.baseElement || this.layerElement
 
     if (!elem) {
