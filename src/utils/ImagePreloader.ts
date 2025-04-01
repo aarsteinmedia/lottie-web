@@ -101,7 +101,7 @@ export default class ImagePreloader {
       }
     }
   }
-  public getAsset(assetData: LottieAsset) {
+  public getAsset(assetData: null | LottieAsset) {
     let i = 0
     const { length } = this.images
     while (i < length) {

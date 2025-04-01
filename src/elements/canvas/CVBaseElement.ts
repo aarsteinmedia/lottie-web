@@ -1,9 +1,11 @@
-// import assetManager from '../../utils/helpers/assetManager';
-// import getBlendMode from '../../utils/helpers/blendModes';
-import Matrix from '@/utils/Matrix'
+import type { GlobalData, LottieLayer } from '@/types'
+
 import CVEffects from '@/elements/canvas/CVEffects'
-import CVMaskElement from '@/elements/canvas/CVMaskElement';
-// import effectTypes from '../../utils/helpers/effectTypes';
+import CVMaskElement from '@/elements/canvas/CVMaskElement'
+import { effectTypes } from '@/elements/helpers/TransformElement'
+import { getBlendMode } from '@/utils'
+import { createCanvas, getLumaCanvas } from '@/utils/helpers/AssetManager'
+import Matrix from '@/utils/Matrix'
 
 const operationsMap = {
   1: 'source-in',
@@ -13,6 +15,14 @@ const operationsMap = {
 }
 
 export default class CVBaseElement {
+  _isFirstFrame?: boolean
+  buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
+  data?: LottieLayer
+  globalData?: GlobalData
+  hidden?: boolean
+  isInRange?: boolean
+  isTransparent?: boolean
+  maskManager?: CVMaskElement
   mHelper = new Matrix()
   clearCanvas(canvasContext) {
     canvasContext.clearRect(
@@ -28,15 +38,23 @@ export default class CVBaseElement {
     // nature of the render tree, it's the only simple way to make sure one inner mask doesn't override an outer mask.
     // TODO: try to reduce the size of these buffers to the size of the composition contaning the layer
     // It might be challenging because the layer most likely is transformed in some way
-    if (this.data.tt >= 1) {
-      this.buffers = []
-      const canvasContext = this.globalData.canvasContext
-      const bufferCanvas = assetManager.createCanvas(
-        canvasContext.canvas.width,
-        canvasContext.canvas.height
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
       )
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (Number(this.data.tt) >= 1) {
+      this.buffers = []
+      const canvasContext = this.globalData.canvasContext,
+        bufferCanvas = createCanvas(
+          canvasContext.canvas.width,
+          canvasContext.canvas.height
+        )
       this.buffers.push(bufferCanvas)
-      const bufferCanvas2 = assetManager.createCanvas(
+      const bufferCanvas2 = createCanvas(
         canvasContext.canvas.width,
         canvasContext.canvas.height
       )
@@ -64,53 +82,59 @@ export default class CVBaseElement {
   }
   destroy() {
     this.canvasContext = null
-    this.data = null
-    this.globalData = null
-    this.maskManager.destroy()
+    this.data = null as unknown as LottieLayer
+    this.globalData = null as unknown as GlobalData
+    this.maskManager?.destroy()
   }
   exitLayer() {
-    if (this.data.tt >= 1) {
-      const buffer = this.buffers[1]
-      // On the second buffer we store the current state of the global drawing
-      // that only contains the content of this layer
-      // (if it is a composition, it also includes the nested layers)
-      const bufferCtx = buffer.getContext('2d')
-      this.clearCanvas(bufferCtx)
-      bufferCtx.drawImage(this.canvasContext.canvas, 0, 0)
-      // We clear the canvas again
-      this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
-      this.clearCanvas(this.canvasContext)
-      this.canvasContext.setTransform(this.currentTransform)
-      // We draw the mask
-      const mask = this.comp.getElementById(
-        'tp' in this.data ? this.data.tp : this.data.ind - 1
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
       )
-      mask.renderFrame(true)
-      // We draw the second buffer (that contains the content of this layer)
-      this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
-
-      // If the mask is a Luma matte, we need to do two extra painting operations
-      // the _isProxy check is to avoid drawing a fake canvas in workers that will throw an error
-      if (this.data.tt >= 3 && !document._isProxy) {
-        // We copy the painted mask to a buffer that has a color matrix filter applied to it
-        // that applies the rgb values to the alpha channel
-        const lumaBuffer = assetManager.getLumaCanvas(this.canvasContext.canvas)
-        const lumaBufferCtx = lumaBuffer.getContext('2d')
-        lumaBufferCtx.drawImage(this.canvasContext.canvas, 0, 0)
-        this.clearCanvas(this.canvasContext)
-        // we repaint the context with the mask applied to it
-        this.canvasContext.drawImage(lumaBuffer, 0, 0)
-      }
-      this.canvasContext.globalCompositeOperation = operationsMap[this.data.tt]
-      this.canvasContext.drawImage(buffer, 0, 0)
-      // We finally draw the first buffer (that contains the content of the global drawing)
-      // We use destination-over to draw the global drawing below the current layer
-      this.canvasContext.globalCompositeOperation = 'destination-over'
-      this.canvasContext.drawImage(this.buffers[0], 0, 0)
-      this.canvasContext.setTransform(this.currentTransform)
-      // We reset the globalCompositeOperation to source-over, the standard type of operation
-      this.canvasContext.globalCompositeOperation = 'source-over'
     }
+    if (Number(this.data.tt) < 1) {
+      return
+    }
+    const buffer = this.buffers[1]
+    // On the second buffer we store the current state of the global drawing
+    // that only contains the content of this layer
+    // (if it is a composition, it also includes the nested layers)
+    const bufferCtx = buffer.getContext('2d')
+    this.clearCanvas(bufferCtx)
+    bufferCtx?.drawImage(this.canvasContext.canvas, 0, 0)
+    // We clear the canvas again
+    this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+    this.clearCanvas(this.canvasContext)
+    this.canvasContext.setTransform(this.currentTransform)
+    // We draw the mask
+    const mask = this.comp.getElementById(
+      'tp' in this.data ? this.data.tp : this.data.ind - 1
+    )
+    mask.renderFrame(true)
+    // We draw the second buffer (that contains the content of this layer)
+    this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+
+    // If the mask is a Luma matte, we need to do two extra painting operations
+    // the _isProxy check is to avoid drawing a fake canvas in workers that will throw an error
+    if (Number(this.data.tt) >= 3 && !document._isProxy) {
+      // We copy the painted mask to a buffer that has a color matrix filter applied to it
+      // that applies the rgb values to the alpha channel
+      const lumaBuffer = getLumaCanvas(this.canvasContext.canvas),
+        lumaBufferCtx = lumaBuffer?.getContext('2d')
+      lumaBufferCtx?.drawImage(this.canvasContext.canvas, 0, 0)
+      this.clearCanvas(this.canvasContext)
+      // we repaint the context with the mask applied to it
+      this.canvasContext.drawImage(lumaBuffer, 0, 0)
+    }
+    this.canvasContext.globalCompositeOperation = operationsMap[this.data.tt]
+    this.canvasContext.drawImage(buffer, 0, 0)
+    // We finally draw the first buffer (that contains the content of the global drawing)
+    // We use destination-over to draw the global drawing below the current layer
+    this.canvasContext.globalCompositeOperation = 'destination-over'
+    this.canvasContext.drawImage(this.buffers[0], 0, 0)
+    this.canvasContext.setTransform(this.currentTransform)
+    // We reset the globalCompositeOperation to source-over, the standard type of operation
+    this.canvasContext.globalCompositeOperation = 'source-over'
   }
   hideElement() {
     if (!this.hidden && (!this.isInRange || this.isTransparent)) {
@@ -121,21 +145,36 @@ export default class CVBaseElement {
     // TODO: Pass through
   }
   prepareLayer() {
-    if (this.data.tt >= 1) {
-      const buffer = this.buffers[0]
-      const bufferCtx = buffer.getContext('2d')
-      this.clearCanvas(bufferCtx)
-      // on the first buffer we store the current state of the global drawing
-      bufferCtx.drawImage(this.canvasContext.canvas, 0, 0)
-      // The next four lines are to clear the canvas
-      // TODO: Check if there is a way to clear the canvas without resetting the transform
-      this.currentTransform = this.canvasContext.getTransform()
-      this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
-      this.clearCanvas(this.canvasContext)
-      this.canvasContext.setTransform(this.currentTransform)
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
     }
+    if (Number(this.data.tt) < 1) {
+      return
+    }
+    const buffer = this.buffers[0],
+      bufferCtx = buffer.getContext('2d')
+    this.clearCanvas(bufferCtx)
+    // on the first buffer we store the current state of the global drawing
+    bufferCtx?.drawImage(this.canvasContext.canvas, 0, 0)
+    // The next four lines are to clear the canvas
+    // TODO: Check if there is a way to clear the canvas without resetting the transform
+    this.currentTransform = this.canvasContext.getTransform()
+    this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+    this.clearCanvas(this.canvasContext)
+    this.canvasContext.setTransform(this.currentTransform)
   }
   renderFrame(forceRender?: boolean) {
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
+
     if (this.hidden || this.data.hd) {
       return
     }
@@ -162,6 +201,14 @@ export default class CVBaseElement {
     }
   }
   setBlendMode() {
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (!this.data) {
+      throw new Error(
+        `${this.constructor.name}: data (LottieLayer) is not implemented`
+      )
+    }
     const globalData = this.globalData
     if (globalData.blendMode !== this.data.bm) {
       globalData.blendMode = this.data.bm
@@ -170,10 +217,16 @@ export default class CVBaseElement {
     }
   }
   showElement() {
-    if (this.isInRange && !this.isTransparent) {
-      this.hidden = false
-      this._isFirstFrame = true
-      this.maskManager._isFirstFrame = true
+    if (!this.maskManager) {
+      throw new Error(
+        `${this.constructor.name}: Method maskManager is not implemented`
+      )
     }
+    if (!this.isInRange || this.isTransparent) {
+      return
+    }
+    this.hidden = false
+    this._isFirstFrame = true
+    this.maskManager._isFirstFrame = true
   }
 }

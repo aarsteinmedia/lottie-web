@@ -1,5 +1,9 @@
+import type { ElementInterfaceIntersect } from '@/types'
+
+import { registeredEffects } from '@/utils/getterSetter'
+
 export default class CVEffects {
-  constructor(elem) {
+  constructor(elem: ElementInterfaceIntersect) {
     const { length } = elem.data.ef || []
     this.filters = []
     let filterManager

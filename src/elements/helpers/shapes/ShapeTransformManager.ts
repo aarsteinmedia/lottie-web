@@ -1,12 +1,13 @@
 import Matrix from '@/utils/Matrix'
 
 export default class ShapeTransformManager {
+  transform_key_count: number
+
   constructor() {
     this.sequences = {}
     this.sequenceList = []
     this.transform_key_count = 0
   }
-
   addTransformSequence(transforms) {
     const { length } = transforms
     let key = '_'
@@ -18,7 +19,7 @@ export default class ShapeTransformManager {
       sequence = {
         _mdf: false,
         finalTransform: new Matrix(),
-        transforms: [].concat(transforms),
+        transforms: [...transforms],
       }
       this.sequences[key] = sequence
       this.sequenceList.push(sequence)
@@ -33,13 +34,16 @@ export default class ShapeTransformManager {
     let i = 0
     const { length } = sequence.transforms
     let _mdf = isFirstFrame
-    while (i < length && !isFirstFrame) {
-      if (sequence.transforms[i].transform.mProps._mdf) {
-        _mdf = true
-        break
+    if (!isFirstFrame) {
+      while (i < length) {
+        if (sequence.transforms[i].transform.mProps._mdf) {
+          _mdf = true
+          break
+        }
+        i++
       }
-      i++
     }
+
     if (_mdf) {
       sequence.finalTransform.reset()
       for (i = length - 1; i >= 0; i -= 1) {

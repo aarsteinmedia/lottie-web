@@ -3,9 +3,18 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import Matrix from '@/utils/Matrix'
 
 class CanvasContext {
+  fillStyle: string
+  id: number
+  lineCap: string
+  lineJoin: string
+  lineWidth: string
+  miterLimit: string
+  opacity: number
+  strokeStyle: string
+  transform: number[]
   constructor() {
     this.opacity = -1
-    this.transform = createTypedArray(ArrayType.Float32, 16)
+    this.transform = createTypedArray(ArrayType.Float32, 16) as number[]
     this.fillStyle = ''
     this.strokeStyle = ''
     this.lineWidth = ''
@@ -17,6 +26,23 @@ class CanvasContext {
 }
 
 export default class CVContextData {
+  _length: number
+  appliedFillStyle: string
+  appliedLineCap: string
+  appliedLineJoin: string
+  appliedLineWidth: string
+  appliedMiterLimit: string
+  appliedStrokeStyle: string
+  cArrPos: number
+  cTr: Matrix
+  currentFillStyle: string
+  currentLineCap: string
+  currentLineJoin: string
+  currentLineWidth: string
+  currentMiterLimit: string
+  currentOpacity: number
+  currentStrokeStyle: string
+  transformMat: Matrix
   constructor() {
     this.stack = []
     this.cArrPos = 0
@@ -52,7 +78,7 @@ export default class CVContextData {
 
   duplicate() {
     const newLength = this._length * 2
-    for (let i = this._length; i < newLength; i += 1) {
+    for (let i = this._length; i < newLength; i++) {
       this.stack[i] = new CanvasContext()
     }
     this._length = newLength

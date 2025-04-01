@@ -40,11 +40,19 @@ import type PolynomialBezier from '@/elements/PolynomialBezier'
 import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type TextElement from '@/elements/TextElement'
-import type { PlayMode, ShapeType, RendererType } from '@/enums'
+import type {
+  PlayMode,
+  ShapeType,
+  RendererType,
+  PreserveAspectRatio,
+} from '@/enums'
 import type BaseRenderer from '@/renderers/BaseRenderer'
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type SVGRenderer from '@/renderers/SVGRenderer'
 import type AudioController from '@/utils/audio/AudioController'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type ImagePreloader from '@/utils/ImagePreloader'
 import type Matrix from '@/utils/Matrix'
 import type { BaseProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -138,6 +146,15 @@ export type ElementInterfaceIntersect = BaseElement &
   BaseRenderer &
   AnimationItem &
   TransformElement
+
+export interface TransformCanvas {
+  h: number
+  sx: number
+  sy: number
+  tx: number
+  ty: number
+  w: number
+}
 
 export interface CompInterface extends AnimationItem {
   _mdf?: boolean
@@ -265,9 +282,14 @@ export type SVGRendererConfig = BaseRendererConfig & {
 
 export type CanvasRendererConfig = BaseRendererConfig & {
   clearCanvas?: boolean
-  context?: CanvasRenderingContext2D
+  context?: null | CanvasRenderingContext2D
+  contentVisibility: string
+  id: string
+  imagePreserveAspectRatio: PreserveAspectRatio
+  preserveAspectRatio: PreserveAspectRatio
   progressiveLoad?: boolean
-  preserveAspectRatio?: string
+  runExpressions: any // TODO:
+  dpr?: number
 }
 
 export type HTMLRendererConfig = BaseRendererConfig & {
@@ -1069,10 +1091,13 @@ export interface Caching {
 export interface GlobalData {
   _mdf?: boolean
   audioController?: AudioController
+  blendMode?: string
+  canvasContext?: null | CanvasRenderingContext2D
   compSize?: {
     w: number
     h: number
   }
+  currentGlobalAlpha: number
   defs: SVGDefsElement
   fontManager?: FontManager
   frameId: number
@@ -1080,12 +1105,15 @@ export interface GlobalData {
   frameRate: number
   getAssetData: AnimationItem['getAssetData']
   getAssetsPath: AnimationItem['getAssetsPath']
-  imageLoader?: any
+  imageLoader?: ImagePreloader | null
+  isDashed?: boolean
   nm?: string
   progressiveLoad?: boolean
   projectInterface?: any // ProjectInterface
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
+  renderer?: CanvasRenderer | SVGRenderer
   slotManager?: SlotManager
+  transformCanvas?: TransformCanvas
 }
 
 export interface SourceRect {

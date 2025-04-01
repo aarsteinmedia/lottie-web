@@ -39,13 +39,15 @@ import ImagePreloader from '@/utils/ImagePreloader'
 
 export default class AnimationItem extends BaseEvent {
   public __complete?: boolean
+  public _isFirstFrame?: number
   public animationData: AnimationData
   public animationID: string
   public assets: LottieAsset[]
-
   public assetsPath: string
+
   public audioController: AudioController
   public autoplay: boolean
+  public container?: HTMLCanvasElement
   public currentFrame: number
   public currentRawFrame: number
   public drawnFrameEvent: LottieEvent

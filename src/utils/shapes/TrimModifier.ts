@@ -1,7 +1,7 @@
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 
-import { SVGShapeData } from '@/elements/helpers/shapes'
+import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import { ElementInterfaceIntersect, Shape, Vector2 } from '@/types'
 import { getNewSegment, getSegmentsLength } from '@/utils/Bezier'
 import { segmentsLengthPool } from '@/utils/pooling'

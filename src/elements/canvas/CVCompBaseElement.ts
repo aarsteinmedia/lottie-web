@@ -1,11 +1,3 @@
-import BaseRenderer from '../../renderers/BaseRenderer';
-import {
-  extendPrototype,
-} from '../../utils/functionExtensions';
+import BaseRenderer from '@/renderers/BaseRenderer'
 
-function CVCompBaseElement() {
-
-}
-extendPrototype([BaseRenderer], CVCompBaseElement);
-
-export default CVCompBaseElement;
+export default class CVCompBaseElement extends BaseRenderer {}

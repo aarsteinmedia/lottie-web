@@ -1,3 +1,4 @@
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
@@ -10,7 +11,7 @@ import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
-import { ShapeGroupData, type SVGShapeData } from '@/elements/helpers/shapes'
+import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'

@@ -1,15 +1,21 @@
 import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type { Shape } from '@/types'
 
+import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import { getShapeProp } from '@/utils/shapes/ShapeProperty'
+import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {
-  constructor(element: ShapeElement, data: Shape, styles, transformsManager) {
+  sh: ShapeProperty | null
+  constructor(
+    element: ShapeElement,
+    data: Shape,
+    styles,
+    transformsManager: ShapeTransformManager
+  ) {
     this.styledShapes = []
     this.tr = [0, 0, 0, 0, 0, 0]
     let ty = 4
-
     switch (data.ty) {
       case 'rc':
         ty = 5
@@ -20,7 +26,6 @@ export default class CVShapeData {
       case 'sr':
         ty = 7
     }
-
     this.sh = getShapeProp(element, data, ty)
     const { length } = styles
     let styledShape
@@ -36,7 +41,8 @@ export default class CVShapeData {
         styles[i].elements.push(styledShape)
       }
     }
-    this.setAsAnimated = new SVGShapeData().setAsAnimated
+    const { setAsAnimated } = SVGShapeData.prototype
+    this.setAsAnimated = setAsAnimated
   }
   setAsAnimated() {
     throw new Error(
