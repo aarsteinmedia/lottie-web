@@ -26,7 +26,7 @@ export default class ImageElement extends SVGBaseElement {
     if (this.assetData && this.assetData.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
-    const { renderInnerContent } = new CompElement()
+    const { renderInnerContent } = CompElement.prototype
     this.renderInnerContent = renderInnerContent
     this.initElement(data, globalData, comp)
     this.sourceRect = {

@@ -134,6 +134,8 @@ registerEffect(28, SVGMatte3Effect, false)
 registerEffect(29, SVGGaussianBlurEffect, true)
 registerEffect(35, SVGTransformEffect, false)
 
+// registerEffect(35, CVTransformEffect)
+
 export type {
   AnimationConfiguration,
   AnimationItem,

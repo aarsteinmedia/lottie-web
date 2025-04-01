@@ -23,8 +23,8 @@ export default class SVGEffects {
     const { length } = elem.data.ef || []
     for (let i = 0; i < length; i++) {
       filterManager = null
-      if (elem.data.ef![i].ty && registeredEffects[elem.data.ef![i].ty]) {
-        const Effect = registeredEffects[elem.data.ef![i].ty].effect
+      if (elem.data.ef?.[i].ty && registeredEffects[elem.data.ef[i].ty]) {
+        const Effect = registeredEffects[elem.data.ef[i].ty].effect
 
         filterManager = new Effect(
           fil as any,
@@ -34,7 +34,7 @@ export default class SVGEffects {
           source
         ) as GroupEffect
         source = idPrefix + count
-        if (registeredEffects[elem.data.ef![i].ty].countsAsEffect) {
+        if (registeredEffects[elem.data.ef[i].ty].countsAsEffect) {
           count += 1
         }
       }

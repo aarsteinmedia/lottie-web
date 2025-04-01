@@ -14,7 +14,7 @@ import type {
 } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 
-import ShapeElement from '@/elements/ShapeElement'
+import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { initialDefaultFrame, roundCorner } from '@/utils/getterSetter'

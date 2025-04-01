@@ -103,14 +103,14 @@ export const setLocationHref = (value: string) => {
  */
 export const registeredEffects: {
     [id: string]: {
-      countsAsEffect: boolean
+      countsAsEffect?: boolean
       effect: EffectElement
     }
   } = {},
   registerEffect = (
     id: number,
     effect: EffectElement,
-    countsAsEffect: boolean
+    countsAsEffect?: boolean
   ) => {
     registeredEffects[id] = {
       countsAsEffect,

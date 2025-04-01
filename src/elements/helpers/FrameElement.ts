@@ -22,16 +22,17 @@ export default class FrameElement extends HierarchyElement {
     const { length } = this.dynamicProperties
     for (let i = 0; i < length; i++) {
       if (
-        isVisible ||
-        (this._isParent && this.dynamicProperties[i].propType === 'transform')
+        !isVisible &&
+        !(this._isParent && this.dynamicProperties[i].propType === 'transform')
       ) {
-        this.dynamicProperties[i].getValue()
-        if (!this.globalData || !this.dynamicProperties[i]._mdf) {
-          continue
-        }
-        this.globalData._mdf = true
-        this._mdf = true
+        continue
       }
+      this.dynamicProperties[i].getValue()
+      if (!this.globalData || !this.dynamicProperties[i]._mdf) {
+        continue
+      }
+      this.globalData._mdf = true
+      this._mdf = true
     }
   }
 }

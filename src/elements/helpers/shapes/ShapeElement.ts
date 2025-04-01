@@ -2,7 +2,8 @@ import type { ElementInterfaceIntersect, Shape } from '@/types'
 import type { ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import { ProcessedElement, type SVGShapeData } from '@/elements/helpers/shapes'
+import ProcessedElement from '@/elements/helpers/shapes/ProcessedElement'
+import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 
 export default class ShapeElement extends RenderableDOMElement {
   _length?: number

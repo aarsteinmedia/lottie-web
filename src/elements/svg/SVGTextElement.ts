@@ -54,7 +54,7 @@ export default class SVGTextLottieElement extends TextElement {
       initRendererElement,
       renderElement,
       setMatte,
-    } = new SVGBaseElement()
+    } = SVGBaseElement.prototype
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.getBaseElement = getBaseElement

@@ -95,5 +95,4 @@ const isProd = process.env.NODE_ENV !== 'development',
   })),
   output = outputs.concat(types)
 
-export default isProd ? output : outputs[1]
-// export default isProd ? [module, types] : module
+export default isProd ? output : outputs[0]

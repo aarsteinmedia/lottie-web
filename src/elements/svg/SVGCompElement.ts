@@ -44,7 +44,7 @@ export default class SVGCompElement extends SVGBaseElement {
         createText,
         findIndexByInd,
         hide,
-      } = new SVGRendererBase(),
+      } = SVGRendererBase.prototype,
       {
         destroy,
         destroyElements,
@@ -53,7 +53,7 @@ export default class SVGCompElement extends SVGBaseElement {
         prepareFrame,
         renderInnerContent,
         setElements,
-      } = new CompElement()
+      } = CompElement.prototype
     this.appendElementInPos = appendElementInPos
     this.buildItem = buildItem
     this.checkPendingElements = checkPendingElements

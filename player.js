@@ -94,10 +94,10 @@ const addExt = (ext, str)=>{
     try {
         // Input validation
         if (!animations.length || !manifest) {
-            throw new Error(`Missing or malformed required parameter(s):\n ${animations?.length ? '- manifest\n' : ''} ${manifest ? '- animations\n' : ''}`);
+            throw new Error(`Missing or malformed required parameter(s):\n ${animations.length ? '- manifest\n' : ''} ${manifest ? '- animations\n' : ''}`);
         }
         const manifestCompressionLevel = 0, animationCompressionLevel = 9, // Prepare the dotLottie file
-        name = addExt('lottie', fileName) || `${useId()}.lottie`, dotlottie = {
+        name = addExt('lottie', fileName) || `${createElementID()}.lottie`, dotlottie = {
             'manifest.json': [
                 strToU8(JSON.stringify(manifest), true),
                 {
@@ -114,7 +114,7 @@ const addExt = (ext, str)=>{
                     continue;
                 }
                 const { p: file, u: path } = animations[i].assets[j];
-                if (!file || !path) {
+                if (!file) {
                     continue;
                 }
                 // Original asset.id caused issues with multianimations
@@ -152,7 +152,7 @@ const addExt = (ext, str)=>{
         if (!animation) {
             throw new Error("createJSON: Missing or malformed required parameter(s):\n - animation\n'");
         }
-        const name = addExt('json', fileName) || `${useId()}.json`, jsonString = JSON.stringify(animation);
+        const name = addExt('json', fileName) || `${createElementID()}.json`, jsonString = JSON.stringify(animation);
         return shouldDownload ? download(jsonString, {
             mimeType: 'application/json',
             name
@@ -169,7 +169,7 @@ const addExt = (ext, str)=>{
         data
     ], {
         type: options?.mimeType
-    }), fileName = options?.name || useId(), dataURL = URL.createObjectURL(blob), link = document.createElement('a');
+    }), fileName = options?.name || createElementID(), dataURL = URL.createObjectURL(blob), link = document.createElement('a');
     link.href = dataURL;
     link.download = fileName;
     link.hidden = true;
@@ -401,9 +401,6 @@ const addExt = (ext, str)=>{
         });
     });
     return unzipped;
-}, useId = (prefix)=>{
-    const s4 = ()=>((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
-    return `${`:${s4()}`}_${s4()}`;
 };
 
 /**
@@ -1757,7 +1754,7 @@ var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-
         this._currentAnimation--;
         this._switchInstance(true);
     }
-    async convert({ animations = [], fileName, manifest, shouldDownload = true, src, typeCheck }) {
+    async convert({ animations, fileName, manifest, shouldDownload = true, src, typeCheck }) {
         if (typeCheck || this._isDotLottie) {
             return createJSON({
                 animation: (await getAnimationData(src || this.src))?.animations?.[0],
@@ -1766,7 +1763,7 @@ var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-
             });
         }
         return createDotLottie({
-            animations: animations || (await getAnimationData(this.src)).animations || [],
+            animations: animations || (await getAnimationData(this.src)).animations,
             fileName: `${getFilename(fileName || this.src || 'converted')}.lottie`,
             manifest: {
                 ...manifest || this._manifest,

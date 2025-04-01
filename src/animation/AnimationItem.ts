@@ -563,9 +563,12 @@ export default class AnimationItem extends BaseEvent {
     }
   }
   public resize(width?: number, height?: number) {
+    if (!this.renderer) {
+      throw new Error(`${this.constructor.name}: renderer is not implemented`)
+    }
     // Adding this validation for backwards compatibility in case an event object was being passed down
-    const _width = typeof width === 'number' ? width : undefined
-    const _height = typeof height === 'number' ? height : undefined
+    const _width = typeof width === 'number' ? width : undefined,
+      _height = typeof height === 'number' ? height : undefined
     this.renderer?.updateContainerSize(_width, _height)
   }
   public setCurrentRawFrameValue(value: number) {

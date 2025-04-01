@@ -11,7 +11,8 @@ export default abstract class RenderableDOMElement extends RenderableElement {
 
   constructor() {
     super()
-    const { addPendingElement, checkLayers, createItem } = new BaseRenderer()
+    const { addPendingElement, checkLayers, createItem } =
+      BaseRenderer.prototype
     this.checkLayers = checkLayers
     this.createItem = createItem
     this.addPendingElement = addPendingElement

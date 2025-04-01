@@ -9,21 +9,19 @@ import type {
   Transformer,
 } from '@/types'
 
-import {
-  ShapeGroupData,
-  SVGFillStyleData,
-  SVGGradientFillStyleData,
-  SVGGradientStrokeStyleData,
-  SVGNoStyleData,
-  SVGShapeData,
-  SVGStrokeStyleData,
-  SVGStyleData,
-  SVGTransformData,
-} from '@/elements/helpers/shapes'
-import ShapeElement from '@/elements/ShapeElement'
+import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
+import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
+import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
+import SVGNoStyleData from '@/elements/helpers/shapes/SVGNoStyleData'
+import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
+import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { lineCapEnum, lineJoinEnum } from '@/enums'
-import { createRenderFunction } from '@/renderers/SVGElementsRenderer'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
@@ -65,7 +63,7 @@ export default class SVGShapeElement extends ShapeElement {
       initRendererElement,
       renderElement,
       setMatte,
-    } = new SVGBaseElement()
+    } = SVGBaseElement.prototype
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.destroyBaseElement = destroyBaseElement

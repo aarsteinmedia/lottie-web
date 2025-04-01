@@ -18,18 +18,20 @@ export default class ProjectInterface {
     let i = 0
     const { length } = compositions
     while (i < length) {
-      if (compositions[i].data && compositions[i].data.nm === name) {
-        if (compositions[i].prepareFrame && compositions[i].data.xt) {
-          compositions[i].prepareFrame!(currentFrame)
-        }
-        for (const [key, value] of Object.entries(
-          compositions[i].compInterface
-        )) {
-          ProjectInterface[key as keyof typeof ProjectInterface] = value
-        }
-        break
+      if (compositions[i].data?.nm !== name) {
+        i++
+        continue
       }
-      i++
+      if (compositions[i].prepareFrame && compositions[i].data.xt) {
+        compositions[i].prepareFrame!(currentFrame)
+      }
+      for (const [key, value] of Object.entries(
+        compositions[i].compInterface
+      )) {
+        ProjectInterface[key as keyof typeof ProjectInterface] = value
+      }
+      break
     }
+    i++
   }
 }

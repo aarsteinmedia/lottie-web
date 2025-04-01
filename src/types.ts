@@ -24,26 +24,24 @@ import type AudioElement from '@/elements/AudioElement'
 import type BaseElement from '@/elements/BaseElement'
 import type CompElement from '@/elements/CompElement'
 import type HierarchyElement from '@/elements/helpers/HierarchyElement'
-import type {
-  SVGFillStyleData,
-  SVGGradientFillStyleData,
-  SVGGradientStrokeStyleData,
-  SVGNoStyleData,
-  SVGShapeData,
-  SVGStrokeStyleData,
-  SVGStyleData,
-  SVGTransformData,
-} from '@/elements/helpers/shapes'
+import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
+import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
+import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import type SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
+import type SVGNoStyleData from '@/elements/helpers/shapes/SVGNoStyleData'
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
+import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type TransformElement from '@/elements/helpers/TransformElement'
 import type MaskElement from '@/elements/MaskElement'
 import type PolynomialBezier from '@/elements/PolynomialBezier'
-import type ShapeElement from '@/elements/ShapeElement'
 import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type TextElement from '@/elements/TextElement'
 import type { PlayMode, ShapeType, RendererType } from '@/enums'
 import type BaseRenderer from '@/renderers/BaseRenderer'
-import type { CreateRenderFunction } from '@/renderers/SVGElementsRenderer'
 import type AudioController from '@/utils/audio/AudioController'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'

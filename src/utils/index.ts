@@ -809,4 +809,13 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       intersectData(split[0], data.t1, data.t),
       intersectData(split[1], data.t, data.t2),
     ]
+  },
+  styleDiv = (element: HTMLElement) => {
+    element.style.position = 'absolute'
+    element.style.top = '0'
+    element.style.left = '0'
+    element.style.display = 'block'
+    element.style.transformOrigin = '0 0'
+    element.style.backfaceVisibility = 'visible'
+    element.style.transformStyle = 'preserve-3d'
   }
