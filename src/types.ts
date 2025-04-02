@@ -391,6 +391,7 @@ export interface Shape {
   _length: number
   _processed?: boolean
   _render?: boolean
+  _shouldRender?: boolean
   /** Anchor point / Highlight angle for radial gradient */
   a?: VectorProperty<Vector1 | Vector2 | Vector3>
   /** Blend Mode */

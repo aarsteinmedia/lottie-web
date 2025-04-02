@@ -2,6 +2,7 @@ import type { ElementInterfaceIntersect, Shape } from '@/types'
 import type { ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
+import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ProcessedElement from '@/elements/helpers/shapes/ProcessedElement'
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 
@@ -12,7 +13,7 @@ export default class ShapeElement extends RenderableDOMElement {
 
   shapeModifiers: ShapeModifierInterface[] = []
 
-  shapes: SVGShapeData[] = []
+  shapes: (SVGShapeData | CVShapeData)[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
     const elements = this.processedElements
@@ -57,7 +58,7 @@ export default class ShapeElement extends RenderableDOMElement {
     }
     const { length } = this.shapes
     for (let i = 0; i < length; i++) {
-      this.shapes[i].sh.reset()
+      this.shapes[i].sh?.reset()
     }
 
     const { length: len } = this.shapeModifiers
