@@ -1,7 +1,9 @@
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  TextSpan,
   Vector3,
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -14,12 +16,16 @@ import { createTag } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class CVTextElement extends TextElement {
+  canvasContext?: CanvasRenderingContext2D
+  currentRender: unknown
   fill?: boolean
+  fillColorAnim: boolean
   justifyOffset: number
   renderedLetters: LetterProps[] = []
-
   stroke?: boolean
-
+  strokeColorAnim: boolean
+  strokeWidthAnim: boolean
+  textSpans: TextSpan[]
   tHelper = createTag<HTMLCanvasElement>('canvas').getContext('2d')
   values: {
     fill: string
@@ -50,9 +56,37 @@ export default class CVTextElement extends TextElement {
       stroke: 'rgba(0,0,0,0)',
       sWidth: 0,
     }
+    const {
+      clearCanvas,
+      createContainerElements,
+      createContent,
+      createElements,
+      createRenderableComponents,
+      destroy,
+      exitLayer,
+      hideElement,
+      initRendererElement,
+      prepareLayer,
+      renderFrame,
+      setBlendMode,
+      showElement,
+    } = CVBaseElement.prototype
+    this.clearCanvas = clearCanvas
+    this.createContainerElements = createContainerElements
+    this.createContent = createContent
+    this.createElements = createElements
+    this.createRenderableComponents = createRenderableComponents
+    this.destroy = destroy
+    this.exitLayer = exitLayer
+    this.hideElement = hideElement
+    this.initRendererElement = initRendererElement
+    this.prepareLayer = prepareLayer
+    this.renderFrame = renderFrame
+    this.setBlendMode = setBlendMode
+    this.showElement = showElement
+
     this.initElement(data, globalData, comp)
   }
-
   override buildNewText() {
     if (!this.data) {
       throw new Error(
@@ -135,7 +169,7 @@ export default class CVTextElement extends TextElement {
         )
       }
       const { length: jLen } = shapes,
-        commands = createSizedArray(jLen - 1)
+        commands = createSizedArray(jLen - 1) as number[][]
       let commandsCounter = 0
       for (let j = 0; j < jLen; j++) {
         if (shapes[j].ty !== 'sh') {
@@ -194,10 +228,40 @@ export default class CVTextElement extends TextElement {
       if (this.textSpans[cnt]) {
         this.textSpans[cnt].elem = commands
       } else {
-        this.textSpans[cnt] = { elem: commands }
+        this.textSpans[cnt] = { elem: commands } as TextSpan
       }
       cnt += 1
     }
+  }
+  clearCanvas(
+    _canvasContext?:
+      | CanvasRenderingContext2D
+      | OffscreenCanvasRenderingContext2D
+      | null
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method clearCanvas is not implemented`
+    )
+  }
+  createElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createElements is not implemented`
+    )
+  }
+  exitLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method exitLayer is not implemented`
+    )
+  }
+  hideElement() {
+    throw new Error(
+      `${this.constructor.name}: Method hideElement is not implemented`
+    )
+  }
+  prepareLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method prepareLayer is not implemented`
+    )
   }
   override renderInnerContent() {
     if (!this.data) {
@@ -218,15 +282,20 @@ export default class CVTextElement extends TextElement {
         `${this.constructor.name}: textProperty is not implemented`
       )
     }
+    if (!this.canvasContext) {
+      throw new Error(
+        `${this.constructor.name}: canvasContext is not implemented`
+      )
+    }
 
     this.validateText()
     const ctx = this.canvasContext
     ctx.font = this.values.fValue
-    this.globalData.renderer.ctxLineCap('butt')
+    ;(this.globalData.renderer as CanvasRenderer)?.ctxLineCap('butt')
     // ctx.lineCap = 'butt';
-    this.globalData.renderer.ctxLineJoin('miter')
+    ;(this.globalData.renderer as CanvasRenderer)?.ctxLineJoin('miter')
     // ctx.lineJoin = 'miter';
-    this.globalData.renderer.ctxMiterLimit(4)
+    ;(this.globalData.renderer as CanvasRenderer)?.ctxMiterLimit(4)
     // ctx.miterLimit = 4;
 
     if (!this.data.singleShape) {
@@ -237,7 +306,7 @@ export default class CVTextElement extends TextElement {
     }
 
     let j
-    let jLen
+    let jLen: number
     let k
     let kLen
     const renderedLetters = this.textAnimator.renderedLetters
@@ -248,9 +317,9 @@ export default class CVTextElement extends TextElement {
     let lastFill = null
     let lastStroke = null
     let lastStrokeW = null
-    let commands
+    let commands: number[][]
     let pathArr
-    const { renderer } = this.globalData,
+    const renderer = this.globalData.renderer as CanvasRenderer,
       { length } = letters
 
     for (let i = 0; i < length; i++) {
@@ -260,13 +329,13 @@ export default class CVTextElement extends TextElement {
       renderedLetter = renderedLetters[i]
       if (renderedLetter) {
         renderer.save()
-        renderer.ctxTransform(renderedLetter.p)
+        renderer.ctxTransform(renderedLetter.p as number[])
         renderer.ctxOpacity(renderedLetter.o)
       }
       if (this.fill) {
-        if (renderedLetter && renderedLetter.fc) {
+        if (renderedLetter?.fc) {
           if (lastFill !== renderedLetter.fc) {
-            renderer.ctxFillStyle(renderedLetter.fc)
+            renderer.ctxFillStyle(renderedLetter.fc as string)
             lastFill = renderedLetter.fc
             // ctx.fillStyle = renderedLetter.fc;
           }
@@ -275,15 +344,15 @@ export default class CVTextElement extends TextElement {
           renderer.ctxFillStyle(this.values.fill)
           // ctx.fillStyle = this.values.fill;
         }
-        commands = this.textSpans[i].elem
-        jLen = commands.length
-        this.globalData.canvasContext.beginPath()
+        commands = this.textSpans[i].elem || []
+        const { length: jLen } = commands
+        this.globalData.canvasContext?.beginPath()
         for (j = 0; j < jLen; j += 1) {
-          pathArr = commands[j]
-          kLen = pathArr.length
-          this.globalData.canvasContext.moveTo(pathArr[0], pathArr[1])
+          pathArr = commands[j] || []
+          const { length: kLen } = pathArr
+          this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
           for (k = 2; k < kLen; k += 6) {
-            this.globalData.canvasContext.bezierCurveTo(
+            this.globalData.canvasContext?.bezierCurveTo(
               pathArr[k],
               pathArr[k + 1],
               pathArr[k + 2],
@@ -293,7 +362,7 @@ export default class CVTextElement extends TextElement {
             )
           }
         }
-        this.globalData.canvasContext.closePath()
+        this.globalData.canvasContext?.closePath()
         renderer.ctxFill()
         // this.globalData.canvasContext.fill();
         // / ctx.fillText(this.textSpans[i].val,0,0);
@@ -313,7 +382,7 @@ export default class CVTextElement extends TextElement {
         if (renderedLetter && renderedLetter.sc) {
           if (lastStroke !== renderedLetter.sc) {
             lastStroke = renderedLetter.sc
-            renderer.ctxStrokeStyle(renderedLetter.sc)
+            renderer.ctxStrokeStyle(renderedLetter.sc as string)
             // ctx.strokeStyle = renderedLetter.sc;
           }
         } else if (lastStroke !== this.values.stroke) {
@@ -321,15 +390,15 @@ export default class CVTextElement extends TextElement {
           renderer.ctxStrokeStyle(this.values.stroke)
           // ctx.strokeStyle = this.values.stroke;
         }
-        commands = this.textSpans[i].elem
+        commands = this.textSpans[i].elem || []
         jLen = commands.length
-        this.globalData.canvasContext.beginPath()
+        this.globalData.canvasContext?.beginPath()
         for (j = 0; j < jLen; j += 1) {
           pathArr = commands[j]
           kLen = pathArr.length
-          this.globalData.canvasContext.moveTo(pathArr[0], pathArr[1])
+          this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
           for (k = 2; k < kLen; k += 6) {
-            this.globalData.canvasContext.bezierCurveTo(
+            this.globalData.canvasContext?.bezierCurveTo(
               pathArr[k],
               pathArr[k + 1],
               pathArr[k + 2],
@@ -339,26 +408,19 @@ export default class CVTextElement extends TextElement {
             )
           }
         }
-        this.globalData.canvasContext.closePath()
+        this.globalData.canvasContext?.closePath()
         renderer.ctxStroke()
         // this.globalData.canvasContext.stroke();
         // / ctx.strokeText(letters[i].val,0,0);
       }
       if (renderedLetter) {
-        this.globalData.renderer.restore()
+        ;(this.globalData.renderer as CanvasRenderer)?.restore()
       }
     }
   }
+  showElement() {
+    throw new Error(
+      `${this.constructor.name}: Method showElement is not implemented`
+    )
+  }
 }
-// extendPrototype(
-//   [
-//     BaseElement,
-//     TransformElement,
-//     CVBaseElement,
-//     HierarchyElement,
-//     FrameElement,
-//     RenderableElement,
-//     ITextElement,
-//   ],
-//   CVTextElement
-// )

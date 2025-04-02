@@ -1,12 +1,11 @@
 import type { AnimationData } from '@/Lottie'
-import type { LottieLayer, TransformCanvas } from '@/types'
+import type { LottieLayer } from '@/types'
 
 import CanvasRendererOriginal from '@/renderers/CanvasRenderer'
 import { createTag } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class CanvasRenderer extends CanvasRendererOriginal {
-  transformCanvas?: TransformCanvas
   override configAnimation(animData: AnimationData) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)

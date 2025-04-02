@@ -1,5 +1,19 @@
 import type AnimationItem from '@/animation/AnimationItem'
+import type CVCompElement from '@/elements/canvas/CVCompElement'
+import type CVImageElement from '@/elements/canvas/CVImageElement'
+import type CVShapeElement from '@/elements/canvas/CVShapeElement'
+import type CVSolidElement from '@/elements/canvas/CVSolidElement'
+import type CVTextElement from '@/elements/canvas/CVTextElement'
+import type HierarchyElement from '@/elements/helpers/HierarchyElement'
+import type HCameraElement from '@/elements/html/HCameraElement'
+import type HCompElement from '@/elements/html/HCompElement'
+import type HTextElement from '@/elements/html/HTextElement'
+import type ImageElement from '@/elements/ImageElement'
+import type NullElement from '@/elements/NullElement'
+import type SolidElement from '@/elements/SolidElement'
 import type SVGCompElement from '@/elements/svg/SVGCompElement'
+import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
+import type SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import type {
   AnimationData,
   ElementInterfaceIntersect,
@@ -10,9 +24,10 @@ import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'
 import FrameElement from '@/elements/helpers/FrameElement'
-import HierarchyElement from '@/elements/helpers/HierarchyElement'
 import FontManager from '@/utils/FontManager'
 import SlotManager from '@/utils/SlotManager'
+import HImageElement from '@/elements/html/HImageElement'
+import HShapeElement from '@/elements/html/HShapeElement'
 
 export default class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
@@ -113,11 +128,16 @@ export default class BaseRenderer extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
-  createCamera(_data: LottieLayer) {
+  createCamera(_data: LottieLayer): HCameraElement {
     throw new Error("You're using a 3d camera. Try the html renderer.")
   }
 
-  createComp(_data: LottieLayer): SVGCompElement {
+  createComp(
+    _data: LottieLayer,
+    _container?: HTMLElement,
+    _comp?: ElementInterfaceIntersect,
+    _?: unknown
+  ): SVGCompElement | CVCompElement | HCompElement {
     throw new Error(
       `${this.constructor.name}: Method createComp not yet implemented`
     )
@@ -133,7 +153,7 @@ export default class BaseRenderer extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
-  createImage(_layer: LottieLayer) {
+  createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement {
     throw new Error(
       `${this.constructor.name}: Method createImage is not implemented`
     )
@@ -162,22 +182,24 @@ export default class BaseRenderer extends FrameElement {
         return this.createNull(layer)
     }
   }
-  createNull(_layer: LottieLayer) {
+  createNull(_layer: LottieLayer): NullElement {
     throw new Error(
       `${this.constructor.name}: Method createNull not implemented`
     )
   }
-  createShape(_layer: LottieLayer) {
+  createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement {
     throw new Error(
       `${this.constructor.name}: Method createShape not implemented`
     )
   }
-  createSolid(_layer: LottieLayer) {
+  createSolid(_layer: LottieLayer): CVSolidElement | SolidElement {
     throw new Error(
       `${this.constructor.name}: Method createSolid not implemented`
     )
   }
-  createText(_layer: LottieLayer) {
+  createText(
+    _layer: LottieLayer
+  ): SVGTextLottieElement | CVTextElement | HTextElement {
     throw new Error(
       `${this.constructor.name}: Method createText not implemented`
     )
@@ -252,7 +274,10 @@ export default class BaseRenderer extends FrameElement {
     this.globalData.projectInterface = pInterface
   }
 
-  setupGlobalData(animData: AnimationData, fontsContainer: SVGDefsElement) {
+  setupGlobalData(
+    animData: AnimationData,
+    fontsContainer: HTMLElement | SVGDefsElement
+  ) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }

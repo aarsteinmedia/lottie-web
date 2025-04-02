@@ -13,7 +13,6 @@ import CanvasRendererBase from '@/renderers/CanvasRendererBase'
 import Matrix from '@/utils/Matrix'
 
 export default class CanvasRenderer extends CanvasRendererBase {
-  contextData: CVContextData
   rendererType: RendererType
   transformMat: Matrix
 

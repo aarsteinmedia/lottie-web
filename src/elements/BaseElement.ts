@@ -21,7 +21,7 @@ export default abstract class BaseElement {
 
   globalData?: GlobalData
   itemsData: SVGElementInterface[] = []
-  layerElement?: SVGGElement
+  layerElement?: SVGGElement | HTMLElement
   layerId?: string
 
   layerInterface?: ProjectInterface

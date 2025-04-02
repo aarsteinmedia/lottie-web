@@ -1,5 +1,6 @@
 import type {
   ElementInterfaceIntersect,
+  ElementInterfaceUnion,
   GlobalData,
   LottieLayer,
 } from '@/types'
@@ -7,7 +8,7 @@ import type {
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 export default abstract class RenderableDOMElement extends RenderableElement {
-  innerElem?: SVGElement | null
+  innerElem?: SVGElement | HTMLElement | null
 
   constructor() {
     super()
@@ -32,7 +33,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method createContent is not implemented`
     )
   }
-  createItem(_data: LottieLayer) {
+  createItem(_data: LottieLayer): ElementInterfaceUnion {
     throw new Error(
       `${this.constructor.name}: Method createItem is not implemented`
     )
@@ -93,7 +94,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       `${this.constructor.name}: Method renderElement is not implemented`
     )
   }
-  renderFrame(_frame?: number | null) {
+  renderFrame(_frame?: number | boolean | null) {
     if (!this.data) {
       throw new Error(
         `${this.constructor.name}: data (LottieLayer) is not implemented`

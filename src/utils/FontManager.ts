@@ -188,7 +188,7 @@ export default class FontManager {
 
   public addFonts(
     fontData?: { list: DocumentData[] },
-    defs?: SVGDefsElement
+    defs?: HTMLElement | SVGDefsElement
   ): void {
     if (!fontData) {
       this.isLoaded = true
@@ -415,7 +415,7 @@ export default class FontManager {
 
   private createHelper(
     fontData: FontList,
-    def?: SVGDefsElement
+    def?: HTMLElement | SVGDefsElement
   ): { measureText: (text: string) => number } | undefined {
     if (isServer()) {
       return

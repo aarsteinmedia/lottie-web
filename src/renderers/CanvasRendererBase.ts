@@ -1,8 +1,11 @@
+import type CVContextData from '@/elements/canvas/CVContextData'
 import type { AnimationData } from '@/Lottie'
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   CanvasRendererConfig,
   ElementInterfaceIntersect,
   LottieLayer,
+  TransformCanvas,
 } from '@/types'
 
 import CVImageElement from '@/elements/canvas/CVImageElement'
@@ -17,11 +20,15 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 export default class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
 
+  contextData?: CVContextData
+
   destroyed?: boolean
 
   renderConfig?: CanvasRendererConfig
 
   renderedFrame?: number
+
+  transformCanvas?: TransformCanvas
 
   constructor() {
     super()
@@ -34,8 +41,8 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (elements[pos] || this.layers[pos].ty === 99) {
       return
     }
-    const element = this.createItem(this.layers[pos], this, this.globalData)
-    elements[pos] = element
+    const element = this.createItem(this.layers[pos]) // this, this.globalData
+    elements[pos] = element as ElementInterfaceIntersect
     element.initExpressions()
     /* if(this.layers[pos].ty === 0){
         element.resize(this.globalData.transformCanvas);
@@ -45,7 +52,7 @@ export default class CanvasRendererBase extends BaseRenderer {
   override checkPendingElements() {
     while (this.pendingElements.length) {
       const element = this.pendingElements.pop()
-      element.checkParenting()
+      element?.checkParenting()
     }
   }
 
@@ -54,6 +61,14 @@ export default class CanvasRendererBase extends BaseRenderer {
       throw new Error(
         `${this.constructor.name}: animationItem is not implemented`
       )
+    }
+    if (!this.renderConfig) {
+      throw new Error(
+        `${this.constructor.name}: renderConfig is not implemented`
+      )
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
 
     if (this.animationItem.wrapper) {
@@ -78,8 +93,8 @@ export default class CanvasRendererBase extends BaseRenderer {
     } else {
       this.canvasContext = this.renderConfig.context
     }
-    this.contextData.setContext(this.canvasContext)
-    this.data = animData
+    this.contextData?.setContext(this.canvasContext)
+    this.data = animData as unknown as LottieLayer
     this.layers = animData.layers
     this.transformCanvas = {
       h: animData.h,
@@ -91,7 +106,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     }
     this.setupGlobalData(animData, document.body)
     this.globalData.canvasContext = this.canvasContext
-    this.globalData.renderer = this
+    this.globalData.renderer = this as unknown as CanvasRenderer
     this.globalData.isDashed = false
     this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
     this.globalData.transformCanvas = this.transformCanvas
@@ -144,7 +159,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     )
   }
 
-  ctxFill(rule: CanvasFillRule) {
+  ctxFill(rule?: CanvasFillRule) {
     if (!this.canvasContext) {
       throw new Error(
         `${this.constructor.name}: canvasContext is not implemented`
@@ -207,7 +222,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.miterLimit = value
   }
 
-  ctxOpacity(op: number) {
+  ctxOpacity(op = 0) {
     if (!this.canvasContext) {
       throw new Error(
         `${this.constructor.name}: canvasContext is not implemented`
@@ -234,7 +249,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.strokeStyle = value
   }
 
-  ctxTransform(props) {
+  ctxTransform(props: number[]) {
     if (
       props[0] === 1 &&
       props[1] === 0 &&
@@ -256,19 +271,25 @@ export default class CanvasRendererBase extends BaseRenderer {
   }
 
   destroy() {
-    if (this.renderConfig.clearCanvas && this.animationItem.wrapper) {
+    if (!this.animationItem) {
+      throw new Error(
+        `${this.constructor.name}: animationItem is not implemented`
+      )
+    }
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+
+    if (this.renderConfig?.clearCanvas && this.animationItem.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
-    let i
-    const len = this.layers ? this.layers.length : 0
-    for (i = len - 1; i >= 0; i -= 1) {
-      if (this.elements[i] && this.elements[i].destroy) {
-        this.elements[i].destroy()
-      }
+    const { length } = this.layers
+    for (let i = length - 1; i >= 0; i -= 1) {
+      this.elements[i]?.destroy?.()
     }
     this.elements.length = 0
     this.globalData.canvasContext = null
-    this.animationItem.container = null
+    this.animationItem.container = null as unknown as HTMLCanvasElement
     this.destroyed = true
   }
 
@@ -321,8 +342,8 @@ export default class CanvasRendererBase extends BaseRenderer {
         this.canvasContext?.clearRect(
           0,
           0,
-          this.transformCanvas.w,
-          this.transformCanvas.h
+          this.transformCanvas?.w || 0,
+          this.transformCanvas?.h || 0
         )
       } else {
         this.save()
@@ -343,7 +364,7 @@ export default class CanvasRendererBase extends BaseRenderer {
       this.canvasContext?.restore()
       return
     }
-    this.contextData.reset()
+    this.contextData?.reset()
   }
 
   restore(actionFlag?: boolean) {
@@ -357,10 +378,10 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (actionFlag) {
       this.globalData.blendMode = 'source-over'
     }
-    this.contextData.restore(actionFlag)
+    this.contextData?.restore(actionFlag)
   }
 
-  save() {
+  save(_flag?: boolean) {
     this.canvasContext?.save()
   }
 
@@ -387,6 +408,11 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (!this.renderConfig?.dpr) {
       throw new Error(
         `${this.constructor.name}: renderConfig -> dpr is not implemented`
+      )
+    }
+    if (!this.transformCanvas) {
+      throw new Error(
+        `${this.constructor.name}: transformCanvas is not implemented`
       )
     }
 
@@ -523,6 +549,6 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.closePath()
     this.canvasContext.clip()
 
-    this.renderFrame(Number(this.renderedFrame), true)
+    this.renderFrame(this.renderedFrame ?? 0, true)
   }
 }

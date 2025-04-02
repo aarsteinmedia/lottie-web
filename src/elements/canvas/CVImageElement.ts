@@ -5,7 +5,7 @@ import type {
   LottieLayer,
 } from '@/types'
 
-// import CVBaseElement from '@/elements/canvas/CVBaseElement'
+import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
@@ -13,10 +13,7 @@ import { createTag } from '@/utils'
 
 export default class CVImageElement extends RenderableElement {
   assetData: LottieAsset | null
-
   canvasContext?: CanvasRenderingContext2D
-  // extendPrototype([BaseElement, TransformElement, CVBaseElement, HierarchyElement, FrameElement, RenderableElement], CVImageElement);
-
   img: HTMLCanvasElement
 
   constructor(
@@ -34,13 +31,48 @@ export default class CVImageElement extends RenderableElement {
     this.img = globalData.imageLoader.getAsset(
       this.assetData
     ) as HTMLCanvasElement
-    const { initElement } = SVGShapeElement.prototype,
+    const {
+        clearCanvas,
+        createContainerElements,
+        createElements,
+        createRenderableComponents,
+        exitLayer,
+        hideElement,
+        initRendererElement,
+        prepareLayer,
+        renderFrame,
+        setBlendMode,
+        showElement,
+      } = CVBaseElement.prototype,
+      { initElement } = SVGShapeElement.prototype,
       { prepareFrame } = ImageElement.prototype
+    this.clearCanvas = clearCanvas
+    this.createContainerElements = createContainerElements
+    this.createElements = createElements
+    this.createRenderableComponents = createRenderableComponents
+    this.exitLayer = exitLayer
+    this.hideElement = hideElement
     this.initElement = initElement
+    this.initRendererElement = initRendererElement
     this.prepareFrame = prepareFrame
+    this.prepareLayer = prepareLayer
+    this.renderFrame = renderFrame
+    this.setBlendMode = setBlendMode
+    this.showElement = showElement
+
     this.initElement(data, globalData, comp)
   }
 
+  clearCanvas() {
+    throw new Error(
+      `${this.constructor.name}: Method clearCanvas is not implemented`
+    )
+  }
+  createContainerElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createContainerElements is not implemented`
+    )
+  }
   createContent() {
     if (!this.assetData) {
       throw new Error(`${this.constructor.name}: assetData is not implemented`)
@@ -92,11 +124,29 @@ export default class CVImageElement extends RenderableElement {
     )
     this.img = canvas
   }
-
+  createElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createElements is not implemented`
+    )
+  }
+  createRenderableComponents() {
+    throw new Error(
+      `${this.constructor.name}: Method createRenderableComponents is not implemented`
+    )
+  }
   destroy() {
     this.img = null as unknown as HTMLCanvasElement
   }
-
+  exitLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method exitLayer is not implemented`
+    )
+  }
+  hideElement() {
+    throw new Error(
+      `${this.constructor.name}: Method hideElement is not implemented`
+    )
+  }
   initElement(
     _data: LottieLayer,
     _globalData: GlobalData,
@@ -106,6 +156,11 @@ export default class CVImageElement extends RenderableElement {
       `${this.constructor.name}: Method initElement is not implemented`
     )
   }
+  initRendererElement() {
+    throw new Error(
+      `${this.constructor.name}: Method initRendererElement is not implemented`
+    )
+  }
 
   prepareFrame(_num: number) {
     throw new Error(
@@ -113,7 +168,31 @@ export default class CVImageElement extends RenderableElement {
     )
   }
 
+  prepareLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method prepareLayer is not implemented`
+    )
+  }
+
+  renderFrame() {
+    throw new Error(
+      `${this.constructor.name}: Method renderFrame is not implemented`
+    )
+  }
+
   renderInnerContent() {
     this.canvasContext?.drawImage(this.img, 0, 0)
+  }
+
+  setMatte() {
+    throw new Error(
+      `${this.constructor.name}: Method setMatte is not implemented`
+    )
+  }
+
+  showElement() {
+    throw new Error(
+      `${this.constructor.name}: Method showElement is not implemented`
+    )
   }
 }

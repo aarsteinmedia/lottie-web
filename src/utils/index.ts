@@ -810,7 +810,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       intersectData(split[1], data.t, data.t2),
     ]
   },
-  styleDiv = (element: HTMLElement) => {
+  styleDiv = (element: HTMLElement | SVGSVGElement) => {
     element.style.position = 'absolute'
     element.style.top = '0'
     element.style.left = '0'

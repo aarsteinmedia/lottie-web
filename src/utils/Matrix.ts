@@ -152,8 +152,8 @@ export default class Matrix {
     return this
   }
 
-  equals(matr: Matrix): boolean {
-    return this.props.every((val, i) => val === matr.props[i])
+  equals(matr?: Matrix): boolean {
+    return this.props.every((val, i) => val === matr?.props[i])
   }
 
   getInverseMatrix(): Matrix {

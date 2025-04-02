@@ -4,6 +4,7 @@ import type {
   GlobalData,
   LottieLayer,
   SourceRect,
+  TextSpan,
   Vector3,
 } from '@/types'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -28,11 +29,7 @@ export default class SVGTextLottieElement extends TextElement {
 
   renderedLetters: string[] = []
   textContainer?: SVGTextElement
-  textSpans: {
-    childSpan?: null | SVGTextElement | SVGGElement
-    glyph: null | SVGCompElement | SVGShapeElement
-    span: null | SVGTextElement | SVGGElement
-  }[]
+  textSpans: TextSpan[]
   private emptyShapeData = {
     shapes: [],
   } as unknown as LottieLayer
@@ -483,7 +480,7 @@ export default class SVGTextLottieElement extends TextElement {
     this.renderInnerContent()
     if (this._sizeChanged) {
       this._sizeChanged = false
-      const textBox = this.layerElement.getBBox()
+      const textBox = (this.layerElement as SVGGElement).getBBox()
       this.bbox = {
         height: textBox.height,
         left: textBox.x,

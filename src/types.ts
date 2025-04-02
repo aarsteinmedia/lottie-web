@@ -21,9 +21,7 @@ import type {
   SVGTritoneFilter,
 } from '@/effects/svg'
 import type AudioElement from '@/elements/AudioElement'
-import type BaseElement from '@/elements/BaseElement'
 import type CompElement from '@/elements/CompElement'
-import type HierarchyElement from '@/elements/helpers/HierarchyElement'
 import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
@@ -34,7 +32,6 @@ import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
-import type TransformElement from '@/elements/helpers/TransformElement'
 import type MaskElement from '@/elements/MaskElement'
 import type PolynomialBezier from '@/elements/PolynomialBezier'
 import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
@@ -64,6 +61,12 @@ import type TransformProperty from '@/utils/TransformProperty'
 
 import { getShapeProp } from '@/utils/shapes/ShapeProperty'
 
+import CVCompElement from './elements/canvas/CVCompElement'
+import CVEffects from './elements/canvas/CVEffects'
+import HCompElement from './elements/html/HCompElement'
+import SVGCompElement from './elements/svg/SVGCompElement'
+import HybridRenderer from './renderers/HybridRenderer'
+
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
   | 'drawnFrame'
@@ -92,6 +95,13 @@ export interface SVGGeometry {
   width: number
 }
 
+export interface TextSpan {
+  childSpan?: null | SVGTextElement | SVGGElement
+  glyph: null | SVGCompElement | SVGShapeElement
+  span: null | SVGTextElement | SVGGElement
+  elem?: number[][]
+}
+
 export type SVGElementInterface =
   | SVGShapeData
   | SVGTransformData
@@ -116,26 +126,17 @@ export interface Transformer {
   opacity: number
 }
 
-export type ElementInterfaceUnion =
-  | BaseElement
-  | HierarchyElement
-  | AudioElement
-  | CompElement
-  | MaskElement
-  | SVGBaseElement
-  | SVGShapeElement
-  | SVGTextElement
-  | SVGStopElement
-  | SVGStrokeStyleData
-  | TextElement
-  | BaseRenderer
-  | AnimationItem
-  | TransformElement
+export type ElementInterfaceUnion = ReturnType<
+  typeof BaseRenderer.prototype.createItem
+>
 
-export type ElementInterfaceIntersect = BaseElement &
-  HierarchyElement &
+// type UnionToIntersection<U> =
+//   (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
+
+export type ElementInterfaceIntersect = CVCompElement &
   AudioElement &
   CompElement &
+  SVGCompElement &
   MaskElement &
   SVGBaseElement &
   SVGShapeElement &
@@ -145,10 +146,13 @@ export type ElementInterfaceIntersect = BaseElement &
   TextElement &
   BaseRenderer &
   AnimationItem &
-  TransformElement
+  HCompElement &
+  CVEffects &
+  HybridRenderer
 
 export interface TransformCanvas {
   h: number
+  props?: number[]
   sx: number
   sy: number
   tx: number
@@ -230,6 +234,14 @@ export interface AnimatedContent {
   fn: null | CreateRenderFunction
 }
 
+export interface ThreeDElements {
+  container: HTMLElement
+  endPos: number
+  perspectiveElem: HTMLDivElement
+  startPos: number
+  type: string
+}
+
 export interface EFXElement {
   p: BaseProperty
 }
@@ -294,6 +306,13 @@ export type CanvasRendererConfig = BaseRendererConfig & {
 
 export type HTMLRendererConfig = BaseRendererConfig & {
   hideOnTransparent?: boolean
+  filterSize: {
+    width: string
+    height: string
+    y: string
+    x: string
+  }
+  runExpressions?: boolean
 }
 
 export type AnimationConfiguration<
@@ -652,7 +671,7 @@ export interface DocumentData extends FontList {
     s: LetterProps | DocumentData
     t: number
   }[]
-  l?: Letter[]
+  l: Letter[]
   lh: number
   lineWidths: number[]
   ls?: number
@@ -952,6 +971,7 @@ export interface LottieLayer {
   /** Out point */
   op: number
   parent?: number
+  pe?: VectorProperty
   /** Asset ID */
   refId?: string
   sc?: string
@@ -977,6 +997,8 @@ export interface LottieLayer {
     height: number
     width: number
   }
+  /** TagName */
+  tg?: string
   /** Time remappoing */
   tm?: AnimatedProperty
   /** Matte reference (for shape) */
@@ -1093,6 +1115,7 @@ export interface GlobalData {
   audioController?: AudioController
   blendMode?: string
   canvasContext?: null | CanvasRenderingContext2D
+  comp?: ElementInterfaceIntersect
   compSize?: {
     w: number
     h: number

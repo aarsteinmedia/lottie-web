@@ -1,3 +1,4 @@
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type { ElementInterfaceIntersect, LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
@@ -5,6 +6,7 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVMaskElement {
+  _isFirstFrame?: boolean
   data: LottieLayer
   element: ElementInterfaceIntersect
   hasMasks: boolean
@@ -47,26 +49,31 @@ export default class CVMaskElement {
     )
   }
   renderFrame() {
+    if (!this.element.globalData.compSize) {
+      throw new Error(
+        `${this.constructor.name}: element->globalData->compSize is not implemented`
+      )
+    }
     if (!this.hasMasks) {
       return
     }
     const transform = this.element.finalTransform?.mat,
       ctx = this.element.canvasContext
     let j
-    const len = this.masksProperties.length
+    const { length } = this.masksProperties
     let pts
-    ctx.beginPath()
-    for (let i = 0; i < len; i += 1) {
+    ctx?.beginPath()
+    for (let i = 0; i < length; i += 1) {
       if (this.masksProperties[i].mode !== 'n') {
         if (this.masksProperties[i].inv) {
-          ctx.moveTo(0, 0)
-          ctx.lineTo(this.element.globalData.compSize?.w, 0)
-          ctx.lineTo(
-            this.element.globalData.compSize?.w,
-            this.element.globalData.compSize?.h
+          ctx?.moveTo(0, 0)
+          ctx?.lineTo(this.element.globalData.compSize.w, 0)
+          ctx?.lineTo(
+            this.element.globalData.compSize.w,
+            this.element.globalData.compSize.h
           )
-          ctx.lineTo(0, this.element.globalData.compSize?.h)
-          ctx.lineTo(0, 0)
+          ctx?.lineTo(0, this.element.globalData.compSize?.h)
+          ctx?.lineTo(0, 0)
         }
         const data = this.viewData[i].v
         if (!data) {
@@ -76,7 +83,7 @@ export default class CVMaskElement {
         }
         const pt =
           transform?.applyToPointArray(data.v[0][0], data.v[0][1], 0) || []
-        ctx.moveTo(pt[0], pt[1])
+        ctx?.moveTo(pt[0], pt[1])
         const jLen = data._length
         for (j = 1; j < jLen; j++) {
           pts =
@@ -85,15 +92,15 @@ export default class CVMaskElement {
               data.i[j],
               data.v[j]
             ) || []
-          ctx.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
+          ctx?.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
         }
         pts =
           transform?.applyToTriplePoints(data.o[j - 1], data.i[0], data.v[0]) ||
           []
-        ctx.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
+        ctx?.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
       }
     }
-    this.element.globalData.renderer.save(true)
-    ctx.clip()
+    ;(this.element.globalData.renderer as CanvasRenderer).save(true)
+    ctx?.clip()
   }
 }
