@@ -6,6 +6,7 @@ import type {
   Shape,
   SVGElementInterface,
 } from '@/types'
+import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 
 import EffectsManager from '@/effects/EffectsManager'
 import { getBlendMode } from '@/utils'
@@ -15,7 +16,7 @@ import ProjectInterface from '@/utils/helpers/ProjectInterface'
 export default abstract class BaseElement {
   baseElement?: SVGGElement
   comp?: ElementInterfaceIntersect
-  compInterface?: ProjectInterface
+  compInterface?: CompExpressionInterface
   data?: LottieLayer
   effectsManager?: EffectsManager
 
@@ -57,7 +58,7 @@ export default abstract class BaseElement {
   initBaseData(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompExpressionInterface
   ) {
     this.globalData = globalData
     this.comp = comp

@@ -11,6 +11,7 @@ import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
+import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -30,12 +31,12 @@ export default class ShapeModifier extends DynamicPropertyContainer {
   frameId?: number
   k?: boolean
   shapes: SVGShapeData[] = []
-  addShape(data: SVGShapeData) {
+  addShape(data: SVGShapeData | CVShapeData) {
     if (this.closed) {
       return
     }
     // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
-    data.sh.container?.addDynamicProperty(data.sh as DynamicPropertyContainer)
+    data.sh?.container?.addDynamicProperty(data.sh as DynamicPropertyContainer)
     const shapeData = {
       data,
       localShapeCollection: newShapeCollection(),

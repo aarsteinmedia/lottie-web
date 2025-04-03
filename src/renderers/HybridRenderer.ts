@@ -6,11 +6,11 @@ import type {
   LottieLayer,
 } from '@/types'
 
+import HCameraElement from '@/elements/html/HCameraElement'
 import HCompElement from '@/elements/html/HCompElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import { RendererType } from '@/enums'
 import HybridRendererBase from '@/renderers/HybridRendererBase'
-import HCameraElement from '@/elements/html/HCameraElement'
 
 export default class HybridRenderer extends HybridRendererBase {
   constructor(animationItem: AnimationItem, config?: HTMLRendererConfig) {

@@ -42,7 +42,7 @@ export default class CVContextData {
   currentMiterLimit: string
   currentOpacity: number
   currentStrokeStyle: string
-  nativeContext?: CanvasRenderingContext2D
+  nativeContext?: null | CanvasRenderingContext2D
   stack: CanvasContext[] = []
 
   transformMat: Matrix
@@ -225,7 +225,7 @@ export default class CVContextData {
     newStack.miterLimit = currentStack.miterLimit
   }
 
-  setContext(value: CanvasRenderingContext2D) {
+  setContext(value?: null | CanvasRenderingContext2D) {
     this.nativeContext = value
   }
 

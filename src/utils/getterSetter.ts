@@ -3,6 +3,8 @@ import type { EffectElement, ExpressionsPlugin } from '@/types'
 import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 import { RendererType } from '@/enums'
+import CanvasRenderer from '@/renderers/CanvasRenderer'
+import HybridRenderer from '@/renderers/HybridRenderer'
 
 export const initialDefaultFrame = -999999,
   roundCorner = 0.5519
@@ -63,13 +65,14 @@ export const setSubframeEnabled = (flag: boolean) => {
  *
  * Renderer
  */
+type Renderer =
+  | typeof SVGRenderer
+  | typeof CanvasRenderer
+  | typeof HybridRenderer
 const renderers: {
-  [key in RendererType]?: typeof SVGRenderer
+  [key in RendererType]?: Renderer
 } = {}
-export const registerRenderer = (
-    key: RendererType,
-    value: typeof SVGRenderer
-  ) => {
+export const registerRenderer = (key: RendererType, value: Renderer) => {
     renderers[key] = value
   },
   getRenderer = (key: RendererType) => renderers[key]!,

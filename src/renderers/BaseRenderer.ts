@@ -24,10 +24,10 @@ import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'
 import FrameElement from '@/elements/helpers/FrameElement'
-import FontManager from '@/utils/FontManager'
-import SlotManager from '@/utils/SlotManager'
 import HImageElement from '@/elements/html/HImageElement'
 import HShapeElement from '@/elements/html/HShapeElement'
+import FontManager from '@/utils/FontManager'
+import SlotManager from '@/utils/SlotManager'
 
 export default class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
@@ -153,7 +153,9 @@ export default class BaseRenderer extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
-  createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement {
+  createImage(
+    _layer: LottieLayer
+  ): CVImageElement | ImageElement | HImageElement {
     throw new Error(
       `${this.constructor.name}: Method createImage is not implemented`
     )
@@ -187,7 +189,9 @@ export default class BaseRenderer extends FrameElement {
       `${this.constructor.name}: Method createNull not implemented`
     )
   }
-  createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement {
+  createShape(
+    _layer: LottieLayer
+  ): CVShapeElement | SVGShapeElement | HShapeElement {
     throw new Error(
       `${this.constructor.name}: Method createShape not implemented`
     )

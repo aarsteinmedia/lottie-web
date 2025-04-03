@@ -28,7 +28,7 @@ export default class ShapeElement extends RenderableDOMElement {
     elements.push(new ProcessedElement(elem, pos))
   }
 
-  addShapeToModifiers(data: SVGShapeData) {
+  addShapeToModifiers(data: SVGShapeData | CVShapeData) {
     const { length } = this.shapeModifiers
     for (let i = 0; i < length; i++) {
       this.shapeModifiers[i].addShape(data)

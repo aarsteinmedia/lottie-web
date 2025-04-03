@@ -1,19 +1,32 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import type {
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
+  TextSpan,
+} from '@/types'
 
-import HBaseElement from '@/elements/html/HBaseElement';
-import TextElement from '@/elements/TextElement';
-import {
-  lineCapEnum,
-  lineJoinEnum,
-} from '@/enums';
-import { RendererType } from '@/enums';
-import { createNS, createTag } from '@/utils';
-import {
-  styleDiv,
-} from '@/utils';
+import HBaseElement from '@/elements/html/HBaseElement'
+import TextElement from '@/elements/TextElement'
+import { lineCapEnum, lineJoinEnum, RendererType } from '@/enums'
+import { createNS, createTag, styleDiv } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class HTextElement extends TextElement {
+  compH?: number
+  compW?: number
+  // extendPrototype([BaseElement, TransformElement, HBaseElement, HierarchyElement, FrameElement, RenderableDOMElement, TextElement], HTextElement);
+
+  currentBBox?: {
+    w: number
+    h: number
+    x: number
+    y: number
+  }
+  isMasked?: boolean
+  maskedElement?: SVGGElement | HTMLElement
+  svgElement?: SVGSVGElement
+  textSpans: TextSpan[]
+
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -23,82 +36,56 @@ export default class HTextElement extends TextElement {
     this.textSpans = []
     this.textPaths = []
     this.currentBBox = {
-      x: 999999,
-      y: -999999,
       h: 0,
       w: 0,
+      x: 999999,
+      y: -999999,
     }
     this.renderType = RendererType.SVG
     this.isMasked = false
     this.initElement(data, globalData, comp)
   }
-  // extendPrototype([BaseElement, TransformElement, HBaseElement, HierarchyElement, FrameElement, RenderableDOMElement, TextElement], HTextElement);
-
-  isMasked?: boolean
-  svgElement?: SVGSVGElement
-  compW?: number
-  compH?: number
-  override createContent() {
-    this.isMasked = this.checkMasks()
-    if (this.isMasked) {
-      this.renderType = RendererType.SVG
-      this.compW = this.comp?.data.w
-      this.compH = this.comp?.data.h
-      this.svgElement?.setAttribute('width', `${this.compW}`)
-      this.svgElement?.setAttribute('height', `${this.compH}`)
-      const g = createNS<SVGGElement>('g')
-      this.maskedElement?.appendChild(g)
-      this.innerElem = g
-    } else {
-      this.renderType = RendererType.HTML
-      this.innerElem = this.layerElement
-    }
-
-    this.checkParenting()
-  }
-
-  maskedElement?: SVGGElement | HTMLElement
 
   override buildNewText() {
-    var documentData = this.textProperty.currentData
+    const documentData = this.textProperty.currentData
     this.renderedLetters = createSizedArray(
       documentData.l ? documentData.l.length : 0
     )
-    var innerElemStyle = this.innerElem.style
-    var textColor = documentData.fc
+    const innerElemStyle = this.innerElem.style
+    const textColor = documentData.fc
       ? this.buildColor(documentData.fc)
       : 'rgba(0,0,0,0)'
     innerElemStyle.fill = textColor
     innerElemStyle.color = textColor
     if (documentData.sc) {
       innerElemStyle.stroke = this.buildColor(documentData.sc)
-      innerElemStyle.strokeWidth = documentData.sw + 'px'
+      innerElemStyle.strokeWidth = `${documentData.sw}px`
     }
     const fontData = this.globalData.fontManager?.getFontByName(documentData.f)
     if (!this.globalData.fontManager?.chars) {
-      innerElemStyle.fontSize = documentData.finalSize + 'px'
-      innerElemStyle.lineHeight = documentData.finalSize + 'px'
+      innerElemStyle.fontSize = `${documentData.finalSize}px`
+      innerElemStyle.lineHeight = `${documentData.finalSize}px`
       if (fontData.fClass && this.innerElem) {
         this.innerElem.className = fontData.fClass
       } else {
         innerElemStyle.fontFamily = fontData.fFamily
-      let fWeight = documentData.fWeight
-      var fStyle = documentData.fStyle
-      innerElemStyle.fontStyle = fStyle
-      innerElemStyle.fontWeight = fWeight
-    }
+        const fWeight = documentData.fWeight
+        const fStyle = documentData.fStyle
+        innerElemStyle.fontStyle = fStyle
+        innerElemStyle.fontWeight = fWeight
+      }
     }
 
-    var letters = documentData.l
-    var tSpan
-    var tParent
-    var tCont
-  let matrixHelper = this.mHelper
-  var shapes
-  var shapeStr = ''
-  var cnt = 0
-  const {length} = letters
-  for (let i = 0; i < length; i++) {
+    const letters = documentData.l
+    let tSpan
+    let tParent
+    let tCont
+    const matrixHelper = this.mHelper
+    let shapes
+    let shapeStr = ''
+    let cnt = 0
+    const { length } = letters
+    for (let i = 0; i < length; i++) {
       if (this.globalData.fontManager.chars) {
         if (!this.textPaths[cnt]) {
           tSpan = createNS('path')
@@ -136,7 +123,7 @@ export default class HTextElement extends TextElement {
       }
       // tSpan.setAttribute('visibility', 'hidden');
       if (this.globalData.fontManager.chars) {
-        var charData = this.globalData.fontManager.getCharData(
+        const charData = this.globalData.fontManager.getCharData(
           documentData.finalText[i],
           fontData.fStyle,
           this.globalData.fontManager.getFontByName(documentData.f).fFamily
@@ -162,27 +149,19 @@ export default class HTextElement extends TextElement {
           if (shapeData && shapeData.shapes) {
             // document.body.appendChild is needed to get exact measure of shape
             document.body.appendChild(tCont)
-            var boundingBox = tCont.getBBox()
+            const boundingBox = tCont.getBBox()
             tCont.setAttribute('width', boundingBox.width + 2)
             tCont.setAttribute('height', boundingBox.height + 2)
             tCont.setAttribute(
               'viewBox',
-              boundingBox.x -
-                1 +
-                ' ' +
-                (boundingBox.y - 1) +
-                ' ' +
-                (boundingBox.width + 2) +
-                ' ' +
-                (boundingBox.height + 2)
+              `${boundingBox.x - 1} ${boundingBox.y - 1} ${
+                boundingBox.width + 2
+              } ${boundingBox.height + 2}`
             )
-            var tContStyle = tCont.style
-            var tContTranslation =
-              'translate(' +
-              (boundingBox.x - 1) +
-              'px,' +
-              (boundingBox.y - 1) +
-              'px)'
+            const tContStyle = tCont.style
+            const tContTranslation = `translate(${boundingBox.x - 1}px,${
+              boundingBox.y - 1
+            }px)`
             tContStyle.transform = tContTranslation
             tContStyle.webkitTransform = tContTranslation
 
@@ -205,9 +184,8 @@ export default class HTextElement extends TextElement {
         if (!this.isMasked) {
           this.innerElem.appendChild(tParent)
           //
-          var tStyle = tSpan.style
-          var tSpanTranslation =
-            'translate3d(0,' + -documentData.finalSize / 1.2 + 'px,0)'
+          const tStyle = tSpan.style
+          const tSpanTranslation = `translate3d(0,${-documentData.finalSize / 1.2}px,0)`
           tStyle.transform = tSpanTranslation
           tStyle.webkitTransform = tSpanTranslation
         } else {
@@ -230,32 +208,41 @@ export default class HTextElement extends TextElement {
     }
   }
 
+  override createContent() {
+    this.isMasked = this.checkMasks()
+    if (this.isMasked) {
+      this.renderType = RendererType.SVG
+      this.compW = this.comp?.data.w
+      this.compH = this.comp?.data.h
+      this.svgElement?.setAttribute('width', `${this.compW}`)
+      this.svgElement?.setAttribute('height', `${this.compH}`)
+      const g = createNS<SVGGElement>('g')
+      this.maskedElement?.appendChild(g)
+      this.innerElem = g
+    } else {
+      this.renderType = RendererType.HTML
+      this.innerElem = this.layerElement
+    }
+
+    this.checkParenting()
+  }
   override renderInnerContent() {
     this.validateText()
-    var svgStyle
-    if (this.data.singleShape) {
+    let svgStyle
+    if (this.data?.singleShape) {
       if (!this._isFirstFrame && !this.lettersChangedFlag) {
         return
       }
-      if (this.isMasked && this.finalTransform._matMdf) {
+      if (this.isMasked && this.finalTransform?._matMdf) {
         // Todo Benchmark if using this is better than getBBox
-        this.svgElement.setAttribute(
+        this.svgElement?.setAttribute(
           'viewBox',
-          -this.finalTransform.mProp.p.v[0] +
-            ' ' +
-            -this.finalTransform.mProp.p.v[1] +
-            ' ' +
-            this.compW +
-            ' ' +
-            this.compH
+          `${-this.finalTransform.mProp.p?.v[0]} ${-this.finalTransform.mProp.p
+            ?.v[1].v[1]} ${this.compW} ${this.compH}`
         )
-        svgStyle = this.svgElement.style
-        var translation =
-          'translate(' +
-          -this.finalTransform.mProp.p.v[0] +
-          'px,' +
-          -this.finalTransform.mProp.p.v[1] +
-          'px)'
+        svgStyle = this.svgElement?.style
+        const translation = `translate(${-this.finalTransform.mProp.p
+          .v[0]}px,${-this.finalTransform.mProp.p?.v[1]}px)`
         svgStyle.transform = translation
       }
     }
@@ -267,25 +254,22 @@ export default class HTextElement extends TextElement {
     if (!this.lettersChangedFlag && !this.textAnimator.lettersChangedFlag) {
       return
     }
-  let i
-  var len
-  var count = 0
-  var renderedLetters = this.textAnimator?.renderedLetters || []
+    let count = 0
+    const renderedLetters = this.textAnimator?.renderedLetters || [],
+      letters = this.textProperty?.currentData.l || []
 
-  var letters = this.textProperty.currentData.l
-
-  len = letters.length
-  var renderedLetter
-  var textSpan
-  var textPath
-  for (i = 0; i < len; i += 1) {
+    const { length } = letters
+    let renderedLetter
+    let textSpan
+    let textPath
+    for (let i = 0; i < length; i++) {
       if (letters[i].n) {
-        count += 1
+        count++
       } else {
         textSpan = this.textSpans[i]
         textPath = this.textPaths[i]
         renderedLetter = renderedLetters[count]
-        count += 1
+        count++
         if (renderedLetter._mdf.m) {
           if (!this.isMasked) {
             textSpan.style.webkitTransform = renderedLetter.m
@@ -294,7 +278,7 @@ export default class HTextElement extends TextElement {
             textSpan.setAttribute('transform', renderedLetter.m)
           }
         }
-        /// /textSpan.setAttribute('opacity',renderedLetter.o);
+        // / /textSpan.setAttribute('opacity',renderedLetter.o);
         textSpan.style.opacity = renderedLetter.o
         if (renderedLetter.sw && renderedLetter._mdf.sw) {
           textPath.setAttribute('stroke-width', renderedLetter.sw)
@@ -314,7 +298,7 @@ export default class HTextElement extends TextElement {
       !this.hidden &&
       (this._isFirstFrame || this._mdf)
     ) {
-      var boundingBox = this.innerElem.getBBox()
+      const boundingBox = this.innerElem.getBBox()
 
       if (this.currentBBox.w !== boundingBox.width) {
         this.currentBBox.w = boundingBox.width
@@ -325,7 +309,7 @@ export default class HTextElement extends TextElement {
         this.svgElement.setAttribute('height', boundingBox.height)
       }
 
-      var margin = 1
+      const margin = 1
       if (
         this.currentBBox &&
         (this.currentBBox?.w !== boundingBox.width + margin * 2 ||
@@ -340,31 +324,18 @@ export default class HTextElement extends TextElement {
 
         this.svgElement?.setAttribute(
           'viewBox',
-          this.currentBBox.x +
-            ' ' +
-            this.currentBBox.y +
-            ' ' +
-            this.currentBBox.w +
-            ' ' +
+          `${this.currentBBox.x} ${this.currentBBox.y} ${this.currentBBox.w} ${
             this.currentBBox.h
+          }`
         )
         if (this.svgElement) {
           svgStyle = this.svgElement.style
-          var svgTransform =
-            'translate(' +
-            this.currentBBox.x +
-            'px,' +
-            this.currentBBox.y +
-            'px)'
+          const svgTransform = `translate(${this.currentBBox.x}px,${
+            this.currentBBox.y
+          }px)`
           svgStyle.transform = svgTransform
         }
-
+      }
     }
-  }
-  currentBBox?: {
-    w: number
-    h: number
-    x: number
-    y: number
   }
 }

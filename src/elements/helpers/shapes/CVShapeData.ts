@@ -7,6 +7,8 @@ import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {
   sh: ShapeProperty | null
+  styledShapes: CVShapeData[]
+  tr: number[]
   constructor(
     element: ShapeElement,
     data: Shape,
@@ -37,7 +39,7 @@ export default class CVShapeData {
           ),
           trNodes: [],
         }
-        this.styledShapes.push(styledShape)
+        this.styledShapes?.push(styledShape)
         styles[i].elements.push(styledShape)
       }
     }

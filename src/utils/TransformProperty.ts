@@ -449,3 +449,13 @@ export default class TransformProperty extends DynamicPropertyContainer {
     }
   }
 }
+
+const TransformPropertyFactory = {
+  getTransformProperty: (
+    elem: ElementInterfaceIntersect,
+    data: Shape,
+    container: ElementInterfaceIntersect
+  ) => new TransformProperty(elem, data, container),
+}
+
+export { TransformPropertyFactory }

@@ -222,7 +222,11 @@ export default class HybridRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
-    this.camera = new HCameraElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+    this.camera = new HCameraElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
     return this.camera
   }
 
@@ -231,9 +235,17 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.supports3d) {
-      return new ImageElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+      return new ImageElement(
+        data,
+        this.globalData,
+        this as unknown as ElementInterfaceIntersect
+      )
     }
-    return new HImageElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+    return new HImageElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createShape(data: LottieLayer) {
@@ -241,9 +253,17 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.supports3d) {
-      return new SVGShapeElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+      return new SVGShapeElement(
+        data,
+        this.globalData,
+        this as unknown as ElementInterfaceIntersect
+      )
     }
-    return new HShapeElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+    return new HShapeElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createSolid(data: LottieLayer) {
@@ -251,9 +271,17 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.supports3d) {
-      return new ISolidElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+      return new ISolidElement(
+        data,
+        this.globalData,
+        this as unknown as ElementInterfaceIntersect
+      )
     }
-    return new HSolidElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+    return new HSolidElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   override createText(data: LottieLayer) {
@@ -261,9 +289,17 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.supports3d) {
-      return new SVGTextLottieElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+      return new SVGTextLottieElement(
+        data,
+        this.globalData,
+        this as unknown as ElementInterfaceIntersect
+      )
     }
-    return new HTextElement(data, this.globalData, this as unknown as ElementInterfaceIntersect)
+    return new HTextElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
   }
 
   createThreeDContainer(pos: number, type: string) {
@@ -351,7 +387,9 @@ export default class HybridRendererBase extends BaseRenderer {
       this.camera.setup()
     } else {
       if (!this.globalData?.compSize) {
-        throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
+        throw new Error(
+          `${this.constructor.name}: globalData->compSize is not implemented`
+        )
       }
       const cWidth = this.globalData.compSize.w
       const cHeight = this.globalData.compSize.h
@@ -371,7 +409,9 @@ export default class HybridRendererBase extends BaseRenderer {
 
   override searchExtraCompositions(assets: LottieLayer[]) {
     if (!this.globalData?.comp) {
-      throw new Error(`${this.constructor.name}: globalData->comp is not implemented`)
+      throw new Error(
+        `${this.constructor.name}: globalData->comp is not implemented`
+      )
     }
     const { length } = assets,
       floatingContainer = createTag<HTMLDivElement>('div')

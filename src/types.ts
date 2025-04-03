@@ -9,18 +9,19 @@ import type {
   PointEffect,
   SliderEffect,
 } from '@/effects'
-import type {
-  SVGDropShadowEffect,
-  SVGFillFilter,
-  SVGGaussianBlurEffect,
-  SVGMatte3Effect,
-  SVGProLevelsFilter,
-  SVGStrokeEffect,
-  SVGTintFilter,
-  SVGTransformEffect,
-  SVGTritoneFilter,
-} from '@/effects/svg'
+import type SVGDropShadowEffect from '@/effects/svg/SVGDropShadowEffect'
+import type SVGFillFilter from '@/effects/svg/SVGFillFilter'
+import type SVGGaussianBlurEffect from '@/effects/svg/SVGGaussianBlurEffect'
+import type SVGMatte3Effect from '@/effects/svg/SVGMatte3Effect'
+import type SVGProLevelsFilter from '@/effects/svg/SVGProLevelsFilter'
+import type SVGStrokeEffect from '@/effects/svg/SVGStrokeEffect'
+import type SVGTintFilter from '@/effects/svg/SVGTintFilter'
+import type SVGTransformEffect from '@/effects/svg/SVGTransformEffect'
+import type SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
 import type AudioElement from '@/elements/AudioElement'
+import type CVCompElement from '@/elements/canvas/CVCompElement'
+import type CVEffects from '@/elements/canvas/CVEffects'
+import type CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import type CompElement from '@/elements/CompElement'
 import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
@@ -32,9 +33,11 @@ import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
+import type HCompElement from '@/elements/html/HCompElement'
 import type MaskElement from '@/elements/MaskElement'
 import type PolynomialBezier from '@/elements/PolynomialBezier'
 import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
+import type SVGCompElement from '@/elements/svg/SVGCompElement'
 import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type TextElement from '@/elements/TextElement'
 import type {
@@ -45,6 +48,7 @@ import type {
 } from '@/enums'
 import type BaseRenderer from '@/renderers/BaseRenderer'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
 import type AudioController from '@/utils/audio/AudioController'
 import type FontManager from '@/utils/FontManager'
@@ -60,12 +64,6 @@ import type TextProperty from '@/utils/text/TextProperty'
 import type TransformProperty from '@/utils/TransformProperty'
 
 import { getShapeProp } from '@/utils/shapes/ShapeProperty'
-
-import CVCompElement from './elements/canvas/CVCompElement'
-import CVEffects from './elements/canvas/CVEffects'
-import HCompElement from './elements/html/HCompElement'
-import SVGCompElement from './elements/svg/SVGCompElement'
-import HybridRenderer from './renderers/HybridRenderer'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -97,9 +95,10 @@ export interface SVGGeometry {
 
 export interface TextSpan {
   childSpan?: null | SVGTextElement | SVGGElement
+  elem?: number[][]
   glyph: null | SVGCompElement | SVGShapeElement
   span: null | SVGTextElement | SVGGElement
-  elem?: number[][]
+  style: CSSStyleDeclaration
 }
 
 export type SVGElementInterface =
@@ -832,6 +831,7 @@ export type EffectElement =
   | typeof SVGMatte3Effect
   | typeof SVGGaussianBlurEffect
   | typeof SVGTransformEffect
+  | typeof CVTransformEffect
 export interface EffectValue {
   ty: number
   v: {

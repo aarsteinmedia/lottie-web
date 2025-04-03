@@ -19,15 +19,10 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
-
   contextData?: CVContextData
-
   destroyed?: boolean
-
   renderConfig?: CanvasRendererConfig
-
   renderedFrame?: number
-
   transformCanvas?: TransformCanvas
 
   constructor() {
