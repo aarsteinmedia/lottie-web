@@ -18,6 +18,7 @@ import {
 import shapePool from '../pooling/shape_pool';
 import PropertyFactory from '../PropertyFactory';
 import ShapePropertyFactory from '../shapes/ShapeProperty';
+import { ArrayType } from '@/enums';
 
 function addPropertyDecorator() {
   function loopOut(type, duration, durationFlag) {
@@ -215,7 +216,7 @@ function addPropertyDecorator() {
     var j = 0
     var value
     if (this.pv.length) {
-      value = createTypedArray('float32', this.pv.length)
+      value = createTypedArray(ArrayType.Float32, this.pv.length)
     } else {
       value = 0
     }

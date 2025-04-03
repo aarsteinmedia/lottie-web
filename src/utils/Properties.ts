@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
 import type {
   Caching,
+  CompElementInterface,
   ElementInterfaceIntersect,
   Keyframe,
   Shape,
@@ -25,7 +26,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _isFirstFrame?: boolean
   _placeholder?: boolean
-  comp?: ElementInterfaceIntersect
+  comp?: CompElementInterface
   data?: VectorProperty<number | number[] | Keyframe[]>
   e?: unknown
   effectsSequence: ((arg: unknown) => any)[] = []

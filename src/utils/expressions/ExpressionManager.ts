@@ -1,3 +1,4 @@
+import { ArrayType } from '@/enums'
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { createTypedArray } from '@/utils/helpers/arrays'
@@ -159,7 +160,7 @@ const ExpressionManager = (function () {
     let len
     if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
       len = a.length
-      arr = createTypedArray('float32', len)
+      arr = createTypedArray(ArrayType.Float32, len)
       for (i = 0; i < len; i++) {
         arr[i] = a[i] * b
       }
@@ -167,7 +168,7 @@ const ExpressionManager = (function () {
     }
     if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
       len = b.length
-      arr = createTypedArray('float32', len)
+      arr = createTypedArray(ArrayType.Float32, len)
       for (i = 0; i < len; i++) {
         arr[i] = a * b[i]
       }
@@ -187,7 +188,7 @@ const ExpressionManager = (function () {
     let len
     if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
       len = a.length
-      arr = createTypedArray('float32', len)
+      arr = createTypedArray(ArrayType.Float32, len)
       for (i = 0; i < len; i++) {
         arr[i] = a[i] / b
       }
@@ -195,7 +196,7 @@ const ExpressionManager = (function () {
     }
     if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
       len = b.length
-      arr = createTypedArray('float32', len)
+      arr = createTypedArray(ArrayType.Float32, len)
       for (i = 0; i < len; i++) {
         arr[i] = a / b[i]
       }
@@ -362,7 +363,7 @@ const ExpressionManager = (function () {
     }
     let i
     const len = value1.length
-    const arr = createTypedArray('float32', len)
+    const arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i++) {
       arr[i] = value1[i] + (value2[i] - value1[i]) * perc
     }
@@ -382,9 +383,9 @@ const ExpressionManager = (function () {
       let i
       const len = max.length
       if (!min) {
-        min = createTypedArray('float32', len)
+        min = createTypedArray(ArrayType.Float32, len)
       }
-      const arr = createTypedArray('float32', len)
+      const arr = createTypedArray(ArrayType.Float32, len)
       const rnd = Math.random()
       for (i = 0; i < len; i++) {
         arr[i] = min[i] + rnd * (max[i] - min[i])
@@ -489,7 +490,7 @@ const ExpressionManager = (function () {
       let iWiggle
       let j
       const lenWiggle = this.pv.length ? this.pv.length : 1
-      const addedAmps = createTypedArray('float32', lenWiggle)
+      const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
       freq = 5
       const iterations = Math.floor(time * freq)
       iWiggle = 0
@@ -505,7 +506,7 @@ const ExpressionManager = (function () {
       // var rnd2 = BMMath.random();
       const periods = time * freq
       const perc = periods - Math.floor(periods)
-      const arr = createTypedArray('float32', lenWiggle)
+      const arr = createTypedArray(ArrayType.Float32, lenWiggle)
       if (lenWiggle > 1) {
         for (j = 0; j < lenWiggle; j++) {
           arr[j] =
@@ -593,7 +594,7 @@ const ExpressionManager = (function () {
       if ($bm_isInstanceOfArray(val1)) {
         let iKey
         const lenKey = val1.length
-        const arr = createTypedArray('float32', lenKey)
+        const arr = createTypedArray(ArrayType.Float32, lenKey)
         for (iKey = 0; iKey < lenKey; iKey++) {
           arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
         }

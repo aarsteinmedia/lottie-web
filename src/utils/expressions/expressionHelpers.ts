@@ -1,3 +1,5 @@
+import { ArrayType } from '@/enums'
+
 import { createTypedArray } from '../helpers/arrays'
 import ExpressionManager from './ExpressionManager'
 
@@ -47,7 +49,7 @@ const expressionHelpers = (function () {
     return speed
   }
 
-  function getVelocityAtTime(frameNum) {
+  function getVelocityAtTime(frameNum: number) {
     if (this.vel !== undefined) {
       return this.vel
     }
@@ -57,7 +59,7 @@ const expressionHelpers = (function () {
     const v2 = this.getValueAtTime(frameNum + delta)
     let velocity
     if (v1.length) {
-      velocity = createTypedArray('float32', v1.length)
+      velocity = createTypedArray(ArrayType.Float32, v1.length)
       let i
       for (i = 0; i < v1.length; i++) {
         // removing frameRate
