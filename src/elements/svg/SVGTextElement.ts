@@ -367,7 +367,7 @@ export default class SVGTextLottieElement extends TextElement {
       this.textContainer = createNS<SVGTextElement>('text')
     }
   }
-  getBaseElement(): SVGGElement | null {
+  getBaseElement(): SVGGElement | HTMLElement | null {
     throw new Error(
       `${this.constructor.name}: Method getBaseElement is not implemented`
     )

@@ -15,9 +15,12 @@ import { degToRads } from '@/utils'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 
+import CVCompElement from '../canvas/CVCompElement'
+
 export default class HCameraElement extends FrameElement {
   _prevMat: Matrix
   a?: ValueProperty<Vector3>
+  override comp?: CVCompElement
   mat?: Matrix
   or?: ValueProperty<Vector3>
   p?: ValueProperty<number[]>

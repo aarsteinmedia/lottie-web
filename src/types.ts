@@ -107,7 +107,7 @@ export interface TextSpan {
   elem?: number[][]
   glyph: null | SVGCompElement | SVGShapeElement
   span: null | SVGTextElement | SVGGElement
-  style: CSSStyleDeclaration
+  style?: CSSStyleDeclaration
 }
 
 export type SVGElementInterface =
@@ -244,7 +244,11 @@ export interface AnimatedContent {
   fn: null | CreateRenderFunction
 }
 
-export type CompElementInterface = CVCompElement | HCompElement | SVGCompElement
+export type CompElementInterface =
+  | BaseRenderer
+  | CVCompElement
+  | HCompElement
+  | SVGCompElement
 
 export interface CVStyleElement {
   closed: boolean

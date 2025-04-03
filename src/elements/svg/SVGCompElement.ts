@@ -20,7 +20,7 @@ export default class SVGCompElement extends SVGBaseElement {
   elements: ElementInterfaceIntersect[]
   layers: LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
-  renderedFrame = 0
+  renderedFrame = -1
   supports3d: boolean
   tm?: KeyframedValueProperty
   constructor(

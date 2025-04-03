@@ -22,7 +22,6 @@ export default class CanvasRendererBase extends BaseRenderer {
   contextData?: CVContextData
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
-  renderedFrame?: number
   transformCanvas?: TransformCanvas
 
   constructor() {

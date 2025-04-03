@@ -33,10 +33,9 @@ export default class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
   completeLayers?: boolean
   elements: ElementInterfaceIntersect[] = []
-
   layers: LottieLayer[] = []
-
   pendingElements: ElementInterfaceIntersect[] = []
+  renderedFrame = -1
 
   addPendingElement(element: ElementInterfaceIntersect) {
     this.pendingElements.push(element)
@@ -235,7 +234,7 @@ export default class BaseRenderer extends FrameElement {
     if (path.length === 0) {
       return element
     }
-    return (element as BaseRenderer)?.getElementByPath(path)
+    return element?.getElementByPath(path)
   }
 
   includeLayers(newLayers: LottieLayer[]) {
@@ -271,9 +270,12 @@ export default class BaseRenderer extends FrameElement {
     }
   }
 
-  setProjectInterface(pInterface: typeof ProjectInterface | null) {
+  setProjectInterface(pInterface: ProjectInterface | null) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
+    }
+    if (!pInterface) {
+      return
     }
     this.globalData.projectInterface = pInterface
   }

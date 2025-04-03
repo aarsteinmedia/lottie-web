@@ -24,7 +24,7 @@ export default class TransformElement extends BaseElement {
       comp = this.comp
     while (flag) {
       if (comp?.finalTransform) {
-        if (comp.data.hasMask) {
+        if (comp.data?.hasMask) {
           transforms.splice(0, 0, comp.finalTransform)
         }
         comp = comp.comp

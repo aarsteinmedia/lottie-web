@@ -78,11 +78,11 @@ export default class CompElement extends RenderableDOMElement {
     if (this.tm?._placeholder) {
       this.renderedFrame = val / Number(this.data.sr)
     } else {
-      let timeRemapped = this.tm?.v
+      let timeRemapped = this.tm?.v || 0
       if (timeRemapped === this.data.op) {
         timeRemapped = this.data.op - 1
       }
-      this.renderedFrame = Number(timeRemapped)
+      this.renderedFrame = timeRemapped
     }
     const { length } = this.elements
     if (!this.completeLayers) {

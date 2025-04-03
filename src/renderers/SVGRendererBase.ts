@@ -24,7 +24,6 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 export default class SVGRendererBase extends BaseRenderer {
   destroyed?: boolean
   renderConfig?: SVGRendererConfig
-  renderedFrame?: number
   svgElement?: SVGSVGElement
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {

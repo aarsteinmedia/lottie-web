@@ -26,8 +26,6 @@ export default class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement
   destroyed: boolean
   renderConfig: HTMLRendererConfig
-
-  renderedFrame: number
   rendererType: RendererType
   resizerElem?: HTMLDivElement
   supports3d: boolean
@@ -75,8 +73,8 @@ export default class HybridRendererBase extends BaseRenderer {
     const len = this.threeDElements.length
     while (i < len) {
       if (pos <= this.threeDElements[i].endPos) {
-        let j = this.threeDElements[i].startPos
-        var nextElement
+        let j = this.threeDElements[i].startPos,
+          nextElement
         while (j < pos) {
           nextElement = this.elements[j]?.getBaseElement?.()
           j++
