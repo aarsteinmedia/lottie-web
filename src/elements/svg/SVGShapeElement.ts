@@ -21,7 +21,7 @@ import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { lineCapEnum, lineJoinEnum } from '@/enums'
+import { lineCapEnum, lineJoinEnum, ShapeType } from '@/enums'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
@@ -109,7 +109,7 @@ export default class SVGShapeElement extends ShapeElement {
       this.shapesData,
       this.itemsData as SVGElementInterface[],
       this.prevViewData || [],
-      this.layerElement,
+      this.layerElement as SVGGElement,
       0,
       [],
       true
@@ -137,13 +137,13 @@ export default class SVGShapeElement extends ShapeElement {
     let ty = 4
 
     switch (data.ty) {
-      case 'rc':
+      case ShapeType.Rectangle:
         ty = 5
         break
-      case 'el':
+      case ShapeType.Ellipse:
         ty = 6
         break
-      case 'sr':
+      case ShapeType.PolygonStar:
         ty = 7
     }
     const shapeProperty = getShapeProp(this, data, ty),
@@ -164,16 +164,16 @@ export default class SVGShapeElement extends ShapeElement {
       pathElement = styleOb.pElem
 
     switch (data.ty) {
-      case 'st':
+      case ShapeType.Stroke:
         elementData = new SVGStrokeStyleData(this, data, styleOb)
         break
-      case 'fl':
+      case ShapeType.Fill:
         elementData = new SVGFillStyleData(this, data, styleOb)
         break
-      case 'gf':
-      case 'gs': {
+      case ShapeType.GradientFill:
+      case ShapeType.GradientStroke: {
         const GradientConstructor =
-          data.ty === 'gf'
+          data.ty === ShapeType.GradientFill
             ? SVGGradientFillStyleData
             : SVGGradientStrokeStyleData
         elementData = new GradientConstructor(this, data, styleOb)
@@ -191,7 +191,7 @@ export default class SVGShapeElement extends ShapeElement {
         }
         break
       }
-      case 'no':
+      case ShapeType.NoStyle:
         elementData = new SVGNoStyleData(
           this,
           data as unknown as SVGShapeData,
@@ -199,7 +199,7 @@ export default class SVGShapeElement extends ShapeElement {
         )
     }
 
-    if (data.ty === 'st' || data.ty === 'gs') {
+    if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
       pathElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
       pathElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
       pathElement.setAttribute('fill-opacity', '0')
@@ -249,7 +249,7 @@ export default class SVGShapeElement extends ShapeElement {
   override destroy() {
     this.destroyBaseElement()
     this.shapesData = null as unknown as Shape[]
-    this.itemsData = null as unknown as SVGElementInterface[]
+    this.itemsData = null as unknown as ElementInterfaceIntersect[]
   }
   filterUniqueShapes() {
     const { length } = this.shapes,
@@ -305,7 +305,7 @@ export default class SVGShapeElement extends ShapeElement {
       this.shapesData,
       this.itemsData as SVGElementInterface[],
       this.prevViewData,
-      this.layerElement,
+      this.layerElement as SVGGElement,
       0,
       [],
       true
@@ -379,11 +379,11 @@ export default class SVGShapeElement extends ShapeElement {
       }
 
       switch (arr[i].ty) {
-        case 'fl':
-        case 'st':
-        case 'gf':
-        case 'gs':
-        case 'no': {
+        case ShapeType.Fill:
+        case ShapeType.Stroke:
+        case ShapeType.GradientFill:
+        case ShapeType.GradientStroke:
+        case ShapeType.NoStyle: {
           if (processedPos) {
             itemsData[i]!.style!.closed = false
           } else {
@@ -438,10 +438,10 @@ export default class SVGShapeElement extends ShapeElement {
 
           break
         }
-        case 'sh':
-        case 'rc':
-        case 'el':
-        case 'sr': {
+        case ShapeType.Path:
+        case ShapeType.Rectangle:
+        case ShapeType.Ellipse:
+        case ShapeType.PolygonStar: {
           if (!processedPos) {
             itemsData[i] = this.createShapeElement(
               arr[i],
@@ -452,12 +452,12 @@ export default class SVGShapeElement extends ShapeElement {
           this.setElementStyles(itemsData[i] as SVGShapeData)
           break
         }
-        case 'tm':
-        case 'rd':
-        case 'ms':
-        case 'pb':
-        case 'zz':
-        case 'op': {
+        case ShapeType.Trim:
+        case ShapeType.RoundedCorners:
+        case ShapeType.Unknown:
+        case ShapeType.PuckerBloat:
+        case ShapeType.ZigZag:
+        case ShapeType.OffsetPath: {
           if (processedPos) {
             Modifier = itemsData[i] as unknown as TrimModifier
             Modifier.closed = false
@@ -470,7 +470,7 @@ export default class SVGShapeElement extends ShapeElement {
           ownModifiers.push(Modifier)
           break
         }
-        case 'rp': {
+        case ShapeType.Repeater: {
           if (processedPos) {
             Modifier = itemsData[i] as unknown as RepeaterModifier
             Modifier.closed = true

@@ -211,6 +211,7 @@ export default TSESlint.config(
       'one-var-declaration-per-line': 'error',
       'operator-assignment': ['error', 'always'],
       'perfectionist/sort-classes': 'warn',
+      'perfectionist/sort-enums': 'warn',
       'perfectionist/sort-imports': 'warn',
       'perfectionist/sort-interfaces': 'warn',
       'perfectionist/sort-objects': 'warn',

@@ -1,5 +1,6 @@
 import type {
   AnimationData,
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
@@ -15,11 +16,10 @@ import PropertyFactory from '@/utils/PropertyFactory'
 export default class CVCompElement extends CompElement {
   canvasContext?: CanvasRenderingContext2D
   pendingElements: ElementInterfaceIntersect[]
-
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompElementInterface
   ) {
     super()
     this.completeLayers = false
@@ -62,7 +62,7 @@ export default class CVCompElement extends CompElement {
         destroy,
         exitLayer,
         hideElement,
-        initRendererElement,
+        // initRendererElement,
         prepareLayer,
         renderFrame,
         setBlendMode,
@@ -101,7 +101,7 @@ export default class CVCompElement extends CompElement {
     this.destroy = destroy
     this.exitLayer = exitLayer
     this.hideElement = hideElement
-    this.initRendererElement = initRendererElement
+    // this.initRendererElement = initRendererElement
     this.prepareLayer = prepareLayer
     this.renderFrame = renderFrame
     this.setBlendMode = setBlendMode
@@ -154,11 +154,7 @@ export default class CVCompElement extends CompElement {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
-    return new CVCompElement(
-      data,
-      this.globalData,
-      this as unknown as ElementInterfaceIntersect
-    )
+    return new CVCompElement(data, this.globalData, this)
   }
 
   createElements() {

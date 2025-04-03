@@ -23,7 +23,9 @@ import type CVCompElement from '@/elements/canvas/CVCompElement'
 import type CVEffects from '@/elements/canvas/CVEffects'
 import type CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import type CompElement from '@/elements/CompElement'
+import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
@@ -53,9 +55,16 @@ import type SVGRenderer from '@/renderers/SVGRenderer'
 import type AudioController from '@/utils/audio/AudioController'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import type ImagePreloader from '@/utils/ImagePreloader'
 import type Matrix from '@/utils/Matrix'
-import type { BaseProperty, ValueProperty } from '@/utils/Properties'
+import type {
+  BaseProperty,
+  MultiDimensionalProperty,
+  ValueProperty,
+} from '@/utils/Properties'
+import type DashProperty from '@/utils/shapes/DashProperty'
+import type GradientProperty from '@/utils/shapes/GradientProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 import type SlotManager from '@/utils/SlotManager'
 import type LetterProps from '@/utils/text/LetterProps'
@@ -115,6 +124,7 @@ export interface Transformer {
   _mdf?: boolean
   _opMdf: boolean
   container: SVGGElement
+  key?: string
   localMat: Matrix
   localOpacity: number
   mat: Matrix
@@ -147,7 +157,8 @@ export type ElementInterfaceIntersect = CVCompElement &
   AnimationItem &
   HCompElement &
   CVEffects &
-  HybridRenderer
+  HybridRenderer &
+  CVShapeData
 
 export interface TransformCanvas {
   h: number
@@ -231,6 +242,42 @@ export interface AnimatedContent {
   data: Shape
   element: ShapeDataInterface | SVGElementInterface
   fn: null | CreateRenderFunction
+}
+
+export type CompElementInterface = CVCompElement | HCompElement | SVGCompElement
+
+export interface CVStyleElement {
+  closed: boolean
+  co?: string
+  coOp?: number
+  da?: Float32Array
+  data: Shape
+  do?: number
+  elements: CVShapeData[]
+  grd?: string
+  lc?: CanvasLineCap
+  lj?: CanvasLineJoin
+  ml?: number
+  preTransforms: ReturnType<
+    typeof ShapeTransformManager.prototype.addTransformSequence
+  >
+  r?: 'evenodd' | 'nonzero'
+  transforms: Transformer[]
+  type: ShapeType
+  wi?: number
+}
+
+export interface CVElement {
+  a?: ValueProperty
+  c?: MultiDimensionalProperty<number[]>
+  d?: DashProperty
+  e?: MultiDimensionalProperty
+  g?: GradientProperty
+  h?: ValueProperty
+  o?: ValueProperty
+  s?: MultiDimensionalProperty
+  style?: CVStyleElement
+  w?: ValueProperty
 }
 
 export interface ThreeDElements {
@@ -1133,7 +1180,7 @@ export interface GlobalData {
   isDashed?: boolean
   nm?: string
   progressiveLoad?: boolean
-  projectInterface?: any // ProjectInterface
+  projectInterface: ProjectInterface
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
   renderer?: CanvasRenderer | SVGRenderer
   slotManager?: SlotManager

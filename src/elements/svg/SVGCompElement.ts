@@ -1,5 +1,6 @@
 import type {
   AnimationData,
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
@@ -19,12 +20,13 @@ export default class SVGCompElement extends SVGBaseElement {
   elements: ElementInterfaceIntersect[]
   layers: LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
+  renderedFrame = 0
   supports3d: boolean
   tm?: KeyframedValueProperty
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompElementInterface
   ) {
     super()
     this.layers = data.layers || []

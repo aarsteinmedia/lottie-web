@@ -106,10 +106,16 @@ export default class CVBaseElement {
     this.searchEffectTransforms()
   }
   createContent() {
-    // TODO: Pass through
+    // TODO: Pass through?
+    throw new Error(
+      `${this.constructor.name}: createContent is not implemented`
+    )
   }
   createElements() {
-    // TODO: Pass through
+    // TODO: Pass through?
+    throw new Error(
+      `${this.constructor.name}: createElements is not implemented`
+    )
   }
   createRenderableComponents() {
     if (!this.data) {
@@ -202,7 +208,10 @@ export default class CVBaseElement {
   }
 
   initRendererElement() {
-    // TODO: Pass through
+    // TODO: Pass through?
+    throw new Error(
+      `${this.constructor.name}: initRendererElement is not implemented`
+    )
   }
   prepareLayer() {
     if (!this.data) {

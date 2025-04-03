@@ -1,14 +1,9 @@
-import type { CompInterface } from '@/types'
-
-export const compositions: CompInterface[] = [],
-  currentFrame = 0
-
-export function registerComposition(comp: CompInterface) {
-  compositions.push(comp)
-}
+import type { CompElementInterface } from '@/types'
 export default class ProjectInterface {
+  compositions: CompElementInterface[] = []
   content?: ProjectInterface
   createEffectsInterface?: (val: any, _interface?: ProjectInterface) => any
+  currentFrame = 0
   registerEffectsInterface?: (val: any, _interface?: ProjectInterface) => any
   registerMaskInterface?: (val: any, _interface?: ProjectInterface) => any
   shapeInterface?: ProjectInterface
@@ -16,22 +11,28 @@ export default class ProjectInterface {
   textInterface?: ProjectInterface
   constructor(name?: string) {
     let i = 0
-    const { length } = compositions
+    const { length } = this.compositions
     while (i < length) {
-      if (compositions[i].data?.nm !== name) {
+      if (this.compositions[i].data?.nm !== name) {
         i++
         continue
       }
-      if (compositions[i].prepareFrame && compositions[i].data.xt) {
-        compositions[i].prepareFrame!(currentFrame)
+      if (
+        !!this.compositions[i].prepareFrame &&
+        this.compositions[i].data?.xt
+      ) {
+        this.compositions[i].prepareFrame!(this.currentFrame)
       }
       for (const [key, value] of Object.entries(
-        compositions[i].compInterface
+        this.compositions[i].compInterface as any
       )) {
-        ProjectInterface[key as keyof typeof ProjectInterface] = value
+        ProjectInterface[key as keyof typeof ProjectInterface] = value as any
       }
       break
     }
     i++
+  }
+  registerComposition(comp: CompElementInterface) {
+    this.compositions.push(comp)
   }
 }

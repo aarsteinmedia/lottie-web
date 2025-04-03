@@ -13,12 +13,12 @@ import { createElementID, getLocationHref } from '@/utils/getterSetter'
 
 export default class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
-  maskedElement?: SVGGElement
+  maskedElement?: HTMLElement | SVGGElement
   matteElement?: SVGGElement
   matteMasks?: {
     [key: number]: string
   }
-  transformedElement?: SVGGElement
+  transformedElement?: HTMLElement | SVGGElement
   override createContainerElements() {
     if (!this.data) {
       throw new Error(
@@ -246,7 +246,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
     return this.matteMasks[matteType]
   }
   override initRendererElement() {
-    this.layerElement = createNS('g')
+    this.layerElement = createNS<SVGGElement>('g')
   }
   override renderElement() {
     if (!this.finalTransform) {

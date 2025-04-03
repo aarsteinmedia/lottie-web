@@ -19,7 +19,6 @@ export default class HCompElement extends CompElement {
   supports3d?: boolean
   svgElement?: SVGSVGElement
   transformedElement?: SVGGElement | HTMLElement
-
   constructor(
     data: LottieLayer,
     globalData: GlobalData,

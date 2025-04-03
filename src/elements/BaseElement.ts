@@ -1,10 +1,11 @@
 import type MaskElement from '@/elements/MaskElement'
 import type {
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
   Shape,
-  SVGElementInterface,
+  // SVGElementInterface,
 } from '@/types'
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 
@@ -14,14 +15,14 @@ import { createElementID, getExpressionInterfaces } from '@/utils/getterSetter'
 import ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 export default abstract class BaseElement {
-  baseElement?: SVGGElement
-  comp?: ElementInterfaceIntersect
+  baseElement?: HTMLElement | SVGGElement
+  comp?: CompElementInterface
   compInterface?: CompExpressionInterface
   data?: LottieLayer
   effectsManager?: EffectsManager
 
   globalData?: GlobalData
-  itemsData: SVGElementInterface[] = []
+  itemsData: ElementInterfaceIntersect[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
 
@@ -58,7 +59,7 @@ export default abstract class BaseElement {
   initBaseData(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: CompExpressionInterface
+    comp: CompElementInterface
   ) {
     this.globalData = globalData
     this.comp = comp

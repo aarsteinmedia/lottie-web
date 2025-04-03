@@ -1,4 +1,5 @@
 import type {
+  CompElementInterface,
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
   GlobalData,
@@ -65,7 +66,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   initElement(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompElementInterface
   ) {
     this.initFrame()
     this.initBaseData(data, globalData, comp)

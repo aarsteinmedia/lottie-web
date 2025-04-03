@@ -1,4 +1,5 @@
 import type {
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
@@ -39,7 +40,7 @@ export default class CompElement extends RenderableDOMElement {
   override initElement(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompElementInterface
   ) {
     this.initFrame()
     this.initBaseData(data, globalData, comp)

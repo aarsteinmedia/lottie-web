@@ -172,7 +172,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.fillRect(x, y, w, h)
   }
 
-  ctxFillStyle(value: string) {
+  ctxFillStyle(value = '') {
     if (!this.canvasContext) {
       throw new Error(
         `${this.constructor.name}: canvasContext is not implemented`
@@ -235,7 +235,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.stroke()
   }
 
-  ctxStrokeStyle(value: string) {
+  ctxStrokeStyle(value = '') {
     if (!this.canvasContext) {
       throw new Error(
         `${this.constructor.name}: canvasContext is not implemented`

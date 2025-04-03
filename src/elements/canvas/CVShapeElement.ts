@@ -1,46 +1,48 @@
+import type TransformEffect from '@/effects/TransformEffect'
 import type {
+  CompElementInterface,
+  CVElement,
+  CVStyleElement,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
   Shape,
+  Transformer,
   Vector3,
   VectorProperty,
 } from '@/types'
+import type {
+  MultiDimensionalProperty,
+  ValueProperty,
+} from '@/utils/Properties'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
-import { lineCapEnum, lineJoinEnum } from '@/enums'
+import { lineCapEnum, lineJoinEnum, RendererType, ShapeType } from '@/enums'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import { degToRads } from '@/utils'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
+import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformProperty from '@/utils/TransformProperty'
-
-import SVGStyleData from '../helpers/shapes/SVGStyleData'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
-
   dashResetter = []
-
-  // extendPrototype([BaseElement, TransformElement, CVBaseElement, ShapeElement, HierarchyElement, FrameElement, RenderableElement], CVShapeElement);
-
-  // CVShapeElement.prototype.initElement = RenderableDOMElement.prototype.initElement;
-
   prevViewData: ElementInterfaceIntersect[]
 
-  stylesList: SVGStyleData[]
+  stylesList: CVStyleElement[]
   transformHelper = { _opMdf: false, opacity: 1 }
   transformsManager: ShapeTransformManager
 
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
-    comp: ElementInterfaceIntersect
+    comp: CompElementInterface
   ) {
     super()
     this.shapes = []
@@ -51,10 +53,37 @@ export default class CVShapeElement extends ShapeElement {
     this.shapeModifiers = []
     this.processedElements = []
     this.transformsManager = new ShapeTransformManager()
+
+    const {
+      clearCanvas,
+      createContainerElements,
+      createElements,
+      createRenderableComponents,
+      exitLayer,
+      hideElement,
+      initRendererElement,
+      prepareLayer,
+      renderFrame,
+      setBlendMode,
+      showElement,
+    } = CVBaseElement.prototype
+
+    this.clearCanvas = clearCanvas
+    this.createContainerElements = createContainerElements
+    this.createElements = createElements
+    this.createRenderableComponents = createRenderableComponents
+    this.exitLayer = exitLayer
+    this.hideElement = hideElement
+    this.initRendererElement = initRendererElement
+    this.prepareLayer = prepareLayer
+    this.renderFrame = renderFrame
+    this.setBlendMode = setBlendMode
+    this.showElement = showElement
+
     this.initElement(data, globalData, comp)
   }
 
-  addTransformToStyleList(transform) {
+  addTransformToStyleList(transform: Transformer) {
     const { length } = this.stylesList
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
@@ -63,7 +92,18 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  closeStyles(styles) {
+  clearCanvas(
+    _canvasContext?:
+      | CanvasRenderingContext2D
+      | OffscreenCanvasRenderingContext2D
+      | null
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method clearCanvas is not implemented`
+    )
+  }
+
+  closeStyles(styles: CVStyleElement[]) {
     const { length } = styles
     for (let i = 0; i < length; i++) {
       styles[i].closed = true
@@ -80,7 +120,13 @@ export default class CVShapeElement extends ShapeElement {
     )
   }
 
-  createGroupElement() {
+  createElements() {
+    throw new Error(
+      `${this.constructor.name}: Method createElements is not implemented`
+    )
+  }
+
+  createGroupElement(_data?: Shape) {
     const elementData = {
       it: [],
       prevViewData: [],
@@ -101,68 +147,85 @@ export default class CVShapeElement extends ShapeElement {
     return elementData
   }
 
-  createStyleElement(data: Shape, transforms) {
-    const styleElem = {
+  createStyleElement(data: Shape, transforms: Transformer[]) {
+    const styleElem: CVStyleElement = {
       closed: data.hd === true,
-      data: data,
+      data,
       elements: [],
       preTransforms: this.transformsManager.addTransformSequence(transforms),
       transforms: [],
       type: data.ty,
     }
-    const elementData = {}
-    if (data.ty === 'fl' || data.ty === 'st') {
-      elementData.c = PropertyFactory(
-        this as unknown as ElementInterfaceIntersect,
-        data.c as VectorProperty<Vector3>,
-        1,
-        255,
-        this as unknown as ElementInterfaceIntersect
-      )
-      if (!elementData.c.k) {
-        styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(
-          elementData.c.v[1]
-        )},${Math.floor(elementData.c.v[2])})`
+    const elementData: CVElement = {}
+
+    switch (data.ty) {
+      case ShapeType.Fill:
+      case ShapeType.Stroke: {
+        elementData.c = PropertyFactory(
+          this as unknown as ElementInterfaceIntersect,
+          data.c as VectorProperty<Vector3>,
+          1,
+          255,
+          this as unknown as ElementInterfaceIntersect
+        ) as MultiDimensionalProperty<number[]>
+        if (!elementData.c.k) {
+          styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(
+            elementData.c.v[1]
+          )},${Math.floor(elementData.c.v[2])})`
+        }
+        break
       }
-    } else if (data.ty === 'gf' || data.ty === 'gs') {
-      elementData.s = PropertyFactory(
-        this as unknown as ElementInterfaceIntersect,
-        data.s,
-        1,
-        null,
-        this as unknown as ElementInterfaceIntersect
-      )
-      elementData.e = PropertyFactory(
-        this as unknown as ElementInterfaceIntersect,
-        data.e,
-        1,
-        null,
-        this as unknown as ElementInterfaceIntersect
-      )
-      elementData.h = PropertyFactory(
-        this as unknown as ElementInterfaceIntersect,
-        data.h || { k: 0 },
-        0,
-        0.01,
-        this as unknown as ElementInterfaceIntersect
-      )
-      elementData.a = PropertyFactory(
-        this as unknown as ElementInterfaceIntersect,
-        data.a || { k: 0 },
-        0,
-        degToRads,
-        this
-      )
-      elementData.g = new GradientProperty(this, data.g, this)
+      case ShapeType.GradientFill:
+      case ShapeType.GradientStroke: {
+        elementData.s = PropertyFactory(
+          this as unknown as ElementInterfaceIntersect,
+          data.s,
+          1,
+          null,
+          this as unknown as ElementInterfaceIntersect
+        ) as MultiDimensionalProperty
+        elementData.e = PropertyFactory(
+          this as unknown as ElementInterfaceIntersect,
+          data.e,
+          1,
+          null,
+          this as unknown as ElementInterfaceIntersect
+        ) as MultiDimensionalProperty
+        elementData.h = PropertyFactory(
+          this as unknown as ElementInterfaceIntersect,
+          (data.h || { k: 0 }) as VectorProperty,
+          0,
+          0.01,
+          this as unknown as ElementInterfaceIntersect
+        ) as ValueProperty
+        elementData.a = PropertyFactory(
+          this as unknown as ElementInterfaceIntersect,
+          (data.a || { k: 0 }) as VectorProperty,
+          0,
+          degToRads,
+          this as unknown as ElementInterfaceIntersect
+        ) as ValueProperty
+        if (data.g) {
+          elementData.g = new GradientProperty(
+            this as unknown as ElementInterfaceIntersect,
+            data.g,
+            this as unknown as ElementInterfaceIntersect
+          )
+        }
+
+        break
+      }
     }
+
     elementData.o = PropertyFactory(
       this as unknown as ElementInterfaceIntersect,
       data.o,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
-    )
-    if (data.ty === 'st' || data.ty === 'gs') {
+    ) as ValueProperty
+
+    if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
       styleElem.lc = lineCapEnum[data.lc || 2]
       styleElem.lj = lineJoinEnum[data.lj || 2]
       if (data.lj === 1) {
@@ -174,12 +237,17 @@ export default class CVShapeElement extends ShapeElement {
         0,
         null,
         this as unknown as ElementInterfaceIntersect
-      )
+      ) as ValueProperty
       if (!elementData.w.k) {
         styleElem.wi = elementData.w.v
       }
-      if (data.d) {
-        const d = new DashProperty(this, data.d, 'canvas', this)
+      if (data.d && typeof data.d === 'object') {
+        const d = new DashProperty(
+          this as unknown as ElementInterfaceIntersect,
+          data.d,
+          RendererType.Canvas,
+          this as unknown as ElementInterfaceIntersect
+        )
         elementData.d = d
         if (!elementData.d.k) {
           styleElem.da = elementData.d.dashArray
@@ -187,7 +255,7 @@ export default class CVShapeElement extends ShapeElement {
         }
       }
     } else {
-      styleElem.r = data.r === 2 ? 'evenodd' : 'nonzero'
+      styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero'
     }
     this.stylesList.push(styleElem)
     elementData.style = styleElem
@@ -239,7 +307,9 @@ export default class CVShapeElement extends ShapeElement {
     let currentStyle
     for (let i = 0; i < length; i++) {
       currentStyle = this.stylesList[i]
-      const type = currentStyle.type
+      const { type } = currentStyle,
+        isStroke =
+          type === ShapeType.Stroke || type === ShapeType.GradientStroke
 
       // Skipping style when
       // Stroke width equals 0
@@ -247,7 +317,7 @@ export default class CVShapeElement extends ShapeElement {
       // current opacity equals 0
       // global opacity equals 0
       if (
-        ((type === 'st' || type === 'gs') && currentStyle.wi === 0) ||
+        (isStroke && currentStyle.wi === 0) ||
         !currentStyle.data._shouldRender ||
         currentStyle.coOp === 0 ||
         this.globalData.currentGlobalAlpha === 0
@@ -256,41 +326,43 @@ export default class CVShapeElement extends ShapeElement {
       }
       renderer.save()
       const elems = currentStyle.elements
-      if (type === 'st' || type === 'gs') {
+      if (isStroke) {
         renderer.ctxStrokeStyle(
-          type === 'st' ? currentStyle.co : currentStyle.grd
+          type === ShapeType.Stroke ? currentStyle.co : currentStyle.grd
         )
-        // ctx.strokeStyle = type === 'st' ? currentStyle.co : currentStyle.grd;
-        renderer.ctxLineWidth(currentStyle.wi)
-        // ctx.lineWidth = currentStyle.wi;
-        renderer.ctxLineCap(currentStyle.lc)
-        // ctx.lineCap = currentStyle.lc;
-        renderer.ctxLineJoin(currentStyle.lj)
-        // ctx.lineJoin = currentStyle.lj;
+        renderer.ctxLineWidth(currentStyle.wi || 0)
+
+        if (currentStyle.lc) {
+          renderer.ctxLineCap(currentStyle.lc)
+        }
+
+        if (currentStyle.lj) {
+          renderer.ctxLineJoin(currentStyle.lj)
+        }
+
         renderer.ctxMiterLimit(currentStyle.ml || 0)
-        // ctx.miterLimit = currentStyle.ml || 0;
       } else {
         renderer.ctxFillStyle(
-          type === 'fl' ? currentStyle.co : currentStyle.grd
+          type === ShapeType.Fill ? currentStyle.co : currentStyle.grd
         )
         // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
       }
       renderer.ctxOpacity(currentStyle.coOp)
-      if (type !== 'st' && type !== 'gs') {
-        ctx.beginPath()
+      if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
+        ctx?.beginPath()
       }
       renderer.ctxTransform(currentStyle.preTransforms.finalTransform.props)
       const { length: jLen } = elems
       for (let j = 0; j < jLen; j++) {
-        if (type === 'st' || type === 'gs') {
-          ctx.beginPath()
-          if (currentStyle.da) {
+        if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
+          ctx?.beginPath()
+          if (ctx && currentStyle.da) {
             ctx.setLineDash(currentStyle.da)
-            ctx.lineDashOffset = currentStyle.do
+            ctx.lineDashOffset = currentStyle.do || 0
           }
         }
-        const nodes = elems[j].trNodes
-        const { length: kLen } = nodes
+        const nodes = elems[j].trNodes,
+          { length: kLen } = nodes
         for (let k = 0; k < kLen; k++) {
           if (nodes[k].t === 'm') {
             ctx?.moveTo(nodes[k].p[0], nodes[k].p[1])
@@ -307,7 +379,7 @@ export default class CVShapeElement extends ShapeElement {
             ctx?.closePath()
           }
         }
-        if (type === 'st' || type === 'gs') {
+        if (isStroke) {
           // ctx.stroke();
           renderer.ctxStroke()
           if (currentStyle.da) {
@@ -315,12 +387,30 @@ export default class CVShapeElement extends ShapeElement {
           }
         }
       }
-      if (type !== 'st' && type !== 'gs') {
+      if (!isStroke) {
         // ctx.fill(currentStyle.r);
         ;(this.globalData.renderer as CanvasRenderer)?.ctxFill(currentStyle.r)
       }
       renderer.restore()
     }
+  }
+
+  exitLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method exitLayer is not implemented`
+    )
+  }
+
+  hideElement() {
+    throw new Error(
+      `${this.constructor.name}: Method hideElement is not implemented`
+    )
+  }
+
+  prepareLayer() {
+    throw new Error(
+      `${this.constructor.name}: Method prepareLayer is not implemented`
+    )
   }
 
   reloadShapes() {
@@ -354,7 +444,7 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderFill(_styleData, itemData, groupTransform) {
+  renderFill(_styleData, itemData, groupTransform: TransformEffect) {
     const styleElem = itemData.style
 
     if (itemData.c._mdf || this._isFirstFrame) {
@@ -367,7 +457,7 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderGradientFill(styleData, itemData, groupTransform) {
+  renderGradientFill(styleData, itemData, groupTransform: TransformEffect) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
@@ -436,7 +526,7 @@ export default class CVShapeElement extends ShapeElement {
     )
   }
 
-  renderPath(pathData, itemData) {
+  renderPath(pathData: Shape, itemData: CVShapeData) {
     if (pathData.hd !== true && pathData._shouldRender) {
       const { length } = itemData.styledShapes
       for (let i = 0; i < length; i += 1) {
@@ -445,7 +535,7 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderShape(parentTransform, items, data, isMain) {
+  renderShape(parentTransform, items: Shape[], data, isMain?: boolean) {
     const len = items.length - 1
     let groupTransform
     groupTransform = parentTransform
@@ -455,25 +545,25 @@ export default class CVShapeElement extends ShapeElement {
           groupTransform = data[i].transform
           this.renderShapeTransform(parentTransform, groupTransform)
           break
-        case 'sh':
-        case 'el':
-        case 'rc':
-        case 'sr':
+        case ShapeType.Path:
+        case ShapeType.Ellipse:
+        case ShapeType.Rectangle:
+        case ShapeType.PolygonStar:
           this.renderPath(items[i], data[i])
           break
-        case 'fl':
+        case ShapeType.Fill:
           this.renderFill(items[i], data[i], groupTransform)
           break
-        case 'st':
+        case ShapeType.Stroke:
           this.renderStroke(items[i], data[i], groupTransform)
           break
-        case 'gf':
+        case ShapeType.GradientFill:
           this.renderGradientFill(items[i], data[i], groupTransform)
           break
-        case 'gr':
-          this.renderShape(groupTransform, items[i].it, data[i].it)
+        case ShapeType.Group:
+          this.renderShape(groupTransform, items[i].it || [], data[i].it)
           break
-        case 'tm':
+        case ShapeType.Trim:
         //
       }
     }
@@ -482,19 +572,22 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderShapeTransform(parentTransform, groupTransform) {
+  renderShapeTransform(
+    parentTransform: TransformEffect,
+    groupTransform: TransformEffect
+  ) {
     if (
       parentTransform._opMdf ||
-      groupTransform.op._mdf ||
+      groupTransform.op?._mdf ||
       this._isFirstFrame
     ) {
       groupTransform.opacity = parentTransform.opacity
-      groupTransform.opacity *= groupTransform.op.v
+      groupTransform.opacity *= groupTransform.op?.v || 1
       groupTransform._opMdf = true
     }
   }
 
-  renderStroke(_styleData, itemData, groupTransform) {
+  renderStroke(_styleData, itemData, groupTransform: TransformEffect) {
     const styleElem = itemData.style,
       d = itemData.d
     if (d && (d._mdf || this._isFirstFrame)) {
@@ -514,23 +607,23 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderStyledShape(styledShape, shape) {
+  renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty) {
     if (this._isFirstFrame || shape._mdf || styledShape.transforms._mdf) {
       const shapeNodes = styledShape.trNodes
       const paths = shape.paths
       let i
       let len
       let j
-      const jLen = paths._length
+      const jLen = paths?._length || 0
       shapeNodes.length = 0
       const groupTransformMat = styledShape.transforms.finalTransform
       for (j = 0; j < jLen; j += 1) {
-        const pathNodes = paths.shapes[j]
+        const pathNodes = paths?.shapes[j]
         if (!pathNodes || !pathNodes.v) {
           continue
         }
         len = pathNodes._length
-        for (let i = 1; i < len; i += 1) {
+        for (i = 1; i < len; i += 1) {
           if (i === 1) {
             shapeNodes.push({
               p: groupTransformMat.applyToPointArray(
@@ -613,7 +706,7 @@ export default class CVShapeElement extends ShapeElement {
         }
 
         ownStyles.push(itemsData[i].style)
-      } else if (arr[i].ty === 'gr') {
+      } else if (arr[i].ty === ShapeType.Group) {
         if (processedPos) {
           jLen = itemsData[i].it.length
           for (let j = 0; j < jLen; j += 1) {
@@ -623,13 +716,13 @@ export default class CVShapeElement extends ShapeElement {
           itemsData[i] = this.createGroupElement(arr[i])
         }
         this.searchShapes(
-          arr[i].it,
+          arr[i].it || [],
           itemsData[i].it,
           itemsData[i].prevViewData,
           shouldRender,
           ownTransforms
         )
-      } else if (arr[i].ty === 'tr') {
+      } else if (arr[i].ty === ShapeType.Transform) {
         if (!processedPos) {
           currentTransform = this.createTransformElement(arr[i])
           itemsData[i] = currentTransform
@@ -637,32 +730,32 @@ export default class CVShapeElement extends ShapeElement {
         ownTransforms.push(itemsData[i])
         this.addTransformToStyleList(itemsData[i])
       } else if (
-        arr[i].ty === 'sh' ||
-        arr[i].ty === 'rc' ||
-        arr[i].ty === 'el' ||
-        arr[i].ty === 'sr'
+        arr[i].ty === ShapeType.Path ||
+        arr[i].ty === ShapeType.Rectangle ||
+        arr[i].ty === ShapeType.Ellipse ||
+        arr[i].ty === ShapeType.PolygonStar
       ) {
         if (!processedPos) {
           itemsData[i] = this.createShapeElement(arr[i])
         }
       } else if (
-        arr[i].ty === 'tm' ||
-        arr[i].ty === 'rd' ||
-        arr[i].ty === 'pb' ||
-        arr[i].ty === 'zz' ||
-        arr[i].ty === 'op'
+        arr[i].ty === ShapeType.Trim ||
+        arr[i].ty === ShapeType.RoundedCorners ||
+        arr[i].ty === ShapeType.PuckerBloat ||
+        arr[i].ty === ShapeType.ZigZag ||
+        arr[i].ty === ShapeType.OffsetPath
       ) {
         if (processedPos) {
           modifier = itemsData[i]
           modifier.closed = false
         } else {
           modifier = getModifier(arr[i].ty)
-          modifier.init(this, arr[i])
+          modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
           itemsData[i] = modifier
           this.shapeModifiers.push(modifier)
         }
         ownModifiers.push(modifier)
-      } else if (arr[i].ty === 'rp') {
+      } else if (arr[i].ty === ShapeType.Repeater) {
         if (processedPos) {
           modifier = itemsData[i]
           modifier.closed = true
@@ -680,7 +773,10 @@ export default class CVShapeElement extends ShapeElement {
         }
         ownModifiers.push(modifier)
       }
-      this.addProcessedElement(arr[i], i + 1)
+      this.addProcessedElement(
+        arr[i] as unknown as ElementInterfaceIntersect,
+        i + 1
+      )
     }
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
@@ -688,5 +784,11 @@ export default class CVShapeElement extends ShapeElement {
     for (let i = 0; i < len; i += 1) {
       ownModifiers[i].closed = true
     }
+  }
+
+  showElement() {
+    throw new Error(
+      `${this.constructor.name}: Method showElement is not implemented`
+    )
   }
 }

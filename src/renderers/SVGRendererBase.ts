@@ -1,6 +1,7 @@
 import type { AnimationItem } from '@/Lottie'
 import type {
   AnimationData,
+  CompElementInterface,
   ElementInterfaceIntersect,
   LottieLayer,
   SVGRendererConfig,
@@ -80,7 +81,9 @@ export default class SVGRendererBase extends BaseRenderer {
     elements[pos] = element as ElementInterfaceIntersect
     if (getExpressionsPlugin()) {
       if (this.layers[pos].ty === 0) {
-        this.globalData.projectInterface.registerComposition(element)
+        this.globalData.projectInterface.registerComposition(
+          element as CompElementInterface
+        )
       }
       element.initExpressions()
     }
@@ -102,9 +105,9 @@ export default class SVGRendererBase extends BaseRenderer {
         this.addPendingElement(element as ElementInterfaceIntersect)
         return
       }
-      const matteElement = elements![elementIndex],
+      const matteElement = elements[elementIndex],
         matteMask = matteElement.getMatte(this.layers[pos].tt)
-      element.setMatte(matteMask)
+      ;(element as ElementInterfaceIntersect).setMatte(matteMask)
     }
   }
 
@@ -340,7 +343,7 @@ export default class SVGRendererBase extends BaseRenderer {
       }
       this.globalData.frameNum = num
       this.globalData.frameId += 1
-      this.globalData.projectInterface.currentFrame = num
+      this.globalData.projectInterface.currentFrame = num || 0
       this.globalData._mdf = false
       const { length } = this.layers
       if (!this.completeLayers) {

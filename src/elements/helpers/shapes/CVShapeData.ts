@@ -1,31 +1,37 @@
 import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
-import type { Shape } from '@/types'
+import type { CVStyleElement, Shape } from '@/types'
 
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import { ShapeType } from '@/enums'
 import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {
+  _isAnimated?: boolean
   sh: ShapeProperty | null
   styledShapes: CVShapeData[]
   tr: number[]
+  transforms: ReturnType<
+    typeof ShapeTransformManager.prototype.addTransformSequence
+  >
+  trNodes: any[] = []
   constructor(
     element: ShapeElement,
     data: Shape,
-    styles,
+    styles: CVStyleElement[],
     transformsManager: ShapeTransformManager
   ) {
     this.styledShapes = []
     this.tr = [0, 0, 0, 0, 0, 0]
     let ty = 4
     switch (data.ty) {
-      case 'rc':
+      case ShapeType.Rectangle:
         ty = 5
         break
-      case 'el':
+      case ShapeType.Ellipse:
         ty = 6
         break
-      case 'sr':
+      case ShapeType.PolygonStar:
         ty = 7
     }
     this.sh = getShapeProp(element, data, ty)
@@ -38,7 +44,7 @@ export default class CVShapeData {
             styles[i].transforms
           ),
           trNodes: [],
-        }
+        } as unknown as CVShapeData
         this.styledShapes?.push(styledShape)
         styles[i].elements.push(styledShape)
       }

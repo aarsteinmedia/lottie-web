@@ -1,3 +1,5 @@
+import type { ValueProperty } from '@/utils/Properties'
+
 import { GroupEffect } from '@/effects/EffectsManager'
 import { effectTypes } from '@/elements/helpers/TransformElement'
 import { Vector2, Vector3 } from '@/types'
@@ -9,7 +11,8 @@ export default abstract class TransformEffect {
   _opMdf?: boolean
   effectsManager?: GroupEffect
   matrix?: Matrix
-  opacity?: number
+  op?: ValueProperty
+  opacity = 1
   type?: string
   init(effectsManager: GroupEffect) {
     this.effectsManager = effectsManager
