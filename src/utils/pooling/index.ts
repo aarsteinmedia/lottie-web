@@ -40,7 +40,7 @@ export default class PoolFactory {
       this._release(element)
     }
     this.pool[this._length] = element
-    this._length += 1
+    this._length++
   }
 }
 

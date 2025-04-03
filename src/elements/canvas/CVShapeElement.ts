@@ -30,6 +30,8 @@ import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformProperty from '@/utils/TransformProperty'
 
+import ShapeGroupData from '../helpers/shapes/ShapeGroupData'
+
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
   dashResetter = []
@@ -416,7 +418,7 @@ export default class CVShapeElement extends ShapeElement {
   reloadShapes() {
     this._isFirstFrame = true
     const { length } = this.itemsData
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       this.prevViewData[i] = this.itemsData[i]
     }
     this.searchShapes(
@@ -427,7 +429,7 @@ export default class CVShapeElement extends ShapeElement {
       []
     )
     const { length: len } = this.dynamicProperties
-    for (let i = 0; i < len; i += 1) {
+    for (let i = 0; i < len; i++) {
       this.dynamicProperties[i].getValue()
     }
     this.renderModifiers()
@@ -435,9 +437,8 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   removeTransformFromStyleList() {
-    let i
     const len = this.stylesList.length
-    for (i = 0; i < len; i += 1) {
+    for (let i = 0; i < len; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.pop()
       }
@@ -470,9 +471,9 @@ export default class CVShapeElement extends ShapeElement {
       itemData.e._mdf ||
       (styleData.t !== 1 && (itemData.h._mdf || itemData.a._mdf))
     ) {
-      const ctx = this.globalData.canvasContext
-      const pt1 = itemData.s.v
-      const pt2 = itemData.e.v
+      const ctx = this.globalData.canvasContext,
+        pt1 = itemData.s.v,
+        pt2 = itemData.e.v
       if (styleData.t === 1) {
         grd = ctx?.createLinearGradient(pt1[0], pt1[1], pt2[0], pt2[1])
       } else {
@@ -497,7 +498,7 @@ export default class CVShapeElement extends ShapeElement {
         cValues = itemData.g.c
       let opacity = 1
 
-      for (let i = 0; i < len; i += 1) {
+      for (let i = 0; i < len; i++) {
         if (itemData.g._hasOpacity && itemData.g._collapsable) {
           opacity = itemData.g.o[i * 2 + 1]
         }
@@ -527,15 +528,20 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   renderPath(pathData: Shape, itemData: CVShapeData) {
-    if (pathData.hd !== true && pathData._shouldRender) {
+    if (pathData.hd !== true && pathData._shouldRender && itemData.sh) {
       const { length } = itemData.styledShapes
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < length; i++) {
         this.renderStyledShape(itemData.styledShapes[i], itemData.sh)
       }
     }
   }
 
-  renderShape(parentTransform, items: Shape[], data, isMain?: boolean) {
+  renderShape(
+    parentTransform: TransformProperty,
+    items: Shape[],
+    data: ShapeGroupData[],
+    isMain?: boolean
+  ) {
     const len = items.length - 1
     let groupTransform
     groupTransform = parentTransform
@@ -617,13 +623,13 @@ export default class CVShapeElement extends ShapeElement {
       const jLen = paths?._length || 0
       shapeNodes.length = 0
       const groupTransformMat = styledShape.transforms.finalTransform
-      for (j = 0; j < jLen; j += 1) {
+      for (j = 0; j < jLen; j++) {
         const pathNodes = paths?.shapes[j]
         if (!pathNodes || !pathNodes.v) {
           continue
         }
         len = pathNodes._length
-        for (i = 1; i < len; i += 1) {
+        for (i = 1; i < len; i++) {
           if (i === 1) {
             shapeNodes.push({
               p: groupTransformMat.applyToPointArray(
@@ -709,7 +715,7 @@ export default class CVShapeElement extends ShapeElement {
       } else if (arr[i].ty === ShapeType.Group) {
         if (processedPos) {
           jLen = itemsData[i].it.length
-          for (let j = 0; j < jLen; j += 1) {
+          for (let j = 0; j < jLen; j++) {
             itemsData[i].prevViewData[j] = itemsData[i].it[j]
           }
         } else {
@@ -781,7 +787,7 @@ export default class CVShapeElement extends ShapeElement {
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
     len = ownModifiers.length
-    for (let i = 0; i < len; i += 1) {
+    for (let i = 0; i < len; i++) {
       ownModifiers[i].closed = true
     }
   }

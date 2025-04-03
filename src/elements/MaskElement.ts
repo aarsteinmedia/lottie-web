@@ -91,7 +91,7 @@ export default class MaskElement {
         defs?.appendChild(path)
         continue
       }
-      count += 1
+      count++
 
       path.setAttribute(
         'fill',

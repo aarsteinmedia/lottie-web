@@ -20,7 +20,7 @@ const ProjectInterface = (function () {
           }
           return this.compositions[i].compInterface
         }
-        i += 1
+        i++
       }
       return null
     }

@@ -8,7 +8,7 @@ const ShapeExpressionInterface = (function () {
     const arr = []
     let i
     const len = shapes ? shapes.length : 0
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       if (shapes[i].ty === 'gr') {
         arr.push(groupInterfaceFactory(shapes[i], view[i], propertyGroup))
       } else if (shapes[i].ty === 'fl') {
@@ -57,7 +57,7 @@ const ShapeExpressionInterface = (function () {
         ) {
           return interfaces[i]
         }
-        i += 1
+        i++
       }
       if (typeof value === 'number') {
         return interfaces[value - 1]
@@ -214,7 +214,7 @@ const ShapeExpressionInterface = (function () {
     let i
     const len = shape.d ? shape.d.length : 0
     var dashOb = {}
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       addPropertyToDashOb(i)
       view.d.dataProps[i].p.setGroupProperty(_dashPropertyGroup)
     }
@@ -616,7 +616,7 @@ const ShapeExpressionInterface = (function () {
         if (interfaces[i]._name === value) {
           return interfaces[i]
         }
-        i += 1
+        i++
       }
       return null
     }

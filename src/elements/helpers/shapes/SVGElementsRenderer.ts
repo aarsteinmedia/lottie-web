@@ -121,7 +121,7 @@ function renderGradient(
     stops = itemData.cst || []
     const cValues = itemData.g.c,
       { length } = stops
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       stop = stops[i]
       stop.setAttribute('offset', `${cValues[i * 4]}%`)
       stop.setAttribute(
@@ -138,7 +138,7 @@ function renderGradient(
       stops = itemData.ost || []
     }
     const { length: sLen } = stops
-    for (let i = 0; i < sLen; i += 1) {
+    for (let i = 0; i < sLen; i++) {
       stop = stops[i]
       if (!itemData.g._collapsable) {
         stop.setAttribute('offset', `${oValues[i * 2]}%`)

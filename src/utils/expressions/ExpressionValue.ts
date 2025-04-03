@@ -24,7 +24,7 @@ function ExpressionValue(
       len = 4
       expressionValue = createTypedArray(ArrayType.Float32, len)
       arrValue = createTypedArray(ArrayType.Float32, len)
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arrValue[i] = i < 3 ? (elementProp.v as Vector3)[i] * mult : 1
         expressionValue[i] = arrValue[i]
       }
@@ -38,7 +38,7 @@ function ExpressionValue(
     len = elementProp.pv.length
     expressionValue = createTypedArray(ArrayType.Float32, len)
     arrValue = createTypedArray(ArrayType.Float32, len)
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       arrValue[i] = (elementProp.v as number[])[i] * mult
       expressionValue[i] = arrValue[i]
     }

@@ -130,7 +130,7 @@ const idPrefix$1 = {
 export const createElementID = (() => {
     let _count = 0
     return () => {
-      _count += 1
+      _count++
       return `${idPrefix$1.current}__lottie_element_${_count}`
     }
   })(),

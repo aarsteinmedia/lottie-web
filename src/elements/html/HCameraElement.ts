@@ -157,7 +157,7 @@ export default class HCameraElement extends FrameElement {
     let _mdf = this._isFirstFrame
     if (this.hierarchy) {
       const { length } = this.hierarchy
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < length; i++) {
         _mdf = this.hierarchy[i].finalTransform?.mProp._mdf || _mdf
       }
     }
@@ -267,7 +267,7 @@ export default class HCameraElement extends FrameElement {
         let comp
         let perspectiveStyle
         let containerStyle: CSSStyleDeclaration
-        for (let i = 0; i < len; i += 1) {
+        for (let i = 0; i < len; i++) {
           comp = this.comp?.threeDElements[i]
           if (comp?.type !== '3d') {
             continue
@@ -291,7 +291,7 @@ export default class HCameraElement extends FrameElement {
   }
   setup() {
     const { length } = this.comp?.threeDElements || []
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       // [perspectiveElem,container]
       const comp = this.comp?.threeDElements[i]
       if (comp?.type === '3d') {

@@ -37,7 +37,7 @@ const expressionHelpers = (function () {
     let speed = 0
     if (v1.length) {
       let i
-      for (i = 0; i < v1.length; i += 1) {
+      for (i = 0; i < v1.length; i++) {
         speed += Math.pow(v2[i] - v1[i], 2)
       }
       speed = Math.sqrt(speed) * 100
@@ -59,7 +59,7 @@ const expressionHelpers = (function () {
     if (v1.length) {
       velocity = createTypedArray('float32', v1.length)
       let i
-      for (i = 0; i < v1.length; i += 1) {
+      for (i = 0; i < v1.length; i++) {
         // removing frameRate
         // if needed, don't add it here
         // velocity[i] = this.elem.globalData.frameRate*((v2[i] - v1[i])/delta);

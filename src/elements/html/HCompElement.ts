@@ -112,7 +112,7 @@ export default class HCompElement extends CompElement {
       nextElement
     while (j < pos) {
       nextElement = this.elements[j].getBaseElement?.()
-      j += 1
+      j++
     }
     if (nextElement) {
       this.layerElement?.insertBefore(elem, nextElement)

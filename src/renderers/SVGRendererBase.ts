@@ -342,7 +342,7 @@ export default class SVGRendererBase extends BaseRenderer {
         this.renderedFrame = Number(num)
       }
       this.globalData.frameNum = num
-      this.globalData.frameId += 1
+      this.globalData.frameId++
       this.globalData.projectInterface.currentFrame = num || 0
       this.globalData._mdf = false
       const { length } = this.layers

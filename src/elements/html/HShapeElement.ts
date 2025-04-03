@@ -71,7 +71,7 @@ export default class HShapeElement extends RenderableElement {
 
   calculateBoundingBox(itemsData, boundingBox) {
     const { length } = itemsData
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       if (itemsData[i] && itemsData[i].sh) {
         this.calculateShapeBoundingBox(itemsData[i], boundingBox)
         continue
@@ -107,7 +107,7 @@ export default class HShapeElement extends RenderableElement {
     if (len <= 1) {
       return
     }
-    for (i = 0; i < len - 1; i += 1) {
+    for (i = 0; i < len - 1; i++) {
       vPoint = this.getTransformedPoint(transformers, shape.v[i])
       oPoint = this.getTransformedPoint(transformers, shape.o[i])
       nextIPoint = this.getTransformedPoint(transformers, shape.i[i + 1])
@@ -172,7 +172,7 @@ export default class HShapeElement extends RenderableElement {
   expandStrokeBoundingBox(widthProperty, boundingBox) {
     let width = 0
     if (widthProperty.keyframes) {
-      for (let i = 0; i < widthProperty.keyframes.length; i += 1) {
+      for (let i = 0; i < widthProperty.keyframes.length; i++) {
         const kfw = widthProperty.keyframes[i].s
         if (kfw > width) {
           width = kfw
@@ -237,7 +237,7 @@ export default class HShapeElement extends RenderableElement {
   getTransformedPoint(transformers, point) {
     let i
     const len = transformers.length
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       point = transformers[i].mProps.v.applyToPointArray(point[0], point[1], 0)
     }
     return point

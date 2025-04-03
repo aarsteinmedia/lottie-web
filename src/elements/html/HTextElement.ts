@@ -200,11 +200,11 @@ export default class HTextElement extends TextElement {
       }
       this.textSpans[cnt].style.display = 'block'
       this.textPaths[cnt] = tSpan
-      cnt += 1
+      cnt++
     }
     while (cnt < this.textSpans.length) {
       this.textSpans[cnt].style.display = 'none'
-      cnt += 1
+      cnt++
     }
   }
 

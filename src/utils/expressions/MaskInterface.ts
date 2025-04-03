@@ -31,7 +31,7 @@ export default class MaskManager {
     this._maskManager = maskManager
     this._masksInterfaces = createSizedArray(this._maskManager.viewData.length)
     const { length } = this._maskManager.viewData
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       this._masksInterfaces[i] = new MaskInterface(
         this._maskManager.viewData[i],
         this._maskManager.masksProperties[i]
@@ -45,7 +45,7 @@ export default class MaskManager {
       if (this._maskManager.masksProperties[i].nm === name) {
         return this._masksInterfaces[i]
       }
-      i += 1
+      i++
     }
     return null
   }

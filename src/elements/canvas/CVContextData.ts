@@ -52,7 +52,7 @@ export default class CVContextData {
     this.cArrPos = 0
     this.cTr = new Matrix()
     const len = 15
-    for (let i = 0; i < len; i += 1) {
+    for (let i = 0; i < len; i++) {
       const canvasContext = new CanvasContext()
       this.stack[i] = canvasContext
     }
@@ -162,7 +162,7 @@ export default class CVContextData {
     const currentContext = this.stack[this.cArrPos]
     const transform = currentContext.transform
     const arr = this.cTr.props
-    for (let i = 0; i < 16; i += 1) {
+    for (let i = 0; i < 16; i++) {
       arr[i] = transform[i]
     }
     if (forceRestore) {
@@ -211,10 +211,10 @@ export default class CVContextData {
 
     const currentStack = this.stack[this.cArrPos]
     let i
-    for (i = 0; i < 16; i += 1) {
+    for (i = 0; i < 16; i++) {
       currentStack.transform[i] = props[i]
     }
-    this.cArrPos += 1
+    this.cArrPos++
     const newStack = this.stack[this.cArrPos]
     newStack.opacity = currentStack.opacity
     newStack.fillStyle = currentStack.fillStyle

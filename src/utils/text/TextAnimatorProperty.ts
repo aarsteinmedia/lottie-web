@@ -254,7 +254,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
       while (lastIndex < i) {
         if (letters) {
           letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
-          lastIndex += 1
+          lastIndex++
         }
       }
     }
@@ -388,10 +388,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               flag = false
             } else if (points) {
               segmentLength += Number(currentPoint?.partialLength)
-              pointInd += 1
+              pointInd++
               if (pointInd >= points.length) {
                 pointInd = 0
-                segmentInd += 1
+                segmentInd++
                 if (segments?.[segmentInd]) {
                   points = segments[segmentInd].points
                 } else if (mask.v.c) {
@@ -473,7 +473,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             Number(documentData.fc[2]),
           ]
         }
-        for (j = 0; j < jLen; j += 1) {
+        for (j = 0; j < jLen; j++) {
           animatorProps = animators[j].a
           if (animatorProps?.a.propType) {
             animatorSelector = animators[j].s
@@ -805,7 +805,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
           letterP as any
         )
         this.renderedLetters.push(letterValue)
-        renderedLettersCount += 1
+        renderedLettersCount++
         this.lettersChangedFlag = true
 
         continue

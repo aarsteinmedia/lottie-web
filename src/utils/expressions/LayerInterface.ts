@@ -84,7 +84,7 @@ export default class LayerExpressionInterface {
   public applyPoint(matrix: Matrix, arr: number[]) {
     if (this._elem.hierarchy && this._elem.hierarchy.length) {
       const { length } = this._elem.hierarchy
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < length; i++) {
         this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
       }
     }
@@ -97,7 +97,7 @@ export default class LayerExpressionInterface {
     this._elem.finalTransform?.mProp.applyToMatrix(toWorldMat)
     if (this._elem.hierarchy && this._elem.hierarchy.length) {
       const { length } = this._elem.hierarchy
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < length; i++) {
         this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(toWorldMat)
       }
       return toWorldMat.inversePoint(arr)
@@ -130,7 +130,7 @@ export default class LayerExpressionInterface {
     if (this._elem.hierarchy && this._elem.hierarchy.length) {
       let i
       const len = this._elem.hierarchy.length
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
       }
     }

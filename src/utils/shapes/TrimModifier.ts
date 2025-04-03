@@ -135,7 +135,7 @@ export default class TrimModifier extends ShapeModifier {
           shapePath.c = false
         }
         addedLength += currentLengthData.addedLength
-        segmentCount += 1
+        segmentCount++
       }
       if (shapePaths[i].c && lengths.length) {
         currentLengthData = lengths[j - 1]
@@ -173,7 +173,7 @@ export default class TrimModifier extends ShapeModifier {
           shapePath.c = false
         }
         addedLength += currentLengthData.addedLength
-        segmentCount += 1
+        segmentCount++
       }
       if (shapePath._length) {
         shapePath.setXYAt(
@@ -307,7 +307,7 @@ export default class TrimModifier extends ShapeModifier {
     if (this._mdf || _isFirstFrame) {
       let o = (Number(this.o?.v) % 360) / 360
       if (o < 0) {
-        o += 1
+        o++
       }
       if (Number(this.s?.v) > 1) {
         s = 1 + o

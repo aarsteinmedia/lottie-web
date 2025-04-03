@@ -34,7 +34,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     if (hsv[0] > 1) {
       hsv[0] -= 1
     } else if (hsv[0] < 0) {
-      hsv[0] += 1
+      hsv[0]++
     }
     return HSVtoRGB(hsv[0], hsv[1], hsv[2])
   },
@@ -483,7 +483,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
         const line = lines[i].split(':')
         if (line.length === 2) {
           keys[line[0]] = line[1].trim()
-          keysCount += 1
+          keysCount++
         }
       }
       if (keysCount === 0) {

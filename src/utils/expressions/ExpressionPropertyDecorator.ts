@@ -67,12 +67,13 @@ function addPropertyDecorator() {
       let endV = this.getValueAtTime(
         lastKeyFrame / this.comp.globalData.frameRate,
         0
+      )
         var current = this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) / this.comp.globalData.frameRate, 0); // eslint-disable-line
       let repeats = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
       if (this.pv.length) {
         ret = new Array(initV.length)
         len = ret.length
-        for (i = 0; i < len; i += 1) {
+        for (i = 0; i < len; i++) {
           ret[i] = (endV[i] - initV[i]) * repeats + current[i]
         }
         return ret
@@ -90,7 +91,7 @@ function addPropertyDecorator() {
       if (this.pv.length) {
         ret = new Array(lastValue.length)
         len = ret.length
-        for (i = 0; i < len; i += 1) {
+        for (i = 0; i < len; i++) {
             ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / this.comp.globalData.frameRate) / 0.0005; // eslint-disable-line
         }
         return ret
@@ -161,7 +162,7 @@ function addPropertyDecorator() {
       if (this.pv.length) {
         ret = new Array(initV.length)
         len = ret.length
-        for (i = 0; i < len; i += 1) {
+        for (i = 0; i < len; i++) {
           ret[i] = current[i] - (endV[i] - initV[i]) * repeats
         }
         return ret
@@ -179,7 +180,7 @@ function addPropertyDecorator() {
       if (this.pv.length) {
         ret = new Array(firstValue.length)
         len = ret.length
-        for (i = 0; i < len; i += 1) {
+        for (i = 0; i < len; i++) {
           ret[i] =
             firstValue[i] +
             ((firstValue[i] - nextFirstValue[i]) *
@@ -222,16 +223,16 @@ function addPropertyDecorator() {
     while (i < samples) {
       sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
       if (this.pv.length) {
-        for (j = 0; j < this.pv.length; j += 1) {
+        for (j = 0; j < this.pv.length; j++) {
           value[j] += sampleValue[j]
         }
       } else {
         value += sampleValue
       }
-      i += 1
+      i++
     }
     if (this.pv.length) {
-      for (j = 0; j < this.pv.length; j += 1) {
+      for (j = 0; j < this.pv.length; j++) {
         value[j] /= samples
       }
     } else {
@@ -440,7 +441,7 @@ function addPropertyDecorator() {
         } else {
           accumulatedLength += lengths[i].addedLength;
         }
-        i += 1;
+        i++;
       }
       if (!pt) {
         pt = shapePath.c ? [shapePath.v[0][0], shapePath.v[0][1]] : [shapePath.v[shapePath._length - 1][0], shapePath.v[shapePath._length - 1][1]];
@@ -485,7 +486,7 @@ function addPropertyDecorator() {
       var vertices = shapePath[prop];
       var points = shapePath.v;
       var arr = createSizedArray(len);
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         if (prop === 'i' || prop === 'o') {
           arr[i] = [vertices[i][0] - points[i][0], vertices[i][1] - points[i][1]];
         } else {

@@ -29,5 +29,5 @@ export function releaseShape(shapeCollection: ShapeCollection) {
     _maxLength *= 2
   }
   pool[_length] = shapeCollection
-  _length += 1
+  _length++
 }

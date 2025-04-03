@@ -12,7 +12,7 @@ export function createEffectsInterface(
       effectsData = elem.data.ef || []
     let i
     let len = elem.effectsManager.effectElements.length
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       effectElements.push(
         createGroupInterface(
           effectsData[i],
@@ -35,7 +35,7 @@ export function createEffectsInterface(
         ) {
           return effectElements[i]
         }
-        i += 1
+        i++
       }
       return null
     }
@@ -65,7 +65,7 @@ function createGroupInterface(data, elements, propertyGroup, elem) {
         }
         return effectElements[i]()
       }
-      i += 1
+      i++
     }
     throw new Error()
   }
@@ -74,7 +74,7 @@ function createGroupInterface(data, elements, propertyGroup, elem) {
   var effectElements = []
   let i
   const len = data.ef.length
-  for (i = 0; i < len; i += 1) {
+  for (i = 0; i < len; i++) {
     if (data.ef[i].ty === 5) {
       effectElements.push(
         createGroupInterface(

@@ -18,7 +18,7 @@ export default class ShapeCollection {
       this._maxLength *= 2
     }
     this.shapes[this._length] = shapeData
-    this._length += 1
+    this._length++
   }
   releaseShapes() {
     // const { _length } = this

@@ -318,7 +318,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     }
     this.renderedFrame = num
     this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame)
-    this.globalData.frameId += 1
+    this.globalData.frameId++
     this.globalData._mdf = !this.renderConfig?.clearCanvas || forceRender
     this.globalData.projectInterface.currentFrame = num
 

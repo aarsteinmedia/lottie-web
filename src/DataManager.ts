@@ -170,7 +170,7 @@ function createProcess(
   onComplete: (data: AnimationData) => void,
   onError?: (error?: unknown) => void
 ) {
-  _counterId += 1
+  _counterId++
   const id = `processId_${_counterId}`
   try {
     processes[id] = {

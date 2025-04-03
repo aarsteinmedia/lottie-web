@@ -35,7 +35,7 @@ export default class SVGEffects {
         ) as GroupEffect
         source = idPrefix + count
         if (registeredEffects[elem.data.ef[i].ty].countsAsEffect) {
-          count += 1
+          count++
         }
       }
       if (filterManager) {

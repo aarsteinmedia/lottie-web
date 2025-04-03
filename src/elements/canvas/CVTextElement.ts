@@ -219,7 +219,7 @@ export default class CVTextElement extends TextElement {
           matrixHelper.applyToY(pathNodes.v[0][0], pathNodes.v[0][1], 0)
         )
         commands[commandsCounter] = pathArr
-        commandsCounter += 1
+        commandsCounter++
       }
       if (singleShape) {
         xPos += letters[i].l
@@ -230,7 +230,7 @@ export default class CVTextElement extends TextElement {
       } else {
         this.textSpans[cnt] = { elem: commands } as TextSpan
       }
-      cnt += 1
+      cnt++
     }
   }
   clearCanvas(
@@ -347,7 +347,7 @@ export default class CVTextElement extends TextElement {
         commands = this.textSpans[i].elem || []
         const { length: jLen } = commands
         this.globalData.canvasContext?.beginPath()
-        for (j = 0; j < jLen; j += 1) {
+        for (j = 0; j < jLen; j++) {
           pathArr = commands[j] || []
           const { length: kLen } = pathArr
           this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
@@ -393,7 +393,7 @@ export default class CVTextElement extends TextElement {
         commands = this.textSpans[i].elem || []
         jLen = commands.length
         this.globalData.canvasContext?.beginPath()
-        for (j = 0; j < jLen; j += 1) {
+        for (j = 0; j < jLen; j++) {
           pathArr = commands[j]
           kLen = pathArr.length
           this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])

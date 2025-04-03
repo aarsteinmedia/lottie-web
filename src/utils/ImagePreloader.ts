@@ -91,7 +91,7 @@ export default class ImagePreloader {
     this.images.length = 0
   }
   public footageLoaded() {
-    this.loadedFootagesCount += 1
+    this.loadedFootagesCount++
     if (
       this.loadedAssets === this.totalImages &&
       this.loadedFootagesCount === this.totalFootages
@@ -113,7 +113,7 @@ export default class ImagePreloader {
     return null
   }
   public imageLoaded() {
-    this.loadedAssets += 1
+    this.loadedAssets++
     if (
       this.loadedAssets === this.totalImages &&
       this.loadedFootagesCount === this.totalFootages
@@ -134,13 +134,13 @@ export default class ImagePreloader {
         continue
       }
       if ((!assets[i].t || assets[i].t === 'seq') && this._createImageData) {
-        this.totalImages += 1
+        this.totalImages++
         this.images.push(this._createImageData(assets[i])!)
         continue
       }
 
       if (Number(assets[i].t) === 3) {
-        this.totalFootages += 1
+        this.totalFootages++
         this.images.push(this.createFootageData(assets[i]))
       }
     }
@@ -245,7 +245,7 @@ export default class ImagePreloader {
           this._imageLoaded()
           clearInterval(intervalId)
         }
-        _count += 1
+        _count++
       }.bind(this),
       50
     )

@@ -235,7 +235,7 @@ export default class TextProperty extends DynamicPropertyContainer {
           }
           if (lineWidth + cLength > Number(boxWidth) && finalText[i] !== ' ') {
             if (lastSpaceIndex === -1) {
-              len += 1
+              len++
             } else {
               i = lastSpaceIndex
             }
@@ -281,7 +281,7 @@ export default class TextProperty extends DynamicPropertyContainer {
         lineWidth = -2 * trackingOffset
         val = ''
         newLineFlag = true
-        currentLine += 1
+        currentLine++
       } else {
         val = currentChar
       }
@@ -327,9 +327,9 @@ export default class TextProperty extends DynamicPropertyContainer {
             letters[currentPos].an = currentSize
             letters[currentPos].ind = index
             letters[currentPos].extra = cLength
-            currentPos += 1
+            currentPos++
           }
-          index += 1
+          index++
           currentSize = 0
         }
       } else if (anchorGrouping === 3) {
@@ -342,15 +342,15 @@ export default class TextProperty extends DynamicPropertyContainer {
             letters[currentPos].an = currentSize
             letters[currentPos].ind = index
             letters[currentPos].extra = cLength
-            currentPos += 1
+            currentPos++
           }
           currentSize = 0
-          index += 1
+          index++
         }
       } else {
         letters[index].ind = index
         letters[index].extra = 0
-        index += 1
+        index++
       }
     }
     documentData.l = letters
@@ -413,7 +413,7 @@ export default class TextProperty extends DynamicPropertyContainer {
           if (Number(animatorData.s?.rn) === 1) {
             indexes.push(ind)
           }
-          ind += 1
+          ind++
         }
       }
       if (data?.a && data.a[j].s) {

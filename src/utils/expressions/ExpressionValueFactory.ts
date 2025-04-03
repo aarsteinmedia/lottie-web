@@ -76,7 +76,7 @@ const ExpressionPropertyInterface = (function () {
       if (property.k) {
         property.getValue()
       }
-      for (let i = 0; i < len; i += 1) {
+      for (let i = 0; i < len; i++) {
         arrValue[i] = property.v[i] * mult
         expressionValue[i] = arrValue[i]
       }

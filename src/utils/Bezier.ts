@@ -52,7 +52,7 @@ export function buildBezierData(
     }
     const bezierData = new BezierData(curveSegments),
       { length } = pt3
-    for (let k = 0; k < curveSegments; k += 1) {
+    for (let k = 0; k < curveSegments; k++) {
       point = createSizedArray(length) as Vector2
       perc = k / (curveSegments - 1)
       ptDistance = 0

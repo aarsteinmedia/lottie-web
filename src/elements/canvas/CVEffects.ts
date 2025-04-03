@@ -9,7 +9,7 @@ export default class CVEffects {
     const { length } = elem.data.ef || []
     this.filters = []
     let filterManager
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       filterManager = null
       const type = elem.data.ef?.[i].ty
       if (type && registeredEffects[type]) {
@@ -31,7 +31,7 @@ export default class CVEffects {
   getEffects(type: string): GroupEffect[] {
     const { length } = this.filters,
       effects = []
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       if (this.filters[i].type === type) {
         effects.push(this.filters[i])
       }
@@ -41,7 +41,7 @@ export default class CVEffects {
 
   renderFrame(_isFirstFrame?: number) {
     const { length } = this.filters
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       this.filters[i].renderFrame(_isFirstFrame)
     }
   }

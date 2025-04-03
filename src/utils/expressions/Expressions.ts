@@ -11,7 +11,7 @@ const Expressions = (function () {
     const registers = []
 
     function pushExpression() {
-      stackCount += 1
+      stackCount++
     }
 
     function popExpression() {
@@ -30,7 +30,7 @@ const Expressions = (function () {
     function releaseInstances() {
       let i
       const len = registers.length
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         registers[i].release()
       }
       registers.length = 0

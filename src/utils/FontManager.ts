@@ -74,7 +74,7 @@ export function isRegionalFlag(text: string, indexFromProps: number): boolean {
     if (codePoint < A_TAG_CODE_POINT || codePoint > Z_TAG_CODE_POINT) {
       return false
     }
-    count += 1
+    count++
     index += 2
   }
   return getCodePoint(text.substr(index, 2)) === CANCEL_TAG_CODE_POINT
@@ -181,7 +181,7 @@ export default class FontManager {
       }
       if (!found) {
         this.chars.push(chars[i])
-        jLen += 1
+        jLen++
       }
     }
   }

@@ -20,7 +20,7 @@ export default class CVMaskElement {
     this.viewData = createSizedArray(this.masksProperties.length)
     const { length } = this.masksProperties
     let hasMasks = false
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       if (this.masksProperties[i].mode !== 'n') {
         hasMasks = true
       }
@@ -63,7 +63,7 @@ export default class CVMaskElement {
     const { length } = this.masksProperties
     let pts
     ctx?.beginPath()
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       if (this.masksProperties[i].mode !== 'n') {
         if (this.masksProperties[i].inv) {
           ctx?.moveTo(0, 0)

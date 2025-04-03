@@ -47,7 +47,7 @@ const ExpressionManager = (function () {
       let i
       const lenA = a.length
       const retArr = []
-      for (i = 0; i < lenA; i += 1) {
+      for (i = 0; i < lenA; i++) {
         retArr[i] = -a[i]
       }
       return retArr
@@ -96,7 +96,7 @@ const ExpressionManager = (function () {
         } else {
           retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
         }
-        i += 1
+        i++
       }
       return retArr
     }
@@ -140,7 +140,7 @@ const ExpressionManager = (function () {
         } else {
           retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
         }
-        i += 1
+        i++
       }
       return retArr
     }
@@ -160,7 +160,7 @@ const ExpressionManager = (function () {
     if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
       len = a.length
       arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arr[i] = a[i] * b
       }
       return arr
@@ -168,7 +168,7 @@ const ExpressionManager = (function () {
     if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
       len = b.length
       arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arr[i] = a * b[i]
       }
       return arr
@@ -188,7 +188,7 @@ const ExpressionManager = (function () {
     if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
       len = a.length
       arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arr[i] = a[i] / b
       }
       return arr
@@ -196,7 +196,7 @@ const ExpressionManager = (function () {
     if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
       len = b.length
       arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arr[i] = a / b[i]
       }
       return arr
@@ -250,7 +250,7 @@ const ExpressionManager = (function () {
     let i
     const len = Math.min(arr1.length, arr2.length)
     let addedLength = 0
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       addedLength += Math.pow(arr2[i] - arr1[i], 2)
     }
     return Math.sqrt(addedLength)
@@ -297,7 +297,7 @@ const ExpressionManager = (function () {
 
   function hue2rgb(p, q, t) {
     if (t < 0) {
-      t += 1
+      t++
     }
     if (t > 1) {
       t -= 1
@@ -363,7 +363,7 @@ const ExpressionManager = (function () {
     let i
     const len = value1.length
     const arr = createTypedArray('float32', len)
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       arr[i] = value1[i] + (value2[i] - value1[i]) * perc
     }
     return arr
@@ -386,7 +386,7 @@ const ExpressionManager = (function () {
       }
       const arr = createTypedArray('float32', len)
       const rnd = Math.random()
-      for (i = 0; i < len; i += 1) {
+      for (i = 0; i < len; i++) {
         arr[i] = min[i] + rnd * (max[i] - min[i])
       }
       return arr
@@ -406,7 +406,7 @@ const ExpressionManager = (function () {
     const arrPlaceholder = [0, 0]
     let inVertexPoint
     let outVertexPoint
-    for (i = 0; i < len; i += 1) {
+    for (i = 0; i < len; i++) {
       inVertexPoint =
         inTangents && inTangents[i] ? inTangents[i] : arrPlaceholder
       outVertexPoint =
@@ -496,18 +496,18 @@ const ExpressionManager = (function () {
       j = 0
       while (iWiggle < iterations) {
         // var rnd = BMMath.random();
-        for (j = 0; j < lenWiggle; j += 1) {
+        for (j = 0; j < lenWiggle; j++) {
           addedAmps[j] += -amp + amp * 2 * BMMath.random()
           // addedAmps[j] += -amp + amp*2*rnd;
         }
-        iWiggle += 1
+        iWiggle++
       }
       // var rnd2 = BMMath.random();
       const periods = time * freq
       const perc = periods - Math.floor(periods)
       const arr = createTypedArray('float32', lenWiggle)
       if (lenWiggle > 1) {
-        for (j = 0; j < lenWiggle; j += 1) {
+        for (j = 0; j < lenWiggle; j++) {
           arr[j] =
             this.pv[j] + addedAmps[j] + (-amp + amp * 2 * Math.random()) * perc
           // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
@@ -594,7 +594,7 @@ const ExpressionManager = (function () {
         let iKey
         const lenKey = val1.length
         const arr = createTypedArray('float32', lenKey)
-        for (iKey = 0; iKey < lenKey; iKey += 1) {
+        for (iKey = 0; iKey < lenKey; iKey++) {
           arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
         }
         return arr
@@ -617,7 +617,7 @@ const ExpressionManager = (function () {
           index = 1
           keyTime = data.k[0].t
         } else {
-          for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
+          for (iKey = 0; iKey < lenKey - 1; iKey++) {
             if (time === data.k[iKey].t) {
               index = iKey + 1
               keyTime = data.k[iKey].t
@@ -662,7 +662,7 @@ const ExpressionManager = (function () {
         : data.k[ind - 1].e
 
       lenKey = arr.length
-      for (iKey = 0; iKey < lenKey; iKey += 1) {
+      for (iKey = 0; iKey < lenKey; iKey++) {
         obKey[iKey] = arr[iKey]
         obKey.value[iKey] = arr[iKey]
       }

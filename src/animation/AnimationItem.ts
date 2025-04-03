@@ -177,7 +177,7 @@ export default class AnimationItem extends BaseEvent {
           nextValue = this.totalFrames - 1
         }
       } else if (nextValue >= this.totalFrames) {
-        this.playCount += 1
+        this.playCount++
         if (!this.checkSegments(nextValue % this.totalFrames)) {
           this.setCurrentRawFrameValue(nextValue % this.totalFrames)
           this._completedLoop = true

@@ -118,7 +118,7 @@ export default class HybridRendererBase extends BaseRenderer {
               : nextLayer.getBaseElement()
             nextDOMElement = tmpDOMElement || nextDOMElement
           }
-          i += 1
+          i++
         }
         if (nextDOMElement) {
           if (!layer.ddd || !this.supports3d) {
@@ -349,7 +349,7 @@ export default class HybridRendererBase extends BaseRenderer {
     this.animationItem.container = null as any
     this.globalData.defs = null as unknown as SVGDefsElement
     const { length } = this.layers || []
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < length; i++) {
       this.elements[i].destroy?.()
     }
     this.elements.length = 0
