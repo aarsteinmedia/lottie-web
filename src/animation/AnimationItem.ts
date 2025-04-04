@@ -24,9 +24,12 @@ import {
   BMSegmentStartEvent,
   LottieEvent,
 } from '@/events'
+import CanvasRenderer from '@/renderers/CanvasRenderer'
+import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
+import Expressions from '@/utils/expressions/Expressions'
 import {
   createElementID,
   getExpressionsPlugin,
@@ -51,7 +54,7 @@ export default class AnimationItem extends BaseEvent {
   public currentFrame: number
   public currentRawFrame: number
   public drawnFrameEvent: LottieEvent
-  public expressionsPlugin: ReturnType<typeof getExpressionsPlugin>
+  public expressionsPlugin: Expressions
   public firstFrame: number
   public frameModifier: AnimationDirection
   public frameMult: number
@@ -68,9 +71,9 @@ export default class AnimationItem extends BaseEvent {
   public playCount: number
   public playDirection: AnimationDirection
   public playSpeed: number
-  public projectInterface: null | typeof ProjectInterface
+  public projectInterface: ProjectInterface
 
-  public renderer: null | SVGRenderer
+  public renderer: SVGRenderer | CanvasRenderer | HybridRenderer
   public segmentPos: number
   public segments: Vector2[]
   public timeCompleted: number
@@ -109,7 +112,7 @@ export default class AnimationItem extends BaseEvent {
     this.isPaused = true
     this.autoplay = false
     this.loop = true
-    this.renderer = null
+    this.renderer = null as unknown as SVGRenderer
     this.animationID = createElementID()
     this.assetsPath = ''
     this.timeCompleted = 0
@@ -118,7 +121,7 @@ export default class AnimationItem extends BaseEvent {
     this.segments = []
     this._idle = true
     this._completedLoop = false
-    this.projectInterface = ProjectInterface
+    this.projectInterface = new ProjectInterface()
     this.imagePreloader = new ImagePreloader()
     this.audioController = new AudioController()
     this.markers = []
@@ -126,7 +129,7 @@ export default class AnimationItem extends BaseEvent {
     this.onSetupError = this.onSetupError.bind(this)
     this.onSegmentComplete = this.onSegmentComplete.bind(this)
     this.drawnFrameEvent = new BMEnterFrameEvent('drawnFrame', 0, 0, 0)
-    this.expressionsPlugin = getExpressionsPlugin()
+    this.expressionsPlugin = new Expressions(this)
   }
 
   public adjustSegment(arr: Vector2, offset: number) {
@@ -220,9 +223,9 @@ export default class AnimationItem extends BaseEvent {
       this.imagePreloader?.loadedFootages()
     ) {
       this.isLoaded = true
-      const expressionsPlugin = getExpressionsPlugin()
-      if (expressionsPlugin) {
-        expressionsPlugin.initExpressions(this)
+      const ExpressionsPlugin = getExpressionsPlugin()
+      if (ExpressionsPlugin) {
+        new ExpressionsPlugin(this)
       }
       this.renderer?.initItems()
       setTimeout(() => {
@@ -295,10 +298,10 @@ export default class AnimationItem extends BaseEvent {
     this.onComplete = null
     this.onSegmentStart = null
     this.onDestroy = null
-    this.renderer = null
-    this.expressionsPlugin = null
+    this.renderer = null as unknown as SVGRenderer
+    this.expressionsPlugin = null as unknown as Expressions
     this.imagePreloader = null
-    this.projectInterface = null
+    this.projectInterface = null as unknown as ProjectInterface
   }
   public getAssetData(id?: string) {
     let i = 0
@@ -478,9 +481,9 @@ export default class AnimationItem extends BaseEvent {
   }
   public onSegmentComplete(data: AnimationData) {
     this.animationData = data
-    const expressionsPlugin = getExpressionsPlugin()
-    if (expressionsPlugin) {
-      expressionsPlugin.initExpressions(this)
+    const ExpressionsPlugin = getExpressionsPlugin()
+    if (ExpressionsPlugin) {
+      new ExpressionsPlugin(this)
     }
     this.loadNextSegment()
   }
@@ -677,7 +680,7 @@ export default class AnimationItem extends BaseEvent {
         animType = params.renderer
       }
       const RendererClass = getRenderer(animType)
-      this.renderer = new RendererClass(this, params.rendererSettings)
+      this.renderer = new RendererClass(this, params.rendererSettings as any)
       if (this.renderer?.globalData?.defs) {
         this.imagePreloader?.setCacheType(
           animType,

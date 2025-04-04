@@ -1159,7 +1159,7 @@ export interface Caching {
   _lastPoint: number
   lastFrame: number
   lastIndex: number
-  value: any
+  value: number | number[]
 }
 
 export interface GlobalData {
@@ -1183,8 +1183,11 @@ export interface GlobalData {
   imageLoader?: ImagePreloader | null
   isDashed?: boolean
   nm?: string
+  popExpression: () => void
   progressiveLoad?: boolean
   projectInterface: ProjectInterface
+  pushExpression: () => void
+  registerExpressionProperty: (expression: any) => void
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
   renderer?: CanvasRenderer | SVGRenderer
   slotManager?: SlotManager

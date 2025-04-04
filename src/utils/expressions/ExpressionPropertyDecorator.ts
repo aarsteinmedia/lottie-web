@@ -1,4 +1,4 @@
-import expressionHelpers from '@/utils/expressions/expressionHelpers';
+import { getSpeedAtTime, getStaticValueAtTime, getValueAtTime, getVelocityAtTime, searchExpressions, setGroupProperty } from '@/utils/expressions/expressionHelpers';
 import ExpressionManager from '@/utils/expressions/ExpressionManager';
 import { initialDefaultFrame } from '@/utils/getterSetter';
 import Matrix from '@/utils/Matrix';
@@ -328,7 +328,7 @@ function addPropertyDecorator() {
     } else {
       prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop)
     }
-    prop.setGroupProperty = expressionHelpers.setGroupProperty
+    prop.setGroupProperty = setGroupProperty
     return prop
   };
 
@@ -339,31 +339,31 @@ function addPropertyDecorator() {
     // prop.loopOut = loopOut;
     // prop.loopIn = loopIn;
     if (prop.kf) {
-      prop.getValueAtTime = expressionHelpers.getValueAtTime.bind(prop)
+      prop.getValueAtTime = getValueAtTime.bind(prop)
     } else {
-      prop.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(prop)
+      prop.getValueAtTime = getStaticValueAtTime.bind(prop)
     }
-    prop.setGroupProperty = expressionHelpers.setGroupProperty
+    prop.setGroupProperty = setGroupProperty
     prop.loopOut = loopOut
     prop.loopIn = loopIn
     prop.smooth = smooth
-    prop.getVelocityAtTime = expressionHelpers.getVelocityAtTime.bind(prop)
-    prop.getSpeedAtTime = expressionHelpers.getSpeedAtTime.bind(prop)
+    prop.getVelocityAtTime = getVelocityAtTime.bind(prop)
+    prop.getSpeedAtTime = getSpeedAtTime.bind(prop)
     prop.numKeys = data.a === 1 ? data.k.length : 0
     prop.propertyIndex = data.ix
-    var value = 0
+    let value: number | number[] = 0
     if (type !== 0) {
       value = createTypedArray(
-        'float32',
+        ArrayType.Float32,
         data.a === 1 ? data.k[0].s.length : data.k.length
-      )
+      ) as number[]
     }
     prop._cachingAtTime = {
       lastFrame: initialDefaultFrame,
       lastIndex: 0,
       value: value,
     }
-    expressionHelpers.searchExpressions(elem, data, prop)
+    searchExpressions(elem, data, prop)
     if (prop.k) {
       container.addDynamicProperty(prop)
     }
@@ -371,7 +371,7 @@ function addPropertyDecorator() {
     return prop
   };
 
-  function getShapeValueAtTime(frameNum) {
+  function getShapeValueAtTime(frameNum: number) {
     // For now this caching object is created only when needed instead of creating it when the shape is initialized.
     if (!this._cachingAtTime) {
       this._cachingAtTime = {
@@ -403,7 +403,7 @@ function addPropertyDecorator() {
 
   function ShapeExpressions() {}
   ShapeExpressions.prototype = {
-    getValueAtTime: expressionHelpers.getStaticValueAtTime,
+    getValueAtTime: getStaticValueAtTime,
     inTangents: function (time) {
       return this.vertices('i', time);
     },
@@ -452,7 +452,7 @@ function addPropertyDecorator() {
     points: function (time) {
       return this.vertices('v', time);
     },
-    setGroupProperty: expressionHelpers.setGroupProperty,
+    setGroupProperty: setGroupProperty,
     tangentOnPath: function (perc, time) {
       return this.vectorOnPath(perc, time, 'tangent');
     },
@@ -502,7 +502,7 @@ function addPropertyDecorator() {
   KeyframedShapePropertyConstructorFunction.prototype.getValueAtTime =
     getShapeValueAtTime
   KeyframedShapePropertyConstructorFunction.prototype.initiateExpression =
-    ExpressionManager.initiateExpression
+    ExpressionManager
 
   let propertyGetShapeProp = ShapePropertyFactory.getShapeProp
   ShapePropertyFactory.getShapeProp = function (elem, data, type, arr, trims) {
@@ -510,9 +510,9 @@ function addPropertyDecorator() {
     prop.propertyIndex = data.ix
     prop.lock = false
     if (type === 3) {
-      expressionHelpers.searchExpressions(elem, data.pt, prop)
+      searchExpressions(elem, data.pt, prop)
     } else if (type === 4) {
-      expressionHelpers.searchExpressions(elem, data.ks, prop)
+      searchExpressions(elem, data.ks, prop)
     }
     if (prop.k) {
       elem.addDynamicProperty(prop)

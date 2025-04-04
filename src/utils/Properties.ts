@@ -24,6 +24,7 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
+  _cachingAtTime?: Caching
   _isFirstFrame?: boolean
   _placeholder?: boolean
   comp?: CompElementInterface
@@ -33,7 +34,6 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   elem?: ElementInterfaceIntersect
   frameId?: number
   g?: unknown
-  getValueAtTime?: (a: number, b?: number) => any
   initFrame = initialDefaultFrame
   k?: boolean
   keyframes: Keyframe[] = []
@@ -44,12 +44,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   kf?: boolean
   lock?: boolean
   mult?: number
-  offsetTime?: number
-  pv?: any
+  offsetTime = 0
+  pv?: number | number[]
   s?: unknown
   sh?: Shape
-  v?: any
-  vel?: number | any[]
+  v?: number | number[]
+  value?: number | number[]
+  vel?: number | number[]
   addEffect(effectFunction: any) {
     this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
@@ -79,6 +80,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
     this._caching!.lastFrame = frameNum
     return this.pv
+  }
+  getValueAtTime(_a: number, _b?: number): number | number[] {
+    throw new Error(
+      `${this.constructor.name}: Method getValueAtTime is not implemented`
+    )
   }
   interpolateValue(frameNum: number, caching?: Caching) {
     const offsetTime = Number(this.offsetTime)
@@ -339,7 +345,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this.lock = false
     this.frameId = this.elem?.globalData.frameId
   }
-  setVValue(val: number | number[]) {
+  setVValue(val?: number | number[] | Keyframe[]) {
     let multipliedValue
     if (typeof val === 'number' && this.propType === 'unidimensional') {
       multipliedValue = val * Number(this.mult)
@@ -350,8 +356,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       return
     }
     let i = 0
-    const len = (this.v as number[]).length
-    while (i < len) {
+    const { length } = this.v as number[]
+    while (i < length) {
       multipliedValue = (val as number[])[i] * Number(this.mult)
       if (Math.abs((this.v as number[])[i] - multipliedValue) > 0.00001) {
         ;(this.v as number[])[i] = multipliedValue
@@ -360,8 +366,15 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       i++
     }
   }
+  valueAtTime(_a: number, _b?: number) {
+    throw new Error(
+      `${this.constructor.name}: Method valueAtTime is not implemented`
+    )
+  }
 }
-export class ValueProperty<T = number> extends BaseProperty {
+export class ValueProperty<
+  T extends number | number[] = number,
+> extends BaseProperty {
   override pv: T
   override v: T
   constructor(
@@ -563,7 +576,7 @@ export class KeyframedMultidimensionalProperty<
       lastFrame: this.initFrame,
       lastIndex: 0,
       value: createTypedArray(ArrayType.Float32, arrLen) as T,
-    } as Caching
+    } as unknown as Caching
   }
 }
 

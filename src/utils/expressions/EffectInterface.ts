@@ -127,7 +127,7 @@ function createValueInterface(element, type, elem, propertyGroup) {
   }
 
   if (element.p.setGroupProperty) {
-    element.p.setGroupProperty(PropertyInterface('', propertyGroup))
+    element.p.setGroupProperty(new PropertyInterface('', propertyGroup))
   }
 
   return interfaceFunction

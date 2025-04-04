@@ -1,5 +1,6 @@
 import type {
   Caching,
+  CompElementInterface,
   ElementInterfaceIntersect,
   Keyframe,
   KeyframesMetadata,
@@ -70,7 +71,7 @@ export function getShapeProp(
 
 abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
-  public comp?: ElementInterfaceIntersect
+  public comp?: CompElementInterface
   public data?: Shape
   public effectsSequence: ((arg: unknown) => ShapePath)[] = []
   public elem?: ShapeElement

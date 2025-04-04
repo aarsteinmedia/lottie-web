@@ -14,7 +14,6 @@ export default class CompElement extends RenderableDOMElement {
   layers: LottieLayer[] = []
   renderedFrame?: number
   tm?: ValueProperty
-
   buildAllItems() {
     throw new Error(
       `${this.constructor.name}: Method buildAllItems is not implemented`

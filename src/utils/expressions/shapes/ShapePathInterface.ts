@@ -6,16 +6,16 @@ import PropertyInterface from '@/utils/expressions/PropertyInterface'
 import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class ShapePathInterface {
-  _name: { value?: string }
+  _name?: string
   _propertyGroup
-  ix: { value?: number }
+  ix?: number
 
-  mn: { value?: string }
-  path: { get(): ShapeProperty }
+  mn?: string
+  path: ShapeProperty
   prop: ShapeProperty
-  propertyGroup: { value?: unknown }
-  propertyIndex: { value?: number }
-  shape: { get(): ShapeProperty }
+  propertyGroup?: unknown
+  propertyIndex?: number
+  shape: ShapeProperty
   constructor(shape: Shape, view: SVGShapeData, propertyGroup: unknown) {
     this.prop = view.sh
 
@@ -23,28 +23,23 @@ export default class ShapePathInterface {
       this.interfaceFunction,
       propertyGroup
     )
-    this.prop.setGroupProperty(PropertyInterface('Path', this._propertyGroup))
-    this.path = {
-      get: () => {
-        if (this.prop.k) {
-          this.prop.getValue()
-        }
-        return this.prop
-      },
+    this.prop.setGroupProperty(
+      new PropertyInterface('Path', this._propertyGroup)
+    )
+
+    if (this.prop.k) {
+      this.prop.getValue()
     }
-    this.shape = {
-      get: () => {
-        if (this.prop.k) {
-          this.prop.getValue()
-        }
-        return this.prop
-      },
+    this.path = this.prop
+    if (this.prop.k) {
+      this.prop.getValue()
     }
-    this._name = { value: shape.nm }
-    this.ix = { value: shape.ix }
-    this.propertyIndex = { value: shape.ix }
-    this.mn = { value: shape.mn }
-    this.propertyGroup = { value: propertyGroup }
+    this.shape = this.prop
+    this._name = shape.nm
+    this.ix = shape.ix
+    this.propertyIndex = shape.ix
+    this.mn = shape.mn
+    this.propertyGroup = propertyGroup
   }
 
   interfaceFunction(val: string | number) {

@@ -1,7 +1,6 @@
 const propertyGroupFactory = (function () {
   return function (interfaceFunction, parentPropertyGroup) {
-    return (val?: number) => {
-      val = val === undefined ? 1 : val
+    return (val = 1) => {
       if (val <= 0) {
         return interfaceFunction
       }

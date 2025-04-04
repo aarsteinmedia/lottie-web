@@ -31,7 +31,7 @@ export default class PoolFactory {
     }
     return element as T
   }
-  release<T = unknown>(element: T) {
+  release<T = unknown>(element?: T) {
     if (this._length === this._maxLength) {
       this.pool = double(this.pool)
       this._maxLength *= 2

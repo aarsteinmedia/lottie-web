@@ -11,8 +11,8 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 
 import EffectsManager from '@/effects/EffectsManager'
 import { getBlendMode } from '@/utils'
+import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import { createElementID, getExpressionInterfaces } from '@/utils/getterSetter'
-import ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 export default abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement
@@ -20,14 +20,11 @@ export default abstract class BaseElement {
   compInterface?: CompExpressionInterface
   data?: LottieLayer
   effectsManager?: EffectsManager
-
   globalData?: GlobalData
   itemsData: ElementInterfaceIntersect[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
-
-  layerInterface?: ProjectInterface
-
+  layerInterface?: LayerExpressionInterface
   maskManager?: MaskElement
   shapesData: Shape[] = []
   type?: unknown

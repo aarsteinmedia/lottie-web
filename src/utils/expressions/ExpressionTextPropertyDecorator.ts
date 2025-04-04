@@ -1,12 +1,14 @@
-import TextProperty from '../text/TextProperty'
-import ExpressionManager from './ExpressionManager'
+import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import TextProperty from '@/utils/text/TextProperty'
 
 function addDecorator() {
   function searchExpressions() {
     if (this.data.d.x) {
-      this.calculateExpression = ExpressionManager.initiateExpression.bind(
+      this.calculateExpression = new ExpressionManager(
+        this.elem,
+        this.data.d,
         this
-      )(this.elem, this.data.d, this)
+      ) // .bind(this)(this.elem, this.data.d, this)
       this.addEffect(this.getExpressionValue.bind(this))
       return true
     }

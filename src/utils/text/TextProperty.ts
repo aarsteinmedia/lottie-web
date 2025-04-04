@@ -4,6 +4,7 @@ import type {
   TextData,
   Vector2,
   ElementInterfaceIntersect,
+  CompElementInterface,
 } from '@/types'
 import type LetterProps from '@/utils/text/LetterProps'
 
@@ -24,7 +25,7 @@ export default class TextProperty extends DynamicPropertyContainer {
   _frameId: number
   _isFirstFrame: boolean
   canResize: boolean
-  comp?: ElementInterfaceIntersect
+  comp?: CompElementInterface
   currentData: DocumentData
   data?: TextData
   defaultBoxWidth: Vector2 = [0, 0]
@@ -452,6 +453,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     }
     return obj
   }
+
   getKeyframeValue() {
     if (!this.data) {
       throw new Error(
@@ -473,6 +475,11 @@ export default class TextProperty extends DynamicPropertyContainer {
       this.keysIndex = i
     }
     return this.data.d?.k[this.keysIndex].s
+  }
+  getValue() {
+    throw new Error(
+      `${this.constructor.name}: Method getValue is not implemented`
+    )
   }
   override getValue(_finalValue: unknown) {
     if (!this.data) {

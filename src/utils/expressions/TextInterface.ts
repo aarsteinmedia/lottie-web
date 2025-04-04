@@ -1,35 +1,47 @@
-const TextExpressionInterface = (function () {
-  return function (elem) {
-    let _sourceText
-    function _thisLayerFunction(name) {
-      switch (name) {
-        case 'ADBE Text Document':
-          return _thisLayerFunction.sourceText
-        default:
-          return null
+import type { ElementInterfaceIntersect } from '@/types'
+
+export default class TextExpressionInterface {
+  elem: ElementInterfaceIntersect
+  get sourceText() {
+    this.elem.textProperty?.getValue()
+    const stringValue = this.elem.textProperty?.currentData.t
+
+    if (!this._sourceText || stringValue !== this._sourceText.value) {
+      this._sourceText = {
+        style: {
+          fillColor: this.elem.textProperty?.currentData.fc as number[],
+        },
+        value:
+          typeof stringValue === 'string'
+            ? stringValue
+            : stringValue?.toString(),
       }
     }
-    Object.defineProperty(_thisLayerFunction, 'sourceText', {
-      get: function () {
-        elem.textProperty.getValue()
-        const stringValue = elem.textProperty.currentData.t
-        if (!_sourceText || stringValue !== _sourceText.value) {
-          _sourceText = new String(stringValue) // eslint-disable-line no-new-wrappers
-          // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
-          _sourceText.value = stringValue || new String(stringValue) // eslint-disable-line no-new-wrappers
-          Object.defineProperty(_sourceText, 'style', {
-            get: function () {
-              return {
-                fillColor: elem.textProperty.currentData.fc,
-              }
-            },
-          })
-        }
-        return _sourceText
-      },
-    })
-    return _thisLayerFunction
-  }
-})()
 
-export default TextExpressionInterface
+    return this._sourceText
+  }
+
+  private _sourceText: {
+    value?: string
+    style?: { fillColor: number[] }
+  } = {}
+
+  constructor(elem: ElementInterfaceIntersect) {
+    this.elem = elem
+  }
+
+  // // Static method to maintain similar interface to original
+  // static create(elem: ElementInterfaceIntersect) {
+  //   const instance = new TextExpressionInterface(elem)
+  //   return instance._thisLayerFunction.bind(instance)
+  // }
+
+  public _thisLayerFunction(name: string) {
+    switch (name) {
+      case 'ADBE Text Document':
+        return this.sourceText
+      default:
+        return null
+    }
+  }
+}

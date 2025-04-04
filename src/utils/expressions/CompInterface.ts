@@ -1,11 +1,8 @@
-import type CVCompElement from '@/elements/canvas/CVCompElement'
-import type HCompElement from '@/elements/html/HCompElement'
-import type SVGCompElement from '@/elements/svg/SVGCompElement'
-import type { GlobalData } from '@/types'
+import type { CompElementInterface, GlobalData } from '@/types'
 
 export default class CompExpressionInterface {
   public _name?: string
-  public comp: CVCompElement | SVGCompElement | HCompElement
+  public comp: CompElementInterface
   public displayStartTime: number
   public frameDuration: number
   public globalData?: GlobalData
@@ -13,7 +10,7 @@ export default class CompExpressionInterface {
   public numLayers: number
   public pixelAspect: number
   public width: number
-  constructor(comp: CVCompElement | SVGCompElement | HCompElement) {
+  constructor(comp: CompElementInterface) {
     this.comp = comp
     this._name = comp.data?.nm
     this.pixelAspect = 1

@@ -151,8 +151,8 @@ const ShapeExpressionInterface = (function () {
       },
     })
 
-    view.c.setGroupProperty(PropertyInterface('Color', propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', propertyGroup))
+    view.c.setGroupProperty(new PropertyInterface('Color', propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', propertyGroup))
     return interfaceFunction
   }
 
@@ -188,9 +188,9 @@ const ShapeExpressionInterface = (function () {
       },
     })
 
-    view.s.setGroupProperty(PropertyInterface('Start Point', propertyGroup))
-    view.e.setGroupProperty(PropertyInterface('End Point', propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', propertyGroup))
+    view.s.setGroupProperty(new PropertyInterface('Start Point', propertyGroup))
+    view.e.setGroupProperty(new PropertyInterface('End Point', propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', propertyGroup))
     return interfaceFunction
   }
   function defaultInterfaceFactory() {
@@ -250,9 +250,11 @@ const ShapeExpressionInterface = (function () {
       },
     })
 
-    view.c.setGroupProperty(PropertyInterface('Color', _propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', _propertyGroup))
-    view.w.setGroupProperty(PropertyInterface('Stroke Width', _propertyGroup))
+    view.c.setGroupProperty(new PropertyInterface('Color', _propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
+    view.w.setGroupProperty(
+      new PropertyInterface('Stroke Width', _propertyGroup)
+    )
     return interfaceFunction
   }
 
@@ -276,9 +278,9 @@ const ShapeExpressionInterface = (function () {
     )
     interfaceFunction.propertyIndex = shape.ix
 
-    view.s.setGroupProperty(PropertyInterface('Start', _propertyGroup))
-    view.e.setGroupProperty(PropertyInterface('End', _propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Offset', _propertyGroup))
+    view.s.setGroupProperty(new PropertyInterface('Start', _propertyGroup))
+    view.e.setGroupProperty(new PropertyInterface('End', _propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
     interfaceFunction.propertyIndex = shape.ix
     interfaceFunction.propertyGroup = propertyGroup
 
@@ -332,30 +334,30 @@ const ShapeExpressionInterface = (function () {
       propertyGroup
     )
     view.transform.mProps.o.setGroupProperty(
-      PropertyInterface('Opacity', _propertyGroup)
+      new PropertyInterface('Opacity', _propertyGroup)
     )
     view.transform.mProps.p.setGroupProperty(
-      PropertyInterface('Position', _propertyGroup)
+      new PropertyInterface('Position', _propertyGroup)
     )
     view.transform.mProps.a.setGroupProperty(
-      PropertyInterface('Anchor Point', _propertyGroup)
+      new PropertyInterface('Anchor Point', _propertyGroup)
     )
     view.transform.mProps.s.setGroupProperty(
-      PropertyInterface('Scale', _propertyGroup)
+      new PropertyInterface('Scale', _propertyGroup)
     )
     view.transform.mProps.r.setGroupProperty(
-      PropertyInterface('Rotation', _propertyGroup)
+      new PropertyInterface('Rotation', _propertyGroup)
     )
     if (view.transform.mProps.sk) {
       view.transform.mProps.sk.setGroupProperty(
-        PropertyInterface('Skew', _propertyGroup)
+        new PropertyInterface('Skew', _propertyGroup)
       )
       view.transform.mProps.sa.setGroupProperty(
-        PropertyInterface('Skew Angle', _propertyGroup)
+        new PropertyInterface('Skew Angle', _propertyGroup)
       )
     }
     view.transform.op.setGroupProperty(
-      PropertyInterface('Opacity', _propertyGroup)
+      new PropertyInterface('Opacity', _propertyGroup)
     )
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -403,8 +405,8 @@ const ShapeExpressionInterface = (function () {
     )
     interfaceFunction.propertyIndex = shape.ix
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
-    prop.s.setGroupProperty(PropertyInterface('Size', _propertyGroup))
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
+    prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -454,19 +456,21 @@ const ShapeExpressionInterface = (function () {
     )
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
     interfaceFunction.propertyIndex = shape.ix
-    prop.or.setGroupProperty(PropertyInterface('Outer Radius', _propertyGroup))
-    prop.os.setGroupProperty(
-      PropertyInterface('Outer Roundness', _propertyGroup)
+    prop.or.setGroupProperty(
+      new PropertyInterface('Outer Radius', _propertyGroup)
     )
-    prop.pt.setGroupProperty(PropertyInterface('Points', _propertyGroup))
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
-    prop.r.setGroupProperty(PropertyInterface('Rotation', _propertyGroup))
+    prop.os.setGroupProperty(
+      new PropertyInterface('Outer Roundness', _propertyGroup)
+    )
+    prop.pt.setGroupProperty(new PropertyInterface('Points', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
     if (shape.ir) {
       prop.ir.setGroupProperty(
-        PropertyInterface('Inner Radius', _propertyGroup)
+        new PropertyInterface('Inner Radius', _propertyGroup)
       )
       prop.is.setGroupProperty(
-        PropertyInterface('Inner Roundness', _propertyGroup)
+        new PropertyInterface('Inner Roundness', _propertyGroup)
       )
     }
 
@@ -522,9 +526,9 @@ const ShapeExpressionInterface = (function () {
 
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
     interfaceFunction.propertyIndex = shape.ix
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
-    prop.s.setGroupProperty(PropertyInterface('Size', _propertyGroup))
-    prop.r.setGroupProperty(PropertyInterface('Rotation', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
+    prop.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -556,7 +560,7 @@ const ShapeExpressionInterface = (function () {
     )
     const prop = view
     interfaceFunction.propertyIndex = shape.ix
-    prop.rd.setGroupProperty(PropertyInterface('Radius', _propertyGroup))
+    prop.rd.setGroupProperty(new PropertyInterface('Radius', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -585,8 +589,8 @@ const ShapeExpressionInterface = (function () {
     )
     const prop = view
     interfaceFunction.propertyIndex = shape.ix
-    prop.c.setGroupProperty(PropertyInterface('Copies', _propertyGroup))
-    prop.o.setGroupProperty(PropertyInterface('Offset', _propertyGroup))
+    prop.c.setGroupProperty(new PropertyInterface('Copies', _propertyGroup))
+    prop.o.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
       copies: {

@@ -4,7 +4,9 @@ import HierarchyElement from '@/elements/helpers/HierarchyElement'
 
 export default class FrameElement extends HierarchyElement {
   _mdf?: boolean
+  displayStartTime = 0
   dynamicProperties: DynamicPropertyContainer[] = []
+  frameDuration = 0.016 // default fps is 60, so default frameDuration is 1 / 60
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (this.dynamicProperties.indexOf(prop) === -1) {
       this.dynamicProperties.push(prop)

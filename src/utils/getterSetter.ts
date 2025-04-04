@@ -1,5 +1,6 @@
 import type SVGRenderer from '@/renderers/SVGRenderer'
-import type { EffectElement, ExpressionsPlugin } from '@/types'
+import type { EffectElement } from '@/types'
+import type Expressions from '@/utils/expressions/Expressions'
 import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 import { RendererType } from '@/enums'
@@ -15,12 +16,12 @@ export const initialDefaultFrame = -999999,
  */
 const expressions: {
   interface: null | typeof ProjectInterface
-  plugin: null | ExpressionsPlugin
+  plugin: null | typeof Expressions
 } = {
   interface: null,
   plugin: null,
 }
-export const setExpressionsPlugin = (value: ExpressionsPlugin) => {
+export const setExpressionsPlugin = (value: typeof Expressions) => {
     expressions.plugin = value
   },
   getExpressionsPlugin = () => expressions.plugin,
