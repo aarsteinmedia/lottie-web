@@ -4,7 +4,9 @@ import type { CVStyleElement, Shape } from '@/types'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import { ShapeType } from '@/enums'
-import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, {
+  type ShapeProperty,
+} from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {
   _isAnimated?: boolean
@@ -34,7 +36,7 @@ export default class CVShapeData {
       case ShapeType.PolygonStar:
         ty = 7
     }
-    this.sh = getShapeProp(element, data, ty)
+    this.sh = ShapePropertyFactory.getShapeProp(element, data, ty)
     const { length } = styles
     let styledShape
     for (let i = 0; i < length; i++) {

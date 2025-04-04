@@ -841,21 +841,21 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     }
     if (this._textData.p && this._textData.p.m) {
       this._pathData = {
-        a: PropertyFactory(
+        a: PropertyFactory.getProp(
           this._elem,
           this._textData.p.a,
           0,
           0,
           this as unknown as ElementInterfaceIntersect
         ),
-        f: PropertyFactory(
+        f: PropertyFactory.getProp(
           this._elem,
           this._textData.p.f,
           0,
           0,
           this as unknown as ElementInterfaceIntersect
         ),
-        l: PropertyFactory(
+        l: PropertyFactory.getProp(
           this._elem,
           this._textData.p.l,
           0,
@@ -863,14 +863,14 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
           this as unknown as ElementInterfaceIntersect
         ),
         m: this._elem.maskManager?.getMaskProperty(this._textData.p.m),
-        p: PropertyFactory(
+        p: PropertyFactory.getProp(
           this._elem,
           this._textData.p.p,
           0,
           0,
           this as unknown as ElementInterfaceIntersect
         ),
-        r: PropertyFactory(
+        r: PropertyFactory.getProp(
           this._elem,
           this._textData.p.r,
           0,
@@ -882,7 +882,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     } else {
       this._hasMaskedPath = false
     }
-    this._moreOptions.alignment = PropertyFactory(
+    this._moreOptions.alignment = PropertyFactory.getProp(
       this._elem,
       this._textData.m?.a,
       1,

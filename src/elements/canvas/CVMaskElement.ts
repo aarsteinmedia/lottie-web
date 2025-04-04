@@ -3,7 +3,9 @@ import type { ElementInterfaceIntersect, LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, {
+  type ShapeProperty,
+} from '@/utils/shapes/ShapeProperty'
 
 export default class CVMaskElement {
   _isFirstFrame?: boolean
@@ -24,7 +26,7 @@ export default class CVMaskElement {
       if (this.masksProperties[i].mode !== 'n') {
         hasMasks = true
       }
-      this.viewData[i] = getShapeProp(
+      this.viewData[i] = ShapePropertyFactory.getShapeProp(
         this.element,
         this.masksProperties[i],
         3

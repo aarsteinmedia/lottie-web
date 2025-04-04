@@ -116,14 +116,14 @@ export default class RepeaterModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.c = PropertyFactory(
+    this.c = PropertyFactory.getProp(
       elem,
       data.c as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.o = PropertyFactory(
+    this.o = PropertyFactory.getProp(
       elem,
       data.o,
       0,
@@ -136,14 +136,14 @@ export default class RepeaterModifier extends ShapeModifier {
         data.tr,
         this as unknown as ElementInterfaceIntersect
       )
-      this.so = PropertyFactory(
+      this.so = PropertyFactory.getProp(
         elem,
         data.tr.so,
         0,
         0.01,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.eo = PropertyFactory(
+      this.eo = PropertyFactory.getProp(
         elem,
         data.tr.eo,
         0,

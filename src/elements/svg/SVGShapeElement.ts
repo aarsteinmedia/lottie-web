@@ -26,7 +26,9 @@ import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import { getShapeProp, type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, {
+  type ShapeProperty,
+} from '@/utils/shapes/ShapeProperty'
 import TrimModifier from '@/utils/shapes/TrimModifier'
 import TransformProperty from '@/utils/TransformProperty'
 export default class SVGShapeElement extends ShapeElement {
@@ -146,7 +148,7 @@ export default class SVGShapeElement extends ShapeElement {
       case ShapeType.PolygonStar:
         ty = 7
     }
-    const shapeProperty = getShapeProp(this, data, ty),
+    const shapeProperty = ShapePropertyFactory.getShapeProp(this, data, ty),
       elementData = new SVGShapeData(
         ownTransformers,
         level,

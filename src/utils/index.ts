@@ -132,6 +132,18 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     a[0] * b[1] - a[1] * b[0],
   ],
   degToRads = Math.PI / 180,
+  extendPrototype = (sources: any[], destination: any) => {
+    const { length } = sources
+    let sourcePrototype
+    for (let i = 0; i < length; i++) {
+      sourcePrototype = sources[i].prototype
+      for (const attr in sourcePrototype) {
+        if (Object.prototype.hasOwnProperty.call(sourcePrototype, attr)) {
+          destination.prototype[attr] = sourcePrototype[attr]
+        }
+      }
+    }
+  },
   floatEqual = (a: number, b: number) =>
     Math.abs(a - b) * 100000 <= Math.min(Math.abs(a), Math.abs(b)),
   floatZero = (f: number) => Math.abs(f) <= 0.00001,

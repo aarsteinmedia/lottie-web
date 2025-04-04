@@ -13,7 +13,7 @@ import { createElementID, getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { ValueProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
-import { getShapeProp } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/ShapeProperty'
 
 export default class MaskElement {
   data: LottieLayer
@@ -79,14 +79,18 @@ export default class MaskElement {
         this.viewData[i] = {
           elem: path,
           lastPath: '',
-          op: PropertyFactory(
+          op: PropertyFactory.getProp(
             this.element,
             properties[i].o,
             0,
             0.01,
             this.element
           ) as ValueProperty,
-          prop: getShapeProp(this.element, properties[i], 3),
+          prop: ShapePropertyFactory.getShapeProp(
+            this.element,
+            properties[i],
+            3
+          ),
         }
         defs?.appendChild(path)
         continue
@@ -106,7 +110,7 @@ export default class MaskElement {
       } else {
         maskType = 'mask'
         maskRef = 'mask'
-        x = PropertyFactory(
+        x = PropertyFactory.getProp(
           this.element,
           properties[i].x,
           0,
@@ -164,14 +168,14 @@ export default class MaskElement {
         elem: path,
         invRect: rect,
         lastPath: '',
-        op: PropertyFactory(
+        op: PropertyFactory.getProp(
           this.element,
           properties[i].o,
           0,
           0.01,
           this.element
         ) as ValueProperty,
-        prop: getShapeProp(this.element, properties[i], 3),
+        prop: ShapePropertyFactory.getShapeProp(this.element, properties[i], 3),
       }
       if (!this.viewData[i].prop?.k) {
         this.drawPath(

@@ -13,7 +13,7 @@ import {
   ValueProperty,
 } from '@/utils/Properties'
 
-export default function PropertyFactory(
+function getProp(
   elem: ElementInterfaceIntersect,
   dataFromProps?: VectorProperty<number | number[]>,
   type?: number,
@@ -69,3 +69,9 @@ export default function PropertyFactory(
   }
   return p
 }
+
+const PropertyFactory = {
+  getProp,
+}
+
+export default PropertyFactory

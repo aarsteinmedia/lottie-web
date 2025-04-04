@@ -28,7 +28,7 @@ export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData
     super(elem, data, styleData)
     this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
     this.getValue = this.iterateDynamicProperties
-    this.w = PropertyFactory(
+    this.w = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.w,
       0,

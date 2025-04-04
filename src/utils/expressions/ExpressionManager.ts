@@ -1,6 +1,9 @@
+import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type MaskManager from '@/utils/expressions/MaskInterface'
+import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
 import type { BaseProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
+import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { ArrayType } from '@/enums'
 import {
@@ -16,10 +19,6 @@ import { getBezierEasing } from '@/utils/BezierFactory'
 import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { newElement } from '@/utils/pooling/ShapePool'
-
-import TextSelectorProperty from '../text/TextSelectorProperty'
-import CompExpressionInterface from './CompInterface'
-import TextExpressionSelectorPropFactory from './TextSelectorPropertyDecorator'
 
 // import seedrandom from '@/utils/SeedRandom'
 // import propTypes from '../helpers/propTypes'
@@ -60,137 +59,50 @@ export default class ExpressionManager {
   helperLengthArray = [0, 0, 0, 0, 0, 0]
   index?: number
   inPoint = 0
-  loop_in
-  loop_out
-  loopIn
-  loopOut
+
   mask?: MaskManager
   name = ''
+
   needsVelocity?: boolean
   numKeys = 0
+
   outPoint = 0
   parent?: LayerExpressionInterface
   position?: Vector2
-
   propType?: string
-
   pv?: number | number[]
-
   randSeed = 0
   rotation?: number
+
   scale?: number
+
   selectorValue?: number
+
   text?: string
   textIndex?: number
   textTotal?: number
   thisComp?: CompExpressionInterface
-
   thisLayer?: LayerExpressionInterface
   time = 0
-
   transform?: typeof LayerExpressionInterface
-
   val?: string | number | number[]
 
   value?: string | number | number[]
   valueAtTime
 
   velocity?: number
+
   velocityAtTime
 
   width = 0
   // const Math = BMMath
   window = null
+
   XMLHttpRequest = null
   private propTypes = {
     SHAPE: 'shape',
   }
-  constructor(
-    elem: ElementInterfaceIntersect,
-    data: TextSelectorProperty,
-    property: TextExpressionSelectorPropFactory
-  ) {
-    if (!elem.globalData.renderConfig?.runExpressions) {
-      return this.noOp as unknown as ExpressionManager
-    }
 
-    if (!elem.comp) {
-      throw new Error(`${this.constructor.name}: elem->comp is not implemented`)
-    }
-
-    if (!elem.comp.globalData) {
-      throw new Error(
-        `${this.constructor.name}: elem->comp->globalData is not implemented`
-      )
-    }
-
-    this.elem = elem
-
-    this.add = this.sum
-    this.radians_to_degrees = this.radiansToDegrees
-    this.degrees_to_radians = this.degreesToRadians
-
-    this.easeInBez = getBezierEasing(0.333, 0, 0.833, 0.833, 'easeIn').get
-    this.easeOutBez = getBezierEasing(0.167, 0.167, 0.667, 1, 'easeOut').get
-    this.easeInOutBez = getBezierEasing(0.33, 0, 0.667, 1, 'easeInOut').get
-
-    this.val = data.x
-    this.needsVelocity = /velocity(?![\w\d])/.test(this.val)
-    this._needsRandom = this.val.indexOf('random') !== -1
-    this.elemType = elem.data.ty
-    const thisProperty = property
-    thisProperty.valueAtTime = thisProperty.getValueAtTime
-    thisProperty.value = thisProperty.v
-    elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
-    elem.comp.displayStartTime = 0
-    this.inPoint = elem.data.ip / elem.comp.globalData.frameRate
-    this.outPoint = elem.data.op / elem.comp.globalData.frameRate
-    this.width = elem.data.sw ? elem.data.sw : 0
-    this.height = elem.data.sh ? elem.data.sh : 0
-    this.name = elem.data.nm
-
-    // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-    this.expression_function = eval(
-      `[function _expression_function(){${this.val};scoped_bm_rt=$bm_rt}]`
-    )[0]
-    this.numKeys = property.kf ? data.k.length : 0
-
-    this.active = !this.data || this.data.hd !== true
-
-    this.wiggle = this.wiggle.bind(this)
-
-    if (thisProperty.loopIn) {
-      this.loopIn = thisProperty.loopIn.bind(thisProperty)
-      this.loop_in = this.loopIn
-    }
-
-    if (thisProperty.loopOut) {
-      this.loopOut = thisProperty.loopOut.bind(thisProperty)
-      this.loop_out = this.loopOut
-    }
-
-    if (thisProperty.smooth) {
-      this.smooth = thisProperty.smooth.bind(thisProperty)
-    }
-
-    if (this.getValueAtTime) {
-      this.valueAtTime = this.getValueAtTime.bind(this)
-    }
-
-    if (this.getVelocityAtTime) {
-      this.velocityAtTime = this.getVelocityAtTime.bind(this)
-    }
-
-    this.comp = elem.comp.globalData.projectInterface.bind(
-      elem.comp.globalData.projectInterface
-    )
-
-    this.index = elem.data.ind
-    this.hasParent = !!(elem.hierarchy && elem.hierarchy.length)
-
-    this.randSeed = Math.floor(Math.random() * 1000000)
-    this.globalData = elem.globalData
-  }
   $bm_isInstanceOfArray(arr: any): arr is number[] {
     return arr.constructor === Array || arr.constructor === Float32Array
   }
@@ -290,16 +202,14 @@ export default class ExpressionManager {
     }
     return path
   }
-
   degrees_to_radians(_val: number) {
     throw new Error(
       `${this.constructor.name}: Method degrees_to_radians is not implemented`
     )
   }
-  degreesToRadians(val) {
+  degreesToRadians(val: number) {
     return val * degToRads
   }
-
   div(a: number | number[], b: number | number[]) {
     const tOfA = typeof a
     const tOfB = typeof b
@@ -307,12 +217,11 @@ export default class ExpressionManager {
     if (this.isNumerable(tOfA, a) && this.isNumerable(tOfB, b)) {
       return a / b
     }
-    let i
     let len
     if (this.$bm_isInstanceOfArray(a) && this.isNumerable(tOfB, b)) {
       len = a.length
       arr = createTypedArray(ArrayType.Float32, len)
-      for (i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         arr[i] = a[i] / b
       }
       return arr
@@ -320,7 +229,7 @@ export default class ExpressionManager {
     if (this.isNumerable(tOfA, a) && this.$bm_isInstanceOfArray(b)) {
       len = b.length
       arr = createTypedArray(ArrayType.Float32, len)
-      for (i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         arr[i] = a / b[i]
       }
       return arr
@@ -336,7 +245,6 @@ export default class ExpressionManager {
   ) {
     return this.applyEase(this.easeInOutBez, t, tMin, tMax, val1, val2)
   }
-
   easeIn(
     t: number,
     tMin: number,
@@ -352,7 +260,6 @@ export default class ExpressionManager {
       `${this.constructor.name}: Method easeInBez is not implemented`
     )
   }
-
   easeInOutBez(_val: number): number {
     throw new Error(
       `${this.constructor.name}: Method easeInOutBez is not implemented`
@@ -368,7 +275,6 @@ export default class ExpressionManager {
   ) {
     return this.applyEase(this.easeOutBez, t, tMin, tMax, val1, val2)
   }
-
   easeOutBez(_val: number): number {
     throw new Error(
       `${this.constructor.name}: Method easeOutBez is not implemented`
@@ -529,6 +435,103 @@ export default class ExpressionManager {
     return p
   }
 
+  initiateExpression(
+    elem: ElementInterfaceIntersect,
+    data: TextSelectorProperty,
+    property: TextExpressionSelectorPropFactory
+  ) {
+    if (!elem.globalData.renderConfig?.runExpressions) {
+      return this.noOp
+    }
+
+    if (!elem.comp) {
+      throw new Error(`${this.constructor.name}: elem->comp is not implemented`)
+    }
+
+    if (!elem.comp.globalData) {
+      throw new Error(
+        `${this.constructor.name}: elem->comp->globalData is not implemented`
+      )
+    }
+
+    this.elem = elem
+
+    this.add = this.sum
+    this.radians_to_degrees = this.radiansToDegrees
+    this.degrees_to_radians = this.degreesToRadians
+
+    this.easeInBez = getBezierEasing(0.333, 0, 0.833, 0.833, 'easeIn').get
+    this.easeOutBez = getBezierEasing(0.167, 0.167, 0.667, 1, 'easeOut').get
+    this.easeInOutBez = getBezierEasing(0.33, 0, 0.667, 1, 'easeInOut').get
+
+    this.val = data.x
+    this.needsVelocity = /velocity(?![\w\d])/.test(this.val)
+    this._needsRandom = this.val.indexOf('random') !== -1
+    this.elemType = elem.data.ty
+    const thisProperty = property
+    thisProperty.valueAtTime = thisProperty.getValueAtTime
+    thisProperty.value = thisProperty.v
+    elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
+    elem.comp.displayStartTime = 0
+    this.inPoint = elem.data.ip / elem.comp.globalData.frameRate
+    this.outPoint = elem.data.op / elem.comp.globalData.frameRate
+    this.width = elem.data.sw ? elem.data.sw : 0
+    this.height = elem.data.sh ? elem.data.sh : 0
+    this.name = elem.data.nm
+
+    // TODO: Eval alternative
+    // eslint-disable-next-line no-new-func
+    this.expression_function = new Function(`
+      function _expression_function() {
+        ${this.val};
+        scoped_bm_rt = $bm_rt;
+      }
+      return _expression_function;
+      `)()
+    // this.expression_function = eval(
+    //   `[function _expression_function(){${this.val};scoped_bm_rt=$bm_rt}]`
+    // )[0]
+    this.numKeys = property.kf ? data.k.length : 0
+
+    this.active = !this.data || this.data.hd !== true
+
+    this.wiggle = this.wiggle.bind(this)
+
+    if (thisProperty.loopIn) {
+      this.loopIn = thisProperty.loopIn.bind(thisProperty)
+      this.loop_in = this.loopIn
+    }
+
+    if (thisProperty.loopOut) {
+      this.loopOut = thisProperty.loopOut.bind(thisProperty)
+      this.loop_out = this.loopOut
+    }
+
+    if (thisProperty.smooth) {
+      this.smooth = thisProperty.smooth.bind(thisProperty)
+    }
+
+    if (this.getValueAtTime) {
+      this.valueAtTime = this.getValueAtTime.bind(this)
+    }
+
+    if (this.getVelocityAtTime) {
+      this.velocityAtTime = this.getVelocityAtTime.bind(this)
+    }
+
+    this.comp = elem.comp.globalData.projectInterface.bind(
+      elem.comp.globalData.projectInterface
+    )
+
+    this.index = elem.data.ind
+    this.hasParent = !!(elem.hierarchy && elem.hierarchy.length)
+
+    this.randSeed = Math.floor(Math.random() * 1000000)
+    this.globalData = elem.globalData
+
+    return this.executeExpression
+  }
+
   isNumerable(tOfV: string, v: unknown): v is number {
     return (
       tOfV === 'number' ||
@@ -620,6 +623,7 @@ export default class ExpressionManager {
     }
     return arr
   }
+
   lookAt(elem1: number[], elem2: number[]): Vector3 {
     const fVec = [
         elem2[0] - elem1[0],
@@ -633,8 +637,31 @@ export default class ExpressionManager {
     return [yaw, pitch, 0]
   }
 
+  loop_in(_type?: string, _duration?: number, _duration?: boolean) {
+    throw new Error(
+      `${this.constructor.name}: Method loop_in is not implemented`
+    )
+  }
+
+  loop_out(_type?: string, _duration?: number, _duration?: boolean) {
+    throw new Error(
+      `${this.constructor.name}: Method loop_out is not implemented`
+    )
+  }
+
+  loopIn(_type?: string, _duration?: number, _duration?: boolean) {
+    throw new Error(
+      `${this.constructor.name}: Method loopIn is not implemented`
+    )
+  }
   loopInDuration(type: string, duration: number) {
     return this.loopIn(type, duration, true)
+  }
+
+  loopOut(_type?: string, _duration?: number, _duration?: boolean) {
+    throw new Error(
+      `${this.constructor.name}: Method loopOut is not implemented`
+    )
   }
 
   loopOutDuration(type: string, duration: number) {

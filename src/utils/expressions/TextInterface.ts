@@ -1,7 +1,11 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
+import ExpressionManager from '@/utils/expressions/ExpressionManager'
+
 export default class TextExpressionInterface {
   elem: ElementInterfaceIntersect
+  initiateExpression?: typeof ExpressionManager
+
   get sourceText() {
     this.elem.textProperty?.getValue()
     const stringValue = this.elem.textProperty?.currentData.t

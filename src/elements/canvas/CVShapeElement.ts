@@ -163,7 +163,7 @@ export default class CVShapeElement extends ShapeElement {
     switch (data.ty) {
       case ShapeType.Fill:
       case ShapeType.Stroke: {
-        elementData.c = PropertyFactory(
+        elementData.c = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           data.c as VectorProperty<Vector3>,
           1,
@@ -179,28 +179,28 @@ export default class CVShapeElement extends ShapeElement {
       }
       case ShapeType.GradientFill:
       case ShapeType.GradientStroke: {
-        elementData.s = PropertyFactory(
+        elementData.s = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           data.s,
           1,
           null,
           this as unknown as ElementInterfaceIntersect
         ) as MultiDimensionalProperty
-        elementData.e = PropertyFactory(
+        elementData.e = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           data.e,
           1,
           null,
           this as unknown as ElementInterfaceIntersect
         ) as MultiDimensionalProperty
-        elementData.h = PropertyFactory(
+        elementData.h = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           (data.h || { k: 0 }) as VectorProperty,
           0,
           0.01,
           this as unknown as ElementInterfaceIntersect
         ) as ValueProperty
-        elementData.a = PropertyFactory(
+        elementData.a = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           (data.a || { k: 0 }) as VectorProperty,
           0,
@@ -219,7 +219,7 @@ export default class CVShapeElement extends ShapeElement {
       }
     }
 
-    elementData.o = PropertyFactory(
+    elementData.o = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.o,
       0,
@@ -233,7 +233,7 @@ export default class CVShapeElement extends ShapeElement {
       if (data.lj === 1) {
         styleElem.ml = data.ml
       }
-      elementData.w = PropertyFactory(
+      elementData.w = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         data.w,
         0,
@@ -274,7 +274,7 @@ export default class CVShapeElement extends ShapeElement {
           data,
           this as unknown as ElementInterfaceIntersect
         ),
-        op: PropertyFactory(
+        op: PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
           data.o,
           0,

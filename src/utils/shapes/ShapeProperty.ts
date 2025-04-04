@@ -9,11 +9,13 @@ import type {
   Vector2,
   VectorProperty,
 } from '@/types'
+import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
 import type {
   MultiDimensionalProperty,
   ValueProperty,
 } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
+import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import { degToRads } from '@/utils'
@@ -25,15 +27,15 @@ import { clone, newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePath from '@/utils/shapes/ShapePath'
 
-export function getConstructorFunction() {
+function getConstructorFunction() {
   return ShapeProperty
 }
 
-export function getKeyframedConstructorFunction() {
+function getKeyframedConstructorFunction() {
   return KeyframedShapeProperty
 }
 
-export function getShapeProp(
+function getShapeProp(
   elem: ShapeElement,
   data: Shape,
   type: number
@@ -86,6 +88,20 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public paths?: ShapeCollection
   public pv?: ShapePath
   public v?: ShapePath
+  getValueAtTime(_frameNumFromProps: number): ShapePath {
+    throw new Error(
+      `${this.constructor.name}: Method getShapeValueAtTime is not implemented`
+    )
+  }
+  initiateExpression(
+    _elem: ElementInterfaceIntersect,
+    _data: TextSelectorProperty,
+    _property: TextExpressionSelectorPropFactory
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method initiateExpression is not implemented`
+    )
+  }
   interpolateShape(
     frameNum: number,
     previousValue: ShapePath,
@@ -320,21 +336,21 @@ export class RectShapeProperty extends ShapeBaseProperty {
     this.frameId = -1
     this.d = data.d as number
     this.initDynamicPropertyContainer(elem)
-    this.p = PropertyFactory(
+    this.p = PropertyFactory.getProp(
       elem,
       data.p,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.s = PropertyFactory(
+    this.s = PropertyFactory.getProp(
       elem,
       data.s,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(
+    this.r = PropertyFactory.getProp(
       elem,
       data.r as unknown as VectorProperty<number[]>, // TODO: Find out if typing is wrong
       0,
@@ -611,14 +627,14 @@ class StarShapeProperty extends ShapeBaseProperty {
     this.d = data.d
     this.initDynamicPropertyContainer(elem)
     if (data.sy === 1) {
-      this.ir = PropertyFactory(
+      this.ir = PropertyFactory.getProp(
         elem,
         data.ir,
         0,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.is = PropertyFactory(
+      this.is = PropertyFactory.getProp(
         elem,
         data.is,
         0,
@@ -629,35 +645,35 @@ class StarShapeProperty extends ShapeBaseProperty {
     } else {
       this.convertToPath = this.convertPolygonToPath
     }
-    this.pt = PropertyFactory(
+    this.pt = PropertyFactory.getProp(
       elem,
       data.pt,
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.p = PropertyFactory(
+    this.p = PropertyFactory.getProp(
       elem,
       data.p,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.r = PropertyFactory(
+    this.r = PropertyFactory.getProp(
       elem,
       data.r,
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.or = PropertyFactory(
+    this.or = PropertyFactory.getProp(
       elem,
       data.or,
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.os = PropertyFactory(
+    this.os = PropertyFactory.getProp(
       elem,
       data.os,
       0,
@@ -808,14 +824,14 @@ class EllShapeProperty extends ShapeBaseProperty {
     this.comp = elem.comp
     this.frameId = -1
     this.initDynamicPropertyContainer(elem)
-    this.p = PropertyFactory(
+    this.p = PropertyFactory.getProp(
       elem,
       data.p,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector2>
-    this.s = PropertyFactory(
+    this.s = PropertyFactory.getProp(
       elem,
       data.s,
       1,
@@ -914,7 +930,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   }
 }
 
-class KeyframedShapeProperty extends ShapeBaseProperty {
+export class KeyframedShapeProperty extends ShapeBaseProperty {
   public lastFrame
   constructor(elem: ShapeElement, data: Shape, type: number) {
     super()
@@ -943,3 +959,11 @@ class KeyframedShapeProperty extends ShapeBaseProperty {
     this.getValue = this.processEffectsSequence
   }
 }
+
+const ShapePropertyFactory = {
+  getConstructorFunction,
+  getKeyframedConstructorFunction,
+  getShapeProp,
+}
+
+export default ShapePropertyFactory

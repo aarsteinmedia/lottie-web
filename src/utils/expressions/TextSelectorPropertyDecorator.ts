@@ -16,6 +16,7 @@ import TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 export default class TextExpressionSelectorPropFactory {
   comp?: CompElementInterface
   elem: ElementInterfaceIntersect
+  initiateExpression?: typeof ExpressionManager
   k: boolean
   kf?: boolean
   lastValue: Vector3

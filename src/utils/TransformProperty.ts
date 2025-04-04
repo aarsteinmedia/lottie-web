@@ -55,14 +55,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
     this.appliedTransformations = 0
     this.initDynamicPropertyContainer(container || elem)
     if (data.p && 's' in data.p) {
-      this.px = PropertyFactory(
+      this.px = PropertyFactory.getProp(
         elem,
         (data.p as any).x,
         0,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.py = PropertyFactory(
+      this.py = PropertyFactory.getProp(
         elem,
         (data.p as any).y,
         0,
@@ -70,7 +70,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       if ('z' in data.p) {
-        this.pz = PropertyFactory(
+        this.pz = PropertyFactory.getProp(
           elem,
           data.p.z as any,
           0,
@@ -79,7 +79,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
         ) as ValueProperty
       }
     } else {
-      this.p = PropertyFactory(
+      this.p = PropertyFactory.getProp(
         elem,
         data.p || ({ k: [0, 0, 0] } as any),
         1,
@@ -88,21 +88,21 @@ export default class TransformProperty extends DynamicPropertyContainer {
       ) as MultiDimensionalProperty<Vector3>
     }
     if ('rx' in data) {
-      this.rx = PropertyFactory(
+      this.rx = PropertyFactory.getProp(
         elem,
         data.rx,
         0,
         degToRads,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.ry = PropertyFactory(
+      this.ry = PropertyFactory.getProp(
         elem,
         data.ry,
         0,
         degToRads,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.rz = PropertyFactory(
+      this.rz = PropertyFactory.getProp(
         elem,
         data.rz,
         0,
@@ -116,7 +116,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
           data.or.k[i].ti = null
         }
       }
-      this.or = PropertyFactory(
+      this.or = PropertyFactory.getProp(
         elem,
         data.or as VectorProperty<number[]>,
         1,
@@ -125,7 +125,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
       ) as MultiDimensionalProperty<Vector3>
       this.or.sh = true as any
     } else {
-      this.r = PropertyFactory(
+      this.r = PropertyFactory.getProp(
         elem,
         data.r || ({ k: 0 } as any),
         0,
@@ -134,14 +134,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
       ) as ValueProperty
     }
     if (data.sk) {
-      this.sk = PropertyFactory(
+      this.sk = PropertyFactory.getProp(
         elem,
         data.sk,
         0,
         degToRads,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.sa = PropertyFactory(
+      this.sa = PropertyFactory.getProp(
         elem,
         data.sa,
         0,
@@ -149,14 +149,14 @@ export default class TransformProperty extends DynamicPropertyContainer {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
-    this.a = PropertyFactory(
+    this.a = PropertyFactory.getProp(
       elem,
       data.a || ({ k: [0, 0, 0] } as any),
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
-    this.s = PropertyFactory(
+    this.s = PropertyFactory.getProp(
       elem,
       data.s || ({ k: [100, 100, 100] } as any),
       1,
@@ -165,7 +165,13 @@ export default class TransformProperty extends DynamicPropertyContainer {
     ) as MultiDimensionalProperty<Vector3>
     // Opacity is not part of the transform properties, that's why it won't use this.dynamicProperties. That way transforms won't get updated if opacity changes.
     if (data.o) {
-      this.o = PropertyFactory(elem, data.o, 0, 0.01, elem) as ValueProperty
+      this.o = PropertyFactory.getProp(
+        elem,
+        data.o,
+        0,
+        0.01,
+        elem
+      ) as ValueProperty
     } else {
       this.o = { _mdf: false, v: 1 } as any
     }

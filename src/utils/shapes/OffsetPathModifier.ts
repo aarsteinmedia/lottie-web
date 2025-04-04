@@ -23,14 +23,14 @@ export default class OffsetPathModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.amount = PropertyFactory(
+    this.amount = PropertyFactory.getProp(
       elem,
       data.a,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.miterLimit = PropertyFactory(
+    this.miterLimit = PropertyFactory.getProp(
       elem,
       data.ml as unknown as VectorProperty, // TODO: Find if typing is wrong
       0,

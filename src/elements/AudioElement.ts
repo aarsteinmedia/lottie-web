@@ -49,7 +49,7 @@ export default class AudioElement extends RenderableElement {
     this._previousVolume = null
     this.tm = (
       data.tm
-        ? PropertyFactory(
+        ? PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             data.tm as VectorProperty,
             0,
@@ -58,7 +58,7 @@ export default class AudioElement extends RenderableElement {
           )
         : { _placeholder: true }
     ) as ValueProperty
-    this.lv = PropertyFactory(
+    this.lv = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       (data.au && data.au.lv ? data.au.lv : { k: [100] }) as VectorProperty<
         number[]

@@ -36,7 +36,7 @@ export default class DashProperty extends DynamicPropertyContainer {
     const len = data.length || 0
     let prop
     for (let i = 0; i < len; i++) {
-      prop = PropertyFactory(
+      prop = PropertyFactory.getProp(
         elem,
         data[i].v,
         0,

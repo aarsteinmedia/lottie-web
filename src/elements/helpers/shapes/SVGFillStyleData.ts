@@ -34,14 +34,14 @@ export default class SVGFillStyleData extends DynamicPropertyContainer {
     super()
     this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
     this.getValue = this.iterateDynamicProperties
-    this.o = PropertyFactory(
+    this.o = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.o,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.c = PropertyFactory(
+    this.c = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.c as VectorProperty,
       1,

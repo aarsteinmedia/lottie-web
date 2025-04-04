@@ -38,7 +38,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this._collapsable = this.checkCollapsable()
     this._hasOpacity = cLength
     this.initDynamicPropertyContainer(container)
-    this.prop = PropertyFactory(
+    this.prop = PropertyFactory.getProp(
       elem,
       data.k as VectorProperty<number[]>,
       1,

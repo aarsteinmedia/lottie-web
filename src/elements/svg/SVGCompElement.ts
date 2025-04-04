@@ -77,7 +77,7 @@ export default class SVGCompElement extends SVGBaseElement {
     this.initElement(data, globalData, comp)
     this.tm = (
       data.tm
-        ? PropertyFactory(
+        ? PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             data.tm as VectorProperty,
             0,

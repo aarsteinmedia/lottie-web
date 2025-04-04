@@ -66,13 +66,12 @@ import type {
 import type DashProperty from '@/utils/shapes/DashProperty'
 import type GradientProperty from '@/utils/shapes/GradientProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import type SlotManager from '@/utils/SlotManager'
 import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 import type TextProperty from '@/utils/text/TextProperty'
 import type TransformProperty from '@/utils/TransformProperty'
-
-import { getShapeProp } from '@/utils/shapes/ShapeProperty'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -168,6 +167,17 @@ export interface TransformCanvas {
   tx: number
   ty: number
   w: number
+}
+
+export interface BezierLength {
+  addedLength: number
+  lengths: number[]
+  percents: number[]
+}
+
+export interface SegmentLength {
+  lengths: BezierLength[]
+  totalLength: number
 }
 
 export interface CompInterface extends AnimationItem {
@@ -548,7 +558,7 @@ export interface ViewData {
   invRect?: SVGRectElement | null
   lastPath: string
   op: ValueProperty
-  prop: ReturnType<typeof getShapeProp>
+  prop: ShapeProperty | null
 }
 
 export interface LottieAsset {
@@ -1159,6 +1169,7 @@ export interface Caching {
   _lastPoint: number
   lastFrame: number
   lastIndex: number
+  shapeValue?: ShapePath
   value: number | number[]
 }
 

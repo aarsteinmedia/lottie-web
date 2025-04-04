@@ -40,7 +40,7 @@ export default class HCameraElement extends FrameElement {
     this.initFrame()
     this.initBaseData(data, globalData, comp)
     this.initHierarchy()
-    this.pe = PropertyFactory(
+    this.pe = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.pe,
       0,
@@ -48,21 +48,21 @@ export default class HCameraElement extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     if ((data.ks.p as any)?.s) {
-      this.px = PropertyFactory(
+      this.px = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         (data.ks.p as any).x,
         1,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.py = PropertyFactory(
+      this.py = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         (data.ks.p as any).y,
         1,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      this.pz = PropertyFactory(
+      this.pz = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         (data.ks.p as any).z,
         1,
@@ -70,7 +70,7 @@ export default class HCameraElement extends FrameElement {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     } else {
-      this.p = PropertyFactory(
+      this.p = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         data.ks.p,
         1,
@@ -79,7 +79,7 @@ export default class HCameraElement extends FrameElement {
       ) as ValueProperty<number[]>
     }
     if (data.ks.a) {
-      this.a = PropertyFactory(
+      this.a = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
         data.ks.a,
         1,
@@ -94,7 +94,7 @@ export default class HCameraElement extends FrameElement {
         data.ks.or.k[i].ti = null
       }
     }
-    this.or = PropertyFactory(
+    this.or = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.ks.or as VectorProperty<number[]>,
       1,
@@ -102,21 +102,21 @@ export default class HCameraElement extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty<Vector3>
     this.or.sh = true as unknown as Shape
-    this.rx = PropertyFactory(
+    this.rx = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.ks.rx,
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.ry = PropertyFactory(
+    this.ry = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.ks.ry,
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.rz = PropertyFactory(
+    this.rz = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       data.ks.rz,
       0,

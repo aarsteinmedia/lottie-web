@@ -1,4 +1,4 @@
-import type { Vector2 } from '@/types'
+import type { BezierLength, SegmentLength, Vector2 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/enums'
@@ -186,9 +186,9 @@ export function getPointInSegment(
   return [ptX, ptY]
 }
 
-export function getSegmentsLength(shapeData: ShapePath) {
+export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
   const segmentsLength: {
-      lengths: ReturnType<typeof getBezierLength>[]
+      lengths: BezierLength[]
       totalLength: number
     } = segmentsLengthPool.newElement(),
     closed = shapeData.c,
@@ -276,7 +276,7 @@ function getBezierLength(
   pt2: Vector2,
   pt3: Vector2,
   pt4: Vector2
-) {
+): BezierLength {
   const curveSegments = getDefaultCurveSegments()
   let ptCoord,
     perc,

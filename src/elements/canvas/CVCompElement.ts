@@ -110,7 +110,7 @@ export default class CVCompElement extends CompElement {
     this.initElement(data, globalData, comp)
     this.tm = (
       data.tm
-        ? PropertyFactory(
+        ? PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             data.tm as VectorProperty<number>,
             0,

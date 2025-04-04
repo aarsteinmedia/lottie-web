@@ -271,21 +271,21 @@ export default class TrimModifier extends ShapeModifier {
     elem: ElementInterfaceIntersect,
     data: Shape
   ) {
-    this.s = PropertyFactory(
+    this.s = PropertyFactory.getProp(
       elem,
       data.s,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.e = PropertyFactory(
+    this.e = PropertyFactory.getProp(
       elem,
       data.e,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.o = PropertyFactory(
+    this.o = PropertyFactory.getProp(
       elem,
       data.o,
       0,

@@ -60,35 +60,35 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     data: Shape,
     styleData: SVGStyleData
   ) {
-    this.o = PropertyFactory(
+    this.o = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.o,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.s = PropertyFactory(
+    this.s = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.s,
       1,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
-    this.e = PropertyFactory(
+    this.e = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.e,
       1,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
-    this.h = PropertyFactory(
+    this.h = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.h || ({ k: 0 } as VectorProperty),
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as KeyframedValueProperty
-    this.a = PropertyFactory(
+    this.a = PropertyFactory.getProp(
       elem as ElementInterfaceIntersect,
       data.a || ({ k: 0 } as VectorProperty),
       0,

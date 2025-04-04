@@ -1,13 +1,14 @@
-import type { ElementInterfaceIntersect } from '@/types'
+import type { ElementInterfaceIntersect, VectorProperty } from '@/types'
 import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
 import type { BaseProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { ArrayType } from '@/enums'
 import { isArrayOfNum } from '@/utils'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { createTypedArray } from '@/utils/helpers/arrays'
-
-import TextSelectorProperty from '../text/TextSelectorProperty'
 
 export function getSpeedAtTime(this: BaseProperty, frameNum: number) {
   const delta = -0.01,
@@ -80,17 +81,17 @@ export function getStaticValueAtTime(this: TextExpressionSelectorPropFactory) {
 
 export function searchExpressions(
   elem: ElementInterfaceIntersect,
-  data: TextSelectorProperty,
-  prop: TextExpressionSelectorPropFactory
+  data: TextSelectorProperty | VectorProperty<ShapePath[]>,
+  prop: TextExpressionSelectorPropFactory | ShapeProperty
 ) {
   if (!data.x) {
     return
   }
   prop.k = true
   prop.x = true
-  prop.initiateExpression = ExpressionManager
+  prop.initiateExpression = ExpressionManager.prototype.initiateExpression
   prop.effectsSequence.push(
-    new prop.initiateExpression(elem, data, prop).bind(prop)
+    prop.initiateExpression(elem, data, prop).bind(prop)
   )
 }
 

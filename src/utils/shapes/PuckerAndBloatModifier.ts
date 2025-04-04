@@ -14,7 +14,7 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     data: Shape
   ) {
     this.getValue = this.processKeys
-    this.amount = PropertyFactory(
+    this.amount = PropertyFactory.getProp(
       elem,
       data.a,
       0,
