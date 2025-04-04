@@ -1,5 +1,5 @@
 export default class PropertyInterface {
-  private _name: string
+  _name: string
 
   constructor(
     propertyName: string,

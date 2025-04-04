@@ -81,7 +81,10 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this._caching!.lastFrame = frameNum
     return this.pv
   }
-  getValueAtTime(_a: number, _b?: number): number | number[] {
+  getValueAtTime<T extends number | number[] = number>(
+    _a: number,
+    _b?: number
+  ): T {
     throw new Error(
       `${this.constructor.name}: Method getValueAtTime is not implemented`
     )

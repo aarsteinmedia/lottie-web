@@ -71,7 +71,7 @@ function getShapeProp(
   return prop
 }
 
-abstract class ShapeBaseProperty extends DynamicPropertyContainer {
+export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   public comp?: CompElementInterface
   public data?: Shape
@@ -88,7 +88,7 @@ abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public paths?: ShapeCollection
   public pv?: ShapePath
   public v?: ShapePath
-  getValueAtTime(_frameNumFromProps: number): ShapePath {
+  getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
     throw new Error(
       `${this.constructor.name}: Method getShapeValueAtTime is not implemented`
     )
@@ -897,6 +897,7 @@ class EllShapeProperty extends ShapeBaseProperty {
 }
 
 export class ShapeProperty extends ShapeBaseProperty {
+  ix?: number
   pathsData?: ShapePath[] | ShapePath
   shape?: {
     _mdf?: boolean
@@ -906,6 +907,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     }
   }
   totalShapeLength?: number
+  x?: boolean
   constructor(elem: ShapeElement, data: Shape, type: number) {
     super()
     this.propType = 'shape'

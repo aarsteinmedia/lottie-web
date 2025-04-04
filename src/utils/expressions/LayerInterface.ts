@@ -1,5 +1,5 @@
 import MaskElement from '@/elements/MaskElement'
-import { ElementInterfaceIntersect, Vector4 } from '@/types'
+import { ElementInterfaceIntersect, Vector2, Vector4 } from '@/types'
 import MaskManager from '@/utils/expressions/MaskInterface'
 import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 // import {
@@ -29,9 +29,11 @@ export default class LayerExpressionInterface {
 
   parent?: LayerExpressionInterface
 
-  source?: string
+  position: Vector2
 
+  source?: string
   startTime: number
+
   transformInterface?: TransformExpressionInterface
 
   width?: number

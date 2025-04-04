@@ -1,5 +1,6 @@
 import type {
   AnimationDirection,
+  Constructor,
   IntersectData,
   Marker,
   MarkerData,
@@ -132,7 +133,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     a[0] * b[1] - a[1] * b[0],
   ],
   degToRads = Math.PI / 180,
-  extendPrototype = (sources: any[], destination: any) => {
+  extendPrototype = (sources: Constructor[], destination: Constructor) => {
     const { length } = sources
     let sourcePrototype
     for (let i = 0; i < length; i++) {

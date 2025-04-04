@@ -13,6 +13,8 @@ import {
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
+import ShapePath from '../shapes/ShapePath'
+
 export default class TextExpressionSelectorPropFactory {
   comp?: CompElementInterface
   elem: ElementInterfaceIntersect
@@ -22,7 +24,7 @@ export default class TextExpressionSelectorPropFactory {
   lastValue: Vector3
   mult: number
   propType: string
-  pv: number
+  pv: ShapePath | number
   selectorValue: number
   textIndex?: number
   textTotal: number
@@ -39,7 +41,7 @@ export default class TextExpressionSelectorPropFactory {
     this.lastValue = [1, 1, 1]
     this.k = true
     this.x = true
-    this.getValue = new ExpressionManager(elem, data, this).executeExpression
+    this.getValue = ExpressionManager.prototype.executeExpression
 
     this.getMult = this.getValueProxy
     this.getVelocityAtTime = getVelocityAtTime

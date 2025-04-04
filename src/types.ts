@@ -101,6 +101,9 @@ export interface SVGGeometry {
   width: number
 }
 
+export interface Constructor {
+  prototype: any
+}
 export interface TextSpan {
   childSpan?: null | SVGTextElement | SVGGElement
   elem?: number[][]

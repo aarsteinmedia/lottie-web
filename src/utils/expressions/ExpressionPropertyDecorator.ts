@@ -7,6 +7,7 @@ import {
   Shape,
   Vector2,
 } from '@/types'
+import { extendPrototype, isArrayOfNum } from '@/utils'
 import { getPointInSegment, getSegmentsLength } from '@/utils/Bezier'
 import {
   getSpeedAtTime,
@@ -21,17 +22,18 @@ import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import Matrix from '@/utils/Matrix'
 import { clone } from '@/utils/pooling/ShapePool'
+import { BaseProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
+import ShapePath from '@/utils/shapes/ShapePath'
 import ShapePropertyFactory, {
   KeyframedShapeProperty,
+  ShapeBaseProperty,
   ShapeProperty,
 } from '@/utils/shapes/ShapeProperty'
 import { TransformPropertyFactory } from '@/utils/TransformProperty'
 
-import { KeyframedValueProperty } from '../Properties'
-import ShapePath from '../shapes/ShapePath'
-
 function loopOut(
+  this: BaseProperty,
   typeFromProps?: string,
   durationFromProps?: number,
   durationFlag?: boolean
@@ -41,7 +43,7 @@ function loopOut(
   }
   let duration = durationFromProps
   const type = typeFromProps?.toLowerCase() || ''
-  const currentFrame = this.comp.renderedFrame
+  const currentFrame = this.comp?.renderedFrame || -1
   const keyframes = this.keyframes
   const lastKeyFrame = keyframes[keyframes.length - 1].t
   if (currentFrame <= lastKeyFrame) {
@@ -52,10 +54,10 @@ function loopOut(
   if (durationFlag) {
     if (duration) {
       cycleDuration = Math.abs(
-        lastKeyFrame - this.elem.comp.globalData.frameRate * duration
+        lastKeyFrame - (this.elem?.comp?.globalData?.frameRate || 60) * duration
       )
     } else {
-      cycleDuration = Math.max(0, lastKeyFrame - this.elem.data.ip)
+      cycleDuration = Math.max(0, lastKeyFrame - (this.elem?.data.ip || 0))
     }
     firstKeyFrame = lastKeyFrame - cycleDuration
   } else {
@@ -73,20 +75,30 @@ function loopOut(
       (currentFrame - firstKeyFrame) / cycleDuration
     )
     if (iterations % 2 !== 0) {
-        return this.getValueAtTime(((cycleDuration - (currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame)) / this.comp.globalData.frameRate, 0); // eslint-disable-line
+      return this.getValueAtTime(
+        (cycleDuration -
+          ((currentFrame - firstKeyFrame) % cycleDuration) +
+          firstKeyFrame) /
+          this.comp.globalData.frameRate,
+        0
+      )
     }
   } else if (type === 'offset') {
-    const initV = this.getValueAtTime(
-      firstKeyFrame / this.comp.globalData.frameRate,
+    const initV: number | number[] = this.getValueAtTime(
+      firstKeyFrame / (this.comp?.globalData?.frameRate || 60),
       0
     )
     const endV = this.getValueAtTime(
-      lastKeyFrame / this.comp.globalData.frameRate,
+      lastKeyFrame / (this.comp?.globalData?.frameRate || 60),
       0
     )
-      var current = this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) / this.comp.globalData.frameRate, 0); // eslint-disable-line
+    const current = this.getValueAtTime(
+      (((currentFrame - firstKeyFrame) % cycleDuration) + firstKeyFrame) /
+        (this.comp?.globalData?.frameRate || 60),
+      0
+    )
     const repeats = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
-    if (this.pv.length) {
+    if (isArrayOfNum(this.pv)) {
       ret = new Array(initV.length)
       len = ret.length
       for (i = 0; i < len; i++) {
@@ -121,6 +133,7 @@ function loopOut(
 }
 
 function loopIn(
+  this: BaseProperty,
   typeFromProps?: string,
   durationFromProps?: number,
   durationFlag?: boolean
@@ -218,7 +231,11 @@ function loopIn(
   return this.getValueAtTime(((cycleDuration - ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame))) / this.comp.globalData.frameRate, 0); // eslint-disable-line
 }
 
-function smooth(widthFromProps?: number, samplesFromProps?: number) {
+function smooth(
+  this: BaseProperty,
+  widthFromProps?: number,
+  samplesFromProps?: number
+) {
   if (!this.k) {
     return this.pv
   }
@@ -262,7 +279,7 @@ function smooth(widthFromProps?: number, samplesFromProps?: number) {
   return value
 }
 
-function getTransformValueAtTime(time: number) {
+function getTransformValueAtTime(this: BaseProperty, time: number) {
   if (!this._transformCachingAtTime) {
     this._transformCachingAtTime = {
       v: new Matrix(),
@@ -418,19 +435,13 @@ function getShapeValueAtTime(frameNumFromProps: number): ShapePath {
   return this._cachingAtTime.shapeValue
 }
 
-class ShapeExpressions extends ShapeProperty {
+class ShapeExpressions extends ShapeBaseProperty {
   _segmentsLength?: SegmentLength
 
-  constructor(elem: ShapeElement, data: Shape, type: number) {
-    super(elem, data, type)
+  constructor() {
+    super()
     this.getValueAtTime = getStaticValueAtTime
     this.setGroupProperty = setGroupProperty
-  }
-
-  getValueAtTime(_a?: number, _b?: number): number {
-    throw new Error(
-      `${this.constructor.name}: Method getValueAtTime is not inmplemented`
-    )
   }
 
   inTangents(time: number) {
@@ -450,7 +461,7 @@ class ShapeExpressions extends ShapeProperty {
     if (time !== undefined) {
       shapePath = this.getValueAtTime(time, 0)
     }
-    if (!this._segmentsLength) {
+    if (!this._segmentsLength && shapePath) {
       this._segmentsLength = getSegmentsLength(shapePath)
     }
 
@@ -549,8 +560,8 @@ class ShapeExpressions extends ShapeProperty {
     return arr
   }
 }
-// extendPrototype([ShapeExpressions], ShapePropertyConstructorFunction)
-// extendPrototype([ShapeExpressions], KeyframedShapePropertyConstructorFunction)
+extendPrototype([ShapeExpressions], ShapeProperty)
+extendPrototype([ShapeExpressions], KeyframedShapeProperty)
 KeyframedShapeProperty.prototype.getValueAtTime = getShapeValueAtTime
 KeyframedShapeProperty.prototype.initiateExpression =
   ExpressionManager.prototype.initiateExpression

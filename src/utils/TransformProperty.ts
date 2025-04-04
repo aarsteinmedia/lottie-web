@@ -280,11 +280,11 @@ export default class TransformProperty extends DynamicPropertyContainer {
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) <=
             this.p.keyframes[0].t
           ) {
-            v1 = this.p.getValueAtTime?.(
+            v1 = this.p.getValueAtTime(
               (this.p.keyframes[0].t + 0.01) / frameRate,
               0
             )
-            v2 = this.p.getValueAtTime?.(
+            v2 = this.p.getValueAtTime(
               Number(this.p.keyframes[0].t) / frameRate,
               0
             )
@@ -292,18 +292,18 @@ export default class TransformProperty extends DynamicPropertyContainer {
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) >=
             this.p.keyframes[this.p.keyframes.length - 1].t
           ) {
-            v1 = this.p.getValueAtTime?.(
+            v1 = this.p.getValueAtTime(
               this.p.keyframes[this.p.keyframes.length - 1].t / frameRate,
               0
             )
-            v2 = this.p.getValueAtTime?.(
+            v2 = this.p.getValueAtTime(
               (this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) /
                 frameRate,
               0
             )
           } else {
             v1 = this.p.pv as Vector2
-            v2 = this.p.getValueAtTime?.(
+            v2 = this.p.getValueAtTime(
               (Number(this.p._caching?.lastFrame) +
                 Number(this.p.offsetTime) -
                 0.01) /
@@ -320,19 +320,19 @@ export default class TransformProperty extends DynamicPropertyContainer {
             Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
             Number(px.keyframes?.[0].t)
           ) {
-            v1[0] = px.getValueAtTime?.(
+            v1[0] = px.getValueAtTime(
               (Number(px.keyframes?.[0].t) + 0.01) / frameRate,
               0
             )
-            v1[1] = py.getValueAtTime?.(
+            v1[1] = py.getValueAtTime(
               (Number(py.keyframes?.[0].t) + 0.01) / frameRate,
               0
             )
-            v2[0] = px.getValueAtTime?.(
+            v2[0] = px.getValueAtTime(
               Number(px.keyframes?.[0].t) / frameRate,
               0
             )
-            v2[1] = py.getValueAtTime?.(
+            v2[1] = py.getValueAtTime(
               Number(py.keyframes?.[0]?.t) / frameRate,
               0
             )
@@ -340,23 +340,23 @@ export default class TransformProperty extends DynamicPropertyContainer {
             Number(px._caching?.lastFrame) + Number(px.offsetTime) >=
             Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t)
           ) {
-            v1[0] = px.getValueAtTime?.(
+            v1[0] = px.getValueAtTime(
               Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t) /
                 frameRate,
               0
             )
-            v1[1] = py.getValueAtTime?.(
+            v1[1] = py.getValueAtTime(
               Number(py.keyframes?.[Number(py.keyframes?.length) - 1].t) /
                 frameRate,
               0
             )
-            v2[0] = px.getValueAtTime?.(
+            v2[0] = px.getValueAtTime(
               (Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t) -
                 0.01) /
                 frameRate,
               0
             )
-            v2[1] = py.getValueAtTime?.(
+            v2[1] = py.getValueAtTime(
               (Number(py.keyframes?.[Number(py.keyframes?.length) - 1].t) -
                 0.01) /
                 frameRate,
@@ -364,12 +364,12 @@ export default class TransformProperty extends DynamicPropertyContainer {
             )
           } else {
             v1 = [px.pv, py.pv]
-            v2[0] = px.getValueAtTime?.(
+            v2[0] = px.getValueAtTime(
               (Number(px._caching?.lastFrame) + Number(px.offsetTime) - 0.01) /
                 frameRate,
               px.offsetTime
             )
-            v2[1] = py.getValueAtTime?.(
+            v2[1] = py.getValueAtTime(
               (Number(py._caching?.lastFrame) + Number(py.offsetTime) - 0.01) /
                 frameRate,
               py.offsetTime
