@@ -1,3 +1,5 @@
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import { ArrayType } from '@/enums'
 import {
@@ -30,7 +32,9 @@ import ShapePropertyFactory, {
   ShapeBaseProperty,
   ShapeProperty,
 } from '@/utils/shapes/ShapeProperty'
-import { TransformPropertyFactory } from '@/utils/TransformProperty'
+import TransformProperty, {
+  TransformPropertyFactory,
+} from '@/utils/TransformProperty'
 
 function loopOut(
   this: BaseProperty,
@@ -42,10 +46,11 @@ function loopOut(
     return this.pv
   }
   let duration = durationFromProps
-  const type = typeFromProps?.toLowerCase() || ''
-  const currentFrame = this.comp?.renderedFrame || -1
-  const keyframes = this.keyframes
-  const lastKeyFrame = keyframes[keyframes.length - 1].t
+  const type = typeFromProps?.toLowerCase() || '',
+    currentFrame = this.comp?.renderedFrame || -1,
+    keyframes = this.keyframes,
+    lastKeyFrame = keyframes[keyframes.length - 1].t,
+    frameRate = this.comp?.globalData?.frameRate ?? 60
   if (currentFrame <= lastKeyFrame) {
     return this.pv
   }
@@ -53,9 +58,7 @@ function loopOut(
   let firstKeyFrame
   if (durationFlag) {
     if (duration) {
-      cycleDuration = Math.abs(
-        lastKeyFrame - (this.elem?.comp?.globalData?.frameRate || 60) * duration
-      )
+      cycleDuration = Math.abs(lastKeyFrame - frameRate * duration)
     } else {
       cycleDuration = Math.max(0, lastKeyFrame - (this.elem?.data.ip || 0))
     }
@@ -79,57 +82,70 @@ function loopOut(
         (cycleDuration -
           ((currentFrame - firstKeyFrame) % cycleDuration) +
           firstKeyFrame) /
-          this.comp.globalData.frameRate,
+          frameRate,
         0
       )
     }
   } else if (type === 'offset') {
     const initV: number | number[] = this.getValueAtTime(
-      firstKeyFrame / (this.comp?.globalData?.frameRate || 60),
+      firstKeyFrame / frameRate,
       0
     )
-    const endV = this.getValueAtTime(
-      lastKeyFrame / (this.comp?.globalData?.frameRate || 60),
-      0
-    )
-    const current = this.getValueAtTime(
-      (((currentFrame - firstKeyFrame) % cycleDuration) + firstKeyFrame) /
-        (this.comp?.globalData?.frameRate || 60),
-      0
-    )
+    const endV: number | number[] = this.getValueAtTime(
+        lastKeyFrame / frameRate,
+        0
+      ),
+      current: number | number[] = this.getValueAtTime(
+        (((currentFrame - firstKeyFrame) % cycleDuration) + firstKeyFrame) /
+          frameRate,
+        0
+      )
     const repeats = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
-    if (isArrayOfNum(this.pv)) {
+    if (isArrayOfNum(this.pv) && isArrayOfNum(initV)) {
       ret = new Array(initV.length)
       len = ret.length
       for (i = 0; i < len; i++) {
-        ret[i] = (endV[i] - initV[i]) * repeats + current[i]
-      }
-      return ret
-    }
-    return (endV - initV) * repeats + current
-  } else if (type === 'continue') {
-    const lastValue = this.getValueAtTime(
-      lastKeyFrame / this.comp.globalData.frameRate,
-      0
-    )
-    const nextLastValue = this.getValueAtTime(
-      (lastKeyFrame - 0.001) / this.comp.globalData.frameRate,
-      0
-    )
-    if (this.pv.length) {
-      ret = new Array(lastValue.length)
-      len = ret.length
-      for (i = 0; i < len; i++) {
-          ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / this.comp.globalData.frameRate) / 0.0005; // eslint-disable-line
+        ret[i] =
+          ((endV as number[])[i] - initV[i]) * repeats +
+          (current as number[])[i]
       }
       return ret
     }
     return (
-      lastValue +
-      (lastValue - nextLastValue) * ((currentFrame - lastKeyFrame) / 0.001)
+      ((endV as number) - (initV as number)) * repeats + (current as number)
+    )
+  } else if (type === 'continue') {
+    const lastValue: number | number[] = this.getValueAtTime(
+        lastKeyFrame / frameRate,
+        0
+      ),
+      nextLastValue: number | number[] = this.getValueAtTime(
+        (lastKeyFrame - 0.001) / frameRate,
+        0
+      )
+    if (isArrayOfNum(this.pv)) {
+      ret = new Array((lastValue as number[]).length)
+      len = ret.length
+      for (i = 0; i < len; i++) {
+        ret[i] =
+          (lastValue as number[])[i] +
+          (((lastValue as number[])[i] - (nextLastValue as number[])[i]) *
+            ((currentFrame - lastKeyFrame) / frameRate)) /
+            0.0005
+      }
+      return ret
+    }
+    return (
+      (lastValue as number) +
+      ((lastValue as number) - (nextLastValue as number)) *
+        ((currentFrame - lastKeyFrame) / 0.001)
     )
   }
-  return this.getValueAtTime((((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame)) / this.comp.globalData.frameRate, 0); // eslint-disable-line
+  return this.getValueAtTime(
+    (((currentFrame - firstKeyFrame) % cycleDuration) + firstKeyFrame) /
+      frameRate,
+    0
+  )
 }
 
 function loopIn(
@@ -142,10 +158,11 @@ function loopIn(
     return this.pv
   }
   let duration = durationFromProps
-  const type = typeFromProps?.toLowerCase() || ''
-  const currentFrame = this.comp.renderedFrame
-  const keyframes = this.keyframes
-  const firstKeyFrame = keyframes[0].t
+  const type = typeFromProps?.toLowerCase() || '',
+    frameRate = this.comp?.globalData?.frameRate ?? 60,
+    currentFrame = this.comp?.renderedFrame || -1,
+    keyframes = this.keyframes,
+    firstKeyFrame = keyframes[0].t
   if (currentFrame >= firstKeyFrame) {
     return this.pv
   }
@@ -153,9 +170,9 @@ function loopIn(
   let lastKeyFrame
   if (durationFlag) {
     if (duration) {
-      cycleDuration = Math.abs(this.elem.comp.globalData.frameRate * duration)
+      cycleDuration = Math.abs(frameRate * duration)
     } else {
-      cycleDuration = Math.max(0, this.elem.data.op - firstKeyFrame)
+      cycleDuration = Math.max(0, (this.elem?.data.op || 0) - firstKeyFrame)
     }
     lastKeyFrame = firstKeyFrame + cycleDuration
   } else {
@@ -173,62 +190,77 @@ function loopIn(
       (firstKeyFrame - currentFrame) / cycleDuration
     )
     if (iterations % 2 === 0) {
-        return this.getValueAtTime((((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) / this.comp.globalData.frameRate, 0); // eslint-disable-line
+      return this.getValueAtTime(
+        (((firstKeyFrame - currentFrame) % cycleDuration) + firstKeyFrame) /
+          frameRate,
+        0
+      )
     }
   } else if (type === 'offset') {
-    const initV = this.getValueAtTime(
-      firstKeyFrame / this.comp.globalData.frameRate,
-      0
-    )
-    const endV = this.getValueAtTime(
-      lastKeyFrame / this.comp.globalData.frameRate,
-      0
-    )
-    const current = this.getValueAtTime(
-      (cycleDuration -
-        ((firstKeyFrame - currentFrame) % cycleDuration) +
-        firstKeyFrame) /
-        this.comp.globalData.frameRate,
-      0
-    )
+    const initV: number | number[] = this.getValueAtTime(
+        firstKeyFrame / frameRate,
+        0
+      ),
+      endV: number | number[] = this.getValueAtTime(
+        lastKeyFrame / frameRate,
+        0
+      ),
+      current: number | number[] = this.getValueAtTime(
+        (cycleDuration -
+          ((firstKeyFrame - currentFrame) % cycleDuration) +
+          firstKeyFrame) /
+          frameRate,
+        0
+      )
     const repeats =
       Math.floor((firstKeyFrame - currentFrame) / cycleDuration) + 1
-    if (this.pv.length) {
-      ret = new Array(initV.length)
-      len = ret.length
-      for (i = 0; i < len; i++) {
-        ret[i] = current[i] - (endV[i] - initV[i]) * repeats
-      }
-      return ret
-    }
-    return current - (endV - initV) * repeats
-  } else if (type === 'continue') {
-    const firstValue = this.getValueAtTime(
-      firstKeyFrame / this.comp.globalData.frameRate,
-      0
-    )
-    const nextFirstValue = this.getValueAtTime(
-      (firstKeyFrame + 0.001) / this.comp.globalData.frameRate,
-      0
-    )
-    if (this.pv.length) {
-      ret = new Array(firstValue.length)
+    if (isArrayOfNum(this.pv)) {
+      ret = new Array((initV as number[]).length)
       len = ret.length
       for (i = 0; i < len; i++) {
         ret[i] =
-          firstValue[i] +
-          ((firstValue[i] - nextFirstValue[i]) *
+          (current as number[])[i] -
+          ((endV as number[])[i] - (initV as number[])[i]) * repeats
+      }
+      return ret
+    }
+    return (
+      (current as number) - ((endV as number) - (initV as number)) * repeats
+    )
+  } else if (type === 'continue') {
+    const firstValue: number | number[] = this.getValueAtTime(
+        firstKeyFrame / frameRate,
+        0
+      ),
+      nextFirstValue: number | number[] = this.getValueAtTime(
+        (firstKeyFrame + 0.001) / frameRate,
+        0
+      )
+    if (isArrayOfNum(this.pv)) {
+      ret = new Array((firstValue as number[]).length)
+      len = ret.length
+      for (i = 0; i < len; i++) {
+        ret[i] =
+          (firstValue as number[])[i] +
+          (((firstValue as number[])[i] - (nextFirstValue as number[])[i]) *
             (firstKeyFrame - currentFrame)) /
             0.001
       }
       return ret
     }
     return (
-      firstValue +
-      ((firstValue - nextFirstValue) * (firstKeyFrame - currentFrame)) / 0.001
+      (firstValue as number) +
+      (((firstValue as number) - (nextFirstValue as number)) *
+        (firstKeyFrame - currentFrame)) /
+        0.001
     )
   }
-  return this.getValueAtTime(((cycleDuration - ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame))) / this.comp.globalData.frameRate, 0); // eslint-disable-line
+  return this.getValueAtTime(
+    (cycleDuration -
+      (((firstKeyFrame - currentFrame) % cycleDuration) + firstKeyFrame)) /
+      frameRate,
+    0
+  )
 }
 
 function smooth(
@@ -239,12 +271,13 @@ function smooth(
   if (!this.k) {
     return this.pv
   }
-  const width = (widthFromProps || 0.4) * 0.5
-  const samples = Math.floor(samplesFromProps || 5)
+  const width = (widthFromProps || 0.4) * 0.5,
+    samples = Math.floor(samplesFromProps || 5),
+    frameRate = this.comp?.globalData?.frameRate ?? 60
   if (samples <= 1) {
     return this.pv
   }
-  const currentTime = this.comp.renderedFrame / this.comp.globalData.frameRate
+  const currentTime = (this.comp?.renderedFrame || 0) / frameRate
   const initFrame = currentTime - width
   const endFrame = currentTime + width
   const sampleFrequency =
@@ -252,34 +285,34 @@ function smooth(
   let i = 0
   let j = 0
   let value
-  if (this.pv.length) {
+  if (isArrayOfNum(this.pv)) {
     value = createTypedArray(ArrayType.Float32, this.pv.length)
   } else {
     value = 0
   }
-  let sampleValue
+  let sampleValue: number | number[]
   while (i < samples) {
     sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
-    if (this.pv.length) {
+    if (isArrayOfNum(this.pv)) {
       for (j = 0; j < this.pv.length; j++) {
-        value[j] += sampleValue[j]
+        ;(value as number[])[j] += (sampleValue as number[])[j]
       }
     } else {
-      value += sampleValue
+      ;(value as number) += sampleValue as number
     }
     i++
   }
-  if (this.pv.length) {
+  if (isArrayOfNum(this.pv)) {
     for (j = 0; j < this.pv.length; j++) {
-      value[j] /= samples
+      ;(value as number[])[j] /= samples
     }
   } else {
-    value /= samples
+    ;(value as number) /= samples
   }
   return value
 }
 
-function getTransformValueAtTime(this: BaseProperty, time: number) {
+function getTransformValueAtTime(this: TransformProperty, time: number) {
   if (!this._transformCachingAtTime) {
     this._transformCachingAtTime = {
       v: new Matrix(),
@@ -289,68 +322,73 @@ function getTransformValueAtTime(this: BaseProperty, time: number) {
   const matrix = this._transformCachingAtTime.v
   matrix.cloneFromProps(this.pre.props)
   if (this.appliedTransformations < 1) {
-    const anchor = this.a.getValueAtTime(time)
-    matrix.translate(
-      -anchor[0] * this.a.mult,
-      -anchor[1] * this.a.mult,
-      anchor[2] * this.a.mult
-    )
+    const anchor: number[] = this.a?.getValueAtTime(time) || [],
+      mult = this.a?.mult ?? 1
+    matrix.translate(-anchor[0] * mult, -anchor[1] * mult, anchor[2] * mult)
   }
   if (this.appliedTransformations < 2) {
-    const scale = this.s.getValueAtTime(time)
-    matrix.scale(
-      scale[0] * this.s.mult,
-      scale[1] * this.s.mult,
-      scale[2] * this.s.mult
-    )
+    const scale: number[] = this.s?.getValueAtTime(time) || [],
+      mult = this.s?.mult ?? 1
+    matrix.scale(scale[0] * mult, scale[1] * mult, scale[2] * mult)
   }
   if (this.sk && this.appliedTransformations < 3) {
-    const skew = this.sk.getValueAtTime(time)
-    const skewAxis = this.sa.getValueAtTime(time)
-    matrix.skewFromAxis(-skew * this.sk.mult, skewAxis * this.sa.mult)
+    const skew = this.sk.getValueAtTime(time),
+      skewAxis = this.sa?.getValueAtTime(time) ?? 0,
+      skMult = this.sk.mult ?? 1,
+      saMult = this.sa?.mult ?? 1
+    matrix.skewFromAxis(-skew * skMult, skewAxis * saMult)
   }
   if (this.r && this.appliedTransformations < 4) {
-    const rotation = this.r.getValueAtTime(time)
-    matrix.rotate(-rotation * this.r.mult)
+    const rotation = this.r.getValueAtTime(time),
+      mult = this.r.mult ?? 1
+    matrix.rotate(-rotation * mult)
   } else if (!this.r && this.appliedTransformations < 4) {
-    const rotationZ = this.rz.getValueAtTime(time)
-    const rotationY = this.ry.getValueAtTime(time)
-    const rotationX = this.rx.getValueAtTime(time)
-    const orientation = this.or.getValueAtTime(time)
+    const rotationZ = this.rz?.getValueAtTime(time) || 0,
+      rotationY = this.ry?.getValueAtTime(time) || 0,
+      rotationX = this.rx?.getValueAtTime(time) || 0,
+      orientation: number[] = this.or?.getValueAtTime(time) || [],
+      rzMult = this.rz?.mult ?? 1,
+      ryMult = this.ry?.mult ?? 1,
+      rxMult = this.rx?.mult ?? 1,
+      orMult = this.or?.mult ?? 1
     matrix
-      .rotateZ(-rotationZ * this.rz.mult)
-      .rotateY(rotationY * this.ry.mult)
-      .rotateX(rotationX * this.rx.mult)
-      .rotateZ(-orientation[2] * this.or.mult)
-      .rotateY(orientation[1] * this.or.mult)
-      .rotateX(orientation[0] * this.or.mult)
+      .rotateZ(-rotationZ * rzMult)
+      .rotateY(rotationY * ryMult)
+      .rotateX(rotationX * rxMult)
+      .rotateZ(-orientation[2] * orMult)
+      .rotateY(orientation[1] * orMult)
+      .rotateX(orientation[0] * orMult)
   }
-  if (this.data.p && this.data.p.s) {
-    const positionX = this.px.getValueAtTime(time)
-    const positionY = this.py.getValueAtTime(time)
-    if (this.data.p.z) {
-      const positionZ = this.pz.getValueAtTime(time)
+  if (this.data.p && 's' in this.data.p) {
+    const positionX = this.px?.getValueAtTime(time) || 0,
+      positionY = this.py?.getValueAtTime(time) || 0,
+      pxMult = this.px?.mult ?? 1,
+      pyMult = this.py?.mult ?? 1
+    if ('z' in this.data.p) {
+      const positionZ = this.pz?.getValueAtTime(time) || 0,
+        pzMult = this.pz?.mult ?? 1
       matrix.translate(
-        positionX * this.px.mult,
-        positionY * this.py.mult,
-        -positionZ * this.pz.mult
+        positionX * pxMult,
+        positionY * pyMult,
+        -positionZ * pzMult
       )
     } else {
-      matrix.translate(positionX * this.px.mult, positionY * this.py.mult, 0)
+      matrix.translate(positionX * pxMult, positionY * pyMult, 0)
     }
   } else {
-    const position = this.p.getValueAtTime(time)
+    const position: number[] = this.p?.getValueAtTime(time) || [],
+      pMult = this.p?.mult ?? 1
     matrix.translate(
-      position[0] * this.p.mult,
-      position[1] * this.p.mult,
-      -position[2] * this.p.mult
+      position[0] * pMult,
+      position[1] * pMult,
+      -position[2] * pMult
     )
   }
   return matrix
   // / /
 }
 
-function getTransformStaticValueAtTime() {
+function getTransformStaticValueAtTime(this: TransformProperty) {
   return this.v.clone(new Matrix())
 }
 
@@ -409,22 +447,32 @@ PropertyFactory.getProp = (elem, data, type, mult, container) => {
   return prop
 }
 
-function getShapeValueAtTime(frameNumFromProps: number): ShapePath {
+function getShapeValueAtTime(
+  this: KeyframedShapeProperty,
+  frameNumFromProps: number
+): ShapePath {
+  if (!this.pv) {
+    throw new Error(`${this.constructor.name}: pv (ShapePath) is not set`)
+  }
+
   let frameNum = frameNumFromProps
+
   // For now this caching object is created only when needed instead of creating it when the shape is initialized.
   if (!this._cachingAtTime) {
     this._cachingAtTime = {
       lastIndex: 0,
       lastTime: initialDefaultFrame,
       shapeValue: clone(this.pv),
-    }
+    } as Caching
   }
 
-  frameNum *= this.elem.globalData.frameRate
+  frameNum *= this.elem?.globalData?.frameRate ?? 60
   frameNum -= this.offsetTime
-  if (frameNum !== this._cachingAtTime.lastTime) {
+  if (frameNum !== this._cachingAtTime?.lastTime) {
     this._cachingAtTime.lastIndex =
-      this._cachingAtTime.lastTime < frameNum ? this._caching.lastIndex : 0
+      this._cachingAtTime.lastTime < frameNum
+        ? (this._caching?.lastIndex ?? 0)
+        : 0
     this._cachingAtTime.lastTime = frameNum
     this.interpolateShape(
       frameNum,
@@ -465,21 +513,24 @@ class ShapeExpressions extends ShapeBaseProperty {
       this._segmentsLength = getSegmentsLength(shapePath)
     }
 
-    const segmentsLength = this._segmentsLength
-    const lengths = segmentsLength.lengths
-    const lengthPos = segmentsLength.totalLength * perc
+    const segmentsLength = this._segmentsLength,
+      lengths = segmentsLength?.lengths || [],
+      lengthPos = (segmentsLength?.totalLength || 0) * perc
     let i = 0
     const len = lengths.length
     let accumulatedLength = 0
     let pt
     while (i < len) {
       if (accumulatedLength + lengths[i].addedLength > lengthPos) {
-        const initIndex = i
-        const endIndex = shapePath.c && i === len - 1 ? 0 : i + 1
-        const segmentPerc =
-          (lengthPos - accumulatedLength) / lengths[i].addedLength
+        if (!shapePath) {
+          break
+        }
+        const initIndex = i,
+          endIndex = shapePath.c && i === len - 1 ? 0 : i + 1,
+          segmentPerc = (lengthPos - accumulatedLength) / lengths[i].addedLength
         pt = getPointInSegment(
-          sz.v[endIndex],
+          shapePath.v[initIndex],
+          shapePath.v[endIndex],
           shapePath.o[initIndex],
           shapePath.i[endIndex],
           segmentPerc,
@@ -504,7 +555,7 @@ class ShapeExpressions extends ShapeBaseProperty {
   points(time: number) {
     return this.vertices('v', time)
   }
-  setGroupProperty(_propertyGroup: any) {
+  setGroupProperty(_propertyGroup: LayerExpressionInterface) {
     throw new Error(
       `${this.constructor.name}: Method setGroupProperty is not inmplemented`
     )

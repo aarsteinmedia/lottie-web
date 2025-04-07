@@ -45,9 +45,12 @@ import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
+import Expressions from '@/utils/expressions/Expressions'
+import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
   registerEffect,
   registerRenderer,
+  setExpressionInterfaces,
   setExpressionsPlugin,
   setIDPrefix,
   setLocationHref,
@@ -154,5 +157,7 @@ export type {
   LottieManifest,
   Vector2,
 }
+
+// import Lottie from './lottie.min'
 
 export default Lottie

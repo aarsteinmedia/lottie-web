@@ -147,7 +147,7 @@ export default class Matrix {
     return matr
   }
 
-  cloneFromProps(props: number[]): this {
+  cloneFromProps(props: Float32Array): this {
     this.props.set(props)
     return this
   }

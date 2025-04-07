@@ -34,10 +34,13 @@ import TransformProperty from '@/utils/TransformProperty'
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
   dashResetter = []
-  prevViewData: ElementInterfaceIntersect[]
+  prevViewData: ShapeGroupData[]
 
   stylesList: CVStyleElement[]
-  transformHelper = { _opMdf: false, opacity: 1 }
+  transformHelper = {
+    _opMdf: false,
+    opacity: 1,
+  } as TransformProperty
   transformsManager: ShapeTransformManager
 
   constructor(
@@ -283,7 +286,7 @@ export default class CVShapeElement extends ShapeElement {
           this as unknown as ElementInterfaceIntersect
         ),
         opacity: 1,
-      },
+      } as Transformer,
     }
     return elementData
   }
@@ -680,18 +683,16 @@ export default class CVShapeElement extends ShapeElement {
 
   searchShapes(
     arr: Shape[],
-    itemsData,
-    prevViewData,
+    itemsData: ShapeGroupData[],
+    prevViewData: ShapeGroupData[],
     shouldRenderFromProps: boolean,
-    transforms
+    transforms: Transformer[]
   ) {
     let shouldRender = shouldRenderFromProps
-    let len = arr.length - 1
-    let jLen
-    const ownStyles = []
-    const ownModifiers = []
-    let modifier
-    let currentTransform
+    const len = arr.length - 1,
+      ownStyles = [],
+      ownModifiers = []
+    let modifier, currentTransform
     const ownTransforms = [...transforms]
     for (let i = len; i >= 0; i -= 1) {
       const processedPos = this.searchProcessedElement(arr[i])
@@ -700,85 +701,92 @@ export default class CVShapeElement extends ShapeElement {
       } else {
         arr[i]._shouldRender = shouldRender
       }
-      if (
-        arr[i].ty === 'fl' ||
-        arr[i].ty === 'st' ||
-        arr[i].ty === 'gf' ||
-        arr[i].ty === 'gs'
-      ) {
-        if (processedPos) {
-          itemsData[i].style.closed = false
-        } else {
-          itemsData[i] = this.createStyleElement(arr[i], ownTransforms)
-        }
 
-        ownStyles.push(itemsData[i].style)
-      } else if (arr[i].ty === ShapeType.Group) {
-        if (processedPos) {
-          jLen = itemsData[i].it.length
-          for (let j = 0; j < jLen; j++) {
-            itemsData[i].prevViewData[j] = itemsData[i].it[j]
+      switch (arr[i].ty) {
+        case ShapeType.Fill:
+        case ShapeType.Stroke:
+        case ShapeType.GradientFill:
+        case ShapeType.GradientStroke: {
+          if (processedPos) {
+            itemsData[i].style.closed = false
+          } else {
+            itemsData[i] = this.createStyleElement(arr[i], ownTransforms)
           }
-        } else {
-          itemsData[i] = this.createGroupElement(arr[i])
+
+          ownStyles.push(itemsData[i].style)
+          break
         }
-        this.searchShapes(
-          arr[i].it || [],
-          itemsData[i].it,
-          itemsData[i].prevViewData,
-          shouldRender,
-          ownTransforms
-        )
-      } else if (arr[i].ty === ShapeType.Transform) {
-        if (!processedPos) {
-          currentTransform = this.createTransformElement(arr[i])
-          itemsData[i] = currentTransform
-        }
-        ownTransforms.push(itemsData[i])
-        this.addTransformToStyleList(itemsData[i])
-      } else if (
-        arr[i].ty === ShapeType.Path ||
-        arr[i].ty === ShapeType.Rectangle ||
-        arr[i].ty === ShapeType.Ellipse ||
-        arr[i].ty === ShapeType.PolygonStar
-      ) {
-        if (!processedPos) {
-          itemsData[i] = this.createShapeElement(arr[i])
-        }
-      } else if (
-        arr[i].ty === ShapeType.Trim ||
-        arr[i].ty === ShapeType.RoundedCorners ||
-        arr[i].ty === ShapeType.PuckerBloat ||
-        arr[i].ty === ShapeType.ZigZag ||
-        arr[i].ty === ShapeType.OffsetPath
-      ) {
-        if (processedPos) {
-          modifier = itemsData[i]
-          modifier.closed = false
-        } else {
-          modifier = getModifier(arr[i].ty)
-          modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
-          itemsData[i] = modifier
-          this.shapeModifiers.push(modifier)
-        }
-        ownModifiers.push(modifier)
-      } else if (arr[i].ty === ShapeType.Repeater) {
-        if (processedPos) {
-          modifier = itemsData[i]
-          modifier.closed = true
-        } else {
-          modifier = getModifier(arr[i].ty)
-          itemsData[i] = modifier
-          modifier.init(
-            this as unknown as ElementInterfaceIntersect,
-            arr,
-            i,
-            itemsData
+        case ShapeType.Group: {
+          if (processedPos) {
+            const { length: jLen } = itemsData[i].it
+            for (let j = 0; j < jLen; j++) {
+              itemsData[i].prevViewData[j] = itemsData[i].it[j]
+            }
+          } else {
+            itemsData[i] = this.createGroupElement(arr[i])
+          }
+          this.searchShapes(
+            arr[i].it || [],
+            itemsData[i].it,
+            itemsData[i].prevViewData,
+            shouldRender,
+            ownTransforms
           )
-          this.shapeModifiers.push(modifier)
-          shouldRender = false
+          break
         }
-        ownModifiers.push(modifier)
+        case ShapeType.Transform: {
+          if (!processedPos) {
+            currentTransform = this.createTransformElement(arr[i])
+            itemsData[i] = currentTransform
+          }
+          ownTransforms.push(itemsData[i])
+          this.addTransformToStyleList(itemsData[i])
+          break
+        }
+        case ShapeType.Path:
+        case ShapeType.Rectangle:
+        case ShapeType.Ellipse:
+        case ShapeType.PolygonStar: {
+          if (!processedPos) {
+            itemsData[i] = this.createShapeElement(arr[i])
+          }
+          break
+        }
+        case ShapeType.Trim:
+        case ShapeType.RoundedCorners:
+        case ShapeType.PuckerBloat:
+        case ShapeType.ZigZag:
+        case ShapeType.OffsetPath: {
+          if (processedPos) {
+            modifier = itemsData[i]
+            modifier.closed = false
+          } else {
+            modifier = getModifier(arr[i].ty)
+            modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
+            itemsData[i] = modifier
+            this.shapeModifiers.push(modifier)
+          }
+          ownModifiers.push(modifier)
+          break
+        }
+        case ShapeType.Repeater: {
+          if (processedPos) {
+            modifier = itemsData[i]
+            modifier.closed = true
+          } else {
+            modifier = getModifier(arr[i].ty)
+            itemsData[i] = modifier
+            modifier.init(
+              this as unknown as ElementInterfaceIntersect,
+              arr,
+              i,
+              itemsData
+            )
+            this.shapeModifiers.push(modifier)
+            shouldRender = false
+          }
+          ownModifiers.push(modifier)
+        }
       }
       this.addProcessedElement(
         arr[i] as unknown as ElementInterfaceIntersect,
@@ -787,8 +795,8 @@ export default class CVShapeElement extends ShapeElement {
     }
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
-    len = ownModifiers.length
-    for (let i = 0; i < len; i++) {
+    const { length } = ownModifiers
+    for (let i = 0; i < length; i++) {
       ownModifiers[i].closed = true
     }
   }

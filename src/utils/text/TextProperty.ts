@@ -4,7 +4,7 @@ import type {
   TextData,
   Vector2,
   ElementInterfaceIntersect,
-  CompElementInterface,
+  TextEffectFunction,
 } from '@/types'
 import type LetterProps from '@/utils/text/LetterProps'
 
@@ -18,26 +18,19 @@ import {
   isZeroWidthJoiner,
 } from '@/utils/FontManager'
 import { initialDefaultFrame } from '@/utils/getterSetter'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-
-type EffectFunction = (data: DocumentData, value: string) => DocumentData
-export default class TextProperty extends DynamicPropertyContainer {
+import { BaseProperty } from '@/utils/Properties'
+export default class TextProperty extends BaseProperty {
   _frameId: number
-  _isFirstFrame: boolean
   canResize: boolean
-  comp?: CompElementInterface
   currentData: DocumentData
-  data?: TextData
+  override data: TextData
   defaultBoxWidth: Vector2 = [0, 0]
-  effectsSequence: EffectFunction[]
-  elem: ElementInterfaceIntersect
-  frameId?: number
+  override effectsSequence: TextEffectFunction[]
+  override elem: ElementInterfaceIntersect
   keysIndex: number
-  kf: boolean
-  lock?: boolean
   minimumFontSize: number
-  pv: DocumentData | string
-  v: DocumentData | string
+  override pv: DocumentData | string
+  override v: DocumentData | string
 
   constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
@@ -93,7 +86,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     }
   }
 
-  addEffect(effectFunction: EffectFunction) {
+  override addEffect(effectFunction: TextEffectFunction) {
     this.effectsSequence.push(effectFunction)
     this.elem.addDynamicProperty(this)
   }
@@ -476,11 +469,7 @@ export default class TextProperty extends DynamicPropertyContainer {
     }
     return this.data.d?.k[this.keysIndex].s
   }
-  getValue() {
-    throw new Error(
-      `${this.constructor.name}: Method getValue is not implemented`
-    )
-  }
+
   override getValue(_finalValue: unknown) {
     if (!this.data) {
       throw new Error(
@@ -558,7 +547,7 @@ export default class TextProperty extends DynamicPropertyContainer {
 
     this.kf = this.data.d.k.length > 1
     if (this.kf) {
-      this.addEffect(this.getKeyframeValue.bind(this) as EffectFunction)
+      this.addEffect(this.getKeyframeValue.bind(this) as TextEffectFunction)
     }
     return this.kf
   }

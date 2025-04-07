@@ -1167,13 +1167,21 @@ export interface Keyframe {
   to: Vector2
 }
 
+export type EffectFunction = (...args: any[]) => any
+
+export type TextEffectFunction = (
+  data: DocumentData,
+  value: string
+) => DocumentData
+
 export interface Caching {
   _lastAddedLength: number
   _lastKeyframeIndex: number
   _lastPoint: number
   lastFrame: number
   lastIndex: number
-  shapeValue?: ShapePath
+  lastTime: number
+  shapeValue: ShapePath
   value: number | number[]
 }
 

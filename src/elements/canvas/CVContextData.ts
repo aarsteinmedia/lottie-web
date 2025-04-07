@@ -270,16 +270,14 @@ export default class CVContextData {
     }
   }
 
-  transform(props: number[]) {
+  transform(props: Float32Array) {
     this.transformMat.cloneFromProps(props)
     // Taking the last transform value from the stored stack of transforms
     const currentTransform = this.cTr
     // Applying the last transform value after the new transform to respect the order of transformations
     this.transformMat.multiply(currentTransform)
     // Storing the new transformed value in the stored transform
-    currentTransform.cloneFromProps(
-      this.transformMat.props as unknown as number[]
-    )
+    currentTransform.cloneFromProps(this.transformMat.props)
     const trProps = currentTransform.props
     // Applying the new transform to the canvas
     this.nativeContext?.setTransform(

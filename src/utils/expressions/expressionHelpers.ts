@@ -1,7 +1,7 @@
-import type { ElementInterfaceIntersect, VectorProperty } from '@/types'
+import type { ElementInterfaceIntersect } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
 import type { BaseProperty } from '@/utils/Properties'
-import type ShapePath from '@/utils/shapes/ShapePath'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
@@ -27,7 +27,7 @@ export function getSpeedAtTime(this: BaseProperty, frameNum: number) {
 }
 
 export function getValueAtTime(
-  this: TextExpressionSelectorPropFactory,
+  this: TextSelectorProperty,
   frameNumFromProps: number
 ) {
   if (!this.elem?.globalData) {
@@ -75,14 +75,14 @@ export function getVelocityAtTime(this: BaseProperty, frameNum: number) {
   return velocity as number | number[]
 }
 
-export function getStaticValueAtTime(this: TextExpressionSelectorPropFactory) {
+export function getStaticValueAtTime(this: TextSelectorProperty) {
   return this.pv
 }
 
 export function searchExpressions(
   elem: ElementInterfaceIntersect,
-  data: TextSelectorProperty | VectorProperty<ShapePath[]>,
-  prop: TextExpressionSelectorPropFactory | ShapeProperty
+  data: TextSelectorProperty,
+  prop: TextSelectorProperty | ShapeProperty
 ) {
   if (!data.x) {
     return
@@ -95,6 +95,9 @@ export function searchExpressions(
   )
 }
 
-export function setGroupProperty(propertyGroup) {
+export function setGroupProperty(
+  this: BaseProperty,
+  propertyGroup: LayerExpressionInterface
+) {
   this.propertyGroup = propertyGroup
 }

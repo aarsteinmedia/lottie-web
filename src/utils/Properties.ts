@@ -2,13 +2,19 @@
 import type {
   Caching,
   CompElementInterface,
+  DocumentData,
+  EffectFunction,
   ElementInterfaceIntersect,
   Keyframe,
   Shape,
+  TextData,
+  TextRangeValue,
   Vector2,
   Vector3,
   VectorProperty,
 } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type Matrix from '@/utils/Matrix'
 
 import { ArrayType } from '@/enums'
 import { createQuaternion, quaternionToEuler, slerp } from '@/utils'
@@ -22,17 +28,19 @@ import { getBezierEasing } from '@/utils/BezierFactory'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-
-import LayerExpressionInterface from './expressions/LayerInterface'
 export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
   _isFirstFrame?: boolean
   _placeholder?: boolean
   comp?: CompElementInterface
-  data?: VectorProperty<number | number[] | Keyframe[]>
-  e?: unknown
-  effectsSequence: ((arg: unknown) => any)[] = []
+  data?:
+    | VectorProperty<number | number[] | Keyframe[]>
+    | Shape
+    | TextRangeValue
+    | TextData
+  e?: ValueProperty | { v: number }
+  effectsSequence: EffectFunction[] = []
   elem?: ElementInterfaceIntersect
   frameId?: number
   g?: unknown
@@ -48,16 +56,18 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   mult?: number
   offsetTime = 0
   propertyGroup?: LayerExpressionInterface
-  pv?: number | number[]
-  s?: unknown
+  pv?: string | number | number[] | DocumentData
+  s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape
-  v?: number | number[]
+  v?: string | number | number[] | Matrix | DocumentData
   value?: number | number[]
   vel?: number | number[]
-  addEffect(effectFunction: any) {
+
+  addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
   }
+
   getSpeedAtTime(_frameNum: number) {
     throw new Error(
       `${this.constructor.name}: Method getSpeedAtTime is not implemented`
@@ -346,17 +356,19 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       return
     }
     if (this.lock) {
-      this.setVValue(this.pv)
+      this.setVValue(this.pv as number | number[])
       return
     }
     this.lock = true
     this._mdf = !!this._isFirstFrame
     const len = this.effectsSequence.length
-    let finalValue = this.kf ? this.pv : this.data.k
+    let finalValue = this.kf
+      ? this.pv
+      : (this.data as VectorProperty<Keyframe[]>).k
     for (let i = 0; i < len; i++) {
       finalValue = this.effectsSequence[i](finalValue)
     }
-    this.setVValue(finalValue)
+    this.setVValue(finalValue as number | number[])
     this._isFirstFrame = false
     this.lock = false
     this.frameId = this.elem?.globalData.frameId

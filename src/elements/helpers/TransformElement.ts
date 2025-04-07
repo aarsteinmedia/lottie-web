@@ -146,7 +146,7 @@ export default class TransformElement extends BaseElement {
       }
 
       if (this.finalTransform._matMdf) {
-        const mat = this.finalTransform.mProp.v.props as unknown as number[]
+        const mat = this.finalTransform.mProp.v.props
         finalMat.cloneFromProps(mat)
         for (i = 0; i < length; i++) {
           if (this.hierarchy[i].finalTransform?.mProp.v) {

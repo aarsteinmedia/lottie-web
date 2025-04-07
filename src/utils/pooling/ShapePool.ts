@@ -8,8 +8,8 @@ export const newElement = _factory.newElement,
   release = _factory.release
 
 export function clone(shape: ShapePath) {
-  const cloned = newElement<ShapePath>()
-  const len = shape._length === undefined ? shape.v.length : shape._length
+  const cloned = newElement<ShapePath>(),
+    len = shape._length === undefined ? shape.v.length : shape._length
   cloned.setLength(len)
   cloned.c = shape.c
 

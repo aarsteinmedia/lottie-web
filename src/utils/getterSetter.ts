@@ -21,6 +21,7 @@ const expressions: {
   interface: null,
   plugin: null,
 }
+
 export const setExpressionsPlugin = (value: typeof Expressions) => {
     expressions.plugin = value
   },

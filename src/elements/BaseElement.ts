@@ -1,3 +1,4 @@
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type MaskElement from '@/elements/MaskElement'
 import type {
   CompElementInterface,
@@ -21,7 +22,7 @@ export default abstract class BaseElement {
   data?: LottieLayer
   effectsManager?: EffectsManager
   globalData?: GlobalData
-  itemsData: ElementInterfaceIntersect[] = []
+  itemsData: ShapeGroupData[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
   layerInterface?: LayerExpressionInterface
@@ -83,12 +84,17 @@ export default abstract class BaseElement {
     if (!ExpressionsInterfaces) {
       return
     }
-    const LayerExpressionInterface = new ExpressionsInterfaces('layer'),
+    const layerExpressionInterface = new ExpressionsInterfaces(
+        'layer'
+      ) as unknown as typeof LayerExpressionInterface,
       EffectsExpressionInterface = new ExpressionsInterfaces('effects'),
       ShapeExpressionInterface = new ExpressionsInterfaces('shape'),
       TextExpressionInterface = new ExpressionsInterfaces('text'),
       CompExpressionInterface = new ExpressionsInterfaces('comp')
-    this.layerInterface = (LayerExpressionInterface as any)(this) // TODO:
+    this.layerInterface = new layerExpressionInterface(
+      this as unknown as ElementInterfaceIntersect
+    )
+
     if (this.data.hasMask && this.maskManager) {
       this.layerInterface?.registerMaskInterface?.(this.maskManager)
     }

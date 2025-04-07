@@ -1,29 +1,21 @@
-import type {
-  CompElementInterface,
-  ElementInterfaceIntersect,
-  TextRangeValue,
-} from '@/types'
+import type { ElementInterfaceIntersect, TextRangeValue } from '@/types'
 
 import { getBezierEasing } from '@/utils/BezierFactory'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-import { ValueProperty } from '@/utils/Properties'
+import { BaseProperty, ValueProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class TextSelectorProperty extends DynamicPropertyContainer {
+export default class TextSelectorProperty extends BaseProperty {
   _currentTextLength: number
   a: ValueProperty
   b?: ValueProperty
-  comp?: CompElementInterface
-  data: TextRangeValue
-  e: ValueProperty | { v: number }
-  elem: ElementInterfaceIntersect
+  override data: TextRangeValue
+  override e: ValueProperty | { v: number }
+  override elem: ElementInterfaceIntersect
   finalE: number
   finalS: number
-  k: boolean
   ne: ValueProperty
   o: ValueProperty
   rn?: number
-  s: ValueProperty
   sm: ValueProperty
   totalChars?: number
   x?: boolean

@@ -5,24 +5,30 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
 
 import { degToRads } from '@/utils'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import Matrix from '@/utils/Matrix'
+import {
+  BaseProperty,
+  type MultiDimensionalProperty,
+  type ValueProperty,
+} from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
-export default class TransformProperty extends DynamicPropertyContainer {
+export default class TransformProperty extends BaseProperty {
   _isDirty?: boolean
+  _opMdf?: boolean
+  _transformCachingAtTime?: {
+    v: Matrix
+  }
   a?: MultiDimensionalProperty<Vector3>
   appliedTransformations: number
   autoOriented?: boolean
-  data: Shape
-  elem: ElementInterfaceIntersect
-  frameId: number
+  override data: Shape
+  override elem: ElementInterfaceIntersect
+  // frameId: number
   o?: ValueProperty
+  opacity?: number
   or?: MultiDimensionalProperty<Vector3>
   p?: MultiDimensionalProperty<Vector3>
   pre: Matrix
@@ -34,10 +40,10 @@ export default class TransformProperty extends DynamicPropertyContainer {
   rx?: ValueProperty
   ry?: ValueProperty
   rz?: ValueProperty
-  s?: MultiDimensionalProperty<Vector3>
+  override s?: MultiDimensionalProperty<Vector3>
   sa?: ValueProperty
   sk?: ValueProperty
-  v: Matrix
+  override v: Matrix
   private defaultVector: Vector2 = [0, 0]
   constructor(
     elem: ElementInterfaceIntersect,
@@ -182,7 +188,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
   }
   override addDynamicProperty(prop: DynamicPropertyContainer) {
     super.addDynamicProperty(prop)
-    this.elem.addDynamicProperty(prop)
+    this.elem?.addDynamicProperty(prop)
     this._isDirty = true
   }
   applyToMatrix(mat: Matrix) {
@@ -251,7 +257,7 @@ export default class TransformProperty extends DynamicPropertyContainer {
 
     if (this._mdf || forceRender) {
       let frameRate
-      this.v.cloneFromProps(this.pre.props as unknown as number[])
+      this.v.cloneFromProps(this.pre.props)
       if (this.appliedTransformations < 1 && this.a) {
         this.v.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
       }

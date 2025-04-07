@@ -73,6 +73,7 @@ function getShapeProp(
 
 export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
+  _cachingAtTime?: Caching
   public comp?: CompElementInterface
   public data?: Shape
   public effectsSequence: ((arg: unknown) => ShapePath)[] = []
@@ -899,6 +900,7 @@ class EllShapeProperty extends ShapeBaseProperty {
 export class ShapeProperty extends ShapeBaseProperty {
   ix?: number
   pathsData?: ShapePath[] | ShapePath
+  propertyIndex?: number
   shape?: {
     _mdf?: boolean
     paths?: {

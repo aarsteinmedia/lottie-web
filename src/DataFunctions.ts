@@ -1,4 +1,3 @@
-/* eslint-disable max-depth */
 import type {
   AnimationData,
   Characacter,
@@ -444,10 +443,12 @@ class CheckShapes {
           }
           const { length: kLen } = (maskProps[j].pt?.k as ShapePath[]) || []
           for (let k = 0; k < kLen; k++) {
+            // eslint-disable-next-line max-depth
             if ((maskProps[j].pt?.k as ShapePath[])[k].s) {
               ;(maskProps[j].pt?.k as ShapePath[])[k].s![0].c =
                 !!maskProps?.[j].cl
             }
+            // eslint-disable-next-line max-depth
             if ((maskProps[j].pt?.k as ShapePath[])[k].e) {
               ;(maskProps[j].pt?.k as ShapePath[])[k].e![0].c =
                 !!maskProps?.[j].cl
