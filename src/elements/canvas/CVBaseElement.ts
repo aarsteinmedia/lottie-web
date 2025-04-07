@@ -208,10 +208,9 @@ export default class CVBaseElement {
   }
 
   initRendererElement() {
-    // TODO: Pass through?
-    throw new Error(
-      `${this.constructor.name}: initRendererElement is not implemented`
-    )
+    // throw new Error(
+    //   `${this.constructor.name}: initRendererElement is not implemented`
+    // )
   }
   prepareLayer() {
     if (!this.data) {

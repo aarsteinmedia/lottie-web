@@ -637,19 +637,19 @@ export default class ExpressionManager {
     return [yaw, pitch, 0]
   }
 
-  loop_in(_type?: string, _duration?: number, _duration?: boolean) {
+  loop_in(_type?: string, _duration?: number, _flag?: boolean) {
     throw new Error(
       `${this.constructor.name}: Method loop_in is not implemented`
     )
   }
 
-  loop_out(_type?: string, _duration?: number, _duration?: boolean) {
+  loop_out(_type?: string, _duration?: number, _flag?: boolean) {
     throw new Error(
       `${this.constructor.name}: Method loop_out is not implemented`
     )
   }
 
-  loopIn(_type?: string, _duration?: number, _duration?: boolean) {
+  loopIn(_type?: string, _duration?: number, _flag?: boolean) {
     throw new Error(
       `${this.constructor.name}: Method loopIn is not implemented`
     )
@@ -658,7 +658,7 @@ export default class ExpressionManager {
     return this.loopIn(type, duration, true)
   }
 
-  loopOut(_type?: string, _duration?: number, _duration?: boolean) {
+  loopOut(_type?: string, _duration?: number, _flag?: boolean) {
     throw new Error(
       `${this.constructor.name}: Method loopOut is not implemented`
     )

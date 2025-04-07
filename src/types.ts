@@ -909,6 +909,7 @@ export interface Effect {
   en: 1 | 0
   fs?: FilterSizeConfig
   ix?: number
+  mn?: string
   nm?: string
   np: number
   ty: number
@@ -1015,7 +1016,7 @@ export interface LottieLayer {
   /** Whether transforms should be applied before or after masks */
   ct?: 0 | 1
   ddd?: 0 | 1
-  ef?: Readonly<Effect[]>
+  ef?: Effect[]
   fonts?: {
     list: DocumentData[]
   }

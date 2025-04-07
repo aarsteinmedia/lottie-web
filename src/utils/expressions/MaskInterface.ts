@@ -3,7 +3,7 @@ import type { Shape, ViewData } from '@/types'
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
-class MaskInterface {
+export class MaskInterface {
   _data: Shape
   _mask: ViewData
   constructor(mask: ViewData, data: Shape) {

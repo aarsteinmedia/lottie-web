@@ -1,4 +1,5 @@
 import type TransformEffect from '@/effects/TransformEffect'
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   CompElementInterface,
   CVElement,
@@ -15,22 +16,20 @@ import type {
   MultiDimensionalProperty,
   ValueProperty,
 } from '@/utils/Properties'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import { lineCapEnum, lineJoinEnum, RendererType, ShapeType } from '@/enums'
-import CanvasRenderer from '@/renderers/CanvasRenderer'
 import { degToRads } from '@/utils'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformProperty from '@/utils/TransformProperty'
-
-import ShapeGroupData from '../helpers/shapes/ShapeGroupData'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
@@ -81,6 +80,8 @@ export default class CVShapeElement extends ShapeElement {
     this.renderFrame = renderFrame
     this.setBlendMode = setBlendMode
     this.showElement = showElement
+
+    console.log(this.initExpressions)
 
     this.initElement(data, globalData, comp)
   }

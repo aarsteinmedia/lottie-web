@@ -10,6 +10,7 @@ import { ValueProperty } from '@/utils/Properties'
 
 export default class CompElement extends RenderableDOMElement {
   completeLayers?: boolean
+  currentFrame = 0
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
   renderedFrame?: number

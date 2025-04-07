@@ -101,6 +101,7 @@ export default abstract class BaseElement {
 
     if (this.data.ty === 0 || this.data.xt) {
       this.compInterface = (CompExpressionInterface as any)(this)
+
       return
     }
     if (this.data.ty === 4) {
@@ -110,6 +111,7 @@ export default abstract class BaseElement {
         this.layerInterface
       )
       this.layerInterface!.content = this.layerInterface?.shapeInterface
+
       return
     }
     if (this.data.ty === 5) {

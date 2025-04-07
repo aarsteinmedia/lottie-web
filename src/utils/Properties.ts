@@ -22,6 +22,8 @@ import { getBezierEasing } from '@/utils/BezierFactory'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+
+import LayerExpressionInterface from './expressions/LayerInterface'
 export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
@@ -45,6 +47,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   lock?: boolean
   mult?: number
   offsetTime = 0
+  propertyGroup?: LayerExpressionInterface
   pv?: number | number[]
   s?: unknown
   sh?: Shape
@@ -54,6 +57,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   addEffect(effectFunction: any) {
     this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
+  }
+  getSpeedAtTime(_frameNum: number) {
+    throw new Error(
+      `${this.constructor.name}: Method getSpeedAtTime is not implemented`
+    )
   }
   getValueAtCurrentTime() {
     const offsetTime = Number(this.offsetTime),
@@ -87,6 +95,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   ): T {
     throw new Error(
       `${this.constructor.name}: Method getValueAtTime is not implemented`
+    )
+  }
+  getVelocityAtTime(_frameNum: number): number {
+    throw new Error(
+      `${this.constructor.name}: Method getVelocityAtTime is not implemented`
     )
   }
   interpolateValue(frameNum: number, caching?: Caching) {

@@ -17,6 +17,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 export default class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
   completeLayers: boolean
+  currentFrame = 0
   elements: ElementInterfaceIntersect[]
   layers: LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
