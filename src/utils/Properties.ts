@@ -15,6 +15,7 @@ import type {
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type Matrix from '@/utils/Matrix'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/enums'
 import { createQuaternion, quaternionToEuler, slerp } from '@/utils'
@@ -56,7 +57,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   mult?: number
   offsetTime = 0
   propertyGroup?: LayerExpressionInterface
-  pv?: string | number | number[] | DocumentData
+  pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape
   v?: string | number | number[] | Matrix | DocumentData

@@ -1,4 +1,7 @@
-import { Shape } from '@/types'
+import type { Shape } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+
+import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
@@ -9,7 +12,11 @@ export default class ShapeExpressionInterface {
   numProperties: number
   propertyGroup: any
   private interfaces: ShapePathInterface[]
-  constructor(shapes: Shape[], view, propertyGroup) {
+  constructor(
+    shapes: Shape[],
+    view: ShapeGroupData[],
+    propertyGroup: LayerExpressionInterface
+  ) {
     const _interfaceFunction = (valueFromProps?: number) => {
         let value = valueFromProps
         if (typeof value === 'number') {
@@ -42,11 +49,15 @@ export default class ShapeExpressionInterface {
     this.numProperties = this.interfaces.length
     this._name = 'Contents'
   }
-  contentsInterfaceFactory(shape: Shape, view, propertyGroup) {
-    const interfaceFunction = (value) => {
+  contentsInterfaceFactory(
+    shape: Shape,
+    view: ShapeGroupData,
+    propertyGroup: (val: any) => any
+  ) {
+    const interfaceFunction = (value: string | number) => {
       let i = 0
-      const len = this.interfaces.length
-      while (i < len) {
+      const { length } = this.interfaces || []
+      while (i < length) {
         if (
           this.interfaces[i]._name === value ||
           this.interfaces[i].mn === value ||
@@ -105,6 +116,7 @@ export default class ShapeExpressionInterface {
       interfaceFunction,
       propertyGroup
     )
+
     interfaceFunction.propertyIndex = shape.ix
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
     prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
@@ -294,6 +306,7 @@ export default class ShapeExpressionInterface {
       }
       return null
     }
+
     const _propertyGroup = propertyGroupFactory(
       interfaceFunction,
       propertyGroup
@@ -487,6 +500,7 @@ export default class ShapeExpressionInterface {
     const dashOb = {}
     for (let i = 0; i < len; i++) {
       addPropertyToDashOb(i)
+
       view.d.dataProps[i].p.setGroupProperty(_dashPropertyGroup)
     }
 
@@ -573,6 +587,7 @@ export default class ShapeExpressionInterface {
         new PropertyInterface('Skew Angle', _propertyGroup)
       )
     }
+
     view.transform.op.setGroupProperty(
       new PropertyInterface('Opacity', _propertyGroup)
     )
@@ -607,14 +622,14 @@ export default class ShapeExpressionInterface {
   }
 
   trimInterfaceFactory(shape: Shape, view, propertyGroup) {
-    const interfaceFunction = (val) => {
-      if (val === shape.e.ix || val === 'End' || val === 'end') {
+    const interfaceFunction = (val: string | number) => {
+      if (val === shape.e?.ix || val === 'End' || val === 'end') {
         return interfaceFunction.end
       }
-      if (val === shape.s.ix) {
+      if (val === shape.s?.ix) {
         return interfaceFunction.start
       }
-      if (val === shape.o.ix) {
+      if (val === shape.o?.ix) {
         return interfaceFunction.offset
       }
       return null

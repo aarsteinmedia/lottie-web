@@ -1,11 +1,15 @@
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
-import type { EffectElement } from '@/types'
+import type {
+  EffectElement,
+  ExpressionInterface,
+  ExpressionInterfaces,
+  GetInterface,
+} from '@/types'
 import type Expressions from '@/utils/expressions/Expressions'
-import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 
 import { RendererType } from '@/enums'
-import CanvasRenderer from '@/renderers/CanvasRenderer'
-import HybridRenderer from '@/renderers/HybridRenderer'
 
 export const initialDefaultFrame = -999999,
   roundCorner = 0.5519
@@ -15,7 +19,7 @@ export const initialDefaultFrame = -999999,
  * Expressions plugin/interface
  */
 const expressions: {
-  interface: null | typeof ProjectInterface
+  interface: null | GetInterface
   plugin: null | typeof Expressions
 } = {
   interface: null,
@@ -26,8 +30,10 @@ export const setExpressionsPlugin = (value: typeof Expressions) => {
     expressions.plugin = value
   },
   getExpressionsPlugin = () => expressions.plugin,
-  setExpressionInterfaces = (value: typeof ProjectInterface) => {
-    expressions.interface = value
+  setExpressionInterfaces = (
+    getInterface: (type: keyof ExpressionInterfaces) => ExpressionInterface
+  ) => {
+    expressions.interface = getInterface
   },
   getExpressionInterfaces = () => expressions.interface
 /**

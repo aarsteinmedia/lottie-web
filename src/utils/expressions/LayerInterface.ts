@@ -1,5 +1,8 @@
+import type { ElementInterfaceIntersect, Vector2, Vector4 } from '@/types'
+import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
+
 import MaskElement from '@/elements/MaskElement'
-import { ElementInterfaceIntersect, Vector2, Vector4 } from '@/types'
 import MaskManager from '@/utils/expressions/MaskInterface'
 import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 // import {
@@ -10,32 +13,24 @@ import Matrix from '@/utils/Matrix'
 export default class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
   _name: string
-
   active?: boolean
-
+  content?: ShapeExpressionInterface
   hasParent: boolean
-
   height?: number
-
   index?: number
-
   inPoint: number
-
   mask?: MaskManager
-
   opacity: any
-
   outPoint: number
-
   parent?: LayerExpressionInterface
-
   position: Vector2
-
+  shapeInterface?: ShapeExpressionInterface
   source?: string
   startTime: number
-
-  transformInterface?: TransformExpressionInterface
-
+  text?: TextExpressionInterface
+  textInterface?: TextExpressionInterface
+  transform?: TransformExpressionInterface
+  transformInterface: TransformExpressionInterface
   width?: number
 
   constructor(elem: ElementInterfaceIntersect) {
@@ -43,14 +38,18 @@ export default class LayerExpressionInterface {
     this.toComp = this.toWorld
     this.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
 
-    if (elem.finalTransform?.mProp) {
-      this.transformInterface = new TransformExpressionInterface(
-        elem.finalTransform.mProp
+    if (!elem.finalTransform?.mProp) {
+      throw new Error(
+        `${this.constructor.name}: elem->finalTransform->mProp is not set`
       )
     }
 
+    this.transformInterface = new TransformExpressionInterface(
+      elem.finalTransform.mProp
+    )
+
     const { anchorPoint, opacity, position, rotation, scale } =
-      TransformExpressionInterface.prototype
+      this.transformInterface
 
     this.anchorPointDescriptor = anchorPoint
 
@@ -59,8 +58,8 @@ export default class LayerExpressionInterface {
     this.source = elem.data.refId
     this.height = elem.data.ty === 0 ? elem.data.h : 100
     this.width = elem.data.ty === 0 ? elem.data.w : 100
-    this.inPoint = elem.data.ip / (elem.comp?.globalData.frameRate || 60)
-    this.outPoint = elem.data.op / (elem.comp?.globalData.frameRate || 60)
+    this.inPoint = elem.data.ip / (elem.comp?.globalData?.frameRate || 60)
+    this.outPoint = elem.data.op / (elem.comp?.globalData?.frameRate || 60)
     this._name = elem.data.nm
 
     this.anchor_point = this.anchorPointDescriptor
@@ -70,14 +69,14 @@ export default class LayerExpressionInterface {
     this.active = this._elem.isInRange
 
     this.opacity = opacity
-    this.parent = elem.hierarchy?.[0].layerInterface
+    this.parent = elem.hierarchy?.[0]?.layerInterface
     this.position = position
     this.rotation = rotation
     this.scale = scale
     this.transform = this.transformInterface
   }
 
-  anchorPointDescriptor() {
+  anchorPointDescriptor(): Vector2 {
     throw new Error(
       `${this.constructor.name}: Method anchorPointDescriptor is not implemented`
     )
@@ -119,12 +118,14 @@ export default class LayerExpressionInterface {
   }
   public getMatrix(time?: number) {
     const toWorldMat = new Matrix()
-    if (time !== undefined) {
-      const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(time)
-      propMatrix.clone(toWorldMat)
-    } else {
+    if (time === undefined) {
       const transformMat = this._elem.finalTransform?.mProp
       transformMat?.applyToMatrix(toWorldMat)
+    } else {
+      const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(
+        time
+      ) as unknown as Matrix
+      propMatrix?.clone(toWorldMat)
     }
     return toWorldMat
   }

@@ -88,11 +88,11 @@ export default class ExpressionManager {
   val?: string | number | number[]
 
   value?: string | number | number[]
-  valueAtTime
+  valueAtTime?: string | number | number[]
 
   velocity?: number
 
-  velocityAtTime
+  velocityAtTime?: number
 
   width = 0
   // const Math = BMMath

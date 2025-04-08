@@ -9,7 +9,7 @@ import type {
   Vector2,
   VectorProperty,
 } from '@/types'
-import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
+import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 import type {
   MultiDimensionalProperty,
   ValueProperty,
@@ -40,7 +40,7 @@ function getShapeProp(
   data: Shape,
   type: number
   // _?: unknown
-): null | ShapeProperty {
+) {
   let prop = null
 
   switch (type) {
@@ -97,7 +97,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   initiateExpression(
     _elem: ElementInterfaceIntersect,
     _data: TextSelectorProperty,
-    _property: TextExpressionSelectorPropFactory
+    _property: TextSelectorProperty
   ) {
     throw new Error(
       `${this.constructor.name}: Method initiateExpression is not implemented`
@@ -607,7 +607,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
   }
 }
 
-class StarShapeProperty extends ShapeBaseProperty {
+export class StarShapeProperty extends ShapeBaseProperty {
   d?: StrokeData[]
   ir?: ValueProperty
   is?: ValueProperty
@@ -617,7 +617,7 @@ class StarShapeProperty extends ShapeBaseProperty {
   pt: ValueProperty
   r: ValueProperty
   s?: ValueProperty
-  constructor(elem: any, data: any) {
+  constructor(elem: ElementInterfaceIntersect, data: any) {
     super()
     this.v = newElement()
     this.v.setPathData(true, 0)
@@ -625,7 +625,7 @@ class StarShapeProperty extends ShapeBaseProperty {
     this.comp = elem.comp
     this.data = data
     this.frameId = -1
-    this.d = data.d
+    this.d = data.d as StrokeData[]
     this.initDynamicPropertyContainer(elem)
     if (data.sy === 1) {
       this.ir = PropertyFactory.getProp(
@@ -807,7 +807,7 @@ class StarShapeProperty extends ShapeBaseProperty {
   }
 }
 
-class EllShapeProperty extends ShapeBaseProperty {
+export class EllShapeProperty extends ShapeBaseProperty {
   _cPoint = roundCorner
   d?: number
   p: MultiDimensionalProperty<Vector2>
@@ -931,6 +931,11 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.paths.addShape(this.v)
     this.effectsSequence = []
     this.getValue = this.processEffectsSequence
+  }
+  setGroupProperty(_propertyInterface: PropertyInterface) {
+    throw new Error(
+      `${this.constructor.name}: Method setGroupProperty is not implemented`
+    )
   }
 }
 

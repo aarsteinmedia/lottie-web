@@ -46,7 +46,7 @@ export default class FootageElement extends RenderableElement {
       return
     }
     const FootageInterface = new expressionsInterfaces('footage')
-    this.layerInterface = (FootageInterface as any)(this)
+    this.layerInterface = new FootageInterface(this)
   }
 
   setMatte(_id: string) {

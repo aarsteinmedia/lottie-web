@@ -3,16 +3,20 @@ import type MaskElement from '@/elements/MaskElement'
 import type {
   CompElementInterface,
   ElementInterfaceIntersect,
+  // ExpressionInterface,
   GlobalData,
   LottieLayer,
   Shape,
   // SVGElementInterface,
 } from '@/types'
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+// import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 
 import EffectsManager from '@/effects/EffectsManager'
 import { getBlendMode } from '@/utils'
-import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import { createElementID, getExpressionInterfaces } from '@/utils/getterSetter'
 
 export default abstract class BaseElement {
@@ -80,51 +84,63 @@ export default abstract class BaseElement {
         `${this.constructor.name}: data (LottieLayer) is not implemented`
       )
     }
-    const ExpressionsInterfaces = getExpressionInterfaces()
-    if (!ExpressionsInterfaces) {
+    const expressionsInterfaces = getExpressionInterfaces()
+    if (!expressionsInterfaces) {
       return
     }
-    const layerExpressionInterface = new ExpressionsInterfaces(
+    const layerExpressionInterface = expressionsInterfaces(
         'layer'
-      ) as unknown as typeof LayerExpressionInterface,
-      EffectsExpressionInterface = new ExpressionsInterfaces('effects'),
-      ShapeExpressionInterface = new ExpressionsInterfaces('shape'),
-      TextExpressionInterface = new ExpressionsInterfaces('text'),
-      CompExpressionInterface = new ExpressionsInterfaces('comp')
+      ) as typeof LayerExpressionInterface,
+      effectsExpressionInterface = expressionsInterfaces('effects'),
+      shapeExpressionInterface = expressionsInterfaces(
+        'shape'
+      ) as typeof ShapeExpressionInterface,
+      textExpressionInterface = expressionsInterfaces(
+        'text'
+      ) as typeof TextExpressionInterface,
+      compExpressionInterface = expressionsInterfaces(
+        'comp'
+      ) as typeof CompExpressionInterface
+
     this.layerInterface = new layerExpressionInterface(
       this as unknown as ElementInterfaceIntersect
     )
 
-    if (this.data.hasMask && this.maskManager) {
-      this.layerInterface?.registerMaskInterface?.(this.maskManager)
+    if (!this.layerInterface) {
+      throw new Error(`${this.constructor.name}: Could not set layerInterface`)
     }
-    const effectsInterface =
-      EffectsExpressionInterface.createEffectsInterface?.(
-        this,
-        this.layerInterface
-      )
-    this.layerInterface?.registerEffectsInterface?.(effectsInterface)
+
+    if (this.data.hasMask && this.maskManager) {
+      this.layerInterface.registerMaskInterface(this.maskManager)
+    }
+    const effectsInterface = effectsExpressionInterface.createEffectsInterface(
+      this,
+      this.layerInterface
+    )
+    this.layerInterface.registerEffectsInterface(effectsInterface)
 
     if (this.data.ty === 0 || this.data.xt) {
-      this.compInterface = (CompExpressionInterface as any)(this)
+      this.compInterface = new compExpressionInterface(
+        this as unknown as ElementInterfaceIntersect
+      )
 
       return
     }
     if (this.data.ty === 4) {
-      this.layerInterface!.shapeInterface = (ShapeExpressionInterface as any)(
+      this.layerInterface.shapeInterface = new shapeExpressionInterface(
         this.shapesData,
         this.itemsData,
         this.layerInterface
       )
-      this.layerInterface!.content = this.layerInterface?.shapeInterface
+      this.layerInterface.content = this.layerInterface.shapeInterface
 
       return
     }
     if (this.data.ty === 5) {
-      this.layerInterface!.textInterface = (TextExpressionInterface as any)(
-        this
+      this.layerInterface.textInterface = new textExpressionInterface(
+        this as unknown as ElementInterfaceIntersect
       )
-      this.layerInterface!.text = this.layerInterface?.textInterface
+      this.layerInterface.text = this.layerInterface.textInterface
     }
   }
   setBlendMode() {

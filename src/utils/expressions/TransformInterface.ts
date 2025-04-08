@@ -1,59 +1,63 @@
+import type { Vector2 } from '@/types'
 import type TransformProperty from '@/utils/TransformProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 
+import { MultiDimensionalProperty, ValueProperty } from '../Properties'
+
 export default class TransformExpressionInterface {
-  _px?: ReturnType<typeof ExpressionPropertyInterface>
-  _py?: ReturnType<typeof ExpressionPropertyInterface>
-  _pz?: ReturnType<typeof ExpressionPropertyInterface>
-  _transformFactory?: ReturnType<typeof ExpressionPropertyInterface>
-  anchorPoint: ReturnType<typeof ExpressionPropertyInterface>
-  opacity: ReturnType<typeof ExpressionPropertyInterface>
-  orientation: ReturnType<typeof ExpressionPropertyInterface>
-  rotation: ReturnType<typeof ExpressionPropertyInterface>
-  scale: ReturnType<typeof ExpressionPropertyInterface>
-  skew: ReturnType<typeof ExpressionPropertyInterface>
-  skewAxis: ReturnType<typeof ExpressionPropertyInterface>
   transform: TransformProperty
-  xRotation: ReturnType<typeof ExpressionPropertyInterface>
-  yRotation: ReturnType<typeof ExpressionPropertyInterface>
-  zRotation: ReturnType<typeof ExpressionPropertyInterface>
+  get anchorPoint() {
+    return ExpressionPropertyInterface(this.transform.a) as unknown as Vector2
+  }
+  get opacity() {
+    return ExpressionPropertyInterface(this.transform.o)
+  }
+  get orientation() {
+    return ExpressionPropertyInterface(this.transform.or)
+  }
   get position() {
     if (this.transform.p) {
-      return this._transformFactory?.()
+      return this._transformFactory()
     }
-    return [this._px?.() || 0, this._py?.() || 0, this._pz?.() || 0]
+    return [this._px(), this._py(), this._pz()]
+  }
+  get rotation() {
+    return ExpressionPropertyInterface(this.transform.r || this.transform.rz)
+  }
+  get scale() {
+    return ExpressionPropertyInterface(this.transform.s)
+  }
+
+  get skew() {
+    return ExpressionPropertyInterface(this.transform.sk)
+  }
+
+  get skewAxis() {
+    return ExpressionPropertyInterface(this.transform.sa)
   }
 
   get xPosition() {
     return ExpressionPropertyInterface(this.transform.px)
   }
 
+  get xRotation() {
+    return ExpressionPropertyInterface(this.transform.rx)
+  }
   get yPosition() {
     return ExpressionPropertyInterface(this.transform.py)
   }
-
+  get yRotation() {
+    return ExpressionPropertyInterface(this.transform.ry)
+  }
   get zPosition() {
     return ExpressionPropertyInterface(this.transform.pz)
   }
-
+  get zRotation() {
+    return ExpressionPropertyInterface(this.transform.rz || this.transform.r)
+  }
   constructor(transform: TransformProperty) {
     this.transform = transform
-
-    this.rotation = ExpressionPropertyInterface(
-      this.transform.r || this.transform.rz
-    )
-    this.zRotation = ExpressionPropertyInterface(
-      this.transform.rz || this.transform.r
-    )
-    this.xRotation = ExpressionPropertyInterface(this.transform.rx)
-    this.yRotation = ExpressionPropertyInterface(this.transform.ry)
-    this.scale = ExpressionPropertyInterface(this.transform.s)
-    this.anchorPoint = ExpressionPropertyInterface(this.transform.a)
-    this.opacity = ExpressionPropertyInterface(this.transform.o)
-    this.skew = ExpressionPropertyInterface(this.transform.sk)
-    this.skewAxis = ExpressionPropertyInterface(this.transform.sa)
-    this.orientation = ExpressionPropertyInterface(this.transform.or)
 
     if (this.transform.p) {
       this._transformFactory = ExpressionPropertyInterface(this.transform.p)
@@ -64,6 +68,22 @@ export default class TransformExpressionInterface {
         this._pz = ExpressionPropertyInterface(this.transform.pz)
       }
     }
+  }
+
+  _px() {
+    throw new Error(`${this.constructor.name}: Method _px is not implemented`)
+  }
+  _py() {
+    throw new Error(`${this.constructor.name}: Method _py is not implemented`)
+  }
+  _pz() {
+    throw new Error(`${this.constructor.name}: Method _pz is not implemented`)
+  }
+
+  _transformFactory(): ValueProperty | MultiDimensionalProperty<number[]> {
+    throw new Error(
+      `${this.constructor.name}: Method _transformFactory is not implemented`
+    )
   }
 
   getProperty(name: string | number) {

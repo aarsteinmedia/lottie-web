@@ -9,6 +9,7 @@ import type {
   MarkerData,
   Vector2,
 } from '@/types'
+import type Expressions from '@/utils/expressions/Expressions'
 
 import { completeAnimation, loadAnimation, loadData } from '@/DataManager'
 import { RendererType } from '@/enums'
@@ -22,14 +23,13 @@ import {
   BMEnterFrameEvent,
   BMRenderFrameErrorEvent,
   BMSegmentStartEvent,
-  LottieEvent,
+  type LottieEvent,
 } from '@/events'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
-import Expressions from '@/utils/expressions/Expressions'
 import {
   createElementID,
   getExpressionsPlugin,
@@ -54,7 +54,7 @@ export default class AnimationItem extends BaseEvent {
   public currentFrame: number
   public currentRawFrame: number
   public drawnFrameEvent: LottieEvent
-  public expressionsPlugin: Expressions
+  public expressionsPlugin: null | typeof Expressions
   public firstFrame: number
   public frameModifier: AnimationDirection
   public frameMult: number
@@ -129,7 +129,7 @@ export default class AnimationItem extends BaseEvent {
     this.onSetupError = this.onSetupError.bind(this)
     this.onSegmentComplete = this.onSegmentComplete.bind(this)
     this.drawnFrameEvent = new BMEnterFrameEvent('drawnFrame', 0, 0, 0)
-    this.expressionsPlugin = new Expressions(this)
+    this.expressionsPlugin = getExpressionsPlugin() // new Expressions(this)
   }
 
   public adjustSegment(arr: Vector2, offset: number) {
@@ -299,7 +299,7 @@ export default class AnimationItem extends BaseEvent {
     this.onSegmentStart = null
     this.onDestroy = null
     this.renderer = null as unknown as SVGRenderer
-    this.expressionsPlugin = null as unknown as Expressions
+    this.expressionsPlugin = null // as unknown as typeof Expressions
     this.imagePreloader = null
     this.projectInterface = null as unknown as ProjectInterface
   }
@@ -553,7 +553,7 @@ export default class AnimationItem extends BaseEvent {
     }
     try {
       if (this.expressionsPlugin) {
-        this.expressionsPlugin.resetFrame()
+        new this.expressionsPlugin(this).resetFrame()
       }
       this.renderer.renderFrame(this.currentFrame + this.firstFrame)
     } catch (error) {

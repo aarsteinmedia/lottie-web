@@ -53,6 +53,12 @@ import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
 import type AudioController from '@/utils/audio/AudioController'
+import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+// import type { EffectInterface } from '@/effects/EffectsManager'
+import type FootageInterface from '@/utils/expressions/FootageInterface'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import type ProjectInterface from '@/utils/helpers/ProjectInterface'
@@ -66,7 +72,13 @@ import type {
 import type DashProperty from '@/utils/shapes/DashProperty'
 import type GradientProperty from '@/utils/shapes/GradientProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type {
+  EllShapeProperty,
+  KeyframedShapeProperty,
+  RectShapeProperty,
+  ShapeProperty,
+  StarShapeProperty,
+} from '@/utils/shapes/ShapeProperty'
 import type SlotManager from '@/utils/SlotManager'
 import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
@@ -251,6 +263,21 @@ export interface CompInterface extends AnimationItem {
   tm: number
 }
 
+export type GetInterface = (
+  type: keyof ExpressionInterfaces
+) => ExpressionInterface
+
+export type ExpressionInterface =
+  ExpressionInterfaces[keyof ExpressionInterfaces]
+export interface ExpressionInterfaces {
+  comp: typeof CompExpressionInterface
+  effects: unknown // EffectInterface
+  footage: typeof FootageInterface
+  layer: typeof LayerExpressionInterface
+  shape: typeof ShapeExpressionInterface
+  text: typeof TextExpressionInterface
+}
+
 export interface AnimatedContent {
   data: Shape
   element: ShapeDataInterface | SVGElementInterface
@@ -363,7 +390,7 @@ export type CanvasRendererConfig = BaseRendererConfig & {
   imagePreserveAspectRatio: PreserveAspectRatio
   preserveAspectRatio: PreserveAspectRatio
   progressiveLoad?: boolean
-  runExpressions: any // TODO:
+  runExpressions?: boolean
   dpr?: number
 }
 
@@ -561,7 +588,13 @@ export interface ViewData {
   invRect?: SVGRectElement | null
   lastPath: string
   op: ValueProperty
-  prop: ShapeProperty | null
+  prop:
+    | ShapeProperty
+    | KeyframedShapeProperty
+    | RectShapeProperty
+    | EllShapeProperty
+    | StarShapeProperty
+    | null
 }
 
 export interface LottieAsset {
@@ -1128,11 +1161,6 @@ export type Merge<A, B> = Partial<A | B> & {
 } & (Partial<Omit<A & B, keyof (A | B)>> extends infer O
     ? { [K in keyof O]: O[K] }
     : never)
-
-export interface ExpressionsPlugin {
-  initExpressions(animItem: AnimationItem): void
-  resetFrame(): void
-}
 
 export interface Audio {
   pause(): void

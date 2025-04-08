@@ -29,7 +29,7 @@ import {
   searchAnimations,
   loadAnimation,
 } from '@/animation/AnimationManager'
-import { RendererType } from '@/enums'
+import { Modifier, RendererType } from '@/enums'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { inBrowser, isServer } from '@/utils'
 import {
@@ -96,12 +96,12 @@ const checkReady = () => {
 registerRenderer(RendererType.SVG, SVGRenderer)
 
 // Registering shape modifiers
-registerModifier('tm', TrimModifier)
-registerModifier('pb', PuckerAndBloatModifier)
-registerModifier('rp', RepeaterModifier)
-registerModifier('rd', RoundCornersModifier)
-registerModifier('zz', ZigZagModifier)
-registerModifier('op', OffsetPathModifier)
+registerModifier(Modifier.TrimModifier, TrimModifier)
+registerModifier(Modifier.PuckerAndBloatModifier, PuckerAndBloatModifier)
+registerModifier(Modifier.RepeaterModifier, RepeaterModifier)
+registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
+registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
+registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
 export type {
   AnimationConfiguration,

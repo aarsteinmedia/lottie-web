@@ -1,6 +1,5 @@
 import type { ElementInterfaceIntersect } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
 import type { BaseProperty } from '@/utils/Properties'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'

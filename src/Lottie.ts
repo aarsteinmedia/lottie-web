@@ -4,7 +4,6 @@ import type {
   AnimationData,
   AnimationDirection,
   AnimationSettings,
-  ExpressionsPlugin,
   LottieAsset,
   LottieManifest,
   Vector2,
@@ -40,12 +39,14 @@ import SVGTintFilter from '@/effects/svg/SVGTintFilter'
 import SVGTransformEffect from '@/effects/svg/SVGTransformEffect'
 import SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
 import CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
-import { RendererType } from '@/enums'
+import { Modifier, RendererType } from '@/enums'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
+import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import Expressions from '@/utils/expressions/Expressions'
+import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
   registerEffect,
@@ -68,7 +69,7 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 
-export function installPlugin(type: string, plugin: ExpressionsPlugin) {
+export function installPlugin(type: string, plugin: typeof Expressions) {
   if (type === 'expressions') {
     setExpressionsPlugin(plugin)
   }
@@ -122,18 +123,18 @@ registerRenderer(RendererType.HTML, HybridRenderer)
 registerRenderer(RendererType.SVG, SVGRenderer)
 
 // Registering shape modifiers
-registerModifier('tm', TrimModifier)
-registerModifier('pb', PuckerAndBloatModifier)
-registerModifier('rp', RepeaterModifier)
-registerModifier('rd', RoundCornersModifier)
-registerModifier('zz', ZigZagModifier)
-registerModifier('op', OffsetPathModifier)
+registerModifier(Modifier.TrimModifier, TrimModifier)
+registerModifier(Modifier.PuckerAndBloatModifier, PuckerAndBloatModifier)
+registerModifier(Modifier.RepeaterModifier, RepeaterModifier)
+registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
+registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
+registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
 // Registering expression plugin
-// setExpressionsPlugin(Expressions)
-// setExpressionInterfaces(getInterface)
-// initialize$1()
-// initialize()
+setExpressionsPlugin(Expressions)
+setExpressionInterfaces(getInterface)
+addPropertyDecorator()
+addTextDecorator()
 
 // Registering effects
 registerEffect(20, SVGTintFilter, true)

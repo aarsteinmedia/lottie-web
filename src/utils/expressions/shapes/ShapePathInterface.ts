@@ -8,8 +8,8 @@ import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 export default class ShapePathInterface {
   _name?: string
   _propertyGroup
+  ind?: number
   ix?: number
-
   mn?: string
   path: ShapeProperty
   prop: ShapeProperty

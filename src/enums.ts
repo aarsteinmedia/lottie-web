@@ -56,6 +56,15 @@ export enum RendererType {
   SVG = 'svg',
 }
 
+export enum Modifier {
+  OffsetPathModifier = 'op',
+  PuckerAndBloatModifier = 'pb',
+  RepeaterModifier = 'rp',
+  RoundCornersModifier = 'rd',
+  TrimModifier = 'tm',
+  ZigZagModifier = 'zz',
+}
+
 export enum ArrayType {
   Float32 = 'float32',
   Int16 = 'int16',

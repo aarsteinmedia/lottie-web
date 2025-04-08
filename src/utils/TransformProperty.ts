@@ -5,6 +5,7 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 
 import { degToRads } from '@/utils'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -21,7 +22,7 @@ export default class TransformProperty extends BaseProperty {
   _transformCachingAtTime?: {
     v: Matrix
   }
-  a?: MultiDimensionalProperty<Vector3>
+  a?: MultiDimensionalProperty<number[]>
   appliedTransformations: number
   autoOriented?: boolean
   override data: Shape
@@ -243,7 +244,6 @@ export default class TransformProperty extends BaseProperty {
       `${this.constructor.name}: Method autoOrient not implemented`
     )
   }
-
   override getValue(forceRender?: boolean) {
     if (this.elem.globalData.frameId === this.frameId) {
       return
@@ -403,6 +403,7 @@ export default class TransformProperty extends BaseProperty {
     }
     this.frameId = this.elem.globalData.frameId!
   }
+
   precalculateMatrix() {
     this.appliedTransformations = 0
     this.pre.reset()
@@ -459,6 +460,11 @@ export default class TransformProperty extends BaseProperty {
         .rotateX(this.or?.v[0])
       this.appliedTransformations = 4
     }
+  }
+  setGroupProperty(_propertyGroup: LayerExpressionInterface) {
+    throw new Error(
+      `${this.constructor.name}: Method setGroupProperty is not implemented`
+    )
   }
 }
 

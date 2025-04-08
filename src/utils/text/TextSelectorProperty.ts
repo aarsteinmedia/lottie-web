@@ -235,4 +235,9 @@ export default class TextSelectorProperty extends BaseProperty {
     this.finalS = s
     this.finalE = e
   }
+  initiateExpression() {
+    throw new Error(
+      `${this.constructor.name}: Method initiateExpression is not implemented`
+    )
+  }
 }

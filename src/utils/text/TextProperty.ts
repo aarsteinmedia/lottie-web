@@ -146,6 +146,12 @@ export default class TextProperty extends BaseProperty {
     return charactersArray
   }
 
+  calculateExpression(_text: string): number {
+    throw new Error(
+      `${this.constructor.name}: Method calculateExpression is not implemented`
+    )
+  }
+
   canResizeFont(_canResize: boolean) {
     this.canResize = _canResize
     this.recalculate(this.keysIndex)
@@ -447,6 +453,12 @@ export default class TextProperty extends BaseProperty {
     return obj
   }
 
+  getExpressionValue(_currentValue: any, _text: any) {
+    throw new Error(
+      `${this.constructor.name}: Method getExpressionValue is not implemented`
+    )
+  }
+
   getKeyframeValue() {
     if (!this.data) {
       throw new Error(
@@ -470,7 +482,7 @@ export default class TextProperty extends BaseProperty {
     return this.data.d?.k[this.keysIndex].s
   }
 
-  override getValue(_finalValue: unknown) {
+  override getValue(_finalValue?: unknown) {
     if (!this.data) {
       throw new Error(
         `${this.constructor.name}: data (TextData) is not implemented`
@@ -536,6 +548,12 @@ export default class TextProperty extends BaseProperty {
     this.keysIndex = 0
     this._isFirstFrame = true
     this.getValue(dData)
+  }
+
+  searchExpressions(): boolean | null {
+    throw new Error(
+      `${this.constructor.name}: Method searchExpressions is not implemented`
+    )
   }
 
   searchKeyframes() {

@@ -84,8 +84,6 @@ export default class CVShapeElement extends ShapeElement {
     this.setBlendMode = setBlendMode
     this.showElement = showElement
 
-    console.log(this.initExpressions)
-
     this.initElement(data, globalData, comp)
   }
 

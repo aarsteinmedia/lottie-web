@@ -1,7 +1,9 @@
 import { ArrayType } from '@/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
-const ExpressionPropertyInterface = (function () {
+import { MultiDimensionalProperty, ValueProperty } from '../Properties'
+
+const ExpressionPropertyInterface = (() => {
   const defaultUnidimensionalValue = { mult: 1, pv: 0, v: 0 }
   const defaultMultidimensionalValue = { mult: 1, pv: [0, 0, 0], v: [0, 0, 0] }
 
@@ -89,14 +91,20 @@ const ExpressionPropertyInterface = (function () {
     return defaultUnidimensionalValue
   }
 
-  return function (property) {
+  return function (
+    property?: ValueProperty | MultiDimensionalProperty<number[]>
+  ) {
     if (!property) {
       return defaultGetter
     }
     if (property.propType === 'unidimensional') {
-      return UnidimensionalPropertyInterface(property)
+      return UnidimensionalPropertyInterface(
+        property
+      ) as unknown as ValueProperty
     }
-    return MultidimensionalPropertyInterface(property)
+    return MultidimensionalPropertyInterface(
+      property
+    ) as unknown as MultiDimensionalProperty
   }
 })()
 
