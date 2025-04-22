@@ -1,7 +1,10 @@
 import type { ElementInterfaceIntersect, Shape, VectorProperty } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
-import { shapeSegment, shapeSegmentInverted } from '@/elements/PolynomialBezier'
+import PolynomialBezier, {
+  shapeSegment,
+  shapeSegmentInverted,
+} from '@/elements/PolynomialBezier'
 import {
   joinLines,
   offsetSegmentSplit,
@@ -53,8 +56,8 @@ export default class OffsetPathModifier extends ShapeModifier {
     if (!inputBezier.c) {
       count -= 1
     }
-    let segment,
-      multiSegments = []
+    let segment: PolynomialBezier,
+      multiSegments: PolynomialBezier[][] = []
 
     for (let i = 0; i < count; i++) {
       segment = shapeSegment(inputBezier, i)
@@ -127,7 +130,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       }
     }
 
-    if (multiSegments.length) {
+    if (multiSegments.length && lastSeg) {
       joinLines(
         outputBezier,
         lastSeg,

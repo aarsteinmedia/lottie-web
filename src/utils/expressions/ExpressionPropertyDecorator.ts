@@ -1,4 +1,4 @@
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+// import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import { ArrayType } from '@/enums'

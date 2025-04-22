@@ -1,4 +1,4 @@
-import type { IntersectData, Vector2 } from '@/types'
+import type { Vector2 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import {
@@ -104,7 +104,7 @@ export default class PolynomialBezier {
     if (maxRecursion === undefined) {
       maxRecursion = 7
     }
-    const intersections: IntersectData[] = []
+    const intersections: number[][] = []
     intersectsImpl(
       intersectData(this, 0, 1),
       intersectData(other, 0, 1),

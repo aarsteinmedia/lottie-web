@@ -11,9 +11,8 @@ import {
   setGroupProperty,
 } from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import ShapePath from '@/utils/shapes/ShapePath'
 import TextSelectorProperty from '@/utils/text/TextSelectorProperty'
-
-import ShapePath from '../shapes/ShapePath'
 
 export default class TextExpressionSelectorPropFactory {
   comp?: CompElementInterface

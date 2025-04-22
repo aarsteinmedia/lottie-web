@@ -44,14 +44,14 @@ import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
-import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
+// import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import Expressions from '@/utils/expressions/Expressions'
-import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
-import getInterface from '@/utils/expressions/InterfacesProvider'
+// import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
+// import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
   registerEffect,
   registerRenderer,
-  setExpressionInterfaces,
+  // setExpressionInterfaces,
   setExpressionsPlugin,
   setIDPrefix,
   setLocationHref,
@@ -131,10 +131,10 @@ registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
 registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
 // Registering expression plugin
-setExpressionsPlugin(Expressions)
-setExpressionInterfaces(getInterface)
-addPropertyDecorator()
-addTextDecorator()
+// setExpressionsPlugin(Expressions)
+// setExpressionInterfaces(getInterface)
+// addPropertyDecorator()
+// addTextDecorator()
 
 // Registering effects
 registerEffect(20, SVGTintFilter, true)
@@ -158,7 +158,5 @@ export type {
   LottieManifest,
   Vector2,
 }
-
-// import Lottie from './lottie.min'
 
 export default Lottie

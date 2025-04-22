@@ -62,7 +62,7 @@ function getShapeProp(
       prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
       break
     case 7:
-      prop = new StarShapeProperty(elem, data)
+      prop = new StarShapeProperty(elem as ElementInterfaceIntersect, data)
   }
 
   if (prop?.k) {

@@ -15,12 +15,203 @@ import PolynomialBezier from '@/elements/PolynomialBezier'
 import { roundCorner } from '@/utils/getterSetter'
 import Matrix from '@/utils/Matrix'
 
-export class CustomError extends Error {
-  status?: number
-}
+const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
+    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
+    Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
+  crossProduct = (a: number[], b: number[]) => [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0],
+  ],
+  getIntersection = (a: PolynomialBezier, b: PolynomialBezier) => {
+    const intersect = a.intersections(b)
+
+    if (intersect.length && floatEqual(intersect[0][0], 1)) {
+      intersect.shift()
+    }
+
+    if (intersect.length) {
+      return intersect[0]
+    }
+
+    return null
+  },
+  getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
+    const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
+      rot = -Math.PI * 0.5,
+      rotatedVector = [
+        Math.cos(rot) * vector[0] - Math.sin(rot) * vector[1],
+        Math.sin(rot) * vector[0] + Math.cos(rot) * vector[1],
+      ]
+    return rotatedVector
+  },
+  HSVtoRGB = (h: number, s: number, v: number): Vector3 => {
+    let r = 0,
+      g = 0,
+      b = 0
+    const i = Math.floor(h * 6),
+      f = h * 6 - i,
+      p = v * (1 - s),
+      q = v * (1 - f * s),
+      t = v * (1 - (1 - f) * s)
+    switch (i % 6) {
+      case 0:
+        r = v
+        g = t
+        b = p
+        break
+      case 1:
+        r = q
+        g = v
+        b = p
+        break
+      case 2:
+        r = p
+        g = v
+        b = t
+        break
+      case 3:
+        r = p
+        g = q
+        b = v
+        break
+      case 4:
+        r = t
+        g = p
+        b = v
+        break
+      case 5:
+        r = v
+        g = p
+        b = q
+        break
+      default:
+        break
+    }
+    return [r, g, b]
+  },
+  lerp = (p0: number, p1: number, amount: number) =>
+    p0 * (1 - amount) + p1 * amount,
+  linearOffset = (p1: Vector2, p2: Vector2, amount: number): Vector2[] => {
+    const angle = Math.atan2(p2[0] - p1[0], p2[1] - p1[1])
+    return [polarOffset(p1, angle, amount), polarOffset(p2, angle, amount)]
+  },
+  lineIntersection = (
+    start1: Vector2,
+    end1: Vector2,
+    start2: Vector2,
+    end2: Vector2
+  ): Vector2 | null => {
+    const v1 = [start1[0], start1[1], 1],
+      v2 = [end1[0], end1[1], 1],
+      v3 = [start2[0], start2[1], 1],
+      v4 = [end2[0], end2[1], 1],
+      //
+      r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
+
+    if (floatZero(r[2])) {
+      return null
+    }
+
+    return [r[0] / r[2], r[1] / r[2]]
+  },
+  offsetSegment = (segment: { points: Vector2[] }, amount: number) => {
+    let e: Vector2[]
+    e = linearOffset(segment.points[0], segment.points[1], amount)
+    const p0: Vector2 = e[0]
+    const p1a = e[1]
+    e = linearOffset(segment.points[1], segment.points[2], amount)
+    const p1b = e[0]
+    const p2b = e[1]
+    e = linearOffset(segment.points[2], segment.points[3], amount)
+    const p2a = e[0]
+    const p3 = e[1]
+    let p1 = lineIntersection(
+      p0 as Vector2,
+      p1a as Vector2,
+      p1b as Vector2,
+      p2b as Vector2
+    )
+    if (p1 === null) {
+      p1 = p1a as Vector2
+    }
+    let p2 = lineIntersection(
+      p2a as Vector2,
+      p3 as Vector2,
+      p1b as Vector2,
+      p2b as Vector2
+    )
+    if (p2 === null) {
+      p2 = p2a as Vector2
+    }
+
+    return new PolynomialBezier(p0, p1, p2, p3)
+  },
+  pointDistance = (p1: Vector2, p2: Vector2) =>
+    Math.hypot(p1[0] - p2[0], p1[1] - p2[1]),
+  polarOffset = (p: Vector2, angle: number, length: number): Vector2 => [
+    p[0] + Math.cos(angle) * length,
+    p[1] - Math.sin(angle) * length,
+  ],
+  pruneSegmentIntersection = (a: PolynomialBezier[], b: PolynomialBezier[]) => {
+    const outa = a.slice(),
+      outb = b.slice()
+    let intersect = getIntersection(a[a.length - 1], b[0])
+    if (intersect) {
+      outa[a.length - 1] = a[a.length - 1].split(intersect[0])[0]
+      outb[0] = b[0].split(intersect[1])[1]
+    }
+    if (a.length > 1 && b.length > 1) {
+      intersect = getIntersection(a[0], b[b.length - 1])
+      if (intersect) {
+        return [
+          [a[0].split(intersect[0])[0]],
+          [b[b.length - 1].split(intersect[1])[1]],
+        ]
+      }
+    }
+    return [outa, outb]
+  },
+  rgbToHSV = (r: number, g: number, b: number): Vector3 => {
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b),
+      d = max - min
+    let h = 0
+    const s = max === 0 ? 0 : d / max,
+      v = max / 255
+
+    switch (max) {
+      case min:
+        h = 0
+        break
+      case r:
+        h = g - b + d * (g < b ? 6 : 0)
+        h /= 6 * d
+        break
+      case g:
+        h = b - r + d * 2
+        h /= 6 * d
+        break
+      case b:
+        h = r - g + d * 4
+        h /= 6 * d
+        break
+      default:
+        break
+    }
+
+    return [h, s, v]
+  },
+  splitData = (data: IntersectData) => {
+    const split = data.bez.split(0.5)
+    return [
+      intersectData(split[0], data.t1, data.t),
+      intersectData(split[1], data.t, data.t2),
+    ]
+  }
 
 export const addBrightnessToRGB = (color: Vector3, offset: number) => {
-    const hsv = RGBtoHSV(color[0] * 255, color[1] * 255, color[2] * 255)
+    const hsv = rgbToHSV(color[0] * 255, color[1] * 255, color[2] * 255)
     hsv[2] += offset
     if (hsv[2] > 1) {
       hsv[2] = 1
@@ -30,7 +221,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return HSVtoRGB(hsv[0], hsv[1], hsv[2])
   },
   addHueToRGB = (color: Vector3, offset: number): Vector3 => {
-    const hsv = RGBtoHSV(color[0] * 255, color[1] * 255, color[2] * 255)
+    const hsv = rgbToHSV(color[0] * 255, color[1] * 255, color[2] * 255)
     hsv[0] += offset / 360
     if (hsv[0] > 1) {
       hsv[0] -= 1
@@ -40,7 +231,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return HSVtoRGB(hsv[0], hsv[1], hsv[2])
   },
   addSaturationToRGB = (color: Vector3, offset: number) => {
-    const hsv = RGBtoHSV(color[0] * 255, color[1] * 255, color[2] * 255)
+    const hsv = rgbToHSV(color[0] * 255, color[1] * 255, color[2] * 255)
     hsv[1] += offset
     if (hsv[1] > 1) {
       hsv[1] = 1
@@ -49,9 +240,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
     return HSVtoRGB(hsv[0], hsv[1], hsv[2])
   },
-  boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
-    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
-    Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
   buildShapeString = (
     pathNodes: ShapePath,
     length: number,
@@ -127,11 +315,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return [x, y, z, w]
   },
-  crossProduct = (a: number[], b: number[]) => [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0],
-  ],
   degToRads = Math.PI / 180,
   extendPrototype = (sources: Constructor[], destination: Constructor) => {
     const { length } = sources
@@ -148,8 +331,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   floatEqual = (a: number, b: number) =>
     Math.abs(a - b) * 100000 <= Math.min(Math.abs(a), Math.abs(b)),
   floatZero = (f: number) => Math.abs(f) <= 0.00001,
-  frameOutput = (frame?: number) =>
-    ((frame ?? 0) + 1).toString().padStart(3, '0'),
   getBlendMode = (mode = 16) => {
     const blendModeEnums: {
       [key: number]: string
@@ -174,44 +355,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return blendModeEnums[mode] || ''
   },
-  /**
-   * Parse URL to get filename
-   * @param { string } src The url string
-   * @param { boolean } keepExt Whether to include file extension
-   * @returns { string } Filename, in lowercase
-   */
-  /**
-   * Get extension from filename, URL or path
-   * @param { string } str Filename, URL or path
-   */
-  getExt = (str?: string) => {
-    if (typeof str !== 'string' || !str || !hasExt(str)) {
-      return
-    }
-    return str.split('.').pop()?.toLowerCase()
-  },
-  getIntersection = (a: PolynomialBezier, b: PolynomialBezier) => {
-    const intersect = a.intersections(b)
-
-    if (intersect.length && floatEqual((intersect as any)[0][0], 1)) {
-      intersect.shift()
-    }
-
-    if (intersect.length) {
-      return intersect[0]
-    }
-
-    return null
-  },
-  getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
-    const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
-      rot = -Math.PI * 0.5,
-      rotatedVector = [
-        Math.cos(rot) * vector[0] - Math.sin(rot) * vector[1],
-        Math.sin(rot) * vector[0] + Math.cos(rot) * vector[1],
-      ]
-    return rotatedVector
-  },
   getProjectingAngle = (path: ShapePath, cur: number) => {
     const prevIndex = cur === 0 ? path.length() - 1 : cur - 1,
       nextIndex = (cur + 1) % path.length(),
@@ -219,70 +362,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       nextPoint = path.v[nextIndex],
       pVector = getPerpendicularVector(prevPoint!, nextPoint!)
     return Math.atan2(0, 1) - Math.atan2(pVector[1], pVector[0])
-  },
-  handleErrors = (err: unknown) => {
-    const res = {
-      message: 'Unknown error',
-      status: isServer() ? 500 : 400,
-    }
-    if (err && typeof err === 'object') {
-      if ('message' in err && typeof err.message === 'string') {
-        res.message = err.message
-      }
-      if ('status' in err) {
-        res.status = Number(err.status)
-      }
-    }
-    return res
-  },
-  hasExt = (path: string) => {
-    const lastDotIndex = path.split('/').pop()?.lastIndexOf('.')
-    return (lastDotIndex ?? 0) > 1 && path.length - 1 > (lastDotIndex ?? 0)
-  },
-  HSVtoRGB = (h: number, s: number, v: number): Vector3 => {
-    let r = 0,
-      g = 0,
-      b = 0
-    const i = Math.floor(h * 6),
-      f = h * 6 - i,
-      p = v * (1 - s),
-      q = v * (1 - f * s),
-      t = v * (1 - (1 - f) * s)
-    switch (i % 6) {
-      case 0:
-        r = v
-        g = t
-        b = p
-        break
-      case 1:
-        r = q
-        g = v
-        b = p
-        break
-      case 2:
-        r = p
-        g = v
-        b = t
-        break
-      case 3:
-        r = p
-        g = q
-        b = v
-        break
-      case 4:
-        r = t
-        g = p
-        b = v
-        break
-      case 5:
-        r = v
-        g = p
-        b = q
-        break
-      default:
-        break
-    }
-    return [r, g, b]
   },
   inBrowser = () => typeof navigator !== 'undefined',
   intersectData = (
@@ -303,8 +382,8 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
   },
   intersectsImpl = (
-    d1: any,
-    d2: any,
+    d1: IntersectData,
+    d2: IntersectData,
     depth: number,
     tolerance: number,
     intersections: unknown[],
@@ -369,14 +448,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
     return true
   },
-  isBase64 = (str?: string) => {
-    if (!str) {
-      return false
-    }
-    const regex =
-      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
-    return regex.test(parseBase64(str))
-  },
   isSafari = (): boolean => {
     const result = inBrowser()
       ? /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
@@ -387,8 +458,8 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   isServer = () => !(typeof window !== 'undefined' && window.document),
   joinLines = (
     outputBezier: ShapePath,
-    seg1: any,
-    seg2: any,
+    seg1: PolynomialBezier,
+    seg2: PolynomialBezier,
     lineJoin: number,
     miterLimit: number
   ) => {
@@ -435,9 +506,9 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
 
     // Miter
-    const t0 = pointEqual(p0, seg1.points[2]) ? seg1.points[0] : seg1.points[2]
-    const t1 = pointEqual(p1, seg2.points[1]) ? seg2.points[3] : seg2.points[1]
-    const intersection = lineIntersection(t0, p0, p1, t1)
+    const t0 = pointEqual(p0, seg1.points[2]) ? seg1.points[0] : seg1.points[2],
+      t1 = pointEqual(p1, seg2.points[1]) ? seg2.points[3] : seg2.points[1],
+      intersection = lineIntersection(t0, p0, p1, t1)
     if (intersection && pointDistance(intersection, p0) < miterLimit) {
       outputBezier.setTripleAt(
         intersection[0],
@@ -453,78 +524,51 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return p0
   },
-  lerp = (p0: number, p1: number, amount: number) =>
-    p0 * (1 - amount) + p1 * amount,
   lerpPoint = (p0: Vector2, p1: Vector2, amount: number): Vector2 => [
     lerp(p0[0], p1[0], amount),
     lerp(p0[1], p1[1], amount),
   ],
-  linearOffset = (p1: Vector2, p2: Vector2, amount: number): Vector2[] => {
-    const angle = Math.atan2(p2[0] - p1[0], p2[1] - p1[1])
-    return [polarOffset(p1, angle, amount), polarOffset(p2, angle, amount)]
-  },
-  lineIntersection = (
-    start1: Vector2,
-    end1: Vector2,
-    start2: Vector2,
-    end2: Vector2
-  ): Vector2 | null => {
-    const v1 = [start1[0], start1[1], 1],
-      v2 = [end1[0], end1[1], 1],
-      v3 = [start2[0], start2[1], 1],
-      v4 = [end2[0], end2[1], 1],
-      //
-      r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
+  markerParser = (markersFromProps: (MarkerData | Marker)[]) => {
+    const parsePayloadLines = (payload: string) => {
+        const lines = payload.split('\r\n'),
+          keys: Record<string, string> = {},
+          { length } = lines
+        let keysCount = 0
 
-    if (floatZero(r[2])) {
-      return null
-    }
-
-    return [r[0] / r[2], r[1] / r[2]]
-  },
-  markerParser = (_markers: (MarkerData | Marker)[]) => {
-    /**
-     *
-     */
-    function parsePayloadLines(payload: string) {
-      const lines = payload.split('\r\n'),
-        keys: Record<string, string> = {},
-        { length } = lines
-      let keysCount = 0
-
-      for (let i = 0; i < length; i++) {
-        const line = lines[i].split(':')
-        if (line.length === 2) {
-          keys[line[0]] = line[1].trim()
-          keysCount++
+        for (let i = 0; i < length; i++) {
+          const line = lines[i].split(':')
+          if (line.length === 2) {
+            keys[line[0]] = line[1].trim()
+            keysCount++
+          }
         }
-      }
-      if (keysCount === 0) {
-        throw new Error('Could not parse markers')
-      }
-      return keys
-    }
-
-    const markers = [],
-      { length } = _markers
+        if (keysCount === 0) {
+          throw new Error('Could not parse markers')
+        }
+        return keys
+      },
+      markers = [],
+      { length } = markersFromProps
     for (let i = 0; i < length; i++) {
-      if ('duration' in _markers[i]) {
-        markers.push(_markers[i])
+      if ('duration' in markersFromProps[i]) {
+        markers.push(markersFromProps[i])
         continue
       }
 
       const markerData: MarkerData = {
-        duration: (_markers[i] as Marker).dr,
-        time: (_markers[i] as Marker).tm,
+        duration: (markersFromProps[i] as Marker).dr,
+        time: (markersFromProps[i] as Marker).tm,
       }
       try {
-        markerData.payload = JSON.parse((_markers[i] as Marker).cm)
+        markerData.payload = JSON.parse((markersFromProps[i] as Marker).cm)
       } catch (_) {
         try {
-          markerData.payload = parsePayloadLines((_markers[i] as Marker).cm)
+          markerData.payload = parsePayloadLines(
+            (markersFromProps[i] as Marker).cm
+          )
         } catch (__) {
           markerData.payload = {
-            name: (_markers[i] as Marker).cm,
+            name: (markersFromProps[i] as Marker).cm,
           }
         }
       }
@@ -532,39 +576,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
     return markers
   },
-  offsetSegment = (segment: { points: Vector2[] }, amount: number) => {
-    let e: Vector2[]
-    e = linearOffset(segment.points[0], segment.points[1], amount)
-    const p0: Vector2 = e[0]
-    const p1a = e[1]
-    e = linearOffset(segment.points[1], segment.points[2], amount)
-    const p1b = e[0]
-    const p2b = e[1]
-    e = linearOffset(segment.points[2], segment.points[3], amount)
-    const p2a = e[0]
-    const p3 = e[1]
-    let p1 = lineIntersection(
-      p0 as Vector2,
-      p1a as Vector2,
-      p1b as Vector2,
-      p2b as Vector2
-    )
-    if (p1 === null) {
-      p1 = p1a as Vector2
-    }
-    let p2 = lineIntersection(
-      p2a as Vector2,
-      p3 as Vector2,
-      p1b as Vector2,
-      p2b as Vector2
-    )
-    if (p2 === null) {
-      p2 = p2a as Vector2
-    }
-
-    return new PolynomialBezier(p0, p1, p2, p3)
-  },
-  offsetSegmentSplit = (segment: any, amount: number) => {
+  offsetSegmentSplit = (segment: PolynomialBezier, amount: number) => {
     /*
     We split each bezier segment into smaller pieces based
     on inflection points, this ensures the control point
@@ -573,9 +585,9 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     (A cubic bezier can have none, one, or two inflection points)
   */
     const flex = segment.inflectionPoints()
-    let left
-    let right
-    let split
+    let left: PolynomialBezier,
+      right: PolynomialBezier,
+      split: PolynomialBezier[]
 
     if (flex.length === 0) {
       return [offsetSegment(segment, amount)]
@@ -602,29 +614,15 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       offsetSegment(right, amount),
     ]
   },
-  parseBase64 = (str: string) => str.substring(str.indexOf(',') + 1),
   polynomialCoefficients = (p0: number, p1: number, p2: number, p3: number) => [
     -p0 + 3 * p1 - 3 * p2 + p3,
     3 * p0 - 6 * p1 + 3 * p2,
     -3 * p0 + 3 * p1,
     p0,
   ],
-  pointDistance = (p1: Vector2, p2: Vector2) =>
-    Math.hypot(p1[0] - p2[0], p1[1] - p2[1]),
   pointEqual = (p1: Vector2, p2: Vector2) =>
     floatEqual(p1[0], p2[0]) && floatEqual(p1[1], p2[1]),
-  polarOffset = (p: Vector2, angle: number, length: number): Vector2 => [
-    p[0] + Math.cos(angle) * length,
-    p[1] - Math.sin(angle) * length,
-  ],
-  prepareString = (str: string) =>
-    str
-      .replace(new RegExp(/"""/, 'g'), '""')
-      .replace(/(["'])(.*?)\1/g, (_match, quote: string, content: string) => {
-        const replacedContent = content.replace(/[^\w\s\d.#]/g, '')
-        return `${quote}${replacedContent}${quote}`
-      }),
-  pruneIntersections = (segments: any[]) => {
+  pruneIntersections = (segments: PolynomialBezier[][]) => {
     let e
     for (let i = 1; i < segments.length; i++) {
       e = pruneSegmentIntersection(segments[i - 1], segments[i])
@@ -639,26 +637,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
 
     return segments
-  },
-  // TODO: Find use case and test
-  pruneSegmentIntersection = (a: any[], b: any[]) => {
-    const outa = a.slice(),
-      outb = b.slice()
-    let intersect = getIntersection(a[a.length - 1], b[0])
-    if (intersect) {
-      outa[a.length - 1] = a[a.length - 1].split((intersect as any)[0])[0]
-      outb[0] = b[0].split((intersect as any)[1])[1]
-    }
-    if (a.length > 1 && b.length > 1) {
-      intersect = getIntersection(a[0], b[b.length - 1])
-      if (intersect) {
-        return [
-          [a[0].split((intersect as any)[0])[0]],
-          [b[b.length - 1].split((intersect as any)[1])[1]],
-        ]
-      }
-    }
-    return [outa, outb]
   },
   quadRoots = (a: number, b: number, c: number) => {
     // no root
@@ -680,19 +658,19 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return [singleRoot - delta, singleRoot + delta]
   },
   quaternionToEuler = (out: Vector3, quat: Vector4) => {
-    const qx = quat[0]
-    const qy = quat[1]
-    const qz = quat[2]
-    const qw = quat[3]
-    const heading = Math.atan2(
-      2 * qy * qw - 2 * qx * qz,
-      1 - 2 * qy * qy - 2 * qz * qz
-    )
-    const attitude = Math.asin(2 * qx * qy + 2 * qz * qw)
-    const bank = Math.atan2(
-      2 * qx * qw - 2 * qy * qz,
-      1 - 2 * qx * qx - 2 * qz * qz
-    )
+    const qx = quat[0],
+      qy = quat[1],
+      qz = quat[2],
+      qw = quat[3],
+      heading = Math.atan2(
+        2 * qy * qw - 2 * qx * qz,
+        1 - 2 * qy * qy - 2 * qz * qz
+      ),
+      attitude = Math.asin(2 * qx * qy + 2 * qz * qw),
+      bank = Math.atan2(
+        2 * qx * qw - 2 * qy * qz,
+        1 - 2 * qx * qx - 2 * qz * qz
+      )
     out[0] = heading / degToRads
     out[1] = attitude / degToRads
     out[2] = bank / degToRads
@@ -718,36 +696,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       b = 0
     }
     return `#${colorMap[r]}${colorMap[g]}${colorMap[b]}`
-  },
-  RGBtoHSV = (r: number, g: number, b: number): Vector3 => {
-    const max = Math.max(r, g, b)
-    const min = Math.min(r, g, b)
-    const d = max - min
-    let h = 0
-    const s = max === 0 ? 0 : d / max
-    const v = max / 255
-
-    switch (max) {
-      case min:
-        h = 0
-        break
-      case r:
-        h = g - b + d * (g < b ? 6 : 0)
-        h /= 6 * d
-        break
-      case g:
-        h = b - r + d * 2
-        h /= 6 * d
-        break
-      case b:
-        h = r - g + d * 4
-        h /= 6 * d
-        break
-      default:
-        break
-    }
-
-    return [h, s, v]
   },
   setPoint = (
     outputBezier: ShapePath,
@@ -815,13 +763,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     out[3] = scale0 * aw + scale1 * bw
 
     return out
-  },
-  splitData = (data: IntersectData) => {
-    const split = data.bez.split(0.5)
-    return [
-      intersectData(split[0], data.t1, data.t),
-      intersectData(split[1], data.t, data.t2),
-    ]
   },
   styleDiv = (element: HTMLElement | SVGSVGElement) => {
     element.style.position = 'absolute'
