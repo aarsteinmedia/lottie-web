@@ -18,7 +18,7 @@ export default class ImagePreloader {
     createImageData(assetData: LottieAsset): ImageData;
     destroy(): void;
     footageLoaded(): void;
-    getAsset(assetData: LottieAsset): HTMLMediaElement | HTMLCanvasElement | SVGElement | null;
+    getAsset(assetData: null | LottieAsset): HTMLMediaElement | HTMLCanvasElement | SVGElement | null;
     imageLoaded(): void;
     loadAssets(assets: LottieAsset[], cb: ImagePreloader['imagesLoadedCb']): void;
     loadedFootages(): boolean;

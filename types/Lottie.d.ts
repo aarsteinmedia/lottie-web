@@ -1,7 +1,8 @@
 import type AnimationItem from './animation/AnimationItem';
-import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationSettings, ExpressionsPlugin, LottieAsset, LottieManifest, Vector2 } from './types';
+import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
-export declare function installPlugin(type: string, plugin: ExpressionsPlugin): void;
+import Expressions from './utils/expressions/Expressions';
+export declare function installPlugin(type: string, plugin: typeof Expressions): void;
 export declare function setSubframeRendering(flag: boolean): void;
 declare const Lottie: {
     destroy: typeof destroy;

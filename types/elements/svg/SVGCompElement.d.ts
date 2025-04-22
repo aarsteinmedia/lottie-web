@@ -1,15 +1,17 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import type { AnimationData, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
 import type { KeyframedValueProperty } from '../../utils/Properties';
 import SVGBaseElement from '../../elements/svg/SVGBaseElement';
 export default class SVGCompElement extends SVGBaseElement {
     _debug?: boolean;
     completeLayers: boolean;
+    currentFrame: number;
     elements: ElementInterfaceIntersect[];
     layers: LottieLayer[];
     pendingElements: ElementInterfaceIntersect[];
+    renderedFrame: number;
     supports3d: boolean;
     tm?: KeyframedValueProperty;
-    constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
+    constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
     appendElementInPos(_element: ElementInterfaceIntersect, _pos: number): void;
     buildItem(_pos: number): void;
     checkPendingElements(): void;

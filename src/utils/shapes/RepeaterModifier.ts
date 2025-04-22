@@ -1,4 +1,5 @@
-import type { ShapeGroupData, SVGShapeData } from '@/elements/helpers/shapes'
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,

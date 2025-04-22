@@ -8,7 +8,6 @@ import BaseRenderer from '../renderers/BaseRenderer';
 export default class SVGRendererBase extends BaseRenderer {
     destroyed?: boolean;
     renderConfig?: SVGRendererConfig;
-    renderedFrame?: number;
     svgElement?: SVGSVGElement;
     appendElementInPos(element: ElementInterfaceIntersect, pos: number): void;
     buildItem(pos: number): void;

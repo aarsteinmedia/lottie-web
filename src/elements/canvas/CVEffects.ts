@@ -13,11 +13,8 @@ export default class CVEffects {
       filterManager = null
       const type = elem.data.ef?.[i].ty
       if (type && registeredEffects[type]) {
-        const Effect = registeredEffects[type].effect
-        filterManager = new Effect(
-          elem.effectsManager.effectElements[i],
-          elem
-        ) as GroupEffect
+        const Effect = registeredEffects[type].effect as any // TODO:
+        filterManager = new Effect(elem.effectsManager?.effectElements[i], elem)
       }
       if (filterManager) {
         this.filters.push(filterManager)

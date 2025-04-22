@@ -1,0 +1,38 @@
+import type { AnimationData, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import CompElement from '../../elements/CompElement';
+export default class CVCompElement extends CompElement {
+    canvasContext?: CanvasRenderingContext2D;
+    pendingElements: ElementInterfaceIntersect[];
+    constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
+    buildItem(_pos: number): void;
+    checkPendingElements(): void;
+    clearCanvas(_canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null): void;
+    configAnimation(_data: AnimationData): void;
+    createComp(data: LottieLayer): CVCompElement;
+    createElements(): void;
+    createImage(_data: LottieLayer): void;
+    createShape(_data: LottieLayer): void;
+    createSolid(_data: LottieLayer): void;
+    createText(_data: LottieLayer): void;
+    ctxFill(_rule?: CanvasFillRule): void;
+    ctxFillRect(_x: number, _y: number, _w: number, _h: number): void;
+    ctxFillStyle(_val: string): void;
+    ctxLineCap(_value: CanvasLineCap): void;
+    ctxLineJoin(_value: CanvasLineJoin): void;
+    ctxLineWidth(_value: number): void;
+    ctxMiterLimit(_value: number): void;
+    ctxOpacity(_value: number): void;
+    ctxStroke(_value: number): void;
+    ctxStrokeStyle(_value: string): void;
+    ctxTransform(_value: number[]): void;
+    destroy(): void;
+    exitLayer(): void;
+    hideElement(): void;
+    prepareLayer(): void;
+    renderInnerContent(): void;
+    reset(): void;
+    restore(_flag?: boolean): void;
+    save(_flag?: boolean): void;
+    showElement(_pos: number): void;
+    updateContainerSize(_width?: number, _height?: number): void;
+}

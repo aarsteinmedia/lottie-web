@@ -1,3 +1,4 @@
+import type HCompElement from '@/elements/html/HCompElement'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
@@ -15,12 +16,10 @@ import { degToRads } from '@/utils'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-import CVCompElement from '../canvas/CVCompElement'
-
 export default class HCameraElement extends FrameElement {
   _prevMat: Matrix
   a?: ValueProperty<Vector3>
-  override comp?: CVCompElement
+  override comp?: HCompElement
   mat?: Matrix
   or?: ValueProperty<Vector3>
   p?: ValueProperty<number[]>
@@ -265,7 +264,10 @@ export default class HCameraElement extends FrameElement {
       this.mat?.translate(0, 0, this.pe?.v)
 
       const hasMatrixChanged = !this._prevMat.equals(this.mat)
-      if ((hasMatrixChanged || this.pe?._mdf) && this.comp?.threeDElements) {
+      if (
+        (hasMatrixChanged || this.pe?._mdf) &&
+        (this.comp as HCompElement)?.threeDElements
+      ) {
         const { length: len } = this.comp?.threeDElements || []
         let comp
         let perspectiveStyle

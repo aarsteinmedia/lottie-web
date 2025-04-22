@@ -54,14 +54,20 @@ export default class CanvasRenderer extends CanvasRendererBase {
     this.completeLayers = false
     this.rendererType = RendererType.Canvas
     if (this.renderConfig.clearCanvas) {
-      this.ctxTransform = this.contextData.transform.bind(this.contextData)
+      this.ctxTransform = this.contextData.transform.bind(
+        this.contextData
+      ) as any
       this.ctxOpacity = this.contextData.opacity.bind(this.contextData)
       this.ctxFillStyle = this.contextData.fillStyle.bind(this.contextData)
       this.ctxStrokeStyle = this.contextData.strokeStyle.bind(this.contextData)
-      this.ctxLineWidth = this.contextData.lineWidth.bind(this.contextData)
+      this.ctxLineWidth = this.contextData.lineWidth.bind(
+        this.contextData
+      ) as any
       this.ctxLineCap = this.contextData.lineCap.bind(this.contextData)
       this.ctxLineJoin = this.contextData.lineJoin.bind(this.contextData)
-      this.ctxMiterLimit = this.contextData.miterLimit.bind(this.contextData)
+      this.ctxMiterLimit = this.contextData.miterLimit.bind(
+        this.contextData
+      ) as any
       this.ctxFill = this.contextData.fill.bind(this.contextData)
       this.ctxFillRect = this.contextData.fillRect.bind(this.contextData)
       this.ctxStroke = this.contextData.stroke.bind(this.contextData)

@@ -1,15 +1,18 @@
-import type { Caching, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, Vector2 } from '../../types';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData, Vector2 } from '../../types';
+import type PropertyInterface from '../../utils/expressions/PropertyInterface';
 import type { MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
 import type ShapeCollection from '../../utils/shapes/ShapeCollection';
-import ShapeElement from '../../elements/ShapeElement';
+import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
+import ShapeElement from '../../elements/helpers/shapes/ShapeElement';
 import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
 import ShapePath from '../../utils/shapes/ShapePath';
-export declare function getConstructorFunction(): typeof ShapeProperty;
-export declare function getKeyframedConstructorFunction(): typeof KeyframedShapeProperty;
-export declare function getShapeProp(elem: ShapeElement, data: Shape, type: number): null | ShapeProperty;
-declare abstract class ShapeBaseProperty extends DynamicPropertyContainer {
+declare function getConstructorFunction(): typeof ShapeProperty;
+declare function getKeyframedConstructorFunction(): typeof KeyframedShapeProperty;
+declare function getShapeProp(elem: ShapeElement, data: Shape, type: number, _arr?: any[], _trims?: any[]): ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | null;
+export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
-    comp?: ElementInterfaceIntersect;
+    _cachingAtTime?: Caching;
+    comp?: CompElementInterface;
     data?: Shape;
     effectsSequence: ((arg: unknown) => ShapePath)[];
     elem?: ShapeElement;
@@ -24,6 +27,8 @@ declare abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     paths?: ShapeCollection;
     pv?: ShapePath;
     v?: ShapePath;
+    getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath;
+    initiateExpression(_elem: ElementInterfaceIntersect, _data: TextSelectorProperty, _property: TextSelectorProperty): void;
     interpolateShape(frameNum: number, previousValue: ShapePath, caching?: Caching): void;
     interpolateShapeCurrentTime(): ShapePath;
     processEffectsSequence(): void;
@@ -45,8 +50,35 @@ export declare class RectShapeProperty extends ShapeBaseProperty {
     convertRectToPath(): void;
     getValue(): void;
 }
+export declare class StarShapeProperty extends ShapeBaseProperty {
+    d?: StrokeData[];
+    ir?: ValueProperty;
+    is?: ValueProperty;
+    or: ValueProperty;
+    os: ValueProperty;
+    p: MultiDimensionalProperty<Vector2>;
+    pt: ValueProperty;
+    r: ValueProperty;
+    s?: ValueProperty;
+    constructor(elem: ElementInterfaceIntersect, data: any);
+    convertPolygonToPath(): void;
+    convertStarToPath(): void;
+    convertToPath(): void;
+    getValue(): void;
+}
+export declare class EllShapeProperty extends ShapeBaseProperty {
+    _cPoint: number;
+    d?: number;
+    p: MultiDimensionalProperty<Vector2>;
+    s: MultiDimensionalProperty<Vector2>;
+    constructor(elem: ElementInterfaceIntersect, data: Shape);
+    convertEllToPath(): void;
+    getValue(): void;
+}
 export declare class ShapeProperty extends ShapeBaseProperty {
+    ix?: number;
     pathsData?: ShapePath[] | ShapePath;
+    propertyIndex?: number;
     shape?: {
         _mdf?: boolean;
         paths?: {
@@ -55,10 +87,17 @@ export declare class ShapeProperty extends ShapeBaseProperty {
         };
     };
     totalShapeLength?: number;
+    x?: boolean;
     constructor(elem: ShapeElement, data: Shape, type: number);
+    setGroupProperty(_propertyInterface: PropertyInterface): void;
 }
-declare class KeyframedShapeProperty extends ShapeBaseProperty {
+export declare class KeyframedShapeProperty extends ShapeBaseProperty {
     lastFrame: number;
     constructor(elem: ShapeElement, data: Shape, type: number);
 }
-export {};
+declare const ShapePropertyFactory: {
+    getConstructorFunction: typeof getConstructorFunction;
+    getKeyframedConstructorFunction: typeof getKeyframedConstructorFunction;
+    getShapeProp: typeof getShapeProp;
+};
+export default ShapePropertyFactory;

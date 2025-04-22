@@ -10,7 +10,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     data: GradientColor;
     k?: boolean;
     o: Float32Array;
-    prop: ReturnType<typeof PropertyFactory>;
+    prop: ReturnType<typeof PropertyFactory.getProp>;
     constructor(elem: ElementInterfaceIntersect, data: GradientColor, container: ElementInterfaceIntersect);
     checkCollapsable(): boolean;
     comparePoints(values: number[], points: number): boolean;

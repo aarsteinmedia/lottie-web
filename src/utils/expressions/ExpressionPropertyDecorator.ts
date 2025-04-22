@@ -401,9 +401,9 @@ export default function addPropertyDecorator() {
   ) => {
     const prop = getTransformProperty(elem, data, container)
     if (prop.dynamicProperties.length) {
-      prop.getValueAtTime = getTransformValueAtTime.bind(prop)
+      prop.getValueAtTime = getTransformValueAtTime.bind(prop) as any
     } else {
-      prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop)
+      prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop) as any
     }
     prop.setGroupProperty = setGroupProperty
     return prop
@@ -411,23 +411,23 @@ export default function addPropertyDecorator() {
 
   const propertyGetProp = PropertyFactory.getProp
   PropertyFactory.getProp = (elem, data, type, mult, container) => {
-    const prop = propertyGetProp(elem, data, type, mult, container)
+    const prop: any = propertyGetProp(elem, data, type, mult, container)
     // prop.getVelocityAtTime = getVelocityAtTime;
     // prop.loopOut = loopOut;
     // prop.loopIn = loopIn;
     if (prop.kf) {
-      prop.getValueAtTime = getValueAtTime.bind(prop)
+      prop.getValueAtTime = getValueAtTime.bind(prop as any) as any
     } else {
-      prop.getValueAtTime = getStaticValueAtTime.bind(prop)
+      prop.getValueAtTime = getStaticValueAtTime.bind(prop as any) as any
     }
     prop.setGroupProperty = setGroupProperty
     prop.loopOut = loopOut
     prop.loopIn = loopIn
     prop.smooth = smooth
-    prop.getVelocityAtTime = getVelocityAtTime.bind(prop)
+    prop.getVelocityAtTime = getVelocityAtTime.bind(prop) as any
     prop.getSpeedAtTime = getSpeedAtTime.bind(prop)
-    prop.numKeys = data.a === 1 ? data.k.length : 0
-    prop.propertyIndex = data.ix
+    prop.numKeys = data?.a === 1 ? (data.k as number[]).length : 0
+    prop.propertyIndex = data?.ix || 0
     let value: number | number[] = 0
     if (type !== 0) {
       value = createTypedArray(
@@ -442,7 +442,7 @@ export default function addPropertyDecorator() {
       lastIndex: 0,
       value: value,
     } as Caching
-    searchExpressions(elem, data, prop)
+    searchExpressions(elem, data as any, prop)
     if (prop.k) {
       container?.addDynamicProperty(prop)
     }
@@ -489,17 +489,11 @@ export default function addPropertyDecorator() {
   class ShapeExpressions extends ShapeBaseProperty {
     _segmentsLength?: SegmentLength
 
-    // constructor() {
-    //   super()
-    //   this.getValueAtTime = getStaticValueAtTime
-    //   this.setGroupProperty = setGroupProperty
-    // }
-
-    get getValueAtTime() {
-      return getStaticValueAtTime
-    }
     get setGroupProperty() {
       return setGroupProperty
+    }
+    override getValueAtTime(_time: number, _pos?: number) {
+      return getStaticValueAtTime as any
     }
 
     inTangents(time: number) {
@@ -517,7 +511,7 @@ export default function addPropertyDecorator() {
     pointOnPath(perc: number, time: number) {
       let shapePath = this.v
       if (time !== undefined) {
-        shapePath = this.getValueAtTime(time, 0) as ShapePath
+        shapePath = (this.getValueAtTime as any)(time, 0) as ShapePath
       }
       if (!this._segmentsLength && shapePath) {
         this._segmentsLength = getSegmentsLength(shapePath)
@@ -603,7 +597,10 @@ export default function addPropertyDecorator() {
       }
       let shapePath = this.v
       if (time !== undefined) {
-        shapePath = this.getValueAtTime(time, 0) as unknown as ShapePath
+        shapePath = (this.getValueAtTime as any)(
+          time,
+          0
+        ) as unknown as ShapePath
       }
       if (!shapePath) {
         return
@@ -628,31 +625,39 @@ export default function addPropertyDecorator() {
   extendPrototype([ShapeExpressions], ShapeProperty)
   extendPrototype([ShapeExpressions], KeyframedShapeProperty)
   KeyframedShapeProperty.prototype.getValueAtTime = getShapeValueAtTime
-  KeyframedShapeProperty.prototype.initiateExpression =
-    ExpressionManager.prototype.initiateExpression
+  KeyframedShapeProperty.prototype.initiateExpression = ExpressionManager
+    .prototype.initiateExpression as any
 
   const propertyGetShapeProp = ShapePropertyFactory.getShapeProp
   ShapePropertyFactory.getShapeProp = function (
     elem: ShapeElement,
     data: Shape,
     type: number,
-    arr,
-    trims
+    arr: any[],
+    trims: any
   ) {
     const prop = propertyGetShapeProp(elem, data, type, arr, trims)
     if (prop) {
-      prop.propertyIndex = data.ix
+      ;(prop as ShapeProperty).propertyIndex = data.ix
       prop.lock = false
     }
 
     if (type === 3) {
-      searchExpressions(elem as ElementInterfaceIntersect, data.pt, prop)
+      searchExpressions(
+        elem as ElementInterfaceIntersect,
+        data.pt as any,
+        prop as ShapeProperty
+      )
     } else if (type === 4) {
-      searchExpressions(elem as ElementInterfaceIntersect, data.ks, prop)
+      searchExpressions(
+        elem as ElementInterfaceIntersect,
+        data.ks as any,
+        prop as ShapeProperty
+      )
     }
     if (prop?.k) {
       elem.addDynamicProperty(prop)
     }
     return prop
-  }
+  } as any
 }

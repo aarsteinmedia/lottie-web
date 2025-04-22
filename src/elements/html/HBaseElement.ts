@@ -85,7 +85,7 @@ export default class HBaseElement {
       `${this.constructor.name}: Method destroyBaseElement is not implemented`
     )
   }
-  getBaseElement(): null | SVGGElement {
+  getBaseElement(): null | HTMLElement | SVGGElement {
     throw new Error(
       `${this.constructor.name}: Method getBaseElement is not implemented`
     )

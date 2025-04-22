@@ -1,4 +1,4 @@
-import type { IntersectData, Vector2 } from '../types';
+import type { Vector2 } from '../types';
 import type ShapePath from '../utils/shapes/ShapePath';
 export default class PolynomialBezier {
     a: Vector2;
@@ -29,7 +29,7 @@ export default class PolynomialBezier {
     };
     derivative(t: number): number[];
     inflectionPoints(): number[];
-    intersections(other: PolynomialBezier, toleranceFromProps?: number, maxRecursionFromProps?: number): IntersectData[];
+    intersections(other: PolynomialBezier, toleranceFromProps?: number, maxRecursionFromProps?: number): number[][];
     normalAngle(t: number): number;
     point(t: number): number[];
     split(t: number): PolynomialBezier[];

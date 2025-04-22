@@ -36,7 +36,11 @@ export default class CVShapeData {
       case ShapeType.PolygonStar:
         ty = 7
     }
-    this.sh = ShapePropertyFactory.getShapeProp(element, data, ty)
+    this.sh = ShapePropertyFactory.getShapeProp(
+      element,
+      data,
+      ty
+    ) as ShapeProperty
     const { length } = styles
     let styledShape
     for (let i = 0; i < length; i++) {

@@ -21,35 +21,43 @@ export declare enum PlayerEvents {
 export declare enum PreserveAspectRatio {
     Contain = "xMidYMid meet",
     Cover = "xMidYMid slice",
-    None = "xMinYMin slice",
-    Initial = "none"
+    Initial = "none",
+    None = "xMinYMin slice"
 }
 export declare enum ShapeType {
-    Rectangle = "rc",
     Ellipse = "el",
-    PolygonStar = "sr",
-    Path = "sh",
     Fill = "fl",
-    Stroke = "st",
     GradientFill = "gf",
     GradientStroke = "gs",
-    NoStyle = "no",
     Group = "gr",
-    Transform = "tr",
-    RoundedCorners = "rd",
-    PuckerBloat = "pb",
     Merge = "mm",
-    Twist = "tw",
+    NoStyle = "no",
     OffsetPath = "op",
-    ZigZag = "zz",
+    Path = "sh",
+    PolygonStar = "sr",
+    PuckerBloat = "pb",
+    Rectangle = "rc",
     Repeater = "rp",
+    RoundedCorners = "rd",
+    Stroke = "st",
+    Transform = "tr",
     Trim = "tm",
-    Unknown = "ms"
+    Twist = "tw",
+    Unknown = "ms",
+    ZigZag = "zz"
 }
 export declare enum RendererType {
-    SVG = "svg",
+    Canvas = "canvas",
     HTML = "html",
-    Canvas = "canvas"
+    SVG = "svg"
+}
+export declare enum Modifier {
+    OffsetPathModifier = "op",
+    PuckerAndBloatModifier = "pb",
+    RepeaterModifier = "rp",
+    RoundCornersModifier = "rd",
+    TrimModifier = "tm",
+    ZigZagModifier = "zz"
 }
 export declare enum ArrayType {
     Float32 = "float32",
@@ -59,7 +67,7 @@ export declare enum ArrayType {
     Uint8c = "uint8c"
 }
 export declare const lineCapEnum: {
-    [key: number]: string;
+    [key: number]: CanvasLineCap;
 }, lineJoinEnum: {
-    [key: number]: string;
+    [key: number]: CanvasLineJoin;
 };

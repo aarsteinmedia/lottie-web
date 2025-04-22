@@ -59,13 +59,16 @@ export default class TransformExpressionInterface {
   constructor(transform: TransformProperty) {
     this.transform = transform
 
+    // TODO:
     if (this.transform.p) {
-      this._transformFactory = ExpressionPropertyInterface(this.transform.p)
+      this._transformFactory = ExpressionPropertyInterface(
+        this.transform.p
+      ) as any
     } else {
-      this._px = ExpressionPropertyInterface(this.transform.px)
-      this._py = ExpressionPropertyInterface(this.transform.py)
+      this._px = ExpressionPropertyInterface(this.transform.px) as any
+      this._py = ExpressionPropertyInterface(this.transform.py) as any
       if (this.transform.pz) {
-        this._pz = ExpressionPropertyInterface(this.transform.pz)
+        this._pz = ExpressionPropertyInterface(this.transform.pz) as any
       }
     }
   }

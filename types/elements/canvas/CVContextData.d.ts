@@ -1,0 +1,53 @@
+import Matrix from '../../utils/Matrix';
+declare class CanvasContext {
+    fillStyle: string;
+    id: number;
+    lineCap: string;
+    lineJoin: string;
+    lineWidth: string;
+    miterLimit: string;
+    opacity: number;
+    strokeStyle: string;
+    transform: number[];
+    constructor();
+}
+export default class CVContextData {
+    _length: number;
+    appliedFillStyle: string;
+    appliedLineCap: string;
+    appliedLineJoin: string;
+    appliedLineWidth: string;
+    appliedMiterLimit: string;
+    appliedStrokeStyle: string;
+    cArrPos: number;
+    cTr: Matrix;
+    currentFillStyle: string;
+    currentLineCap: string;
+    currentLineJoin: string;
+    currentLineWidth: string;
+    currentMiterLimit: string;
+    currentOpacity: number;
+    currentStrokeStyle: string;
+    nativeContext?: null | CanvasRenderingContext2D;
+    stack: CanvasContext[];
+    transformMat: Matrix;
+    constructor();
+    duplicate(): void;
+    fill(rule: CanvasFillRule): void;
+    fillRect(x: number, y: number, w: number, h: number): void;
+    fillStyle(value: string): void;
+    lineCap(value: string): void;
+    lineJoin(value: string): void;
+    lineWidth(value: string): void;
+    miterLimit(value: string): void;
+    opacity(op: number): void;
+    reset(): void;
+    restore(forceRestore?: boolean): void;
+    save(saveOnNativeFlag?: boolean): void;
+    setContext(value?: null | CanvasRenderingContext2D): void;
+    setOpacity(value: number): void;
+    stroke(): void;
+    strokeStyle(value: string): void;
+    transform(props: Float32Array): void;
+}
+export {};

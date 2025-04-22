@@ -1,16 +1,21 @@
 import type { ElementInterfaceIntersect, Shape, Vector3 } from '../types';
-import type { MultiDimensionalProperty, ValueProperty } from '../utils/Properties';
+import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
 import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 import Matrix from '../utils/Matrix';
-export default class TransformProperty extends DynamicPropertyContainer {
+import { BaseProperty, type MultiDimensionalProperty, type ValueProperty } from '../utils/Properties';
+export default class TransformProperty extends BaseProperty {
     _isDirty?: boolean;
-    a?: MultiDimensionalProperty<Vector3>;
+    _opMdf?: boolean;
+    _transformCachingAtTime?: {
+        v: Matrix;
+    };
+    a?: MultiDimensionalProperty<number[]>;
     appliedTransformations: number;
     autoOriented?: boolean;
     data: Shape;
     elem: ElementInterfaceIntersect;
-    frameId: number;
     o?: ValueProperty;
+    opacity?: number;
     or?: MultiDimensionalProperty<Vector3>;
     p?: MultiDimensionalProperty<Vector3>;
     pre: Matrix;
@@ -33,4 +38,9 @@ export default class TransformProperty extends DynamicPropertyContainer {
     autoOrient(): void;
     getValue(forceRender?: boolean): void;
     precalculateMatrix(): void;
+    setGroupProperty(_propertyGroup: LayerExpressionInterface): void;
 }
+declare const TransformPropertyFactory: {
+    getTransformProperty: (elem: ElementInterfaceIntersect, data: Shape, container: ElementInterfaceIntersect) => TransformProperty;
+};
+export { TransformPropertyFactory };

@@ -9,7 +9,7 @@ import type {
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 export default abstract class RenderableDOMElement extends RenderableElement {
-  innerElem?: SVGElement | HTMLElement | null
+  innerElem?: SVGGraphicsElement | HTMLElement | null
 
   constructor() {
     super()

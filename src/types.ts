@@ -117,6 +117,7 @@ export interface Constructor {
   prototype: any
 }
 export interface TextSpan {
+  children: SVGSVGElement[]
   childSpan?: null | SVGTextElement | SVGGElement
   elem?: number[][]
   glyph: null | SVGCompElement | SVGShapeElement
@@ -318,7 +319,9 @@ export interface CVElement {
   e?: MultiDimensionalProperty
   g?: GradientProperty
   h?: ValueProperty
+  it: CVElement[]
   o?: ValueProperty
+  prevViewData: CVElement[]
   s?: MultiDimensionalProperty
   style?: CVStyleElement
   w?: ValueProperty
@@ -363,6 +366,8 @@ export interface Letter {
   line: number
   n: boolean
   val: string
+  xOffset: number
+  yOffset: number
 }
 
 export type SVGRendererConfig = BaseRendererConfig & {
@@ -503,6 +508,12 @@ export interface Shape {
   hd?: boolean
   ind?: number
   inv?: boolean
+  ir?: {
+    ix?: number
+  }
+  is?: {
+    ix?: number
+  }
   it?: Shape[]
   ix?: number
   ks?: ShapeDataProperty
@@ -526,6 +537,10 @@ export interface Shape {
   }
   or?: {
     k: any[]
+    ix?: number
+  }
+  os?: {
+    ix?: number
   }
   /** Position */
   p?: VectorProperty<Vector2>
@@ -850,6 +865,13 @@ export interface ShapeDataInterface {
     _mdf: boolean
     comp: ElementInterfaceIntersect
     paths: ShapeElement
+    v: {
+      v: number[][]
+      o: number[][]
+      i: number[][]
+      c: number[][]
+      _length: number
+    }
   }
   styles: SVGStyleData[]
   transform: Transformer
@@ -1050,6 +1072,7 @@ export interface LottieLayer {
   ct?: 0 | 1
   ddd?: 0 | 1
   ef?: Effect[]
+  en?: number
   fonts?: {
     list: DocumentData[]
   }
@@ -1066,7 +1089,9 @@ export interface LottieLayer {
   layers?: LottieLayer[] & { __used?: boolean }
   ln?: string
   masksProperties?: Shape[]
+  mn?: string
   nm: string
+  np?: any
   /** Out point */
   op: number
   parent?: number

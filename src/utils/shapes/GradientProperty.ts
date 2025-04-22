@@ -20,7 +20,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
   data: GradientColor
   k?: boolean
   o: Float32Array
-  prop: ReturnType<typeof PropertyFactory>
+  prop: ReturnType<typeof PropertyFactory.getProp>
   constructor(
     elem: ElementInterfaceIntersect,
     data: GradientColor,

@@ -15,8 +15,8 @@ export default class Matrix {
     applyToY(x: number, y: number, z: number): number;
     applyToZ(x: number, y: number, z: number): number;
     clone(matr: Matrix): Matrix;
-    cloneFromProps(props: number[]): this;
-    equals(matr: Matrix): boolean;
+    cloneFromProps(props: Float32Array): this;
+    equals(matr?: Matrix): boolean;
     getInverseMatrix(): Matrix;
     inversePoint(pt: number[]): {
         x: number;

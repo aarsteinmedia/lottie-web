@@ -45,9 +45,9 @@ export default class TextExpressionSelectorPropFactory {
     this.getMult = this.getValueProxy
     this.getVelocityAtTime = getVelocityAtTime
     if (this.kf) {
-      this.getValueAtTime = getValueAtTime.bind(this)
+      this.getValueAtTime = getValueAtTime.bind(this as any)
     } else {
-      this.getValueAtTime = getStaticValueAtTime.bind(this)
+      this.getValueAtTime = getStaticValueAtTime.bind(this as any)
     }
     this.setGroupProperty = setGroupProperty
   }

@@ -1,14 +1,15 @@
 import Matrix from '@/utils/Matrix'
 
 export default class ShapeTransformManager {
+  sequenceList: any[]
+  sequences: any
   transform_key_count: number
-
   constructor() {
     this.sequences = {}
     this.sequenceList = []
     this.transform_key_count = 0
   }
-  addTransformSequence(transforms) {
+  addTransformSequence(transforms: any[]) {
     const { length } = transforms
     let key = '_'
     for (let i = 0; i < length; i++) {
@@ -30,7 +31,7 @@ export default class ShapeTransformManager {
     this.transform_key_count++
     return `_${this.transform_key_count}`
   }
-  processSequence(sequence, isFirstFrame?: boolean) {
+  processSequence(sequence: any, isFirstFrame?: boolean) {
     let i = 0
     const { length } = sequence.transforms
     let _mdf = isFirstFrame

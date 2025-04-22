@@ -18,6 +18,7 @@ export default class HCompElement extends CompElement {
   pendingElements: ElementInterfaceIntersect[]
   supports3d?: boolean
   svgElement?: SVGSVGElement
+  threeDElements: any[] = []
   transformedElement?: SVGGElement | HTMLElement
   constructor(
     data: LottieLayer,

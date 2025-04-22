@@ -8,6 +8,7 @@ import { createNS } from '@/utils'
 
 export default class ShapeGroupData {
   _render?: boolean
+  closed?: boolean
   gr: SVGGElement
   it: ShapeDataInterface[]
   prevViewData: SVGElementInterface[]

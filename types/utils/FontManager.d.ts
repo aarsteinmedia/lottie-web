@@ -19,7 +19,7 @@ export default class FontManager {
     addChars(chars?: Characacter[]): void;
     addFonts(fontData?: {
         list: DocumentData[];
-    }, defs?: SVGDefsElement): void;
+    }, defs?: HTMLElement | SVGDefsElement): void;
     getCharData(char: Characacter | string, style?: string, font?: string): Characacter;
     getFontByName(name?: string): DocumentData;
     measureText(char: string, fontName?: string, size?: number): number;

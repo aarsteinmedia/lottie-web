@@ -1,24 +1,26 @@
+import type ShapeGroupData from '../elements/helpers/shapes/ShapeGroupData';
 import type MaskElement from '../elements/MaskElement';
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, SVGElementInterface } from '../types';
+import type { CompElementInterface, GlobalData, LottieLayer, Shape } from '../types';
+import type CompExpressionInterface from '../utils/expressions/CompInterface';
+import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
 import EffectsManager from '../effects/EffectsManager';
-import ProjectInterface from '../utils/helpers/ProjectInterface';
 export default abstract class BaseElement {
-    baseElement?: SVGGElement;
-    comp?: ElementInterfaceIntersect;
-    compInterface?: ProjectInterface;
+    baseElement?: HTMLElement | SVGGElement;
+    comp?: CompElementInterface;
+    compInterface?: CompExpressionInterface;
     data?: LottieLayer;
     effectsManager?: EffectsManager;
     globalData?: GlobalData;
-    itemsData: SVGElementInterface[];
-    layerElement?: SVGGElement;
+    itemsData: ShapeGroupData[];
+    layerElement?: SVGGElement | HTMLElement;
     layerId?: string;
-    layerInterface?: ProjectInterface;
+    layerInterface?: LayerExpressionInterface;
     maskManager?: MaskElement;
     shapesData: Shape[];
     type?: unknown;
     checkMasks(): boolean;
     getType(): unknown;
-    initBaseData(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect): void;
+    initBaseData(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface): void;
     initExpressions(): void;
     setBlendMode(): void;
 }

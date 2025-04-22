@@ -1,24 +1,33 @@
+import type {
+  BaseProperty,
+  MultiDimensionalProperty,
+  ValueProperty,
+} from '@/utils/Properties'
+
 import { ArrayType } from '@/enums'
+import { Vector2 } from '@/Lottie'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
-import { MultiDimensionalProperty, ValueProperty } from '../Properties'
-
 const ExpressionPropertyInterface = (() => {
-  const defaultUnidimensionalValue = { mult: 1, pv: 0, v: 0 }
-  const defaultMultidimensionalValue = { mult: 1, pv: [0, 0, 0], v: [0, 0, 0] }
+  const defaultUnidimensionalValue = { mult: 1, pv: 0, v: 0 },
+    defaultMultidimensionalValue = { mult: 1, pv: [0, 0, 0], v: [0, 0, 0] }
 
-  function completeProperty(expressionValue, property, type) {
+  function completeProperty(
+    expressionValue: any,
+    property: BaseProperty,
+    type: string
+  ) {
     Object.defineProperty(expressionValue, 'velocity', {
       get: function () {
-        return property.getVelocityAtTime(property.comp.currentFrame)
+        return property.getVelocityAtTime(property.comp?.currentFrame || 0)
       },
     })
     expressionValue.numKeys = property.keyframes ? property.keyframes.length : 0
-    expressionValue.key = function (pos) {
+    expressionValue.key = (pos: number) => {
       if (!expressionValue.numKeys) {
         return 0
       }
-      let value = ''
+      let value: string | Vector2 = ''
       if ('s' in property.keyframes[pos - 1]) {
         value = property.keyframes[pos - 1].s
       } else if ('e' in property.keyframes[pos - 2]) {
@@ -27,9 +36,10 @@ const ExpressionPropertyInterface = (() => {
         value = property.keyframes[pos - 2].s
       }
       const valueProp =
-        type === 'unidimensional' ? new Number(value) : { ...value } // eslint-disable-line no-new-wrappers
+        type === 'unidimensional' ? new Number(value) : { ...(value as any) } // eslint-disable-line no-new-wrappers
       valueProp.time =
-        property.keyframes[pos - 1].t / property.elem.comp.globalData.frameRate
+        property.keyframes[pos - 1].t /
+        (property.elem?.comp?.globalData?.frameRate ?? 60)
       valueProp.value = type === 'unidimensional' ? value[0] : value
       return valueProp
     }
@@ -39,13 +49,14 @@ const ExpressionPropertyInterface = (() => {
     expressionValue.propertyGroup = property.propertyGroup
   }
 
-  function UnidimensionalPropertyInterface(property) {
+  function UnidimensionalPropertyInterface(propertyFromProps: BaseProperty) {
+    let property = propertyFromProps
     if (!property || !('pv' in property)) {
-      property = defaultUnidimensionalValue
+      property = defaultUnidimensionalValue as BaseProperty
     }
-    const mult = 1 / property.mult
-    let val = property.pv * mult
-    let expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+    const mult = 1 / (property.mult ?? 1)
+    let val = (property.pv as number) * mult,
+      expressionValue = new Number(val) as any // eslint-disable-line no-new-wrappers
     expressionValue.value = val
     completeProperty(expressionValue, property, 'unidimensional')
 
@@ -53,7 +64,7 @@ const ExpressionPropertyInterface = (() => {
       if (property.k) {
         property.getValue()
       }
-      val = property.v * mult
+      val = (property.v as number) * mult
       if (expressionValue.value !== val) {
         expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
         expressionValue.value = val
@@ -63,14 +74,16 @@ const ExpressionPropertyInterface = (() => {
     }
   }
 
-  function MultidimensionalPropertyInterface(property) {
+  function MultidimensionalPropertyInterface(propertyFromProps: BaseProperty) {
+    let property = propertyFromProps
     if (!property || !('pv' in property)) {
-      property = defaultMultidimensionalValue
+      property = defaultMultidimensionalValue as BaseProperty
     }
-    const mult = 1 / property.mult
-    const len = (property.data && property.data.l) || property.pv.length
-    const expressionValue = createTypedArray(ArrayType.Float32, len)
-    const arrValue = createTypedArray(ArrayType.Float32, len)
+    const mult = 1 / (property.mult ?? 1),
+      len: number =
+        ((property.data as any)?.l || (property.pv as number[])?.length) ?? 0,
+      expressionValue = createTypedArray(ArrayType.Float32, len) as any,
+      arrValue = createTypedArray(ArrayType.Float32, len)
     expressionValue.value = arrValue
     completeProperty(expressionValue, property, 'multidimensional')
 
@@ -79,7 +92,7 @@ const ExpressionPropertyInterface = (() => {
         property.getValue()
       }
       for (let i = 0; i < len; i++) {
-        arrValue[i] = property.v[i] * mult
+        arrValue[i] = (property.v as number[])[i] * mult
         expressionValue[i] = arrValue[i]
       }
       return expressionValue

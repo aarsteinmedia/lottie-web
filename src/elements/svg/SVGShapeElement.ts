@@ -251,7 +251,7 @@ export default class SVGShapeElement extends ShapeElement {
   override destroy() {
     this.destroyBaseElement()
     this.shapesData = null as unknown as Shape[]
-    this.itemsData = null as unknown as ElementInterfaceIntersect[]
+    this.itemsData = null as any
   }
   filterUniqueShapes() {
     const { length } = this.shapes,
@@ -301,7 +301,7 @@ export default class SVGShapeElement extends ShapeElement {
     this._isFirstFrame = true
     const { length } = this.itemsData || []
     for (let i = 0; i < length; i++) {
-      this.prevViewData[i] = this.itemsData![i]
+      this.prevViewData[i] = this.itemsData![i] as any
     }
     this.searchShapes(
       this.shapesData,

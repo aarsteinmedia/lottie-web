@@ -1,16 +1,16 @@
 import RenderableDOMElement from '../../elements/helpers/RenderableDOMElement';
 export default class SVGBaseElement extends RenderableDOMElement {
     _sizeChanged?: boolean;
-    maskedElement?: SVGGElement;
+    maskedElement?: HTMLElement | SVGGElement;
     matteElement?: SVGGElement;
     matteMasks?: {
         [key: number]: string;
     };
-    transformedElement?: SVGGElement;
+    transformedElement?: HTMLElement | SVGGElement;
     createContainerElements(): void;
     createRenderableComponents(): void;
     destroyBaseElement(): void;
-    getBaseElement(): SVGGElement | null;
+    getBaseElement(): HTMLElement | SVGGElement | null;
     getMatte(matteType?: number): string;
     initRendererElement(): void;
     renderElement(): void;

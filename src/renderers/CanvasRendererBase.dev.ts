@@ -9,8 +9,8 @@ import type {
 } from '@/types'
 
 import CVImageElement from '@/elements/canvas/CVImageElement'
-import CVShapeElement from '@/elements/canvas/CVShapeElement_'
-import CVSolidElement from '@/elements/canvas/CVSolidElement_'
+import CVShapeElement from '@/elements/canvas/CVShapeElement.dev'
+import CVSolidElement from '@/elements/canvas/CVSolidElement.dev'
 import CVTextElement from '@/elements/canvas/CVTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'

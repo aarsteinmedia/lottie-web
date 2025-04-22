@@ -14,6 +14,6 @@ export default class MaskElement {
     destroy(): void;
     drawPath(pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData): void;
     getMaskelement(): SVGElement | null;
-    getMaskProperty(pos: number): import("../utils/shapes/ShapeProperty").ShapeProperty | null;
+    getMaskProperty(pos: number): import("../utils/shapes/ShapeProperty").ShapeProperty | import("../utils/shapes/ShapeProperty").KeyframedShapeProperty | import("../utils/shapes/ShapeProperty").RectShapeProperty | import("../utils/shapes/ShapeProperty").EllShapeProperty | import("../utils/shapes/ShapeProperty").StarShapeProperty | null;
     renderFrame(frame?: number | null): void;
 }

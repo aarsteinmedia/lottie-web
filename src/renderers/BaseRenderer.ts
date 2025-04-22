@@ -113,6 +113,7 @@ export default class BaseRenderer extends FrameElement {
     }
     this.checkPendingElements()
   }
+
   checkPendingElements() {
     throw new Error(
       `${this.constructor.name}: Method checkPendingElements not yet implemented`
@@ -131,7 +132,6 @@ export default class BaseRenderer extends FrameElement {
   createCamera(_data: LottieLayer): HCameraElement {
     throw new Error("You're using a 3d camera. Try the html renderer.")
   }
-
   createComp(
     _data: LottieLayer,
     _container?: HTMLElement,
@@ -153,6 +153,7 @@ export default class BaseRenderer extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
+
   createImage(
     _layer: LottieLayer
   ): CVImageElement | ImageElement | HImageElement {
@@ -217,7 +218,6 @@ export default class BaseRenderer extends FrameElement {
     }
     return null
   }
-
   getElementByPath(path: unknown[]): ElementInterfaceIntersect | undefined {
     const pathValue = path.shift()
     let element
@@ -258,6 +258,12 @@ export default class BaseRenderer extends FrameElement {
     if (!this.globalData?.progressiveLoad) {
       this.buildAllItems()
     }
+  }
+
+  prepareFrame(_num: number) {
+    throw new Error(
+      `${this.constructor.name}: Method prepareFrame not yet implemented`
+    )
   }
 
   searchExtraCompositions(assets: LottieLayer[]) {

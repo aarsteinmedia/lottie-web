@@ -1,7 +1,8 @@
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type MaskManager from '@/utils/expressions/MaskInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type TextExpressionSelectorPropFactory from '@/utils/expressions/TextSelectorPropertyDecorator'
-import type { BaseProperty } from '@/utils/Properties'
+import type { BaseProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
@@ -12,7 +13,6 @@ import {
   GlobalData,
   Vector2,
   Vector3,
-  Vector4,
 } from '@/types'
 import { degToRads, isArrayOfNum } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
@@ -42,57 +42,57 @@ export default class ExpressionManager {
 
   content?: typeof LayerExpressionInterface
 
+  data: any
   document = null
   effect?: any
   elem?: ElementInterfaceIntersect
   elemType?: number
   fetch = null
   frameExpressionId?: number
+
   frames = null
 
   getValueAtTime: any
-
   getVelocityAtTime: any
   globalData?: GlobalData
   hasParent?: boolean
   height = 0
   helperLengthArray = [0, 0, 0, 0, 0, 0]
   index?: number
+
   inPoint = 0
-
   mask?: MaskManager
+
   name = ''
-
   needsVelocity?: boolean
-  numKeys = 0
 
+  numKeys = 0
   outPoint = 0
   parent?: LayerExpressionInterface
   position?: Vector2
   propType?: string
   pv?: number | number[]
   randSeed = 0
+
   rotation?: number
 
   scale?: number
 
+  scoped_bm_rt?: ValueProperty
   selectorValue?: number
-
-  text?: string
+  text?: TextExpressionInterface
   textIndex?: number
   textTotal?: number
   thisComp?: CompExpressionInterface
   thisLayer?: LayerExpressionInterface
   time = 0
+
   transform?: typeof LayerExpressionInterface
   val?: string | number | number[]
 
   value?: string | number | number[]
-  valueAtTime?: string | number | number[]
 
   velocity?: number
-
-  velocityAtTime?: number
 
   width = 0
   // const Math = BMMath
@@ -103,8 +103,8 @@ export default class ExpressionManager {
     SHAPE: 'shape',
   }
 
-  $bm_isInstanceOfArray(arr: any): arr is number[] {
-    return arr.constructor === Array || arr.constructor === Float32Array
+  $bm_isInstanceOfArray(arr: unknown): arr is number[] {
+    return arr?.constructor === Array || arr?.constructor === Float32Array
   }
   $bm_neg(a: number | boolean | BaseProperty) {
     const tOfA = typeof a
@@ -311,15 +311,17 @@ export default class ExpressionManager {
       this.fromComp = this.thisLayer.fromComp.bind(this.thisLayer)
       this.toComp = this.thisLayer.toComp.bind(this.thisLayer)
       this.mask = this.thisLayer.mask
-        ? this.thisLayer.mask.bind(this.thisLayer)
+        ? (this.thisLayer.mask as any).bind(this.thisLayer)
         : null
       this.fromCompToSurface = this.fromComp
     }
     if (!this.transform) {
-      this.transform = this.elem.layerInterface('ADBE Transform Group')
+      this.transform = (this.elem?.layerInterface as any)(
+        'ADBE Transform Group'
+      )
       this.$bm_transform = this.transform
       if (this.transform) {
-        this.anchorPoint = this.transform.anchorPoint
+        this.anchorPoint = (this.transform as any).anchorPoint
         /* position = transform.position;
                 rotation = transform.rotation;
                 scale = transform.scale; */
@@ -327,10 +329,10 @@ export default class ExpressionManager {
     }
 
     if (this.elemType === 4 && !this.content) {
-      this.content = this.thisLayer('ADBE Root Vectors Group')
+      this.content = (this.thisLayer as any)('ADBE Root Vectors Group')
     }
     if (!this.effect) {
-      this.effect = this.thisLayer(4)
+      this.effect = (this.thisLayer as any)(4)
     }
     this.hasParent = !!(this.elem?.hierarchy && this.elem.hierarchy.length)
     if (this.hasParent && !parent) {
@@ -353,8 +355,8 @@ export default class ExpressionManager {
     // TODO: Check if it's possible to return on ShapeInterface the .v value
     // Changed this to a ternary operation because Rollup failed compiling it correctly
     this.scoped_bm_rt =
-      this.scoped_bm_rt.propType === this.propTypes.SHAPE
-        ? this.scoped_bm_rt.v
+      this.scoped_bm_rt?.propType === this.propTypes.SHAPE
+        ? (this.scoped_bm_rt.v as unknown as ValueProperty)
         : this.scoped_bm_rt
     return this.scoped_bm_rt as unknown as T
   }
@@ -391,50 +393,6 @@ export default class ExpressionManager {
     )
   }
 
-  hslToRgb(val: number[]): Vector4 {
-    const h = val[0]
-    const s = val[1]
-    const l = val[2]
-
-    let r
-    let g
-    let b
-
-    if (s === 0) {
-      r = l // achromatic
-      b = l // achromatic
-      g = l // achromatic
-    } else {
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s
-      const p = 2 * l - q
-      r = this.hue2rgb(p, q, h + 1 / 3)
-      g = this.hue2rgb(p, q, h)
-      b = this.hue2rgb(p, q, h - 1 / 3)
-    }
-
-    return [r, g, b, val[3]]
-  }
-
-  hue2rgb(p: number, q: number, tFromProps: number) {
-    let t = tFromProps
-    if (t < 0) {
-      t++
-    }
-    if (t > 1) {
-      t -= 1
-    }
-    if (t < 1 / 6) {
-      return p + (q - p) * 6 * t
-    }
-    if (t < 1 / 2) {
-      return q
-    }
-    if (t < 2 / 3) {
-      return p + (q - p) * (2 / 3 - t) * 6
-    }
-    return p
-  }
-
   initiateExpression(
     elem: ElementInterfaceIntersect,
     data: TextSelectorProperty,
@@ -464,11 +422,11 @@ export default class ExpressionManager {
     this.easeOutBez = getBezierEasing(0.167, 0.167, 0.667, 1, 'easeOut').get
     this.easeInOutBez = getBezierEasing(0.33, 0, 0.667, 1, 'easeInOut').get
 
-    this.val = data.x
+    this.val = data.x as unknown as string
     this.needsVelocity = /velocity(?![\w\d])/.test(this.val)
-    this._needsRandom = this.val.indexOf('random') !== -1
+    this._needsRandom = (this.val as string)?.indexOf('random') !== -1
     this.elemType = elem.data.ty
-    const thisProperty = property
+    const thisProperty = property as any
     thisProperty.valueAtTime = thisProperty.getValueAtTime
     thisProperty.value = thisProperty.v
     elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
@@ -491,7 +449,7 @@ export default class ExpressionManager {
     // this.expression_function = eval(
     //   `[function _expression_function(){${this.val};scoped_bm_rt=$bm_rt}]`
     // )[0]
-    this.numKeys = property.kf ? data.k.length : 0
+    this.numKeys = property.kf ? (data.k as unknown as number[])?.length : 0
 
     this.active = !this.data || this.data.hd !== true
 
@@ -519,7 +477,7 @@ export default class ExpressionManager {
       this.velocityAtTime = this.getVelocityAtTime.bind(this)
     }
 
-    this.comp = elem.comp.globalData.projectInterface.bind(
+    this.comp = (elem.comp.globalData.projectInterface as any).bind(
       elem.comp.globalData.projectInterface
     )
 
@@ -543,12 +501,15 @@ export default class ExpressionManager {
 
   key(indFromProps: number) {
     let ind = indFromProps
-    let iKey
     if (!this.data.k.length || typeof this.data.k[0] === 'number') {
       throw new Error(`The property has no keyframe at index ${ind}`)
     }
     ind -= 1
-    const obKey = {
+    const obKey: {
+      time: number
+      value: any[]
+      [key: number]: any
+    } = {
       time: this.data.k[ind].t / (this.elem?.comp?.globalData?.frameRate || 60),
       value: [],
     }
@@ -557,7 +518,7 @@ export default class ExpressionManager {
       : this.data.k[ind - 1].e
 
     const lenKey = arr.length
-    for (iKey = 0; iKey < lenKey; iKey++) {
+    for (let iKey = 0; iKey < lenKey; iKey++) {
       obKey[iKey] = arr[iKey]
       obKey.value[iKey] = arr[iKey]
     }
@@ -732,7 +693,7 @@ export default class ExpressionManager {
           if (!(time > this.data.k[iKey].t && time < this.data.k[iKey + 1].t)) {
             break
           }
-          if (time - this.data.k[iKey].t > data.k[iKey + 1].t - time) {
+          if (time - this.data.k[iKey].t > this.data.k[iKey + 1].t - time) {
             index = iKey + 2
             keyTime = this.data.k[iKey + 1].t
           } else {
@@ -810,50 +771,15 @@ export default class ExpressionManager {
     this._lottieGlobal = {}
   }
 
-  rgbToHsl(val: Vector3) {
-    const r = val[0]
-    const g = val[1]
-    const b = val[2]
-    const max = Math.max(r, g, b)
-    const min = Math.min(r, g, b)
-    let h = 0
-    let s
-    const l = (max + min) / 2
+  // scoped_bm_rt() {
+  //   throw new Error(
+  //     `${this.constructor.name}: Method scoped_bm_rt is not implemented`
+  //   )
+  // }
 
-    if (max === min) {
-      h = 0 // achromatic
-      s = 0 // achromatic
-    } else {
-      const d = max - min
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-      switch (max) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0)
-          break
-        case g:
-          h = (b - r) / d + 2
-          break
-        case b:
-          h = (r - g) / d + 4
-          break
-        default:
-          break
-      }
-      h /= 6
-    }
-
-    return [h, s, l, val[3]]
-  }
-
-  scoped_bm_rt() {
-    throw new Error(
-      `${this.constructor.name}: Method scoped_bm_rt is not implemented`
-    )
-  }
-
-  seedRandom(seed: number) {
+  seedRandom(_seed: number) {
+    throw new Error(`${this.constructor.name}: seedRandom is not implemented`)
     // BMMath.seedrandom(randSeed + seed)
-    Math.random(this.randSeed + seed)
   }
 
   smooth() {
@@ -876,10 +802,10 @@ export default class ExpressionManager {
     const tOfB = typeof b
     if (this.isNumerable(tOfA, a) && this.isNumerable(tOfB, b)) {
       if (tOfA === 'string') {
-        a = parseInt(a, 10)
+        a = parseInt(a as unknown as string, 10)
       }
       if (tOfB === 'string') {
-        b = parseInt(b, 10)
+        b = parseInt(b as unknown as string, 10)
       }
       return a - b
     }
@@ -900,8 +826,8 @@ export default class ExpressionManager {
       const retArr = []
       while (i < lenA || i < lenB) {
         if (
-          (typeof a[i] === 'number' || a[i] instanceof Number) &&
-          (typeof b[i] === 'number' || b[i] instanceof Number)
+          (typeof a[i] === 'number' || (a as any)[i] instanceof Number) &&
+          (typeof b[i] === 'number' || (b as any)[i] instanceof Number)
         ) {
           retArr[i] = a[i] - b[i]
         } else {
@@ -963,8 +889,8 @@ export default class ExpressionManager {
       const retArr = []
       while (i < lenA || i < lenB) {
         if (
-          (typeof a[i] === 'number' || a[i] instanceof Number) &&
-          (typeof b[i] === 'number' || b[i] instanceof Number)
+          (typeof a[i] === 'number' || (a as any)[i] instanceof Number) &&
+          (typeof b[i] === 'number' || (b as any)[i] instanceof Number)
         ) {
           retArr[i] = a[i] + b[i]
         } else {
@@ -998,6 +924,18 @@ export default class ExpressionManager {
   toWorld(_arr: number[], _time?: number): number[] {
     throw new Error(
       `${this.constructor.name}: Method toWorld is not implemented`
+    )
+  }
+
+  valueAtTime(_num: number): string | number | number[] {
+    throw new Error(
+      `${this.constructor.name}: Method valueAtTime is not implemented`
+    )
+  }
+
+  velocityAtTime(_num: number): number {
+    throw new Error(
+      `${this.constructor.name}: Method velocityAtTime is not implemented`
     )
   }
 

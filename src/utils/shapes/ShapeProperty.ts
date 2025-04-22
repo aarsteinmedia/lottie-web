@@ -38,8 +38,9 @@ function getKeyframedConstructorFunction() {
 function getShapeProp(
   elem: ShapeElement,
   data: Shape,
-  type: number
-  // _?: unknown
+  type: number,
+  _arr?: any[],
+  _trims?: any[]
 ) {
   let prop = null
 

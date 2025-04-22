@@ -316,7 +316,7 @@ export default class TextProperty extends BaseProperty {
         line: currentLine,
         n: newLineFlag,
         val: val,
-      })
+      } as unknown as Letter)
       if (anchorGrouping === 2) {
         currentSize += cLength
         if (val === '' || val === ' ' || i === len - 1) {

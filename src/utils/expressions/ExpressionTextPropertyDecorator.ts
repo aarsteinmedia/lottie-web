@@ -1,4 +1,5 @@
-import { DocumentData } from '@/types'
+import type { DocumentData } from '@/types'
+
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import TextProperty from '@/utils/text/TextProperty'
 
@@ -7,10 +8,10 @@ export default function addTextDecorator() {
     if (this.data.d && 'x' in this.data.d) {
       this.calculateExpression = new ExpressionManager().initiateExpression(
         this.elem,
-        this.data.d,
-        this
-      ) // .bind(this)(this.elem, this.data.d, this)
-      this.addEffect(this.getExpressionValue.bind(this))
+        this.data.d as any,
+        this as any
+      ) as any // .bind(this)(this.elem, this.data.d, this)
+      this.addEffect(this.getExpressionValue.bind(this) as any)
       return true
     }
     return null

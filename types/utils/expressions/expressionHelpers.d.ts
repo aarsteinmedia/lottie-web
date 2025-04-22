@@ -1,0 +1,11 @@
+import type { ElementInterfaceIntersect } from '../../types';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import type { BaseProperty } from '../../utils/Properties';
+import type { ShapeBaseProperty, ShapeProperty } from '../../utils/shapes/ShapeProperty';
+import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
+export declare function getSpeedAtTime(this: BaseProperty, frameNum: number): number;
+export declare function getValueAtTime(this: TextSelectorProperty, frameNumFromProps: number): number | number[] | undefined;
+export declare function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[];
+export declare function getStaticValueAtTime(this: ShapeBaseProperty): import("../shapes/ShapePath").default | undefined;
+export declare function searchExpressions(elem: ElementInterfaceIntersect, data: TextSelectorProperty, prop: TextSelectorProperty | ShapeProperty): void;
+export declare function setGroupProperty(this: BaseProperty, propertyGroup: LayerExpressionInterface): void;

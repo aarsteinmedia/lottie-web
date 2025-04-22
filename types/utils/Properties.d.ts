@@ -1,18 +1,23 @@
-import type { Caching, ElementInterfaceIntersect, Keyframe, Shape, Vector2, Vector3, VectorProperty } from '../types';
+import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, Keyframe, Shape, TextData, TextRangeValue, Vector2, Vector3, VectorProperty } from '../types';
+import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
+import type Matrix from '../utils/Matrix';
+import type ShapePath from '../utils/shapes/ShapePath';
 import { type BezierData } from '../utils/Bezier';
 import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
+    _cachingAtTime?: Caching;
     _isFirstFrame?: boolean;
     _placeholder?: boolean;
-    comp?: ElementInterfaceIntersect;
-    data?: VectorProperty<number | number[] | Keyframe[]>;
-    e?: unknown;
-    effectsSequence: ((arg: unknown) => any)[];
+    comp?: CompElementInterface;
+    data?: VectorProperty<number | number[] | Keyframe[]> | Shape | TextRangeValue | TextData;
+    e?: ValueProperty | {
+        v: number;
+    };
+    effectsSequence: EffectFunction[];
     elem?: ElementInterfaceIntersect;
     frameId?: number;
     g?: unknown;
-    getValueAtTime?: (a: number, b?: number) => any;
     initFrame: number;
     k?: boolean;
     keyframes: Keyframe[];
@@ -23,19 +28,25 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     kf?: boolean;
     lock?: boolean;
     mult?: number;
-    offsetTime?: number;
-    pv?: any;
-    s?: unknown;
+    offsetTime: number;
+    propertyGroup?: LayerExpressionInterface;
+    pv?: string | number | number[] | DocumentData | ShapePath;
+    s?: ValueProperty | MultiDimensionalProperty<Vector3>;
     sh?: Shape;
-    v?: any;
-    vel?: number | any[];
-    addEffect(effectFunction: any): void;
-    getValueAtCurrentTime(): any;
+    v?: string | number | number[] | Matrix | DocumentData;
+    value?: number | number[];
+    vel?: number | number[];
+    addEffect(effectFunction: EffectFunction): void;
+    getSpeedAtTime(_frameNum: number): void;
+    getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
+    getValueAtTime<T extends number | number[] = number>(_a: number, _b?: number): T;
+    getVelocityAtTime(_frameNum: number): number;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
     processEffectsSequence(): void;
-    setVValue(val: number | number[]): void;
+    setVValue(val?: number | number[] | Keyframe[]): void;
+    valueAtTime(_a: number, _b?: number): void;
 }
-export declare class ValueProperty<T = number> extends BaseProperty {
+export declare class ValueProperty<T extends number | number[] = number> extends BaseProperty {
     pv: T;
     v: T;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty, mult?: null | number, container?: ElementInterfaceIntersect | null);

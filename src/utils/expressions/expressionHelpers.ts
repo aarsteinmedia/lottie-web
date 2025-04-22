@@ -1,7 +1,10 @@
 import type { ElementInterfaceIntersect } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { BaseProperty } from '@/utils/Properties'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type {
+  ShapeBaseProperty,
+  ShapeProperty,
+} from '@/utils/shapes/ShapeProperty'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { ArrayType } from '@/enums'
@@ -74,7 +77,7 @@ export function getVelocityAtTime(this: BaseProperty, frameNum: number) {
   return velocity as number | number[]
 }
 
-export function getStaticValueAtTime(this: TextSelectorProperty) {
+export function getStaticValueAtTime(this: ShapeBaseProperty) {
   return this.pv
 }
 
@@ -88,9 +91,10 @@ export function searchExpressions(
   }
   prop.k = true
   prop.x = true
-  prop.initiateExpression = ExpressionManager.prototype.initiateExpression
+  prop.initiateExpression = ExpressionManager.prototype
+    .initiateExpression as any
   prop.effectsSequence.push(
-    prop.initiateExpression(elem, data, prop).bind(prop)
+    (prop.initiateExpression as any)(elem, data, prop).bind(prop)
   )
 }
 

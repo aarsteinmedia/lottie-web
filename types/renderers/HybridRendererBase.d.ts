@@ -1,0 +1,48 @@
+import type AnimationItem from '../animation/AnimationItem';
+import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '../types';
+import HCameraElement from '../elements/html/HCameraElement';
+import HImageElement from '../elements/html/HImageElement';
+import HShapeElement from '../elements/html/HShapeElement';
+import HSolidElement from '../elements/html/HSolidElement';
+import HTextElement from '../elements/html/HTextElement';
+import ImageElement from '../elements/ImageElement';
+import ISolidElement from '../elements/SolidElement';
+import SVGShapeElement from '../elements/svg/SVGShapeElement';
+import SVGTextLottieElement from '../elements/svg/SVGTextElement';
+import { RendererType } from '../enums';
+import BaseRenderer from '../renderers/BaseRenderer';
+export default class HybridRendererBase extends BaseRenderer {
+    camera?: HCameraElement;
+    destroyed: boolean;
+    renderConfig: HTMLRendererConfig;
+    rendererType: RendererType;
+    resizerElem?: HTMLDivElement;
+    supports3d: boolean;
+    threeDElements: ThreeDElements[];
+    constructor(animationItem: AnimationItem, config?: HTMLRendererConfig);
+    addTo3dContainer(elem: SVGElement, pos: number): void;
+    appendElementInPos(element: ElementInterfaceIntersect, pos: number): void;
+    build3dContainers(): void;
+    checkPendingElements(): void;
+    configAnimation(animData: AnimationData): void;
+    createCamera(data: LottieLayer): HCameraElement;
+    createImage(data: LottieLayer): ImageElement | HImageElement;
+    createShape(data: LottieLayer): SVGShapeElement | HShapeElement;
+    createSolid(data: LottieLayer): ISolidElement | HSolidElement;
+    createText(data: LottieLayer): SVGTextLottieElement | HTextElement;
+    createThreeDContainer(pos: number, type: string): {
+        container: HTMLElement;
+        endPos: number;
+        perspectiveElem: HTMLDivElement;
+        startPos: number;
+        type: string;
+    };
+    destroy(): void;
+    getThreeDContainerByPos(pos: number): HTMLDivElement | null;
+    hide(): void;
+    initItems(): void;
+    renderFrame(_num: number | null): void;
+    searchExtraCompositions(assets: LottieLayer[]): void;
+    show(): void;
+    updateContainerSize(): void;
+}

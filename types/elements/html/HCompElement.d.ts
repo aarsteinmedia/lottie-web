@@ -1,0 +1,32 @@
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import CompElement from '../../elements/CompElement';
+import SVGCompElement from '../../elements/svg/SVGCompElement';
+export default class HCompElement extends CompElement {
+    pendingElements: ElementInterfaceIntersect[];
+    supports3d?: boolean;
+    svgElement?: SVGSVGElement;
+    threeDElements: any[];
+    transformedElement?: SVGGElement | HTMLElement;
+    constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
+    _createBaseContainerElements(): void;
+    addEffects(): void;
+    addTo3dContainer(elem: ElementInterfaceIntersect, pos: number): void;
+    appendElementInPos(_element: ElementInterfaceIntersect, _pos: number): void;
+    build3dContainers(): void;
+    checkBlendMode(): void;
+    checkPendingElements(): void;
+    configAnimation(_data: AnimationData): void;
+    createCamera(_data: LottieLayer): void;
+    createComp(data: LottieLayer): HCompElement | SVGCompElement;
+    createContainerElements(): void;
+    createImage(_data: LottieLayer): void;
+    createShape(_data: LottieLayer): void;
+    createSolid(_data: LottieLayer): void;
+    createText(_data: LottieLayer): void;
+    createThreeDContainer(_pos: number, _type: string): void;
+    getThreeDContainerByPos(_pos: number): void;
+    initItems(): void;
+    searchExtraCompositions(_assets: LottieLayer[]): void;
+    setMatte(): void;
+    updateContainerSize(): void;
+}

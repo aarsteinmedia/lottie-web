@@ -113,10 +113,8 @@ export default abstract class BaseElement {
     if (this.data.hasMask && this.maskManager) {
       this.layerInterface.registerMaskInterface(this.maskManager)
     }
-    const effectsInterface = effectsExpressionInterface.createEffectsInterface(
-      this,
-      this.layerInterface
-    )
+    const effectsInterface = (effectsExpressionInterface as any) // TODO:
+      .createEffectsInterface(this, this.layerInterface)
     this.layerInterface.registerEffectsInterface(effectsInterface)
 
     if (this.data.ty === 0 || this.data.xt) {

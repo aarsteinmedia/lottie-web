@@ -1,37 +1,33 @@
-import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect } from '../../types';
+import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect, TextEffectFunction } from '../../types';
 import type LetterProps from '../../utils/text/LetterProps';
-import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
-type EffectFunction = (data: DocumentData, value: string) => DocumentData;
-export default class TextProperty extends DynamicPropertyContainer {
+import { BaseProperty } from '../../utils/Properties';
+export default class TextProperty extends BaseProperty {
     _frameId: number;
-    _isFirstFrame: boolean;
     canResize: boolean;
-    comp?: ElementInterfaceIntersect;
     currentData: DocumentData;
-    data?: TextData;
+    data: TextData;
     defaultBoxWidth: Vector2;
-    effectsSequence: EffectFunction[];
+    effectsSequence: TextEffectFunction[];
     elem: ElementInterfaceIntersect;
-    frameId?: number;
     keysIndex: number;
-    kf: boolean;
-    lock?: boolean;
     minimumFontSize: number;
     pv: DocumentData | string;
     v: DocumentData | string;
-    constructor(elem: ElementInterfaceIntersect, data?: TextData);
-    addEffect(effectFunction: EffectFunction): void;
+    constructor(elem: ElementInterfaceIntersect, data: TextData);
+    addEffect(effectFunction: TextEffectFunction): void;
     buildFinalText(text: string): string[];
+    calculateExpression(_text: string): number;
     canResizeFont(_canResize: boolean): void;
     completeTextData(documentData: DocumentData): void;
     copyData(obj: DocumentData, data?: DocumentData | LetterProps): DocumentData;
+    getExpressionValue(_currentValue: any, _text: any): void;
     getKeyframeValue(): DocumentData | LetterProps | undefined;
-    getValue(_finalValue: unknown): void;
+    getValue(_finalValue?: unknown): void;
     recalculate(index: number): void;
+    searchExpressions(): boolean | null;
     searchKeyframes(): boolean;
     searchProperty(): boolean;
     setCurrentData(data: DocumentData): void;
     setMinimumFontSize(_fontValue: number): void;
     updateDocumentData(newData: DocumentData, indexFromProps: number): void;
 }
-export {};

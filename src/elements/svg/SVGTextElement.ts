@@ -167,7 +167,7 @@ export default class SVGTextLottieElement extends TextElement {
           this.textSpans[i] = {
             glyph: null,
             span: null,
-          }
+          } as any
         }
         this.textSpans[i].span = tSpan
         yPos += Number(documentData.finalLineHeight)
@@ -185,7 +185,7 @@ export default class SVGTextLottieElement extends TextElement {
             childSpan: null,
             glyph: null,
             span: null,
-          }
+          } as any
         }
         if (!usesGlyphs || !singleShape || i === 0) {
           tSpan =

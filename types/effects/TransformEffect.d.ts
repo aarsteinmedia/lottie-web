@@ -1,3 +1,4 @@
+import type { ValueProperty } from '../utils/Properties';
 import { GroupEffect } from '../effects/EffectsManager';
 import Matrix from '../utils/Matrix';
 export default abstract class TransformEffect {
@@ -5,7 +6,8 @@ export default abstract class TransformEffect {
     _opMdf?: boolean;
     effectsManager?: GroupEffect;
     matrix?: Matrix;
-    opacity?: number;
+    op?: ValueProperty;
+    opacity: number;
     type?: string;
     init(effectsManager: GroupEffect): void;
     renderFrame(forceFrame?: boolean): void;

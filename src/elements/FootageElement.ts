@@ -41,7 +41,7 @@ export default class FootageElement extends RenderableElement {
   }
 
   override initExpressions() {
-    const expressionsInterfaces = getExpressionInterfaces()
+    const expressionsInterfaces = getExpressionInterfaces() as any
     if (!expressionsInterfaces) {
       return
     }

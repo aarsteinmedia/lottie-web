@@ -14,7 +14,10 @@ export default class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
   _name: string
   active?: boolean
+  anchor_point: any
+  anchorPoint: any
   content?: ShapeExpressionInterface
+  effect: any
   hasParent: boolean
   height?: number
   index?: number
@@ -24,6 +27,8 @@ export default class LayerExpressionInterface {
   outPoint: number
   parent?: LayerExpressionInterface
   position: Vector2
+  rotation: number
+  scale: number
   shapeInterface?: ShapeExpressionInterface
   source?: string
   startTime: number
@@ -51,7 +56,7 @@ export default class LayerExpressionInterface {
     const { anchorPoint, opacity, position, rotation, scale } =
       this.transformInterface
 
-    this.anchorPointDescriptor = anchorPoint
+    this.anchorPointDescriptor = anchorPoint as any
 
     this.startTime = elem.data.st
     this.index = elem.data.ind
@@ -70,9 +75,9 @@ export default class LayerExpressionInterface {
 
     this.opacity = opacity
     this.parent = elem.hierarchy?.[0]?.layerInterface
-    this.position = position
-    this.rotation = rotation
-    this.scale = scale
+    this.position = position as any
+    this.rotation = rotation as any
+    this.scale = scale as any
     this.transform = this.transformInterface
   }
 
@@ -91,7 +96,6 @@ export default class LayerExpressionInterface {
     }
     return matrix.applyToPointArray(arr[0], arr[1], arr[2] || 0)
   }
-
   public fromComp(arr: number[]) {
     const toWorldMat = new Matrix()
     toWorldMat.reset()
@@ -139,7 +143,7 @@ export default class LayerExpressionInterface {
     }
     return matrix.inversePoint(arr)
   }
-  registerEffectsInterface(effects) {
+  registerEffectsInterface(effects: any) {
     this.effect = effects
   }
   registerMaskInterface(maskManager: MaskElement) {

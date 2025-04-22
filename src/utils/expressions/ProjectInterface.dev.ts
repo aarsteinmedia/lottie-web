@@ -1,5 +1,7 @@
+import { CompElementInterface } from '@/types'
+
 const ProjectInterface = (function () {
-  function registerComposition(comp) {
+  function registerComposition(comp: CompElementInterface) {
     this.compositions.push(comp)
   }
 

@@ -1,13 +1,16 @@
-import type { CompInterface } from '../../types';
-export declare const compositions: CompInterface[], currentFrame = 0;
-export declare function registerComposition(comp: CompInterface): void;
+import type { CompElementInterface } from '../../types';
+import LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import { MaskInterface } from '../../utils/expressions/MaskInterface';
 export default class ProjectInterface {
+    compositions: CompElementInterface[];
     content?: ProjectInterface;
-    createEffectsInterface?: (val: any, _interface?: ProjectInterface) => any;
+    createEffectsInterface?: (val: any, _interface?: LayerExpressionInterface) => any;
+    currentFrame: number;
     registerEffectsInterface?: (val: any, _interface?: ProjectInterface) => any;
-    registerMaskInterface?: (val: any, _interface?: ProjectInterface) => any;
+    registerMaskInterface?: (val: any, _interface?: MaskInterface) => any;
     shapeInterface?: ProjectInterface;
     text?: ProjectInterface;
     textInterface?: ProjectInterface;
     constructor(name?: string);
+    registerComposition(comp: CompElementInterface): void;
 }

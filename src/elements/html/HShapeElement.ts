@@ -1,23 +1,44 @@
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type {
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  Shape,
+  ShapeDataInterface,
+  Transformer,
+  Vector2,
 } from '@/types'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
-import HBaseElement from '@/elements/html/HBaseElement'
-import HSolidElement from '@/elements/html/HSolidElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import { createNS } from '@/utils'
 
 export default class HShapeElement extends RenderableElement {
+  animatedContents: any[]
+  currentBBox: any
+  prevViewData: HShapeElement[]
+
+  processedElements: any[]
+
   shapeBoundingBox = {
     bottom: 0,
     left: 0,
     right: 0,
     top: 0,
   }
+
+  shapeCont?: SVGElement
+
+  shapeModifiers: any[]
+
+  shapes: Shape[]
+
   shapesContainer: SVGGElement
+
+  stylesList: any[]
+
+  svgElement?: SVGSVGElement
+
   tempBoundingBox = {
     height: 0,
     width: 0,
@@ -69,7 +90,7 @@ export default class HShapeElement extends RenderableElement {
     )
   }
 
-  calculateBoundingBox(itemsData, boundingBox) {
+  calculateBoundingBox(itemsData: any, boundingBox: DOMRect) {
     const { length } = itemsData
     for (let i = 0; i < length; i++) {
       if (itemsData[i] && itemsData[i].sh) {
@@ -86,7 +107,14 @@ export default class HShapeElement extends RenderableElement {
     }
   }
 
-  calculateF(t: number, p0, p1, p2, p3, i) {
+  calculateF(
+    t: number,
+    p0: Vector2,
+    p1: Vector2,
+    p2: Vector2,
+    p3: Vector2,
+    i: number
+  ) {
     return (
       Math.pow(1 - t, 3) * p0[i] +
       3 * Math.pow(1 - t, 2) * t * p1[i] +
@@ -95,7 +123,7 @@ export default class HShapeElement extends RenderableElement {
     )
   }
 
-  calculateShapeBoundingBox(item, boundingBox) {
+  calculateShapeBoundingBox(item: ShapeDataInterface, boundingBox: DOMRect) {
     const shape = item.sh.v
     const transformers = item.transformers
     let i
@@ -108,22 +136,34 @@ export default class HShapeElement extends RenderableElement {
       return
     }
     for (i = 0; i < len - 1; i++) {
-      vPoint = this.getTransformedPoint(transformers, shape.v[i])
-      oPoint = this.getTransformedPoint(transformers, shape.o[i])
-      nextIPoint = this.getTransformedPoint(transformers, shape.i[i + 1])
-      nextVPoint = this.getTransformedPoint(transformers, shape.v[i + 1])
+      vPoint = this.getTransformedPoint(transformers, shape.v[i]) as Vector2
+      oPoint = this.getTransformedPoint(transformers, shape.o[i]) as Vector2
+      nextIPoint = this.getTransformedPoint(
+        transformers,
+        shape.i[i + 1]
+      ) as Vector2
+      nextVPoint = this.getTransformedPoint(
+        transformers,
+        shape.v[i + 1]
+      ) as Vector2
       this.checkBounds(vPoint, oPoint, nextIPoint, nextVPoint, boundingBox)
     }
     if (shape.c) {
-      vPoint = this.getTransformedPoint(transformers, shape.v[i])
-      oPoint = this.getTransformedPoint(transformers, shape.o[i])
-      nextIPoint = this.getTransformedPoint(transformers, shape.i[0])
-      nextVPoint = this.getTransformedPoint(transformers, shape.v[0])
+      vPoint = this.getTransformedPoint(transformers, shape.v[i]) as Vector2
+      oPoint = this.getTransformedPoint(transformers, shape.o[i]) as Vector2
+      nextIPoint = this.getTransformedPoint(transformers, shape.i[0]) as Vector2
+      nextVPoint = this.getTransformedPoint(transformers, shape.v[0]) as Vector2
       this.checkBounds(vPoint, oPoint, nextIPoint, nextVPoint, boundingBox)
     }
   }
 
-  checkBounds(vPoint, oPoint, nextIPoint, nextVPoint, boundingBox) {
+  checkBounds(
+    vPoint: Vector2,
+    oPoint: Vector2,
+    nextIPoint: Vector2,
+    nextVPoint: Vector2,
+    boundingBox: any
+  ) {
     this.getBoundsOfCurve(vPoint, oPoint, nextIPoint, nextVPoint)
     const bounds = this.shapeBoundingBox
     boundingBox.x = Math.min(bounds.left, boundingBox.x)
@@ -134,17 +174,24 @@ export default class HShapeElement extends RenderableElement {
 
   createContent() {
     let cont
-    this.baseElement.style.fontSize = 0
-    if (this.data.hasMask) {
-      this.layerElement.appendChild(this.shapesContainer)
+    if (!this.baseElement) {
+      throw new Error(
+        `${this.constructor.name}: baseElement is not implemented`
+      )
+    }
+    this.baseElement.style.fontSize = '0'
+    if (this.data?.hasMask) {
+      this.layerElement?.appendChild(this.shapesContainer)
       cont = this.svgElement
     } else {
-      cont = createNS('svg')
-      const size = this.comp.data ? this.comp.data : this.globalData.compSize
-      cont.setAttribute('width', size.w)
-      cont.setAttribute('height', size.h)
+      cont = createNS<SVGSVGElement>('svg')
+      const size = this.comp?.data ? this.comp.data : this.globalData?.compSize
+      if (size) {
+        cont.setAttribute('width', `${size.w}`)
+        cont.setAttribute('height', `${size.h}`)
+      }
       cont.appendChild(this.shapesContainer)
-      this.layerElement.appendChild(cont)
+      this.layerElement?.appendChild(cont)
     }
 
     this.searchShapes(
@@ -160,7 +207,7 @@ export default class HShapeElement extends RenderableElement {
     this.shapeCont = cont
   }
 
-  currentBoxContains(box) {
+  currentBoxContains(box: DOMRect) {
     return (
       this.currentBBox.x <= box.x &&
       this.currentBBox.y <= box.y &&
@@ -169,7 +216,7 @@ export default class HShapeElement extends RenderableElement {
     )
   }
 
-  expandStrokeBoundingBox(widthProperty, boundingBox) {
+  expandStrokeBoundingBox(widthProperty: any, boundingBox: any) {
     let width = 0
     if (widthProperty.keyframes) {
       for (let i = 0; i < widthProperty.keyframes.length; i++) {
@@ -189,13 +236,19 @@ export default class HShapeElement extends RenderableElement {
     boundingBox.yMax += width
   }
 
-  getBoundsOfCurve(p0, p1, p2, p3) {
+  filterUniqueShapes() {
+    throw new Error(
+      `${this.constructor.name}: Method filterUniqueShapes is not implemented`
+    )
+  }
+
+  getBoundsOfCurve(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) {
     const bounds = [
       [p0[0], p3[0]],
       [p0[1], p3[1]],
     ]
 
-    for (var a, b, c, t, b2ac, t1, t2, i = 0; i < 2; ++i) {
+    for (let a, b, c, t, b2ac, t1, t2, i = 0; i < 2; ++i) {
       b = 6 * p0[i] - 12 * p1[i] + 6 * p2[i]
       a = -3 * p0[i] + 9 * p1[i] - 9 * p2[i] + 3 * p3[i]
       c = 3 * p1[i] - 3 * p0[i]
@@ -234,26 +287,42 @@ export default class HShapeElement extends RenderableElement {
     this.shapeBoundingBox.bottom = Math.max.apply(null, bounds[1])
   }
 
-  getTransformedPoint(transformers, point) {
-    let i
-    const len = transformers.length
-    for (i = 0; i < len; i++) {
+  getTransformedPoint(transformers: Transformer[], pointFromProps: number[]) {
+    let point = pointFromProps
+    const { length } = transformers
+    for (let i = 0; i < length; i++) {
       point = transformers[i].mProps.v.applyToPointArray(point[0], point[1], 0)
     }
     return point
+  }
+
+  initElement(
+    _data: LottieLayer,
+    _globalData: GlobalData,
+    _comp: CompElementInterface
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method initElement is not implemented`
+    )
   }
 
   renderInnerContent() {
     this._renderShapeFrame()
 
     if (!this.hidden && (this._isFirstFrame || this._mdf)) {
+      if (!this.shapeCont) {
+        throw new Error(
+          `${this.constructor.name}: shapeCont is not implemented`
+        )
+      }
+
       const tempBoundingBox = this.tempBoundingBox
       const max = 999999
       tempBoundingBox.x = max
       tempBoundingBox.xMax = -max
       tempBoundingBox.y = max
       tempBoundingBox.yMax = -max
-      this.calculateBoundingBox(this.itemsData, tempBoundingBox)
+      this.calculateBoundingBox(this.itemsData, tempBoundingBox as any)
       tempBoundingBox.width =
         tempBoundingBox.xMax < tempBoundingBox.x
           ? 0
@@ -263,18 +332,18 @@ export default class HShapeElement extends RenderableElement {
           ? 0
           : tempBoundingBox.yMax - tempBoundingBox.y
       // var tempBoundingBox = this.shapeCont.getBBox();
-      if (this.currentBoxContains(tempBoundingBox)) {
+      if (this.currentBoxContains(tempBoundingBox as any)) {
         return
       }
       let changed = false
       if (this.currentBBox.w !== tempBoundingBox.width) {
         this.currentBBox.w = tempBoundingBox.width
-        this.shapeCont.setAttribute('width', tempBoundingBox.width)
+        this.shapeCont.setAttribute('width', `${tempBoundingBox.width}`)
         changed = true
       }
       if (this.currentBBox.h !== tempBoundingBox.height) {
         this.currentBBox.h = tempBoundingBox.height
-        this.shapeCont.setAttribute('height', tempBoundingBox.height)
+        this.shapeCont.setAttribute('height', `${tempBoundingBox.height}`)
         changed = true
       }
       if (
@@ -287,7 +356,7 @@ export default class HShapeElement extends RenderableElement {
         this.currentBBox.x = tempBoundingBox.x
         this.currentBBox.y = tempBoundingBox.y
 
-        this.shapeCont.setAttribute(
+        this.shapeCont?.setAttribute(
           'viewBox',
           `${this.currentBBox.x} ${this.currentBBox.y} ${this.currentBBox.w} ${
             this.currentBBox.h
@@ -301,5 +370,19 @@ export default class HShapeElement extends RenderableElement {
         shapeStyle.webkitTransform = shapeTransform
       }
     }
+  }
+
+  searchShapes(
+    _shapes: Shape[],
+    _itemsData: ShapeGroupData[],
+    _prevViewData: HShapeElement[],
+    _shapesContainer: SVGElement,
+    _pos: number,
+    _: unknown[],
+    _flag: boolean
+  ) {
+    throw new Error(
+      `${this.constructor.name}: Method searchShapes is not implemented`
+    )
   }
 }

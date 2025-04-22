@@ -117,8 +117,8 @@ export default class CVShapeElement extends ShapeElement {
   override createContent() {
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
-      this.prevViewData,
+      this.itemsData as any,
+      this.prevViewData as any,
       true,
       []
     )
@@ -160,7 +160,7 @@ export default class CVShapeElement extends ShapeElement {
       transforms: [],
       type: data.ty,
     }
-    const elementData: CVElement = {}
+    const elementData = {} as unknown as CVElement
 
     switch (data.ty) {
       case ShapeType.Fill:
@@ -425,8 +425,8 @@ export default class CVShapeElement extends ShapeElement {
     }
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
-      this.prevViewData,
+      this.itemsData as any,
+      this.prevViewData as any,
       true,
       []
     )
@@ -447,7 +447,7 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderFill(_styleData, itemData, groupTransform: TransformEffect) {
+  renderFill(_styleData: any, itemData: any, groupTransform: TransformEffect) {
     const styleElem = itemData.style
 
     if (itemData.c._mdf || this._isFirstFrame) {
@@ -460,7 +460,11 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderGradientFill(styleData, itemData, groupTransform: TransformEffect) {
+  renderGradientFill(
+    styleData: any,
+    itemData: any,
+    groupTransform: TransformEffect
+  ) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
@@ -545,31 +549,37 @@ export default class CVShapeElement extends ShapeElement {
     isMain?: boolean
   ) {
     const len = items.length - 1
-    let groupTransform
-    groupTransform = parentTransform
+    let groupTransform = parentTransform
     for (let i = len; i >= 0; i -= 1) {
       switch (items[i].ty) {
         case 'tr':
-          groupTransform = data[i].transform
-          this.renderShapeTransform(parentTransform, groupTransform)
+          groupTransform = data[i].transform as any
+          this.renderShapeTransform(
+            parentTransform as any,
+            groupTransform as any
+          )
           break
         case ShapeType.Path:
         case ShapeType.Ellipse:
         case ShapeType.Rectangle:
         case ShapeType.PolygonStar:
-          this.renderPath(items[i], data[i])
+          this.renderPath(items[i], data[i] as any)
           break
         case ShapeType.Fill:
-          this.renderFill(items[i], data[i], groupTransform)
+          this.renderFill(items[i], data[i], groupTransform as any)
           break
         case ShapeType.Stroke:
-          this.renderStroke(items[i], data[i], groupTransform)
+          this.renderStroke(items[i], data[i], groupTransform as any)
           break
         case ShapeType.GradientFill:
-          this.renderGradientFill(items[i], data[i], groupTransform)
+          this.renderGradientFill(
+            items[i] as any,
+            data[i],
+            groupTransform as any
+          )
           break
         case ShapeType.Group:
-          this.renderShape(groupTransform, items[i].it || [], data[i].it)
+          this.renderShape(groupTransform, items[i].it || [], data[i].it as any)
           break
         case ShapeType.Trim:
         //
@@ -595,7 +605,11 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderStroke(_styleData, itemData, groupTransform: TransformEffect) {
+  renderStroke(
+    _styleData: any,
+    itemData: any,
+    groupTransform: TransformEffect
+  ) {
     const styleElem = itemData.style,
       d = itemData.d
     if (d && (d._mdf || this._isFirstFrame)) {
@@ -681,8 +695,8 @@ export default class CVShapeElement extends ShapeElement {
 
   searchShapes(
     arr: Shape[],
-    itemsData: ShapeGroupData[],
-    prevViewData: ShapeGroupData[],
+    itemsData: any[],
+    prevViewData: CVShapeElement[],
     shouldRenderFromProps: boolean,
     transforms: Transformer[]
   ) {
@@ -735,10 +749,10 @@ export default class CVShapeElement extends ShapeElement {
         case ShapeType.Transform: {
           if (!processedPos) {
             currentTransform = this.createTransformElement(arr[i])
-            itemsData[i] = currentTransform
+            itemsData[i] = currentTransform as unknown as CVElement
           }
-          ownTransforms.push(itemsData[i])
-          this.addTransformToStyleList(itemsData[i])
+          ownTransforms.push(itemsData[i] as any)
+          this.addTransformToStyleList(itemsData[i] as any)
           break
         }
         case ShapeType.Path:
