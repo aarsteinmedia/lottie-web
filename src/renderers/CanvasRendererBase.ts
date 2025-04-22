@@ -241,6 +241,11 @@ export default class CanvasRendererBase extends BaseRenderer {
   }
 
   ctxTransform(props: Float32Array) {
+    if (!this.canvasContext) {
+      throw new Error(
+        `${this.constructor.name}: canvasContext is not implemented`
+      )
+    }
     if (
       props[0] === 1 &&
       props[1] === 0 &&
@@ -251,7 +256,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     ) {
       return
     }
-    this.canvasContext?.transform(
+    this.canvasContext.transform(
       props[0],
       props[1],
       props[4],
