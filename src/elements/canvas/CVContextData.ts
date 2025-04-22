@@ -7,8 +7,8 @@ class CanvasContext {
   id: number
   lineCap: string
   lineJoin: string
-  lineWidth: string
-  miterLimit: string
+  lineWidth: number | string
+  miterLimit: number | string
   opacity: number
   strokeStyle: string
   transform: number[]
@@ -30,16 +30,16 @@ export default class CVContextData {
   appliedFillStyle: string
   appliedLineCap: string
   appliedLineJoin: string
-  appliedLineWidth: string
-  appliedMiterLimit: string
+  appliedLineWidth: string | number
+  appliedMiterLimit: string | number
   appliedStrokeStyle: string
   cArrPos: number
   cTr: Matrix
   currentFillStyle: string
   currentLineCap: string
   currentLineJoin: string
-  currentLineWidth: string
-  currentMiterLimit: string
+  currentLineWidth: string | number
+  currentMiterLimit: string | number
   currentOpacity: number
   currentStrokeStyle: string
   nativeContext?: null | CanvasRenderingContext2D
@@ -125,14 +125,14 @@ export default class CVContextData {
     }
   }
 
-  lineWidth(value: string) {
+  lineWidth(value: number) {
     if (this.stack[this.cArrPos].lineWidth !== value) {
       this.currentLineWidth = value
       this.stack[this.cArrPos].lineWidth = value
     }
   }
 
-  miterLimit(value: string) {
+  miterLimit(value: number) {
     if (this.stack[this.cArrPos].miterLimit !== value) {
       this.currentMiterLimit = value
       this.stack[this.cArrPos].miterLimit = value

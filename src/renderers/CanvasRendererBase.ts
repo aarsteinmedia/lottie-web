@@ -31,7 +31,7 @@ export default class CanvasRendererBase extends BaseRenderer {
   }
 
   override buildItem(pos: number) {
-    const elements = this.elements
+    const { elements } = this
     if (elements[pos] || this.layers[pos].ty === 99) {
       return
     }
@@ -76,13 +76,10 @@ export default class CanvasRendererBase extends BaseRenderer {
       this.animationItem.wrapper.appendChild(this.animationItem.container)
       this.canvasContext = this.animationItem.container.getContext('2d')
       if (this.renderConfig.className) {
-        this.animationItem.container.setAttribute(
-          'class',
-          this.renderConfig.className
-        )
+        this.animationItem.container.className = this.renderConfig.className
       }
       if (this.renderConfig.id) {
-        this.animationItem.container.setAttribute('id', this.renderConfig.id)
+        this.animationItem.container.id = this.renderConfig.id
       }
     } else {
       this.canvasContext = this.renderConfig.context
@@ -243,7 +240,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.strokeStyle = value
   }
 
-  ctxTransform(props: number[]) {
+  ctxTransform(props: Float32Array) {
     if (
       props[0] === 1 &&
       props[1] === 0 &&
@@ -530,7 +527,7 @@ export default class CanvasRendererBase extends BaseRenderer {
       this.transformCanvas.ty,
       0,
       1,
-    ]
+    ] as unknown as Float32Array
 
     this.ctxTransform(this.transformCanvas.props)
     this.canvasContext.beginPath()

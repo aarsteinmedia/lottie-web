@@ -177,7 +177,7 @@ export type ElementInterfaceIntersect = CVCompElement &
 
 export interface TransformCanvas {
   h: number
-  props?: number[]
+  props?: Float32Array
   sx: number
   sy: number
   tx: number
@@ -1243,7 +1243,7 @@ export interface GlobalData {
   audioController?: AudioController
   blendMode?: string
   canvasContext?: null | CanvasRenderingContext2D
-  comp?: ElementInterfaceIntersect
+  comp?: CompElementInterface
   compSize?: {
     w: number
     h: number

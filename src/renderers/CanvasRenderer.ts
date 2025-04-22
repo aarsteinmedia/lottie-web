@@ -20,22 +20,19 @@ export default class CanvasRenderer extends CanvasRendererBase {
     super()
     this.animationItem = animationItem
     this.renderConfig = {
-      className: (config && config.className) || '',
-      clearCanvas:
-        config?.clearCanvas === undefined ? true : config.clearCanvas,
-      contentVisibility: (config && config.contentVisibility) || 'visible',
-      context: config?.context || null,
-      id: (config && config.id) || '',
+      className: config?.className || '',
+      clearCanvas: config?.clearCanvas ?? true,
+      contentVisibility: config?.contentVisibility || 'visible',
+      context: config?.context ?? null,
+      dpr: config?.dpr ?? 1,
+      id: config?.id || '',
       imagePreserveAspectRatio:
-        (config && config.imagePreserveAspectRatio) ||
-        PreserveAspectRatio.Cover,
+        config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
       preserveAspectRatio:
-        (config && config.preserveAspectRatio) || PreserveAspectRatio.Contain,
-      progressiveLoad: (config && config.progressiveLoad) || false,
-      runExpressions:
-        !config || config.runExpressions === undefined || config.runExpressions,
+        config?.preserveAspectRatio || PreserveAspectRatio.Contain,
+      progressiveLoad: !!config?.progressiveLoad,
+      runExpressions: config?.runExpressions ?? true,
     }
-    this.renderConfig.dpr = (config && config.dpr) || 1
     if (this.animationItem.wrapper) {
       this.renderConfig.dpr =
         (config && config.dpr) || window.devicePixelRatio || 1
@@ -54,20 +51,14 @@ export default class CanvasRenderer extends CanvasRendererBase {
     this.completeLayers = false
     this.rendererType = RendererType.Canvas
     if (this.renderConfig.clearCanvas) {
-      this.ctxTransform = this.contextData.transform.bind(
-        this.contextData
-      ) as any
+      this.ctxTransform = this.contextData.transform.bind(this.contextData)
       this.ctxOpacity = this.contextData.opacity.bind(this.contextData)
       this.ctxFillStyle = this.contextData.fillStyle.bind(this.contextData)
       this.ctxStrokeStyle = this.contextData.strokeStyle.bind(this.contextData)
-      this.ctxLineWidth = this.contextData.lineWidth.bind(
-        this.contextData
-      ) as any
+      this.ctxLineWidth = this.contextData.lineWidth.bind(this.contextData)
       this.ctxLineCap = this.contextData.lineCap.bind(this.contextData)
       this.ctxLineJoin = this.contextData.lineJoin.bind(this.contextData)
-      this.ctxMiterLimit = this.contextData.miterLimit.bind(
-        this.contextData
-      ) as any
+      this.ctxMiterLimit = this.contextData.miterLimit.bind(this.contextData)
       this.ctxFill = this.contextData.fill.bind(this.contextData)
       this.ctxFillRect = this.contextData.fillRect.bind(this.contextData)
       this.ctxStroke = this.contextData.stroke.bind(this.contextData)
