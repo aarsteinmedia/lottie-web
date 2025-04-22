@@ -50,7 +50,7 @@ export default class SVGEffects {
       )
     }
     if (this.filters.length) {
-      elem.addRenderableComponent(this as unknown as ElementInterfaceIntersect)
+      elem.addRenderableComponent(this)
     }
   }
 

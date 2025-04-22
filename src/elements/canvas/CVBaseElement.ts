@@ -81,7 +81,9 @@ export default class CVBaseElement {
       )
     }
 
-    if (Number(this.data.tt) >= 1) {
+    const matteMode = this.data.tt || 0
+
+    if (matteMode >= 1) {
       this.buffers = []
       const canvasContext = this.globalData.canvasContext,
         bufferCanvas = createCanvas(
@@ -94,7 +96,7 @@ export default class CVBaseElement {
         canvasContext.canvas.height
       )
       this.buffers.push(bufferCanvas2)
-      if (Number(this.data.tt) >= 3 && !(document as any)._isProxy) {
+      if (matteMode >= 3 && !document._isProxy) {
         loadLumaCanvas()
       }
     }
@@ -124,10 +126,7 @@ export default class CVBaseElement {
       )
     }
 
-    this.maskManager = new CVMaskElement(
-      this.data,
-      this as unknown as ElementInterfaceIntersect
-    )
+    this.maskManager = new CVMaskElement(this.data, this)
     if (this.renderableEffectsManager) {
       this.transformEffects = this.renderableEffectsManager.getEffects(
         effectTypes.TRANSFORM_EFFECT
@@ -152,15 +151,17 @@ export default class CVBaseElement {
       )
     }
 
-    if (Number(this.data.tt) < 1) {
+    const matteMode = this.data.tt || 0
+
+    if (matteMode < 1) {
       return
     }
     const buffer = this.buffers[1]
     // On the second buffer we store the current state of the global drawing
     // that only contains the content of this layer
     // (if it is a composition, it also includes the nested layers)
-    const bufferCtx = buffer.getContext('2d')
-    this.clearCanvas(bufferCtx as CanvasRenderingContext2D)
+    const bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
+    this.clearCanvas(bufferCtx)
     bufferCtx?.drawImage(this.canvasContext.canvas, 0, 0)
     // We clear the canvas again
     this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
@@ -179,7 +180,7 @@ export default class CVBaseElement {
 
     // If the mask is a Luma matte, we need to do two extra painting operations
     // the _isProxy check is to avoid drawing a fake canvas in workers that will throw an error
-    if (Number(this.data.tt) >= 3 && !(document as any)._isProxy) {
+    if (matteMode >= 3 && !document._isProxy) {
       // We copy the painted mask to a buffer that has a color matrix filter applied to it
       // that applies the rgb values to the alpha channel
       const lumaBuffer = getLumaCanvas(this.canvasContext.canvas),
@@ -190,8 +191,8 @@ export default class CVBaseElement {
       this.canvasContext.drawImage(lumaBuffer, 0, 0)
     }
     this.canvasContext.globalCompositeOperation = operationsMap[
-      this.data.tt as keyof typeof operationsMap
-    ] as any // TODO:
+      matteMode as keyof typeof operationsMap
+    ] as GlobalCompositeOperation
     this.canvasContext.drawImage(buffer, 0, 0)
     // We finally draw the first buffer (that contains the content of the global drawing)
     // We use destination-over to draw the global drawing below the current layer
@@ -208,9 +209,10 @@ export default class CVBaseElement {
   }
 
   initRendererElement() {
-    // throw new Error(
-    //   `${this.constructor.name}: initRendererElement is not implemented`
-    // )
+    // TODO: Pass through?
+    throw new Error(
+      `${this.constructor.name}: initRendererElement is not implemented`
+    )
   }
   prepareLayer() {
     if (!this.data) {
@@ -224,7 +226,9 @@ export default class CVBaseElement {
       )
     }
 
-    if (Number(this.data.tt) < 1) {
+    const matteMode = this.data.tt || 0
+
+    if (matteMode < 1) {
       return
     }
     const buffer = this.buffers[0],
@@ -261,18 +265,17 @@ export default class CVBaseElement {
     this.setBlendMode()
     const forceRealStack = this.data.ty === 0
     this.prepareLayer()
-    ;(this.globalData.renderer as CanvasRenderer).save(forceRealStack)
-    ;(this.globalData.renderer as CanvasRenderer).ctxTransform(
-      this.finalTransform?.localMat.props as Float32Array
-    )
-    ;(this.globalData.renderer as CanvasRenderer).ctxOpacity(
-      this.finalTransform?.localOpacity
-    )
+
+    const { renderer } = <{ renderer: CanvasRenderer }>this.globalData
+
+    renderer.save(forceRealStack)
+    renderer.ctxTransform(this.finalTransform?.localMat.props as Float32Array)
+    renderer.ctxOpacity(this.finalTransform?.localOpacity)
     this.renderInnerContent()
-    ;(this.globalData.renderer as CanvasRenderer).restore(forceRealStack)
+    renderer.restore(forceRealStack)
     this.exitLayer()
     if (this.maskManager?.hasMasks) {
-      ;(this.globalData.renderer as CanvasRenderer).restore(true)
+      renderer.restore(true)
     }
     if (this._isFirstFrame) {
       this._isFirstFrame = false

@@ -254,9 +254,8 @@ export default class CVCompElement extends CompElement {
   }
 
   override destroy() {
-    let i
-    const len = this.layers.length
-    for (i = len - 1; i >= 0; i -= 1) {
+    const { length } = this.layers
+    for (let i = length - 1; i >= 0; i--) {
       if (this.elements[i]) {
         this.elements[i].destroy()
       }
@@ -289,14 +288,19 @@ export default class CVCompElement extends CompElement {
         `${this.constructor.name} data (LottieLayer) is not implemented`
       )
     }
-    const ctx = this.canvasContext
-    ctx?.beginPath()
-    ctx?.moveTo(0, 0)
-    ctx?.lineTo(this.data.w, 0)
-    ctx?.lineTo(this.data.w, this.data.h)
-    ctx?.lineTo(0, this.data.h)
-    ctx?.lineTo(0, 0)
-    ctx?.clip()
+    const { canvasContext: ctx } = this
+    if (!ctx) {
+      throw new Error(
+        `${this.constructor.name}: canvasContext is not implemented`
+      )
+    }
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(this.data.w, 0)
+    ctx.lineTo(this.data.w, this.data.h)
+    ctx.lineTo(0, this.data.h)
+    ctx.lineTo(0, 0)
+    ctx.clip()
     const { length } = this.layers
     for (let i = length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {

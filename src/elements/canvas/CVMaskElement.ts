@@ -1,5 +1,7 @@
+import type CVBaseElement from '@/elements/canvas/CVBaseElement'
+import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type { ElementInterfaceIntersect, LottieLayer, Shape } from '@/types'
+import type { LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -10,12 +12,12 @@ import ShapePropertyFactory, {
 export default class CVMaskElement {
   _isFirstFrame?: boolean
   data: LottieLayer
-  element: ElementInterfaceIntersect
+  element: CVShapeElement | CVBaseElement
   hasMasks: boolean
   masksProperties: Shape[]
   viewData: ShapeProperty[]
 
-  constructor(data: LottieLayer, element: ElementInterfaceIntersect) {
+  constructor(data: LottieLayer, element: CVShapeElement | CVBaseElement) {
     this.data = data
     this.element = element
     this.masksProperties = this.data.masksProperties || []
@@ -27,22 +29,20 @@ export default class CVMaskElement {
         hasMasks = true
       }
       this.viewData[i] = ShapePropertyFactory.getShapeProp(
-        this.element,
+        this.element as CVShapeElement,
         this.masksProperties[i],
         3
       ) as ShapeProperty
     }
     this.hasMasks = hasMasks
     if (hasMasks) {
-      this.element.addRenderableComponent(
-        this as unknown as ElementInterfaceIntersect
-      )
+      ;(this.element as CVShapeElement).addRenderableComponent(this)
     }
     this.getMaskProperty = MaskElement.prototype.getMaskProperty
   }
 
   destroy() {
-    this.element = null as unknown as ElementInterfaceIntersect
+    this.element = null as unknown as CVShapeElement
   }
 
   getMaskProperty(_pos: number) {
@@ -50,8 +50,8 @@ export default class CVMaskElement {
       `${this.constructor.name}: Method getMaskProperty is not implemented`
     )
   }
-  renderFrame() {
-    if (!this.element.globalData.compSize) {
+  renderFrame(_num?: number) {
+    if (!this.element.globalData?.compSize) {
       throw new Error(
         `${this.constructor.name}: element->globalData->compSize is not implemented`
       )

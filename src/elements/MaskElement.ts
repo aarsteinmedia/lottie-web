@@ -202,9 +202,7 @@ export default class MaskElement {
       defs?.appendChild(this.maskElement)
     }
     if (this.viewData.length) {
-      this.element.addRenderableComponent(
-        this as unknown as ElementInterfaceIntersect
-      )
+      this.element.addRenderableComponent(this)
     }
   }
 

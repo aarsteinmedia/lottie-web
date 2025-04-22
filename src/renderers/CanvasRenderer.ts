@@ -34,8 +34,7 @@ export default class CanvasRenderer extends CanvasRendererBase {
       runExpressions: config?.runExpressions ?? true,
     }
     if (this.animationItem.wrapper) {
-      this.renderConfig.dpr =
-        (config && config.dpr) || window.devicePixelRatio || 1
+      this.renderConfig.dpr = config?.dpr || window.devicePixelRatio || 1
     }
     this.renderedFrame = -1
     this.globalData = {

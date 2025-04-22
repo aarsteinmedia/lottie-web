@@ -21,6 +21,7 @@ import type SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
 import type AudioElement from '@/elements/AudioElement'
 import type CVCompElement from '@/elements/canvas/CVCompElement'
 import type CVEffects from '@/elements/canvas/CVEffects'
+import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import type CompElement from '@/elements/CompElement'
 import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
@@ -174,6 +175,8 @@ export type ElementInterfaceIntersect = CVCompElement &
   CVEffects &
   HybridRenderer &
   CVShapeData
+
+export type RenderableComponent = MaskElement | CVMaskElement | CVEffects
 
 export interface TransformCanvas {
   h: number
@@ -1285,4 +1288,10 @@ export interface IntersectData {
   t1: number
   t2: number
   width: number
+}
+
+declare global {
+  interface Document {
+    _isProxy?: boolean
+  }
 }

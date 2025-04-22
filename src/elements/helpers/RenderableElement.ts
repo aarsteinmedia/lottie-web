@@ -1,5 +1,5 @@
 import type {
-  ElementInterfaceIntersect,
+  RenderableComponent,
   SourceRect,
   SVGRendererConfig,
 } from '@/types'
@@ -9,9 +9,9 @@ export default class RenderableElement extends FrameElement {
   hidden?: boolean
   isInRange?: boolean
   isTransparent?: boolean
-  private renderableComponents: ElementInterfaceIntersect[] = []
+  private renderableComponents: RenderableComponent[] = []
 
-  addRenderableComponent(component: ElementInterfaceIntersect) {
+  addRenderableComponent(component: RenderableComponent) {
     if (this.renderableComponents.indexOf(component) === -1) {
       this.renderableComponents.push(component)
     }
@@ -99,7 +99,7 @@ export default class RenderableElement extends FrameElement {
   prepareRenderableFrame(num: number, _?: boolean) {
     this.checkLayerLimits(num)
   }
-  removeRenderableComponent(component: ElementInterfaceIntersect) {
+  removeRenderableComponent(component: RenderableComponent) {
     if (this.renderableComponents.indexOf(component) !== -1) {
       this.renderableComponents.splice(
         this.renderableComponents.indexOf(component),
