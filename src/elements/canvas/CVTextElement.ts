@@ -329,7 +329,7 @@ export default class CVTextElement extends TextElement {
       renderedLetter = renderedLetters[i]
       if (renderedLetter) {
         renderer.save()
-        renderer.ctxTransform(renderedLetter.p as number[])
+        renderer.ctxTransform(renderedLetter.p as unknown as Float32Array)
         renderer.ctxOpacity(renderedLetter.o)
       }
       if (this.fill) {

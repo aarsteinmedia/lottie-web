@@ -160,7 +160,7 @@ export default class CVBaseElement {
     // that only contains the content of this layer
     // (if it is a composition, it also includes the nested layers)
     const bufferCtx = buffer.getContext('2d')
-    this.clearCanvas(bufferCtx)
+    this.clearCanvas(bufferCtx as CanvasRenderingContext2D)
     bufferCtx?.drawImage(this.canvasContext.canvas, 0, 0)
     // We clear the canvas again
     this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
@@ -263,7 +263,7 @@ export default class CVBaseElement {
     this.prepareLayer()
     ;(this.globalData.renderer as CanvasRenderer).save(forceRealStack)
     ;(this.globalData.renderer as CanvasRenderer).ctxTransform(
-      (this.finalTransform?.localMat.props as unknown as number[]) || []
+      this.finalTransform?.localMat.props as Float32Array
     )
     ;(this.globalData.renderer as CanvasRenderer).ctxOpacity(
       this.finalTransform?.localOpacity

@@ -16,6 +16,7 @@ import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import type {
   AnimationData,
+  CompElementInterface,
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
@@ -135,7 +136,7 @@ export default class BaseRenderer extends FrameElement {
   createComp(
     _data: LottieLayer,
     _container?: HTMLElement,
-    _comp?: ElementInterfaceIntersect,
+    _comp?: CompElementInterface,
     _?: unknown
   ): SVGCompElement | CVCompElement | HCompElement {
     throw new Error(

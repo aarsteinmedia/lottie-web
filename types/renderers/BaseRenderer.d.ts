@@ -13,7 +13,7 @@ import type SolidElement from '../elements/SolidElement';
 import type SVGCompElement from '../elements/svg/SVGCompElement';
 import type SVGShapeElement from '../elements/svg/SVGShapeElement';
 import type SVGTextLottieElement from '../elements/svg/SVGTextElement';
-import type { AnimationData, ElementInterfaceIntersect, LottieLayer } from '../types';
+import type { AnimationData, CompElementInterface, ElementInterfaceIntersect, LottieLayer } from '../types';
 import type ProjectInterface from '../utils/helpers/ProjectInterface';
 import AudioElement from '../elements/AudioElement';
 import FootageElement from '../elements/FootageElement';
@@ -36,7 +36,7 @@ export default class BaseRenderer extends FrameElement {
     checkPendingElements(): void;
     createAudio(data: LottieLayer): AudioElement;
     createCamera(_data: LottieLayer): HCameraElement;
-    createComp(_data: LottieLayer, _container?: HTMLElement, _comp?: ElementInterfaceIntersect, _?: unknown): SVGCompElement | CVCompElement | HCompElement;
+    createComp(_data: LottieLayer, _container?: HTMLElement, _comp?: CompElementInterface, _?: unknown): SVGCompElement | CVCompElement | HCompElement;
     createFootage(data: LottieLayer): FootageElement;
     createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement;
     createItem(layer: LottieLayer): CVCompElement | HCompElement | SVGCompElement | AudioElement | SVGShapeElement | CVImageElement | ImageElement | HImageElement | CVSolidElement | NullElement | CVShapeElement | HShapeElement | SVGTextLottieElement | CVTextElement | HTextElement | HCameraElement | FootageElement;

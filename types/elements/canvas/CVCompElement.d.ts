@@ -24,7 +24,7 @@ export default class CVCompElement extends CompElement {
     ctxOpacity(_value: number): void;
     ctxStroke(_value: number): void;
     ctxStrokeStyle(_value: string): void;
-    ctxTransform(_value: number[]): void;
+    ctxTransform(_value: Float32Array): void;
     destroy(): void;
     exitLayer(): void;
     hideElement(): void;

@@ -99,7 +99,7 @@ export type ElementInterfaceUnion = ReturnType<typeof BaseRenderer.prototype.cre
 export type ElementInterfaceIntersect = CVCompElement & AudioElement & CompElement & SVGCompElement & MaskElement & SVGBaseElement & SVGShapeElement & SVGTextElement & SVGStopElement & SVGStrokeStyleData & TextElement & BaseRenderer & AnimationItem & HCompElement & CVEffects & HybridRenderer & CVShapeData;
 export interface TransformCanvas {
     h: number;
-    props?: number[];
+    props?: Float32Array;
     sx: number;
     sy: number;
     tx: number;
@@ -950,7 +950,7 @@ export interface GlobalData {
     audioController?: AudioController;
     blendMode?: string;
     canvasContext?: null | CanvasRenderingContext2D;
-    comp?: ElementInterfaceIntersect;
+    comp?: CompElementInterface;
     compSize?: {
         w: number;
         h: number;

@@ -247,7 +247,7 @@ export default class CVCompElement extends CompElement {
     )
   }
 
-  ctxTransform(_value: number[]) {
+  ctxTransform(_value: Float32Array) {
     throw new Error(
       `${this.constructor.name}: Method ctxTransform is not implemented`
     )

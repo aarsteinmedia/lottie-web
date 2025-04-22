@@ -30,7 +30,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     ctxOpacity(op?: number): void;
     ctxStroke(): void;
     ctxStrokeStyle(value?: string): void;
-    ctxTransform(props: number[]): void;
+    ctxTransform(props: Float32Array): void;
     destroy(): void;
     hide(): void;
     renderFrame(num: number, forceRender?: boolean): void;
