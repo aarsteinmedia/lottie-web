@@ -48,8 +48,8 @@ importers:
         specifier: ^50.6.9
         version: 50.6.9(eslint@9.25.1)
       eslint-plugin-perfectionist:
-        specifier: ^4.12.0
-        version: 4.12.0(eslint@9.25.1)(typescript@5.8.3)
+        specifier: ^4.12.1
+        version: 4.12.1(eslint@9.25.1)(typescript@5.8.3)
       eslint-plugin-prettier:
         specifier: ^5.2.6
         version: 5.2.6(eslint-config-prettier@10.1.2(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3)
@@ -940,8 +940,8 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
 
-  eslint-plugin-perfectionist@4.12.0:
-    resolution: {integrity: sha512-qvjf2IK3w11kyA24eLBKRifjtnwu+kluYTALmKdYCg5xWH1W5uQar3QXGHNOIvGuIM1djpy0FDMssVPPIbTe4Q==}
+  eslint-plugin-perfectionist@4.12.1:
+    resolution: {integrity: sha512-0w0zF4ugHqFfsSFfZcg/pQTUoKkSJOYqqFPURRgA8hkpZsbYksCO4rfpDdiMkOgCJ3y4wxPvwKm3eTrP7jl7zg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       eslint: '>=8.45.0'
@@ -2744,7 +2744,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-perfectionist@4.12.0(eslint@9.25.1)(typescript@5.8.3):
+  eslint-plugin-perfectionist@4.12.1(eslint@9.25.1)(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/types': 8.31.0
       '@typescript-eslint/utils': 8.31.0(eslint@9.25.1)(typescript@5.8.3)
