@@ -4,7 +4,6 @@
  *
  */
 
-import type BaseRenderer from '@/renderers/BaseRenderer'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import TransformElement from '@/elements/helpers/TransformElement'
@@ -25,10 +24,10 @@ export default class HierarchyElement extends TransformElement {
         `${this.constructor.name}: comp (ElementInterface) is not implemented`
       )
     }
-    if (!this.data.parent) {
+    if (!this.data.parent || !('buildElementParenting' in this.comp)) {
       return
     }
-    ;(this.comp as BaseRenderer).buildElementParenting(
+    this.comp.buildElementParenting(
       this as unknown as ElementInterfaceIntersect,
       this.data.parent,
       []

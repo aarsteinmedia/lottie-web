@@ -5,6 +5,7 @@ import _import from 'eslint-plugin-import'
 import jsdoc from 'eslint-plugin-jsdoc'
 import perfectionist from 'eslint-plugin-perfectionist'
 import ESLintPluginPrettier from 'eslint-plugin-prettier'
+import regexpPlugin from 'eslint-plugin-regexp'
 import globals from 'globals'
 import TSESlint from 'typescript-eslint'
 
@@ -22,6 +23,7 @@ export default TSESlint.config(
   },
   ESLint.configs.recommended,
   ...TSESlint.configs.recommended,
+  regexpPlugin.configs['flat/recommended'],
   ESLintConfigPrettier,
   {
     files: ['**/*.{ts,js}'],
@@ -40,6 +42,7 @@ export default TSESlint.config(
       jsdoc,
       perfectionist,
       prettier: ESLintPluginPrettier,
+      regexpPlugin,
     },
 
     rules: {
