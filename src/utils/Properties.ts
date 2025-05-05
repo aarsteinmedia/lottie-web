@@ -19,7 +19,7 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/enums'
 import {
-  createQuaternion, quaternionToEuler, slerp 
+  createQuaternion, quaternionToEuler, slerp
 } from '@/utils'
 import {
   buildBezierData,
@@ -88,8 +88,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       !(
         frameNum === lastFrame ||
         lastFrame !== initialDefaultFrame &&
-          (lastFrame >= endTime && frameNum >= endTime ||
-            lastFrame < initTime && frameNum < initTime)
+        (lastFrame >= endTime && frameNum >= endTime ||
+          lastFrame < initTime && frameNum < initTime)
       )
     ) {
       if (lastFrame >= frameNum) {
@@ -112,16 +112,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   getVelocityAtTime(_frameNum: number): number {
     throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
   }
-  interpolateValue(frameNum: number, caching: Caching = {
-    _lastAddedLength: 0,
-    _lastKeyframeIndex: 0,
-    _lastPoint: 0,
-    lastFrame: 0,
-    lastIndex: 0,
-    lastTime: 0,
-    shapeValue: null,
-    value: 0
-  }) {
+  interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
     const offsetTime = Number(this.offsetTime)
     let newValue: Vector3 = [0,
       0,
@@ -129,19 +120,19 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     if (this.propType === 'multidimensional' && this.pv) {
       newValue = createTypedArray(ArrayType.Float32,
-        (this.pv as number[]).length) as Vector3
+        (this.pv as any[]).length) as Vector3
     }
-    let iterationIndex = caching.lastIndex || 0
-    let it = iterationIndex
-    let len = this.keyframes.length - 1
-    let shouldInterpolate = true
-    let keyData = this.keyframes[0]
-    let nextKeyData = this.keyframes[1]
+    let iterationIndex = caching.lastIndex || 0,
+      i = iterationIndex,
+      len = this.keyframes.length - 1,
+      shouldInterpolate = true,
+      keyData = this.keyframes[0],
+      nextKeyData = this.keyframes[1]
 
     while (shouldInterpolate) {
-      keyData = this.keyframes[it]
-      nextKeyData = this.keyframes[it + 1]
-      if (it === len - 1 && frameNum >= nextKeyData.t - offsetTime) {
+      keyData = this.keyframes[i]
+      nextKeyData = this.keyframes[i + 1]
+      if (i === len - 1 && frameNum >= nextKeyData.t - offsetTime) {
         if (keyData.h) {
           keyData = nextKeyData
         }
@@ -149,23 +140,23 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         break
       }
       if (nextKeyData.t - offsetTime > frameNum) {
-        iterationIndex = it
+        iterationIndex = i
         break
       }
-      if (it < len - 1) {
-        it++
+      if (i < len - 1) {
+        i++
       } else {
         iterationIndex = 0
         shouldInterpolate = false
       }
     }
-    const keyframeMetadata = this.keyframesMetadata[it] || {}
+    const keyframeMetadata = this.keyframesMetadata[i] || {}
 
-    let kLen
-    let perc
-    let jLen
-    let j
-    let fnc: null | ((val: number) => number) = null
+    let kLen,
+      perc,
+      jLen,
+      j,
+      fnc: null | ((val: number) => number) = null
     const nextKeyTime = nextKeyData.t - offsetTime,
       keyTime = keyData.t - offsetTime
     let endValue
@@ -206,13 +197,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         let segmentPerc,
           addedLength =
             Number(caching.lastFrame) < frameNum &&
-            caching._lastKeyframeIndex === it
+              caching._lastKeyframeIndex === i
               ? caching._lastAddedLength
               : 0
 
         j =
           Number(caching.lastFrame) < frameNum &&
-          caching._lastKeyframeIndex === it
+            caching._lastKeyframeIndex === i
             ? caching._lastPoint
             : 0
         shouldInterpolate = true
@@ -232,7 +223,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           } else if (
             distanceInLine >= addedLength &&
             distanceInLine <
-              addedLength + bezierData.points[j + 1].partialLength
+            addedLength + bezierData.points[j + 1].partialLength
           ) {
             segmentPerc =
               (distanceInLine - addedLength) /
@@ -243,7 +234,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
                 bezierData.points[j].point[k] +
                 (bezierData.points[j + 1].point[k] -
                   bezierData.points[j].point[k]) *
-                  segmentPerc
+                segmentPerc
             }
             break
           }
@@ -256,7 +247,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         caching._lastPoint = j
         caching._lastAddedLength =
           addedLength - bezierData.points[j].partialLength
-        caching._lastKeyframeIndex = it
+        caching._lastKeyframeIndex = i
       }
     } else {
       let outX
@@ -276,7 +267,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           newValue[0] = keyData.s[0]
           newValue[1] = keyData.s[1]
           newValue[2] = keyData.s[2]
-        } else if (keyData.s) {
+        } else {
           const quatStart = createQuaternion(keyData.s as Vector3)
           const quatEnd = createQuaternion(endValue as Vector3)
           const time = (frameNum - keyTime) / (nextKeyTime - keyTime)
@@ -286,7 +277,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           ))
         }
       } else {
-        for (let i = 0; i < len; i++) {
+        for (i = 0; i < len; i++) {
           if (keyData.h !== 1) {
             if (frameNum >= nextKeyTime) {
               perc = 1
@@ -295,8 +286,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
             } else {
               if (keyData.o.x.constructor === Array) {
                 keyframeMetadata.__fnct = keyframeMetadata.__fnct ?? []
-                if ((keyframeMetadata.__fnct as any[])[i]) {
-                  fnc = (keyframeMetadata.__fnct as any[])[i]
+                if ((keyframeMetadata.__fnct as any)[i]) {
+                  fnc = (keyframeMetadata.__fnct as any)[i]
                 } else if (
                   Array.isArray(keyData.o.y) &&
                   Array.isArray(keyData.i.y) &&
@@ -313,7 +304,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
                   fnc = getBezierEasing(
                     outX, outY, inX, inY
                   ).get
-                  ;(keyframeMetadata.__fnct as any)[i] = fnc
+                  ; (keyframeMetadata.__fnct as any)[i] = fnc
                 }
               } else if (keyframeMetadata.__fnct) {
                 fnc = keyframeMetadata.__fnct as any
@@ -337,7 +328,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               ? keyData.s?.[i]
               : Number(keyData.s?.[i]) + (endValue[i] - Number(keyData.s?.[i])) * Number(perc)
 
-          if (keyValue) {
+          if (keyValue !== undefined) {
             if (this.propType === 'multidimensional') {
               newValue[i] = keyValue
             } else {
@@ -403,7 +394,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     while (i < length) {
       multipliedValue = (val as number[])[i] * Number(this.mult)
       if (Math.abs((this.v as number[])[i] - multipliedValue) > 0.00001) {
-        ;(this.v as number[])[i] = multipliedValue
+        ; (this.v as number[])[i] = multipliedValue
         this._mdf = true
       }
       i++
@@ -541,42 +532,42 @@ export class KeyframedMultidimensionalProperty<
         ti = data.k[i].ti as number[]
         if (
           s.length === 2 &&
-            !(s[0] === e[0] && s[1] === e[1]) &&
-            pointOnLine2D(
-              s[0], s[1], e[0], e[1], s[0] + to[0], s[1] + to[1]
-            ) &&
-            pointOnLine2D(
-              s[0],
-              s[1],
-              e[0],
-              e[1],
-              e[0] + ti[0],
-              e[1] + ti[1]
-            ) ||
+          !(s[0] === e[0] && s[1] === e[1]) &&
+          pointOnLine2D(
+            s[0], s[1], e[0], e[1], s[0] + to[0], s[1] + to[1]
+          ) &&
+          pointOnLine2D(
+            s[0],
+            s[1],
+            e[0],
+            e[1],
+            e[0] + ti[0],
+            e[1] + ti[1]
+          ) ||
           s.length === 3 &&
-            !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]) &&
-            pointOnLine3D(
-              s[0],
-              s[1],
-              s[2],
-              e[0],
-              e[1],
-              e[2],
-              s[0] + to[0],
-              s[1] + to[1],
-              s[2] + to[2]
-            ) &&
-            pointOnLine3D(
-              s[0],
-              s[1],
-              s[2],
-              e[0],
-              e[1],
-              e[2],
-              e[0] + ti[0],
-              e[1] + ti[1],
-              e[2] + ti[2]
-            )
+          !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]) &&
+          pointOnLine3D(
+            s[0],
+            s[1],
+            s[2],
+            e[0],
+            e[1],
+            e[2],
+            s[0] + to[0],
+            s[1] + to[1],
+            s[2] + to[2]
+          ) &&
+          pointOnLine3D(
+            s[0],
+            s[1],
+            s[2],
+            e[0],
+            e[1],
+            e[2],
+            e[0] + ti[0],
+            e[1] + ti[1],
+            e[2] + ti[2]
+          )
         ) {
           data.k[i].to = null
           data.k[i].ti = null
@@ -587,7 +578,7 @@ export class KeyframedMultidimensionalProperty<
           to[0] === 0 &&
           to[1] === 0 &&
           ti[0] === 0 &&
-            ti[1] === 0 && s.length === 2 || s[2] === e[2] && to[2] === 0 && ti[2] === 0
+          ti[1] === 0 && s.length === 2 || s[2] === e[2] && to[2] === 0 && ti[2] === 0
         ) {
           data.k[i].to = null
           data.k[i].ti = null

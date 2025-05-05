@@ -2,7 +2,9 @@ import type { ImageData, LottieAsset } from '@/types'
 
 import { loadData } from '@/DataManager'
 import { RendererType } from '@/enums'
-import { createNS, createTag, isSafari, isServer } from '@/utils'
+import {
+  createNS, createTag, isSafari, isServer 
+} from '@/utils'
 
 export default class ImagePreloader {
   assetsPath: string
@@ -38,7 +40,10 @@ export default class ImagePreloader {
       assetData: data,
       img: null,
     }
-    const path = this.getAssetsPath(data, this.assetsPath, this.path)
+    const path = this.getAssetsPath(
+      data, this.assetsPath, this.path
+    )
+
     loadData(
       path,
       function (this: ImagePreloader, footageData: unknown) {
@@ -46,23 +51,34 @@ export default class ImagePreloader {
           obj.img = footageData as SVGElement
         }
         this._footageLoaded()
-      }.bind(this),
+      },
       function (this: ImagePreloader) {
         this._footageLoaded()
-      }.bind(this)
+      }
     )
+
     return obj
   }
   public createImageData(assetData: LottieAsset) {
-    const path = this.getAssetsPath(assetData, this.assetsPath, this.path)
+    const path = this.getAssetsPath(
+      assetData, this.assetsPath, this.path
+    )
     const img = createNS<SVGImageElement>('image')
-    if (!img) {
-      throw new Error(`${this.constructor.name}: Could not create SVG`)
+
+    // if (!img) {
+    //   throw new Error(`${this.constructor.name}: Could not create SVG`)
+    // }
+    const obj: ImageData = {
+      assetData,
+      img,
     }
+
     if (isSafari()) {
       this.testImageLoaded(img)
     } else {
-      img.addEventListener('load', this._imageLoaded, false)
+      img.addEventListener(
+        'load', this._imageLoaded, false
+      )
     }
     img.addEventListener(
       'error',
@@ -71,19 +87,18 @@ export default class ImagePreloader {
           obj.img = this.proxyImage
         }
         this._imageLoaded()
-      }.bind(this),
+      },
       false
     )
-    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', path)
+    img.setAttributeNS(
+      'http://www.w3.org/1999/xlink', 'href', path
+    )
     if (this._elementHelper?.append) {
       this._elementHelper.append(img)
     } else {
       this._elementHelper?.appendChild(img)
     }
-    const obj: ImageData = {
-      assetData,
-      img,
-    }
+    
     return obj
   }
   public destroy() {
@@ -94,48 +109,52 @@ export default class ImagePreloader {
     this.loadedFootagesCount++
     if (
       this.loadedAssets === this.totalImages &&
-      this.loadedFootagesCount === this.totalFootages
+      this.loadedFootagesCount === this.totalFootages &&
+      this.imagesLoadedCb
     ) {
-      if (this.imagesLoadedCb) {
-        this.imagesLoadedCb(null)
-      }
+      this.imagesLoadedCb(null)
     }
   }
   public getAsset(assetData: null | LottieAsset) {
     let i = 0
     const { length } = this.images
+
     while (i < length) {
       if (this.images[i].assetData === assetData) {
         return this.images[i].img
       }
       i++
     }
+
     return null
   }
   public imageLoaded() {
     this.loadedAssets++
     if (
       this.loadedAssets === this.totalImages &&
-      this.loadedFootagesCount === this.totalFootages
+      this.loadedFootagesCount === this.totalFootages &&
+      this.imagesLoadedCb
     ) {
-      if (this.imagesLoadedCb) {
-        this.imagesLoadedCb(null)
-      }
+      this.imagesLoadedCb(null)
     }
   }
-  public loadAssets(
-    assets: LottieAsset[],
-    cb: ImagePreloader['imagesLoadedCb']
-  ) {
+  public loadAssets(assets: LottieAsset[],
+    cb: ImagePreloader['imagesLoadedCb']) {
     this.imagesLoadedCb = cb
     const { length } = assets
+
     for (let i = 0; i < length; i++) {
       if (assets[i].layers) {
         continue
       }
       if ((!assets[i].t || assets[i].t === 'seq') && this._createImageData) {
         this.totalImages++
-        this.images.push(this._createImageData(assets[i])!)
+        const imageData = this._createImageData(assets[i])
+
+        if (imageData) {
+          this.images.push(imageData)
+        }
+        
         continue
       }
 
@@ -154,7 +173,7 @@ export default class ImagePreloader {
   public setAssetsPath(path?: string) {
     this.assetsPath = path || ''
   }
-  public setCacheType(type: string, elementHelper: SVGElement) {
+  public setCacheType(type: RendererType, elementHelper: SVGElement) {
     if (type === RendererType.SVG) {
       this._elementHelper = elementHelper
       this._createImageData = this.createImageData.bind(this)
@@ -170,30 +189,42 @@ export default class ImagePreloader {
       return null
     }
     const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
-    if (!canvas) {
-      throw new Error(
-        `${this.constructor.name}: Could not create canvas element`
-      )
-    }
+
+    // if (!canvas) {
+    //   throw new Error(`${this.constructor.name}: Could not create canvas element`)
+    // }
     canvas.width = 1
     canvas.height = 1
     const ctx = canvas.getContext('2d')
+
     if (ctx) {
       ctx.fillStyle = 'rgba(0,0,0,0)'
-      ctx.fillRect(0, 0, 1, 1)
+      ctx.fillRect(
+        0, 0, 1, 1
+      )
     }
+
     return canvas
   }
   private createImgData(assetData: LottieAsset) {
-    const path = this.getAssetsPath(assetData, this.assetsPath, this.path)
+    const path = this.getAssetsPath(
+      assetData, this.assetsPath, this.path
+    )
     const img = createTag<HTMLMediaElement>('img')
-    if (!img) {
-      throw new Error(
-        `${this.constructor.name}: Could not create image element`
-      )
+
+    // if (!img) {
+    //   throw new Error(`${this.constructor.name}: Could not create image element`)
+    // }
+
+    const obj: ImageData = {
+      assetData,
+      img,
     }
+
     img.crossOrigin = 'anonymous'
-    img.addEventListener('load', this._imageLoaded, false)
+    img.addEventListener(
+      'load', this._imageLoaded, false
+    )
     img.addEventListener(
       'error',
       function (this: ImagePreloader) {
@@ -202,14 +233,12 @@ export default class ImagePreloader {
         }
 
         this._imageLoaded()
-      }.bind(this),
+      },
       false
     )
     img.src = path
-    const obj: ImageData = {
-      assetData,
-      img,
-    }
+    
+
     return obj
   }
   private getAssetsPath(
@@ -223,14 +252,18 @@ export default class ImagePreloader {
 
     if (assetsPath) {
       let imagePath = assetData.p
+
       if (imagePath?.indexOf('images/') !== -1) {
         imagePath = imagePath?.split('/')[1]
       }
+
       return `${assetsPath}${imagePath || ''}`
     }
     let path = originalPath
-    path += assetData.u ? assetData.u : ''
-    path += assetData.p
+
+    path += assetData.u ?? ''
+    path += assetData.p ?? ''
+
     return path
   }
   private testImageLoaded(img: SVGGraphicsElement) {
@@ -238,16 +271,15 @@ export default class ImagePreloader {
       return
     }
     let _count = 0
-    const intervalId = setInterval(
-      function (this: ImagePreloader) {
-        const box = img.getBBox()
-        if (box.width || _count > 500) {
-          this._imageLoaded()
-          clearInterval(intervalId)
-        }
-        _count++
-      }.bind(this),
-      50
-    )
+    const intervalId = setInterval(function (this: ImagePreloader) {
+      const box = img.getBBox()
+
+      if (box.width || _count > 500) {
+        this._imageLoaded()
+        clearInterval(intervalId)
+      }
+      _count++
+    },
+    50)
   }
 }

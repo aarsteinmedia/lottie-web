@@ -18,15 +18,6 @@ import { createTypedArray } from '@/utils/helpers/arrays'
  * existing context.
  *
  * All values are handled as floating point values.
- *
- * @param {CanvasRenderingContext2D} [context] - Optional context to sync with Matrix
- * @prop {number} a - scale x
- * @prop {number} b - shear y
- * @prop {number} c - shear x
- * @prop {number} d - scale y
- * @prop {number} e - translate x
- * @prop {number} f - translate y
- * @prop {CanvasRenderingContext2D|null} [context=null] - set or get current canvas context
  */
 export default class Matrix {
   props: Float32Array
@@ -44,7 +35,11 @@ export default class Matrix {
     x: number,
     y: number,
     z: number
-  ): { x: number; y: number; z: number } {
+  ): {
+    x: number;
+    y: number;
+    z: number
+  } {
     return {
       x:
         x * this.props[0] +
@@ -64,23 +59,28 @@ export default class Matrix {
     }
   }
 
-  applyToPointArray(x: number, y: number, z: number): number[] {
+  applyToPointArray(
+    x: number, y: number, z: number
+  ): number[] {
     if (this.isIdentity()) {
-      return [x, y, z]
+      return [x,
+        y,
+        z]
     }
+
     return [
       x * this.props[0] +
-        y * this.props[4] +
-        z * this.props[8] +
-        this.props[12],
+      y * this.props[4] +
+      z * this.props[8] +
+      this.props[12],
       x * this.props[1] +
-        y * this.props[5] +
-        z * this.props[9] +
-        this.props[13],
+      y * this.props[5] +
+      z * this.props[9] +
+      this.props[13],
       x * this.props[2] +
-        y * this.props[6] +
-        z * this.props[10] +
-        this.props[14],
+      y * this.props[6] +
+      z * this.props[10] +
+      this.props[14],
     ]
   }
 
@@ -89,9 +89,9 @@ export default class Matrix {
       return `${x},${y}`
     }
     const _p = this.props
-    return `${Math.round((x * _p[0] + y * _p[4] + _p[12]) * 100) / 100},${
-      Math.round((x * _p[1] + y * _p[5] + _p[13]) * 100) / 100
-    }`
+
+    return `${Math.round((x * _p[0] + y * _p[4] + _p[12]) * 100) / 100},${Math.round((x * _p[1] + y * _p[5] + _p[13]) * 100) / 100
+      }`
   }
 
   applyToTriplePoints(
@@ -100,8 +100,14 @@ export default class Matrix {
     pt3: number[]
   ): Float32Array {
     const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array
+
     if (this.isIdentity()) {
-      arr.set([pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]])
+      arr.set([pt1[0],
+      pt1[1],
+      pt2[0],
+      pt2[1],
+      pt3[0],
+      pt3[1]])
     } else {
       const p0 = this.props[0]
       const p1 = this.props[1]
@@ -109,6 +115,7 @@ export default class Matrix {
       const p5 = this.props[5]
       const p12 = this.props[12]
       const p13 = this.props[13]
+
       arr.set([
         pt1[0] * p0 + pt1[1] * p4 + p12,
         pt1[0] * p1 + pt1[1] * p5 + p13,
@@ -118,22 +125,29 @@ export default class Matrix {
         pt3[0] * p1 + pt3[1] * p5 + p13,
       ])
     }
+
     return arr
   }
 
-  applyToX(x: number, y: number, z: number): number {
+  applyToX(
+    x: number, y: number, z: number
+  ): number {
     return (
       x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12]
     )
   }
 
-  applyToY(x: number, y: number, z: number): number {
+  applyToY(
+    x: number, y: number, z: number
+  ): number {
     return (
       x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13]
     )
   }
 
-  applyToZ(x: number, y: number, z: number): number {
+  applyToZ(
+    x: number, y: number, z: number
+  ): number {
     return (
       x * this.props[2] +
       y * this.props[6] +
@@ -144,11 +158,13 @@ export default class Matrix {
 
   clone(matr: Matrix): Matrix {
     matr.props.set(this.props)
+
     return matr
   }
 
   cloneFromProps(props: Float32Array): this {
     this.props.set(props)
+
     return this
   }
 
@@ -171,16 +187,31 @@ export default class Matrix {
       determinant
 
     const inverseMatrix = new Matrix()
-    inverseMatrix.setTransform(a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, e, f, 0, 1)
+
+    inverseMatrix.setTransform(
+      a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, e, f, 0, 1
+    )
+
     return inverseMatrix
   }
 
-  inversePoint(pt: number[]): { x: number; y: number; z: number } {
+  inversePoint(pt: number[]): {
+    x: number;
+    y: number;
+    z: number
+  } {
     const inverseMatrix = this.getInverseMatrix()
-    return inverseMatrix.applyToPoint(pt[0], pt[1], pt[2] || 0)
+
+    return inverseMatrix.applyToPoint(
+      pt[0], pt[1], pt[2] || 0
+    )
   }
 
-  inversePoints(pts: number[][]): { x: number; y: number; z: number }[] {
+  inversePoints(pts: number[][]): {
+    x: number;
+    y: number;
+    z: number
+  }[] {
     return pts.map((pt) => this.inversePoint(pt))
   }
 
@@ -206,6 +237,7 @@ export default class Matrix {
       )
       this._identityCalculated = true
     }
+
     return this._identity
   }
 
@@ -215,7 +247,23 @@ export default class Matrix {
   }
 
   reset(): this {
-    this.props.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+    this.props.set([1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1])
+
     return this
   }
 
@@ -225,41 +273,50 @@ export default class Matrix {
     }
     const mCos = Math.cos(angle)
     const mSin = Math.sin(angle)
-    return this._t(mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+
+    return this._t(
+      mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+    )
   }
 
   rotateX(angle?: number): this {
     if (!angle) {
       return this
     }
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
-    return this._t(1, 0, 0, 0, 0, mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1)
+    const mCos = Math.cos(angle),
+      mSin = Math.sin(angle)
+
+    return this._t(
+      1, 0, 0, 0, 0, mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1
+    )
   }
 
   rotateY(angle?: number): this {
     if (!angle) {
       return this
     }
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
-    return this._t(mCos, 0, mSin, 0, 0, 1, 0, 0, -mSin, 0, mCos, 0, 0, 0, 0, 1)
+    const mCos = Math.cos(angle),
+      mSin = Math.sin(angle)
+
+    return this._t(
+      mCos, 0, mSin, 0, 0, 1, 0, 0, -mSin, 0, mCos, 0, 0, 0, 0, 1
+    )
   }
 
   rotateZ(angle?: number): this {
-    if (!angle) {
-      return this
-    }
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
-    return this._t(mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    return this.rotate(angle)
   }
 
-  scale(sx: number, sy: number, sz: number = 1): this {
+  scale(
+    sx: number, sy: number, sz = 1
+  ): this {
     if (sx === 1 && sy === 1 && sz === 1) {
       return this
     }
-    return this._t(sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1)
+
+    return this._t(
+      sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1
+    )
   }
 
   setTransform(
@@ -280,12 +337,30 @@ export default class Matrix {
     o: number,
     p: number
   ): this {
-    this.props.set([a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p])
+    this.props.set([a,
+      b,
+      c,
+      d,
+      e,
+      f,
+      g,
+      h,
+      i,
+      j,
+      k,
+      l,
+      m,
+      n,
+      o,
+      p])
+
     return this
   }
 
   shear(sx: number, sy: number): this {
-    return this._t(1, sy, sx, 1, 0, 0)
+    return this._t(
+      1, sy, sx, 1, 0, 0
+    )
   }
 
   skew(ax: number, ay: number): this {
@@ -295,9 +370,16 @@ export default class Matrix {
   skewFromAxis(ax: number, angle: number): this {
     const mCos = Math.cos(angle),
       mSin = Math.sin(angle)
-    return this._t(mCos, mSin, 0, 0, -mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-      ._t(1, 0, 0, 0, Math.tan(ax), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-      ._t(mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+
+    return this._t(
+      mCos, mSin, 0, 0, -mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+    )
+      ._t(
+        1, 0, 0, 0, Math.tan(ax), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+      )
+      ._t(
+        mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+      )
   }
 
   to2dCSS(): string {
@@ -307,16 +389,19 @@ export default class Matrix {
       _d = this.roundMatrixProperty(this.props[5]),
       _e = this.roundMatrixProperty(this.props[12]),
       _f = this.roundMatrixProperty(this.props[13])
+
     return `matrix(${_a},${_b},${_c},${_d},${_e},${_f})`
   }
 
   toCSS(): string {
     let cssValue = 'matrix3d('
     const v = 10000
+
     for (let i = 0; i < 16; i++) {
-      cssValue += Math.round(this.props[i] * v) / v
+      cssValue += `${Math.round(this.props[i] * v) / v}`
       cssValue += i === 15 ? ')' : ','
     }
+
     return cssValue
   }
 
@@ -359,6 +444,7 @@ export default class Matrix {
       _p[14] = _p[14] * k2 + _p[15] * o2
       _p[15] *= p2
       this._identityCalculated = false
+
       return this
     }
 
@@ -400,13 +486,19 @@ export default class Matrix {
     _p[15] = m1 * d2 + n1 * h2 + o1 * l2 + p1 * p2
 
     this._identityCalculated = false
+
     return this
   }
 
-  translate(tx: number, ty: number, tz: number = 0): this {
+  translate(
+    tx: number, ty: number, tz = 0
+  ): this {
     if (tx !== 0 || ty !== 0 || tz !== 0) {
-      return this._t(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1)
+      return this._t(
+        1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1
+      )
     }
+
     return this
   }
 
@@ -417,9 +509,11 @@ export default class Matrix {
 
   private roundMatrixProperty(val: number): number {
     const v = 10000
-    if ((val < 0.000001 && val > 0) || (val > -0.000001 && val < 0)) {
+
+    if (val < 0.000001 && val > 0 || val > -0.000001 && val < 0) {
       return Math.round(val * v) / v
     }
+
     return val
   }
 }
