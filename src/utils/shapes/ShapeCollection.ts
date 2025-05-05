@@ -14,7 +14,7 @@ export default class ShapeCollection {
   }
   addShape(shapeData: ShapePath) {
     if (this._length === this._maxLength) {
-      this.shapes = this.shapes.concat(createSizedArray(this._maxLength))
+      this.shapes = [...this.shapes, ...createSizedArray(this._maxLength)] as ShapePath[]
       this._maxLength *= 2
     }
     this.shapes[this._length] = shapeData

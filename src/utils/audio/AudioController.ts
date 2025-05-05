@@ -26,32 +26,26 @@ export default class AudioController {
       return this.audioFactory(assetPath)
     }
     if (!isServer() && 'Howl' in window) {
-      return new (window.Howl as any)({
-        src: [assetPath],
-      })
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      return new (window.Howl as any)({ src: [assetPath], })
     }
+
     return {
       isPlaying: false,
       play: () => {
         this.isPlaying = true
       },
       playing: () => {
-        throw new Error(
-          `${this.constructor.name}: Method playing is not implemented`
-        )
+        throw new Error(`${this.constructor.name}: Method playing is not implemented`)
       },
       rate: () => {
-        throw new Error(
-          `${this.constructor.name}: Method rate is not implemented`
-        )
+        throw new Error(`${this.constructor.name}: Method rate is not implemented`)
       },
       seek: () => {
         this.isPlaying = false
       },
       setVolume: () => {
-        throw new Error(
-          `${this.constructor.name}: Method setVolume is not implemented`
-        )
+        throw new Error(`${this.constructor.name}: Method setVolume is not implemented`)
       },
     }
   }
@@ -90,6 +84,7 @@ export default class AudioController {
   }
   private _updateVolume() {
     const { length } = this.audios
+
     for (let i = 0; i < length; i++) {
       this.audios[i].volume(this._volume * (this._isMuted ? 0 : 1))
     }

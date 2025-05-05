@@ -37,7 +37,9 @@ export default class HCameraElement extends FrameElement {
   ) {
     super()
     this.initFrame()
-    this.initBaseData(data, globalData, comp)
+    this.initBaseData(
+      data, globalData, comp
+    )
     this.initHierarchy()
     this.pe = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
@@ -88,6 +90,7 @@ export default class HCameraElement extends FrameElement {
     }
     if (data.ks.or?.k.length && data.ks.or.k[0].to) {
       const { length } = data.ks.or?.k || []
+
       for (let i = 0; i < length; i++) {
         data.ks.or.k[i].to = null
         data.ks.or.k[i].ti = null
@@ -127,9 +130,7 @@ export default class HCameraElement extends FrameElement {
     this._isFirstFrame = true
 
     // TODO: find a better way to make the HCamera element to be compatible with the LayerInterface and TransformInterface.
-    this.finalTransform = {
-      mProp: this as unknown as TransformProperty,
-    } as Transformer
+    this.finalTransform = { mProp: this as unknown as TransformProperty, } as Transformer
   }
   createElements() {
     // TODO: Pass Through
@@ -152,13 +153,13 @@ export default class HCameraElement extends FrameElement {
   }
   renderFrame() {
     if (!this.globalData?.compSize) {
-      throw new Error(
-        `${this.constructor.name}: globalData->compSize is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
     }
     let _mdf = this._isFirstFrame
+
     if (this.hierarchy) {
       const { length } = this.hierarchy
+
       for (let i = 0; i < length; i++) {
         _mdf = this.hierarchy[i].finalTransform?.mProp._mdf || _mdf
       }
@@ -166,20 +167,22 @@ export default class HCameraElement extends FrameElement {
     if (
       _mdf ||
       this.pe?._mdf ||
-      (this.p && this.p._mdf) ||
-      (this.px && (this.px._mdf || this.py?._mdf || this.pz?._mdf)) ||
+      this.p?._mdf ||
+      this.px && (this.px._mdf || this.py?._mdf || this.pz?._mdf) ||
       this.rx?._mdf ||
       this.ry?._mdf ||
       this.rz?._mdf ||
       this.or?._mdf ||
-      (this.a && this.a._mdf)
+      this.a?._mdf
     ) {
       this.mat?.reset()
 
       if (this.hierarchy) {
         const len = this.hierarchy.length - 1
+
         for (let i = len; i >= 0; i--) {
           const mTransf = this.hierarchy[i].finalTransform?.mProp
+
           if (
             !mTransf?.p ||
             !mTransf.or ||
@@ -191,7 +194,9 @@ export default class HCameraElement extends FrameElement {
           ) {
             continue
           }
-          this.mat?.translate(-mTransf.p.v[0], -mTransf.p.v[1], mTransf.p.v[2])
+          this.mat?.translate(
+            -mTransf.p.v[0], -mTransf.p.v[1], mTransf.p.v[2]
+          )
           this.mat
             ?.rotateX(-mTransf.or.v[0])
             .rotateY(-mTransf.or.v[1])
@@ -205,16 +210,23 @@ export default class HCameraElement extends FrameElement {
             1 / mTransf.s.v[1],
             1 / mTransf.s.v[2]
           )
-          this.mat?.translate(mTransf.a.v[0], mTransf.a.v[1], mTransf.a.v[2])
+          this.mat?.translate(
+            mTransf.a.v[0], mTransf.a.v[1], mTransf.a.v[2]
+          )
         }
       }
       if (this.p) {
-        this.mat?.translate(-this.p.v[0], -this.p.v[1], this.p.v[2])
+        this.mat?.translate(
+          -this.p.v[0], -this.p.v[1], this.p.v[2]
+        )
       } else if (this.px && this.py && this.pz) {
-        this.mat?.translate(-this.px.v, -this.py.v, this.pz.v)
+        this.mat?.translate(
+          -this.px.v, -this.py.v, this.pz.v
+        )
       }
       if (this.a) {
         let diffVector: number[] = []
+
         if (this.p) {
           diffVector = [
             this.p.v[0] - this.a.v[0],
@@ -228,22 +240,19 @@ export default class HCameraElement extends FrameElement {
             this.pz.v - this.a.v[2],
           ]
         }
-        const mag = Math.sqrt(
-          Math.pow(diffVector[0], 2) +
+        const mag = Math.sqrt(Math.pow(diffVector[0], 2) +
             Math.pow(diffVector[1], 2) +
-            Math.pow(diffVector[2], 2)
-        )
+            Math.pow(diffVector[2], 2))
         // var lookDir = getNormalizedPoint(getDiffVector(this.a.v,this.p.v));
         const lookDir = [
           diffVector[0] / mag,
           diffVector[1] / mag,
           diffVector[2] / mag,
         ]
-        const lookLengthOnXZ = Math.sqrt(
-          lookDir[2] * lookDir[2] + lookDir[0] * lookDir[0]
-        )
+        const lookLengthOnXZ = Math.sqrt(lookDir[2] * lookDir[2] + lookDir[0] * lookDir[0])
         const mRotationX = Math.atan2(lookDir[1], lookLengthOnXZ)
         const mRotationY = Math.atan2(lookDir[0], -lookDir[2])
+
         this.mat?.rotateY(mRotationY).rotateX(-mRotationX)
       }
       if (this.rx && this.ry && this.rz) {
@@ -261,9 +270,12 @@ export default class HCameraElement extends FrameElement {
         this.globalData.compSize.h / 2,
         0
       )
-      this.mat?.translate(0, 0, this.pe?.v)
+      this.mat?.translate(
+        0, 0, this.pe?.v
+      )
 
       const hasMatrixChanged = !this._prevMat.equals(this.mat)
+
       if (
         (hasMatrixChanged || this.pe?._mdf) &&
         (this.comp as HCompElement)?.threeDElements
@@ -272,6 +284,7 @@ export default class HCameraElement extends FrameElement {
         let comp
         let perspectiveStyle
         let containerStyle: CSSStyleDeclaration
+
         for (let i = 0; i < len; i++) {
           comp = this.comp?.threeDElements[i]
           if (comp?.type !== '3d') {
@@ -279,6 +292,7 @@ export default class HCameraElement extends FrameElement {
           }
           if (hasMatrixChanged) {
             const matValue = this.mat?.toCSS()
+
             containerStyle = comp.container.style
             if (matValue) {
               containerStyle.transform = matValue
@@ -296,15 +310,18 @@ export default class HCameraElement extends FrameElement {
   }
   setup() {
     const { length } = this.comp?.threeDElements || []
+
     for (let i = 0; i < length; i++) {
       // [perspectiveElem,container]
       const comp = this.comp?.threeDElements[i]
+
       if (comp?.type === '3d') {
         const perspectiveStyle = comp.perspectiveElem.style,
           containerStyle = comp.container.style,
           perspective = `${this.pe?.v}px`,
           origin = '0px 0px 0px',
           matrix = 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)'
+
         perspectiveStyle.perspective = perspective
         containerStyle.transformOrigin = origin
         perspectiveStyle.transform = matrix

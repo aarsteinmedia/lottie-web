@@ -4,9 +4,9 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
+import type { ValueProperty } from '@/utils/Properties'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import { ValueProperty } from '@/utils/Properties'
 
 export default class CompElement extends RenderableDOMElement {
   completeLayers?: boolean
@@ -16,16 +16,15 @@ export default class CompElement extends RenderableDOMElement {
   renderedFrame?: number
   tm?: ValueProperty
   buildAllItems() {
-    throw new Error(
-      `${this.constructor.name}: Method buildAllItems is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
   }
   override destroy() {
     this.destroyElements()
     this.destroyBaseElement()
   }
   destroyElements() {
-    const { length } = this.layers || []
+    const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
       if (this.elements[i]) {
         this.elements[i].destroy()
@@ -43,7 +42,9 @@ export default class CompElement extends RenderableDOMElement {
     comp: CompElementInterface
   ) {
     this.initFrame()
-    this.initBaseData(data, globalData, comp)
+    this.initBaseData(
+      data, globalData, comp
+    )
     this.initTransform()
     this.initRenderable()
     this.initHierarchy()
@@ -51,9 +52,7 @@ export default class CompElement extends RenderableDOMElement {
     this.createContainerElements()
     this.createRenderableComponents()
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     if (this.data.xt || !globalData.progressiveLoad) {
       this.buildAllItems()
@@ -63,9 +62,7 @@ export default class CompElement extends RenderableDOMElement {
 
   override prepareFrame(val: number) {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
 
     this._mdf = false
@@ -79,18 +76,18 @@ export default class CompElement extends RenderableDOMElement {
       this.renderedFrame = val / Number(this.data.sr)
     } else {
       let timeRemapped = this.tm?.v || 0
+
       if (timeRemapped === this.data.op) {
         timeRemapped = this.data.op - 1
       }
       this.renderedFrame = timeRemapped
     }
     const { length } = this.elements
+
     if (!this.completeLayers) {
-      if (!this.checkLayers) {
-        throw new Error(
-          `${this.constructor.name}: Method checkLayers is not implemented`
-        )
-      }
+      // if (!this.checkLayers) {
+      //   throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
+      // }
       this.checkLayers(this.renderedFrame)
     }
     // This iteration needs to be backwards because of how expressions connect between each other
@@ -106,6 +103,7 @@ export default class CompElement extends RenderableDOMElement {
 
   override renderInnerContent() {
     const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i].renderFrame()

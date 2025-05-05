@@ -1,5 +1,4 @@
 /**
- * @file
  * Handles AE's layer parenting property.
  *
  */
@@ -11,18 +10,14 @@ import TransformElement from '@/elements/helpers/TransformElement'
 export default class HierarchyElement extends TransformElement {
   _isParent?: boolean
   /**
-   * Searches layer's parenting chain
+   * Searches layer's parenting chain.
    */
   checkParenting() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     if (!this.comp) {
-      throw new Error(
-        `${this.constructor.name}: comp (ElementInterface) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`)
     }
     if (!this.data.parent || !('buildElementParenting' in this.comp)) {
       return
@@ -34,7 +29,7 @@ export default class HierarchyElement extends TransformElement {
     )
   }
   /**
-   * Initializes hierarchy properties
+   * Initializes hierarchy properties.
    */
   initHierarchy() {
     // element's parent list
@@ -51,8 +46,9 @@ export default class HierarchyElement extends TransformElement {
   }
   /**
    * Sets layer's hierarchy.
-   * @param {array} hierarchy
-   * layer's parent list
+   *
+   * @param hierarchy
+   * - layer's parent list.
    */
   setHierarchy(hierarchy: ElementInterfaceIntersect[]) {
     this.hierarchy = hierarchy

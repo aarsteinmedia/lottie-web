@@ -1,3 +1,4 @@
+import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   ElementInterfaceUnion,
@@ -12,7 +13,6 @@ import type {
 } from '@/utils/Properties'
 
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
-import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import { RendererType } from '@/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
@@ -24,7 +24,9 @@ export default class SVGStrokeStyleData extends SVGFillStyleData {
     data: Shape,
     styleObj: SVGStyleData
   ) {
-    super(elem, data, styleObj)
+    super(
+      elem, data, styleObj
+    )
     this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
     this.getValue = this.iterateDynamicProperties
     this.o = PropertyFactory.getProp(
@@ -55,6 +57,6 @@ export default class SVGStrokeStyleData extends SVGFillStyleData {
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     this.style = styleObj
-    this._isAnimated = !!this._isAnimated
+    this._isAnimated = Boolean(this._isAnimated)
   }
 }

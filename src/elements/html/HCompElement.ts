@@ -30,7 +30,7 @@ export default class HCompElement extends CompElement {
     this.supports3d = !data.hasMask
     this.completeLayers = false
     this.pendingElements = []
-    this.elements = this.layers ? createSizedArray(this.layers.length) : []
+    this.elements = createSizedArray(this.layers.length)
 
     const {
         appendElementInPos,
@@ -82,16 +82,18 @@ export default class HCompElement extends CompElement {
     this.setMatte = setMatte
     this.updateContainerSize = updateContainerSize
 
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.tm as VectorProperty,
-            0,
-            globalData.frameRate,
-            this as unknown as ElementInterfaceIntersect
-          )
+          this as unknown as ElementInterfaceIntersect,
+          data.tm as VectorProperty,
+          0,
+          globalData.frameRate,
+          this as unknown as ElementInterfaceIntersect
+        )
         : { _placeholder: true }
     ) as ValueProperty
 
@@ -99,20 +101,17 @@ export default class HCompElement extends CompElement {
   }
 
   _createBaseContainerElements() {
-    throw new Error(
-      `${this.constructor.name}: Method _createBaseContainerElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method _createBaseContainerElements is not implemented`)
   }
   addEffects() {
-    throw new Error(
-      `${this.constructor.name}: Method addEffects is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method addEffects is not implemented`)
   }
   addTo3dContainer(elem: ElementInterfaceIntersect, pos: number) {
     let j = 0,
       nextElement
+
     while (j < pos) {
-      nextElement = this.elements[j].getBaseElement?.()
+      nextElement = this.elements[j].getBaseElement()
       j++
     }
     if (nextElement) {
@@ -123,35 +122,23 @@ export default class HCompElement extends CompElement {
   }
 
   appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method appendElementInPos is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method appendElementInPos is not implemented`)
   }
 
   build3dContainers() {
-    throw new Error(
-      `${this.constructor.name}: Method build3dContainers is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method build3dContainers is not implemented`)
   }
   checkBlendMode() {
-    throw new Error(
-      `${this.constructor.name}: Method checkBlendMode is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkBlendMode is not implemented`)
   }
   checkPendingElements() {
-    throw new Error(
-      `${this.constructor.name}: Method checkPendingElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkPendingElements is not implemented`)
   }
   configAnimation(_data: AnimationData) {
-    throw new Error(
-      `${this.constructor.name}: Method configAnimation is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method configAnimation is not implemented`)
   }
   createCamera(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createCamera is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createCamera is not implemented`)
   }
   createComp(data: LottieLayer) {
     if (!this.globalData) {
@@ -164,6 +151,7 @@ export default class HCompElement extends CompElement {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HCompElement(
       data,
       this.globalData,
@@ -183,56 +171,36 @@ export default class HCompElement extends CompElement {
   }
 
   createImage(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createImage is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
   }
   createShape(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createShape is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createShape is not implemented`)
   }
   createSolid(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createSolid is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createSolid is not implemented`)
   }
   createText(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createText is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createText is not implemented`)
   }
   createThreeDContainer(_pos: number, _type: string) {
-    throw new Error(
-      `${this.constructor.name}: Method createThreeDContainer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createThreeDContainer is not implemented`)
   }
   getThreeDContainerByPos(_pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method getThreeDContainerByPos is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getThreeDContainerByPos is not implemented`)
   }
   initItems() {
-    throw new Error(
-      `${this.constructor.name}: Method initItems is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initItems is not implemented`)
   }
 
   searchExtraCompositions(_assets: LottieLayer[]) {
-    throw new Error(
-      `${this.constructor.name}: Method searchExtraCompositions is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method searchExtraCompositions is not implemented`)
   }
 
   setMatte() {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 
   updateContainerSize() {
-    throw new Error(
-      `${this.constructor.name}: Method updateContainerSize is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method updateContainerSize is not implemented`)
   }
 }

@@ -12,6 +12,7 @@ import CVImageElement from '@/elements/canvas/CVImageElement'
 import CVShapeElement from '@/elements/canvas/CVShapeElement'
 import CVSolidElement from '@/elements/canvas/CVSolidElement'
 import CVTextElement from '@/elements/canvas/CVTextElement'
+import { PreserveAspectRatio } from '@/enums'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { createTag } from '@/utils'
@@ -27,15 +28,21 @@ export default class CanvasRendererBase extends BaseRenderer {
   constructor() {
     super()
     const { createNull } = SVGRenderer.prototype
+
     this.createNull = createNull
   }
 
   override buildItem(pos: number) {
-    const { elements } = this
-    if (elements[pos] || this.layers[pos].ty === 99) {
+    const { elements, layers } = this
+
+    if (elements[pos] || layers[pos].ty === 99) {
       return
     }
-    const element = this.createItem(this.layers[pos]) // this, this.globalData
+    /**
+     * This, this.globalData.
+     */
+    const element = this.createItem(layers[pos])
+
     elements[pos] = element as ElementInterfaceIntersect
     element.initExpressions()
     /* if(this.layers[pos].ty === 0){
@@ -44,22 +51,19 @@ export default class CanvasRendererBase extends BaseRenderer {
   }
 
   override checkPendingElements() {
-    while (this.pendingElements.length) {
+    while (this.pendingElements.length > 0) {
       const element = this.pendingElements.pop()
+
       element?.checkParenting()
     }
   }
 
   configAnimation(animData: AnimationData) {
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     if (!this.renderConfig) {
-      throw new Error(
-        `${this.constructor.name}: renderConfig is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: renderConfig is not implemented`)
     }
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
@@ -68,9 +72,11 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (this.animationItem.wrapper) {
       this.animationItem.container = createTag('canvas')
       const containerStyle = this.animationItem.container.style
+
       containerStyle.width = '100%'
       containerStyle.height = '100%'
       const origin = '0px 0px 0px'
+
       containerStyle.transformOrigin = origin
       containerStyle.contentVisibility = this.renderConfig.contentVisibility
       this.animationItem.wrapper.appendChild(this.animationItem.container)
@@ -110,6 +116,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
+
     return new CVImageElement(
       data,
       this.globalData,
@@ -121,6 +128,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
+
     return new CVShapeElement(
       data,
       this.globalData,
@@ -132,6 +140,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
+
     return new CVSolidElement(
       data,
       this.globalData,
@@ -143,6 +152,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
+
     return new CVTextElement(
       data,
       this.globalData,
@@ -152,99 +162,81 @@ export default class CanvasRendererBase extends BaseRenderer {
 
   ctxFill(rule?: CanvasFillRule) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.fill(rule)
   }
 
-  ctxFillRect(x: number, y: number, w: number, h: number) {
+  ctxFillRect(
+    x: number, y: number, w: number, h: number
+  ) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
-    this.canvasContext.fillRect(x, y, w, h)
+    this.canvasContext.fillRect(
+      x, y, w, h
+    )
   }
 
   ctxFillStyle(value = '') {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.fillStyle = value
   }
 
   ctxLineCap(value: CanvasLineCap) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.lineCap = value
   }
 
   ctxLineJoin(value: CanvasLineJoin) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.lineJoin = value
   }
 
   ctxLineWidth(value: number) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.lineWidth = value
   }
 
   ctxMiterLimit(value: number) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.miterLimit = value
   }
 
   ctxOpacity(op = 0) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.globalAlpha *= op < 0 ? 0 : op
   }
 
   ctxStroke() {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.stroke()
   }
 
   ctxStrokeStyle(value = '') {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     this.canvasContext.strokeStyle = value
   }
 
   ctxTransform(props: Float32Array) {
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     if (
       props[0] === 1 &&
@@ -268,9 +260,7 @@ export default class CanvasRendererBase extends BaseRenderer {
 
   destroy() {
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
@@ -280,6 +270,7 @@ export default class CanvasRendererBase extends BaseRenderer {
       this.animationItem.wrapper.innerText = ''
     }
     const { length } = this.layers
+
     for (let i = length - 1; i >= 0; i -= 1) {
       this.elements[i]?.destroy?.()
     }
@@ -291,9 +282,7 @@ export default class CanvasRendererBase extends BaseRenderer {
 
   hide() {
     if (!this.animationItem?.container) {
-      throw new Error(
-        `${this.constructor.name}: animationItem -> container is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`)
     }
     this.animationItem.container.style.display = 'none'
   }
@@ -303,15 +292,13 @@ export default class CanvasRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
 
     if (
-      (this.renderedFrame === num &&
+      this.renderedFrame === num &&
         this.renderConfig?.clearCanvas === true &&
-        !forceRender) ||
+        !forceRender ||
       this.destroyed ||
       num === -1
     ) {
@@ -324,6 +311,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.globalData.projectInterface.currentFrame = num
 
     const { length } = this.layers
+
     if (!this.completeLayers) {
       this.checkLayers(num)
     }
@@ -358,6 +346,7 @@ export default class CanvasRendererBase extends BaseRenderer {
   reset() {
     if (!this.renderConfig?.clearCanvas) {
       this.canvasContext?.restore()
+
       return
     }
     this.contextData?.reset()
@@ -369,6 +358,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     }
     if (!this.renderConfig?.clearCanvas) {
       this.canvasContext?.restore()
+
       return
     }
     if (actionFlag) {
@@ -383,37 +373,28 @@ export default class CanvasRendererBase extends BaseRenderer {
 
   show() {
     if (!this.animationItem?.container) {
-      throw new Error(
-        `${this.constructor.name}: animationItem -> container is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`)
     }
     this.animationItem.container.style.display = 'block'
   }
 
   updateContainerSize(width?: number, height?: number) {
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     if (!this.renderConfig?.dpr) {
-      throw new Error(
-        `${this.constructor.name}: renderConfig -> dpr is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: renderConfig -> dpr is not implemented`)
     }
     if (!this.transformCanvas) {
-      throw new Error(
-        `${this.constructor.name}: transformCanvas is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
     }
 
     this.reset()
     let elementWidth, elementHeight
+
     if (width) {
       elementWidth = width
       elementHeight = Number(height)
@@ -432,20 +413,22 @@ export default class CanvasRendererBase extends BaseRenderer {
     }
 
     let elementRel, animationRel
+
     if (
-      this.renderConfig.preserveAspectRatio.indexOf('meet') !== -1 ||
-      this.renderConfig.preserveAspectRatio.indexOf('slice') !== -1
+      this.renderConfig.preserveAspectRatio.includes('meet') ||
+      this.renderConfig.preserveAspectRatio.includes('slice')
     ) {
       const par = this.renderConfig.preserveAspectRatio.split(' '),
         fillType = par[1] || 'meet',
         pos = par[0] || 'xMidYMid',
-        xPos = pos.substring(0, 4),
-        yPos = pos.substring(4)
+        xPos = pos.slice(0, 4),
+        yPos = pos.slice(4)
+
       elementRel = elementWidth / elementHeight
       animationRel = this.transformCanvas.w / this.transformCanvas.h
       if (
-        (animationRel > elementRel && fillType === 'meet') ||
-        (animationRel < elementRel && fillType === 'slice')
+        animationRel > elementRel && fillType === 'meet' ||
+        animationRel < elementRel && fillType === 'slice'
       ) {
         this.transformCanvas.sx =
           elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
@@ -460,18 +443,18 @@ export default class CanvasRendererBase extends BaseRenderer {
 
       if (
         xPos === 'xMid' &&
-        ((animationRel < elementRel && fillType === 'meet') ||
-          (animationRel > elementRel && fillType === 'slice'))
+        (animationRel < elementRel && fillType === 'meet' ||
+          animationRel > elementRel && fillType === 'slice')
       ) {
         this.transformCanvas.tx =
-          ((elementWidth -
+          (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
-            2) *
+            2 *
           this.renderConfig.dpr
       } else if (
         xPos === 'xMax' &&
-        ((animationRel < elementRel && fillType === 'meet') ||
-          (animationRel > elementRel && fillType === 'slice'))
+        (animationRel < elementRel && fillType === 'meet' ||
+          animationRel > elementRel && fillType === 'slice')
       ) {
         this.transformCanvas.tx =
           (elementWidth -
@@ -482,18 +465,18 @@ export default class CanvasRendererBase extends BaseRenderer {
       }
       if (
         yPos === 'YMid' &&
-        ((animationRel > elementRel && fillType === 'meet') ||
-          (animationRel < elementRel && fillType === 'slice'))
+        (animationRel > elementRel && fillType === 'meet' ||
+          animationRel < elementRel && fillType === 'slice')
       ) {
         this.transformCanvas.ty =
-          ((elementHeight -
+          (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
-            2) *
+            2 *
           this.renderConfig.dpr
       } else if (
         yPos === 'YMax' &&
-        ((animationRel > elementRel && fillType === 'meet') ||
-          (animationRel < elementRel && fillType === 'slice'))
+        (animationRel > elementRel && fillType === 'meet' ||
+          animationRel < elementRel && fillType === 'slice')
       ) {
         this.transformCanvas.ty =
           (elementHeight -
@@ -502,7 +485,7 @@ export default class CanvasRendererBase extends BaseRenderer {
       } else {
         this.transformCanvas.ty = 0
       }
-    } else if (this.renderConfig.preserveAspectRatio === 'none') {
+    } else if (this.renderConfig.preserveAspectRatio === PreserveAspectRatio.Initial) {
       this.transformCanvas.sx =
         elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
       this.transformCanvas.sy =
@@ -545,6 +528,6 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.closePath()
     this.canvasContext.clip()
 
-    this.renderFrame(this.renderedFrame ?? 0, true)
+    this.renderFrame(this.renderedFrame, true)
   }
 }

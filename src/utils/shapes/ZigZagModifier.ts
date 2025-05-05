@@ -1,19 +1,19 @@
-import type { ValueProperty } from '@/utils/Properties'
-import type ShapePath from '@/utils/shapes/ShapePath'
-
-import PolynomialBezier, { shapeSegment } from '@/elements/PolynomialBezier'
-import {
+import type {
   AnimationDirection,
   ElementInterfaceIntersect,
   Shape,
   Vector2,
   VectorProperty,
 } from '@/types'
+import type { ValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+
+import { type default as PolynomialBezier, shapeSegment } from '@/elements/PolynomialBezier'
 import { getProjectingAngle, setPoint } from '@/utils'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 function zigZagCorner(
   outputBezier: ShapePath,
@@ -25,27 +25,23 @@ function zigZagCorner(
   direction: AnimationDirection
 ) {
   const angle = getProjectingAngle(path, cur),
-    point = path.v[cur % Number(path._length)],
-    prevPoint = path.v[cur === 0 ? Number(path._length) - 1 : cur - 1],
-    nextPoint = path.v[(cur + 1) % Number(path._length)],
+    point = path.v[cur % path._length],
+    prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1],
+    nextPoint = path.v[(cur + 1) % path._length],
     prevDist =
       pointType === 2
-        ? Math.sqrt(
-            Math.pow(Number(point?.[0]) - Number(prevPoint?.[0]), 2) +
-              Math.pow(Number(point?.[1]) - Number(prevPoint?.[1]), 2)
-          )
+        ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2) +
+              Math.pow(point[1] - prevPoint[1], 2))
         : 0,
     nextDist =
       pointType === 2
-        ? Math.sqrt(
-            Math.pow(Number(point?.[0]) - Number(nextPoint?.[0]), 2) +
-              Math.pow(Number(point?.[1]) - Number(nextPoint?.[1]), 2)
-          )
+        ? Math.sqrt(Math.pow(point[0] - nextPoint[0], 2) +
+              Math.pow(point[1] - nextPoint[1], 2))
         : 0
 
   setPoint(
     outputBezier,
-    (path.v[cur % Number(path._length)] || [0, 0]) as Vector2,
+    path.v[cur % path._length] || [0, 0],
     angle,
     direction,
     amplitude,
@@ -63,17 +59,17 @@ function zigZagSegment(
   directionFromProps: AnimationDirection
 ) {
   let direction = directionFromProps
+
   for (let i = 0; i < frequency; i++) {
     const t = (i + 1) / (frequency + 1),
       dist =
         pointType === 2
-          ? Math.sqrt(
-              Math.pow(segment.points[3][0] - segment.points[0][0], 2) +
-                Math.pow(segment.points[3][1] - segment.points[0][1], 2)
-            )
+          ? Math.sqrt(Math.pow(segment.points[3][0] - segment.points[0][0], 2) +
+                Math.pow(segment.points[3][1] - segment.points[0][1], 2))
           : 0,
       angle = segment.normalAngle(t),
       point = segment.point(t) as Vector2
+
     setPoint(
       outputBezier,
       point,
@@ -94,10 +90,8 @@ export default class ZigZagModifier extends ShapeModifier {
   frequency?: ValueProperty
   pointsType?: ValueProperty
 
-  override initModifierProperties(
-    elem: ElementInterfaceIntersect,
-    data: Shape
-  ) {
+  override initModifierProperties(elem: ElementInterfaceIntersect,
+    data: Shape) {
     this.getValue = this.processKeys
     this.amplitude = PropertyFactory.getProp(
       elem,
@@ -108,22 +102,22 @@ export default class ZigZagModifier extends ShapeModifier {
     ) as ValueProperty
     this.frequency = PropertyFactory.getProp(
       elem,
-      data.r as unknown as VectorProperty<number>, // TODO: Fix typing
+      data.r as unknown as VectorProperty, // TODO: Fix typing
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.pointsType = PropertyFactory.getProp(
       elem,
-      data.pt as unknown as VectorProperty<number>, // TODO: Fix typing
+      data.pt as unknown as VectorProperty, // TODO: Fix typing
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this._isAnimated =
-      this.amplitude?.effectsSequence.length !== 0 ||
-      this.frequency?.effectsSequence.length !== 0 ||
-      this.pointsType?.effectsSequence.length !== 0
+      this.amplitude.effectsSequence.length > 0 ||
+      this.frequency.effectsSequence.length > 0 ||
+      this.pointsType.effectsSequence.length > 0
   }
 
   processPath(
@@ -134,6 +128,7 @@ export default class ZigZagModifier extends ShapeModifier {
   ) {
     let count = path._length
     const clonedPath = newElement<ShapePath>()
+
     clonedPath.c = path.c
 
     if (!path.c) {
@@ -146,6 +141,7 @@ export default class ZigZagModifier extends ShapeModifier {
 
     let direction: AnimationDirection = -1,
       segment = shapeSegment(path, 0)
+
     zigZagCorner(
       clonedPath,
       path,
@@ -179,7 +175,7 @@ export default class ZigZagModifier extends ShapeModifier {
         amplitude,
         frequency,
         pointType,
-        direction as AnimationDirection
+        direction
       )
     }
 
@@ -187,9 +183,9 @@ export default class ZigZagModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    if (!this.shapes) {
-      throw new Error(`${this.constructor.name}: shapes is not initialized`)
-    }
+    // if (!this.shapes) {
+    //   throw new Error(`${this.constructor.name}: shapes is not initialized`)
+    // }
 
     const amplitude = Number(this.amplitude?.v),
       frequency = Math.max(0, Math.round(Number(this.frequency?.v))),
@@ -198,24 +194,32 @@ export default class ZigZagModifier extends ShapeModifier {
     if (amplitude !== 0) {
       let shapeData, localShapeCollection, shapePaths
       const { length } = this.shapes
+
       for (let i = 0; i < length; i++) {
         shapeData = (this.shapes as unknown as ShapeProperty[])[i]
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape!._mdf = true
-          shapePaths = shapeData.shape?.paths?.shapes || []
-          const { _length } = shapeData.shape?.paths || { _length: 0 }
+          if (shapeData.shape) {
+            shapeData.shape._mdf = true
+          }
+
+          shapePaths = shapeData.shape?.paths?.shapes ?? []
+          const { _length } = shapeData.shape?.paths ?? { _length: 0 }
+
           for (let j = 0; j < _length; j++) {
-            localShapeCollection?.addShape(
-              this.processPath(shapePaths[j], amplitude, frequency, pointType)
-            )
+            localShapeCollection?.addShape(this.processPath(
+              shapePaths[j], amplitude, frequency, pointType
+            ))
           }
         }
-        shapeData.shape!.paths = shapeData.localShapeCollection
+        if (shapeData.shape) {
+          shapeData.shape.paths = shapeData.localShapeCollection
+        }
+
       }
     }
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this._mdf = false
     }
   }

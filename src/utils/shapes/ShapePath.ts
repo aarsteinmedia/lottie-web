@@ -1,4 +1,4 @@
-import type { Vector2 } from '@/types'
+import type { BezierLength, Vector2 } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { pointPool } from '@/utils/pooling'
@@ -9,7 +9,7 @@ export default class ShapePath {
   c: boolean
   e?: ShapePath[]
   i: Vector2[]
-  lengths: number[] = []
+  lengths: BezierLength[] = []
   o: Vector2[]
   s?: ShapePath[]
   v: Vector2[]
@@ -17,15 +17,15 @@ export default class ShapePath {
     this.c = false
     this._length = 0
     this._maxLength = 8
-    this.v = createSizedArray(this._maxLength) as Vector2[]
-    this.o = createSizedArray(this._maxLength) as Vector2[]
-    this.i = createSizedArray(this._maxLength) as Vector2[]
+    this.v = createSizedArray(this._maxLength)
+    this.o = createSizedArray(this._maxLength)
+    this.i = createSizedArray(this._maxLength)
   }
 
   doubleArrayLength() {
-    this.v = this.v.concat(createSizedArray(this._maxLength))
-    this.i = this.i.concat(createSizedArray(this._maxLength))
-    this.o = this.o.concat(createSizedArray(this._maxLength))
+    this.v = [...this.v, ...createSizedArray(this._maxLength)] as Vector2[]
+    this.i = [...this.i, ...createSizedArray(this._maxLength)] as Vector2[]
+    this.o = [...this.o, ...createSizedArray(this._maxLength)] as Vector2[]
     this._maxLength *= 2
   }
 
@@ -35,11 +35,13 @@ export default class ShapePath {
 
   reverse() {
     const newPath = new ShapePath()
+
     newPath.setPathData(this.c, this._length)
     const vertices = this.v,
       outPoints = this.o,
       inPoints = this.i
     let init = 0
+
     if (this.c) {
       newPath.setTripleAt(
         vertices[0][0],
@@ -69,6 +71,7 @@ export default class ShapePath {
       )
       cnt -= 1
     }
+
     return newPath
   }
 
@@ -83,6 +86,7 @@ export default class ShapePath {
     this.c = closed
     this.setLength(len)
     let i = 0
+
     while (i < len) {
       this.v[i] = pointPool.newElement()
       this.o[i] = pointPool.newElement()
@@ -101,32 +105,45 @@ export default class ShapePath {
     pos: number,
     replace?: boolean
   ) {
-    this.setXYAt(vX, vY, 'v', pos, replace)
-    this.setXYAt(oX, oY, 'o', pos, replace)
-    this.setXYAt(iX, iY, 'i', pos, replace)
+    this.setXYAt(
+      vX, vY, 'v', pos, replace
+    )
+    this.setXYAt(
+      oX, oY, 'o', pos, replace
+    )
+    this.setXYAt(
+      iX, iY, 'i', pos, replace
+    )
   }
 
-  setXYAt(x: number, y: number, type: string, pos: number, replace?: boolean) {
+  setXYAt(
+    x: number, y: number, type: string, pos: number, replace?: boolean
+  ) {
     let arr: number[][]
+
     this._length = Math.max(this._length, pos + 1)
     if (this._length >= this._maxLength) {
       this.doubleArrayLength()
     }
     switch (type) {
-      case 'v':
+      case 'v': {
         arr = this.v
         break
-      case 'i':
+      }
+      case 'i': {
         arr = this.i
         break
-      case 'o':
+      }
+      case 'o': {
         arr = this.o
         break
-      default:
+      }
+      default: {
         arr = []
         break
+      }
     }
-    if (!arr[pos] || (arr[pos] && !replace)) {
+    if (!arr[pos] || arr[pos] && !replace) {
       arr[pos] = pointPool.newElement()
     }
     arr[pos][0] = x

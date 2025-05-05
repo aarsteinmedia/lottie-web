@@ -71,6 +71,7 @@ export default class CVTextElement extends TextElement {
       setBlendMode,
       showElement,
     } = CVBaseElement.prototype
+
     this.clearCanvas = clearCanvas
     this.createContainerElements = createContainerElements
     this.createContent = createContent
@@ -85,32 +86,30 @@ export default class CVTextElement extends TextElement {
     this.setBlendMode = setBlendMode
     this.showElement = showElement
 
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
   override buildNewText() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.globalData.fontManager) {
-      throw new Error(
-        `${this.constructor.name}: fontManager is not implemented in globalData`
-      )
+      throw new Error(`${this.constructor.name}: fontManager is not implemented in globalData`)
     }
     if (!this.textProperty) {
-      throw new Error(
-        `${this.constructor.name}: textProperty is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: textProperty is not implemented`)
     }
 
     const documentData = this.textProperty.currentData
+
     this.renderedLetters = createSizedArray(documentData.l?.length || 0)
 
     let hasFill = false
+
     if (documentData.fc) {
       hasFill = true
       this.values.fill = this.buildColor(documentData.fc as Vector3)
@@ -119,6 +118,7 @@ export default class CVTextElement extends TextElement {
     }
     this.fill = hasFill
     let hasStroke = false
+
     if (documentData.sc) {
       hasStroke = true
       this.values.stroke = this.buildColor(documentData.sc)
@@ -127,6 +127,7 @@ export default class CVTextElement extends TextElement {
     const fontData = this.globalData.fontManager.getFontByName(documentData.f),
       letters = documentData.l || [],
       matrixHelper = this.mHelper
+
     this.stroke = hasStroke
     this.values.fValue = `${documentData.finalSize}px ${
       this.globalData.fontManager.getFontByName(documentData.f).fFamily
@@ -140,13 +141,15 @@ export default class CVTextElement extends TextElement {
       firstLine = true,
       cnt = 0
     const { length } = documentData.finalText
+
     for (let i = 0; i < length; i++) {
       const charData = this.globalData.fontManager.getCharData(
         documentData.finalText[i],
         fontData.fStyle,
         this.globalData.fontManager.getFontByName(documentData.f).fFamily
       )
-      const shapeData = (charData && charData.data) || {}
+      const shapeData = charData && charData.data || {}
+
       matrixHelper.reset()
       if (singleShape && letters[i].n) {
         xPos = -trackingOffset
@@ -155,10 +158,9 @@ export default class CVTextElement extends TextElement {
         firstLine = false
       }
       const shapes = shapeData.shapes?.[0].it || []
-      matrixHelper.scale(
-        Number(documentData.finalSize) / 100,
-        Number(documentData.finalSize) / 100
-      )
+
+      matrixHelper.scale(Number(documentData.finalSize) / 100,
+        Number(documentData.finalSize) / 100)
       if (singleShape) {
         this.applyTextPropertiesToMatrix(
           documentData,
@@ -169,8 +171,9 @@ export default class CVTextElement extends TextElement {
         )
       }
       const { length: jLen } = shapes,
-        commands = createSizedArray(jLen - 1) as number[][]
+        commands = createSizedArray(jLen - 1)
       let commandsCounter = 0
+
       for (let j = 0; j < jLen; j++) {
         if (shapes[j].ty !== 'sh') {
           continue
@@ -178,12 +181,15 @@ export default class CVTextElement extends TextElement {
         const { length: kLen } = (shapes[j].ks?.k as ShapePath).i || [],
           pathNodes = shapes[j].ks?.k as ShapePath,
           pathArr = []
+
         for (k = 1; k < kLen; k++) {
           if (k === 1) {
-            pathArr.push(
-              matrixHelper.applyToX(pathNodes.v[0][0], pathNodes.v[0][1], 0),
-              matrixHelper.applyToY(pathNodes.v[0][0], pathNodes.v[0][1], 0)
-            )
+            pathArr.push(matrixHelper.applyToX(
+              pathNodes.v[0][0], pathNodes.v[0][1], 0
+            ),
+            matrixHelper.applyToY(
+              pathNodes.v[0][0], pathNodes.v[0][1], 0
+            ))
           }
           pathArr.push(
             matrixHelper.applyToX(
@@ -196,10 +202,18 @@ export default class CVTextElement extends TextElement {
               pathNodes.o[k - 1][1],
               0
             ),
-            matrixHelper.applyToX(pathNodes.i[k][0], pathNodes.i[k][1], 0),
-            matrixHelper.applyToY(pathNodes.i[k][0], pathNodes.i[k][1], 0),
-            matrixHelper.applyToX(pathNodes.v[k][0], pathNodes.v[k][1], 0),
-            matrixHelper.applyToY(pathNodes.v[k][0], pathNodes.v[k][1], 0)
+            matrixHelper.applyToX(
+              pathNodes.i[k][0], pathNodes.i[k][1], 0
+            ),
+            matrixHelper.applyToY(
+              pathNodes.i[k][0], pathNodes.i[k][1], 0
+            ),
+            matrixHelper.applyToX(
+              pathNodes.v[k][0], pathNodes.v[k][1], 0
+            ),
+            matrixHelper.applyToY(
+              pathNodes.v[k][0], pathNodes.v[k][1], 0
+            )
           )
         }
         pathArr.push(
@@ -213,10 +227,18 @@ export default class CVTextElement extends TextElement {
             pathNodes.o[k - 1][1],
             0
           ),
-          matrixHelper.applyToX(pathNodes.i[0][0], pathNodes.i[0][1], 0),
-          matrixHelper.applyToY(pathNodes.i[0][0], pathNodes.i[0][1], 0),
-          matrixHelper.applyToX(pathNodes.v[0][0], pathNodes.v[0][1], 0),
-          matrixHelper.applyToY(pathNodes.v[0][0], pathNodes.v[0][1], 0)
+          matrixHelper.applyToX(
+            pathNodes.i[0][0], pathNodes.i[0][1], 0
+          ),
+          matrixHelper.applyToY(
+            pathNodes.i[0][0], pathNodes.i[0][1], 0
+          ),
+          matrixHelper.applyToX(
+            pathNodes.v[0][0], pathNodes.v[0][1], 0
+          ),
+          matrixHelper.applyToY(
+            pathNodes.v[0][0], pathNodes.v[0][1], 0
+          )
         )
         commands[commandsCounter] = pathArr
         commandsCounter++
@@ -233,63 +255,44 @@ export default class CVTextElement extends TextElement {
       cnt++
     }
   }
-  clearCanvas(
-    _canvasContext?:
+  clearCanvas(_canvasContext?:
       | CanvasRenderingContext2D
       | OffscreenCanvasRenderingContext2D
-      | null
-  ) {
-    throw new Error(
-      `${this.constructor.name}: Method clearCanvas is not implemented`
-    )
+      | null) {
+    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
   createElements() {
-    throw new Error(
-      `${this.constructor.name}: Method createElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
   exitLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method exitLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
   hideElement() {
-    throw new Error(
-      `${this.constructor.name}: Method hideElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
   prepareLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method prepareLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
   override renderInnerContent() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.textAnimator) {
-      throw new Error(
-        `${this.constructor.name}: textAnimator is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: textAnimator is not implemented`)
     }
     if (!this.textProperty) {
-      throw new Error(
-        `${this.constructor.name}: textProperty is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: textProperty is not implemented`)
     }
     if (!this.canvasContext) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
 
     this.validateText()
     const ctx = this.canvasContext
+
     ctx.font = this.values.fValue
     ;(this.globalData.renderer as CanvasRenderer)?.ctxLineCap('butt')
     // ctx.lineCap = 'butt';
@@ -299,17 +302,15 @@ export default class CVTextElement extends TextElement {
     // ctx.miterLimit = 4;
 
     if (!this.data.singleShape) {
-      this.textAnimator.getMeasures(
-        this.textProperty.currentData,
-        this.lettersChangedFlag
-      )
+      this.textAnimator.getMeasures(this.textProperty.currentData,
+        this.lettersChangedFlag)
     }
 
     let j
     let jLen: number
     let k
     let kLen
-    const renderedLetters = this.textAnimator.renderedLetters
+    const { renderedLetters } = this.textAnimator
 
     const letters = this.textProperty.currentData.l || []
 
@@ -346,10 +347,12 @@ export default class CVTextElement extends TextElement {
         }
         commands = this.textSpans[i].elem || []
         const { length: jLen } = commands
+
         this.globalData.canvasContext?.beginPath()
         for (j = 0; j < jLen; j++) {
           pathArr = commands[j] || []
           const { length: kLen } = pathArr
+
           this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
           for (k = 2; k < kLen; k += 6) {
             this.globalData.canvasContext?.bezierCurveTo(
@@ -368,7 +371,7 @@ export default class CVTextElement extends TextElement {
         // / ctx.fillText(this.textSpans[i].val,0,0);
       }
       if (this.stroke) {
-        if (renderedLetter && renderedLetter.sw) {
+        if (renderedLetter?.sw) {
           if (lastStrokeW !== renderedLetter.sw) {
             lastStrokeW = renderedLetter.sw
             renderer.ctxLineWidth(renderedLetter.sw)
@@ -379,7 +382,7 @@ export default class CVTextElement extends TextElement {
           renderer.ctxLineWidth(this.values.sWidth)
           // ctx.lineWidth = this.values.sWidth;
         }
-        if (renderedLetter && renderedLetter.sc) {
+        if (renderedLetter?.sc) {
           if (lastStroke !== renderedLetter.sc) {
             lastStroke = renderedLetter.sc
             renderer.ctxStrokeStyle(renderedLetter.sc as string)
@@ -419,8 +422,6 @@ export default class CVTextElement extends TextElement {
     }
   }
   showElement() {
-    throw new Error(
-      `${this.constructor.name}: Method showElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 }

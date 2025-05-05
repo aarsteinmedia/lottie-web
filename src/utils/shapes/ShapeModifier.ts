@@ -1,3 +1,5 @@
+import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
@@ -11,8 +13,6 @@ import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
-import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
-import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -42,6 +42,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       localShapeCollection: newShapeCollection(),
       shape: data.sh,
     } as unknown as SVGShapeData
+
     this.shapes.push(shapeData)
     this.addShapeToModifier(shapeData)
     if (this._isAnimated) {
@@ -49,9 +50,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     }
   }
   addShapeToModifier(_shapeData: SVGShapeData) {
-    throw new Error(
-      `${this.constructor.name}: Method addShapeToModifier is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method addShapeToModifier is not implemented`)
   }
   init(
     elem: ElementInterfaceIntersect,
@@ -60,27 +59,23 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     _elemsData?: ShapeGroupData[]
   ) {
     this.shapes = []
-    this.elem = elem as ElementInterfaceIntersect
+    this.elem = elem
     this.initDynamicPropertyContainer(elem)
     this.initModifierProperties(elem, data)
     this.frameId = initialDefaultFrame
     this.closed = false
     this.k = false
-    if (this.dynamicProperties.length) {
+    if (this.dynamicProperties.length > 0) {
       this.k = true
     } else {
       this.getValue(true)
     }
   }
   initModifierProperties(_elem: ElementInterfaceUnion, _data: Shape | Shape[]) {
-    throw new Error(
-      `${this.constructor.name}: Method initModifierProperties is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initModifierProperties is not implemented`)
   }
   isAnimatedWithShape(_data: Shape): boolean {
-    throw new Error(
-      `${this.constructor.name}: Method isAnimatedWithShape is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method isAnimatedWithShape is not implemented`)
   }
 
   processKeys() {

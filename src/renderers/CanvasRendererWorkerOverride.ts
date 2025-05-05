@@ -13,17 +13,17 @@ export default class CanvasRenderer extends CanvasRendererOriginal {
     if (this.animationItem?.wrapper) {
       this.animationItem.container = createTag('canvas')
       const containerStyle = this.animationItem.container.style
+
       containerStyle.width = '100%'
       containerStyle.height = '100%'
       const origin = '0px 0px 0px'
+
       containerStyle.transformOrigin = origin
       this.animationItem.wrapper.appendChild(this.animationItem.container)
       this.canvasContext = this.animationItem.container.getContext('2d')
       if (this.renderConfig?.className) {
-        this.animationItem.container.setAttribute(
-          'class',
-          this.renderConfig.className
-        )
+        this.animationItem.container.setAttribute('class',
+          this.renderConfig.className)
       }
     } else {
       this.canvasContext = this.renderConfig?.context

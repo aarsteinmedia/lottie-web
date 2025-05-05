@@ -1,4 +1,5 @@
 import type { Vector3, Vector4 } from '@/types'
+
 export default class LetterProps {
   __complete?: boolean
   _mdf: {
@@ -32,12 +33,12 @@ export default class LetterProps {
     this.m = m
     this.p = p
     this._mdf = {
-      fc: !!fc,
+      fc: Boolean(fc),
       m: true,
       o: true,
       p: true,
-      sc: !!sc,
-      sw: !!sw,
+      sc: Boolean(sc),
+      sw: Boolean(sw),
     }
   }
   update(
@@ -54,36 +55,36 @@ export default class LetterProps {
     this._mdf.fc = false
     this._mdf.m = false
     this._mdf.p = false
-    let updated = false
+    let isUpdated = false
 
     if (this.o !== o) {
       this.o = o
       this._mdf.o = true
-      updated = true
+      isUpdated = true
     }
     if (this.sw !== sw) {
       this.sw = sw
       this._mdf.sw = true
-      updated = true
+      isUpdated = true
     }
     if (this.sc !== sc) {
       this.sc = sc
       this._mdf.sc = true
-      updated = true
+      isUpdated = true
     }
     if (this.fc !== fc) {
       this.fc = fc
       this._mdf.fc = true
-      updated = true
+      isUpdated = true
     }
     if (this.m !== m) {
       this.m = m
       this._mdf.m = true
-      updated = true
+      isUpdated = true
     }
     if (
       Array.isArray(p) &&
-      p.length &&
+      p.length > 0 &&
       ((this.p as number[])[0] !== p[0] ||
         (this.p as number[])[1] !== p[1] ||
         (this.p as number[])[4] !== p[4] ||
@@ -93,8 +94,9 @@ export default class LetterProps {
     ) {
       this.p = p
       this._mdf.p = true
-      updated = true
+      isUpdated = true
     }
-    return updated
+
+    return isUpdated
   }
 }

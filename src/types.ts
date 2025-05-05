@@ -551,10 +551,11 @@ export interface Shape {
   /** Skew. */
   sk?: VectorProperty
   so?: VectorProperty
+  sy?: number
+
   /** Gradient type. */
   t?: number
   tr?: Shape
-
   ty: ShapeType
   w?: VectorProperty
   x?: {
@@ -785,7 +786,7 @@ export interface DocumentData extends FontList {
   strokeColorAnim?: boolean
   strokeWidthAnim?: boolean
   sw?: number
-  sz: Vector2[]
+  sz?: Vector2
   t: string | number
   tr: number
   yOffset?: number
@@ -870,6 +871,7 @@ export interface ShapeDataInterface {
 
 export interface TextData {
   __complete: boolean
+  _mdf?: boolean
   /** Text range. */
   a?: TextAnimatorDataProperty[]
   ascent: number
@@ -891,6 +893,7 @@ export interface TextData {
   ls: number
   /** Text Alignment. */
   m?: {
+    _mdf?: boolean
     /** Grouping. */
     g: number
     a: {
@@ -898,30 +901,38 @@ export interface TextData {
       k: Vector2
       ix?: number
     }
+    v: any
   }
+  n?: any
   of: string
   /** Text Follow Path TODO:. */
   p?: TextPathData
   ps: null | Vector2
+  r?: { v: number[] }
   s: number
   sc: string
   strokeColorAnim: boolean
   strokeWidthAnim: boolean
   sw: number
-  t: string /**
+  t: string
+  /**
    * Number.
    */
   tr: number
   yOffset: number
 }
 
-interface TextPathData {
+export interface TextPathData {
+  _mdf?: boolean
   a: any
   f: any
   l: any
-  m?: number
+  m?: any
+  n: any
   p: any
+  pi: any
   r: any
+  v: any
 }
 
 export type EffectElement =
@@ -1179,6 +1190,12 @@ export interface ImageData {
   img: null | SVGElement | HTMLCanvasElement | HTMLMediaElement
 }
 
+export interface Svalue {
+  c: number
+  i: number[]
+  s: number[][]
+}
+
 export interface Keyframe {
   e: Vector2
   h?: number
@@ -1189,7 +1206,7 @@ export interface Keyframe {
   }
   n: string
   o: Coordinates
-  s: number[] | null
+  s: Svalue[] | null
   t: number
   ti: Vector2
   to?: Vector2 | null

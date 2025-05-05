@@ -35,15 +35,14 @@ export default abstract class BaseElement {
   type?: unknown
   checkMasks() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not initialized`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not initialized`)
     }
     if (!this.data.hasMask) {
       return false
     }
     let i = 0
-    const { length } = this.data.masksProperties || []
+    const { length } = this.data.masksProperties ?? []
+
     while (i < length) {
       if (
         this.data.masksProperties?.[i].mode !== 'n' &&
@@ -53,6 +52,7 @@ export default abstract class BaseElement {
       }
       i++
     }
+
     return false
   }
   getType() {
@@ -72,55 +72,42 @@ export default abstract class BaseElement {
     if (!this.data.sr) {
       this.data.sr = 1
     }
-    this.effectsManager = new EffectsManager(
-      this.data,
+    this.effectsManager = new EffectsManager(this.data,
       this as unknown as ElementInterfaceIntersect
       // this.dynamicProperties
     )
   }
   initExpressions() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     const expressionsInterfaces = getExpressionInterfaces()
+
     if (!expressionsInterfaces) {
       return
     }
-    const layerExpressionInterface = expressionsInterfaces(
-        'layer'
-      ) as typeof LayerExpressionInterface,
+    const layerExpressionInterface = expressionsInterfaces('layer') as typeof LayerExpressionInterface,
       effectsExpressionInterface = expressionsInterfaces('effects'),
-      shapeExpressionInterface = expressionsInterfaces(
-        'shape'
-      ) as typeof ShapeExpressionInterface,
-      textExpressionInterface = expressionsInterfaces(
-        'text'
-      ) as typeof TextExpressionInterface,
-      compExpressionInterface = expressionsInterfaces(
-        'comp'
-      ) as typeof CompExpressionInterface
+      shapeExpressionInterface = expressionsInterfaces('shape') as typeof ShapeExpressionInterface,
+      textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
+      compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
 
-    this.layerInterface = new layerExpressionInterface(
-      this as unknown as ElementInterfaceIntersect
-    )
+    this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
-    if (!this.layerInterface) {
-      throw new Error(`${this.constructor.name}: Could not set layerInterface`)
-    }
+    // if (!this.layerInterface) {
+    //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
+    // }
 
     if (this.data.hasMask && this.maskManager) {
       this.layerInterface.registerMaskInterface(this.maskManager)
     }
-    const effectsInterface = (effectsExpressionInterface as any) // TODO:
-      .createEffectsInterface(this, this.layerInterface)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const effectsInterface = (effectsExpressionInterface as any).createEffectsInterface(this, this.layerInterface)
+
     this.layerInterface.registerEffectsInterface(effectsInterface)
 
     if (this.data.ty === 0 || this.data.xt) {
-      this.compInterface = new compExpressionInterface(
-        this as unknown as ElementInterfaceIntersect
-      )
+      this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
       return
     }
@@ -135,25 +122,19 @@ export default abstract class BaseElement {
       return
     }
     if (this.data.ty === 5) {
-      this.layerInterface.textInterface = new textExpressionInterface(
-        this as unknown as ElementInterfaceIntersect
-      )
+      this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
       this.layerInterface.text = this.layerInterface.textInterface
     }
   }
   setBlendMode() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     const blendModeValue = getBlendMode(this.data.bm),
-      elem = this.baseElement || this.layerElement
+      elem = this.baseElement ?? this.layerElement
 
     if (!elem) {
-      throw new Error(
-        `${this.constructor.name}: Both baseElement and layerElement are not implemented`
-      )
+      throw new Error(`${this.constructor.name}: Both baseElement and layerElement are not implemented`)
     }
     elem.style.mixBlendMode = blendModeValue
   }

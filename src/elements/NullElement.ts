@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 
 import FrameElement from '@/elements/helpers/FrameElement'
+
 export default class NullElement extends FrameElement {
   constructor(
     data: LottieLayer,
@@ -13,7 +14,9 @@ export default class NullElement extends FrameElement {
   ) {
     super()
     this.initFrame()
-    this.initBaseData(data, globalData, comp)
+    this.initBaseData(
+      data, globalData, comp
+    )
     this.initTransform()
     this.initHierarchy()
   }

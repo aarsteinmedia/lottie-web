@@ -11,19 +11,19 @@ function createLumaSvgFilter() {
   const _svg = createNS<SVGSVGElement>('svg'),
     fil = createNS<SVGFilterElement>('filter'),
     matrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
+
   fil.setAttribute('id', id)
   matrix.setAttribute('type', 'matrix')
   matrix.setAttribute('color-interpolation-filters', 'sRGB')
-  matrix.setAttribute(
-    'values',
-    '0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0'
-  )
+  matrix.setAttribute('values',
+    '0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0')
   fil.appendChild(matrix)
   _svg.appendChild(fil)
   _svg.setAttribute('id', `${id}_svg`)
   if (featureSupport.svgLumaHidden) {
     _svg.style.display = 'none'
   }
+
   return _svg
 }
 
@@ -38,7 +38,9 @@ export function loadLumaCanvas() {
   if (lumaBufferCtx) {
     lumaBufferCtx.filter = `url(#${id})`
     lumaBufferCtx.fillStyle = 'rgba(0,0,0,0)'
-    lumaBufferCtx.fillRect(0, 0, 1, 1)
+    lumaBufferCtx.fillRect(
+      0, 0, 1, 1
+    )
   }
 }
 
@@ -52,6 +54,7 @@ export function getLumaCanvas(canvas: HTMLCanvasElement) {
   lumaBuffer.width = canvas.width
   lumaBuffer.height = canvas.height
   lumaBufferCtx.filter = `url(#${id})`
+
   return lumaBuffer
 }
 
@@ -60,7 +63,9 @@ export function createCanvas(width: number, height: number) {
     return new OffscreenCanvas(width, height)
   }
   const canvas = createTag<HTMLCanvasElement>('canvas')
+
   canvas.width = width
   canvas.height = height
+
   return canvas
 }

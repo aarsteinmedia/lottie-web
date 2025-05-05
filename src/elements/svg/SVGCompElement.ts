@@ -30,11 +30,11 @@ export default class SVGCompElement extends SVGBaseElement {
     comp: CompElementInterface
   ) {
     super()
-    this.layers = data.layers || []
+    this.layers = data.layers ?? []
     this.supports3d = true
     this.completeLayers = false
     this.pendingElements = []
-    this.elements = this.layers ? createSizedArray(this.layers.length) : []
+    this.elements = createSizedArray(this.layers.length)
     const {
         appendElementInPos,
         buildItem,
@@ -57,6 +57,7 @@ export default class SVGCompElement extends SVGBaseElement {
         renderInnerContent,
         setElements,
       } = CompElement.prototype
+
     this.appendElementInPos = appendElementInPos
     this.buildItem = buildItem
     this.checkPendingElements = checkPendingElements
@@ -75,48 +76,43 @@ export default class SVGCompElement extends SVGBaseElement {
     this.prepareFrame = prepareFrame
     this.renderInnerContent = renderInnerContent
     this.setElements = setElements
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.tm as VectorProperty,
-            0,
-            globalData.frameRate,
-            this as unknown as ElementInterfaceIntersect
-          )
+          this as unknown as ElementInterfaceIntersect,
+          data.tm as VectorProperty,
+          0,
+          globalData.frameRate,
+          this as unknown as ElementInterfaceIntersect
+        )
         : { _placeholder: true }
     ) as KeyframedValueProperty
   }
 
   appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method appendElementInPos is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method appendElementInPos is not impelemented`)
   }
 
   buildItem(_pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method buildItem is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildItem is not impelemented`)
   }
 
   checkPendingElements() {
-    throw new Error(
-      `${this.constructor.name}: Method checkPendingElements is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkPendingElements is not impelemented`)
   }
 
   configAnimation(_data: AnimationData) {
-    throw new Error(
-      `${this.constructor.name}: Method configAnimation is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method configAnimation is not impelemented`)
   }
 
   createComp(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Cannot access global data`)
     }
+
     return new SVGCompElement(
       data,
       this.globalData,
@@ -125,56 +121,38 @@ export default class SVGCompElement extends SVGBaseElement {
   }
 
   createImage(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createImage is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createImage is not impelemented`)
   }
 
   createNull(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createNull is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createNull is not impelemented`)
   }
 
   createShape(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createShape is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createShape is not impelemented`)
   }
 
   createSolid(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createSolid is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createSolid is not impelemented`)
   }
 
   createText(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createText is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createText is not impelemented`)
   }
 
   destroyElements() {
-    throw new Error(
-      `${this.constructor.name}: Method destroyElements is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method destroyElements is not impelemented`)
   }
 
   findIndexByInd(_ind: number) {
-    throw new Error(
-      `${this.constructor.name}: Method findIndexByInd is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method findIndexByInd is not impelemented`)
   }
 
   getElements() {
-    throw new Error(
-      `${this.constructor.name}: Method getElements is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getElements is not impelemented`)
   }
 
   setElements(_elems: ElementInterfaceIntersect[]) {
-    throw new Error(
-      `${this.constructor.name}: Method setElements is not impelemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setElements is not impelemented`)
   }
 }

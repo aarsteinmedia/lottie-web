@@ -27,17 +27,17 @@ export default class SVGRendererBase extends BaseRenderer {
   svgElement?: SVGSVGElement
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
-    if (!element.getBaseElement) {
-      throw new Error(
-        `${element.constructor.name}: Method getBaseElement is not implemented`
-      )
-    }
+    // if (!element.getBaseElement) {
+    //   throw new Error(`${element.constructor.name}: Method getBaseElement is not implemented`)
+    // }
     const newElement = element.getBaseElement()
+
     if (!newElement) {
       return
     }
     let i = 0
     let nextElement
+
     while (i < pos) {
       if (
         this.elements[i] &&
@@ -56,67 +56,73 @@ export default class SVGRendererBase extends BaseRenderer {
   }
 
   override buildItem(pos: number) {
-    if (!this.layers) {
-      throw new Error(`${this.constructor.name}: layers it not implemented`)
-    }
+    // if (!this.layers) {
+    //   throw new Error(`${this.constructor.name}: layers it not implemented`)
+    // }
 
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData it not implemented`)
     }
 
-    const elements = this.elements
-    if (elements[pos] || this.layers[pos].ty === 99) {
+    const {
+      elements, globalData, layers
+    } = this
+
+    if (elements[pos] || layers[pos].ty === 99) {
       return
     }
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(this.layers[pos])
+    const element = this.createItem(layers[pos])
 
-    if (!element) {
-      throw new Error(`${this.constructor.name}: Could not create element`)
-    }
+    // if (!element) {
+    //   throw new Error(`${this.constructor.name}: Could not create element`)
+    // }
 
     elements[pos] = element as ElementInterfaceIntersect
     if (getExpressionsPlugin()) {
-      if (this.layers[pos].ty === 0) {
-        this.globalData.projectInterface.registerComposition(
-          element as CompElementInterface
-        )
+      if (layers[pos].ty === 0) {
+        globalData.projectInterface.registerComposition(element as CompElementInterface)
       }
       element.initExpressions()
     }
     this.appendElementInPos(element as ElementInterfaceIntersect, pos)
-    if (this.layers[pos].tt) {
+    if (layers[pos].tt) {
       const elementIndex =
-        'tp' in this.layers[pos]
-          ? this.findIndexByInd(this.layers[pos].tp)
+        'tp' in layers[pos]
+          ? this.findIndexByInd(layers[pos].tp)
           : pos - 1
+
       if (elementIndex === -1) {
         return
       }
       if (
-        !this.elements[elementIndex] ||
-        this.elements[elementIndex] ===
+        !elements[elementIndex] ||
+        elements[elementIndex] ===
           (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
         this.addPendingElement(element as ElementInterfaceIntersect)
+
         return
       }
       const matteElement = elements[elementIndex],
-        matteMask = matteElement.getMatte(this.layers[pos].tt)
+        matteMask = matteElement.getMatte(layers[pos].tt)
+
       ;(element as ElementInterfaceIntersect).setMatte(matteMask)
     }
   }
 
   override checkPendingElements() {
-    while (this.pendingElements.length) {
+    while (this.pendingElements.length > 0) {
       const element = this.pendingElements.pop()
+
       element?.checkParenting()
-      if (element?.data?.tt) {
+      if (element?.data.tt) {
         let i = 0
-        const { length } = this.elements || []
+        const { length } = this.elements
+
         while (i < length) {
           if (this.elements[i] !== element) {
             i++
@@ -132,7 +138,7 @@ export default class SVGRendererBase extends BaseRenderer {
           element.setMatte(matteMask)
           break
         }
-        i++
+        // i++
       }
     }
   }
@@ -153,17 +159,13 @@ export default class SVGRendererBase extends BaseRenderer {
       }
 
       this.svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-      this.svgElement.setAttribute(
-        'xmlns:xlink',
-        'http://www.w3.org/1999/xlink'
-      )
+      this.svgElement.setAttribute('xmlns:xlink',
+        'http://www.w3.org/1999/xlink')
       if (this.renderConfig.viewBoxSize) {
         this.svgElement.setAttribute('viewBox', this.renderConfig.viewBoxSize)
       } else {
-        this.svgElement.setAttribute(
-          'viewBox',
-          `0 0 ${animData.w} ${animData.h}`
-        )
+        this.svgElement.setAttribute('viewBox',
+          `0 0 ${animData.w} ${animData.h}`)
       }
 
       if (!this.renderConfig.viewBoxOnly) {
@@ -172,7 +174,7 @@ export default class SVGRendererBase extends BaseRenderer {
         this.svgElement.style.width = '100%'
         this.svgElement.style.height = '100%'
         this.svgElement.style.transform = 'translate3d(0,0,0)'
-        if (this.renderConfig?.contentVisibility) {
+        if (this.renderConfig.contentVisibility) {
           this.svgElement.style.contentVisibility =
             this.renderConfig.contentVisibility
         }
@@ -190,21 +192,17 @@ export default class SVGRendererBase extends BaseRenderer {
         this.svgElement.setAttribute('id', this.renderConfig.id)
       }
       if (this.renderConfig.focusable !== undefined) {
-        this.svgElement.setAttribute(
-          'focusable',
-          `${this.renderConfig.focusable}`
-        )
+        this.svgElement.setAttribute('focusable',
+          `${this.renderConfig.focusable}`)
       }
       if (this.renderConfig.preserveAspectRatio) {
-        this.svgElement.setAttribute(
-          'preserveAspectRatio',
-          this.renderConfig.preserveAspectRatio
-        )
+        this.svgElement.setAttribute('preserveAspectRatio',
+          this.renderConfig.preserveAspectRatio)
       }
 
       this.animationItem.wrapper?.appendChild(this.svgElement)
       // Mask animation
-      const defs = this.globalData.defs
+      const { defs } = this.globalData
 
       this.setupGlobalData(animData, defs)
       this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
@@ -212,23 +210,23 @@ export default class SVGRendererBase extends BaseRenderer {
 
       const maskElement = createNS<SVGClipPathElement>('clipPath'),
         rect = createNS<SVGRectElement>('rect')
+
       rect.setAttribute('width', `${animData.w}`)
       rect.setAttribute('height', `${animData.h}`)
       rect.setAttribute('x', '0')
       rect.setAttribute('y', '0')
       const maskId = createElementID()
+
       maskElement.setAttribute('id', maskId)
       maskElement.appendChild(rect)
-      this.layerElement?.setAttribute(
-        'clip-path',
-        `url(${getLocationHref()}#${maskId})`
-      )
+      this.layerElement?.setAttribute('clip-path',
+        `url(${getLocationHref()}#${maskId})`)
 
       defs.appendChild(maskElement)
       this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -236,6 +234,7 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new ImageElement(
       data,
       this.globalData,
@@ -247,6 +246,7 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new NullElement(
       data,
       this.globalData,
@@ -258,6 +258,7 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new SVGShapeElement(
       data,
       this.globalData,
@@ -269,6 +270,7 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new SolidElement(
       data,
       this.globalData,
@@ -280,6 +282,7 @@ export default class SVGRendererBase extends BaseRenderer {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new SVGTextLottieElement(
       data,
       this.globalData,
@@ -301,6 +304,7 @@ export default class SVGRendererBase extends BaseRenderer {
     this.layerElement = null as unknown as SVGGElement
     this.globalData.defs = null as unknown as SVGDefsElement
     const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
       this.elements[i].destroy()
     }
@@ -311,11 +315,13 @@ export default class SVGRendererBase extends BaseRenderer {
 
   findIndexByInd(ind?: number) {
     const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
       if (this.layers[i].ind === ind) {
         return i
       }
     }
+
     return -1
   }
 
@@ -335,6 +341,7 @@ export default class SVGRendererBase extends BaseRenderer {
         return
       }
       let num = numFromProps
+
       if (num === null) {
         num = this.renderedFrame
       } else {
@@ -345,14 +352,16 @@ export default class SVGRendererBase extends BaseRenderer {
       this.globalData.projectInterface.currentFrame = num || 0
       this.globalData._mdf = false
       const { length } = this.layers
+
       if (!this.completeLayers) {
         this.checkLayers(num)
       }
       for (let i = length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i].prepareFrame(Number(num) - Number(this.layers[i].st))
+          this.elements[i].prepareFrame(Number(num) - this.layers[i].st)
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (this.globalData._mdf) {
         for (let i = 0; i < length; i++) {
           if (this.completeLayers || this.elements[i]) {
@@ -360,23 +369,19 @@ export default class SVGRendererBase extends BaseRenderer {
           }
         }
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
   }
 
   show() {
     if (!this.layerElement) {
-      throw new Error(
-        `${this.constructor.name}: layerElement is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: layerElement is not implemented`)
     }
     this.layerElement.style.display = 'block'
   }
 
   updateContainerSize(_width?: number, _height?: number) {
-    throw new Error(
-      `${this.constructor.name}: Method updateContainerSize is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method updateContainerSize is not implemented`)
   }
 }

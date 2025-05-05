@@ -1,9 +1,9 @@
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type { Shape } from '@/types'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import { Shape } from '@/types'
 import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class ShapePathInterface {
   _name?: string
@@ -16,16 +16,14 @@ export default class ShapePathInterface {
   propertyGroup?: unknown
   propertyIndex?: number
   shape: ShapeProperty
-  constructor(shape: Shape, view: SVGShapeData, propertyGroup: unknown) {
+  constructor(
+    shape: Shape, view: SVGShapeData, propertyGroup: unknown
+  ) {
     this.prop = view.sh
 
-    this._propertyGroup = propertyGroupFactory(
-      this.interfaceFunction,
-      propertyGroup
-    )
-    this.prop.setGroupProperty(
-      new PropertyInterface('Path', this._propertyGroup)
-    )
+    this._propertyGroup = propertyGroupFactory(this.interfaceFunction,
+      propertyGroup)
+    this.prop.setGroupProperty(new PropertyInterface('Path', this._propertyGroup))
 
     if (this.prop.k) {
       this.prop.getValue()
@@ -53,6 +51,7 @@ export default class ShapePathInterface {
     ) {
       return this.path
     }
+
     return null
   }
 }

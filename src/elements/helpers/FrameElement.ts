@@ -6,9 +6,12 @@ export default class FrameElement extends HierarchyElement {
   _mdf?: boolean
   displayStartTime = 0
   dynamicProperties: DynamicPropertyContainer[] = []
-  frameDuration = 0.016 // default fps is 60, so default frameDuration is 1 / 60
+  /**
+   * Default fps is 60, so default frameDuration is 1 / 60.
+   */
+  frameDuration = 0.016
   addDynamicProperty(prop: DynamicPropertyContainer) {
-    if (this.dynamicProperties.indexOf(prop) === -1) {
+    if (!this.dynamicProperties.includes(prop)) {
       this.dynamicProperties.push(prop)
     }
   }
@@ -22,6 +25,7 @@ export default class FrameElement extends HierarchyElement {
   }
   prepareProperties(_: number, isVisible?: boolean) {
     const { length } = this.dynamicProperties
+
     for (let i = 0; i < length; i++) {
       if (
         !isVisible &&

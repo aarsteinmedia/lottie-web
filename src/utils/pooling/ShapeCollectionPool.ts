@@ -9,12 +9,14 @@ let _length = 0,
 
 export function newShapeCollection() {
   let shapeCollection
+
   if (_length) {
     _length -= 1
     shapeCollection = pool[_length]
   } else {
     shapeCollection = new ShapeCollection()
   }
+
   return shapeCollection as ShapeCollection
 }
 

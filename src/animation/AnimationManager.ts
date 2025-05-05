@@ -10,6 +10,7 @@ import { RendererType } from '@/enums'
 import { createTag, isServer } from '@/utils'
 
 let _isFrozen = false,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   _stopped = true,
   initTime = 0,
   len = 0,
@@ -31,9 +32,11 @@ export function freeze() {
 export function getRegisteredAnimations() {
   const lenAnims = registeredAnimations.length,
     animations = []
+
   for (let i = 0; i < lenAnims; i++) {
     animations.push(registeredAnimations[i].animation)
   }
+
   return animations
 }
 
@@ -43,18 +46,22 @@ export function goToAndStop(
   animation?: string
 ) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.goToAndStop(value, isFrame, animation)
+    registeredAnimations[i].animation.goToAndStop(
+      value, isFrame, animation
+    )
   }
 }
 
 export function loadAnimation(params: AnimationConfiguration) {
   try {
     const animItem = new AnimationItem()
+
     setupAnimation(animItem, null)
     animItem.setParams(params)
+
     return animItem
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.error(error)
     throw new Error('Could not load animation')
   }
 }
@@ -77,15 +84,14 @@ export function play(animation?: string) {
   }
 }
 
-export function registerAnimation(
-  element: HTMLElement | null,
-  animationData?: AnimationData
-) {
+export function registerAnimation(element: HTMLElement | null,
+  animationData?: AnimationData) {
   try {
     if (!element) {
       return null
     }
     let i = 0
+
     while (i < len) {
       if (
         registeredAnimations[i].elem === element &&
@@ -96,11 +102,13 @@ export function registerAnimation(
       i++
     }
     const animItem = new AnimationItem()
+
     setupAnimation(animItem, element)
     animItem.setData(element, animationData)
+
     return animItem
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.error(error)
     throw new Error('Could not register animation')
   }
 }
@@ -119,11 +127,10 @@ export function searchAnimations(
     return
   }
   let renderer = rendererFromProps
-  const animElements = [].concat(
-    [].slice.call(document.getElementsByClassName('lottie')),
-    [].slice.call(document.getElementsByClassName('bodymovin'))
-  ) as HTMLElement[]
+  const animElements = [].concat(Array.prototype.slice.call(document.getElementsByClassName('lottie')),
+    Array.prototype.slice.call(document.getElementsByClassName('bodymovin'))) as HTMLElement[]
   const { length } = animElements
+
   for (let i = 0; i < length; i++) {
     if (renderer) {
       animElements[i].setAttribute('data-bm-type', renderer)
@@ -135,11 +142,13 @@ export function searchAnimations(
       renderer = RendererType.SVG
     }
     const body = document.getElementsByTagName('body')[0]
+
     body.innerText = ''
     const div = createTag('div')
-    if (!div) {
-      throw new Error('Could not create DIV')
-    }
+
+    // if (!div) {
+    //   throw new Error('Could not create DIV')
+    // }
     div.style.width = '100%'
     div.style.height = '100%'
     div.setAttribute('data-bm-type', renderer)
@@ -188,12 +197,11 @@ export function unmute(animation?: string) {
   }
 }
 function activate() {
-  if (!_isFrozen && playingAnimationsNum) {
-    if (_stopped && typeof !isServer()) {
-      window.requestAnimationFrame(first)
-      _stopped = false
-    }
+  if (_isFrozen || !playingAnimationsNum || !_stopped || isServer()) {
+    return
   }
+  window.requestAnimationFrame(first)
+  _stopped = false
 }
 function addPlayingCount() {
   playingAnimationsNum++
@@ -209,6 +217,7 @@ function first(nowTime: number) {
 
 function removeElement({ target: animItem }: LottieEvent) {
   let i = 0
+
   if (!animItem) {
     throw new Error('No animation to remove')
   }
@@ -227,6 +236,7 @@ function removeElement({ target: animItem }: LottieEvent) {
 
 function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
+
   for (let i = 0; i < len; i++) {
     registeredAnimations[i].animation.advanceTime(elapsedTime)
   }
@@ -244,7 +254,10 @@ function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
   animItem.addEventListener('destroy', removeElement as () => void)
   animItem.addEventListener('_active', addPlayingCount)
   animItem.addEventListener('_idle', subtractPlayingCount)
-  registeredAnimations.push({ animation: animItem, elem: element })
+  registeredAnimations.push({
+    animation: animItem,
+    elem: element
+  })
   len++
 }
 function subtractPlayingCount() {

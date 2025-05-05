@@ -46,37 +46,47 @@ export default class RepeaterModifier extends ShapeModifier {
     inv?: boolean
   ) {
     if (!transform.s || !transform.p || !transform.a || !transform.r) {
-      throw new Error(
-        `${this.constructor.name}: Missing required data from Transform`
-      )
+      throw new Error(`${this.constructor.name}: Missing required data from Transform`)
     }
     const dir = inv ? -1 : 1,
       scaleX = transform.s.v[0] + (1 - transform.s.v[0]) * (1 - perc),
       scaleY = transform.s.v[1] + (1 - transform.s.v[1]) * (1 - perc)
+
     pMatrix.translate(
       transform.p.v[0] * dir * perc,
       transform.p.v[1] * dir * perc,
       transform.p.v[2]
     )
-    rMatrix.translate(-transform.a.v[0], -transform.a.v[1], transform.a.v[2])
+    rMatrix.translate(
+      -transform.a.v[0], -transform.a.v[1], transform.a.v[2]
+    )
     rMatrix.rotate(-transform.r.v * dir * perc)
-    rMatrix.translate(transform.a.v[0], transform.a.v[1], transform.a.v[2])
-    sMatrix.translate(-transform.a.v[0], -transform.a.v[1], transform.a.v[2])
+    rMatrix.translate(
+      transform.a.v[0], transform.a.v[1], transform.a.v[2]
+    )
+    sMatrix.translate(
+      -transform.a.v[0], -transform.a.v[1], transform.a.v[2]
+    )
     sMatrix.scale(inv ? 1 / scaleX : scaleX, inv ? 1 / scaleY : scaleY)
-    sMatrix.translate(transform.a.v[0], transform.a.v[1], transform.a.v[2])
+    sMatrix.translate(
+      transform.a.v[0], transform.a.v[1], transform.a.v[2]
+    )
   }
   changeGroupRender(elements: Shape[], renderFlag?: boolean) {
     const { length } = elements
+
     for (let i = 0; i < length; i++) {
       elements[i]._render = renderFlag
-      if (elements[i].ty === 'gr') {
+      if (elements[i].ty === ShapeType.Group) {
         this.changeGroupRender(elements[i].it as Shape[], renderFlag)
       }
     }
   }
   cloneElements(elements: Shape[]): Shape[] {
-    const newElements = JSON.parse(JSON.stringify(elements))
+    const newElements = JSON.parse(JSON.stringify(elements)) as Shape[]
+
     this.resetElements(newElements)
+
     return newElements
   }
   override init(
@@ -86,11 +96,10 @@ export default class RepeaterModifier extends ShapeModifier {
     elemsData: ShapeGroupData[] = []
   ) {
     if (!Array.isArray(arr)) {
-      throw new Error(
-        `${this.constructor.name}: Method init, param arr must be array`
-      )
+      throw new TypeError(`${this.constructor.name}: Method init, param arr must be array`)
     }
     let pos = Number(posFromProps)
+
     this.elem = elem as ElementInterfaceIntersect
     this.arr = arr
     this.pos = pos
@@ -105,17 +114,16 @@ export default class RepeaterModifier extends ShapeModifier {
       pos--
       this._elements.unshift(arr[pos])
     }
-    if (this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length > 0) {
       this.k = true
+
       return
     }
     this.getValue(true)
   }
 
-  override initModifierProperties(
-    elem: ElementInterfaceIntersect,
-    data: Shape
-  ) {
+  override initModifierProperties(elem: ElementInterfaceIntersect,
+    data: Shape) {
     this.getValue = this.processKeys
     this.c = PropertyFactory.getProp(
       elem,
@@ -153,10 +161,10 @@ export default class RepeaterModifier extends ShapeModifier {
       ) as ValueProperty
     }
     this.data = data
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this.getValue(true)
     }
-    this._isAnimated = !!this.dynamicProperties.length
+    this._isAnimated = this.dynamicProperties.length > 0
     this.pMatrix = new Matrix()
     this.rMatrix = new Matrix()
     this.sMatrix = new Matrix()
@@ -166,9 +174,7 @@ export default class RepeaterModifier extends ShapeModifier {
 
   processShapes(_isFirstFrame: boolean) {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (Shape) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
 
     let items,
@@ -177,52 +183,91 @@ export default class RepeaterModifier extends ShapeModifier {
       dir,
       cont: number,
       hasReloaded = false
+
     if (!this._mdf && !_isFirstFrame) {
       cont = Number(this._currentCopies)
       i = 0
       dir = 1
       while (cont) {
-        items = this.elemsData?.[i].it
-        if (!items) {
-          continue
-        }
-        itemsTransform = items[items.length - 1].transform.mProps.v.props
+        items = this.elemsData[i].it
+        // if (!items) {
+        //   continue
+        // }
+        // itemsTransform = items[items.length - 1].transform.mProps.v.props
         items[items.length - 1].transform.mProps._mdf = false
         items[items.length - 1].transform.op._mdf = false
         cont--
         i += dir
       }
+
       return hasReloaded
     }
 
     const copies = Math.ceil(Number(this.c?.v))
+
     if (this._groups.length < copies) {
       while (this._groups.length < copies) {
         const group = {
           it: this.cloneElements(this._elements),
           ty: 'gr',
         } as Shape
+
         group.it?.push({
-          a: { a: 0, ix: 1, k: [0, 0] },
+          a: {
+            a: 0,
+            ix: 1,
+            k: [0, 0]
+          },
           nm: 'Transform',
-          o: { a: 0, ix: 7, k: 100 },
-          p: { a: 0, ix: 2, k: [0, 0] },
+          o: {
+            a: 0,
+            ix: 7,
+            k: 100
+          },
+          p: {
+            a: 0,
+            ix: 2,
+            k: [0, 0]
+          },
           r: {
             a: 1,
             ix: 6,
             k: [
-              { e: 0, s: 0, t: 0 },
-              { e: 0, s: 0, t: 1 },
+              {
+                e: 0,
+                s: 0,
+                t: 0
+              }, {
+                e: 0,
+                s: 0,
+                t: 1
+              },
             ],
           },
-          s: { a: 0, ix: 3, k: [100, 100] },
-          sa: { a: 0, ix: 5, k: 0 },
-          sk: { a: 0, ix: 4, k: 0 },
+          s: {
+            a: 0,
+            ix: 3,
+            k: [100, 100]
+          },
+          sa: {
+            a: 0,
+            ix: 5,
+            k: 0
+          },
+          sk: {
+            a: 0,
+            ix: 4,
+            k: 0
+          },
           ty: ShapeType.Transform,
         } as Shape)
 
-        this.arr.splice(0, 0, group)
-        this._groups.splice(0, 0, group)
+        this.arr.splice(
+          0, 0, group
+        )
+        this._groups.splice(
+          0, 0, group
+        )
 
         if (this._currentCopies) {
           this._currentCopies++
@@ -234,18 +279,20 @@ export default class RepeaterModifier extends ShapeModifier {
       hasReloaded = true
     }
     cont = 0
-    let renderFlag = false
+    let shouldRender
     const length = this._groups.length - 1
+
     for (i = 0; i <= length - 1; i++) {
-      renderFlag = cont < copies
+      shouldRender = cont < copies
       if (this._groups[i]) {
-        this._groups[i]._render = renderFlag
+        this._groups[i]._render = shouldRender
       }
 
-      this.changeGroupRender(this._groups[i].it || [], renderFlag)
-      if (!renderFlag) {
+      this.changeGroupRender(this._groups[i].it ?? [], shouldRender)
+      if (!shouldRender) {
         const elems = this.elemsData[i].it,
           transformData = elems[elems.length - 1]
+
         if (transformData.transform.op.v === 0) {
           transformData.transform.op._mdf = false
         } else {
@@ -278,6 +325,7 @@ export default class RepeaterModifier extends ShapeModifier {
       pProps = this.pMatrix.props,
       rProps = this.rMatrix.props,
       sProps = this.sMatrix.props
+
     this.pMatrix.reset()
     this.rMatrix.reset()
     this.sMatrix.reset()
@@ -336,10 +384,12 @@ export default class RepeaterModifier extends ShapeModifier {
     dir = this.data.m === 1 ? 1 : -1
     cont = this._currentCopies
     let j
+
     while (cont) {
       items = this.elemsData[i].it
       itemsTransform = items[items.length - 1].transform.mProps.v.props
       const { length: jLen } = itemsTransform
+
       items[items.length - 1].transform.mProps._mdf = true
       items[items.length - 1].transform.op._mdf = true
       items[items.length - 1].transform.op.v =
@@ -356,8 +406,8 @@ export default class RepeaterModifier extends ShapeModifier {
         }
       } else {
         if (
-          (i !== 0 && dir === 1) ||
-          (i !== this._currentCopies - 1 && dir === -1)
+          i !== 0 && dir === 1 ||
+          i !== this._currentCopies - 1 && dir === -1
         ) {
           this.applyTransforms(
             this.pMatrix,
@@ -432,15 +482,20 @@ export default class RepeaterModifier extends ShapeModifier {
       cont--
       i += dir
     }
+
     return hasReloaded
   }
 
   resetElements(elements: Shape[]) {
     const { length } = elements
+
     for (let i = 0; i < length; i++) {
       elements[i]._processed = false
-      if (elements[i].ty === 'gr') {
-        this.resetElements(elements[i].it!)
+
+      const { it } = elements[i]
+
+      if (elements[i].ty === ShapeType.Group && it) {
+        this.resetElements(it)
       }
     }
   }

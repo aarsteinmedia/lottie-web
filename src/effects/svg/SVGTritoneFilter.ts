@@ -17,28 +17,29 @@ export default class SVGTritoneFilter {
   ) {
     this.filterManager = filterManager
     const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
+
     feColorMatrix.setAttribute('type', 'matrix')
     feColorMatrix.setAttribute('color-interpolation-filters', 'linearRGB')
-    feColorMatrix.setAttribute(
-      'values',
-      '0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'
-    )
+    feColorMatrix.setAttribute('values',
+      '0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0')
     filter.appendChild(feColorMatrix)
-    const feComponentTransfer = createNS<SVGFEComponentTransferElement>(
-      'feComponentTransfer'
-    )
+    const feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
+
     feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB')
     feComponentTransfer.setAttribute('result', id)
     this.matrixFilter = feComponentTransfer
     const feFuncR = createNS<SVGFEFuncRElement>('feFuncR')
+
     feFuncR.setAttribute('type', 'table')
     feComponentTransfer.appendChild(feFuncR)
     this.feFuncR = feFuncR
     const feFuncG = createNS<SVGFEFuncGElement>('feFuncG')
+
     feFuncG.setAttribute('type', 'table')
     feComponentTransfer.appendChild(feFuncG)
     this.feFuncG = feFuncG
     const feFuncB = createNS<SVGFEFuncBElement>('feFuncB')
+
     feFuncB.setAttribute('type', 'table')
     feComponentTransfer.appendChild(feFuncB)
     this.feFuncB = feFuncB
@@ -47,8 +48,8 @@ export default class SVGTritoneFilter {
 
   renderFrame(forceRender?: boolean) {
     if (
-      (!forceRender && !this.filterManager._mdf) ||
-      !this.filterManager.effectElements
+      !forceRender && !this.filterManager._mdf //||
+      // !this.filterManager.effectElements
     ) {
       return
     }
@@ -58,6 +59,7 @@ export default class SVGTritoneFilter {
     const tableR = `${color3[0]} ${color2[0]} ${color1[0]}`
     const tableG = `${color3[1]} ${color2[1]} ${color1[1]}`
     const tableB = `${color3[2]} ${color2[2]} ${color1[2]}`
+
     this.feFuncR.setAttribute('tableValues', tableR)
     this.feFuncG.setAttribute('tableValues', tableG)
     this.feFuncB.setAttribute('tableValues', tableB)

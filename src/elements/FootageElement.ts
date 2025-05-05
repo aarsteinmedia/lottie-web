@@ -7,6 +7,7 @@ import type {
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import { getExpressionInterfaces } from '@/utils/getterSetter'
+
 export default class FootageElement extends RenderableElement {
   assetData: null | LottieAsset = null
   footageData: null | SVGElement
@@ -22,14 +23,12 @@ export default class FootageElement extends RenderableElement {
       this.assetData = globalData.getAssetData(data.refId)
     }
     if (!globalData.imageLoader) {
-      throw new Error(
-        `${this.constructor.name}: imageLoader is not implemented in globalData`
-      )
+      throw new Error(`${this.constructor.name}: imageLoader is not implemented in globalData`)
     }
-    this.footageData = globalData.imageLoader.getAsset(
-      this.assetData
-    ) as SVGElement
-    this.initBaseData(data, globalData, comp)
+    this.footageData = globalData.imageLoader.getAsset(this.assetData) as SVGElement
+    this.initBaseData(
+      data, globalData, comp
+    )
   }
 
   getBaseElement(): SVGGElement | null {
@@ -42,16 +41,18 @@ export default class FootageElement extends RenderableElement {
 
   override initExpressions() {
     const expressionsInterfaces = getExpressionInterfaces() as any
+
     if (!expressionsInterfaces) {
       return
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const FootageInterface = new expressionsInterfaces('footage')
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.layerInterface = new FootageInterface(this)
   }
 
   setMatte(_id: string) {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 }

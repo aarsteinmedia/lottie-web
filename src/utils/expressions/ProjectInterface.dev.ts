@@ -1,4 +1,4 @@
-import { CompElementInterface } from '@/types'
+import type { CompElementInterface } from '@/types'
 
 const ProjectInterface = (function () {
   function registerComposition(comp: CompElementInterface) {
@@ -9,6 +9,7 @@ const ProjectInterface = (function () {
     function _thisProjectFunction(name) {
       let i = 0
       const len = this.compositions.length
+
       while (i < len) {
         if (
           this.compositions[i].data &&
@@ -20,10 +21,12 @@ const ProjectInterface = (function () {
           ) {
             this.compositions[i].prepareFrame(this.currentFrame)
           }
+
           return this.compositions[i].compInterface
         }
         i++
       }
+
       return null
     }
 

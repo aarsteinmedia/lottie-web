@@ -12,28 +12,36 @@ export default function addTextDecorator() {
         this as any
       ) as any // .bind(this)(this.elem, this.data.d, this)
       this.addEffect(this.getExpressionValue.bind(this) as any)
+
       return true
     }
+
     return null
   }
 
   TextProperty.prototype.getExpressionValue = function (currentValue, text) {
     const newValue = this.calculateExpression(text)
+
     if (currentValue.t !== newValue) {
       const newData = {} as DocumentData
+
       this.copyData(newData, currentValue)
       newData.t = newValue.toString()
       newData.__complete = false
+
       return newData
     }
+
     return currentValue
   }
 
   TextProperty.prototype.searchProperty = function () {
     const isKeyframed = this.searchKeyframes()
     const hasExpressions = this.searchExpressions()
-    this.kf = !!(isKeyframed || hasExpressions)
-    return !!this.kf
+
+    this.kf = Boolean(isKeyframed || hasExpressions)
+
+    return Boolean(this.kf)
   }
 
   TextProperty.prototype.searchExpressions = searchExpressions

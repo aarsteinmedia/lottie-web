@@ -1,6 +1,5 @@
 import type { ElementInterfaceIntersect } from '@/types'
-
-import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import type ExpressionManager from '@/utils/expressions/ExpressionManager'
 
 export default class TextExpressionInterface {
   elem: ElementInterfaceIntersect
@@ -12,9 +11,7 @@ export default class TextExpressionInterface {
 
     if (!this._sourceText || stringValue !== this._sourceText.value) {
       this._sourceText = {
-        style: {
-          fillColor: this.elem.textProperty?.currentData.fc as number[],
-        },
+        style: { fillColor: this.elem.textProperty?.currentData.fc as number[], },
         value:
           typeof stringValue === 'string'
             ? stringValue
@@ -25,7 +22,7 @@ export default class TextExpressionInterface {
     return this._sourceText
   }
 
-  private _sourceText: {
+  private _sourceText?: {
     value?: string
     style?: { fillColor: number[] }
   } = {}
@@ -41,11 +38,10 @@ export default class TextExpressionInterface {
   // }
 
   public _thisLayerFunction(name: string) {
-    switch (name) {
-      case 'ADBE Text Document':
-        return this.sourceText
-      default:
-        return null
+    if (name === 'ADBE Text Document') {
+      return this.sourceText
     }
+
+    return null
   }
 }

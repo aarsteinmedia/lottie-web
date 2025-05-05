@@ -18,9 +18,12 @@ export default class CVSolidElement extends RenderableElement {
     super()
     const { initElement } = SVGShapeElement.prototype,
       { prepareFrame } = ImageElement.prototype
+
     this.prepareFrame = prepareFrame
     this.initElement = initElement
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
 
   initElement(
@@ -28,15 +31,11 @@ export default class CVSolidElement extends RenderableElement {
     _globalData: GlobalData,
     _comp: ElementInterfaceIntersect
   ) {
-    throw new Error(
-      `${this.constructor.name}: Method initElement it not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initElement it not implemented`)
   }
 
   prepareFrame(_num: number) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareFrame it not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareFrame it not implemented`)
   }
 
   renderInnerContent() {
@@ -44,14 +43,10 @@ export default class CVSolidElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: globalData it not implemented`)
     }
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) it not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) it not implemented`)
     }
     if (!this.globalData.renderer) {
-      throw new Error(
-        `${this.constructor.name}: globalData.renderer it not implemented`
-      )
+      throw new Error(`${this.constructor.name}: globalData.renderer it not implemented`)
     }
 
     // var ctx = this.canvasContext;

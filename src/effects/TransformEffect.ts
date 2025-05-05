@@ -1,8 +1,8 @@
+import type { GroupEffect } from '@/effects/EffectsManager'
+import type { Vector2, Vector3 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
-import { GroupEffect } from '@/effects/EffectsManager'
 import { effectTypes } from '@/elements/helpers/TransformElement'
-import { Vector2, Vector3 } from '@/types'
 import { degToRads } from '@/utils'
 import Matrix from '@/utils/Matrix'
 
@@ -40,12 +40,19 @@ export default abstract class TransformEffect {
       skew = effectElements[5].p.v as number,
       skewAxis = effectElements[6].p.v as number,
       rotation = effectElements[7].p.v as number
+
     this.matrix?.reset()
-    this.matrix?.translate(-anchor[0], -anchor[1], anchor[2])
-    this.matrix?.scale(scaleWidth * 0.01, scaleHeight * 0.01, 1)
+    this.matrix?.translate(
+      -anchor[0], -anchor[1], anchor[2]
+    )
+    this.matrix?.scale(
+      scaleWidth * 0.01, scaleHeight * 0.01, 1
+    )
     this.matrix?.rotate(-rotation * degToRads)
     this.matrix?.skewFromAxis(-skew * degToRads, (skewAxis + 90) * degToRads)
-    this.matrix?.translate(position[0], position[1], 0)
+    this.matrix?.translate(
+      position[0], position[1], 0
+    )
     this._mdf = true
     if (this.opacity !== effectElements[8].p.v) {
       this.opacity = effectElements[8].p.v as number

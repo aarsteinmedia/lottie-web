@@ -21,13 +21,11 @@ export default class SVGProLevelsFilter {
     this.filterManager = filterManager
     const { effectElements } = this.filterManager
 
-    if (!effectElements) {
-      throw new Error(`${this.constructor.name}: Missing Effect Elements`)
-    }
+    // if (!effectElements) {
+    //   throw new Error(`${this.constructor.name}: Missing Effect Elements`)
+    // }
 
-    let feComponentTransfer = createNS<SVGFEComponentTransferElement>(
-      'feComponentTransfer'
-    )
+    let feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
 
     // Red
     if (
@@ -107,9 +105,7 @@ export default class SVGProLevelsFilter {
       effectElements[7].p.k ||
       effectElements[7].p.v !== 1
     ) {
-      feComponentTransfer = createNS<SVGFEComponentTransferElement>(
-        'feComponentTransfer'
-      )
+      feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
       feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB')
       feComponentTransfer.setAttribute('result', id)
       filter.appendChild(feComponentTransfer)
@@ -119,13 +115,13 @@ export default class SVGProLevelsFilter {
     }
   }
 
-  createFeFunc<T extends SVGElement>(
-    type: string,
-    feComponentTransfer: SVGFEComponentTransferElement
-  ) {
+  createFeFunc<T extends SVGElement>(type: string,
+    feComponentTransfer: SVGFEComponentTransferElement) {
     const feFunc = createNS<T>(type)
+
     feFunc.setAttribute('type', 'table')
     feComponentTransfer.appendChild(feFunc)
+
     return feFunc
   }
 
@@ -146,6 +142,7 @@ export default class SVGProLevelsFilter {
       pos = 0
     const outputDelta = outputWhite - outputBlack,
       inputDelta = inputWhite - inputBlack
+
     while (cnt <= 256) {
       perc = cnt / 256
       if (perc <= min) {
@@ -161,18 +158,20 @@ export default class SVGProLevelsFilter {
       pos++
       cnt += 256 / (segments - 1)
     }
+
     return table.join(' ')
   }
 
   renderFrame(forceRender?: boolean) {
     if (
-      (!forceRender && !this.filterManager._mdf) ||
+      !forceRender && !this.filterManager._mdf ||
       !this.filterManager.effectElements
     ) {
       return
     }
     let val
     const { effectElements } = this.filterManager
+
     if (
       this.feFuncRComposed &&
       (forceRender ||

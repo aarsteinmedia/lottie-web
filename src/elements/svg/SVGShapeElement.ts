@@ -8,6 +8,8 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
+import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
+import type TrimModifier from '@/utils/shapes/TrimModifier'
 
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
@@ -21,16 +23,15 @@ import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { lineCapEnum, lineJoinEnum, ShapeType } from '@/enums'
+import {
+  lineCapEnum, lineJoinEnum, ShapeType
+} from '@/enums'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
-import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import ShapePropertyFactory, {
-  type ShapeProperty,
-} from '@/utils/shapes/ShapeProperty'
-import TrimModifier from '@/utils/shapes/TrimModifier'
+import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
 import TransformProperty from '@/utils/TransformProperty'
+
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   animatedContents: AnimatedContent[]
@@ -45,7 +46,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of drawable elements
     this.shapes = []
     // Full shape data
-    this.shapesData = data.shapes || []
+    this.shapesData = data.shapes
     // List of styles that will be applied to shapes
     this.stylesList = []
     // List of modifiers that will be applied to shapes
@@ -66,6 +67,7 @@ export default class SVGShapeElement extends ShapeElement {
       renderElement,
       setMatte,
     } = SVGBaseElement.prototype
+
     this.createContainerElements = createContainerElements
     this.createRenderableComponents = createRenderableComponents
     this.destroyBaseElement = destroyBaseElement
@@ -74,7 +76,9 @@ export default class SVGShapeElement extends ShapeElement {
     this.renderElement = renderElement
     this.getMatte = getMatte
     this.setMatte = setMatte
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
     // List of elements that have been created
     this.prevViewData = []
@@ -83,6 +87,7 @@ export default class SVGShapeElement extends ShapeElement {
   addToAnimatedContents(data: Shape, element: SVGElementInterface) {
     let i = 0
     const len = this.animatedContents.length
+
     while (i < len) {
       if (this.animatedContents[i].element === element) {
         return
@@ -96,21 +101,19 @@ export default class SVGShapeElement extends ShapeElement {
     })
   }
   buildExpressionInterface() {
-    throw new Error(
-      `${this.constructor.name}: Method buildExpressionInterface not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildExpressionInterface not implemented`)
   }
   override createContent() {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access Layer`)
     }
-    if (!this.shapesData) {
-      throw new Error(`${this.constructor.name}: Could not access ShapesData`)
-    }
+    // if (!this.shapesData) {
+    //   throw new Error(`${this.constructor.name}: Could not access ShapesData`)
+    // }
     this.searchShapes(
       this.shapesData,
       this.itemsData as SVGElementInterface[],
-      this.prevViewData || [],
+      this.prevViewData,
       this.layerElement as SVGGElement,
       0,
       [],
@@ -120,6 +123,7 @@ export default class SVGShapeElement extends ShapeElement {
   }
   createGroupElement(data: Shape) {
     const elementData = new ShapeGroupData()
+
     if (data.ln) {
       elementData.gr.setAttribute('id', data.ln)
     }
@@ -129,6 +133,7 @@ export default class SVGShapeElement extends ShapeElement {
     if (data.bm) {
       elementData.gr.style.mixBlendMode = getBlendMode(data.bm)
     }
+
     return elementData
   }
   createShapeElement(
@@ -138,25 +143,33 @@ export default class SVGShapeElement extends ShapeElement {
   ) {
     let ty = 4
 
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
     switch (data.ty) {
-      case ShapeType.Rectangle:
+      case ShapeType.Rectangle: {
         ty = 5
         break
-      case ShapeType.Ellipse:
+      }
+      case ShapeType.Ellipse: {
         ty = 6
         break
-      case ShapeType.PolygonStar:
+      }
+      case ShapeType.PolygonStar: {
         ty = 7
+      }
     }
-    const shapeProperty = ShapePropertyFactory.getShapeProp(this, data, ty),
+    const shapeProperty = ShapePropertyFactory.getShapeProp(
+        this, data, ty
+      ),
       elementData = new SVGShapeData(
         ownTransformers,
         level,
         shapeProperty as ShapeProperty
       )
+
     this.shapes.push(elementData)
     this.addShapeToModifiers(elementData)
     this.addToAnimatedContents(data, elementData)
+
     return elementData
   }
   createStyleElement(data: Shape, level: number) {
@@ -165,20 +178,30 @@ export default class SVGShapeElement extends ShapeElement {
     const styleOb = new SVGStyleData(data, level),
       pathElement = styleOb.pElem
 
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
     switch (data.ty) {
-      case ShapeType.Stroke:
-        elementData = new SVGStrokeStyleData(this, data, styleOb)
+      case ShapeType.Stroke: {
+        elementData = new SVGStrokeStyleData(
+          this, data, styleOb
+        )
         break
-      case ShapeType.Fill:
-        elementData = new SVGFillStyleData(this, data, styleOb)
+      }
+      case ShapeType.Fill: {
+        elementData = new SVGFillStyleData(
+          this, data, styleOb
+        )
         break
+      }
       case ShapeType.GradientFill:
       case ShapeType.GradientStroke: {
         const GradientConstructor =
           data.ty === ShapeType.GradientFill
             ? SVGGradientFillStyleData
             : SVGGradientStrokeStyleData
-        elementData = new GradientConstructor(this, data, styleOb)
+
+        elementData = new GradientConstructor(
+          this, data, styleOb
+        )
         if (elementData.gf) {
           this.globalData?.defs.appendChild(elementData.gf)
         }
@@ -186,19 +209,18 @@ export default class SVGShapeElement extends ShapeElement {
         if (elementData.maskId && elementData.ms && elementData.of) {
           this.globalData?.defs.appendChild(elementData.ms)
           this.globalData?.defs.appendChild(elementData.of)
-          pathElement.setAttribute(
-            'mask',
-            `url(${getLocationHref()}#${elementData.maskId})`
-          )
+          pathElement.setAttribute('mask',
+            `url(${getLocationHref()}#${elementData.maskId})`)
         }
         break
       }
-      case ShapeType.NoStyle:
+      case ShapeType.NoStyle: {
         elementData = new SVGNoStyleData(
           this,
           data as unknown as SVGShapeData,
           styleOb
         )
+      }
     }
 
     if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
@@ -227,6 +249,7 @@ export default class SVGShapeElement extends ShapeElement {
     if (elementData) {
       this.addToAnimatedContents(data, elementData)
     }
+
     return elementData
   }
   createTransformElement(data: Shape, container: SVGGElement) {
@@ -235,17 +258,18 @@ export default class SVGShapeElement extends ShapeElement {
       data,
       this as unknown as ElementInterfaceIntersect
     )
+
     if (!transformProperty.o) {
-      throw new Error(
-        `${this.constructor.name}: Missing required data in TransformProperty`
-      )
+      throw new Error(`${this.constructor.name}: Missing required data in TransformProperty`)
     }
     const elementData = new SVGTransformData(
       transformProperty,
       transformProperty.o,
       container
     )
+
     this.addToAnimatedContents(data, elementData)
+
     return elementData
   }
   override destroy() {
@@ -258,13 +282,14 @@ export default class SVGShapeElement extends ShapeElement {
       jLen = this.stylesList.length,
       tempShapes = []
     let style,
-      areAnimated = false
+      areAnimated
+
     for (let j = 0; j < jLen; j++) {
       style = this.stylesList[j]
       areAnimated = false
       tempShapes.length = 0
       for (let i = 0; i < length; i++) {
-        if ((this.shapes[i] as SVGShapeData).styles.indexOf(style) !== -1) {
+        if ((this.shapes[i] as SVGShapeData).styles.includes(style)) {
           tempShapes.push(this.shapes[i])
           areAnimated = this.shapes[i]._isAnimated || areAnimated
         }
@@ -275,33 +300,28 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
   getBaseElement() {
-    throw new Error(
-      `${this.constructor.name}: Method getBaseElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
 
   getMatte(_type?: number) {
-    throw new Error(
-      `${this.constructor.name}: Method getMatte not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getMatte not yet implemented`)
   }
 
   initSecondaryElement() {
-    throw new Error(
-      `${this.constructor.name}: Method initSecondaryElement not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initSecondaryElement not yet implemented`)
   }
   reloadShapes() {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access layerElement`)
     }
-    if (!this.shapesData) {
-      throw new Error(`${this.constructor.name}: Could not access shapesData`)
-    }
+    // if (!this.shapesData) {
+    //   throw new Error(`${this.constructor.name}: Could not access shapesData`)
+    // }
     this._isFirstFrame = true
-    const { length } = this.itemsData || []
+    const { length } = this.itemsData
+
     for (let i = 0; i < length; i++) {
-      this.prevViewData[i] = this.itemsData![i] as any
+      this.prevViewData[i] = this.itemsData[i] as any
     }
     this.searchShapes(
       this.shapesData,
@@ -313,15 +333,17 @@ export default class SVGShapeElement extends ShapeElement {
       true
     )
     this.filterUniqueShapes()
-    const { length: dLength } = this.dynamicProperties || []
+    const { length: dLength } = this.dynamicProperties
+
     for (let i = 0; i < dLength; i++) {
-      this.dynamicProperties?.[i].getValue()
+      this.dynamicProperties[i].getValue()
     }
     this.renderModifiers()
   }
   override renderInnerContent() {
     this.renderModifiers()
     const { length } = this.stylesList
+
     for (let i = 0; i < length; i++) {
       this.stylesList[i].reset()
     }
@@ -340,16 +362,17 @@ export default class SVGShapeElement extends ShapeElement {
   }
   renderShape() {
     const { length } = this.animatedContents
+
     for (let i = 0; i < length; i++) {
       if (
-        (!this._isFirstFrame &&
-          !this.animatedContents[i].element._isAnimated) ||
+        !this._isFirstFrame &&
+          !this.animatedContents[i].element._isAnimated ||
         this.animatedContents[i].data === (true as unknown as Shape) ||
         !this.animatedContents[i].fn
       ) {
         continue
       }
-      this.animatedContents[i].fn!(
+      this.animatedContents[i].fn?.(
         this.animatedContents[i].data,
         this.animatedContents[i].element as any,
         this._isFirstFrame
@@ -365,21 +388,24 @@ export default class SVGShapeElement extends ShapeElement {
     transformers: Transformer[],
     renderFromProps: boolean
   ) {
-    let render = renderFromProps
+    let shouldRender = renderFromProps
     // Make a clone of transfomers
     const ownTransformers = [...transformers],
       ownStyles = [],
       ownModifiers = []
     let currentTransform, Modifier: TrimModifier | RepeaterModifier
     const { length } = arr
+
     for (let i = length - 1; i >= 0; i--) {
       const processedPos = this.searchProcessedElement(arr[i])
+
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
-        arr[i]._render = render
+        arr[i]._render = shouldRender
       }
 
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (arr[i].ty) {
         case ShapeType.Fill:
         case ShapeType.Stroke:
@@ -387,49 +413,42 @@ export default class SVGShapeElement extends ShapeElement {
         case ShapeType.GradientStroke:
         case ShapeType.NoStyle: {
           if (processedPos) {
-            itemsData[i]!.style!.closed = false
+            itemsData[i].style.closed = false
           } else {
-            itemsData[i] = this.createStyleElement(
-              arr[i],
-              level
-            ) as SVGElementInterface
+            itemsData[i] = this.createStyleElement(arr[i],
+              level) as SVGElementInterface
           }
-          if (arr[i]._render) {
-            if (itemsData[i]?.style?.pElem.parentNode !== container) {
-              container.appendChild(itemsData[i].style!.pElem)
-            }
+          if (arr[i]._render && itemsData[i]?.style?.pElem.parentNode !== container) {
+            container.appendChild(itemsData[i].style.pElem)
           }
           ownStyles.push(itemsData[i]?.style)
           break
         }
-        case 'gr': {
+        case ShapeType.Group: {
           if (processedPos) {
-            const { length } = itemsData[i]?.it || []
-            for (let j = 0; j < length; j++) {
-              itemsData[i]!.prevViewData![j] = itemsData[i]!.it![j]
+            const { length: jLen } = itemsData[i]?.it ?? []
+
+            for (let j = 0; j < jLen; j++) {
+              itemsData[i].prevViewData[j] = itemsData[i].it[j]
             }
           } else {
-            itemsData[i] = this.createGroupElement(
-              arr[i]
-            ) as SVGElementInterface
+            itemsData[i] = this.createGroupElement(arr[i]) as SVGElementInterface
           }
           this.searchShapes(
             arr[i].it as Shape[],
-            itemsData[i]?.it || [],
-            itemsData[i]?.prevViewData || [],
-            itemsData[i]!.gr!,
+            itemsData[i]?.it ?? [],
+            itemsData[i]?.prevViewData ?? [],
+            itemsData[i].gr as SVGGElement,
             level + 1,
             ownTransformers,
-            render
+            shouldRender
           )
-          if (arr[i]._render) {
-            if (itemsData[i]?.gr?.parentNode !== container) {
-              container.appendChild(itemsData[i]!.gr!)
-            }
+          if (arr[i]._render && itemsData[i]?.gr?.parentNode !== container) {
+            container.appendChild(itemsData[i].gr)
           }
           break
         }
-        case 'tr': {
+        case ShapeType.Transform: {
           if (!processedPos) {
             itemsData[i] = this.createTransformElement(arr[i], container)
           }
@@ -489,27 +508,28 @@ export default class SVGShapeElement extends ShapeElement {
           )
           this.shapeModifiers.push(Modifier)
 
-          render = false
+          shouldRender = false
           ownModifiers.push(Modifier)
         }
       }
 
-      this.addProcessedElement(
-        arr[i] as unknown as ElementInterfaceIntersect,
-        i + 1
-      )
+      this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
+        i + 1)
     }
     const { length: sLen } = ownStyles
+
     for (let i = 0; i < sLen; i++) {
-      ownStyles[i]!.closed = true
+      ownStyles[i].closed = true
     }
     const { length: mLen } = ownModifiers
+
     for (let i = 0; i < mLen; i++) {
       ownModifiers[i].closed = true
     }
   }
   setElementStyles(elementData: SVGShapeData) {
     const { length } = this.stylesList
+
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
         elementData.styles.push(this.stylesList[i])
@@ -517,12 +537,11 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
   setMatte(_id: string) {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte not yet implemented`)
   }
   setShapesAsAnimated(shapes: ShapeDataInterface[]) {
     const { length } = shapes
+
     for (let i = 0; i < length; i++) {
       shapes[i].setAsAnimated()
     }

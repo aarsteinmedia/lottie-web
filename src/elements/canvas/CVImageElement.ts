@@ -24,13 +24,9 @@ export default class CVImageElement extends RenderableElement {
     super()
     this.assetData = globalData.getAssetData(data.refId)
     if (!globalData.imageLoader) {
-      throw new Error(
-        `${this.constructor.name} imageLoader is not implemented in globalData`
-      )
+      throw new Error(`${this.constructor.name} imageLoader is not implemented in globalData`)
     }
-    this.img = globalData.imageLoader.getAsset(
-      this.assetData
-    ) as HTMLCanvasElement
+    this.img = globalData.imageLoader.getAsset(this.assetData) as HTMLCanvasElement
     const {
         clearCanvas,
         createContainerElements,
@@ -46,6 +42,7 @@ export default class CVImageElement extends RenderableElement {
       } = CVBaseElement.prototype,
       { initElement } = SVGShapeElement.prototype,
       { prepareFrame } = ImageElement.prototype
+
     this.clearCanvas = clearCanvas
     this.createContainerElements = createContainerElements
     this.createElements = createElements
@@ -60,18 +57,16 @@ export default class CVImageElement extends RenderableElement {
     this.setBlendMode = setBlendMode
     this.showElement = showElement
 
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
 
   clearCanvas() {
-    throw new Error(
-      `${this.constructor.name}: Method clearCanvas is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
   createContainerElements() {
-    throw new Error(
-      `${this.constructor.name}: Method createContainerElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
   }
   createContent() {
     if (!this.assetData) {
@@ -90,6 +85,7 @@ export default class CVImageElement extends RenderableElement {
       return
     }
     const canvas = createTag<HTMLCanvasElement>('canvas')
+
     canvas.width = Number(this.assetData.w)
     canvas.height = Number(this.assetData.h)
     const ctx = canvas.getContext('2d'),
@@ -101,9 +97,10 @@ export default class CVImageElement extends RenderableElement {
     const par =
       this.assetData.pr ||
       this.globalData.renderConfig?.imagePreserveAspectRatio
+
     if (
-      (imgRel > canvasRel && par === 'xMidYMid slice') ||
-      (imgRel < canvasRel && par !== 'xMidYMid slice')
+      imgRel > canvasRel && par === 'xMidYMid slice' ||
+      imgRel < canvasRel && par !== 'xMidYMid slice'
     ) {
       heightCrop = imgH
       widthCrop = heightCrop * canvasRel
@@ -125,74 +122,54 @@ export default class CVImageElement extends RenderableElement {
     this.img = canvas
   }
   createElements() {
-    throw new Error(
-      `${this.constructor.name}: Method createElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
   createRenderableComponents() {
-    throw new Error(
-      `${this.constructor.name}: Method createRenderableComponents is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
   }
   destroy() {
     this.img = null as unknown as HTMLCanvasElement
   }
   exitLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method exitLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
   hideElement() {
-    throw new Error(
-      `${this.constructor.name}: Method hideElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
   initElement(
     _data: LottieLayer,
     _globalData: GlobalData,
     _comp: ElementInterfaceIntersect
   ) {
-    throw new Error(
-      `${this.constructor.name}: Method initElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initElement is not implemented`)
   }
   initRendererElement() {
-    throw new Error(
-      `${this.constructor.name}: Method initRendererElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
   }
 
   prepareFrame(_num: number) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareFrame is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareFrame is not implemented`)
   }
 
   prepareLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method prepareLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
 
   renderFrame() {
-    throw new Error(
-      `${this.constructor.name}: Method renderFrame is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method renderFrame is not implemented`)
   }
 
   renderInnerContent() {
-    this.canvasContext?.drawImage(this.img, 0, 0)
+    this.canvasContext?.drawImage(
+      this.img, 0, 0
+    )
   }
 
   setMatte() {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 
   showElement() {
-    throw new Error(
-      `${this.constructor.name}: Method showElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 }

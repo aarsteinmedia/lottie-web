@@ -1,29 +1,32 @@
 import { ArrayType } from '@/enums'
 
 const createTypedArray = (() => {
-  /**
-   *
-   */
+
   function createRegularArray(type: ArrayType, len: number) {
     const arr = []
     let value
+
     switch (type) {
       case ArrayType.Int16:
-      case ArrayType.Uint8c:
+      case ArrayType.Uint8c: {
         value = 1
         break
-      default:
+      }
+      case ArrayType.Float32:
+      case ArrayType.Int32:
+      case ArrayType.Uint8:
+      default: {
         value = 1.1
         break
+      }
     }
     for (let i = 0; i < len; i++) {
       arr.push(value)
     }
+
     return arr
   }
-  /**
-   *
-   */
+
   function createTypedArrayFactory(type: ArrayType, len: number) {
     if (type === ArrayType.Float32) {
       return new Float32Array(len)
@@ -34,6 +37,7 @@ const createTypedArray = (() => {
     if (type === ArrayType.Uint8c) {
       return new Uint8ClampedArray(len)
     }
+
     return createRegularArray(type, len)
   }
   if (
@@ -42,6 +46,7 @@ const createTypedArray = (() => {
   ) {
     return createTypedArrayFactory
   }
+
   return createRegularArray
 })()
 
@@ -49,4 +54,4 @@ function createSizedArray<T = unknown>(length: number) {
   return Array.from<T>({ length })
 }
 
-export { createTypedArray, createSizedArray }
+export { createSizedArray,createTypedArray }

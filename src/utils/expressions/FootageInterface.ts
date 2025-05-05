@@ -14,6 +14,7 @@ class OutlineInterface {
   init = () => {
     this.currentPropertyName = ''
     this.currentProperty = this.elem.getFootageData()
+
     return this.searchProperty
   }
 
@@ -24,27 +25,26 @@ class OutlineInterface {
       if (typeof this.currentProperty === 'object') {
         return this.searchProperty
       }
+
       return this.currentProperty
     }
 
-    const propertyNameIndex = (value as string).indexOf(
-      this.currentPropertyName
-    )
+    const propertyNameIndex = (value as string).indexOf(this.currentPropertyName)
+
     if (propertyNameIndex !== -1) {
-      const index = parseInt(
-        (value as string).substring(
-          propertyNameIndex + this.currentPropertyName.length
-        ),
-        10
-      )
+      const index = parseInt((value as string).slice(Math.max(0, propertyNameIndex + this.currentPropertyName.length)),
+        10)
+
       this.currentProperty = (this.currentProperty as unknown as unknown[])?.[
         index
       ]
       if (typeof this.currentProperty === 'object') {
         return this.searchProperty
       }
+
       return this.currentProperty
     }
+
     return ''
   }
 }
@@ -64,6 +64,7 @@ class DataInterface {
     if (value === 'Outline') {
       return this.outlineInterface.init()
     }
+
     return null
   }
 }
@@ -83,6 +84,7 @@ export default class FootageInterface {
     if (value === 'Data') {
       return this.dataInterface
     }
+
     return null
   }
 }

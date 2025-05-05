@@ -9,6 +9,7 @@ import type {
 import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { createNS } from '@/utils'
+
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
   layers: LottieLayer[] = []
@@ -20,15 +21,18 @@ export default class ImageElement extends SVGBaseElement {
     comp: ElementInterfaceIntersect
   ) {
     super()
-    if (data.refId && globalData.getAssetData) {
+    if (data.refId) {
       this.assetData = globalData.getAssetData(data.refId)
     }
-    if (this.assetData && this.assetData.sid) {
+    if (this.assetData?.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
     const { renderInnerContent } = CompElement.prototype
+
     this.renderInnerContent = renderInnerContent
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
     this.sourceRect = {
       height: Number(this.assetData?.h),
       left: 0,
@@ -39,6 +43,7 @@ export default class ImageElement extends SVGBaseElement {
 
   override createContent() {
     let assetPath = ''
+
     if (this.assetData && this.globalData?.getAssetsPath) {
       assetPath = this.globalData.getAssetsPath(this.assetData)
     }
@@ -47,12 +52,10 @@ export default class ImageElement extends SVGBaseElement {
       this.innerElem = createNS<SVGImageElement>('image')
       this.innerElem.setAttribute('width', `${this.assetData.w}px`)
       this.innerElem.setAttribute('height', `${this.assetData.h}px`)
-      this.innerElem.setAttribute(
-        'preserveAspectRatio',
-        this.assetData?.pr ||
+      this.innerElem.setAttribute('preserveAspectRatio',
+        this.assetData.pr ||
           this.globalData?.renderConfig?.imagePreserveAspectRatio ||
-          ''
-      )
+          '')
       this.innerElem.setAttributeNS(
         'http://www.w3.org/1999/xlink',
         'href',

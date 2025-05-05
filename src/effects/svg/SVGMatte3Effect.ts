@@ -33,19 +33,22 @@ export default class SVGMatte3Effect {
   findSymbol(mask: ElementInterfaceIntersect) {
     let i = 0
     const len = _svgMatteSymbols.length
+
     while (i < len) {
       if (_svgMatteSymbols[i] === mask) {
         return _svgMatteSymbols[i]
       }
       i++
     }
+
     return null
   }
   initialize() {
-    const ind = this.filterManager.effectElements?.[0].p.v
-    const elements = this.elem.comp?.elements || []
+    const ind = this.filterManager.effectElements[0].p.v
+    const elements = this.elem.comp?.elements ?? []
     let i = 0
     const { length } = elements
+
     while (i < length) {
       if (elements[i] && elements[i].data.ind === ind) {
         this.setElementAsMask(this.elem, elements[i])
@@ -62,12 +65,14 @@ export default class SVGMatte3Effect {
 
   replaceInParent(mask: ElementInterfaceIntersect, symbolId: string) {
     const parentNode = mask.layerElement?.parentNode
+
     if (!parentNode) {
       return
     }
-    const children = parentNode.children
+    const { children } = parentNode
     let i = 0
     const len = children.length
+
     while (i < len) {
       if (children[i] === mask.layerElement) {
         break
@@ -75,10 +80,12 @@ export default class SVGMatte3Effect {
       i++
     }
     let nextChild
+
     if (i <= len - 2) {
       nextChild = children[i + 1]
     }
     const useElem = createNS<SVGUseElement>('use')
+
     useElem.setAttribute('href', `#${symbolId}`)
     if (nextChild) {
       parentNode.insertBefore(useElem, nextChild)
@@ -87,19 +94,20 @@ export default class SVGMatte3Effect {
     }
   }
 
-  setElementAsMask(
-    elem: ElementInterfaceIntersect,
-    mask: ElementInterfaceIntersect
-  ) {
+  setElementAsMask(elem: ElementInterfaceIntersect,
+    mask: ElementInterfaceIntersect) {
     if (!this.findSymbol(mask)) {
       const symbolId = createElementID(),
         masker = createNS<SVGMaskElement>('mask')
+
       masker.setAttribute('id', mask.layerId || '')
       masker.setAttribute('mask-type', 'alpha')
       _svgMatteSymbols.push(mask)
-      const defs = elem.globalData.defs
+      const { defs } = elem.globalData
+
       defs.appendChild(masker)
       const symbol = createNS<SVGSymbolElement>('symbol')
+
       symbol.setAttribute('id', symbolId)
       this.replaceInParent(mask, symbolId)
       if (mask.layerElement) {
@@ -108,6 +116,7 @@ export default class SVGMatte3Effect {
 
       defs.appendChild(symbol)
       const useElem = createNS<SVGUseElement>('use')
+
       useElem.setAttribute('href', `#${symbolId}`)
       masker.appendChild(useElem)
       mask.data.hd = false

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type {
   Caching,
   CompElementInterface,
@@ -6,7 +8,7 @@ import type {
   KeyframesMetadata,
   Shape,
   StrokeData,
-  Vector2,
+  Svalue,
   VectorProperty,
 } from '@/types'
 import type PropertyInterface from '@/utils/expressions/PropertyInterface'
@@ -15,9 +17,9 @@ import type {
   ValueProperty,
 } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
+import type ShapePath from '@/utils/shapes/ShapePath'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
-import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { initialDefaultFrame, roundCorner } from '@/utils/getterSetter'
@@ -25,7 +27,6 @@ import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePath from '@/utils/shapes/ShapePath'
 
 function getConstructorFunction() {
   return ShapeProperty
@@ -49,26 +50,35 @@ function getShapeProp(
     case 4: {
       const dataProp = type === 3 ? data.pt : data.ks,
         keys = dataProp?.k
+
       if (keys?.length) {
-        prop = new KeyframedShapeProperty(elem, data, type)
+        prop = new KeyframedShapeProperty(
+          elem, data, type
+        )
         break
       }
-      prop = new ShapeProperty(elem, data, type)
+      prop = new ShapeProperty(
+        elem, data, type
+      )
       break
     }
-    case 5:
+    case 5: {
       prop = new RectShapeProperty(elem as ElementInterfaceIntersect, data)
       break
-    case 6:
+    }
+    case 6: {
       prop = new EllShapeProperty(elem as ElementInterfaceIntersect, data)
       break
-    case 7:
+    }
+    case 7: {
       prop = new StarShapeProperty(elem as ElementInterfaceIntersect, data)
+    }
   }
 
   if (prop?.k) {
     elem.addDynamicProperty(prop)
   }
+
   return prop
 }
 
@@ -86,46 +96,41 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public kf?: boolean
   public localShapeCollection?: ShapeCollection
   lock?: boolean
-  offsetTime: number = 0
+  offsetTime = 0
   public paths?: ShapeCollection
   public pv?: ShapePath
   public v?: ShapePath
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
-    throw new Error(
-      `${this.constructor.name}: Method getShapeValueAtTime is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)
   }
   initiateExpression(
     _elem: ElementInterfaceIntersect,
     _data: TextSelectorProperty,
     _property: TextSelectorProperty
   ) {
-    throw new Error(
-      `${this.constructor.name}: Method initiateExpression is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }
   interpolateShape(
     frameNum: number,
     previousValue: ShapePath,
-    caching?: Caching
+    caching: Caching = {} as Caching
   ) {
-    let iterationIndex = caching?.lastIndex || 0,
-      keyPropS,
+    let iterationIndex = caching.lastIndex || 0,
+      keyPropS: Svalue[],
       keyPropE,
       isHold,
       perc = 0,
       vertexValue
     const kf = this.keyframes
-    if (!kf) {
-      throw new Error(`${this.constructor.name}: Could not read keyframe data`)
-    }
+
     if (frameNum < kf[0].t - this.offsetTime) {
-      keyPropS = kf[0].s[0]
+      keyPropS = kf[0].s?.[0] as unknown as Svalue[]
       isHold = true
       iterationIndex = 0
     } else if (frameNum >= kf[kf.length - 1].t - this.offsetTime) {
+      // @ts-expect-error: ignore
       keyPropS = kf[kf.length - 1].s
-        ? kf[kf.length - 1].s[0]
+        ? kf[kf.length - 1].s?.[0]
         : kf[kf.length - 2].e[0]
       /* if(kf[kf.length - 1].s){
                 keyPropS = kf[kf.length - 1].s[0];
@@ -136,10 +141,11 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     } else {
       let i = iterationIndex
       const len = kf.length - 1
-      let flag = true
+      let shouldInterpolate = true
       let keyData
       let nextKeyData
-      while (flag) {
+
+      while (shouldInterpolate) {
         keyData = kf[i]
         nextKeyData = kf[i + 1]
         if (nextKeyData.t - this.offsetTime > frameNum) {
@@ -148,13 +154,14 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
         if (i < len - 1) {
           i++
         } else {
-          flag = false
+          shouldInterpolate = false
         }
       }
       if (!keyData || !nextKeyData) {
         throw new Error(`${this.constructor.name}: Could not set keyframe data`)
       }
-      const keyframeMetadata = this.keyframesMetadata?.[i] || {}
+      const keyframeMetadata = this.keyframesMetadata[i] || {}
+
       isHold = keyData.h === 1
       iterationIndex = i
       if (!isHold) {
@@ -164,6 +171,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
           perc = 0
         } else {
           let fnc
+
           if (keyframeMetadata.__fnct) {
             fnc = keyframeMetadata.__fnct
           } else if (
@@ -181,83 +189,96 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
             keyframeMetadata.__fnct = fnc
           }
           perc =
-            fnc?.(
-              (frameNum - (keyData.t - this.offsetTime)) /
+            fnc?.((frameNum - (keyData.t - this.offsetTime)) /
                 (nextKeyData.t -
                   this.offsetTime -
-                  (keyData.t - this.offsetTime))
-            ) || 0
+                  (keyData.t - this.offsetTime))) || 0
         }
         keyPropE = nextKeyData.s ? nextKeyData.s[0] : keyData.e[0]
       }
-      keyPropS = keyData.s[0]
+      // @ts-expect-error: ignore
+      keyPropS = keyData.s?.[0]
     }
     const jLen = previousValue._length
+    // @ts-expect-error: ignore
     const kLen = keyPropS.i[0].length
-    caching!.lastIndex = iterationIndex
+
+    caching.lastIndex = iterationIndex
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
         vertexValue = isHold
+          // @ts-expect-error: ignore
           ? keyPropS.i[j][k]
-          : keyPropS.i[j][k] + (keyPropE.i[j][k] - keyPropS.i[j][k]) * perc
+          // @ts-expect-error: ignore
+          : Number(keyPropS.i[j][k]) + (keyPropE.i[j][k] - keyPropS.i[j][k]) * perc
         previousValue.i[j][k] = vertexValue
         vertexValue = isHold
+          // @ts-expect-error: ignore
           ? keyPropS.o[j][k]
-          : keyPropS.o[j][k] + (keyPropE.o[j][k] - keyPropS.o[j][k]) * perc
+          // @ts-expect-error: ignore
+          : Number(keyPropS.o[j][k]) + (keyPropE.o[j][k] - keyPropS.o[j][k]) * perc
         previousValue.o[j][k] = vertexValue
         vertexValue = isHold
+          // @ts-expect-error: ignore
           ? keyPropS.v[j][k]
-          : keyPropS.v[j][k] + (keyPropE.v[j][k] - keyPropS.v[j][k]) * perc
+          // @ts-expect-error: ignore
+          : Number(keyPropS.v[j][k]) + (keyPropE.v[j][k] - keyPropS.v[j][k]) * perc
         previousValue.v[j][k] = vertexValue
       }
     }
   }
   interpolateShapeCurrentTime() {
     if (!this.pv) {
-      throw new Error(
-        `${this.constructor.name}: Cannot parse ShapePath v value`
-      )
+      throw new Error(`${this.constructor.name}: Cannot parse ShapePath v value`)
     }
+
+    this._caching = this._caching ?? ({} as Caching)
+
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
       initTime = this.keyframes[0].t - this.offsetTime,
       endTime = this.keyframes[this.keyframes.length - 1].t - this.offsetTime,
-      lastFrame = Number(this._caching?.lastFrame)
+      lastFrame = Number(this._caching.lastFrame)
+
     if (
       !(
         lastFrame !== initialDefaultFrame &&
-        ((lastFrame < initTime && frameNum < initTime) ||
-          (lastFrame > endTime && frameNum > endTime))
+        (lastFrame < initTime && frameNum < initTime ||
+          lastFrame > endTime && frameNum > endTime)
       )
     ) {
-      this._caching!.lastIndex =
-        lastFrame < frameNum ? Number(this._caching?.lastIndex) : 0
-      this.interpolateShape(frameNum, this.pv, this._caching)
+      this._caching.lastIndex =
+        lastFrame < frameNum ? Number(this._caching.lastIndex) : 0
+      this.interpolateShape(
+        frameNum, this.pv, this._caching
+      )
     }
-    this._caching!.lastFrame = frameNum
+    this._caching.lastFrame = frameNum
+
     return this.pv
   }
   processEffectsSequence() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (Shape) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
 
-    if (this.elem?.globalData?.frameId === this.frameId || 0) {
+    if (this.elem?.globalData?.frameId === this.frameId) {
       return
     }
-    if (!this.effectsSequence?.length) {
+    if (this.effectsSequence.length === 0) {
       this._mdf = false
+
       return
     }
     if (this.lock && this.pv) {
       this.setVValue(this.pv)
+
       return
     }
     this.lock = true
     this._mdf = false
     let finalValue
+
     if (this.kf) {
       finalValue = this.pv
     } else if (this.data.ks) {
@@ -267,8 +288,9 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     }
     let i
     const len = this.effectsSequence.length
+
     for (i = 0; i < len; i++) {
-      finalValue = this.effectsSequence?.[i](finalValue)
+      finalValue = this.effectsSequence[i](finalValue)
     }
     this.setVValue(finalValue as ShapePath)
     this.lock = false
@@ -282,9 +304,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       throw new Error(`${this.constructor.name}: ShapePath is not set`)
     }
     if (!this.localShapeCollection) {
-      throw new Error(
-        `${this.constructor.name}: localShapeCollection is not set`
-      )
+      throw new Error(`${this.constructor.name}: localShapeCollection is not set`)
     }
     if (!this.shapesEqual(this.v, newPath)) {
       this.v = clone(newPath)
@@ -299,6 +319,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       return false
     }
     const len = shape1._length || 0
+
     for (let i = 0; i < len; i++) {
       if (
         shape1.v[i]?.[0] !== shape2.v[i]?.[0] ||
@@ -311,6 +332,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
         return false
       }
     }
+
     return true
   }
 }
@@ -321,10 +343,10 @@ export class RectShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or?: ValueProperty
   os?: ValueProperty
-  p: MultiDimensionalProperty<Vector2>
+  p: MultiDimensionalProperty
   pt?: ValueProperty
   r: ValueProperty
-  s: MultiDimensionalProperty<Vector2>
+  s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
@@ -344,14 +366,14 @@ export class RectShapeProperty extends ShapeBaseProperty {
       1,
       0,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
+    ) as MultiDimensionalProperty
     this.s = PropertyFactory.getProp(
       elem,
       data.s,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
+    ) as MultiDimensionalProperty
     this.r = PropertyFactory.getProp(
       elem,
       data.r as unknown as VectorProperty<number[]>, // TODO: Find out if typing is wrong
@@ -359,7 +381,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    if (this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length > 0) {
       this.k = true
     } else {
       this.k = false
@@ -371,9 +393,15 @@ export class RectShapeProperty extends ShapeBaseProperty {
       p1 = this.p.v[1],
       v0 = this.s.v[0] / 2,
       v1 = this.s.v[1] / 2,
-      round = Math.min(v0, v1, this.r.v),
+      round = Math.min(
+        v0, v1, this.r.v
+      ),
       cPoint = round * (1 - roundCorner)
-    this.v!._length = 0
+
+    if (this.v) {
+      this.v._length = 0
+    }
+
 
     if (this.d === 2 || this.d === 1) {
       this.v?.setTripleAt(
@@ -614,11 +642,11 @@ export class StarShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or: ValueProperty
   os: ValueProperty
-  p: MultiDimensionalProperty<Vector2>
+  p: MultiDimensionalProperty
   pt: ValueProperty
   r: ValueProperty
   s?: ValueProperty
-  constructor(elem: ElementInterfaceIntersect, data: any) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
     this.v = newElement()
     this.v.setPathData(true, 0)
@@ -628,17 +656,18 @@ export class StarShapeProperty extends ShapeBaseProperty {
     this.frameId = -1
     this.d = data.d as StrokeData[]
     this.initDynamicPropertyContainer(elem)
+
     if (data.sy === 1) {
       this.ir = PropertyFactory.getProp(
         elem,
-        data.ir,
+        data.ir as VectorProperty,
         0,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.is = PropertyFactory.getProp(
         elem,
-        data.is,
+        data.is as VectorProperty,
         0,
         0.01,
         this as unknown as ElementInterfaceIntersect
@@ -660,7 +689,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
       1,
       0,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
+    ) as MultiDimensionalProperty
     this.r = PropertyFactory.getProp(
       elem,
       data.r,
@@ -670,14 +699,14 @@ export class StarShapeProperty extends ShapeBaseProperty {
     ) as ValueProperty
     this.or = PropertyFactory.getProp(
       elem,
-      data.or,
+      data.or as unknown as VectorProperty,
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.os = PropertyFactory.getProp(
       elem,
-      data.os,
+      data.os as VectorProperty,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
@@ -685,7 +714,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
     this.localShapeCollection = newShapeCollection()
     this.localShapeCollection.addShape(this.v)
     this.paths = this.localShapeCollection
-    if (this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length > 0) {
       this.k = true
     } else {
       this.k = false
@@ -695,26 +724,29 @@ export class StarShapeProperty extends ShapeBaseProperty {
 
   convertPolygonToPath() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (Shape) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
     const numPts = Math.floor(this.pt.v),
-      angle = (Math.PI * 2) / numPts,
+      angle = Math.PI * 2 / numPts,
       rad = this.or.v,
       roundness = this.os.v,
-      perimSegment = (2 * Math.PI * rad) / (numPts * 4)
+      perimSegment = 2 * Math.PI * rad / (numPts * 4)
     let currentAng = -Math.PI * 0.5
     const dir = this.data.d === 3 ? -1 : 1
+
     currentAng += this.r.v
-    this.v!._length = 0
+    if (this.v) {
+      this.v._length = 0
+    }
+
     for (let i = 0; i < numPts; i++) {
       let x = rad * Math.cos(currentAng)
       let y = rad * Math.sin(currentAng)
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y)
       const oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
-      x += +this.p.v[0]
-      y += +this.p.v[1]
+
+      x += Number(this.p.v[0])
+      y += Number(this.p.v[1])
       this.v?.setTripleAt(
         x,
         y,
@@ -727,52 +759,51 @@ export class StarShapeProperty extends ShapeBaseProperty {
       )
       currentAng += angle * dir
     }
-    ;(this.paths as any).length = 0 // TODO: Check if values are different in star shapes
-    ;(this.paths as any)[0] = this.v
+    ;(this.paths as unknown as { length: number }).length = 0 // TODO: Check if values are different in star shapes
+    ;(this.paths as unknown as any[])[0] = this.v
   }
   convertStarToPath() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (Shape) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
 
     if (!this.v) {
-      throw new Error(
-        `${this.constructor.name}: v (ShapePath) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: v (ShapePath) is not implemented`)
     }
 
     const numPts = Math.floor(this.pt.v) * 2,
-      angle = (Math.PI * 2) / numPts
+      angle = Math.PI * 2 / numPts
     /* this.v.v.length = numPts;
               this.v.i.length = numPts;
               this.v.o.length = numPts; */
-    let longFlag = true
+    let isLong = true
     const longRad = this.or.v,
       shortRad = Number(this.ir?.v),
       longRound = this.os.v,
       shortRound = Number(this.is?.v),
-      longPerimSegment = (2 * Math.PI * longRad) / (numPts * 2),
-      shortPerimSegment = (2 * Math.PI * shortRad) / (numPts * 2)
+      longPerimSegment = 2 * Math.PI * longRad / (numPts * 2),
+      shortPerimSegment = 2 * Math.PI * shortRad / (numPts * 2)
     let rad,
       roundness,
       perimSegment,
       currentAng = -Math.PI / 2
+
     currentAng += this.r.v
     const dir = this.data.d === 3 ? -1 : 1
+
     this.v._length = 0
     for (let i = 0; i < numPts; i++) {
-      rad = longFlag ? longRad : shortRad
-      roundness = longFlag ? longRound : shortRound
-      perimSegment = longFlag ? longPerimSegment : shortPerimSegment
+      rad = isLong ? longRad : shortRad
+      roundness = isLong ? longRound : shortRound
+      perimSegment = isLong ? longPerimSegment : shortPerimSegment
       let x = rad * Math.cos(currentAng),
         y = rad * Math.sin(currentAng)
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
         oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
-      x += +this.p.v[0]
-      y += +this.p.v[1]
-      this.v?.setTripleAt(
+
+      x += Number(this.p.v[0])
+      y += Number(this.p.v[1])
+      this.v.setTripleAt(
         x,
         y,
         x - ox * perimSegment * roundness * dir,
@@ -787,14 +818,12 @@ export class StarShapeProperty extends ShapeBaseProperty {
                   this.v.i[i] = [x+ox*perimSegment*roundness*dir,y+oy*perimSegment*roundness*dir];
                   this.v.o[i] = [x-ox*perimSegment*roundness*dir,y-oy*perimSegment*roundness*dir];
                   this.v._length = numPts; */
-      longFlag = !longFlag
+      isLong = !isLong
       currentAng += angle * dir
     }
   }
   convertToPath() {
-    throw new Error(
-      `${this.constructor.name}: Method convertToPath is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method convertToPath is not implemented`)
   }
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
@@ -811,8 +840,8 @@ export class StarShapeProperty extends ShapeBaseProperty {
 export class EllShapeProperty extends ShapeBaseProperty {
   _cPoint = roundCorner
   d?: number
-  p: MultiDimensionalProperty<Vector2>
-  s: MultiDimensionalProperty<Vector2>
+  p: MultiDimensionalProperty
+  s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
@@ -832,15 +861,15 @@ export class EllShapeProperty extends ShapeBaseProperty {
       1,
       0,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
+    ) as MultiDimensionalProperty
     this.s = PropertyFactory.getProp(
       elem,
       data.s,
       1,
       0,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
-    if (this.dynamicProperties?.length) {
+    ) as MultiDimensionalProperty
+    if (this.dynamicProperties.length > 0) {
       this.k = true
     } else {
       this.k = false
@@ -852,13 +881,12 @@ export class EllShapeProperty extends ShapeBaseProperty {
       p1 = this.p.v[1],
       s0 = this.s.v[0] / 2,
       s1 = this.s.v[1] / 2,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       _cw = this.d !== 3,
       _v = this.v
 
     if (!_v) {
-      throw new Error(
-        `${this.constructor.name}: Could not get value of ellipse`
-      )
+      throw new Error(`${this.constructor.name}: Could not get value of ellipse`)
     }
     _v.v[0][0] = p0
     _v.v[0][1] = p1 - s1
@@ -911,7 +939,9 @@ export class ShapeProperty extends ShapeBaseProperty {
   }
   totalShapeLength?: number
   x?: boolean
-  constructor(elem: ShapeElement, data: Shape, type: number) {
+  constructor(
+    elem: ShapeElement, data: Shape, type: number
+  ) {
     super()
     this.propType = 'shape'
     this.comp = elem.comp
@@ -922,6 +952,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.kf = false
     this._mdf = false
     const pathData = type === 3 ? data.pt?.k : data.ks?.k
+
     if (!pathData) {
       throw new Error(`${this.constructor.name}: Could now get Path Data`)
     }
@@ -934,15 +965,15 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.getValue = this.processEffectsSequence
   }
   setGroupProperty(_propertyInterface: PropertyInterface) {
-    throw new Error(
-      `${this.constructor.name}: Method setGroupProperty is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }
 }
 
 export class KeyframedShapeProperty extends ShapeBaseProperty {
   public lastFrame
-  constructor(elem: ShapeElement, data: Shape, type: number) {
+  constructor(
+    elem: ShapeElement, data: Shape, type: number
+  ) {
     super()
     this.data = data
     this.propType = 'shape'
@@ -952,19 +983,23 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
     this.offsetTime = elem.data?.st || 0
     this.keyframes = (type === 3
       ? data.pt?.k
-      : (data.ks?.k ?? [])) as unknown as Keyframe[]
+      : data.ks?.k ?? []) as unknown as Keyframe[]
     this.keyframesMetadata = []
     this.k = true
     this.kf = true
-    const { length } = this.keyframes[0].s?.[0].i || []
+    const { length } = this.keyframes[0].s?.[0].i ?? []
+
     this.v = newElement()
-    this.v.setPathData(!!this.keyframes[0].s?.[0].c, length)
+    this.v.setPathData(Boolean(this.keyframes[0].s?.[0].c), length)
     this.pv = clone(this.v)
     this.localShapeCollection = newShapeCollection()
     this.paths = this.localShapeCollection
     this.paths.addShape(this.v)
     this.lastFrame = initialDefaultFrame
-    this._caching = { lastFrame: initialDefaultFrame, lastIndex: 0 } as Caching
+    this._caching = {
+      lastFrame: initialDefaultFrame,
+      lastIndex: 0
+    } as Caching
     this.effectsSequence = [this.interpolateShapeCurrentTime.bind(this)]
     this.getValue = this.processEffectsSequence
   }

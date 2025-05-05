@@ -1,7 +1,12 @@
-import type { ElementInterfaceIntersect, Shape, VectorProperty } from '@/types'
+import type {
+  ElementInterfaceIntersect, Shape, VectorProperty
+} from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import PolynomialBezier, {
+import {
+  type default as PolynomialBezier,
   shapeSegment,
   shapeSegmentInverted,
 } from '@/elements/PolynomialBezier'
@@ -14,17 +19,13 @@ import {
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import ShapePath from '@/utils/shapes/ShapePath'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty
   lineJoin?: number
   miterLimit?: ValueProperty
-  override initModifierProperties(
-    elem: ElementInterfaceIntersect,
-    data: Shape
-  ) {
+  override initModifierProperties(elem: ElementInterfaceIntersect,
+    data: Shape) {
     this.getValue = this.processKeys
     this.amount = PropertyFactory.getProp(
       elem,
@@ -41,7 +42,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.lineJoin = data.lj
-    this._isAnimated = this.amount?.effectsSequence.length !== 0
+    this._isAnimated = this.amount.effectsSequence.length > 0
   }
 
   processPath(
@@ -51,8 +52,10 @@ export default class OffsetPathModifier extends ShapeModifier {
     miterLimit: number
   ) {
     const outputBezier = newElement<ShapePath>()
+
     outputBezier.c = inputBezier.c
     let count = inputBezier.length()
+
     if (!inputBezier.c) {
       count -= 1
     }
@@ -78,6 +81,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       lastSeg = null
 
     const { length } = multiSegments
+
     for (let i = 0; i < length; i++) {
       const multiSegment = multiSegments[i]
 
@@ -94,6 +98,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       lastSeg = multiSegment[multiSegment.length - 1]
 
       const { length: mLength } = multiSegment
+
       for (let j = 0; j < mLength; j++) {
         segment = multiSegment[j]
 
@@ -130,7 +135,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       }
     }
 
-    if (multiSegments.length && lastSeg) {
+    if (length > 0 && lastSeg) {
       joinLines(
         outputBezier,
         lastSeg,
@@ -144,31 +149,47 @@ export default class OffsetPathModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes || [],
+    const { length } = this.shapes,
       amount = Number(this.amount?.v),
       miterLimit = Number(this.miterLimit?.v),
       lineJoin = Number(this.lineJoin)
 
     if (amount !== 0) {
       let shapePaths, shapeData, localShapeCollection
+
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i] as unknown as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape!._mdf = true
+          if (shapeData.shape) {
+            shapeData.shape._mdf = true
+          }
+
           shapePaths = shapeData.shape?.paths?.shapes
           const jLen = shapeData.shape?.paths?._length || 0
+
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(
-              this.processPath(shapePaths![j], amount, lineJoin, miterLimit)
-            )
+            const shapePath = shapePaths?.[j]
+
+            if (!shapePath) {
+              continue
+            }
+
+            localShapeCollection?.addShape(this.processPath(
+              shapePath, amount, lineJoin, miterLimit
+            ))
           }
         }
-        shapeData.shape!.paths = shapeData.localShapeCollection
+
+        if (shapeData.shape) {
+          shapeData.shape.paths = shapeData.localShapeCollection
+        }
+
+
       }
     }
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this._mdf = false
     }
   }

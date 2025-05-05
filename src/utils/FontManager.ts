@@ -206,7 +206,7 @@ export default class FontManager {
     this.checkLoadedFontsBinded = this.checkLoadedFonts.bind(this)
   }
 
-  public addChars(chars?: Characacter[]): void {
+  public addChars(chars?: null | Characacter[]): void {
     if (!chars) {
       return
     }

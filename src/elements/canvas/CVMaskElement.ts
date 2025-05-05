@@ -5,9 +5,7 @@ import type { LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import ShapePropertyFactory, {
-  type ShapeProperty,
-} from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
 
 export default class CVMaskElement {
   _isFirstFrame?: boolean
@@ -24,6 +22,7 @@ export default class CVMaskElement {
     this.viewData = createSizedArray(this.masksProperties.length)
     const { length } = this.masksProperties
     let hasMasks = false
+
     for (let i = 0; i < length; i++) {
       if (this.masksProperties[i].mode !== 'n') {
         hasMasks = true
@@ -46,15 +45,11 @@ export default class CVMaskElement {
   }
 
   getMaskProperty(_pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method getMaskProperty is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getMaskProperty is not implemented`)
   }
   renderFrame(_num?: number) {
     if (!this.element.globalData?.compSize) {
-      throw new Error(
-        `${this.constructor.name}: element->globalData->compSize is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: element->globalData->compSize is not implemented`)
     }
     if (!this.hasMasks) {
       return
@@ -64,29 +59,31 @@ export default class CVMaskElement {
     let j
     const { length } = this.masksProperties
     let pts
+
     ctx?.beginPath()
     for (let i = 0; i < length; i++) {
       if (this.masksProperties[i].mode !== 'n') {
         if (this.masksProperties[i].inv) {
           ctx?.moveTo(0, 0)
           ctx?.lineTo(this.element.globalData.compSize.w, 0)
-          ctx?.lineTo(
-            this.element.globalData.compSize.w,
-            this.element.globalData.compSize.h
-          )
+          ctx?.lineTo(this.element.globalData.compSize.w,
+            this.element.globalData.compSize.h)
           ctx?.lineTo(0, this.element.globalData.compSize?.h)
           ctx?.lineTo(0, 0)
         }
         const data = this.viewData[i].v
+
         if (!data) {
-          throw new Error(
-            `${this.constructor.name}: Could not access ShapePath`
-          )
+          throw new Error(`${this.constructor.name}: Could not access ShapePath`)
         }
         const pt =
-          transform?.applyToPointArray(data.v[0][0], data.v[0][1], 0) || []
+          transform?.applyToPointArray(
+            data.v[0][0], data.v[0][1], 0
+          ) || []
+
         ctx?.moveTo(pt[0], pt[1])
         const jLen = data._length
+
         for (j = 1; j < jLen; j++) {
           pts =
             transform?.applyToTriplePoints(
@@ -94,12 +91,18 @@ export default class CVMaskElement {
               data.i[j],
               data.v[j]
             ) || []
-          ctx?.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
+          ctx?.bezierCurveTo(
+            pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]
+          )
         }
         pts =
-          transform?.applyToTriplePoints(data.o[j - 1], data.i[0], data.v[0]) ||
+          transform?.applyToTriplePoints(
+            data.o[j - 1], data.i[0], data.v[0]
+          ) ||
           []
-        ctx?.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5])
+        ctx?.bezierCurveTo(
+          pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]
+        )
       }
     }
     ;(this.element.globalData.renderer as CanvasRenderer).save(true)

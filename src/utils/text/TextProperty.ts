@@ -80,7 +80,12 @@ export default class TextProperty extends BaseProperty {
       yOffset: 0,
     } as unknown as DocumentData
 
-    this.copyData(this.currentData, this.data.d?.k[0].s)
+    const newData = this.data.d?.k[0].s
+
+    if (newData) {
+      this.copyData(this.currentData, newData)
+    }
+
 
     if (!this.searchProperty()) {
       this.completeTextData(this.currentData)
@@ -129,7 +134,7 @@ export default class TextProperty extends BaseProperty {
           }
         }
       } else if (charCode > 0xdbff) {
-        secondCharCode = text.charCodeAt(i + 1)
+        // secondCharCode = text.charCodeAt(i + 1)
         if (isVariationSelector(charCode)) {
           shouldCombine = true
         }
@@ -139,7 +144,7 @@ export default class TextProperty extends BaseProperty {
       }
       if (shouldCombine) {
         charactersArray[charactersArray.length - 1] += currentChars
-        shouldCombine = false
+        // shouldCombine = false
       } else {
         charactersArray.push(currentChars)
       }
@@ -166,7 +171,9 @@ export default class TextProperty extends BaseProperty {
     if (!fontManager) {
       throw new Error(`${this.constructor.name}: FontManager not loaded to globalData`)
     }
-    const { data } = this
+    const {
+      canResize, data, minimumFontSize
+    } = this
     const letters: Letter[] = []
     let len: number,
       newLineFlag,
@@ -177,11 +184,11 @@ export default class TextProperty extends BaseProperty {
       currentPos = 0,
       currentLine = 0
     const lineWidths = []
-    let lineWidth = 0,
+    let lineWidth,
       maxLineWidth = 0
-    const fontData = fontManager?.getFontByName(documentData.f)
+    const fontData = fontManager.getFontByName(documentData.f)
     let charData,
-      cLength = 0
+      cLength
 
     const fontProps = getFontProperties(fontData)
 
@@ -189,19 +196,18 @@ export default class TextProperty extends BaseProperty {
     documentData.fStyle = fontProps.style
     documentData.finalSize = documentData.s
     documentData.finalText = this.buildFinalText(`${documentData.t}`)
-    len = documentData.finalText?.length || 0
+    len = documentData.finalText.length || 0
     documentData.finalLineHeight = documentData.lh
     let trackingOffset = documentData.tr / 1000 * documentData.finalSize
     let charCode
 
     if (documentData.sz) {
-      let flag = true
-      const boxWidth = documentData.sz[0]
-      const boxHeight = documentData.sz[1]
+      let shouldComplete = true
+      const [boxWidth, boxHeight] = documentData.sz
       let currentHeight
       let finalText
 
-      while (flag) {
+      while (shouldComplete) {
         finalText = this.buildFinalText(`${documentData.t}`)
         currentHeight = 0
         lineWidth = 0
@@ -220,7 +226,7 @@ export default class TextProperty extends BaseProperty {
             currentHeight +=
               documentData.finalLineHeight || documentData.finalSize * 1.2
           }
-          if (fontManager?.chars) {
+          if (fontManager.chars) {
             charData = fontManager.getCharData(
               finalText[i],
               fontData.fStyle,
@@ -231,13 +237,13 @@ export default class TextProperty extends BaseProperty {
               : charData.w * documentData.finalSize / 100
           } else {
             cLength =
-              fontManager?.measureText(
+              fontManager.measureText(
                 finalText[i],
                 documentData.f,
                 documentData.finalSize
               ) || 0
           }
-          if (lineWidth + cLength > Number(boxWidth) && finalText[i] !== ' ') {
+          if (lineWidth + cLength > boxWidth && finalText[i] !== ' ') {
             if (lastSpaceIndex === -1) {
               len++
             } else {
@@ -258,9 +264,9 @@ export default class TextProperty extends BaseProperty {
         currentHeight +=
           Number(fontData.ascent) * documentData.finalSize / 100
         if (
-          this.canResize &&
-          documentData.finalSize > this.minimumFontSize &&
-          Number(boxHeight) < currentHeight
+          canResize &&
+          documentData.finalSize > minimumFontSize &&
+          boxHeight < currentHeight
         ) {
           documentData.finalSize -= 1
           documentData.finalLineHeight =
@@ -268,14 +274,13 @@ export default class TextProperty extends BaseProperty {
         } else {
           documentData.finalText = finalText
           len = documentData.finalText.length
-          flag = false
+          shouldComplete = false
         }
       }
     }
     lineWidth = -trackingOffset
-    cLength = 0
-    let uncollapsedSpaces = 0
-    let currentChar
+    let uncollapsedSpaces = 0,
+      currentChar
 
     for (let i = 0; i < len; i++) {
       newLineFlag = false
@@ -377,6 +382,7 @@ export default class TextProperty extends BaseProperty {
           documentData.justifyOffset = -documentData.boxWidth / 2
           break
         }
+        case undefined:
         default: {
           documentData.justifyOffset = 0
         }
@@ -384,9 +390,9 @@ export default class TextProperty extends BaseProperty {
     }
     documentData.lineWidths = lineWidths
 
-    const animators = data?.a
+    const animators = data.a
     let animatorData, letterData
-    const jLen = animators?.length || 0
+    const { length: jLen } = animators ?? []
     let based, ind
     const indexes = []
 
@@ -427,8 +433,10 @@ export default class TextProperty extends BaseProperty {
           ind++
         }
       }
-      if (data?.a?.[j].s) {
-        data.a[j].s!.totalChars = ind
+      const textSelectorProperty = data.a?.[j].s
+
+      if (textSelectorProperty) {
+        textSelectorProperty.totalChars = ind
       }
       let currentInd = -1,
         newInd
@@ -454,10 +462,14 @@ export default class TextProperty extends BaseProperty {
       Number(fontData.ascent) * documentData.finalSize / 100
   }
 
-  copyData(obj: DocumentData, data?: DocumentData | LetterProps) {
-    for (const s in data) {
-      if (Object.hasOwn(data, s)) {
-        ;(obj as any)[s] = (data as any)[s]
+  copyData(obj: DocumentData, data: DocumentData | LetterProps) {
+    const keys = Object.keys(data),
+      { length } = keys
+
+    for (let i = 0; i < length; i++) {
+      if (Object.hasOwn(data, keys[i])) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (obj as any)[keys[i]] = data[keys[i] as keyof typeof data]
       }
     }
 
@@ -469,11 +481,11 @@ export default class TextProperty extends BaseProperty {
   }
 
   getKeyframeValue() {
-    if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
-    }
+    // if (!this.data) {
+    //   throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
+    // }
 
-    const textKeys = this.data.d?.k || [],
+    const textKeys = this.data.d?.k ?? [],
       frameNum = Number(this.elem.comp?.renderedFrame)
     let i = 0
     const len = textKeys.length
@@ -492,9 +504,9 @@ export default class TextProperty extends BaseProperty {
   }
 
   override getValue(_finalValue?: unknown) {
-    if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)
-    }
+    // if (!this.data) {
+    //   throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)
+    // }
 
     if (
       (this.elem.globalData.frameId === this.frameId ||
@@ -503,8 +515,10 @@ export default class TextProperty extends BaseProperty {
     ) {
       return
     }
-    if (this.data.d?.k[this.keysIndex].s.t) {
-      this.currentData.t = this.data.d.k[this.keysIndex].s.t!
+    const tValue = this.data.d?.k[this.keysIndex].s.t
+
+    if (tValue) {
+      this.currentData.t = tValue
     }
     const currentValue = this.currentData,
       currentIndex = this.keysIndex
@@ -518,7 +532,7 @@ export default class TextProperty extends BaseProperty {
     this._mdf = false
     const { length } = this.effectsSequence
     let finalValue =
-      (_finalValue as DocumentData) || this.data.d?.k[this.keysIndex].s
+      (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex].s
 
     for (let i = 0; i < length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
@@ -526,12 +540,12 @@ export default class TextProperty extends BaseProperty {
         finalValue = this.effectsSequence[i](this.currentData,
           finalValue?.t as string)
       } else {
-        finalValue = this.effectsSequence[i](finalValue,
+        finalValue = this.effectsSequence[i](finalValue as DocumentData,
           finalValue?.t as string)
       }
     }
     if (currentValue !== finalValue) {
-      this.setCurrentData(finalValue)
+      this.setCurrentData(finalValue as DocumentData)
     }
     this.v = this.currentData
     this.pv = this.v
@@ -540,12 +554,13 @@ export default class TextProperty extends BaseProperty {
   }
 
   recalculate(index: number) {
-    if (!this.data?.d) {
+    if (!this.data.d) {
       throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
 
     const dData = this.data.d.k[index].s
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (dData) {
       dData.__complete = false
     }
@@ -560,7 +575,7 @@ export default class TextProperty extends BaseProperty {
   }
 
   searchKeyframes() {
-    if (!this.data?.d) {
+    if (!this.data.d) {
       throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
 
@@ -592,20 +607,18 @@ export default class TextProperty extends BaseProperty {
     this.elem.addDynamicProperty(this)
   }
 
-  updateDocumentData(newData: DocumentData, indexFromProps: number) {
-    if (!this.data?.d) {
+  updateDocumentData(newData: DocumentData, indexFromProps?: number) {
+    if (!this.data.d) {
       throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
     let index = indexFromProps
 
-    index = index === undefined ? this.keysIndex : index
+    index = index ?? this.keysIndex
     let dData = this.copyData({} as DocumentData, this.data.d.k[index].s)
 
     dData = this.copyData(dData, newData)
-    if (this.data.d.k[index].s) {
-      this.data.d.k[index].s = dData
-    }
 
+    this.data.d.k[index].s = dData
     this.recalculate(index)
     this.setCurrentData(dData)
     this.elem.addDynamicProperty(this)

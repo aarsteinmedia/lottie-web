@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import type { ElementInterfaceIntersect, LottieLayer } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 
@@ -6,34 +9,30 @@ import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 const EffectsExpressionInterface = (function () {
-  const ob = {
-    createEffectsInterface: createEffectsInterface,
-  }
+  const ob = { createEffectsInterface, }
 
-  function createEffectsInterface(
-    elem: ElementInterfaceIntersect,
-    propertyGroup: LayerExpressionInterface
-  ) {
+  function createEffectsInterface(elem: ElementInterfaceIntersect,
+    propertyGroup: LayerExpressionInterface) {
     if (elem.effectsManager) {
       const effectElements: any[] = [],
-        effectsData = elem.data.ef,
+        effectsData = elem.data.ef ?? [],
         { length } = elem.effectsManager.effectElements
+
       for (let i = 0; i < length; i += 1) {
-        effectElements.push(
-          createGroupInterface(
-            effectsData?.[i] as any,
-            elem.effectsManager.effectElements[i] as any,
-            propertyGroup,
-            elem
-          )
-        )
+        effectElements.push(createGroupInterface(
+          effectsData[i] as unknown as LottieLayer,
+          elem.effectsManager.effectElements[i] as any,
+          propertyGroup,
+          elem
+        ))
       }
 
-      const effects = elem.data.ef || []
+      const effects = elem.data.ef ?? []
       const groupInterface = (name: string | number) => {
         let i = 0
-        const { length } = effects
-        while (i < length) {
+        const { length: jLen } = effects
+
+        while (i < jLen) {
           if (
             name === effects[i].nm ||
             name === effects[i].mn ||
@@ -44,15 +43,21 @@ const EffectsExpressionInterface = (function () {
           }
           i += 1
         }
+
         return null
       }
-      Object.defineProperty(groupInterface, 'numProperties', {
-        get: function () {
-          return effects.length
-        },
-      })
+
+      Object.defineProperty(
+        groupInterface, 'numProperties', {
+          get () {
+            return effects.length
+          },
+        }
+      )
+
       return groupInterface
     }
+
     return null
   }
 
@@ -63,10 +68,11 @@ const EffectsExpressionInterface = (function () {
     elem: ElementInterfaceIntersect
   ) {
     function groupInterface(name: string | number) {
-      const effects = data.ef || []
+      const effects = data.ef ?? []
       let i = 0
-      const { length } = effects
-      while (i < length) {
+      const { length: kLen } = effects
+
+      while (i < kLen) {
         if (
           name === effects[i].nm ||
           name === effects[i].mn ||
@@ -75,6 +81,7 @@ const EffectsExpressionInterface = (function () {
           if (effects[i].ty === 5) {
             return effectElements[i]
           }
+
           return effectElements[i]()
         }
         i++
@@ -83,40 +90,38 @@ const EffectsExpressionInterface = (function () {
     }
     const _propertyGroup = propertyGroupFactory(groupInterface, propertyGroup),
       effectElements: any[] = []
-    let i
-    const { length } = data.ef || []
-    for (i = 0; i < length; i++) {
+    const { length } = data.ef ?? []
+
+    for (let i = 0; i < length; i++) {
       if (data.ef?.[i].ty === 5) {
-        effectElements.push(
-          createGroupInterface(
-            data.ef[i] as any,
-            elements.effectElements[i],
-            elements.effectElements[i].propertyGroup,
-            elem
-          )
-        )
+        effectElements.push(createGroupInterface(
+          data.ef[i] as unknown as LottieLayer,
+          elements.effectElements[i],
+          elements.effectElements[i].propertyGroup,
+          elem
+        ))
       } else {
-        effectElements.push(
-          createValueInterface(
-            elements.effectElements[i],
-            data.ef?.[i].ty as any,
-            elem,
-            _propertyGroup as any
-          )
-        )
+        effectElements.push(createValueInterface(
+          elements.effectElements[i],
+          data.ef?.[i].ty as any,
+          elem,
+          _propertyGroup as any
+        ))
       }
     }
     if (data.mn === 'ADBE Color Control') {
-      Object.defineProperty(groupInterface, 'color', {
-        get: function () {
-          return effectElements[0]()
-        },
-      })
+      Object.defineProperty(
+        groupInterface, 'color', {
+          get () {
+            return effectElements[0]()
+          },
+        }
+      )
     }
     Object.defineProperties(groupInterface, {
       _name: { value: data.nm },
       numProperties: {
-        get: function () {
+        get () {
           return data.np
         },
       },
@@ -126,6 +131,7 @@ const EffectsExpressionInterface = (function () {
     // @ts-nocheck TODO:
     groupInterface.enabled = data.en !== 0
     groupInterface.active = groupInterface.enabled
+
     return groupInterface
   }
 
@@ -136,17 +142,17 @@ const EffectsExpressionInterface = (function () {
     propertyGroup: LayerExpressionInterface
   ) {
     const expressionProperty = ExpressionPropertyInterface(element.p)
+
     function interfaceFunction() {
       if (type === 10) {
         return (elem.comp?.compInterface as any)(element.p.v)
       }
+
       return (expressionProperty as any)()
     }
 
     if (element.p.setGroupProperty) {
-      element.p.setGroupProperty(
-        new PropertyInterface('', propertyGroup as any)
-      )
+      element.p.setGroupProperty(new PropertyInterface('', propertyGroup as any))
     }
 
     return interfaceFunction

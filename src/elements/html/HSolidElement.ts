@@ -28,6 +28,7 @@ export default class HSolidElement extends RenderableDOMElement {
       // renderFrame,
       setMatte,
     } = HBaseElement.prototype
+
     this.addEffects = addEffects
     this.checkBlendMode = checkBlendMode
     // this.createContainerElements = createContainerElements
@@ -36,29 +37,26 @@ export default class HSolidElement extends RenderableDOMElement {
     // this.initRendererElement = initRendererElement
     // this.renderFrame = renderFrame
     this.setMatte = setMatte
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
 
   addEffects() {
-    throw new Error(
-      `${this.constructor.name}: Method addEffects is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method addEffects is not implemented`)
   }
 
   checkBlendMode() {
-    throw new Error(
-      `${this.constructor.name}: Method checkBlendMode is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkBlendMode is not implemented`)
   }
 
   override createContent() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottierLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottierLayer) is not implemented`)
     }
 
     let rect
+
     if (this.data.hasMask) {
       rect = createNS<SVGRectElement>('rect')
       rect.setAttribute('width', `${this.data.sw}`)
@@ -78,8 +76,6 @@ export default class HSolidElement extends RenderableDOMElement {
   }
 
   setMatte() {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 }

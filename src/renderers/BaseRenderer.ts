@@ -7,6 +7,8 @@ import type CVTextElement from '@/elements/canvas/CVTextElement'
 import type HierarchyElement from '@/elements/helpers/HierarchyElement'
 import type HCameraElement from '@/elements/html/HCameraElement'
 import type HCompElement from '@/elements/html/HCompElement'
+import type HImageElement from '@/elements/html/HImageElement'
+import type HShapeElement from '@/elements/html/HShapeElement'
 import type HTextElement from '@/elements/html/HTextElement'
 import type ImageElement from '@/elements/ImageElement'
 import type NullElement from '@/elements/NullElement'
@@ -25,8 +27,6 @@ import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'
 import FrameElement from '@/elements/helpers/FrameElement'
-import HImageElement from '@/elements/html/HImageElement'
-import HShapeElement from '@/elements/html/HShapeElement'
 import FontManager from '@/utils/FontManager'
 import SlotManager from '@/utils/SlotManager'
 
@@ -45,6 +45,7 @@ export default class BaseRenderer extends FrameElement {
 
   buildAllItems() {
     const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
       this.buildItem(i)
     }
@@ -58,6 +59,7 @@ export default class BaseRenderer extends FrameElement {
     const { elements, layers } = this
     let i = 0
     const { length } = layers
+
     while (i < length) {
       if (layers[i].ind !== parentName) {
         i++
@@ -69,11 +71,9 @@ export default class BaseRenderer extends FrameElement {
       ) {
         this.buildItem(i)
 
-        if (!this.addPendingElement) {
-          throw new Error(
-            `${this.constructor.name}: Method addPendingElement is not initialized`
-          )
-        }
+        // if (!this.addPendingElement) {
+        //   throw new Error(`${this.constructor.name}: Method addPendingElement is not initialized`)
+        // }
         this.addPendingElement(element)
         i++
         continue
@@ -85,30 +85,29 @@ export default class BaseRenderer extends FrameElement {
         i++
         continue
       }
-      this.buildElementParenting(element, layers[i].parent, hierarchy)
+      this.buildElementParenting(
+        element, layers[i].parent, hierarchy
+      )
       i++
     }
   }
 
   buildItem(_val: number) {
-    throw new Error(
-      `${this.constructor.name}: Method buildItem not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildItem not yet implemented`)
   }
 
   checkLayers(val?: number) {
     this.completeLayers = true
-    const { length } = this.layers || []
+    const { length } = this.layers
+
     for (let i = length - 1; i >= 0; i--) {
-      if (!this.elements[i]) {
-        if (
-          this.layers[i].ip - this.layers[i].st <=
+      if (!this.elements[i] &&
+          (this.layers[i].ip - this.layers[i].st <=
             Number(val) - this.layers[i].st &&
           this.layers[i].op - this.layers[i].st >
-            Number(val) - this.layers[i].st
-        ) {
-          this.buildItem(i)
-        }
+            Number(val) - this.layers[i].st)
+      ) {
+        this.buildItem(i)
       }
       this.completeLayers = this.elements[i] ? this.completeLayers : false
     }
@@ -116,14 +115,13 @@ export default class BaseRenderer extends FrameElement {
   }
 
   checkPendingElements() {
-    throw new Error(
-      `${this.constructor.name}: Method checkPendingElements not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkPendingElements not yet implemented`)
   }
   createAudio(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new AudioElement(
       data,
       this.globalData,
@@ -131,7 +129,7 @@ export default class BaseRenderer extends FrameElement {
     )
   }
   createCamera(_data: LottieLayer): HCameraElement {
-    throw new Error("You're using a 3d camera. Try the html renderer.")
+    throw new Error('You\'re using a 3d camera. Try the html renderer.')
   }
   createComp(
     _data: LottieLayer,
@@ -139,15 +137,14 @@ export default class BaseRenderer extends FrameElement {
     _comp?: CompElementInterface,
     _?: unknown
   ): SVGCompElement | CVCompElement | HCompElement {
-    throw new Error(
-      `${this.constructor.name}: Method createComp not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createComp not yet implemented`)
   }
 
   createFootage(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
+
     return new FootageElement(
       data,
       this.globalData,
@@ -155,79 +152,77 @@ export default class BaseRenderer extends FrameElement {
     )
   }
 
-  createImage(
-    _layer: LottieLayer
-  ): CVImageElement | ImageElement | HImageElement {
-    throw new Error(
-      `${this.constructor.name}: Method createImage is not implemented`
-    )
+  createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement {
+    throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
   }
   createItem(layer: LottieLayer) {
     switch (layer.ty) {
-      case 2:
+      case 2: {
         return this.createImage(layer)
-      case 0:
+      }
+      case 0: {
         return this.createComp(layer)
-      case 1:
+      }
+      case 1: {
         return this.createSolid(layer)
-      case 3:
+      }
+      case 3: {
         return this.createNull(layer)
-      case 4:
+      }
+      case 4: {
         return this.createShape(layer)
-      case 5:
+      }
+      case 5: {
         return this.createText(layer)
-      case 6:
+      }
+      case 6: {
         return this.createAudio(layer)
-      case 13:
+      }
+      case 13: {
         return this.createCamera(layer)
-      case 15:
+      }
+      case 15: {
         return this.createFootage(layer)
-      default:
+      }
+      default: {
         return this.createNull(layer)
+      }
     }
   }
   createNull(_layer: LottieLayer): NullElement {
-    throw new Error(
-      `${this.constructor.name}: Method createNull not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createNull not implemented`)
   }
-  createShape(
-    _layer: LottieLayer
-  ): CVShapeElement | SVGShapeElement | HShapeElement {
-    throw new Error(
-      `${this.constructor.name}: Method createShape not implemented`
-    )
+  createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement {
+    throw new Error(`${this.constructor.name}: Method createShape not implemented`)
   }
   createSolid(_layer: LottieLayer): CVSolidElement | SolidElement {
-    throw new Error(
-      `${this.constructor.name}: Method createSolid not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createSolid not implemented`)
   }
-  createText(
-    _layer: LottieLayer
-  ): SVGTextLottieElement | CVTextElement | HTextElement {
-    throw new Error(
-      `${this.constructor.name}: Method createText not implemented`
-    )
+  createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement | HTextElement {
+    throw new Error(`${this.constructor.name}: Method createText not implemented`)
   }
   getElementById(ind: number) {
-    const { length } = this.elements || []
+    const { length } = this.elements
+
     for (let i = 0; i < length; i++) {
-      if (this.elements[i].data?.ind === ind) {
+      if (this.elements[i].data.ind === ind) {
         return this.elements[i]
       }
     }
+
     return null
   }
   getElementByPath(path: unknown[]): ElementInterfaceIntersect | undefined {
     const pathValue = path.shift()
     let element
+
     if (typeof pathValue === 'number') {
       element = this.elements[pathValue]
     } else {
-      const { length } = this.elements || []
+      const { length } = this.elements
+
       for (let i = 0; i < length; i++) {
-        if (this.elements[i].data?.nm === pathValue) {
+        if (this.elements[i].data.nm === pathValue) {
           element = this.elements[i]
           break
         }
@@ -236,6 +231,7 @@ export default class BaseRenderer extends FrameElement {
     if (path.length === 0) {
       return element
     }
+
     return element?.getElementByPath(path)
   }
 
@@ -243,8 +239,10 @@ export default class BaseRenderer extends FrameElement {
     this.completeLayers = false
     const { length } = newLayers,
       { length: jLen } = this.layers
+
     for (let i = 0; i < length; i++) {
       let j = 0
+
       while (j < jLen) {
         if (this.layers[j].id === newLayers[i].id) {
           this.layers[j] = newLayers[i]
@@ -262,18 +260,18 @@ export default class BaseRenderer extends FrameElement {
   }
 
   prepareFrame(_num: number) {
-    throw new Error(
-      `${this.constructor.name}: Method prepareFrame not yet implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
   }
 
   searchExtraCompositions(assets: LottieLayer[]) {
     const { length } = assets
+
     for (let i = 0; i < length; i++) {
       if (assets[i].xt) {
         const comp = this.createComp(assets[i])
+
         comp.initExpressions()
-        this.globalData?.projectInterface?.registerComposition(comp)
+        this.globalData?.projectInterface.registerComposition(comp)
       }
     }
   }
@@ -288,30 +286,20 @@ export default class BaseRenderer extends FrameElement {
     this.globalData.projectInterface = pInterface
   }
 
-  setupGlobalData(
-    animData: AnimationData,
-    fontsContainer: HTMLElement | SVGDefsElement
-  ) {
+  setupGlobalData(animData: AnimationData,
+    fontsContainer: HTMLElement | SVGDefsElement) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     this.globalData.fontManager = new FontManager()
-    this.globalData.slotManager = new SlotManager(
-      animData as unknown as LottieLayer
-    )
+    this.globalData.slotManager = new SlotManager(animData as unknown as LottieLayer)
     this.globalData.fontManager.addChars(animData.chars)
     this.globalData.fontManager.addFonts(animData.fonts, fontsContainer)
-    this.globalData.getAssetData = this.animationItem.getAssetData.bind(
-      this.animationItem
-    )
-    this.globalData.getAssetsPath = this.animationItem.getAssetsPath.bind(
-      this.animationItem
-    )
+    this.globalData.getAssetData = this.animationItem.getAssetData.bind(this.animationItem)
+    this.globalData.getAssetsPath = this.animationItem.getAssetsPath.bind(this.animationItem)
 
     this.globalData.imageLoader = this.animationItem.imagePreloader
     this.globalData.audioController = this.animationItem.audioController

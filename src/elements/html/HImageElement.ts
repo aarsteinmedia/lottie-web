@@ -18,9 +18,13 @@ export default class HImageElement extends HSolidElement {
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super(data, globalData, comp)
+    super(
+      data, globalData, comp
+    )
     this.assetData = globalData.getAssetData(data.refId)
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
   override createContent() {
     if (!this.assetData) {

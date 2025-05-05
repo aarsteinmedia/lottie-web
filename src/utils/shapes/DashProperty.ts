@@ -27,14 +27,13 @@ export default class DashProperty extends DynamicPropertyContainer {
     this.renderer = renderer
     this.k = false
     this.dashStr = ''
-    this.dashArray = createTypedArray(
-      ArrayType.Float32,
-      data.length ? data.length - 1 : 0
-    ) as Float32Array
+    this.dashArray = createTypedArray(ArrayType.Float32,
+      data.length > 0 ? data.length - 1 : 0) as Float32Array
     this.dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
     this.initDynamicPropertyContainer(container)
     const len = data.length || 0
     let prop
+
     for (let i = 0; i < len; i++) {
       prop = PropertyFactory.getProp(
         elem,
@@ -43,8 +42,11 @@ export default class DashProperty extends DynamicPropertyContainer {
         0,
         this as unknown as ElementInterfaceIntersect
       )
-      this.k = prop?.k || this.k
-      this.dataProps[i] = { n: data[i].n, p: prop }
+      this.k = prop.k || this.k
+      this.dataProps[i] = {
+        n: data[i].n,
+        p: prop
+      }
     }
     if (!this.k) {
       this.getValue(true)
@@ -60,23 +62,27 @@ export default class DashProperty extends DynamicPropertyContainer {
     }
 
     this.iterateDynamicProperties()
-    this._mdf = this._mdf || !!forceRender
+    this._mdf = this._mdf || Boolean(forceRender)
     if (!this._mdf) {
       return
     }
     const len = this.dataProps.length
+
     if (this.renderer === RendererType.SVG) {
       this.dashStr = ''
     }
     for (let i = 0; i < len; i++) {
       if (this.dataProps[i].n === 'o') {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         this.dashoffset[0] = this.dataProps[i].p.v as number
         continue
       }
       if (this.renderer === RendererType.SVG) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         this.dashStr += ` ${this.dataProps[i].p.v}`
         continue
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.dashArray[i] = this.dataProps[i].p.v as number
     }
   }

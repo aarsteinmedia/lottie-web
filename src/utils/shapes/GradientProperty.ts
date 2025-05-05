@@ -29,9 +29,10 @@ export default class GradientProperty extends DynamicPropertyContainer {
     super()
     this.data = data
     this.c = createTypedArray(ArrayType.Uint8c, data.p * 4) as Uint8ClampedArray
-    const cLength = (data.k.k as Stop[])[0].s
+    const cLength = (data.k.k as Stop[] | undefined)?.[0].s
       ? (data.k.k as Stop[])[0].s.length - data.p * 4
       : data.k.k.length - data.p * 4
+
     this.o = createTypedArray(ArrayType.Float32, cLength) as Float32Array
     this._cmdf = false
     this._omdf = false
@@ -53,9 +54,10 @@ export default class GradientProperty extends DynamicPropertyContainer {
     if (this.o.length / 2 !== this.c.length / 4) {
       return false
     }
-    if ((this.data.k.k as Stop[])[0].s) {
+    if ((this.data.k.k as Stop[] | undefined)?.[0].s) {
       let i = 0
       const len = this.data.k.k.length
+
       while (i < len) {
         if (!this.comparePoints((this.data.k.k as Stop[])[i].s, this.data.p)) {
           return false
@@ -67,6 +69,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     ) {
       return false
     }
+
     return true
   }
 
@@ -74,6 +77,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     let i = 0
     const len = this.o.length / 2
     let diff
+
     while (i < len) {
       diff = Math.abs(values[i * 4] - values[points * 4 + i * 2])
       if (diff > 0.01) {
@@ -81,6 +85,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
       }
       i++
     }
+
     return true
   }
 
@@ -89,12 +94,13 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this._mdf = false
     this._cmdf = false
     this._omdf = false
-    if ((!this.prop._mdf && !forceRender) || !isArrayOfNum(this.prop.v)) {
+    if (!this.prop._mdf && !forceRender || !isArrayOfNum(this.prop.v)) {
       return
     }
     const len = this.data.p * 4
     let mult
     let val
+
     for (let i = 0; i < len; i++) {
       mult = i % 4 === 0 ? 100 : 255
       val = Math.round(this.prop.v[i] * mult)
@@ -103,10 +109,11 @@ export default class GradientProperty extends DynamicPropertyContainer {
         this._cmdf = !forceRender
       }
     }
-    if (this.o.length) {
+    if (this.o.length > 0) {
       const { length } = this.prop.v
+
       for (let i = this.data.p * 4; i < length; i++) {
-        mult = i % 2 === 0 ? 100 : 1
+        // mult = i % 2 === 0 ? 100 : 1
         val = i % 2 === 0 ? Math.round(this.prop.v[i] * 100) : this.prop.v[i]
         if (this.o[i - this.data.p * 4] !== val) {
           this.o[i - this.data.p * 4] = val

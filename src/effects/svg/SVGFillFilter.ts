@@ -14,12 +14,11 @@ export default class SVGFillFilter {
   ) {
     this.filterManager = filterManager
     const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
+
     feColorMatrix.setAttribute('type', 'matrix')
     feColorMatrix.setAttribute('color-interpolation-filters', 'sRGB')
-    feColorMatrix.setAttribute(
-      'values',
-      '1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0'
-    )
+    feColorMatrix.setAttribute('values',
+      '1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0')
     feColorMatrix.setAttribute('result', id)
     filter.appendChild(feColorMatrix)
     this.matrixFilter = feColorMatrix
@@ -27,18 +26,16 @@ export default class SVGFillFilter {
 
   renderFrame(forceRender?: boolean) {
     if (
-      (!forceRender && !this.filterManager._mdf) ||
-      !this.filterManager.effectElements
+      !forceRender && !this.filterManager._mdf
     ) {
       return
     }
     const color = this.filterManager.effectElements[2].p.v as Vector3
     const opacity = this.filterManager.effectElements[6].p.v as Vector3
-    this.matrixFilter.setAttribute(
-      'values',
+
+    this.matrixFilter.setAttribute('values',
       `0 0 0 0 ${color[0]} 0 0 0 0 ${color[1]} 0 0 0 0 ${color[2]} 0 0 0 ${
         opacity
-      } 0`
-    )
+      } 0`)
   }
 }

@@ -1,7 +1,7 @@
 import type { CompElementInterface } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type { MaskInterface } from '@/utils/expressions/MaskInterface'
 
-import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import { MaskInterface } from '@/utils/expressions/MaskInterface'
 export default class ProjectInterface {
   compositions: CompElementInterface[] = []
   content?: ProjectInterface
@@ -18,25 +18,25 @@ export default class ProjectInterface {
   constructor(name?: string) {
     let i = 0
     const { length } = this.compositions
+
     while (i < length) {
       if (this.compositions[i].data?.nm !== name) {
         i++
         continue
       }
       if (
-        !!this.compositions[i].prepareFrame &&
+        Boolean(this.compositions[i].prepareFrame) &&
         this.compositions[i].data?.xt
       ) {
-        this.compositions[i].prepareFrame!(this.currentFrame)
+        this.compositions[i].prepareFrame(this.currentFrame)
       }
-      for (const [key, value] of Object.entries(
-        this.compositions[i].compInterface as any
-      )) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      for (const [key, value] of Object.entries(this.compositions[i].compInterface as any)) {
         ProjectInterface[key as keyof typeof ProjectInterface] = value as any
       }
       break
     }
-    i++
+    // i++
   }
   registerComposition(comp: CompElementInterface) {
     this.compositions.push(comp)

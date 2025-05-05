@@ -1,3 +1,6 @@
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type HybridRenderer from '@/renderers/HybridRenderer'
+import type SVGRenderer from '@/renderers/SVGRenderer'
 import type {
   AnimationConfiguration,
   AnimationData,
@@ -11,7 +14,9 @@ import type {
 } from '@/types'
 import type Expressions from '@/utils/expressions/Expressions'
 
-import { completeAnimation, loadAnimation, loadData } from '@/DataManager'
+import {
+  completeAnimation, loadAnimation, loadData
+} from '@/DataManager'
 import { RendererType } from '@/enums'
 import {
   BaseEvent,
@@ -25,9 +30,6 @@ import {
   BMSegmentStartEvent,
   type LottieEvent,
 } from '@/events'
-import CanvasRenderer from '@/renderers/CanvasRenderer'
-import HybridRenderer from '@/renderers/HybridRenderer'
-import SVGRenderer from '@/renderers/SVGRenderer'
 import { markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
 import {
@@ -80,7 +82,7 @@ export default class AnimationItem extends BaseEvent {
   public totalFrames: number
   public wrapper: HTMLElement | null = null
   protected animType?: RendererType
-  protected autoloadSegments: boolean = false
+  protected autoloadSegments = false
   protected fileName?: string
 
   protected initialSegment?: Vector2
@@ -128,7 +130,9 @@ export default class AnimationItem extends BaseEvent {
     this.configAnimation = this.configAnimation.bind(this)
     this.onSetupError = this.onSetupError.bind(this)
     this.onSegmentComplete = this.onSegmentComplete.bind(this)
-    this.drawnFrameEvent = new BMEnterFrameEvent('drawnFrame', 0, 0, 0)
+    this.drawnFrameEvent = new BMEnterFrameEvent(
+      'drawnFrame', 0, 0, 0
+    )
     this.expressionsPlugin = getExpressionsPlugin() // new Expressions(this)
   }
 
@@ -162,19 +166,18 @@ export default class AnimationItem extends BaseEvent {
     this.trigger('segmentStart')
   }
   public advanceTime(value: number) {
-    if (this.isPaused === true || this.isLoaded === false) {
+    if (this.isPaused || !this.isLoaded) {
       return
     }
     let nextValue = this.currentRawFrame + value * this.frameModifier
     let _isComplete = false
+
     // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.
     // If animation won't loop, it should stop at totalFrames - 1. If it will loop it should complete the last frame and then loop.
     if (nextValue >= this.totalFrames - 1 && this.frameModifier > 0) {
       if (!this.loop || this.playCount === this.loop) {
         if (
-          !this.checkSegments(
-            nextValue > this.totalFrames ? nextValue % this.totalFrames : 0
-          )
+          !this.checkSegments(nextValue > this.totalFrames ? nextValue % this.totalFrames : 0)
         ) {
           _isComplete = true
           nextValue = this.totalFrames - 1
@@ -192,9 +195,7 @@ export default class AnimationItem extends BaseEvent {
     } else if (nextValue < 0) {
       if (!this.checkSegments(nextValue % this.totalFrames)) {
         if (this.loop && !(this.playCount-- <= 0 && this.loop !== true)) {
-          this.setCurrentRawFrameValue(
-            this.totalFrames + (nextValue % this.totalFrames)
-          )
+          this.setCurrentRawFrameValue(this.totalFrames + nextValue % this.totalFrames)
           if (this._completedLoop) {
             this.trigger('loopComplete')
           } else {
@@ -216,63 +217,63 @@ export default class AnimationItem extends BaseEvent {
   }
   public checkLoaded() {
     if (
-      !this.isLoaded &&
-      this.renderer?.globalData?.fontManager?.isLoaded &&
-      (this.imagePreloader?.loadedImages() ||
-        this.renderer.rendererType !== 'canvas') &&
-      this.imagePreloader?.loadedFootages()
+      this.isLoaded ||
+      !this.renderer.globalData?.fontManager?.isLoaded ||
+      !this.imagePreloader?.loadedImages() &&
+        this.renderer.rendererType === RendererType.Canvas ||
+      !this.imagePreloader?.loadedFootages()
     ) {
-      this.isLoaded = true
-      const ExpressionsPlugin = getExpressionsPlugin()
-      if (ExpressionsPlugin) {
-        new ExpressionsPlugin(this)
-      }
-      this.renderer?.initItems()
-      setTimeout(() => {
-        this.trigger('DOMLoaded')
-      }, 0)
-      this.gotoFrame()
-      if (this.autoplay) {
-        this.play()
-      }
+      return
+    }
+    this.isLoaded = true
+    const ExpressionsPlugin = getExpressionsPlugin()
+
+    if (ExpressionsPlugin) {
+      new ExpressionsPlugin(this)
+    }
+    this.renderer.initItems()
+    setTimeout(() => {
+      this.trigger('DOMLoaded')
+    }, 0)
+    this.gotoFrame()
+    if (this.autoplay) {
+      this.play()
     }
   }
   public checkSegments(offset: number) {
-    if (this.segments.length) {
-      this.adjustSegment(this.segments.shift()!, offset)
+    if (this.segments.length > 0) {
+      this.adjustSegment(this.segments.shift(), offset)
+
       return true
     }
+
     return false
   }
   public configAnimation(animData: AnimationData) {
-    if (!this.renderer) {
-      return
-    }
+    // if (!this.renderer) {
+    //   return
+    // }
     try {
       this.animationData = animData
       if (this.initialSegment) {
-        this.totalFrames = Math.floor(
-          this.initialSegment[1] - this.initialSegment[0]
-        )
+        this.totalFrames = Math.floor(this.initialSegment[1] - this.initialSegment[0])
         this.firstFrame = Math.round(this.initialSegment[0])
       } else {
-        this.totalFrames = Math.floor(
-          (this.animationData.op || 1) - (this.animationData.ip || 0)
-        )
+        this.totalFrames = Math.floor((this.animationData.op || 1) - (this.animationData.ip || 0))
         this.firstFrame = Math.round(this.animationData.ip || 0)
       }
       this.renderer.configAnimation(animData)
-      if (!animData.assets) {
-        animData.assets = []
-      }
+      // if (!animData.assets) {
+      //   animData.assets = []
+      // }
 
-      this.assets = this.animationData.assets ?? this.assets
-      this.frameRate = this.animationData.fr ?? this.frameRate
+      this.assets = this.animationData.assets // ?? this.assets
+      this.frameRate = this.animationData.fr // ?? this.frameRate
       if (typeof this.animationData.fr !== 'undefined') {
         this.frameMult = this.animationData.fr / 1000
       }
       this.renderer.searchExtraCompositions(animData.assets as LottieLayer[])
-      this.markers = markerParser(animData.markers || []) as MarkerData[]
+      this.markers = markerParser(animData.markers ?? []) as MarkerData[]
       this.trigger('config_ready')
       this.preloadImages()
       this.loadSegments()
@@ -286,7 +287,7 @@ export default class AnimationItem extends BaseEvent {
     }
   }
   public destroy(name?: string) {
-    if ((name && this.name !== name) || !this.renderer) {
+    if (name && this.name !== name) {
       return
     }
     this.renderer.destroy()
@@ -306,32 +307,37 @@ export default class AnimationItem extends BaseEvent {
   public getAssetData(id?: string) {
     let i = 0
     const len = this.assets.length
+
     while (i < len) {
       if (id === this.assets[i].id) {
         return this.assets[i]
       }
       i++
     }
+
     return null
   }
   public getAssetsPath(assetData: null | LottieAsset) {
     if (!assetData) {
       return ''
     }
-    let path = ''
+    let path
+
     if (assetData.e) {
       path = assetData.p || ''
     } else if (this.assetsPath) {
-      let imagePath = assetData?.p
+      let imagePath = assetData.p
+
       if (imagePath?.indexOf('images/') !== -1) {
         imagePath = imagePath?.split('/')[1]
       }
-      path = this.assetsPath + imagePath
+      path = this.assetsPath + (imagePath || '')
     } else {
       path = this.path
-      path += assetData.u ? assetData.u : ''
-      path += assetData.p
+      path += assetData.u ?? ''
+      path += assetData.p ?? ''
     }
+
     return path
   }
   public getDuration(isFrame?: boolean) {
@@ -343,6 +349,7 @@ export default class AnimationItem extends BaseEvent {
         return this.markers[i]
       }
     }
+
     return null
   }
   public getPath() {
@@ -351,13 +358,17 @@ export default class AnimationItem extends BaseEvent {
   public getVolume() {
     return this.audioController.getVolume()
   }
-  public goToAndPlay(value: number, isFrame?: boolean, name?: string) {
+  public goToAndPlay(
+    value: number, isFrame?: boolean, name?: string
+  ) {
     if (name && this.name !== name) {
       return
     }
     const numValue = Number(value)
+
     if (isNaN(numValue)) {
       const marker = this.getMarkerData(value)
+
       if (marker) {
         if (marker.duration) {
           this.playSegments([marker.time, marker.time + marker.duration], true)
@@ -366,17 +377,23 @@ export default class AnimationItem extends BaseEvent {
         }
       }
     } else {
-      this.goToAndStop(numValue, isFrame, name)
+      this.goToAndStop(
+        numValue, isFrame, name
+      )
     }
     this.play()
   }
-  public goToAndStop(value: number, isFrame?: boolean, name?: string) {
+  public goToAndStop(
+    value: number, isFrame?: boolean, name?: string
+  ) {
     if (name && this.name !== name) {
       return
     }
     const numValue = Number(value)
+
     if (isNaN(numValue)) {
       const marker = this.getMarkerData(value)
+
       if (marker) {
         this.goToAndStop(marker.time, true)
       }
@@ -417,11 +434,12 @@ export default class AnimationItem extends BaseEvent {
       this.animationData.op = data.op
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
     }
-    const layers = this.animationData.layers || []
+    const { layers } = this.animationData
     let i,
       len = layers.length
     const newLayers = data.layers,
       { length: jLen } = newLayers
+
     for (let j = 0; j < jLen; j++) {
       i = 0
       while (i < len) {
@@ -434,10 +452,8 @@ export default class AnimationItem extends BaseEvent {
     }
     if (data.chars || data.fonts) {
       this.renderer.globalData?.fontManager?.addChars(data.chars)
-      this.renderer.globalData?.fontManager?.addFonts(
-        data.fonts,
-        this.renderer.globalData.defs
-      )
+      this.renderer.globalData?.fontManager?.addFonts(data.fonts,
+        this.renderer.globalData.defs)
     }
     if (data.assets) {
       len = data.assets.length
@@ -446,28 +462,33 @@ export default class AnimationItem extends BaseEvent {
       }
     }
     this.animationData.__complete = false
-    completeAnimation(
-      this.animationData as AnimationData,
-      this.onSegmentComplete
-    )
+    completeAnimation(this.animationData,
+      this.onSegmentComplete)
   }
   public loadNextSegment() {
-    const segments = this.animationData.segments
+    const { segments } = this.animationData
+
     if (!segments || segments.length === 0 || !this.autoloadSegments) {
       this.trigger('data_ready')
       this.timeCompleted = this.totalFrames
+
       return
     }
     const segment = segments.shift()
+
     this.timeCompleted = Number(segment?.time) * this.frameRate
     const segmentPath = `${this.path + this.fileName}_${this.segmentPos}.json`
+
     this.segmentPos++
-    loadData(segmentPath, this.includeLayers.bind(this), () => {
-      this.trigger('data_failed')
-    })
+    loadData(
+      segmentPath, this.includeLayers.bind(this), () => {
+        this.trigger('data_failed')
+      }
+    )
   }
   public loadSegments() {
-    const segments = this.animationData.segments
+    const { segments } = this.animationData
+
     if (!segments) {
       this.timeCompleted = this.totalFrames
     }
@@ -482,6 +503,7 @@ export default class AnimationItem extends BaseEvent {
   public onSegmentComplete(data: AnimationData) {
     this.animationData = data
     const ExpressionsPlugin = getExpressionsPlugin()
+
     if (ExpressionsPlugin) {
       new ExpressionsPlugin(this)
     }
@@ -494,7 +516,7 @@ export default class AnimationItem extends BaseEvent {
     if (name && this.name !== name) {
       return
     }
-    if (this.isPaused === false) {
+    if (!this.isPaused) {
       this.isPaused = true
       this.trigger('_pause')
       this._idle = true
@@ -507,7 +529,7 @@ export default class AnimationItem extends BaseEvent {
       return
     }
 
-    if (this.isPaused === true) {
+    if (this.isPaused) {
       this.isPaused = false
       this.trigger('_play')
       this.audioController.resume()
@@ -523,13 +545,14 @@ export default class AnimationItem extends BaseEvent {
     }
     if (Array.isArray(arr[0])) {
       const { length } = arr
+
       for (let i = 0; i < length; i++) {
         this.segments.push(arr[i] as Vector2)
       }
     } else {
       this.segments.push(arr as Vector2)
     }
-    if (this.segments.length && forceFlag) {
+    if (this.segments.length > 0 && forceFlag) {
       this.adjustSegment(this.segments.shift()!, 0)
     }
     if (this.isPaused) {
@@ -542,13 +565,11 @@ export default class AnimationItem extends BaseEvent {
     }
     this.imagePreloader.setAssetsPath(this.assetsPath)
     this.imagePreloader.setPath(this.path)
-    this.imagePreloader.loadAssets(
-      this.animationData.assets || [],
-      this.imagesLoaded.bind(this)
-    )
+    this.imagePreloader.loadAssets(this.animationData.assets || [],
+      this.imagesLoaded.bind(this))
   }
   public renderFrame(_num?: number | null) {
-    if (this.isLoaded === false || !this.renderer) {
+    if (!this.isLoaded || !this.renderer) {
       return
     }
     try {
@@ -562,19 +583,20 @@ export default class AnimationItem extends BaseEvent {
   }
   public resetSegments(forceFlag?: boolean) {
     this.segments.length = 0
-    this.segments.push([this.animationData.ip!, this.animationData.op!])
+    this.segments.push([this.animationData.ip, this.animationData.op])
     if (forceFlag) {
       this.checkSegments(0)
     }
   }
   public resize(width?: number, height?: number) {
-    if (!this.renderer) {
-      throw new Error(`${this.constructor.name}: renderer is not implemented`)
-    }
+    // if (!this.renderer) {
+    //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
+    // }
     // Adding this validation for backwards compatibility in case an event object was being passed down
     const _width = typeof width === 'number' ? width : undefined,
       _height = typeof height === 'number' ? height : undefined
-    this.renderer?.updateContainerSize(_width, _height)
+
+    this.renderer.updateContainerSize(_width, _height)
   }
   public setCurrentRawFrameValue(value: number) {
     this.currentRawFrame = value
@@ -584,6 +606,7 @@ export default class AnimationItem extends BaseEvent {
   public setData(wrapper: HTMLElement, animationDatFromProps?: AnimationData) {
     try {
       let animationData = animationDatFromProps
+
       if (animationData) {
         if (typeof animationData !== 'object') {
           animationData = JSON.parse(animationData)
@@ -620,6 +643,7 @@ export default class AnimationItem extends BaseEvent {
         wrapperAttributes.getNamedItem('data-bm-loop')?.value ??
         wrapperAttributes.getNamedItem('bm-loop')?.value ??
         ''
+
       if (loop === 'false') {
         params.loop = false
       } else if (loop === 'true') {
@@ -632,6 +656,7 @@ export default class AnimationItem extends BaseEvent {
         wrapperAttributes.getNamedItem('data-bm-autoplay')?.value ??
         wrapperAttributes.getNamedItem('bm-autoplay')?.value ??
         true
+
       params.autoplay = autoplay !== 'false'
 
       params.name =
@@ -653,8 +678,8 @@ export default class AnimationItem extends BaseEvent {
       } else {
         this.trigger('destroy')
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       throw new Error(`${this.constructor.name}: Could not set data`)
     }
   }
@@ -674,18 +699,18 @@ export default class AnimationItem extends BaseEvent {
         this.wrapper = params.wrapper || params.container || null
       }
       let animType = RendererType.SVG
+
       if (params.animType) {
         animType = params.animType
       } else if (params.renderer) {
         animType = params.renderer
       }
       const RendererClass = getRenderer(animType)
+
       this.renderer = new RendererClass(this, params.rendererSettings as any)
       if (this.renderer?.globalData?.defs) {
-        this.imagePreloader?.setCacheType(
-          animType,
-          this.renderer.globalData.defs
-        )
+        this.imagePreloader?.setCacheType(animType,
+          this.renderer.globalData.defs)
       }
 
       this.renderer?.setProjectInterface(this.projectInterface)
@@ -702,12 +727,10 @@ export default class AnimationItem extends BaseEvent {
       } else {
         this.loop = parseInt(`${params.loop}`, 10)
       }
-      this.autoplay = !!('autoplay' in params ? params.autoplay : true)
+      this.autoplay = Boolean('autoplay' in params ? params.autoplay : true)
       this.name = params.name ? params.name : ''
-      this.autoloadSegments = !!(Object.prototype.hasOwnProperty.call(
-        params,
-        'autoloadSegments'
-      )
+      this.autoloadSegments = Boolean(Object.hasOwn(params,
+        'autoloadSegments')
         ? params.autoloadSegments
         : true)
       this.assetsPath = params.assetsPath ?? this.assetsPath
@@ -718,28 +741,27 @@ export default class AnimationItem extends BaseEvent {
       if (params.animationData) {
         this.setupAnimation(params.animationData)
       } else if (params.path) {
-        if (params.path.lastIndexOf('\\') === -1) {
-          this.path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
+        if (!params.path.includes('\\')) {
+          this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
         } else {
-          this.path = params.path.substring(
-            0,
-            params.path.lastIndexOf('\\') + 1
-          )
+          this.path = params.path.slice(0,
+            Math.max(0, params.path.lastIndexOf('\\') + 1))
         }
-        this.fileName = params.path.substring(params.path.lastIndexOf('/') + 1)
-        this.fileName = this.fileName.substring(
-          0,
-          this.fileName.lastIndexOf('.json')
+        this.fileName = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
+        this.fileName = this.fileName.slice(0,
+          Math.max(0, this.fileName.lastIndexOf('.json')))
+        loadAnimation(
+          params.path, this.configAnimation, this.onSetupError
         )
-        loadAnimation(params.path, this.configAnimation, this.onSetupError)
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       throw new Error(`${this.constructor.name}: Could not set params`)
     }
   }
   public setSegment(init: number, end: number) {
     let pendingFrame = -1
+
     if (this.isPaused) {
       if (this.currentRawFrame + this.firstFrame < init) {
         pendingFrame = init
@@ -763,7 +785,7 @@ export default class AnimationItem extends BaseEvent {
     this.updaFrameModifier()
   }
   public setSubframe(flag: boolean) {
-    this.isSubframeEnabled = !!flag
+    this.isSubframeEnabled = Boolean(flag)
   }
   public setupAnimation(data: AnimationData) {
     completeAnimation(data, this.configAnimation)
@@ -790,7 +812,7 @@ export default class AnimationItem extends BaseEvent {
     if (name && this.name !== name) {
       return
     }
-    if (this.isPaused === true) {
+    if (this.isPaused) {
       this.play()
     } else {
       this.pause()
@@ -803,56 +825,47 @@ export default class AnimationItem extends BaseEvent {
       }
       switch (name) {
         case 'enterFrame': {
-          this.triggerEvent(
-            name,
+          this.triggerEvent(name,
             new BMEnterFrameEvent(
               name,
               this.currentFrame,
               this.totalFrames,
               this.frameModifier
-            )
-          )
-          this.onEnterFrame?.call(
-            this,
+            ))
+          this.onEnterFrame?.call(this,
             new BMEnterFrameEvent(
               name,
               this.currentFrame,
               this.totalFrames,
               this.frameMult
-            )
-          )
+            ))
           break
         }
-        case 'drawnFrame':
-          this.triggerEvent(
-            name,
+        case 'drawnFrame': {
+          this.triggerEvent(name,
             new BMDrawnFrameEvent(
               name,
               this.currentFrame,
               this.frameModifier,
               this.totalFrames
-            )
-          )
+            ))
           break
+        }
         case 'loopComplete': {
-          this.triggerEvent(
-            name,
+          this.triggerEvent(name,
             new BMCompleteLoopEvent(
               name,
               Number(this.loop),
               this.playCount,
               this.frameMult
-            )
-          )
-          this.onLoopComplete?.call(
-            this,
+            ))
+          this.onLoopComplete?.call(this,
             new BMCompleteLoopEvent(
               name,
               this.loop,
               this.playCount,
               this.frameMult
-            )
-          )
+            ))
           break
         }
         case 'complete': {
@@ -861,14 +874,14 @@ export default class AnimationItem extends BaseEvent {
           break
         }
         case 'segmentStart': {
-          this.triggerEvent(
-            name,
-            new BMSegmentStartEvent(name, this.firstFrame, this.totalFrames)
-          )
-          this.onSegmentStart?.call(
-            this,
-            new BMSegmentStartEvent(name, this.firstFrame, this.totalFrames)
-          )
+          this.triggerEvent(name,
+            new BMSegmentStartEvent(
+              name, this.firstFrame, this.totalFrames
+            ))
+          this.onSegmentStart?.call(this,
+            new BMSegmentStartEvent(
+              name, this.firstFrame, this.totalFrames
+            ))
           break
         }
         case 'destroy': {
@@ -876,15 +889,17 @@ export default class AnimationItem extends BaseEvent {
           this.onDestroy?.call(this, new BMDestroyEvent(name, this))
           break
         }
-        default:
+        default: {
           this.triggerEvent(name)
+        }
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
   }
   public triggerConfigError(nativeError: unknown) {
     const error = new BMConfigErrorEvent(nativeError, this.currentFrame)
+
     this.triggerEvent('error', error)
 
     if (this.onError) {
@@ -917,18 +932,22 @@ export default class AnimationItem extends BaseEvent {
     index: number
   ) {
     try {
-      const element = this.renderer?.getElementByPath(path)
-      element?.updateDocumentData([], documentData, index)
+      const element = this.renderer.getElementByPath(path)
+
+      element?.updateDocumentData(
+        [], documentData, index
+      )
     } catch (_error) {
       console.warn(_error)
     }
   }
   public waitForFontsLoaded() {
-    if (!this.renderer) {
-      return
-    }
-    if (this.renderer?.globalData?.fontManager?.isLoaded) {
+    // if (!this.renderer) {
+    //   return
+    // }
+    if (this.renderer.globalData?.fontManager?.isLoaded) {
       this.checkLoaded()
+
       return
     }
     setTimeout(this.waitForFontsLoaded.bind(this), 20)

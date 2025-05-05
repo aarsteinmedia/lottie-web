@@ -6,19 +6,17 @@ import type {
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import { roundCorner } from '@/utils/getterSetter'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class RoundCornersModifier extends ShapeModifier {
   rd?: ValueProperty
-  override initModifierProperties(
-    elem: ElementInterfaceIntersect,
-    data: Shape
-  ) {
+  override initModifierProperties(elem: ElementInterfaceIntersect,
+    data: Shape) {
     this.getValue = this.processKeys
     this.rd = PropertyFactory.getProp(
       elem,
@@ -27,11 +25,12 @@ export default class RoundCornersModifier extends ShapeModifier {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this._isAnimated = !!this.rd?.effectsSequence.length
+    this._isAnimated = this.rd.effectsSequence.length > 0
   }
 
   processPath(path: ShapePath, round: number) {
     const clonedPath = newElement<ShapePath>()
+
     clonedPath.c = path.c
     const len = path._length
     let currentV,
@@ -47,6 +46,7 @@ export default class RoundCornersModifier extends ShapeModifier {
       oY,
       iX,
       iY
+
     for (let i = 0; i < len; i++) {
       currentV = path.v[i]
       currentO = path.o[i]
@@ -77,10 +77,8 @@ export default class RoundCornersModifier extends ShapeModifier {
           } else {
             closerV = path.v[i - 1]
           }
-          distance = Math.sqrt(
-            Math.pow(currentV[0] - closerV[0], 2) +
-              Math.pow(currentV[1] - closerV[1], 2)
-          )
+          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
+              Math.pow(currentV[1] - closerV[1], 2))
           newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
           iX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
           vX = iX
@@ -88,7 +86,9 @@ export default class RoundCornersModifier extends ShapeModifier {
           vY = iY
           oX = vX - (vX - currentV[0]) * roundCorner
           oY = vY - (vY - currentV[1]) * roundCorner
-          clonedPath.setTripleAt(vX, vY, oX, oY, iX, iY, index)
+          clonedPath.setTripleAt(
+            vX, vY, oX, oY, iX, iY, index
+          )
           index++
 
           if (i === len - 1) {
@@ -96,10 +96,8 @@ export default class RoundCornersModifier extends ShapeModifier {
           } else {
             closerV = path.v[i + 1]
           }
-          distance = Math.sqrt(
-            Math.pow(currentV[0] - closerV[0], 2) +
-              Math.pow(currentV[1] - closerV[1], 2)
-          )
+          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
+              Math.pow(currentV[1] - closerV[1], 2))
           newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
           oX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
           vX = oX
@@ -107,7 +105,9 @@ export default class RoundCornersModifier extends ShapeModifier {
           vY = oY
           iX = vX - (vX - currentV[0]) * roundCorner
           iY = vY - (vY - currentV[1]) * roundCorner
-          clonedPath.setTripleAt(vX, vY, oX, oY, iX, iY, index)
+          clonedPath.setTripleAt(
+            vX, vY, oX, oY, iX, iY, index
+          )
           index++
         }
       } else {
@@ -123,33 +123,40 @@ export default class RoundCornersModifier extends ShapeModifier {
         index++
       }
     }
+
     return clonedPath
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes || [],
+    const { length } = this.shapes,
       rd = this.rd?.v
 
     if (rd !== 0) {
       let shapeData, shapePaths, localShapeCollection
+
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i] as unknown as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape!._mdf = true
-          shapePaths = shapeData.shape?.paths?.shapes || []
+          if (shapeData.shape) {
+            shapeData.shape._mdf = true
+          }
+
+          shapePaths = shapeData.shape?.paths?.shapes ?? []
           const jLen = shapeData.shape?.paths?._length || 0
+
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(
-              this.processPath(shapePaths![j], rd as number)
-            )
+            localShapeCollection?.addShape(this.processPath(shapePaths[j], rd as number))
           }
         }
-        shapeData.shape!.paths = shapeData.localShapeCollection
+        if (shapeData.shape) {
+          shapeData.shape.paths = shapeData.localShapeCollection
+        }
+
       }
     }
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this._mdf = false
     }
   }

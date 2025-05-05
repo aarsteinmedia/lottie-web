@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 
 import FrameElement from '@/elements/helpers/FrameElement'
+
 export default class RenderableElement extends FrameElement {
   hidden?: boolean
   isInRange?: boolean
@@ -12,7 +13,7 @@ export default class RenderableElement extends FrameElement {
   private renderableComponents: RenderableComponent[] = []
 
   addRenderableComponent(component: RenderableComponent) {
-    if (this.renderableComponents.indexOf(component) === -1) {
+    if (!this.renderableComponents.includes(component)) {
       this.renderableComponents.push(component)
     }
   }
@@ -39,25 +40,22 @@ export default class RenderableElement extends FrameElement {
   }
 
   checkLayers(_val?: number) {
-    throw new Error(
-      `${this.constructor.name}: Method checkLayers is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
   }
 
   checkTransparency() {
     if (!this.finalTransform) {
-      throw new Error(
-        `${this.constructor.name}: finalTransform is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: finalTransform is not implemented`)
     }
     if (Number(this.finalTransform.mProp.o?.v) <= 0) {
       if (
         !this.isTransparent &&
-        (this.globalData?.renderConfig as SVGRendererConfig)?.hideOnTransparent
+        (this.globalData?.renderConfig as SVGRendererConfig).hideOnTransparent
       ) {
         this.isTransparent = true
         this.hide()
       }
+
       return
     }
 
@@ -69,9 +67,7 @@ export default class RenderableElement extends FrameElement {
 
   getLayerSize() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     if (this.data.ty === 5) {
       return {
@@ -79,7 +75,11 @@ export default class RenderableElement extends FrameElement {
         w: Number(this.data.textData?.width),
       }
     }
-    return { h: Number(this.data.height), w: Number(this.data.width) }
+
+    return {
+      h: Number(this.data.height),
+      w: Number(this.data.width)
+    }
   }
 
   hide() {
@@ -100,15 +100,14 @@ export default class RenderableElement extends FrameElement {
     this.checkLayerLimits(num)
   }
   removeRenderableComponent(component: RenderableComponent) {
-    if (this.renderableComponents.indexOf(component) !== -1) {
-      this.renderableComponents.splice(
-        this.renderableComponents.indexOf(component),
-        1
-      )
+    if (this.renderableComponents.includes(component)) {
+      this.renderableComponents.splice(this.renderableComponents.indexOf(component),
+        1)
     }
   }
   renderRenderable() {
     const { length } = this.renderableComponents
+
     for (let i = 0; i < length; i++) {
       this.renderableComponents[i].renderFrame(Number(this._isFirstFrame))
     }

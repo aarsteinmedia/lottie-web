@@ -1,13 +1,13 @@
 import type SVGEffects from '@/elements/svg/SVGEffects'
-import type { ElementInterfaceIntersect, Transformer, Vector3 } from '@/types'
+import type {
+  ElementInterfaceIntersect, Transformer, Vector3
+} from '@/types'
 
 import BaseElement from '@/elements/BaseElement'
 import Matrix from '@/utils/Matrix'
 import TransformProperty from '@/utils/TransformProperty'
 
-export const effectTypes = {
-  TRANSFORM_EFFECT: 'transformEffect',
-}
+export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect', }
 
 export default class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
@@ -19,35 +19,44 @@ export default class TransformElement extends BaseElement {
   globalToLocal(point: Vector3) {
     let pt = point
     const transforms = []
+
     transforms.push(this.finalTransform)
-    let flag = true,
-      comp = this.comp
-    while (flag) {
+    let shouldTransform = true,
+      { comp } = this
+
+    while (shouldTransform) {
       if (comp?.finalTransform) {
         if (comp.data?.hasMask) {
-          transforms.splice(0, 0, comp.finalTransform)
+          transforms.splice(
+            0, 0, comp.finalTransform
+          )
         }
         comp = comp.comp
       } else {
-        flag = false
+        shouldTransform = false
       }
     }
     const { length } = transforms
     let ptNew
+
     for (let i = 0; i < length; i++) {
-      ptNew = transforms[i]?.mat.applyToPointArray(0, 0, 0)
+      ptNew = transforms[i]?.mat.applyToPointArray(
+        0, 0, 0
+      )
       // ptNew = transforms[i].mat.applyToPointArray(pt[0],pt[1],pt[2]);
-      pt = [pt[0] - Number(ptNew?.[0]), pt[1] - Number(ptNew?.[1]), 0]
+      pt = [pt[0] - Number(ptNew?.[0]),
+        pt[1] - Number(ptNew?.[1]),
+        0]
     }
+
     return pt
   }
   initTransform() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: LottiePlayer is not initialized`
-      )
+      throw new Error(`${this.constructor.name}: LottiePlayer is not initialized`)
     }
     const mat = new Matrix()
+
     this.finalTransform = {
       _localMatMdf: false,
       _matMdf: false,
@@ -57,10 +66,10 @@ export default class TransformElement extends BaseElement {
       mat,
       mProp: this.data.ks
         ? new TransformProperty(
-            this as unknown as ElementInterfaceIntersect,
-            this.data.ks,
-            this as unknown as ElementInterfaceIntersect
-          )
+          this as unknown as ElementInterfaceIntersect,
+          this.data.ks,
+          this as unknown as ElementInterfaceIntersect
+        )
         : ({ o: 0 } as unknown as TransformProperty),
     } as Transformer
     if (this.data.ao) {
@@ -77,40 +86,40 @@ export default class TransformElement extends BaseElement {
       return
     }
     if (!this.finalTransform) {
-      throw new Error(
-        `${this.constructor.name}: finalTransform is not initialized`
-      )
+      throw new Error(`${this.constructor.name}: finalTransform is not initialized`)
     }
     let i = 0
     const { length } = this.localTransforms
-    this.finalTransform._localMatMdf = !!this.finalTransform._matMdf
+
+    this.finalTransform._localMatMdf = Boolean(this.finalTransform._matMdf)
     if (!this.finalTransform._localMatMdf || !this.finalTransform._opMdf) {
       while (i < length) {
         if (this.localTransforms[i]._mdf) {
           this.finalTransform._localMatMdf = true
         }
         if (this.localTransforms[i]._opMdf && !this.finalTransform._opMdf) {
-          this.finalTransform.localOpacity = Number(
-            this.finalTransform.mProp.o?.v
-          )
+          this.finalTransform.localOpacity = Number(this.finalTransform.mProp.o?.v)
           this.finalTransform._opMdf = true
         }
         i++
       }
     }
     if (this.finalTransform._localMatMdf) {
-      const localMat = this.finalTransform.localMat
+      const { localMat, mat } = this.finalTransform
+
       this.localTransforms[0].matrix?.clone(localMat)
       for (i = 1; i < length; i++) {
         const lmat = this.localTransforms[i].matrix
+
         if (lmat) {
           localMat.multiply(lmat)
         }
       }
-      localMat.multiply(this.finalTransform.mat)
+      localMat.multiply(mat)
     }
     if (this.finalTransform._opMdf) {
       let localOp = this.finalTransform.localOpacity
+
       for (i = 0; i < length; i++) {
         localOp *= this.localTransforms[i].opacity * 0.01
       }
@@ -119,21 +128,16 @@ export default class TransformElement extends BaseElement {
   }
   renderTransform() {
     if (!this.finalTransform) {
-      throw new Error(
-        `${this.constructor.name}: finalTransform is not initialized`
-      )
+      throw new Error(`${this.constructor.name}: finalTransform is not initialized`)
     }
-    this.finalTransform._opMdf = !!(
-      this.finalTransform?.mProp.o?._mdf || this._isFirstFrame
-    )
-    this.finalTransform._matMdf = !!(
-      this.finalTransform?.mProp._mdf || this._isFirstFrame
-    )
+    this.finalTransform._opMdf = Boolean(this.finalTransform.mProp.o?._mdf || this._isFirstFrame)
+    this.finalTransform._matMdf = Boolean(this.finalTransform.mProp._mdf || this._isFirstFrame)
 
     if (this.hierarchy) {
       const finalMat = this.finalTransform.mat
       let i = 0
       const { length } = this.hierarchy
+
       // Checking if any of the transformation matrices in the hierarchy chain has changed.
       if (!this.finalTransform._matMdf) {
         while (i < length) {
@@ -147,10 +151,11 @@ export default class TransformElement extends BaseElement {
 
       if (this.finalTransform._matMdf) {
         const mat = this.finalTransform.mProp.v.props
+
         finalMat.cloneFromProps(mat)
         for (i = 0; i < length; i++) {
           if (this.hierarchy[i].finalTransform?.mProp.v) {
-            finalMat?.multiply(this.hierarchy[i].finalTransform!.mProp.v)
+            finalMat.multiply(this.hierarchy[i].finalTransform.mProp.v)
           }
         }
       }
@@ -166,10 +171,9 @@ export default class TransformElement extends BaseElement {
     if (!this.renderableEffectsManager) {
       return
     }
-    const transformEffects = this.renderableEffectsManager.getEffects(
-      effectTypes.TRANSFORM_EFFECT
-    )
-    if (!transformEffects.length) {
+    const transformEffects = this.renderableEffectsManager.getEffects(effectTypes.TRANSFORM_EFFECT)
+
+    if (transformEffects.length === 0) {
       return
     }
     this.localTransforms = []
@@ -178,6 +182,7 @@ export default class TransformElement extends BaseElement {
     }
 
     const { length } = transformEffects
+
     for (let i = 0; i < length; i++) {
       this.localTransforms.push(transformEffects[i] as unknown as Transformer)
     }

@@ -4,7 +4,6 @@ import type {
   GlobalData,
   LottieAsset,
   LottieLayer,
-  Vector2,
   VectorProperty,
 } from '@/types'
 import type {
@@ -24,7 +23,7 @@ export default class AudioElement extends RenderableElement {
   _volumeMultiplier?: number
   assetData: null | LottieAsset
   audio: Audio
-  lv: MultiDimensionalProperty<Vector2>
+  lv: MultiDimensionalProperty
 
   tm: ValueProperty
 
@@ -36,11 +35,14 @@ export default class AudioElement extends RenderableElement {
     super()
     this.initFrame()
     this.initRenderable()
-    this.assetData = globalData.getAssetData(data.refId) || null
-    this.initBaseData(data, globalData, comp)
+    this.assetData = globalData.getAssetData(data.refId) ?? null
+    this.initBaseData(
+      data, globalData, comp
+    )
     this._isPlaying = false
     this._canPlay = false
     const assetPath = this.globalData?.getAssetsPath(this.assetData)
+
     this.audio = this.globalData?.audioController?.createAudio(assetPath)
     this._currentTime = 0
     this.globalData?.audioController?.addAudio(this)
@@ -50,23 +52,23 @@ export default class AudioElement extends RenderableElement {
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.tm as VectorProperty,
-            0,
-            globalData.frameRate,
-            this as unknown as ElementInterfaceIntersect
-          )
+          this as unknown as ElementInterfaceIntersect,
+          data.tm as VectorProperty,
+          0,
+          globalData.frameRate,
+          this as unknown as ElementInterfaceIntersect
+        )
         : { _placeholder: true }
     ) as ValueProperty
     this.lv = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
-      (data.au && data.au.lv ? data.au.lv : { k: [100] }) as VectorProperty<
+      (data.au?.lv ?? { k: [100] }) as VectorProperty<
         number[]
       >,
       1,
       0.01,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector2>
+    ) as MultiDimensionalProperty
   }
 
   getBaseElement(): SVGGElement | null {
@@ -86,9 +88,7 @@ export default class AudioElement extends RenderableElement {
 
   prepareFrame(num: number) {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
     this.prepareRenderableFrame(num, true)
     this.prepareProperties(num, true)
@@ -97,8 +97,9 @@ export default class AudioElement extends RenderableElement {
     } else {
       this._currentTime = this.tm.v
     }
-    this._volume = Number(this.lv?.v[0])
+    this._volume = Number(this.lv.v[0])
     const totalVolume = this._volume * Number(this._volumeMultiplier)
+
     if (this._previousVolume !== totalVolume) {
       this._previousVolume = totalVolume
       this.audio.volume(totalVolume)
@@ -113,15 +114,14 @@ export default class AudioElement extends RenderableElement {
       this.audio.play()
       this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
       this._isPlaying = true
+
       return
     }
 
     if (
       !this.audio.playing() ||
-      Math.abs(
-        this._currentTime / Number(this.globalData?.frameRate) -
-          this.audio.seek()
-      ) > 0.1
+      Math.abs(this._currentTime / Number(this.globalData?.frameRate) -
+          this.audio.seek()) > 0.1
     ) {
       this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }
@@ -132,9 +132,7 @@ export default class AudioElement extends RenderableElement {
   }
 
   setMatte(_id: string) {
-    throw new Error(
-      `${this.constructor.name}: Method setMatte is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
   setRate(rateValue: number) {
     this.audio.rate(rateValue)

@@ -13,9 +13,9 @@ import {
   ValueProperty,
 } from '@/utils/Properties'
 
-function getProp(
+function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
-  dataFromProps?: VectorProperty<number | number[]>,
+  dataFromProps?: VectorProperty<T>,
   type?: number,
   mult?: null | number,
   container?: ElementInterfaceIntersect

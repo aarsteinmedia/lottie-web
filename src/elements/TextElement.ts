@@ -10,7 +10,7 @@ import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import { RendererType } from '@/enums'
+import { RendererType, ShapeType } from '@/enums'
 import { buildShapeString } from '@/utils'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
@@ -39,41 +39,45 @@ export default class TextElement extends RenderableDOMElement {
         0
       )
     }
-    matrixHelper.translate(0, -Number(documentData.ls), 0)
+    matrixHelper.translate(
+      0, -Number(documentData.ls), 0
+    )
     switch (documentData.j) {
-      case 1:
+      case 1: {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
             (Number(documentData.boxWidth) -
-              Number(documentData.lineWidths?.[lineNumber])),
+              Number(documentData.lineWidths[lineNumber])),
           0,
           0
         )
         break
-      case 2:
+      }
+      case 2: {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
             (Number(documentData.boxWidth) -
-              Number(documentData.lineWidths?.[lineNumber])) /
+              Number(documentData.lineWidths[lineNumber])) /
               2,
           0,
           0
         )
         break
-      default:
+      }
+      case undefined:
+      default: {
         break
+      }
     }
-    matrixHelper.translate(xPos, yPos, 0)
+    matrixHelper.translate(
+      xPos, yPos, 0
+    )
   }
   buildColor(colorData: Vector3) {
-    return `rgb(${Math.round(colorData[0] * 255)},${Math.round(
-      colorData[1] * 255
-    )},${Math.round(colorData[2] * 255)})`
+    return `rgb(${Math.round(colorData[0] * 255)},${Math.round(colorData[1] * 255)},${Math.round(colorData[2] * 255)})`
   }
   buildNewText() {
-    throw new Error(
-      `${this.constructor.name}: Method buildNewText it not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildNewText it not implemented`)
   }
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
@@ -83,11 +87,12 @@ export default class TextElement extends RenderableDOMElement {
     let pathNodes: ShapePath,
       shapeStr = ''
     const { length } = shapes
+
     for (let i = 0; i < length; i++) {
-      if (shapes[i].ty !== 'sh' || !shapes[i].ks?.k) {
+      if (shapes[i].ty !== ShapeType.Path || !shapes[i].ks?.k) {
         continue
       }
-      pathNodes = shapes[i].ks!.k as ShapePath
+      pathNodes = shapes[i].ks?.k as ShapePath
       shapeStr += buildShapeString(
         pathNodes,
         pathNodes.i.length,
@@ -95,6 +100,7 @@ export default class TextElement extends RenderableDOMElement {
         matrixHelper
       )
     }
+
     return shapeStr
   }
 
@@ -104,18 +110,16 @@ export default class TextElement extends RenderableDOMElement {
     comp: ElementInterfaceIntersect
   ) {
     if (!data.t) {
-      throw new Error(
-        `${this.constructor.name}: data.t (LottieLayer -> TextData) can't be undefined`
-      )
+      throw new Error(`${this.constructor.name}: data.t (LottieLayer -> TextData) can't be undefined`)
     }
     this.emptyProp = new LetterProps()
     this.lettersChangedFlag = true
     this.initFrame()
-    this.initBaseData(data, globalData, comp)
-    this.textProperty = new TextProperty(
-      this as unknown as ElementInterfaceIntersect,
-      data.t
+    this.initBaseData(
+      data, globalData, comp
     )
+    this.textProperty = new TextProperty(this as unknown as ElementInterfaceIntersect,
+      data.t)
     this.textAnimator = new TextAnimatorProperty(
       data.t,
       this.renderType || RendererType.SVG,
@@ -129,7 +133,7 @@ export default class TextElement extends RenderableDOMElement {
     this.createRenderableComponents()
     this.createContent()
     this.hide()
-    this.textAnimator.searchProperties(this.dynamicProperties || [])
+    this.textAnimator.searchProperties(this.dynamicProperties)
   }
 
   override prepareFrame(num: number) {
@@ -147,10 +151,11 @@ export default class TextElement extends RenderableDOMElement {
   }
 
   validateText() {
-    if (this.textProperty?._mdf || this?.textProperty?._isFirstFrame) {
-      this.buildNewText()
-      this.textProperty._isFirstFrame = false
-      this.textProperty._mdf = false
+    if (!this.textProperty?._mdf && !this.textProperty?._isFirstFrame) {
+      return
     }
+    this.buildNewText()
+    this.textProperty._isFirstFrame = false
+    this.textProperty._mdf = false
   }
 }

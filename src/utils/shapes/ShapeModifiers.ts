@@ -1,10 +1,9 @@
+import type { ElementInterfaceIntersect } from '@/types'
 import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
 import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
 import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
-
-import { ElementInterfaceIntersect } from '@/types'
 
 export type ShapeModifierInterface =
   | TrimModifier
@@ -20,18 +19,21 @@ type Modifier =
   | typeof ZigZagModifier
   | typeof OffsetPathModifier
 
+const Modifiers: { [key: string]: Modifier | undefined } = {}
+
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function getModifier<T extends ShapeModifierInterface>(
   nm: string,
   _elem?: ElementInterfaceIntersect,
   _data?: unknown
 ) {
+  if (!Modifiers[nm]) {
+    throw new Error('Invalid modifier')
+  }
+
   return new Modifiers[nm]() as T
 }
 
 export function registerModifier(nm: string, factory: Modifier) {
-  if (!Modifiers[nm]) {
-    Modifiers[nm] = factory
-  }
+  Modifiers[nm] = Modifiers[nm] ?? factory
 }
-
-const Modifiers: { [key: string]: Modifier } = {}

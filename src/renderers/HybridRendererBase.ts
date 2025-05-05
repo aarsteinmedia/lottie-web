@@ -20,7 +20,9 @@ import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import { RendererType } from '@/enums'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { createNS, createTag, styleDiv } from '@/utils'
+import {
+  createNS, createTag, styleDiv
+} from '@/utils'
 
 export default class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement
@@ -38,12 +40,12 @@ export default class HybridRendererBase extends BaseRenderer {
     this.layers = null as unknown as LottieLayer[]
     this.renderedFrame = -1
     this.renderConfig = {
-      className: (config && config.className) || '',
+      className: config && config.className || '',
       filterSize: {
-        height: config?.filterSize?.height || '400%',
-        width: config?.filterSize?.width || '400%',
-        x: config?.filterSize?.x || '-100%',
-        y: config?.filterSize?.y || '-100%',
+        height: config?.filterSize.height || '400%',
+        width: config?.filterSize.width || '400%',
+        x: config?.filterSize.x || '-100%',
+        y: config?.filterSize.y || '-100%',
       },
       hideOnTransparent: !(config && config.hideOnTransparent === false),
       imagePreserveAspectRatio:
@@ -62,7 +64,10 @@ export default class HybridRendererBase extends BaseRenderer {
     this.supports3d = true
     this.rendererType = RendererType.HTML
 
-    const { buildItem, createNull, renderFrame } = SVGRenderer.prototype
+    const {
+      buildItem, createNull, renderFrame
+    } = SVGRenderer.prototype
+
     this.buildItem = buildItem
     this.createNull = createNull
     this.renderFrame = renderFrame
@@ -71,10 +76,12 @@ export default class HybridRendererBase extends BaseRenderer {
   addTo3dContainer(elem: SVGElement, pos: number) {
     let i = 0
     const len = this.threeDElements.length
+
     while (i < len) {
       if (pos <= this.threeDElements[i].endPos) {
         let j = this.threeDElements[i].startPos,
           nextElement
+
         while (j < pos) {
           nextElement = this.elements[j]?.getBaseElement?.()
           j++
@@ -92,29 +99,32 @@ export default class HybridRendererBase extends BaseRenderer {
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
     const newDOMElement = element.getBaseElement()
+
     if (!newDOMElement) {
       return
     }
     const layer = this.layers[pos]
+
     if (!layer.ddd || !this.supports3d) {
-      if (this.threeDElements) {
+      if (this.threeDElements.length > 0) {
         this.addTo3dContainer(newDOMElement, pos)
       } else {
         let i = 0
         let nextDOMElement
         let nextLayer
         let tmpDOMElement
+
         while (i < pos) {
           if (
             this.elements[i] !==
               (true as unknown as ElementInterfaceIntersect) &&
-            !!this.elements[i]?.getBaseElement
+            Boolean(this.elements[i]?.getBaseElement)
           ) {
             nextLayer = this.elements[i]
             tmpDOMElement = this.layers[i].ddd
               ? this.getThreeDContainerByPos(i)
               : nextLayer.getBaseElement()
-            nextDOMElement = tmpDOMElement || nextDOMElement
+            nextDOMElement = tmpDOMElement ?? nextDOMElement
           }
           i++
         }
@@ -135,6 +145,7 @@ export default class HybridRendererBase extends BaseRenderer {
     const { length } = this.layers
     let lastThreeDContainerData
     let currentContainer = ''
+
     for (let i = 0; i < length; i++) {
       if (this.layers[i].ddd && this.layers[i].ty !== 3) {
         if (currentContainer !== '3d') {
@@ -144,10 +155,8 @@ export default class HybridRendererBase extends BaseRenderer {
         if (!lastThreeDContainerData) {
           continue
         }
-        lastThreeDContainerData.endPos = Math.max(
-          lastThreeDContainerData.endPos,
-          i
-        )
+        lastThreeDContainerData.endPos = Math.max(lastThreeDContainerData.endPos,
+          i)
       } else {
         if (currentContainer !== '2d') {
           currentContainer = '2d'
@@ -156,38 +165,37 @@ export default class HybridRendererBase extends BaseRenderer {
         if (!lastThreeDContainerData) {
           continue
         }
-        lastThreeDContainerData.endPos = Math.max(
-          lastThreeDContainerData.endPos,
-          i
-        )
+        lastThreeDContainerData.endPos = Math.max(lastThreeDContainerData.endPos,
+          i)
       }
     }
     const { length: len } = this.threeDElements
+
     for (let i = len - 1; i >= 0; i--) {
       this.resizerElem?.appendChild(this.threeDElements[i].perspectiveElem)
     }
   }
 
   override checkPendingElements() {
-    while (this.pendingElements.length) {
+    while (this.pendingElements.length > 0) {
       const element = this.pendingElements.pop()
+
       element?.checkParenting()
     }
   }
 
   configAnimation(animData: AnimationData) {
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
 
     const resizerElem = createTag<HTMLDivElement>('div'),
-      wrapper = this.animationItem.wrapper,
-      style = resizerElem.style
+      { wrapper } = this.animationItem,
+      { style } = resizerElem
+
     style.width = `${animData.w}px`
     style.height = `${animData.h}px`
     this.resizerElem = resizerElem
@@ -200,11 +208,13 @@ export default class HybridRendererBase extends BaseRenderer {
 
     style.overflow = 'hidden'
     const svg = createNS<SVGSVGElement>('svg')
+
     svg.setAttribute('width', '1')
     svg.setAttribute('height', '1')
     styleDiv(svg)
     this.resizerElem.appendChild(svg)
     const defs = createNS<SVGDefsElement>('defs')
+
     svg.appendChild(defs)
     this.data = animData as unknown as LottieLayer
     // Mask animation
@@ -225,6 +235,7 @@ export default class HybridRendererBase extends BaseRenderer {
       this.globalData,
       this as unknown as ElementInterfaceIntersect
     )
+
     return this.camera
   }
 
@@ -239,6 +250,7 @@ export default class HybridRendererBase extends BaseRenderer {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HImageElement(
       data,
       this.globalData,
@@ -257,6 +269,7 @@ export default class HybridRendererBase extends BaseRenderer {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HShapeElement(
       data,
       this.globalData,
@@ -275,6 +288,7 @@ export default class HybridRendererBase extends BaseRenderer {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HSolidElement(
       data,
       this.globalData,
@@ -293,6 +307,7 @@ export default class HybridRendererBase extends BaseRenderer {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HTextElement(
       data,
       this.globalData,
@@ -304,17 +319,21 @@ export default class HybridRendererBase extends BaseRenderer {
     const perspectiveElem = createTag<HTMLDivElement>('div')
     let style
     let containerStyle
+
     styleDiv(perspectiveElem)
     const container = createTag('div')
+
     styleDiv(container)
     if (type === '3d') {
       style = perspectiveElem.style
       style.width = `${this.globalData?.compSize?.w}px`
       style.height = `${this.globalData?.compSize?.h}px`
       const center = '50% 50%'
+
       style.transformOrigin = center
       containerStyle = container.style
       const matrix = 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)'
+
       containerStyle.transform = matrix
     }
 
@@ -327,7 +346,9 @@ export default class HybridRendererBase extends BaseRenderer {
       startPos: pos,
       type,
     }
+
     this.threeDElements.push(threeDContainerData)
+
     return threeDContainerData
   }
 
@@ -336,19 +357,18 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.animationItem) {
-      throw new Error(
-        `${this.constructor.name}: animationItem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
 
-    if (this.animationItem?.wrapper) {
+    if (this.animationItem.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
     this.animationItem.container = null as any
     this.globalData.defs = null as unknown as SVGDefsElement
-    const { length } = this.layers || []
+    const { length } = this.layers
+
     for (let i = 0; i < length; i++) {
-      this.elements[i].destroy?.()
+      this.elements[i].destroy()
     }
     this.elements.length = 0
     this.destroyed = true
@@ -358,6 +378,7 @@ export default class HybridRendererBase extends BaseRenderer {
   getThreeDContainerByPos(pos: number) {
     let i = 0
     const len = this.threeDElements.length
+
     while (i < len) {
       if (
         this.threeDElements[i].startPos <= pos &&
@@ -367,14 +388,13 @@ export default class HybridRendererBase extends BaseRenderer {
       }
       i++
     }
+
     return null
   }
 
   hide() {
     if (!this.resizerElem) {
-      throw new Error(
-        `${this.constructor.name}: resizerElem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: resizerElem is not implemented`)
     }
     this.resizerElem.style.display = 'none'
   }
@@ -385,34 +405,31 @@ export default class HybridRendererBase extends BaseRenderer {
       this.camera.setup()
     } else {
       if (!this.globalData?.compSize) {
-        throw new Error(
-          `${this.constructor.name}: globalData->compSize is not implemented`
-        )
+        throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
       }
       const cWidth = this.globalData.compSize.w
       const cHeight = this.globalData.compSize.h
       const { length } = this.threeDElements
+
       for (let i = 0; i < length; i++) {
-        const style = this.threeDElements[i].perspectiveElem.style
+        const { style } = this.threeDElements[i].perspectiveElem
+
         style.perspective = `${Math.sqrt(Math.pow(cWidth, 2) + Math.pow(cHeight, 2))}px`
       }
     }
   }
 
   renderFrame(_num: number | null) {
-    throw new Error(
-      `${this.constructor.name}: Method renderFrame is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method renderFrame is not implemented`)
   }
 
   override searchExtraCompositions(assets: LottieLayer[]) {
     if (!this.globalData?.comp) {
-      throw new Error(
-        `${this.constructor.name}: globalData->comp is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: globalData->comp is not implemented`)
     }
     const { length } = assets,
       floatingContainer = createTag<HTMLDivElement>('div')
+
     for (let i = 0; i < length; i++) {
       if (assets[i].xt) {
         const comp = this.createComp(
@@ -421,31 +438,26 @@ export default class HybridRendererBase extends BaseRenderer {
           this.globalData.comp,
           null
         )
+
         comp.initExpressions()
-        this.globalData?.projectInterface.registerComposition(comp)
+        this.globalData.projectInterface.registerComposition(comp)
       }
     }
   }
 
   show() {
     if (!this.resizerElem) {
-      throw new Error(
-        `${this.constructor.name}: resizerElem is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: resizerElem is not implemented`)
     }
     this.resizerElem.style.display = 'block'
   }
 
   updateContainerSize() {
     if (!this.globalData?.compSize) {
-      throw new Error(
-        `${this.constructor.name}: compSize is not implemented in globalData`
-      )
+      throw new Error(`${this.constructor.name}: compSize is not implemented in globalData`)
     }
     if (!this.animationItem?.wrapper) {
-      throw new Error(
-        `${this.constructor.name}: wrapper is not implemented in animationItem`
-      )
+      throw new Error(`${this.constructor.name}: wrapper is not implemented in animationItem`)
     }
     const elementWidth = this.animationItem.wrapper.offsetWidth
     const elementHeight = this.animationItem.wrapper.offsetHeight
@@ -455,6 +467,7 @@ export default class HybridRendererBase extends BaseRenderer {
     let sy
     let tx
     let ty
+
     if (animationRel > elementRel) {
       sx = elementWidth / this.globalData.compSize.w
       sy = elementWidth / this.globalData.compSize.w
@@ -476,6 +489,7 @@ export default class HybridRendererBase extends BaseRenderer {
     }
     if (this.resizerElem) {
       const { style } = this.resizerElem
+
       style.transform = `matrix3d(${sx},0,0,0,0,${sy},0,0,0,0,1,0,${tx},${
         ty
       },0,1)`

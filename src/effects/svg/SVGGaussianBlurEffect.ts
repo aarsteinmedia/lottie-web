@@ -20,6 +20,7 @@ export default class SVGGaussianBlurEffect {
 
     this.filterManager = filterManager
     const feGaussianBlur = createNS<SVGFEGaussianBlurElement>('feGaussianBlur')
+
     feGaussianBlur.setAttribute('result', id)
     filter.appendChild(feGaussianBlur)
     this.feGaussianBlur = feGaussianBlur
@@ -27,8 +28,8 @@ export default class SVGGaussianBlurEffect {
 
   renderFrame(forceRender?: boolean) {
     if (
-      (!forceRender && !this.filterManager._mdf) ||
-      !this.filterManager.effectElements
+      !forceRender && !this.filterManager._mdf
+      // !this.filterManager.effectElements
     ) {
       return
     }
@@ -42,7 +43,9 @@ export default class SVGGaussianBlurEffect {
       //   1 -> horizontal & vertical
       //   2 -> horizontal only
       //   3 -> vertical only
-      //
+      /**
+       *
+       */
       dimensions = Number(this.filterManager.effectElements[1].p.v),
       sigmaX = dimensions === 3 ? 0 : sigma,
       sigmaY = dimensions === 2 ? 0 : sigma
@@ -57,6 +60,7 @@ export default class SVGGaussianBlurEffect {
       Number(this.filterManager.effectElements[2].p.v) === 1
         ? 'wrap'
         : 'duplicate'
+
     this.feGaussianBlur.setAttribute('edgeMode', edgeMode)
   }
 }

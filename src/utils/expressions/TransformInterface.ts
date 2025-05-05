@@ -3,7 +3,7 @@ import type TransformProperty from '@/utils/TransformProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 
-import { MultiDimensionalProperty, ValueProperty } from '../Properties'
+import type { MultiDimensionalProperty, ValueProperty } from '../Properties'
 
 export default class TransformExpressionInterface {
   transform: TransformProperty
@@ -20,10 +20,16 @@ export default class TransformExpressionInterface {
     if (this.transform.p) {
       return this._transformFactory()
     }
-    return [this._px(), this._py(), this._pz()]
+
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    return [this._px(),
+      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+      this._py(),
+      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+      this._pz()]
   }
   get rotation() {
-    return ExpressionPropertyInterface(this.transform.r || this.transform.rz)
+    return ExpressionPropertyInterface(this.transform.r ?? this.transform.rz)
   }
   get scale() {
     return ExpressionPropertyInterface(this.transform.s)
@@ -54,16 +60,14 @@ export default class TransformExpressionInterface {
     return ExpressionPropertyInterface(this.transform.pz)
   }
   get zRotation() {
-    return ExpressionPropertyInterface(this.transform.rz || this.transform.r)
+    return ExpressionPropertyInterface(this.transform.rz ?? this.transform.r)
   }
   constructor(transform: TransformProperty) {
     this.transform = transform
 
     // TODO:
     if (this.transform.p) {
-      this._transformFactory = ExpressionPropertyInterface(
-        this.transform.p
-      ) as any
+      this._transformFactory = ExpressionPropertyInterface(this.transform.p) as any
     } else {
       this._px = ExpressionPropertyInterface(this.transform.px) as any
       this._py = ExpressionPropertyInterface(this.transform.py) as any
@@ -84,9 +88,7 @@ export default class TransformExpressionInterface {
   }
 
   _transformFactory(): ValueProperty | MultiDimensionalProperty<number[]> {
-    throw new Error(
-      `${this.constructor.name}: Method _transformFactory is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method _transformFactory is not implemented`)
   }
 
   getProperty(name: string | number) {
@@ -94,41 +96,52 @@ export default class TransformExpressionInterface {
       case 'scale':
       case 'Scale':
       case 'ADBE Scale':
-      case 6:
+      case 6: {
         return this.scale
+      }
       case 'rotation':
       case 'Rotation':
       case 'ADBE Rotation':
       case 'ADBE Rotate Z':
-      case 10:
+      case 10: {
         return this.rotation
-      case 'ADBE Rotate X':
+      }
+      case 'ADBE Rotate X': {
         return this.xRotation
-      case 'ADBE Rotate Y':
+      }
+      case 'ADBE Rotate Y': {
         return this.yRotation
+      }
       case 'position':
       case 'Position':
       case 'ADBE Position':
-      case 2:
+      case 2: {
         return this.position
-      case 'ADBE Position_0':
+      }
+      case 'ADBE Position_0': {
         return this.xPosition
-      case 'ADBE Position_1':
+      }
+      case 'ADBE Position_1': {
         return this.yPosition
-      case 'ADBE Position_2':
+      }
+      case 'ADBE Position_2': {
         return this.zPosition
+      }
       case 'anchorPoint':
       case 'AnchorPoint':
       case 'Anchor Point':
       case 'ADBE AnchorPoint':
-      case 1:
+      case 1: {
         return this.anchorPoint
+      }
       case 'opacity':
       case 'Opacity':
-      case 11:
+      case 11: {
         return this.opacity
-      default:
+      }
+      default: {
         return null
+      }
     }
   }
 }

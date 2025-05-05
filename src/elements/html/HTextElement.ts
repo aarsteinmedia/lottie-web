@@ -7,8 +7,12 @@ import type {
 } from '@/types'
 
 import TextElement from '@/elements/TextElement'
-import { lineCapEnum, lineJoinEnum, RendererType } from '@/enums'
-import { createNS, createTag, styleDiv } from '@/utils'
+import {
+  lineCapEnum, lineJoinEnum, RendererType
+} from '@/enums'
+import {
+  createNS, createTag, styleDiv
+} from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class HTextElement extends TextElement {
@@ -47,16 +51,20 @@ export default class HTextElement extends TextElement {
     }
     this.renderType = RendererType.SVG
     this.isMasked = false
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
 
   override buildNewText() {
     const documentData = this.textProperty?.currentData
+
     this.renderedLetters = createSizedArray(documentData?.l.length || 0)
     const innerElemStyle = this.innerElem?.style,
       textColor = documentData?.fc
         ? this.buildColor(documentData.fc as Vector3)
         : 'rgba(0,0,0,0)'
+
     if (innerElemStyle) {
       innerElemStyle.fill = textColor
       innerElemStyle.color = textColor
@@ -67,9 +75,8 @@ export default class HTextElement extends TextElement {
       }
     }
 
-    const fontData = this.globalData?.fontManager?.getFontByName(
-      documentData?.f
-    )
+    const fontData = this.globalData?.fontManager?.getFontByName(documentData?.f)
+
     if (innerElemStyle && !this.globalData?.fontManager?.chars) {
       innerElemStyle.fontSize = `${documentData?.finalSize || 0}px`
       innerElemStyle.lineHeight = `${documentData?.finalSize || 0}px`
@@ -81,8 +88,9 @@ export default class HTextElement extends TextElement {
         }
 
         if (documentData) {
-          const fWeight = documentData.fWeight
-          const fStyle = documentData.fStyle
+          const { fWeight } = documentData
+          const { fStyle } = documentData
+
           innerElemStyle.fontStyle = fStyle
           innerElemStyle.fontWeight = fWeight
         }
@@ -98,6 +106,7 @@ export default class HTextElement extends TextElement {
       shapeStr = '',
       cnt = 0
     const { length } = letters
+
     for (let i = 0; i < length; i++) {
       if (this.globalData?.fontManager?.chars) {
         if (this.textPaths[cnt]) {
@@ -140,18 +149,17 @@ export default class HTextElement extends TextElement {
           this.globalData.fontManager.getFontByName(documentData?.f).fFamily
         )
         let shapeData
+
         if (charData) {
           shapeData = charData.data
         } else {
           shapeData = null
         }
         matrixHelper.reset()
-        if (shapeData && shapeData.shapes && shapeData.shapes.length) {
+        if (shapeData && shapeData.shapes && shapeData.shapes.length > 0) {
           shapes = shapeData.shapes[0].it || []
-          matrixHelper.scale(
-            (documentData?.finalSize || 0) / 100,
-            (documentData?.finalSize || 0) / 100
-          )
+          matrixHelper.scale((documentData?.finalSize || 0) / 100,
+            (documentData?.finalSize || 0) / 100)
           shapeStr = this.createPathShape(matrixHelper, shapes)
           tSpan.setAttribute('d', shapeStr)
         }
@@ -163,18 +171,18 @@ export default class HTextElement extends TextElement {
             // document.body.appendChild is needed to get exact measure of shape
             document.body.appendChild(tCont)
             const boundingBox = (tCont as SVGSVGElement).getBBox()
+
             tCont.setAttribute('width', `${boundingBox.width + 2}`)
             tCont.setAttribute('height', `${boundingBox.height + 2}`)
-            tCont.setAttribute(
-              'viewBox',
+            tCont.setAttribute('viewBox',
               `${boundingBox.x - 1} ${boundingBox.y - 1} ${
                 boundingBox.width + 2
-              } ${boundingBox.height + 2}`
-            )
+              } ${boundingBox.height + 2}`)
             const tContStyle = tCont.style
             const tContTranslation = `translate(${boundingBox.x - 1}px,${
               boundingBox.y - 1
             }px)`
+
             tContStyle.transform = tContTranslation
 
             letters[i].yOffset = boundingBox.y - 1
@@ -200,6 +208,7 @@ export default class HTextElement extends TextElement {
 
           const tStyle = tSpan.style,
             tSpanTranslation = `translate3d(0,${-(documentData?.finalSize || 0) / 1.2}px,0)`
+
           tStyle.transform = tSpanTranslation
         }
       }
@@ -228,6 +237,7 @@ export default class HTextElement extends TextElement {
       this.svgElement?.setAttribute('width', `${this.compW}`)
       this.svgElement?.setAttribute('height', `${this.compH}`)
       const g = createNS<SVGGElement>('g')
+
       this.maskedElement?.appendChild(g)
       this.innerElem = g
     } else {
@@ -240,18 +250,17 @@ export default class HTextElement extends TextElement {
   override renderInnerContent() {
     this.validateText()
     let svgStyle
+
     if (this.data?.singleShape) {
       if (!this._isFirstFrame && !this.lettersChangedFlag) {
         return
       }
       if (this.isMasked && this.finalTransform?._matMdf) {
         // Todo Benchmark if using this is better than getBBox
-        this.svgElement?.setAttribute(
-          'viewBox',
+        this.svgElement?.setAttribute('viewBox',
           `${-(this.finalTransform?.mProp.p?.v as any[])[0]} ${-(
             this.finalTransform.mProp.p?.v as any[]
-          )[1].v[1]} ${this.compW} ${this.compH}`
-        )
+          )[1].v[1]} ${this.compW} ${this.compH}`)
         svgStyle = this.svgElement?.style
         const translation = `translate(${-(this.finalTransform.mProp.p as any)
           ?.v[0]}px,${-(this.finalTransform.mProp.p as any)?.v[1]}px)`
@@ -262,10 +271,8 @@ export default class HTextElement extends TextElement {
       }
     }
 
-    this.textAnimator?.getMeasures(
-      this.textProperty?.currentData as DocumentData,
-      this.lettersChangedFlag
-    )
+    this.textAnimator?.getMeasures(this.textProperty?.currentData as DocumentData,
+      this.lettersChangedFlag)
     if (!this.lettersChangedFlag && !this.textAnimator?.lettersChangedFlag) {
       return
     }
@@ -277,6 +284,7 @@ export default class HTextElement extends TextElement {
     let renderedLetter
     let textSpan
     let textPath
+
     for (let i = 0; i < length; i++) {
       if (letters[i].n) {
         count++
@@ -324,6 +332,7 @@ export default class HTextElement extends TextElement {
       }
 
       const margin = 1
+
       if (
         this.currentBBox &&
         (this.currentBBox?.w !== boundingBox.width + margin * 2 ||
@@ -336,17 +345,16 @@ export default class HTextElement extends TextElement {
         this.currentBBox.x = boundingBox.x - margin
         this.currentBBox.y = boundingBox.y - margin
 
-        this.svgElement?.setAttribute(
-          'viewBox',
+        this.svgElement?.setAttribute('viewBox',
           `${this.currentBBox.x} ${this.currentBBox.y} ${this.currentBBox.w} ${
             this.currentBBox.h
-          }`
-        )
+          }`)
         if (this.svgElement) {
           svgStyle = this.svgElement.style
           const svgTransform = `translate(${this.currentBBox.x}px,${
             this.currentBBox.y
           }px)`
+
           svgStyle.transform = svgTransform
         }
       }

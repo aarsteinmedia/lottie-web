@@ -25,7 +25,9 @@ export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData
     data: Shape,
     styleData: SVGStyleData
   ) {
-    super(elem, data, styleData)
+    super(
+      elem, data, styleData
+    )
     this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
     this.getValue = this.iterateDynamicProperties
     this.w = PropertyFactory.getProp(
@@ -41,7 +43,9 @@ export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData
       RendererType.SVG,
       this as unknown as ElementInterfaceIntersect
     ) // TODO
-    this.initGradientData(elem, data, styleData)
-    this._isAnimated = !!this._isAnimated
+    this.initGradientData(
+      elem, data, styleData
+    )
+    this._isAnimated = Boolean(this._isAnimated)
   }
 }

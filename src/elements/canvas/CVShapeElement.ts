@@ -1,4 +1,5 @@
 import type TransformEffect from '@/effects/TransformEffect'
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   CompElementInterface,
@@ -21,9 +22,10 @@ import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
-import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
-import { lineCapEnum, lineJoinEnum, RendererType, ShapeType } from '@/enums'
+import {
+  lineCapEnum, lineJoinEnum, RendererType, ShapeType
+} from '@/enums'
 import { degToRads } from '@/utils'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
@@ -84,11 +86,14 @@ export default class CVShapeElement extends ShapeElement {
     this.setBlendMode = setBlendMode
     this.showElement = showElement
 
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
   }
 
   addTransformToStyleList(transform: Transformer) {
     const { length } = this.stylesList
+
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.push(transform)
@@ -96,19 +101,16 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  clearCanvas(
-    _canvasContext?:
+  clearCanvas(_canvasContext?:
       | CanvasRenderingContext2D
       | OffscreenCanvasRenderingContext2D
-      | null
-  ) {
-    throw new Error(
-      `${this.constructor.name}: Method clearCanvas is not implemented`
-    )
+      | null) {
+    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
 
   closeStyles(styles: CVStyleElement[]) {
     const { length } = styles
+
     for (let i = 0; i < length; i++) {
       styles[i].closed = true
     }
@@ -125,9 +127,7 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   createElements() {
-    throw new Error(
-      `${this.constructor.name}: Method createElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
 
   createGroupElement(_data?: Shape) {
@@ -135,6 +135,7 @@ export default class CVShapeElement extends ShapeElement {
       it: [],
       prevViewData: [],
     }
+
     return elementData
   }
 
@@ -148,6 +149,7 @@ export default class CVShapeElement extends ShapeElement {
 
     this.shapes.push(elementData)
     this.addShapeToModifiers(elementData)
+
     return elementData
   }
 
@@ -173,9 +175,7 @@ export default class CVShapeElement extends ShapeElement {
           this as unknown as ElementInterfaceIntersect
         ) as MultiDimensionalProperty<number[]>
         if (!elementData.c.k) {
-          styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(
-            elementData.c.v[1]
-          )},${Math.floor(elementData.c.v[2])})`
+          styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(elementData.c.v[1])},${Math.floor(elementData.c.v[2])})`
         }
         break
       }
@@ -252,6 +252,7 @@ export default class CVShapeElement extends ShapeElement {
           RendererType.Canvas,
           this as unknown as ElementInterfaceIntersect
         )
+
         elementData.d = d
         if (!elementData.d.k) {
           styleElem.da = elementData.d.dashArray
@@ -263,6 +264,7 @@ export default class CVShapeElement extends ShapeElement {
     }
     this.stylesList.push(styleElem)
     elementData.style = styleElem
+
     return elementData
   }
 
@@ -286,6 +288,7 @@ export default class CVShapeElement extends ShapeElement {
         opacity: 1,
       } as Transformer,
     }
+
     return elementData
   }
 
@@ -309,6 +312,7 @@ export default class CVShapeElement extends ShapeElement {
       { renderer } = this.globalData as { renderer: CanvasRenderer },
       ctx = this.globalData.canvasContext
     let currentStyle
+
     for (let i = 0; i < length; i++) {
       currentStyle = this.stylesList[i]
       const { type } = currentStyle,
@@ -321,7 +325,7 @@ export default class CVShapeElement extends ShapeElement {
       // current opacity equals 0
       // global opacity equals 0
       if (
-        (isStroke && currentStyle.wi === 0) ||
+        isStroke && currentStyle.wi === 0 ||
         !currentStyle.data._shouldRender ||
         currentStyle.coOp === 0 ||
         this.globalData.currentGlobalAlpha === 0
@@ -330,10 +334,9 @@ export default class CVShapeElement extends ShapeElement {
       }
       renderer.save()
       const elems = currentStyle.elements
+
       if (isStroke) {
-        renderer.ctxStrokeStyle(
-          type === ShapeType.Stroke ? currentStyle.co : currentStyle.grd
-        )
+        renderer.ctxStrokeStyle(type === ShapeType.Stroke ? currentStyle.co : currentStyle.grd)
         renderer.ctxLineWidth(currentStyle.wi || 0)
 
         if (currentStyle.lc) {
@@ -346,9 +349,7 @@ export default class CVShapeElement extends ShapeElement {
 
         renderer.ctxMiterLimit(currentStyle.ml || 0)
       } else {
-        renderer.ctxFillStyle(
-          type === ShapeType.Fill ? currentStyle.co : currentStyle.grd
-        )
+        renderer.ctxFillStyle(type === ShapeType.Fill ? currentStyle.co : currentStyle.grd)
         // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
       }
       renderer.ctxOpacity(currentStyle.coOp)
@@ -357,6 +358,7 @@ export default class CVShapeElement extends ShapeElement {
       }
       renderer.ctxTransform(currentStyle.preTransforms.finalTransform.props)
       const { length: jLen } = elems
+
       for (let j = 0; j < jLen; j++) {
         if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
           ctx?.beginPath()
@@ -367,6 +369,7 @@ export default class CVShapeElement extends ShapeElement {
         }
         const nodes = elems[j].trNodes,
           { length: kLen } = nodes
+
         for (let k = 0; k < kLen; k++) {
           if (nodes[k].t === 'm') {
             ctx?.moveTo(nodes[k].p[0], nodes[k].p[1])
@@ -400,26 +403,21 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   exitLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method exitLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
 
   hideElement() {
-    throw new Error(
-      `${this.constructor.name}: Method hideElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
 
   prepareLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method prepareLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
 
   reloadShapes() {
     this._isFirstFrame = true
     const { length } = this.itemsData
+
     for (let i = 0; i < length; i++) {
       this.prevViewData[i] = this.itemsData[i]
     }
@@ -431,6 +429,7 @@ export default class CVShapeElement extends ShapeElement {
       []
     )
     const { length: len } = this.dynamicProperties
+
     for (let i = 0; i < len; i++) {
       this.dynamicProperties[i].getValue()
     }
@@ -440,6 +439,7 @@ export default class CVShapeElement extends ShapeElement {
 
   removeTransformFromStyleList() {
     const len = this.stylesList.length
+
     for (let i = 0; i < len; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.pop()
@@ -447,13 +447,13 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderFill(_styleData: any, itemData: any, groupTransform: TransformEffect) {
+  renderFill(
+    _styleData: any, itemData: any, groupTransform: TransformEffect
+  ) {
     const styleElem = itemData.style
 
     if (itemData.c._mdf || this._isFirstFrame) {
-      styleElem.co = `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(
-        itemData.c.v[1]
-      )},${Math.floor(itemData.c.v[2])})`
+      styleElem.co = `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(itemData.c.v[1])},${Math.floor(itemData.c.v[2])})`
     }
     if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = itemData.o.v * groupTransform.opacity
@@ -470,25 +470,28 @@ export default class CVShapeElement extends ShapeElement {
     }
     const styleElem = itemData.style
     let grd
+
     if (
       !styleElem.grd ||
       itemData.g._mdf ||
       itemData.s._mdf ||
       itemData.e._mdf ||
-      (styleData.t !== 1 && (itemData.h._mdf || itemData.a._mdf))
+      styleData.t !== 1 && (itemData.h._mdf || itemData.a._mdf)
     ) {
       const ctx = this.globalData.canvasContext,
         pt1 = itemData.s.v,
         pt2 = itemData.e.v
+
       if (styleData.t === 1) {
-        grd = ctx?.createLinearGradient(pt1[0], pt1[1], pt2[0], pt2[1])
-      } else {
-        const rad = Math.sqrt(
-          Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2)
+        grd = ctx?.createLinearGradient(
+          pt1[0], pt1[1], pt2[0], pt2[1]
         )
+      } else {
+        const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2))
         const ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
 
         let percent = itemData.h.v
+
         if (percent >= 1) {
           percent = 0.99
         } else if (percent <= -1) {
@@ -497,7 +500,10 @@ export default class CVShapeElement extends ShapeElement {
         const dist = rad * percent,
           x = Math.cos(ang + itemData.a.v) * dist + pt1[0],
           y = Math.sin(ang + itemData.a.v) * dist + pt1[1]
-        grd = ctx?.createRadialGradient(x, y, 0, pt1[0], pt1[1], rad)
+
+        grd = ctx?.createRadialGradient(
+          x, y, 0, pt1[0], pt1[1], rad
+        )
       }
 
       const len = styleData.g.p,
@@ -508,12 +514,10 @@ export default class CVShapeElement extends ShapeElement {
         if (itemData.g._hasOpacity && itemData.g._collapsable) {
           opacity = itemData.g.o[i * 2 + 1]
         }
-        grd?.addColorStop(
-          cValues[i * 4] / 100,
+        grd?.addColorStop(cValues[i * 4] / 100,
           `rgba(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${
             cValues[i * 4 + 3]
-          },${opacity})`
-        )
+          },${opacity})`)
       }
       styleElem.grd = grd
     }
@@ -536,6 +540,7 @@ export default class CVShapeElement extends ShapeElement {
   renderPath(pathData: Shape, itemData: CVShapeData) {
     if (pathData.hd !== true && pathData._shouldRender && itemData.sh) {
       const { length } = itemData.styledShapes
+
       for (let i = 0; i < length; i++) {
         this.renderStyledShape(itemData.styledShapes[i], itemData.sh)
       }
@@ -550,37 +555,48 @@ export default class CVShapeElement extends ShapeElement {
   ) {
     const len = items.length - 1
     let groupTransform = parentTransform
+
     for (let i = len; i >= 0; i -= 1) {
       switch (items[i].ty) {
-        case 'tr':
+        case 'tr': {
           groupTransform = data[i].transform as any
-          this.renderShapeTransform(
-            parentTransform as any,
-            groupTransform as any
-          )
+          this.renderShapeTransform(parentTransform as any,
+            groupTransform as any)
           break
+        }
         case ShapeType.Path:
         case ShapeType.Ellipse:
         case ShapeType.Rectangle:
-        case ShapeType.PolygonStar:
+        case ShapeType.PolygonStar: {
           this.renderPath(items[i], data[i] as any)
           break
-        case ShapeType.Fill:
-          this.renderFill(items[i], data[i], groupTransform as any)
+        }
+        case ShapeType.Fill: {
+          this.renderFill(
+            items[i], data[i], groupTransform as any
+          )
           break
-        case ShapeType.Stroke:
-          this.renderStroke(items[i], data[i], groupTransform as any)
+        }
+        case ShapeType.Stroke: {
+          this.renderStroke(
+            items[i], data[i], groupTransform as any
+          )
           break
-        case ShapeType.GradientFill:
+        }
+        case ShapeType.GradientFill: {
           this.renderGradientFill(
             items[i] as any,
             data[i],
             groupTransform as any
           )
           break
-        case ShapeType.Group:
-          this.renderShape(groupTransform, items[i].it || [], data[i].it as any)
+        }
+        case ShapeType.Group: {
+          this.renderShape(
+            groupTransform, items[i].it || [], data[i].it as any
+          )
           break
+        }
         case ShapeType.Trim:
         //
       }
@@ -590,10 +606,8 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderShapeTransform(
-    parentTransform: TransformEffect,
-    groupTransform: TransformEffect
-  ) {
+  renderShapeTransform(parentTransform: TransformEffect,
+    groupTransform: TransformEffect) {
     if (
       parentTransform._opMdf ||
       groupTransform.op?._mdf ||
@@ -611,15 +625,14 @@ export default class CVShapeElement extends ShapeElement {
     groupTransform: TransformEffect
   ) {
     const styleElem = itemData.style,
-      d = itemData.d
+      { d } = itemData
+
     if (d && (d._mdf || this._isFirstFrame)) {
       styleElem.da = d.dashArray
       styleElem.do = d.dashoffset[0]
     }
     if (itemData.c._mdf || this._isFirstFrame) {
-      styleElem.co = `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(
-        itemData.c.v[1]
-      )},${Math.floor(itemData.c.v[2])})`
+      styleElem.co = `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(itemData.c.v[1])},${Math.floor(itemData.c.v[2])})`
     }
     if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = itemData.o.v * groupTransform.opacity
@@ -632,16 +645,19 @@ export default class CVShapeElement extends ShapeElement {
   renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty) {
     if (this._isFirstFrame || shape._mdf || styledShape.transforms._mdf) {
       const shapeNodes = styledShape.trNodes
-      const paths = shape.paths
+      const { paths } = shape
       let i
       let len
       let j
       const jLen = paths?._length || 0
+
       shapeNodes.length = 0
       const groupTransformMat = styledShape.transforms.finalTransform
+
       for (j = 0; j < jLen; j++) {
         const pathNodes = paths?.shapes[j]
-        if (!pathNodes || !pathNodes.v) {
+
+        if (!pathNodes?.v) {
           continue
         }
         len = pathNodes._length
@@ -683,10 +699,7 @@ export default class CVShapeElement extends ShapeElement {
               pathNodes.v[0]
             ),
             t: 'c',
-          })
-          shapeNodes.push({
-            t: 'z',
-          })
+          }, { t: 'z', })
         }
       }
       styledShape.trNodes = shapeNodes
@@ -706,8 +719,10 @@ export default class CVShapeElement extends ShapeElement {
       ownModifiers = []
     let modifier, currentTransform
     const ownTransforms = [...transforms]
+
     for (let i = len; i >= 0; i -= 1) {
       const processedPos = this.searchProcessedElement(arr[i])
+
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
@@ -731,6 +746,7 @@ export default class CVShapeElement extends ShapeElement {
         case ShapeType.Group: {
           if (processedPos) {
             const { length: jLen } = itemsData[i].it
+
             for (let j = 0; j < jLen; j++) {
               itemsData[i].prevViewData[j] = itemsData[i].it[j]
             }
@@ -751,8 +767,8 @@ export default class CVShapeElement extends ShapeElement {
             currentTransform = this.createTransformElement(arr[i])
             itemsData[i] = currentTransform as unknown as CVElement
           }
-          ownTransforms.push(itemsData[i] as any)
-          this.addTransformToStyleList(itemsData[i] as any)
+          ownTransforms.push(itemsData[i])
+          this.addTransformToStyleList(itemsData[i])
           break
         }
         case ShapeType.Path:
@@ -800,22 +816,19 @@ export default class CVShapeElement extends ShapeElement {
           ownModifiers.push(modifier)
         }
       }
-      this.addProcessedElement(
-        arr[i] as unknown as ElementInterfaceIntersect,
-        i + 1
-      )
+      this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
+        i + 1)
     }
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
     const { length } = ownModifiers
+
     for (let i = 0; i < length; i++) {
       ownModifiers[i].closed = true
     }
   }
 
   showElement() {
-    throw new Error(
-      `${this.constructor.name}: Method showElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 }

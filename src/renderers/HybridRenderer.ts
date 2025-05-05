@@ -1,3 +1,4 @@
+import type HCameraElement from '@/elements/html/HCameraElement'
 import type { AnimationItem } from '@/Lottie'
 import type {
   ElementInterfaceIntersect,
@@ -6,7 +7,6 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import HCameraElement from '@/elements/html/HCameraElement'
 import HCompElement from '@/elements/html/HCompElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import { RendererType } from '@/enums'
@@ -19,18 +19,18 @@ export default class HybridRenderer extends HybridRendererBase {
     this.layers = null as unknown as LottieLayer[]
     this.renderedFrame = -1
     this.renderConfig = {
-      className: (config && config.className) || '',
+      className: config && config.className || '',
       filterSize: {
         height:
-          (config && config.filterSize && config.filterSize.height) || '400%',
+          config?.filterSize.height || '400%',
         width:
-          (config && config.filterSize && config.filterSize.width) || '400%',
-        x: (config && config.filterSize && config.filterSize.x) || '-100%',
-        y: (config && config.filterSize && config.filterSize.y) || '-100%',
+          config?.filterSize.width || '400%',
+        x: config?.filterSize.x || '-100%',
+        y: config?.filterSize.y || '-100%',
       },
       hideOnTransparent: !(config && config.hideOnTransparent === false),
       imagePreserveAspectRatio:
-        (config && config.imagePreserveAspectRatio) || 'xMidYMid slice',
+        config && config.imagePreserveAspectRatio || 'xMidYMid slice',
       runExpressions:
         !config || config.runExpressions === undefined || config.runExpressions,
     }
@@ -58,6 +58,7 @@ export default class HybridRenderer extends HybridRendererBase {
         this as unknown as ElementInterfaceIntersect
       )
     }
+
     return new HCompElement(
       data,
       this.globalData,

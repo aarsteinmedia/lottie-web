@@ -1,18 +1,16 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class PuckerAndBloatModifier extends ShapeModifier {
   amount?: ValueProperty
-  override initModifierProperties(
-    elem: ElementInterfaceIntersect,
-    data: Shape
-  ) {
+  override initModifierProperties(elem: ElementInterfaceIntersect,
+    data: Shape) {
     this.getValue = this.processKeys
     this.amount = PropertyFactory.getProp(
       elem,
@@ -21,14 +19,15 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this._isAnimated = !!this.amount?.effectsSequence.length
+    this._isAnimated = this.amount.effectsSequence.length > 0
   }
 
   processPath(path: ShapePath, amount: number) {
     const percent = amount / 100
     const centerPoint = [0, 0]
     const pathLength = path._length
-    let i = 0
+    let i
+
     for (i = 0; i < pathLength; i++) {
       centerPoint[0] += path.v[i][0]
       centerPoint[1] += path.v[i][1]
@@ -36,8 +35,10 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
     centerPoint[0] /= pathLength
     centerPoint[1] /= pathLength
     const clonedPath = newElement<ShapePath>()
+
     clonedPath.c = path.c
     let vX, vY, oX, oY, iX, iY
+
     for (i = 0; i < pathLength; i++) {
       vX = path.v[i][0] + (centerPoint[0] - path.v[i][0]) * percent
       vY = path.v[i][1] + (centerPoint[1] - path.v[i][1]) * percent
@@ -45,37 +46,48 @@ export default class PuckerAndBloatModifier extends ShapeModifier {
       oY = path.o[i][1] + (centerPoint[1] - path.o[i][1]) * -percent
       iX = path.i[i][0] + (centerPoint[0] - path.i[i][0]) * -percent
       iY = path.i[i][1] + (centerPoint[1] - path.i[i][1]) * -percent
-      clonedPath.setTripleAt(vX, vY, oX, oY, iX, iY, i)
+      clonedPath.setTripleAt(
+        vX, vY, oX, oY, iX, iY, i
+      )
     }
+
     return clonedPath
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes || [],
+    const { length } = this.shapes,
       amount = this.amount?.v
 
     if (amount !== 0) {
       let shapePaths, shapeData, localShapeCollection
+
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes?.[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i] as unknown as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
-          shapeData.shape!._mdf = true
+          if (shapeData.shape) {
+            shapeData.shape._mdf = true
+          }
+
           shapePaths = shapeData.shape?.paths?.shapes
           const jLen = shapeData.shape?.paths?._length || 0
+
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(
-              this.processPath(shapePaths![j], amount as number)
-            )
+            const shapePath = shapePaths?.[j]
+
+            if (shapePath) {
+              localShapeCollection?.addShape(this.processPath(shapePath, amount || 0))
+            }
+
           }
         }
-        if (shapeData.localShapeCollection) {
-          shapeData.shape!.paths = shapeData.localShapeCollection
+        if (shapeData.localShapeCollection && shapeData.shape) {
+          shapeData.shape.paths = shapeData.localShapeCollection
         }
       }
     }
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this._mdf = false
     }
   }

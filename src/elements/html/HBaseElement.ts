@@ -9,7 +9,9 @@ import CVEffects from '@/elements/canvas/CVEffects'
 import MaskElement from '@/elements/MaskElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import { createNS, createTag, styleDiv } from '@/utils'
+import {
+  createNS, createTag, styleDiv
+} from '@/utils'
 
 export default class HBaseElement {
   _isFirstFrame?: boolean
@@ -28,6 +30,7 @@ export default class HBaseElement {
   constructor() {
     const { getBaseElement } = SVGBaseElement.prototype,
       { buildElementParenting } = BaseRenderer.prototype
+
     this.getBaseElement = getBaseElement
     this.destroyBaseElement = this.destroy
     this.buildElementParenting = buildElementParenting
@@ -40,15 +43,13 @@ export default class HBaseElement {
     _parentName?: number,
     _hierarchy?: ElementInterfaceIntersect[]
   ) {
-    throw new Error(
-      `${this.constructor.name}: Method buildElementParenting is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
   }
   checkBlendMode() {
     // TODO: Pass Through
   }
   createContainerElements() {
-    this.renderableEffectsManager = new CVEffects(this as any)
+    this.renderableEffectsManager = new CVEffects(this as unknown as ElementInterfaceIntersect)
     this.transformedElement = this.baseElement
     this.maskedElement = this.layerElement
     if (this.data?.ln) {
@@ -63,11 +64,11 @@ export default class HBaseElement {
   }
   createRenderableComponents() {
     if (!this.data || !this.globalData) {
-      throw new Error(
-        `${this.constructor.name}: data or globalData is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data or globalData is not implemented`)
     }
-    this.maskManager = new MaskElement(this.data, this as any, this.globalData)
+    this.maskManager = new MaskElement(
+      this.data, this as unknown as ElementInterfaceIntersect, this.globalData
+    )
   }
   destroy() {
     this.layerElement = null as unknown as SVGGElement
@@ -81,14 +82,10 @@ export default class HBaseElement {
     }
   }
   destroyBaseElement() {
-    throw new Error(
-      `${this.constructor.name}: Method destroyBaseElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
   }
   getBaseElement(): null | HTMLElement | SVGGElement {
-    throw new Error(
-      `${this.constructor.name}: Method getBaseElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
   initRendererElement() {
     this.baseElement = createTag(this.data?.tg || 'div')
@@ -107,8 +104,10 @@ export default class HBaseElement {
     const transformedElementStyle = this.transformedElement
       ? this.transformedElement.style
       : ({} as CSSStyleDeclaration)
+
     if (this.finalTransform?._matMdf) {
       const matrixValue = this.finalTransform.mat.toCSS()
+
       transformedElementStyle.transform = matrixValue
     }
     if (this.finalTransform?._opMdf) {
@@ -130,24 +129,16 @@ export default class HBaseElement {
     }
   }
   renderInnerContent() {
-    throw new Error(
-      `${this.constructor.name}: Method renderInnerContent is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
   }
   renderRenderable() {
-    throw new Error(
-      `${this.constructor.name}: Method renderRenderable is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method renderRenderable is not implemented`)
   }
   renderTransform() {
-    throw new Error(
-      `${this.constructor.name}: Method renderTransform is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method renderTransform is not implemented`)
   }
   setBlendMode() {
-    throw new Error(
-      `${this.constructor.name}: Method setBlendMode is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method setBlendMode is not implemented`)
   }
 
   setMatte() {

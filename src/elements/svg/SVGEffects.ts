@@ -1,5 +1,6 @@
-import { GroupEffect } from '@/effects/EffectsManager'
-import { ElementInterfaceIntersect } from '@/types'
+import type { GroupEffect } from '@/effects/EffectsManager'
+import type { ElementInterfaceIntersect } from '@/types'
+
 import { createFilter } from '@/utils/FiltersFactory'
 import {
   createElementID,
@@ -18,9 +19,11 @@ export default class SVGEffects {
       fil = createFilter(filId, true)
 
     let count = 0
+
     this.filters = []
     let filterManager: null | GroupEffect
     const { length } = elem.data.ef || []
+
     for (let i = 0; i < length; i++) {
       filterManager = null
       if (elem.data.ef?.[i].ty && registeredEffects[elem.data.ef[i].ty]) {
@@ -44,12 +47,10 @@ export default class SVGEffects {
     }
     if (count) {
       elem.globalData.defs.appendChild(fil)
-      elem.layerElement?.setAttribute(
-        'filter',
-        `url(${getLocationHref()}#${filId})`
-      )
+      elem.layerElement?.setAttribute('filter',
+        `url(${getLocationHref()}#${filId})`)
     }
-    if (this.filters.length) {
+    if (this.filters.length > 0) {
       elem.addRenderableComponent(this)
     }
   }
@@ -57,16 +58,19 @@ export default class SVGEffects {
   getEffects(type: string) {
     const { length } = this.filters,
       effects = []
+
     for (let i = 0; i < length; i++) {
       if (this.filters[i].type === type) {
         effects.push(this.filters[i])
       }
     }
+
     return effects
   }
 
   renderFrame(frame?: number | null) {
     const { length } = this.filters
+
     for (let i = 0; i < length; i++) {
       this.filters[i].renderFrame(frame)
     }

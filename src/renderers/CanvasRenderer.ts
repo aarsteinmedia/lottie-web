@@ -30,7 +30,7 @@ export default class CanvasRenderer extends CanvasRendererBase {
         config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
       preserveAspectRatio:
         config?.preserveAspectRatio || PreserveAspectRatio.Contain,
-      progressiveLoad: !!config?.progressiveLoad,
+      progressiveLoad: Boolean(config?.progressiveLoad),
       runExpressions: config?.runExpressions ?? true,
     }
     if (this.animationItem.wrapper) {
@@ -67,8 +67,9 @@ export default class CanvasRenderer extends CanvasRendererBase {
 
   override createComp(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
+
     return new CVCompElement(
       data,
       this.globalData,
