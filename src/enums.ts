@@ -73,16 +73,12 @@ export enum ArrayType {
   Uint8c = 'uint8c',
 }
 
-export const lineCapEnum: {
-    [key: number]: CanvasLineCap
-  } = {
+export const lineCapEnum: { [key: number]: CanvasLineCap } = {
     1: 'butt',
     2: 'round',
     3: 'square',
   },
-  lineJoinEnum: {
-    [key: number]: CanvasLineJoin
-  } = {
+  lineJoinEnum: { [key: number]: CanvasLineJoin } = {
     1: 'miter',
     2: 'round',
     3: 'bevel',

@@ -1,6 +1,5 @@
 import type AnimationItem from '@/animation/AnimationItem'
-
-import { AnimationDirection, AnimationEventName } from '@/types'
+import type { AnimationDirection, AnimationEventName } from '@/types'
 
 export class BMEnterFrameEvent {
   currentTime: number
@@ -135,9 +134,7 @@ export class BaseEvent {
     eventName: AnimationEventName,
     callback: (ev?: LottieEvent) => unknown
   ): () => void {
-    if (!this._cbs[eventName]) {
-      this._cbs[eventName] = []
-    }
+    this._cbs[eventName] = this._cbs[eventName] ?? []
     this._cbs[eventName].push(callback)
 
     return () => {
@@ -151,12 +148,14 @@ export class BaseEvent {
   ): void {
     if (!callback) {
       this._cbs[eventName] = null
+
       return
     }
 
     if (this._cbs[eventName]) {
       let i = 0
       let len = this._cbs[eventName].length
+
       while (i < len) {
         if (this._cbs[eventName][i] === callback) {
           this._cbs[eventName].splice(i, 1)
@@ -172,11 +171,13 @@ export class BaseEvent {
   }
 
   triggerEvent(eventName: AnimationEventName, ev?: LottieEvent): void {
-    if (this._cbs[eventName]) {
-      const { length } = this._cbs[eventName]
-      for (let i = 0; i < length; i++) {
-        this._cbs[eventName][i](ev)
-      }
+    if (!this._cbs[eventName]) {
+      return
+    }
+    const { length } = this._cbs[eventName]
+
+    for (let i = 0; i < length; i++) {
+      this._cbs[eventName][i](ev)
     }
   }
 }
@@ -187,7 +188,7 @@ export type LottieEvent =
   | BMCompleteEvent
   | BMCompleteLoopEvent
   | BMSegmentStartEvent
-  | BMAnimationConfigErrorEvent
+   
   | BMConfigErrorEvent
   | BMDestroyEvent
   | BMDrawnFrameEvent

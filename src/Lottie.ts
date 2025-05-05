@@ -1,13 +1,8 @@
-import type AnimationItem from '@/animation/AnimationItem'
-import type {
-  AnimationConfiguration,
-  AnimationData,
-  AnimationDirection,
-  AnimationSettings,
-  LottieAsset,
-  LottieManifest,
-  Vector2,
-} from '@/types'
+
+
+
+// import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
+import type Expressions from '@/utils/expressions/Expressions'
 
 import {
   play,
@@ -44,8 +39,6 @@ import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
-// import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
-import Expressions from '@/utils/expressions/Expressions'
 // import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 // import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
@@ -69,15 +62,15 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 
-export function installPlugin(type: string, plugin: typeof Expressions) {
-  if (type === 'expressions') {
-    setExpressionsPlugin(plugin)
-  }
-}
+export const installPlugin = (type: string, plugin: typeof Expressions) => {
+    if (type === 'expressions') {
+      setExpressionsPlugin(plugin)
+    }
+  },
 
-export function setSubframeRendering(flag: boolean) {
-  setSubframeEnabled(flag)
-}
+  setSubframeRendering = (flag: boolean) => {
+    setSubframeEnabled(flag)
+  }
 
 const Lottie = {
   destroy,
@@ -106,16 +99,18 @@ const Lottie = {
   version,
 }
 
-const checkReady = () => {
-    if (isServer()) {
-      return
-    }
-    if (document.readyState === 'complete') {
-      clearInterval(readyStateCheckInterval)
-      searchAnimations()
-    }
-  },
-  readyStateCheckInterval = setInterval(checkReady, 100)
+const readyStateCheckInterval = setInterval(checkReady, 100)
+
+function checkReady() {
+  if (isServer()) {
+    return
+  }
+  if (document.readyState === 'complete') {
+     
+    clearInterval(readyStateCheckInterval)
+    searchAnimations()
+  }
+}
 
 // Registering renderers
 registerRenderer(RendererType.Canvas, CanvasRenderer)
@@ -148,15 +143,15 @@ registerEffect(29, SVGGaussianBlurEffect, true)
 registerEffect(35, SVGTransformEffect, false)
 registerEffect(35, CVTransformEffect)
 
+export default Lottie
+
+export { type default as AnimationItem } from '@/animation/AnimationItem'
 export type {
   AnimationConfiguration,
-  AnimationItem,
   AnimationData,
   AnimationDirection,
   AnimationSettings,
   LottieAsset,
   LottieManifest,
-  Vector2,
-}
-
-export default Lottie
+  Vector2
+} from '@/types'

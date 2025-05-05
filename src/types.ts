@@ -114,9 +114,7 @@ export interface SVGGeometry {
   width: number
 }
 
-export interface Constructor {
-  prototype: any
-}
+export interface Constructor {prototype: any}
 export interface TextSpan {
   children: SVGSVGElement[]
   childSpan?: null | SVGTextElement | SVGGElement
@@ -259,11 +257,7 @@ export interface CompInterface extends AnimationItem {
   setMatte: (id: string) => void
   supports3d: boolean
   svgElement?: SVGSVGElement
-  textProperty?: {
-    currentData: {
-      l: number[]
-    }
-  }
+  textProperty?: { currentData: { l: number[] } }
   tm: number
 }
 
@@ -275,7 +269,10 @@ export type ExpressionInterface =
   ExpressionInterfaces[keyof ExpressionInterfaces]
 export interface ExpressionInterfaces {
   comp: typeof CompExpressionInterface
-  effects: unknown // EffectInterface
+  /**
+   * EffectInterface.
+   */
+  effects: unknown 
   footage: typeof FootageInterface
   layer: typeof LayerExpressionInterface
   shape: typeof ShapeExpressionInterface
@@ -338,22 +335,18 @@ export interface ThreeDElements {
   type: string
 }
 
-export interface EFXElement {
-  p: BaseProperty
-}
+export interface EFXElement {p: BaseProperty}
 
-export interface KeyframesMetadata {
-  __fnct?: (val: number) => number
-}
+export interface KeyframesMetadata {__fnct?: (val: number) => number}
 
-type BaseRendererConfig = {
-  imagePreserveAspectRatio?: string
+interface BaseRendererConfig {
   className?: string
+  imagePreserveAspectRatio?: string
 }
 
-export type FilterSizeConfig = {
-  width: string
+export interface FilterSizeConfig {
   height: string
+  width: string
   x: string
   y: string
 }
@@ -413,43 +406,41 @@ export type HTMLRendererConfig = BaseRendererConfig & {
   runExpressions?: boolean
 }
 
-export type AnimationConfiguration<
+export interface AnimationConfiguration<
   T extends RendererType =
     | RendererType.Canvas
     | RendererType.HTML
     | RendererType.SVG,
-> = {
+> {
   animationData?: AnimationData
   animType?: RendererType
-  container?: HTMLElement
-  wrapper?: HTMLElement
-  renderer?: T
-  autoloadSegments?: boolean
-  loop?: Loop
-  autoplay?: boolean
-  initialSegment?: Vector2
-  name?: string
   assetsPath?: string
+  audioFactory?: AudioFactory
+  autoloadSegments?: boolean
+  autoplay?: boolean
+  container?: HTMLElement
+  initialSegment?: Vector2
+  loop?: Loop
+  name?: string
+  path?: string
+  prerender?: boolean
+
+  renderer?: T
   rendererSettings?: {
     svg: SVGRendererConfig
     canvas: CanvasRendererConfig
     html: HTMLRendererConfig
   }[T]
-
-  audioFactory?: AudioFactory
-  path?: string
-  prerender?: boolean
+  wrapper?: HTMLElement
 }
 
-export interface Stop {
-  s: number[]
-}
+export interface Stop {s: number[]}
 export interface GradientColor {
   k: {
     a: 1 | 0
     k: number[] | Stop[]
   }
-  /** Number of colors */
+  /** Number of colors. */
   p: number
 }
 
@@ -490,48 +481,46 @@ export interface Shape {
   _processed?: boolean
   _render?: boolean
   _shouldRender?: boolean
-  /** Anchor point / Highlight angle for radial gradient */
+  /** Anchor point / Highlight angle for radial gradient. */
   a?: VectorProperty<Vector1 | Vector2 | Vector3>
-  /** Blend Mode */
+  /** Blend Mode. */
   bm?: number
-  /** Color */
+  /** Color. */
   c?: ShapeColor
   cix?: number
-  /** CSS Class */
+  /** CSS Class. */
   cl?: string
   closed?: boolean
   d?: number | StrokeData[]
-  /** Endpoint for gradient */
+  /** Endpoint for gradient. */
   e?: VectorProperty<Vector2>
   eo?: VectorProperty
-  /** Gradient colors */
+  /** Gradient colors. */
   g?: GradientColor
-  /** Highlight length for radial gradient */
+  /** Highlight length for radial gradient. */
   h?: GenericAnimatedProperty
   hd?: boolean
   ind?: number
   inv?: boolean
-  ir?: {
-    ix?: number
-  }
-  is?: {
-    ix?: number
-  }
+  ir?: { ix?: number }
+  is?: { ix?: number }
   it?: Shape[]
   ix?: number
   ks?: ShapeDataProperty
   lc?: 1 | 2 | 3
   lj?: 1 | 2 | 3
   ln?: string
-  /** Stacking order. 1: Above 2. Below */
+  /** Stacking order. 1: Above 2: Below. */
   m?: 1 | 2
   ml?: number
   mn?: string
   mode?: string
   nm?: string
-  /** Number of properties */
+  /** Number of properties. */
   np?: number
-  // o?: VectorProperty
+  /**
+   * O?: VectorProperty.
+   */
   o?: {
     a: 0 | 1
     k: number
@@ -542,25 +531,27 @@ export interface Shape {
     k: any[]
     ix?: number
   }
-  os?: {
-    ix?: number
-  }
-  /** Position */
+  os?: { ix?: number }
+  /** Position. */
   p?: VectorProperty<Vector2>
   pt?: VectorProperty<ShapePath | ShapePath[]>
-  /** Rotation (for transforms) | Fill-rule (for fills) */
-  r?: VectorProperty<{ e: number; s: number; t: number }[]>
+  /** Rotation (for transforms) | Fill-rule (for fills). */
+  r?: VectorProperty<{
+    e: number;
+    s: number;
+    t: number 
+  }[]>
   rx?: VectorProperty
   ry?: VectorProperty
   rz?: VectorProperty
-  /** Scale / StartPoint for gradient */
+  /** Scale / StartPoint for gradient. */
   s?: VectorProperty<Vector2 | Vector3>
-  /** Skew Axis */
+  /** Skew Axis. */
   sa?: VectorProperty
-  /** Skew */
+  /** Skew. */
   sk?: VectorProperty
   so?: VectorProperty
-  /** Gradient type */
+  /** Gradient type. */
   t?: number
   tr?: Shape
 
@@ -617,35 +608,35 @@ export interface ViewData {
 
 export interface LottieAsset {
   __used?: boolean
-  /** Whether the data is embedded/encoded */
+  /** Whether the data is embedded/encoded. */
   e?: BoolInt
-  /** Height of image in pixels */
+  /** Height of image in pixels. */
   h?: number
 
-  /** id/slug of asset – e.g. image_0 / audio_0 */
+  /** Id/slug of asset – e.g. Image_0 / audio_0. */
   id?: string
 
-  layers: LottieLayer[] & { __used?: boolean }
+  layers?: LottieLayer[] & { __used?: boolean }
 
-  /** Name of asset – e.g. "Black Mouse Ears" */
+  /** Name of asset – e.g. "Black Mouse Ears". */
   nm?: string
 
-  /** Filename – e.g image_0.png / audio_0.mp3 | DataURL, Base64 encoded */
+  /** Filename – e.g image_0.png / audio_0.mp3 | DataURL, Base64 encoded. */
   p?: string
 
-  /** Aspect Ratio */
+  /** Aspect Ratio. */
   pr?: string
 
   sid?: string
 
   t?: string
 
-  /** Path to asset. Empty string if asset is embedded */
+  /** Path to asset. Empty string if asset is embedded. */
   u?: string
-  /** Width of image in pixels */
+  /** Width of image in pixels. */
   w?: number
 
-  /** Extra composition */
+  /** Extra composition. */
   xt?: number
 }
 
@@ -657,15 +648,11 @@ export interface AnimationSettings {
   speed?: number
 }
 
-interface Animation extends AnimationSettings {
-  id: string
-}
+interface Animation extends AnimationSettings {id: string}
 
 export type ValueOf<T> = T[keyof T]
 
-export interface AnimationConfig extends Animation {
-  url: string
-}
+export interface AnimationConfig extends Animation {url: string}
 
 export interface LottieManifest {
   animations: Animation[]
@@ -684,13 +671,13 @@ export type Vector2 = [number, number]
 export type Vector3 = [number, number, number]
 export type Vector4 = [number, number, number, number]
 
-export type VectorProperty<T = Vector1> = {
-  a: 1 | 0
-  k: T
-  v?: number
-  ix?: number
-  sid?: number
+export interface VectorProperty<T = Vector1> {
   _mdf?: boolean
+  a: 1 | 0
+  ix?: number
+  k: T
+  sid?: number
+  v?: number
 }
 
 export interface Coordinates {
@@ -805,47 +792,47 @@ export interface DocumentData extends FontList {
 }
 
 export interface TextRangeValue {
-  /** Max Amount */
+  /** Max Amount. */
   a: {
     a: 0 | 1
     k: number
   }
-  /** Based On */
+  /** Based On. */
   b: number
-  /** End */
+  /** End. */
   e: {
     a: 0 | 1
     k: number
   }
-  /** Min Ease */
+  /** Min Ease. */
   ne: {
     a: 0 | 1
     k: number
   }
-  /** Offset */
+  /** Offset. */
   o: {
     a: 0 | 1
     k: number
   }
-  /** Range units */
+  /** Range units. */
   r: number
-  /** Randomize */
+  /** Randomize. */
   rn: 0 | 1
-  /** Start */
+  /** Start. */
   s: {
     a: 0 | 1
     k: number
   }
-  /** Shape */
+  /** Shape. */
   sh: number
-  /** Smoothness */
+  /** Smoothness. */
   sm: {
     a: 0 | 1
     k: number
   }
   t: 0 | 1
   totalChars: number
-  /** Max Ease */
+  /** Max Ease. */
   xe: {
     a: 0 | 1
     k: number
@@ -854,7 +841,7 @@ export interface TextRangeValue {
 
 export interface ShapeDataInterface {
   _isAnimated: boolean
-  /** SVG Path Data */
+  /** SVG Path Data. */
   caches: string[]
   container: ElementInterfaceIntersect
   elements: ElementInterfaceIntersect[]
@@ -883,11 +870,11 @@ export interface ShapeDataInterface {
 
 export interface TextData {
   __complete: boolean
-  /** Text range */
+  /** Text range. */
   a?: TextAnimatorDataProperty[]
   ascent: number
   boxWidth: Vector2
-  /** Text Document */
+  /** Text Document. */
   d?: DocumentData
   f: string
   fc: string
@@ -902,9 +889,9 @@ export interface TextData {
   lh: number
   lineWidths: number[]
   ls: number
-  /** Text Alignment */
+  /** Text Alignment. */
   m?: {
-    /** Grouping */
+    /** Grouping. */
     g: number
     a: {
       a: 0 | 1
@@ -913,7 +900,7 @@ export interface TextData {
     }
   }
   of: string
-  /** Text Follow Path TODO: */
+  /** Text Follow Path TODO:. */
   p?: TextPathData
   ps: null | Vector2
   s: number
@@ -921,7 +908,9 @@ export interface TextData {
   strokeColorAnim: boolean
   strokeWidthAnim: boolean
   sw: number
-  t: string // number
+  t: string /**
+   * Number.
+   */
   tr: number
   yOffset: number
 }
@@ -982,16 +971,16 @@ export interface FontList {
   fPath: string
   fStyle: string
   fWeight: string
-  helper?: {
-    measureText: (str: string, fontName?: string, size?: number) => number
-  }
+  helper?: { measureText: (str: string, fontName?: string, size?: number) => number }
   loaded?: boolean
   monoCase?: {
     node: HTMLElement
     parent: HTMLElement
     w: number
   }
-  origin: number // 0 | 1
+  origin: number /**
+   * 0 | 1.
+   */
   sansCase?: {
     node: HTMLElement
     parent: HTMLElement
@@ -1015,18 +1004,16 @@ export interface AnimationData {
   $schema?: string
   ao?: boolean | 0 | 1
   assets: LottieAsset[]
-  /** Characters */
-  chars: Characacter[]
-  /** Is three dimensional */
+  /** Characters. */
+  chars: Characacter[] | null
+  /** Is three dimensional. */
   ddd: 0 | 1
-  fonts: {
-    list: DocumentData[]
-  }
-  /** Framerate */
+  fonts: { list: DocumentData[] }
+  /** Framerate. */
   fr: number
-  /** Height */
+  /** Height. */
   h: number
-  /** In point */
+  /** In point. */
   ip: number
   layers: LottieLayer[]
   markers?: MarkerData[]
@@ -1037,23 +1024,17 @@ export interface AnimationData {
     tc: string
     g: string
   }
-  /** Match name */
+  /** Match name. */
   mn?: string
-  /** Name */
+  /** Name. */
   nm: string
-  /** Out point */
+  /** Out point. */
   op: number
-  segments: {
-    time: number
-  }[]
-  slots?: {
-    [key: string]: {
-      p: any
-    }
-  }
-  /** Version */
+  segments: { time: number }[]
+  slots?: { [key: string]: { p: any } }
+  /** Version. */
   v: string
-  /** Width */
+  /** Width. */
   w: number
 }
 
@@ -1061,24 +1042,18 @@ export interface LottieLayer {
   __used?: boolean
   _render?: boolean
   ao?: 0 | 1 | boolean
-  au?: {
-    lv?: {
-      k: number[]
-    }
-  }
-  /** Blend Mode */
+  au?: { lv?: { k: number[] } }
+  /** Blend Mode. */
   bm?: number
   chars?: Characacter[]
   cl?: string
   completed?: boolean
-  /** Whether transforms should be applied before or after masks */
+  /** Whether transforms should be applied before or after masks. */
   ct?: 0 | 1
   ddd?: 0 | 1
   ef?: Effect[]
   en?: number
-  fonts?: {
-    list: DocumentData[]
-  }
+  fonts?: { list: DocumentData[] }
   fr?: number
   h?: number
   hasMask?: boolean
@@ -1086,7 +1061,7 @@ export interface LottieLayer {
   height?: number
   id?: string
   ind?: number
-  /** In point */
+  /** In point. */
   ip: number
   ks: Shape
   layers?: LottieLayer[] & { __used?: boolean }
@@ -1095,44 +1070,40 @@ export interface LottieLayer {
   mn?: string
   nm: string
   np?: any
-  /** Out point */
+  /** Out point. */
   op: number
   parent?: number
   pe?: VectorProperty
-  /** Asset ID */
+  /** Asset ID. */
   refId?: string
   sc?: string
   sh?: number
   shapes: Shape[]
   singleShape?: boolean
-  slots?: {
-    [key: string]: {
-      p: any
-    }
-  }
-  /** Time stretch */
+  slots?: { [key: string]: { p: any } }
+  /** Time stretch. */
   sr?: number
-  /** Start time */
+  /** Start time. */
   st: number
   sw?: number
   sy?: LayerStyle[]
-  /** Text Data */
+  /** Text Data. */
   t?: TextData
-  /** Matte target: If set to 1 it means a layer is using this layer as a track matte */
+  /** Matte target: If set to 1 it means a layer is using this layer as a track matte. */
   td?: 0 | 1
   textData?: {
     height: number
     width: number
   }
-  /** TagName */
+  /** TagName. */
   tg?: string
-  /** Time remappoing */
+  /** Time remappoing. */
   tm?: AnimatedProperty
-  /** Matte reference (for shape) */
+  /** Matte reference (for shape). */
   tp?: number
-  /** Matte mode */
+  /** Matte mode. */
   tt?: number
-  /** Layer type */
+  /** Layer type.*/
   ty: number
   w?: number
   width?: number
@@ -1146,16 +1117,14 @@ export interface AnimatedProperty<T = number> {
   v?: T
 }
 
-interface GenericAnimatedProperty extends AnimatedProperty {
-  k: number | number[]
-}
+interface GenericAnimatedProperty extends AnimatedProperty {k: number | number[]}
 
 export interface Marker {
-  /** Comment */
+  /** Comment. */
   cm: string
-  /** Duration */
+  /** Duration. */
   dr: number
-  /** Time */
+  /** Time. */
   tm: number
 }
 
@@ -1187,18 +1156,18 @@ export interface WorkerEvent {
 export type Merge<A, B> = Partial<A | B> & {
   [K in keyof (A | B)]: (A & B)[K]
 } & (Partial<Omit<A & B, keyof (A | B)>> extends infer O
-    ? { [K in keyof O]: O[K] }
-    : never)
+  ? { [K in keyof O]: O[K] }
+  : never)
 
 export interface Audio {
-  pause(): void
-  play(): void
-  playing(): boolean
-  rate(val: number): void
-  resume(): void
-  seek(val?: number): number
-  setRate(val: number): void
-  volume(val: number): void
+  pause: () => void
+  play: () => void
+  playing: () => boolean
+  rate: (val: number) => void
+  resume: () => void
+  seek: (val?: number) => number
+  setRate: (val: number) => void
+  volume: (val: number) => void
 }
 
 export type AudioFactory = (path?: string) => Audio
@@ -1214,13 +1183,16 @@ export interface Keyframe {
   e: Vector2
   h?: number
   i: Coordinates
-  keyframeMetadata: any
+  keyframeMetadata?: {
+    length: number
+    name: string
+  }
   n: string
   o: Coordinates
-  s: any // { i: any }[]
+  s: number[] | null
   t: number
   ti: Vector2
-  to: Vector2
+  to?: Vector2 | null
 }
 
 export type EffectFunction = (...args: any[]) => any
@@ -1237,7 +1209,7 @@ export interface Caching {
   lastFrame: number
   lastIndex: number
   lastTime: number
-  shapeValue: ShapePath
+  shapeValue: ShapePath | null
   value: number | number[]
 }
 
@@ -1291,7 +1263,5 @@ export interface IntersectData {
 }
 
 declare global {
-  interface Document {
-    _isProxy?: boolean
-  }
+  interface Document {_isProxy?: boolean}
 }

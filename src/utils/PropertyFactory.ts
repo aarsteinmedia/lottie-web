@@ -21,11 +21,13 @@ function getProp(
   container?: ElementInterfaceIntersect
 ) {
   let data = dataFromProps
+
   if (data && 'sid' in data && data.sid) {
     data = elem.globalData.slotManager?.getProp(data as unknown as LottieLayer)
   }
   let p
-  if (!(data?.k as number[]).length) {
+
+  if (!(data?.k as number[] | undefined)?.length) {
     p = new ValueProperty(
       elem,
       data as VectorProperty,
@@ -34,22 +36,23 @@ function getProp(
     )
   } else if (typeof (data?.k as number[])[0] === 'number') {
     p = new MultiDimensionalProperty(
-      elem as ElementInterfaceIntersect,
+      elem,
       data as VectorProperty<number[]>,
       mult,
       container as ElementInterfaceIntersect
     )
   } else {
     switch (type) {
-      case 0:
+      case 0: {
         p = new KeyframedValueProperty(
-          elem as ElementInterfaceIntersect,
+          elem,
           data as unknown as VectorProperty<Keyframe[]>,
           mult,
           container as ElementInterfaceIntersect
         )
         break
-      case 1:
+      }
+      case 1: {
         p = new KeyframedMultidimensionalProperty(
           elem,
           data as VectorProperty<number[]>,
@@ -57,21 +60,21 @@ function getProp(
           container as ElementInterfaceIntersect
         )
         break
-      default:
+      }
+      case undefined:
+      default: {
         break
+      }
     }
   }
-  if (!p) {
-    p = new NoProperty()
-  }
-  if (p?.effectsSequence.length) {
+  p = p ?? new NoProperty()
+  if (p.effectsSequence.length > 0) {
     container?.addDynamicProperty(p)
   }
+
   return p
 }
 
-const PropertyFactory = {
-  getProp,
-}
+const PropertyFactory = { getProp }
 
 export default PropertyFactory

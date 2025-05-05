@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
   ElementInterfaceIntersect,
   Shape,
@@ -6,9 +8,9 @@ import type {
   VectorProperty,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import { degToRads } from '@/utils'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import Matrix from '@/utils/Matrix'
 import {
   BaseProperty,
@@ -16,18 +18,19 @@ import {
   type ValueProperty,
 } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
+
 export default class TransformProperty extends BaseProperty {
   _isDirty?: boolean
   _opMdf?: boolean
-  _transformCachingAtTime?: {
-    v: Matrix
-  }
+  _transformCachingAtTime?: { v: Matrix }
   a?: MultiDimensionalProperty<number[]>
   appliedTransformations: number
   autoOriented?: boolean
   override data: Shape
   override elem: ElementInterfaceIntersect
-  // frameId: number
+  /**
+   * FrameId: number.
+   */
   o?: ValueProperty
   opacity?: number
   or?: MultiDimensionalProperty<Vector3>
@@ -49,7 +52,7 @@ export default class TransformProperty extends BaseProperty {
   constructor(
     elem: ElementInterfaceIntersect,
     data: Shape,
-    container: ElementInterfaceIntersect
+    container: ElementInterfaceIntersect | null
   ) {
     super()
     this.elem = elem
@@ -60,7 +63,7 @@ export default class TransformProperty extends BaseProperty {
     // Precalculated matrix with non animated properties
     this.pre = new Matrix()
     this.appliedTransformations = 0
-    this.initDynamicPropertyContainer(container || elem)
+    this.initDynamicPropertyContainer(container ?? elem)
     if (data.p && 's' in data.p) {
       this.px = PropertyFactory.getProp(
         elem,
@@ -88,7 +91,7 @@ export default class TransformProperty extends BaseProperty {
     } else {
       this.p = PropertyFactory.getProp(
         elem,
-        data.p || ({ k: [0, 0, 0] } as any),
+        data.p ?? ({ k: [0, 0, 0] } as any),
         1,
         0,
         this as unknown as ElementInterfaceIntersect
@@ -118,6 +121,7 @@ export default class TransformProperty extends BaseProperty {
       ) as ValueProperty
       if (data.or?.k[0].ti) {
         const { length } = data.or.k
+
         for (let i = 0; i < length; i++) {
           data.or.k[i].to = null
           data.or.k[i].ti = null
@@ -134,7 +138,7 @@ export default class TransformProperty extends BaseProperty {
     } else {
       this.r = PropertyFactory.getProp(
         elem,
-        data.r || ({ k: 0 } as any),
+        data.r ?? ({ k: 0 } as any),
         0,
         degToRads,
         this as unknown as ElementInterfaceIntersect
@@ -158,14 +162,14 @@ export default class TransformProperty extends BaseProperty {
     }
     this.a = PropertyFactory.getProp(
       elem,
-      data.a || ({ k: [0, 0, 0] } as any),
+      data.a ?? ({ k: [0, 0, 0] } as any),
       1,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty<Vector3>
     this.s = PropertyFactory.getProp(
       elem,
-      data.s || ({ k: [100, 100, 100] } as any),
+      data.s ?? ({ k: [100, 100, 100] } as any),
       1,
       0.01,
       this as unknown as ElementInterfaceIntersect
@@ -180,27 +184,33 @@ export default class TransformProperty extends BaseProperty {
         elem
       ) as ValueProperty
     } else {
-      this.o = { _mdf: false, v: 1 } as any
+      this.o = {
+        _mdf: false,
+        v: 1 
+      } as any
     }
     this._isDirty = true
-    if (!this.dynamicProperties?.length) {
+
+    if (this.dynamicProperties.length === 0) {
       this.getValue(true)
     }
   }
   override addDynamicProperty(prop: DynamicPropertyContainer) {
     super.addDynamicProperty(prop)
-    this.elem?.addDynamicProperty(prop)
+    this.elem.addDynamicProperty(prop)
     this._isDirty = true
   }
   applyToMatrix(mat: Matrix) {
+    // This check is useful for develpment
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.data) {
       throw new Error(
         `${this.constructor.name}: data (Shape) is not implemented`
       )
     }
-    const _mdf = this._mdf
+
     this.iterateDynamicProperties()
-    this._mdf = this._mdf || _mdf
+    this._mdf = Boolean(this._mdf)
     if (this.a) {
       mat.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
     }
@@ -257,6 +267,7 @@ export default class TransformProperty extends BaseProperty {
 
     if (this._mdf || forceRender) {
       let frameRate
+
       this.v.cloneFromProps(this.pre.props)
       if (this.appliedTransformations < 1 && this.a) {
         this.v.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
@@ -280,6 +291,7 @@ export default class TransformProperty extends BaseProperty {
       }
       if (this.autoOriented) {
         let v1: Vector2, v2: Vector2
+
         frameRate = this.elem.globalData.frameRate
         if (this.p?.keyframes) {
           if (
@@ -320,50 +332,51 @@ export default class TransformProperty extends BaseProperty {
         } else if (this.px?.keyframes && this.py?.keyframes) {
           v1 = [0, 0] // TODO: Used to be []. Check if works
           v2 = [0, 0]
-          const px = this.px,
-            py = this.py
+          const { px } = this,
+            { py } = this
+
           if (
             Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
-            Number(px.keyframes?.[0].t)
+            px.keyframes[0].t
           ) {
             v1[0] = px.getValueAtTime(
-              (Number(px.keyframes?.[0].t) + 0.01) / frameRate,
+              (px.keyframes[0].t + 0.01) / frameRate,
               0
             )
             v1[1] = py.getValueAtTime(
-              (Number(py.keyframes?.[0].t) + 0.01) / frameRate,
+              (py.keyframes[0].t + 0.01) / frameRate,
               0
             )
             v2[0] = px.getValueAtTime(
-              Number(px.keyframes?.[0].t) / frameRate,
+              px.keyframes[0].t / frameRate,
               0
             )
             v2[1] = py.getValueAtTime(
-              Number(py.keyframes?.[0]?.t) / frameRate,
+              Number(py.keyframes[0]?.t) / frameRate,
               0
             )
           } else if (
-            Number(px._caching?.lastFrame) + Number(px.offsetTime) >=
-            Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t)
+            Number(px._caching?.lastFrame) + px.offsetTime >=
+            px.keyframes[px.keyframes.length - 1].t
           ) {
             v1[0] = px.getValueAtTime(
-              Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t) /
+              px.keyframes[px.keyframes.length - 1].t /
                 frameRate,
               0
             )
             v1[1] = py.getValueAtTime(
-              Number(py.keyframes?.[Number(py.keyframes?.length) - 1].t) /
+              py.keyframes[py.keyframes.length - 1].t /
                 frameRate,
               0
             )
             v2[0] = px.getValueAtTime(
-              (Number(px.keyframes?.[Number(px.keyframes?.length) - 1].t) -
+              (px.keyframes[px.keyframes.length - 1].t -
                 0.01) /
                 frameRate,
               0
             )
             v2[1] = py.getValueAtTime(
-              (Number(py.keyframes?.[Number(py.keyframes?.length) - 1].t) -
+              (py.keyframes[py.keyframes.length - 1].t -
                 0.01) /
                 frameRate,
               0
@@ -371,12 +384,12 @@ export default class TransformProperty extends BaseProperty {
           } else {
             v1 = [px.pv, py.pv]
             v2[0] = px.getValueAtTime(
-              (Number(px._caching?.lastFrame) + Number(px.offsetTime) - 0.01) /
+              (Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
                 frameRate,
               px.offsetTime
             )
             v2[1] = py.getValueAtTime(
-              (Number(py._caching?.lastFrame) + Number(py.offsetTime) - 0.01) /
+              (Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
                 frameRate,
               py.offsetTime
             )
@@ -401,14 +414,14 @@ export default class TransformProperty extends BaseProperty {
         this.v.translate(this.p.v[0], this.p.v[1], -this.p.v[2])
       }
     }
-    this.frameId = this.elem.globalData.frameId!
+    this.frameId = this.elem.globalData.frameId
   }
 
   precalculateMatrix() {
     this.appliedTransformations = 0
     this.pre.reset()
 
-    if (this.a?.effectsSequence?.length) {
+    if (this.a?.effectsSequence.length) {
       return
     }
 
@@ -419,7 +432,7 @@ export default class TransformProperty extends BaseProperty {
     this.pre.translate(-this.a.v[0], -this.a.v[1], this.a.v[2])
     this.appliedTransformations = 1
 
-    if (this.s?.effectsSequence?.length) {
+    if (this.s?.effectsSequence.length) {
       return
     }
 
@@ -431,17 +444,18 @@ export default class TransformProperty extends BaseProperty {
     this.appliedTransformations = 2
 
     if (this.sk) {
-      if (this.sk.effectsSequence?.length || this.sa?.effectsSequence?.length) {
+      if (this.sk.effectsSequence.length > 0 || this.sa?.effectsSequence.length) {
         return
       }
       this.pre.skewFromAxis(-this.sk.v, Number(this.sa?.v))
       this.appliedTransformations = 3
     }
     if (this.r) {
-      if (!this.r.effectsSequence?.length) {
+      if (this.r.effectsSequence.length === 0) {
         this.pre.rotate(-Number(this.r.v))
         this.appliedTransformations = 4
       }
+
       return
     }
 

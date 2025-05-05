@@ -1,4 +1,6 @@
-import type { DocumentData, LottieAsset, LottieLayer } from '@/types'
+import type {
+  DocumentData, LottieAsset, LottieLayer 
+} from '@/types'
 
 export default class SlotManager {
   animationData: LottieLayer
@@ -6,16 +8,20 @@ export default class SlotManager {
     this.animationData = animationData
   }
   getProp(data: DocumentData | LottieLayer | LottieAsset) {
+    const { sid } = data as LottieAsset
+
     if (
-      (data as LottieAsset).sid &&
-      this.animationData.slots &&
-      this.animationData.slots[(data as LottieAsset).sid!]
+      sid &&
+      this.animationData.slots?.[sid]
     ) {
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return Object.assign(
         data,
-        this.animationData.slots[(data as LottieAsset).sid!].p
+        this.animationData.slots[sid].p
       )
     }
+
     return data
   }
 }

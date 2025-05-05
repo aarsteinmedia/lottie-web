@@ -1,14 +1,3 @@
-import type AnimationItem from '@/animation/AnimationItem'
-import type {
-  AnimationConfiguration,
-  AnimationData,
-  AnimationDirection,
-  AnimationSettings,
-  LottieAsset,
-  LottieManifest,
-  Vector2,
-} from '@/types'
-
 import {
   play,
   pause,
@@ -50,7 +39,7 @@ import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 
-export function setSubframeRendering(flag: boolean) {
+export const setSubframeRendering = (flag: boolean) => {
   setSubframeEnabled(flag)
 }
 
@@ -86,6 +75,7 @@ const checkReady = () => {
       return
     }
     if (document.readyState === 'complete') {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       clearInterval(readyStateCheckInterval)
       searchAnimations()
     }
@@ -103,15 +93,16 @@ registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
 registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
 registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
+
+export default Lottie
+
+export { type default as AnimationItem } from '@/animation/AnimationItem'
 export type {
   AnimationConfiguration,
-  AnimationItem,
   AnimationData,
   AnimationDirection,
   AnimationSettings,
   LottieAsset,
   LottieManifest,
-  Vector2,
-}
-
-export default Lottie
+  Vector2
+} from '@/types'

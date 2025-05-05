@@ -7,16 +7,19 @@ import { getWebWorker } from '@/utils/getterSetter'
 
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void
-const workerProxy: Worker = {
+
+const funcitonNotImplemented = 'Function not implemented.',
+
+  workerProxy: Worker = {
     addEventListener: <K extends keyof WorkerEventMap>(
       _type: K,
       _listener: (this: Worker, ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | AddEventListenerOptions
     ): void => {
-      throw new Error('Function not implemented.')
+      throw new Error(funcitonNotImplemented)
     },
     dispatchEvent: (_: Event): boolean => {
-      throw new Error('Function not implemented.')
+      throw new Error(funcitonNotImplemented)
     },
     onerror: null,
     onmessage: (_: { data: string }) => {
@@ -24,19 +27,17 @@ const workerProxy: Worker = {
     },
     onmessageerror: null,
     postMessage: (data: WorkerEvent['data']) => {
-      workerFn({
-        data,
-      })
+      workerFn({ data, })
     },
     removeEventListener: <K extends keyof WorkerEventMap>(
       _type: K,
       _listener: (this: Worker, ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | EventListenerOptions
     ): void => {
-      throw new Error('Function not implemented.')
+      throw new Error(funcitonNotImplemented)
     },
     terminate: (): void => {
-      throw new Error('Function not implemented.')
+      throw new Error(funcitonNotImplemented)
     },
   },
   _workerSelf: {
@@ -46,7 +47,11 @@ const workerProxy: Worker = {
       status: string
     }) => void
   } = {
-    postMessage: (data: { id: string; payload?: unknown; status: string }) => {
+    postMessage: (data: {
+      id: string;
+      payload?: unknown;
+      status: string 
+    }) => {
       if (!workerProxy.onmessage) {
         return
       }
@@ -59,10 +64,10 @@ const workerProxy: Worker = {
         CAPTURING_PHASE: 1,
         composed: false,
         composedPath: (): EventTarget[] => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         currentTarget: null,
-        data: data,
+        data,
         defaultPrevented: false,
         eventPhase: 0,
         initEvent: (
@@ -70,7 +75,7 @@ const workerProxy: Worker = {
           _bubbles?: boolean,
           _cancelable?: boolean
         ): void => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         initMessageEvent: (
           _type: string,
@@ -82,7 +87,7 @@ const workerProxy: Worker = {
           _source?: MessageEventSource | null,
           _ports?: MessagePort[]
         ): void => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         isTrusted: false,
         lastEventId: '',
@@ -90,16 +95,16 @@ const workerProxy: Worker = {
         origin: '',
         ports: [],
         preventDefault: (): void => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         returnValue: false,
         source: null,
         srcElement: null,
         stopImmediatePropagation: (): void => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         stopPropagation: (): void => {
-          throw new Error('Function not implemented.')
+          throw new Error(funcitonNotImplemented)
         },
         target: null,
         timeStamp: 0,
@@ -113,7 +118,7 @@ const workerProxy: Worker = {
       onError?: (error?: unknown) => void
     }
   } = {}
-let workerInstance: Worker
+let workerInstance: Worker | undefined
 
 export function completeAnimation(
   animation: AnimationData,
@@ -122,7 +127,8 @@ export function completeAnimation(
 ) {
   setupWorker()
   const processId = createProcess(onComplete, onError)
-  workerInstance.postMessage({
+
+  workerInstance?.postMessage({
     animation,
     id: processId,
     type: 'complete',
@@ -139,12 +145,13 @@ export function loadAnimation(
   }
   setupWorker()
   const processId = createProcess(onComplete, onError)
-  workerInstance.postMessage({
+
+  workerInstance?.postMessage({
     fullPath: isServer()
       ? path
       : window.location.origin + window.location.pathname,
     id: processId,
-    path: path,
+    path,
     type: 'loadAnimation',
   })
 }
@@ -156,12 +163,13 @@ export function loadData(
 ) {
   setupWorker()
   const processId = createProcess(onComplete, onError)
-  workerInstance.postMessage({
+
+  workerInstance?.postMessage({
     fullPath: isServer()
       ? path
       : window.location.origin + window.location.pathname,
     id: processId,
-    path: path,
+    path,
     type: 'loadData',
   })
 }
@@ -172,28 +180,32 @@ function createProcess(
 ) {
   _counterId++
   const id = `processId_${_counterId}`
+
   try {
     processes[id] = {
       onComplete,
       onError,
     }
+
     return id
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.error(error)
     throw new Error('Could not create animation proccess')
   }
 }
 
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
-  if (!isServer() && window.Worker && window.Blob && getWebWorker()) {
+  if (!isServer() && getWebWorker()) {
     const blob = new Blob(
       ['var _workerSelf = self; self.onmessage = ', fn.toString()],
       { type: 'text/javascript' }
     )
     const url = URL.createObjectURL(blob)
+
     return new Worker(url)
   }
   workerFn = fn
+
   return workerProxy
 }
 function setupWorker() {
@@ -221,16 +233,19 @@ function setupWorker() {
           })
         }
       )
+
       return
     }
     if (e.data.type === 'complete') {
-      const animation = e.data.animation
+      const { animation, id } = e.data
+
       completeData(animation)
       _workerSelf.postMessage({
-        id: e.data.id,
+        id,
         payload: animation,
         status: 'success',
       })
+
       return
     }
     if (e.data.type === 'loadData') {
@@ -255,11 +270,19 @@ function setupWorker() {
   })
 
   workerInstance.onmessage = ({ data }) => {
-    const { id } = data
-    const process = processes[id]
+    const {
+        id, payload, status 
+      } = data as {
+        id: string;
+        status: string;
+        payload: AnimationData 
+      },
+      process = processes[id]
+
     processes[id] = null as any
-    if (data.status === 'success') {
-      process.onComplete(data.payload)
+    if (status === 'success') {
+      process.onComplete(payload)
+
       return
     }
     if (process.onError) {

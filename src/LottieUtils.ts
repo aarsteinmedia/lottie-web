@@ -1,19 +1,4 @@
-import {
-  degToRads,
-  floatEqual,
-  floatZero,
-  inBrowser,
-  isSafari,
-  isServer,
-} from '@/utils'
-import { createElementID } from '@/utils/getterSetter'
-
 export {
-  createElementID,
-  degToRads,
-  floatEqual,
-  floatZero,
-  inBrowser,
-  isSafari,
-  isServer,
-}
+  degToRads, floatEqual, floatZero, inBrowser, isSafari, isServer 
+} from '@/utils'
+export { createElementID } from '@/utils/getterSetter'
