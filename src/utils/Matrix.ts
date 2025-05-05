@@ -36,10 +36,10 @@ export default class Matrix {
     y: number,
     z: number
   ): {
-    x: number;
-    y: number;
-    z: number
-  } {
+      x: number;
+      y: number;
+      z: number
+    } {
     return {
       x:
         x * this.props[0] +
@@ -91,7 +91,7 @@ export default class Matrix {
     const _p = this.props
 
     return `${Math.round((x * _p[0] + y * _p[4] + _p[12]) * 100) / 100},${Math.round((x * _p[1] + y * _p[5] + _p[13]) * 100) / 100
-      }`
+    }`
   }
 
   applyToTriplePoints(
@@ -103,11 +103,11 @@ export default class Matrix {
 
     if (this.isIdentity()) {
       arr.set([pt1[0],
-      pt1[1],
-      pt2[0],
-      pt2[1],
-      pt3[0],
-      pt3[1]])
+        pt1[1],
+        pt2[0],
+        pt2[1],
+        pt3[0],
+        pt3[1]])
     } else {
       const p0 = this.props[0]
       const p1 = this.props[1]

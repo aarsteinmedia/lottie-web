@@ -2,23 +2,18 @@ import { createNS, inBrowser } from '@/utils'
 
 export function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
-  if (!feColorMatrix) {
-    throw new Error('Could not create SVGFEColorMatrixElement Element')
-  }
+
   feColorMatrix.setAttribute('type', 'matrix')
   feColorMatrix.setAttribute('color-interpolation-filters', 'sRGB')
-  feColorMatrix.setAttribute(
-    'values',
-    '0 0 0 1 0  0 0 0 1 0  0 0 0 1 0  0 0 0 1 1'
-  )
+  feColorMatrix.setAttribute('values',
+    '0 0 0 1 0  0 0 0 1 0  0 0 0 1 0  0 0 0 1 1')
+
   return feColorMatrix
 }
 
 export function createFilter(filId: string, skipCoordinates?: boolean) {
   const fil = createNS<SVGFilterElement>('filter')
-  if (!fil) {
-    throw new Error(`Could not create ${filId} filter element`)
-  }
+
   fil.id = filId
   if (!skipCoordinates) {
     fil.setAttribute('filterUnits', 'objectBoundingBox')
@@ -27,6 +22,7 @@ export function createFilter(filId: string, skipCoordinates?: boolean) {
     fil.setAttribute('width', '100%')
     fil.setAttribute('height', '100%')
   }
+
   return fil
 }
 

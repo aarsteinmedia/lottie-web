@@ -1,4 +1,7 @@
-import type { BezierLength, SegmentLength, Vector2 } from '@/types'
+/* eslint-disable @typescript-eslint/naming-convention */
+import type {
+  BezierLength, SegmentLength, Vector2
+} from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/enums'
@@ -14,12 +17,11 @@ export function buildBezierData(
   pt3: Vector2,
   pt4: Vector2
 ) {
-  const storedData: {
-    [key: string]: BezierData
-  } = {}
-  const bezierName = `${pt1[0]}_${pt1[1]}_${pt2[0]}_${pt2[1]}_${pt3[0]}_${
-    pt3[1]
-  }_${pt4[0]}_${pt4[1]}`.replace(/\./g, 'p')
+  const storedData: { [key: string]: BezierData | undefined } = {},
+    bezierName = `${pt1[0]}_${pt1[1]}_${pt2[0]}_${pt2[1]}_${pt3[0]}_${
+      pt3[1]
+    }_${pt4[0]}_${pt4[1]}`.replaceAll('.', 'p')
+
   if (!storedData[bezierName]) {
     let curveSegments = getDefaultCurveSegments(),
       ptCoord,
@@ -28,7 +30,9 @@ export function buildBezierData(
       ptDistance,
       point,
       lastPoint = null
+
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       pt1.length === 2 &&
       (pt1[0] !== pt2[0] || pt1[1] !== pt2[1]) &&
       pointOnLine2D(
@@ -52,6 +56,7 @@ export function buildBezierData(
     }
     const bezierData = new BezierData(curveSegments),
       { length } = pt3
+
     for (let k = 0; k < curveSegments; k++) {
       point = createSizedArray(length) as Vector2
       perc = k / (curveSegments - 1)
@@ -75,6 +80,7 @@ export function buildBezierData(
     bezierData.segmentLength = addedLength
     storedData[bezierName] = bezierData
   }
+
   return storedData[bezierName]
 }
 
@@ -89,12 +95,14 @@ export function getNewSegment(
 ) {
   let startPerc = startPercFromProps,
     endPerc = endPercFromProps
+
   if (startPerc < 0) {
     startPerc = 0
   } else if (startPerc > 1) {
     startPerc = 1
   }
   const t0 = getDistancePerc(startPerc, bezierData)
+
   endPerc = endPerc > 1 ? 1 : endPerc
   const t1 = getDistancePerc(endPerc, bezierData),
     u0 = 1 - t0,
@@ -103,55 +111,54 @@ export function getNewSegment(
     t0u0u0_3 = t0 * u0 * u0 * 3,
     t0t0u0_3 = t0 * t0 * u0 * 3,
     t0t0t0 = t0 * t0 * t0,
-    //
+    /**
+     *
+     */
     u0u0u1 = u0 * u0 * u1,
     t0u0u1_3 = t0 * u0 * u1 + u0 * t0 * u1 + u0 * u0 * t1,
     t0t0u1_3 = t0 * t0 * u1 + u0 * t0 * t1 + t0 * u0 * t1,
     t0t0t1 = t0 * t0 * t1,
-    //
+    /**
+     *
+     */
     u0u1u1 = u0 * u1 * u1,
     t0u1u1_3 = t0 * u1 * u1 + u0 * t1 * u1 + u0 * u1 * t1,
     t0t1u1_3 = t0 * t1 * u1 + u0 * t1 * t1 + t0 * u1 * t1,
     t0t1t1 = t0 * t1 * t1,
-    //
+    /**
+     *
+     */
     u1u1u1 = u1 * u1 * u1,
     t1u1u1_3 = t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1,
     t1t1u1_3 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1,
     t1t1t1 = t1 * t1 * t1,
     { length } = pt1
+
   for (let i = 0; i < length; i++) {
     bezierSegmentPoints[i * 4] =
-      Math.round(
-        (u0u0u0 * pt1[i] +
+      Math.round((u0u0u0 * pt1[i] +
           t0u0u0_3 * pt3[i] +
           t0t0u0_3 * pt4[i] +
           t0t0t0 * pt2[i]) *
-          1000
-      ) / 1000
+          1000) / 1000
     bezierSegmentPoints[i * 4 + 1] =
-      Math.round(
-        (u0u0u1 * pt1[i] +
+      Math.round((u0u0u1 * pt1[i] +
           t0u0u1_3 * pt3[i] +
           t0t0u1_3 * pt4[i] +
           t0t0t1 * pt2[i]) *
-          1000
-      ) / 1000
+          1000) / 1000
     bezierSegmentPoints[i * 4 + 2] =
-      Math.round(
-        (u0u1u1 * pt1[i] +
+      Math.round((u0u1u1 * pt1[i] +
           t0u1u1_3 * pt3[i] +
           t0t1u1_3 * pt4[i] +
           t0t1t1 * pt2[i]) *
-          1000
-      ) / 1000
+          1000) / 1000
     bezierSegmentPoints[i * 4 + 3] =
-      Math.round(
-        (u1u1u1 * pt1[i] +
+      Math.round((u1u1u1 * pt1[i] +
           t1u1u1_3 * pt3[i] +
           t1t1u1_3 * pt4[i] +
           t1t1t1 * pt2[i]) *
-          1000
-      ) / 1000
+          1000) / 1000
   }
 
   return bezierSegmentPoints
@@ -168,21 +175,18 @@ export function getPointInSegment(
   const t1 = getDistancePerc(percent, bezierData),
     u1 = 1 - t1,
     ptX =
-      Math.round(
-        (u1 * u1 * u1 * pt1[0] +
+      Math.round((u1 * u1 * u1 * pt1[0] +
           (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
           (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
           t1 * t1 * t1 * pt2[0]) *
-          1000
-      ) / 1000,
+          1000) / 1000,
     ptY =
-      Math.round(
-        (u1 * u1 * u1 * pt1[1] +
+      Math.round((u1 * u1 * u1 * pt1[1] +
           (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
           (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
           t1 * t1 * t1 * pt2[1]) *
-          1000
-      ) / 1000
+          1000) / 1000
+
   return [ptX, ptY]
 }
 
@@ -191,7 +195,7 @@ export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
       lengths: BezierLength[]
       totalLength: number
     } = segmentsLengthPool.newElement(),
-    closed = shapeData.c,
+    isClosed = shapeData.c,
     pathV = shapeData.v,
     pathO = shapeData.o,
     pathI = shapeData.i
@@ -199,25 +203,27 @@ export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
   const len = shapeData._length || 0,
     { lengths } = segmentsLength
   let totalLength = 0
+
   for (i = 0; i < len - 1; i++) {
     lengths[i] = getBezierLength(
-      pathV[i] as Vector2,
-      pathV[i + 1] as Vector2,
-      pathO[i] as Vector2,
-      pathI[i + 1] as Vector2
+      pathV[i],
+      pathV[i + 1],
+      pathO[i],
+      pathI[i + 1]
     )
     totalLength += lengths[i].addedLength
   }
-  if (closed && len) {
+  if (isClosed && len) {
     lengths[i] = getBezierLength(
-      pathV[i] as Vector2,
-      pathV[0] as Vector2,
-      pathO[i] as Vector2,
-      pathI[0] as Vector2
+      pathV[i],
+      pathV[0],
+      pathO[i],
+      pathI[0]
     )
     totalLength += lengths[i].addedLength
   }
   segmentsLength.totalLength = totalLength
+
   return segmentsLength
 }
 
@@ -230,6 +236,7 @@ export function pointOnLine2D(
   y3: number
 ) {
   const det1 = x1 * y2 + y1 * x3 + x2 * y3 - x3 * y2 - y3 * x1 - x2 * y1
+
   return det1 > -0.001 && det1 < 0.001
 }
 
@@ -245,18 +252,15 @@ export function pointOnLine3D(
   z3: number
 ) {
   if (z1 === 0 && z2 === 0 && z3 === 0) {
-    return pointOnLine2D(x1, y1, x2, y2, x3, y3)
-  }
-  const dist1 = Math.sqrt(
-      Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)
-    ),
-    dist2 = Math.sqrt(
-      Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2) + Math.pow(z3 - z1, 2)
-    ),
-    dist3 = Math.sqrt(
-      Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) + Math.pow(z3 - z2, 2)
+    return pointOnLine2D(
+      x1, y1, x2, y2, x3, y3
     )
+  }
+  const dist1 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)),
+    dist2 = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2) + Math.pow(z3 - z1, 2)),
+    dist3 = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) + Math.pow(z3 - z2, 2))
   let diffDist: number
+
   if (dist1 > dist2) {
     if (dist1 > dist3) {
       diffDist = dist1 - dist2 - dist3
@@ -268,6 +272,7 @@ export function pointOnLine3D(
   } else {
     diffDist = dist2 - dist1 - dist3
   }
+
   return diffDist > -0.0001 && diffDist < 0.0001
 }
 
@@ -283,13 +288,14 @@ function getBezierLength(
     addedLength = 0,
     ptDistance
   const point = [],
-    lastPoint = [],
+    lastPoint: (number | null)[] = [],
     lengthData: {
       percents: number[]
       lengths: number[]
       addedLength: number
     } = bezierLengthPool.newElement(),
     len = pt3.length
+
   for (let k = 0; k < curveSegments; k++) {
     perc = k / (curveSegments - 1)
     ptDistance = 0
@@ -301,7 +307,7 @@ function getBezierLength(
         Math.pow(perc, 3) * pt2[i]
       point[i] = ptCoord
       if (lastPoint[i] !== null) {
-        ptDistance += Math.pow(point[i] - lastPoint[i], 2)
+        ptDistance += Math.pow(point[i] - (lastPoint[i] || 0), 2)
       }
       lastPoint[i] = point[i]
     }
@@ -313,17 +319,19 @@ function getBezierLength(
     lengthData.lengths[k] = addedLength
   }
   lengthData.addedLength = addedLength
+
   return lengthData
 }
 
-function getDistancePerc(
-  perc: number,
-  { addedLength, lengths, percents }: ReturnType<typeof getBezierLength>
-) {
+function getDistancePerc(perc: number,
+  {
+    addedLength, lengths, percents
+  }: ReturnType<typeof getBezierLength>) {
   const { length } = percents
   let initPos = Math.floor((length - 1) * perc)
   const lengthPos = perc * addedLength
   let lPerc = 0
+
   if (
     initPos === length - 1 ||
     initPos === 0 ||
@@ -332,13 +340,14 @@ function getDistancePerc(
     return percents[initPos]
   }
   const dir = lengths[initPos] > lengthPos ? -1 : 1
-  let flag = true
-  while (flag) {
+  let shouldIterate = true
+
+  while (shouldIterate) {
     if (lengths[initPos] <= lengthPos && lengths[initPos + 1] > lengthPos) {
       lPerc =
         (lengthPos - lengths[initPos]) /
         (lengths[initPos + 1] - lengths[initPos])
-      flag = false
+      shouldIterate = false
     } else {
       initPos += dir
     }
@@ -347,18 +356,22 @@ function getDistancePerc(
       if (initPos === length - 1) {
         return percents[initPos]
       }
-      flag = false
+      shouldIterate = false
     }
   }
+
   return percents[initPos] + (percents[initPos + 1] - percents[initPos]) * lPerc
 }
 
 export class BezierData {
-  points: { point: number[]; partialLength: number }[]
+  points: {
+    point: number[];
+    partialLength: number
+  }[]
   segmentLength: number
   constructor(length: number) {
     this.segmentLength = 0
-    this.points = new Array(length)
+    this.points = Array.from({ length })
   }
 }
 

@@ -1,7 +1,7 @@
 import type { ConfigArray } from 'typescript-eslint'
 
 import {
-  sheriff, type SheriffSettings, tseslint 
+  sheriff, type SheriffSettings, tseslint
 } from 'eslint-config-sheriff'
 import perfectionist from 'eslint-plugin-perfectionist'
 
@@ -25,11 +25,14 @@ const config: ConfigArray = tseslint.config(
     plugins: { perfectionist },
     rules: {
       '@stylistic/array-element-newline': ['warn', { minItems: 3 }],
+      '@stylistic/func-call-spacing': 'warn',
       '@stylistic/function-paren-newline': ['warn', { minItems: 3 }],
       '@stylistic/indent': ['warn', 2],
       '@stylistic/jsx-quotes': ['warn', 'prefer-double'],
+      '@stylistic/key-spacing': 'warn',
       '@stylistic/no-extra-parens': 'warn',
       '@stylistic/no-multiple-empty-lines': 'warn',
+      '@stylistic/no-trailing-spaces': 'warn',
       '@stylistic/object-curly-newline': ['warn', {
         minProperties: 3,
         multiline: true

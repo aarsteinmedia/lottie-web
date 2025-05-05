@@ -1,7 +1,7 @@
 import type { ElementInterfaceIntersect, TextRangeValue } from '@/types'
 
 import { getBezierEasing } from '@/utils/BezierFactory'
-import { BaseProperty, ValueProperty } from '@/utils/Properties'
+import { type ValueProperty, BaseProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export default class TextSelectorProperty extends BaseProperty {
@@ -32,7 +32,10 @@ export default class TextSelectorProperty extends BaseProperty {
     this.initDynamicPropertyContainer(elem)
     this.s = PropertyFactory.getProp(
       elem,
-      data.s || { k: 0 },
+      data.s ?? {
+        a: 0,
+        k: 0
+      },
       0,
       0,
       this as unknown as ElementInterfaceIntersect
@@ -50,28 +53,40 @@ export default class TextSelectorProperty extends BaseProperty {
     }
     this.o = PropertyFactory.getProp(
       elem,
-      data.o || { k: 0 },
+      data.o ?? {
+        a: 0,
+        k: 0
+      },
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.xe = PropertyFactory.getProp(
       elem,
-      data.xe || { k: 0 },
+      data.xe ?? {
+        a: 0,
+        k: 0
+      },
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.ne = PropertyFactory.getProp(
       elem,
-      data.ne || { k: 0 },
+      data.ne ?? {
+        a: 0,
+        k: 0
+      },
       0,
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.sm = PropertyFactory.getProp(
       elem,
-      data.sm || { k: 100 },
+      data.sm ?? {
+        a: 0,
+        k: 100
+      },
       0,
       0,
       this as unknown as ElementInterfaceIntersect
@@ -84,15 +99,16 @@ export default class TextSelectorProperty extends BaseProperty {
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
 
-    if (!this.dynamicProperties?.length) {
+    if (this.dynamicProperties.length === 0) {
       this.getValue()
     }
   }
 
   getMult(indFromProps: number, _val?: number): number | number[] {
     let ind = indFromProps
+
     if (
-      this._currentTextLength !== this.elem.textProperty?.currentData.l?.length
+      this._currentTextLength !== this.elem.textProperty?.currentData.l.length
     ) {
       this.getValue()
     }
@@ -100,17 +116,20 @@ export default class TextSelectorProperty extends BaseProperty {
       y1 = 0,
       x2 = 1,
       y2 = 1
-    if ((this.ne.v as number) > 0) {
-      x1 = (this.ne.v as number) / 100.0
+
+    if (this.ne.v > 0) {
+      x1 = this.ne.v / 100.0
     } else {
       y1 = -this.ne.v / 100.0
     }
-    if ((this.xe.v as number) > 0) {
-      x2 = 1.0 - (this.xe.v as number) / 100.0
+    if (this.xe.v > 0) {
+      x2 = 1.0 - this.xe.v / 100.0
     } else {
-      y2 = 1.0 + (this.xe.v as number) / 100.0
+      y2 = 1.0 + this.xe.v / 100.0
     }
-    const easer = getBezierEasing(x1, y1, x2, y2).get
+    const easer = getBezierEasing(
+      x1, y1, x2, y2
+    ).get
 
     let mult = 0
     const s = this.finalS,
@@ -157,12 +176,14 @@ export default class TextSelectorProperty extends BaseProperty {
           mult = 0
         } else {
           const tot = e - s
+
           /* ind += 0.5;
                   mult = -4/(tot*tot)*(ind*ind)+(4/tot)*ind; */
           ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
           const x = -tot / 2 + ind
           const a = tot / 2
-          mult = Math.sqrt(1 - (x * x) / (a * a))
+
+          mult = Math.sqrt(1 - x * x / (a * a))
         }
         mult = easer(mult)
         break
@@ -172,7 +193,7 @@ export default class TextSelectorProperty extends BaseProperty {
           mult = 0
         } else {
           ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
-          mult = (1 + Math.cos(Math.PI + (Math.PI * 2 * ind) / (e - s))) / 2
+          mult = (1 + Math.cos(Math.PI + Math.PI * 2 * ind / (e - s))) / 2
         }
         mult = easer(mult)
         break
@@ -200,11 +221,13 @@ export default class TextSelectorProperty extends BaseProperty {
     //     - divide it by the smoothness (this will return the range to [0; 1])
     // Note: If it doesn't work on some scenarios, consider applying it before the easer.
     if (this.sm.v !== 100) {
-      let smoothness = (this.sm.v as number) * 0.01
+      let smoothness = this.sm.v * 0.01
+
       if (smoothness === 0) {
         smoothness = 0.00000001
       }
       const threshold = 0.5 - smoothness * 0.5
+
       if (mult < threshold) {
         mult = 0
       } else {
@@ -214,21 +237,24 @@ export default class TextSelectorProperty extends BaseProperty {
         }
       }
     }
+
     return mult * Number(this.a.v)
   }
   override getValue(newCharsFlag?: boolean) {
     this.iterateDynamicProperties()
     this._mdf = newCharsFlag || this._mdf
-    this._currentTextLength = this.elem.textProperty?.currentData.l?.length || 0
-    if (newCharsFlag && this.data.r === 2 && this.e?.v) {
+    this._currentTextLength = this.elem.textProperty?.currentData.l.length || 0
+    if (newCharsFlag && this.data.r === 2 && this.e.v) {
       this.e.v = this._currentTextLength
     }
     const divisor = this.data.r === 2 ? 1 : 100 / this.data.totalChars,
-      o = Number(this.o?.v) / divisor
+      o = Number(this.o.v) / divisor
     let s = Number(this.s?.v) / divisor + o,
-      e = Number(this.e?.v) / divisor + o
+      e = Number(this.e.v) / divisor + o
+
     if (s > e) {
       const _s = s
+
       s = e
       e = _s
     }
@@ -236,8 +262,6 @@ export default class TextSelectorProperty extends BaseProperty {
     this.finalE = e
   }
   initiateExpression() {
-    throw new Error(
-      `${this.constructor.name}: Method initiateExpression is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }
 }

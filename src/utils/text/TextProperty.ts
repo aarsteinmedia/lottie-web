@@ -19,6 +19,7 @@ import {
 } from '@/utils/FontManager'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { BaseProperty } from '@/utils/Properties'
+
 export default class TextProperty extends BaseProperty {
   _frameId: number
   canResize: boolean
@@ -40,7 +41,7 @@ export default class TextProperty extends BaseProperty {
     this.kf = false
     this._isFirstFrame = true
     this._mdf = false
-    if (data?.d && data.d.sid) {
+    if (data.d?.sid) {
       data.d = elem.globalData.slotManager?.getProp(data.d)
     }
     this.data = data
@@ -97,9 +98,10 @@ export default class TextProperty extends BaseProperty {
     const len = text.length
     let charCode,
       secondCharCode,
-      shouldCombine = false,
+      shouldCombine,
       shouldCombineNext = false,
-      currentChars = ''
+      currentChars
+
     while (i < len) {
       shouldCombine = shouldCombineNext
       shouldCombineNext = false
@@ -110,19 +112,19 @@ export default class TextProperty extends BaseProperty {
         // It's a potential surrogate pair (this is the High surrogate)
       } else if (charCode >= 0xd800 && charCode <= 0xdbff) {
         if (isRegionalFlag(text, i)) {
-          currentChars = text.substring(i, 14)
+          currentChars = text.slice(i, 14)
         } else {
           secondCharCode = text.charCodeAt(i + 1)
           // It's a surrogate pair (this is the Low surrogate)
           if (secondCharCode >= 0xdc00 && secondCharCode <= 0xdfff) {
-            // eslint-disable-next-line max-depth
+
             if (isModifier(charCode, secondCharCode)) {
-              currentChars = text.substring(i, 2)
+              currentChars = text.slice(i, 2)
               shouldCombine = true
-            } else if (isFlagEmoji(text.substring(i, 4))) {
-              currentChars = text.substring(i, 4)
+            } else if (isFlagEmoji(text.slice(i, 4))) {
+              currentChars = text.slice(i, 4)
             } else {
-              currentChars = text.substring(i, 2)
+              currentChars = text.slice(i, 2)
             }
           }
         }
@@ -143,13 +145,12 @@ export default class TextProperty extends BaseProperty {
       }
       i += currentChars.length
     }
+
     return charactersArray
   }
 
   calculateExpression(_text: string): number {
-    throw new Error(
-      `${this.constructor.name}: Method calculateExpression is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method calculateExpression is not implemented`)
   }
 
   canResizeFont(_canResize: boolean) {
@@ -161,18 +162,17 @@ export default class TextProperty extends BaseProperty {
   completeTextData(documentData: DocumentData) {
     documentData.__complete = true
     const { fontManager } = this.elem.globalData
+
     if (!fontManager) {
-      throw new Error(
-        `${this.constructor.name}: FontManager not loaded to globalData`
-      )
+      throw new Error(`${this.constructor.name}: FontManager not loaded to globalData`)
     }
-    const data = this.data
+    const { data } = this
     const letters: Letter[] = []
     let len: number,
       newLineFlag,
       index = 0,
       val
-    const anchorGrouping = data?.m?.g
+    const anchorGrouping = data.m?.g
     let currentSize = 0,
       currentPos = 0,
       currentLine = 0
@@ -184,27 +184,31 @@ export default class TextProperty extends BaseProperty {
       cLength = 0
 
     const fontProps = getFontProperties(fontData)
+
     documentData.fWeight = fontProps.weight
     documentData.fStyle = fontProps.style
     documentData.finalSize = documentData.s
     documentData.finalText = this.buildFinalText(`${documentData.t}`)
     len = documentData.finalText?.length || 0
     documentData.finalLineHeight = documentData.lh
-    let trackingOffset = (documentData.tr / 1000) * documentData.finalSize
+    let trackingOffset = documentData.tr / 1000 * documentData.finalSize
     let charCode
+
     if (documentData.sz) {
       let flag = true
       const boxWidth = documentData.sz[0]
       const boxHeight = documentData.sz[1]
       let currentHeight
       let finalText
+
       while (flag) {
         finalText = this.buildFinalText(`${documentData.t}`)
         currentHeight = 0
         lineWidth = 0
         len = finalText.length
-        trackingOffset = (documentData.tr / 1000) * documentData.finalSize
+        trackingOffset = documentData.tr / 1000 * documentData.finalSize
         let lastSpaceIndex = -1
+
         for (let i = 0; i < len; i++) {
           charCode = finalText[i].charCodeAt(0)
           newLineFlag = false
@@ -224,7 +228,7 @@ export default class TextProperty extends BaseProperty {
             )
             cLength = newLineFlag
               ? 0
-              : (charData.w * documentData.finalSize) / 100
+              : charData.w * documentData.finalSize / 100
           } else {
             cLength =
               fontManager?.measureText(
@@ -241,7 +245,9 @@ export default class TextProperty extends BaseProperty {
             }
             currentHeight +=
               documentData.finalLineHeight || documentData.finalSize * 1.2
-            finalText.splice(i, lastSpaceIndex === i ? 1 : 0, '\r')
+            finalText.splice(
+              i, lastSpaceIndex === i ? 1 : 0, '\r'
+            )
             lastSpaceIndex = -1
             lineWidth = 0
           } else {
@@ -250,7 +256,7 @@ export default class TextProperty extends BaseProperty {
           }
         }
         currentHeight +=
-          (Number(fontData.ascent) * documentData.finalSize) / 100
+          Number(fontData.ascent) * documentData.finalSize / 100
         if (
           this.canResize &&
           documentData.finalSize > this.minimumFontSize &&
@@ -258,7 +264,7 @@ export default class TextProperty extends BaseProperty {
         ) {
           documentData.finalSize -= 1
           documentData.finalLineHeight =
-            (documentData.finalSize * documentData.lh) / documentData.s
+            documentData.finalSize * documentData.lh / documentData.s
         } else {
           documentData.finalText = finalText
           len = documentData.finalText.length
@@ -270,6 +276,7 @@ export default class TextProperty extends BaseProperty {
     cLength = 0
     let uncollapsedSpaces = 0
     let currentChar
+
     for (let i = 0; i < len; i++) {
       newLineFlag = false
       currentChar = documentData.finalText[i]
@@ -291,7 +298,7 @@ export default class TextProperty extends BaseProperty {
           fontData.fStyle,
           fontManager.getFontByName(documentData.f).fFamily
         )
-        cLength = newLineFlag ? 0 : (charData.w * documentData.finalSize) / 100
+        cLength = newLineFlag ? 0 : charData.w * documentData.finalSize / 100
       } else {
         cLength = fontManager.measureText(
           val,
@@ -315,7 +322,7 @@ export default class TextProperty extends BaseProperty {
         l: cLength,
         line: currentLine,
         n: newLineFlag,
-        val: val,
+        val,
       } as unknown as Letter)
       if (anchorGrouping === 2) {
         currentSize += cLength
@@ -362,14 +369,17 @@ export default class TextProperty extends BaseProperty {
     } else {
       documentData.boxWidth = maxLineWidth
       switch (documentData.j) {
-        case 1:
+        case 1: {
           documentData.justifyOffset = -documentData.boxWidth
           break
-        case 2:
+        }
+        case 2: {
           documentData.justifyOffset = -documentData.boxWidth / 2
           break
-        default:
+        }
+        default: {
           documentData.justifyOffset = 0
+        }
       }
     }
     documentData.lineWidths = lineWidths
@@ -379,6 +389,7 @@ export default class TextProperty extends BaseProperty {
     const jLen = animators?.length || 0
     let based, ind
     const indexes = []
+
     for (let j = 0; j < jLen; j++) {
       animatorData = animators?.[j]
       if (!animatorData) {
@@ -404,11 +415,11 @@ export default class TextProperty extends BaseProperty {
         letterData = letters[i]
         letterData.anIndexes[j] = ind
         if (
-          (based === 1 && letterData.val !== '') ||
-          (based === 2 && letterData.val !== '' && letterData.val !== ' ') ||
-          (based === 3 &&
-            (letterData.n || letterData.val === ' ' || i === len - 1)) ||
-          (based === 4 && (letterData.n || i === len - 1))
+          based === 1 && letterData.val !== '' ||
+          based === 2 && letterData.val !== '' && letterData.val !== ' ' ||
+          based === 3 &&
+            (letterData.n || letterData.val === ' ' || i === len - 1) ||
+          based === 4 && (letterData.n || i === len - 1)
         ) {
           if (Number(animatorData.s?.rn) === 1) {
             indexes.push(ind)
@@ -416,20 +427,19 @@ export default class TextProperty extends BaseProperty {
           ind++
         }
       }
-      if (data?.a && data.a[j].s) {
+      if (data?.a?.[j].s) {
         data.a[j].s!.totalChars = ind
       }
       let currentInd = -1,
         newInd
+
       if (animatorData.s?.rn === 1) {
         for (let i = 0; i < len; i++) {
           letterData = letters[i]
           if (currentInd !== Number(letterData.anIndexes[j])) {
             currentInd = letterData.anIndexes[j]
-            newInd = indexes.splice(
-              Math.floor(Math.random() * indexes.length),
-              1
-            )[0]
+            newInd = indexes.splice(Math.floor(Math.random() * indexes.length),
+              1)[0]
           }
           if (newInd) {
             letterData.anIndexes[j] = newInd
@@ -441,35 +451,33 @@ export default class TextProperty extends BaseProperty {
       documentData.finalLineHeight || documentData.finalSize * 1.2
     documentData.ls = documentData.ls || 0
     documentData.ascent =
-      (Number(fontData.ascent) * documentData.finalSize) / 100
+      Number(fontData.ascent) * documentData.finalSize / 100
   }
 
   copyData(obj: DocumentData, data?: DocumentData | LetterProps) {
     for (const s in data) {
-      if (Object.prototype.hasOwnProperty.call(data, s)) {
+      if (Object.hasOwn(data, s)) {
         ;(obj as any)[s] = (data as any)[s]
       }
     }
+
     return obj
   }
 
   getExpressionValue(_currentValue: any, _text: any) {
-    throw new Error(
-      `${this.constructor.name}: Method getExpressionValue is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method getExpressionValue is not implemented`)
   }
 
   getKeyframeValue() {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (Shape) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
 
     const textKeys = this.data.d?.k || [],
       frameNum = Number(this.elem.comp?.renderedFrame)
     let i = 0
     const len = textKeys.length
+
     while (i <= len - 1) {
       if (i === len - 1 || Number(textKeys[i + 1].t) > frameNum) {
         break
@@ -479,19 +487,18 @@ export default class TextProperty extends BaseProperty {
     if (this.keysIndex !== i) {
       this.keysIndex = i
     }
+
     return this.data.d?.k[this.keysIndex].s
   }
 
   override getValue(_finalValue?: unknown) {
     if (!this.data) {
-      throw new Error(
-        `${this.constructor.name}: data (TextData) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)
     }
 
     if (
       (this.elem.globalData.frameId === this.frameId ||
-        !this.effectsSequence.length) &&
+        this.effectsSequence.length === 0) &&
       !_finalValue
     ) {
       return
@@ -501,8 +508,10 @@ export default class TextProperty extends BaseProperty {
     }
     const currentValue = this.currentData,
       currentIndex = this.keysIndex
+
     if (this.lock) {
       this.setCurrentData(this.currentData)
+
       return
     }
     this.lock = true
@@ -510,18 +519,15 @@ export default class TextProperty extends BaseProperty {
     const { length } = this.effectsSequence
     let finalValue =
       (_finalValue as DocumentData) || this.data.d?.k[this.keysIndex].s
+
     for (let i = 0; i < length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
-        finalValue = this.effectsSequence[i](
-          this.currentData,
-          finalValue?.t as string
-        )
+        finalValue = this.effectsSequence[i](this.currentData,
+          finalValue?.t as string)
       } else {
-        finalValue = this.effectsSequence[i](
-          finalValue,
-          finalValue?.t as string
-        )
+        finalValue = this.effectsSequence[i](finalValue,
+          finalValue?.t as string)
       }
     }
     if (currentValue !== finalValue) {
@@ -535,12 +541,11 @@ export default class TextProperty extends BaseProperty {
 
   recalculate(index: number) {
     if (!this.data?.d) {
-      throw new Error(
-        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
 
     const dData = this.data.d.k[index].s
+
     if (dData) {
       dData.__complete = false
     }
@@ -551,22 +556,19 @@ export default class TextProperty extends BaseProperty {
   }
 
   searchExpressions(): boolean | null {
-    throw new Error(
-      `${this.constructor.name}: Method searchExpressions is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method searchExpressions is not implemented`)
   }
 
   searchKeyframes() {
     if (!this.data?.d) {
-      throw new Error(
-        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
 
     this.kf = this.data.d.k.length > 1
     if (this.kf) {
       this.addEffect(this.getKeyframeValue.bind(this) as TextEffectFunction)
     }
+
     return this.kf
   }
 
@@ -592,13 +594,13 @@ export default class TextProperty extends BaseProperty {
 
   updateDocumentData(newData: DocumentData, indexFromProps: number) {
     if (!this.data?.d) {
-      throw new Error(
-        `${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
     let index = indexFromProps
+
     index = index === undefined ? this.keysIndex : index
     let dData = this.copyData({} as DocumentData, this.data.d.k[index].s)
+
     dData = this.copyData(dData, newData)
     if (this.data.d.k[index].s) {
       this.data.d.k[index].s = dData

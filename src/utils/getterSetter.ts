@@ -16,7 +16,7 @@ export const initialDefaultFrame = -999999,
 
 /**
  *
- * Expressions plugin/interface
+ * Expressions plugin/interface.
  */
 const expressions: {
   interface: null | GetInterface
@@ -30,48 +30,43 @@ export const setExpressionsPlugin = (value: typeof Expressions) => {
     expressions.plugin = value
   },
   getExpressionsPlugin = () => expressions.plugin,
-  setExpressionInterfaces = (
-    getInterface: (type: keyof ExpressionInterfaces) => ExpressionInterface
-  ) => {
+  setExpressionInterfaces = (getInterface: (type: keyof ExpressionInterfaces) => ExpressionInterface) => {
     expressions.interface = getInterface
   },
   getExpressionInterfaces = () => expressions.interface
 /**
  *
- * Curve segments
+ * Curve segments.
  */
-const curveSegments = {
-  default: 150,
-}
+const curveSegments = { default: 150, }
+
 export const setDefaultCurveSegments = (value: number) => {
     curveSegments.default = value
   },
   getDefaultCurveSegments = () => curveSegments.default
 /**
  *
- * Web worker
+ * Web worker.
  */
-const isWebWorkerActive = {
-  current: false,
-}
+const isWebWorkerActive = { current: false, }
+
 export const setWebWorker = (flag: boolean) => {
     isWebWorkerActive.current = flag
   },
   getWebWorker = () => isWebWorkerActive.current
 /**
  *
- * Subframe
+ * Subframe.
  */
-const isSubframeEnabled = {
-  current: true,
-}
+const isSubframeEnabled = { current: true, }
+
 export const setSubframeEnabled = (flag: boolean) => {
     isSubframeEnabled.current = flag
   },
   getSubframeEnabled = () => isSubframeEnabled.current
 /**
  *
- * Renderer
+ * Renderer.
  */
 type Renderer =
   | typeof SVGRenderer
@@ -80,37 +75,42 @@ type Renderer =
 const renderers: {
   [key in RendererType]?: Renderer
 } = {}
+
 export const registerRenderer = (key: RendererType, value: Renderer) => {
     renderers[key] = value
   },
-  getRenderer = (key: RendererType) => renderers[key]!,
+  getRenderer = (key: RendererType) => renderers[key],
   getRegisteredRenderer = () => {
     // Returns canvas by default for compatibility
     if (renderers.canvas) {
       return RendererType.Canvas
     }
     // Returns any renderer that is registered
-    for (const key in renderers) {
-      if (renderers[key as RendererType]) {
-        return key as RendererType
+
+    const keys = Object.keys(renderers),
+      { length } = keys
+
+    for (let i = 0; i < length; i++) {
+      if (renderers[keys[i] as RendererType]) {
+        return keys[i] as RendererType
       }
     }
+
     return RendererType.SVG
   }
 /**
  *
- * Location HREF
+ * Location HREF.
  */
-const locationHref = {
-  current: '',
-}
+const locationHref = { current: '', }
+
 export const setLocationHref = (value: string) => {
     locationHref.current = value
   },
   getLocationHref = () => locationHref.current
 /**
  *
- * Effects
+ * Effects.
  */
 export const registeredEffects: {
     [id: string]: {
@@ -130,15 +130,16 @@ export const registeredEffects: {
   }
 /**
  *
- * Element ID
+ * Element ID.
  */
-const idPrefix$1 = {
-  current: '',
-}
+const idPrefix$1 = { current: '', }
+
 export const createElementID = (() => {
     let _count = 0
+
     return () => {
       _count++
+
       return `${idPrefix$1.current}__lottie_element_${_count}`
     }
   })(),
@@ -148,11 +149,10 @@ export const createElementID = (() => {
   getIDPrefix = () => idPrefix$1.current
 /**
  *
- * Quality
+ * Quality.
  */
-const shouldRoundValues = {
-  current: false,
-}
+const shouldRoundValues = { current: false, }
+
 export const getShouldRoundValues = () => shouldRoundValues.current,
   setShouldRoundValues = (value: boolean) => {
     shouldRoundValues.current = value
@@ -160,16 +160,19 @@ export const getShouldRoundValues = () => shouldRoundValues.current,
   setQuality = (value: string | number) => {
     if (typeof value === 'string') {
       switch (value) {
-        case 'high':
+        case 'high': {
           setDefaultCurveSegments(200)
           break
+        }
         default:
-        case 'medium':
+        case 'medium': {
           setDefaultCurveSegments(50)
           break
-        case 'low':
+        }
+        case 'low': {
           setDefaultCurveSegments(10)
           break
+        }
       }
     } else if (!isNaN(value) && value > 1) {
       setDefaultCurveSegments(value)

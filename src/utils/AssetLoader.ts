@@ -3,11 +3,12 @@ import type { AnimationData } from '@/types'
 export function loadAsset(
   path: string,
   fullPath: string,
-  callback: (asset: AnimationData) => void,
-  errorCallback: (err: unknown) => void
+  callback: (asset: null | AnimationData) => void,
+  errorCallback?: (err: unknown) => void
 ) {
-  let response
+  let response: null | AnimationData
   const xhr = new XMLHttpRequest()
+
   // set responseType after calling open or IE will break.
   try {
     // This crashes on Android WebView prior to KitKat
@@ -22,23 +23,30 @@ export function loadAsset(
     if (xhr.status === 200) {
       response = formatResponse(xhr)
       callback(response)
+
       return
     }
     try {
       response = formatResponse(xhr)
       callback(response)
-    } catch (err) {
-      if (errorCallback) {
-        errorCallback(err)
-      }
+    } catch (error) {
+      errorCallback?.(error)
     }
   }
   try {
     // Hack to workaround banner validation
-    xhr.open(['G', 'E', 'T'].join(''), path, true)
+    xhr.open(
+      ['G',
+        'E',
+        'T'].join(''), path, true
+    )
   } catch (_) {
     // Hack to workaround banner validation
-    xhr.open(['G', 'E', 'T'].join(''), `${fullPath}/${path}`, true)
+    xhr.open(
+      ['G',
+        'E',
+        'T'].join(''), `${fullPath}/${path}`, true
+    )
   }
   xhr.send()
 }
@@ -47,21 +55,23 @@ function formatResponse(xhr: XMLHttpRequest) {
   // using typeof doubles the time of execution of this method,
   // so if available, it's better to use the header to validate the type
   const contentTypeHeader = xhr.getResponseHeader('content-type')
+
   if (
     contentTypeHeader &&
     xhr.responseType === 'json' &&
-    contentTypeHeader.indexOf('json') !== -1
+    contentTypeHeader.includes('json')
   ) {
-    return xhr.response
+    return xhr.response as AnimationData
   }
   if (xhr.response && typeof xhr.response === 'object') {
-    return xhr.response
+    return xhr.response as AnimationData
   }
   if (xhr.response && typeof xhr.response === 'string') {
-    return JSON.parse(xhr.response)
+    return JSON.parse(xhr.response) as AnimationData
   }
   if (xhr.responseText) {
-    return JSON.parse(xhr.responseText)
+    return JSON.parse(xhr.responseText) as AnimationData
   }
+
   return null
 }

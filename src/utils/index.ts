@@ -89,14 +89,14 @@ export const degToRads = Math.PI / 180,
   polarOffset = (
     p: Vector2, angle: number, length: number
   ): Vector2 => [
-      p[0] + Math.cos(angle) * length, p[1] - Math.sin(angle) * length,
-    ]
+    p[0] + Math.cos(angle) * length, p[1] - Math.sin(angle) * length,
+  ]
 
 /**
  * Functions that are only used locally.
  */
 const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
-  Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
+    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
   Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
   crossProduct = (a: number[], b: number[]) => [
     a[1] * b[2] - a[2] * b[1],
@@ -205,16 +205,16 @@ const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
     end2: Vector2
   ): Vector2 | null => {
     const v1 = [start1[0],
-    start1[1],
-      1],
+        start1[1],
+        1],
       v2 = [end1[0],
-      end1[1],
+        end1[1],
         1],
       v3 = [start2[0],
-      start2[1],
+        start2[1],
         1],
       v4 = [end2[0],
-      end2[1],
+        end2[1],
         1],
       /**
        *
@@ -294,8 +294,8 @@ const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
     r: number, g: number, b: number
   ): Vector3 => {
     const max = Math.max(
-      r, g, b
-    ),
+        r, g, b
+      ),
       min = Math.min(
         r, g, b
       ),
@@ -349,21 +349,21 @@ const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
  * Exported functions.
  */
 export const addBrightnessToRGB = (color: Vector3, offset: number) => {
-  const hsv = rgbToHSV(
-    color[0] * 255, color[1] * 255, color[2] * 255
-  )
+    const hsv = rgbToHSV(
+      color[0] * 255, color[1] * 255, color[2] * 255
+    )
 
-  hsv[2] += offset
-  if (hsv[2] > 1) {
-    hsv[2] = 1
-  } else if (hsv[2] < 0) {
-    hsv[2] = 0
-  }
+    hsv[2] += offset
+    if (hsv[2] > 1) {
+      hsv[2] = 1
+    } else if (hsv[2] < 0) {
+      hsv[2] = 0
+    }
 
-  return HSVtoRGB(
-    hsv[0], hsv[1], hsv[2]
-  )
-},
+    return HSVtoRGB(
+      hsv[0], hsv[1], hsv[2]
+    )
+  },
   addHueToRGB = (color: Vector3, offset: number): Vector3 => {
     const hsv = rgbToHSV(
       color[0] * 255, color[1] * 255, color[2] * 255
@@ -414,12 +414,12 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     for (i = 1; i < length; i++) {
       shapeString += ` C${mat.applyToPointStringified(_o[i - 1][0],
         _o[i - 1][1])} ${mat.applyToPointStringified(_i[i][0],
-          _i[i][1])} ${mat.applyToPointStringified(_v[i][0], _v[i][1])}`
+        _i[i][1])} ${mat.applyToPointStringified(_v[i][0], _v[i][1])}`
     }
     if (closed && length) {
       shapeString += ` C${mat.applyToPointStringified(_o[i - 1][0],
         _o[i - 1][1])} ${mat.applyToPointStringified(_i[0][0],
-          _i[0][1])} ${mat.applyToPointStringified(_v[0][0], _v[0][1])}`
+        _i[0][1])} ${mat.applyToPointStringified(_v[0][0], _v[0][1])}`
       shapeString += 'z'
     }
 
@@ -707,12 +707,12 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   lerpPoint = (
     p0: Vector2, p1: Vector2, amount: number
   ): Vector2 => [
-      lerp(
-        p0[0], p1[0], amount
-      ), lerp(
-        p0[1], p1[1], amount
-      ),
-    ],
+    lerp(
+      p0[0], p1[0], amount
+    ), lerp(
+      p0[1], p1[1], amount
+    ),
+  ],
   markerParser = (markersFromProps: (MarkerData | Marker)[]) => {
     const markers = [],
       { length } = markersFromProps
@@ -785,11 +785,11 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   polynomialCoefficients = (
     p0: number, p1: number, p2: number, p3: number
   ) => [
-      -p0 + 3 * p1 - 3 * p2 + p3,
-      3 * p0 - 6 * p1 + 3 * p2,
-      -3 * p0 + 3 * p1,
-      p0,
-    ],
+    -p0 + 3 * p1 - 3 * p2 + p3,
+    3 * p0 - 6 * p1 + 3 * p2,
+    -3 * p0 + 3 * p1,
+    p0,
+  ],
   pruneIntersections = (segments: PolynomialBezier[][]) => {
     let e
 
@@ -953,9 +953,9 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     a: Vector4, b: Vector4, t: number
   ): Vector4 => {
     const out: Vector4 = [0,
-      0,
-      0,
-      0],
+        0,
+        0,
+        0],
       ax = a[0],
       ay = a[1],
       az = a[2],

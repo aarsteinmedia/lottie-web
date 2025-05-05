@@ -1,21 +1,54 @@
-import type { Characacter, DocumentData, FontList, LottieLayer } from '@/types'
+/* eslint-disable @typescript-eslint/naming-convention */
+import type {
+  Characacter, DocumentData, FontList, LottieLayer
+} from '@/types'
 
 import { RendererType } from '@/enums'
-import { createNS, createTag, isServer } from '@/utils'
+import {
+  createNS, createTag, isServer
+} from '@/utils'
 
 const A_TAG_CODE_POINT = 917601,
   BLACK_FLAG_CODE_POINT = 127988,
   CANCEL_TAG_CODE_POINT = 917631,
   combinedCharacters: number[] = [
     // Hindi characters
-    2304, 2305, 2306, 2307, 2362, 2363, 2364, 2364, 2366, 2367, 2368, 2369,
-    2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381,
-    2382, 2383, 2387, 2388, 2389, 2390, 2391, 2402, 2403,
+    2304,
+    2305,
+    2306,
+    2307,
+    2362,
+    2363,
+    2364,
+    2364,
+    2366,
+    2367,
+    2368,
+    2369,
+    2370,
+    2371,
+    2372,
+    2373,
+    2374,
+    2375,
+    2376,
+    2377,
+    2378,
+    2379,
+    2380,
+    2381,
+    2382,
+    2383,
+    2387,
+    2388,
+    2389,
+    2390,
+    2391,
+    2402,
+    2403,
   ],
   emptyChar = {
-    data: {
-      shapes: [],
-    } as unknown as LottieLayer,
+    data: { shapes: [], } as unknown as LottieLayer,
     shapes: [],
     size: 0,
     w: 0,
@@ -35,26 +68,26 @@ const A_TAG_CODE_POINT = 917601,
   ZERO_WIDTH_JOINER_CODE_POINT = 8205
 
 export function isCombinedCharacter(char: number): boolean {
-  return combinedCharacters.indexOf(char) !== -1
+  return combinedCharacters.includes(char)
 }
 
 export function isFlagEmoji(string: string): boolean {
   return (
-    isRegionalCode(string.substring(0, 2)) &&
-    isRegionalCode(string.substring(2, 2))
+    isRegionalCode(string.slice(0, 2)) &&
+    isRegionalCode(string.slice(2, 2))
   )
 }
 
-export function isModifier(
-  firstCharCode: number,
-  secondCharCode: number
-): boolean {
+export function isModifier(firstCharCode: number,
+  secondCharCode: number): boolean {
   const sum = firstCharCode.toString(16) + secondCharCode.toString(16)
-  return surrogateModifiers.indexOf(sum) !== -1
+
+  return surrogateModifiers.includes(sum)
 }
 
 export function isRegionalCode(string: string): boolean {
   const codePoint = getCodePoint(string)
+
   return (
     codePoint >= REGIONAL_CHARACTER_A_CODE_POINT &&
     codePoint <= REGIONAL_CHARACTER_Z_CODE_POINT
@@ -63,21 +96,24 @@ export function isRegionalCode(string: string): boolean {
 
 export function isRegionalFlag(text: string, indexFromProps: number): boolean {
   let index = indexFromProps
-  let codePoint = getCodePoint(text.substring(index, 2))
+  let codePoint = getCodePoint(text.slice(index, 2))
+
   if (codePoint !== BLACK_FLAG_CODE_POINT) {
     return false
   }
   let count = 0
+
   index += 2
   while (count < 5) {
-    codePoint = getCodePoint(text.substring(index, 2))
+    codePoint = getCodePoint(text.slice(index, 2))
     if (codePoint < A_TAG_CODE_POINT || codePoint > Z_TAG_CODE_POINT) {
       return false
     }
     count++
     index += 2
   }
-  return getCodePoint(text.substr(index, 2)) === CANCEL_TAG_CODE_POINT
+
+  return getCodePoint(text.slice(index, 2)) === CANCEL_TAG_CODE_POINT
 }
 
 export function isVariationSelector(charCode: number): boolean {
@@ -91,26 +127,33 @@ export function isZeroWidthJoiner(charCode: number): boolean {
 function getCodePoint(string: string): number {
   let codePoint = 0
   const first = string.charCodeAt(0)
+
   if (first >= 0xd800 && first <= 0xdbff) {
     const second = string.charCodeAt(1)
+
     if (second >= 0xdc00 && second <= 0xdfff) {
       codePoint = (first - 0xd800) * 0x400 + second - 0xdc00 + 0x10000
     }
   }
+
   return codePoint
 }
 
-function setUpNode(
-  font: string,
-  family: string
-): { node: HTMLElement; parent: HTMLElement; w: number } | undefined {
+function setUpNode(font: string,
+  family: string): {
+    node: HTMLElement;
+    parent: HTMLElement;
+    w: number
+  } | undefined {
   if (isServer()) {
     return
   }
   const parentNode = createTag('span')
+
   parentNode.setAttribute('aria-hidden', 'true')
   parentNode.style.fontFamily = family
   const node = createTag('span')
+
   node.innerText = 'giItT1WQy@!-/#'
   parentNode.style.position = 'absolute'
   parentNode.style.left = '-10000px'
@@ -124,19 +167,27 @@ function setUpNode(
   document.body.appendChild(parentNode)
 
   const width = node.offsetWidth
+
   node.style.fontFamily = `${trimFontOptions(font)}, ${family}`
-  return { node, parent: parentNode, w: width }
+
+  return {
+    node,
+    parent: parentNode,
+    w: width
+  }
 }
 
 function trimFontOptions(font: string): string {
   const familyArray = font.split(',')
   const len = familyArray.length
   const enabledFamilies = []
+
   for (let i = 0; i < len; i++) {
     if (familyArray[i] !== 'sans-serif' && familyArray[i] !== 'monospace') {
       enabledFamilies.push(familyArray[i])
     }
   }
+
   return enabledFamilies.join(',')
 }
 
@@ -159,13 +210,12 @@ export default class FontManager {
     if (!chars) {
       return
     }
-    if (!this.chars) {
-      this.chars = []
-    }
+    this.chars = this.chars ?? []
     const len = chars.length
     let j
     let jLen = this.chars.length
     let found
+
     for (let i = 0; i < len; i++) {
       j = 0
       found = false
@@ -186,43 +236,43 @@ export default class FontManager {
     }
   }
 
-  public addFonts(
-    fontData?: { list: DocumentData[] },
-    defs?: HTMLElement | SVGDefsElement
-  ): void {
+  public addFonts(fontData?: { list: DocumentData[] },
+    defs?: HTMLElement | SVGDefsElement): void {
     if (!fontData) {
       this.isLoaded = true
+
       return
     }
     if (this.chars) {
       this.isLoaded = true
       this.fonts = fontData.list
+
       return
     }
-    if (!isServer() && !document.body) {
+    if (!isServer()) {
       this.isLoaded = true
       const { length } = fontData.list
+
       for (let i = 0; i < length; i++) {
         fontData.list[i].helper = this.createHelper(fontData.list[i])
         fontData.list[i].cache = {}
       }
       this.fonts = fontData.list
+
       return
     }
 
     let _pendingFonts = fontData.list.length
+
     for (let i = 0; i < _pendingFonts; i++) {
       let shouldLoadFont = true
       let loadedSelector
+
       fontData.list[i].loaded = false
-      fontData.list[i].monoCase = setUpNode(
-        fontData.list[i].fFamily,
-        'monospace'
-      )
-      fontData.list[i].sansCase = setUpNode(
-        fontData.list[i].fFamily,
-        'sans-serif'
-      )
+      fontData.list[i].monoCase = setUpNode(fontData.list[i].fFamily,
+        'monospace')
+      fontData.list[i].sansCase = setUpNode(fontData.list[i].fFamily,
+        'sans-serif')
       if (!fontData.list[i].fPath) {
         fontData.list[i].loaded = true
         _pendingFonts -= 1
@@ -230,9 +280,7 @@ export default class FontManager {
         !isServer() &&
         (fontData.list[i].fOrigin === 'p' || fontData.list[i].origin === 3)
       ) {
-        loadedSelector = document.querySelectorAll(
-          `style[f-forigin="p"][f-family="${fontData.list[i].fFamily}"], style[f-origin="3"][f-family="${fontData.list[i].fFamily}"]`
-        )
+        loadedSelector = document.querySelectorAll(`style[f-forigin="p"][f-family="${fontData.list[i].fFamily}"], style[f-origin="3"][f-family="${fontData.list[i].fFamily}"]`)
 
         if (loadedSelector.length > 0) {
           shouldLoadFont = false
@@ -240,6 +288,7 @@ export default class FontManager {
 
         if (shouldLoadFont) {
           const s: HTMLStyleElement = createTag('style')
+
           s.setAttribute('f-forigin', fontData.list[i].fOrigin)
           s.setAttribute('f-origin', `${fontData.list[i].origin}`)
           s.setAttribute('f-family', fontData.list[i].fFamily)
@@ -250,19 +299,19 @@ export default class FontManager {
         !isServer() &&
         (fontData.list[i].fOrigin === 'g' || fontData.list[i].origin === 1)
       ) {
-        loadedSelector = document.querySelectorAll<HTMLLinkElement>(
-          'link[f-forigin="g"], link[f-origin="1"]'
-        )
+        loadedSelector = document.querySelectorAll<HTMLLinkElement>('link[f-forigin="g"], link[f-origin="1"]')
 
         const { length } = loadedSelector
-        for (let i = 0; i < length; i++) {
-          if (loadedSelector[i].href.indexOf(fontData.list[i].fPath) !== -1) {
+
+        for (i = 0; i < length; i++) {
+          if (loadedSelector[i].href.includes(fontData.list[i].fPath)) {
             shouldLoadFont = false
           }
         }
 
         if (shouldLoadFont && !isServer()) {
           const link = createTag<HTMLLinkElement>('link')
+
           link.setAttribute('f-forigin', fontData.list[i].fOrigin)
           link.setAttribute('f-origin', `${fontData.list[i].origin}`)
           link.type = 'text/css'
@@ -274,12 +323,11 @@ export default class FontManager {
         !isServer() &&
         (fontData.list[i].fOrigin === 't' || fontData.list[i].origin === 2)
       ) {
-        loadedSelector = document.querySelectorAll(
-          'script[f-forigin="t"], script[f-origin="2"]'
-        ) as NodeListOf<HTMLScriptElement>
+        loadedSelector = document.querySelectorAll<HTMLScriptElement>('script[f-forigin="t"], script[f-origin="2"]')
 
         const { length } = loadedSelector
-        for (let i = 0; i < length; i++) {
+
+        for (i = 0; i < length; i++) {
           if (fontData.list[i].fPath === loadedSelector[i].src) {
             shouldLoadFont = false
           }
@@ -287,6 +335,7 @@ export default class FontManager {
 
         if (shouldLoadFont) {
           const sc = createTag('link')
+
           sc.setAttribute('f-forigin', fontData.list[i].fOrigin)
           sc.setAttribute('f-origin', `${fontData.list[i].origin}`)
           sc.setAttribute('rel', 'stylesheet')
@@ -312,20 +361,19 @@ export default class FontManager {
   ): Characacter {
     let i = 0
     const len = this.chars?.length || 0
+
     while (i < len) {
       if (
         this.chars?.[i].ch === char &&
-        this.chars?.[i].style === style &&
-        this.chars?.[i].fFamily === font
+        this.chars[i].style === style &&
+        this.chars[i].fFamily === font
       ) {
         return this.chars[i]
       }
       i++
     }
     if (
-      ((typeof char === 'string' && char.charCodeAt(0) !== 13) || !char) &&
-      console &&
-      console.warn &&
+      (typeof char === 'string' && char.charCodeAt(0) !== 13 || !char) &&
       !this._warned
     ) {
       this._warned = true
@@ -336,34 +384,43 @@ export default class FontManager {
         font
       )
     }
+
     return emptyChar
   }
 
   public getFontByName(name?: string): DocumentData {
     let i = 0
-    const len = this.fonts.length
-    while (i < len) {
+    const { length } = this.fonts
+
+    while (i < length) {
       if (this.fonts[i].fName === name) {
         return this.fonts[i]
       }
       i++
     }
+
     return this.fonts[0]
   }
 
-  public measureText(char: string, fontName?: string, size?: number): number {
-    const fontData = this.getFontByName(fontName)
-    const index = char
-    if (!fontData.cache?.[index]) {
+  public measureText(
+    char: string, fontName?: string, size?: number
+  ): number {
+    const fontData = this.getFontByName(fontName),
+      index = char
+
+    if (fontData.cache && !fontData.cache[index]) {
       const tHelper = fontData.helper
+
       if (char === ' ') {
-        const doubleSize = Number(tHelper?.measureText(`|${char}|`))
-        const singleSize = Number(tHelper?.measureText('||'))
-        fontData.cache![index] = (doubleSize - singleSize) / 100
+        const doubleSize = Number(tHelper?.measureText(`|${char}|`)),
+          singleSize = Number(tHelper?.measureText('||'))
+
+        fontData.cache[index] = (doubleSize - singleSize) / 100
       } else {
-        fontData.cache![index] = Number(tHelper?.measureText(char)) / 100
+        fontData.cache[index] = Number(tHelper?.measureText(char)) / 100
       }
     }
+
     return Number(fontData.cache?.[index]) * Number(size)
   }
 
@@ -371,6 +428,7 @@ export default class FontManager {
     let node: HTMLElement | undefined
     let w: number
     let loadedCount = this.fonts.length
+
     for (let i = 0; i < loadedCount; i++) {
       if (this.fonts[i].loaded) {
         loadedCount -= 1
@@ -397,34 +455,39 @@ export default class FontManager {
       if (!this.fonts[i].loaded) {
         continue
       }
-      this.fonts[i].sansCase?.parent.parentNode?.removeChild(
-        this.fonts[i].sansCase!.parent
-      )
-      this.fonts[i].monoCase?.parent.parentNode?.removeChild(
-        this.fonts[i].monoCase!.parent
-      )
+
+      const { monoCase, sansCase } = this.fonts[i]
+
+      if (sansCase) {
+        this.fonts[i].sansCase?.parent.parentNode?.removeChild(sansCase.parent)
+      }
+      if (monoCase) {
+        this.fonts[i].monoCase?.parent.parentNode?.removeChild(monoCase.parent)
+      }
+
     }
 
     if (loadedCount !== 0 && Date.now() - this.initTime < maxWaitingTime) {
       setTimeout(this.checkLoadedFontsBinded, 20)
+
       return
     }
 
     setTimeout(this.setIsLoadedBinded, 10)
   }
 
-  private createHelper(
-    fontData: FontList,
-    def?: HTMLElement | SVGDefsElement
-  ): { measureText: (text: string) => number } | undefined {
+  private createHelper(fontData: FontList,
+    def?: HTMLElement | SVGDefsElement): { measureText: (text: string) => number } | undefined {
     if (isServer()) {
       return
     }
-    const engine = document.body && def ? RendererType.SVG : RendererType.Canvas
-    let helper: any
+    const engine = def ? RendererType.SVG : RendererType.Canvas
+    let helper: SVGTextElement | OffscreenCanvasRenderingContext2D
     const fontProps = getFontProperties(fontData)
+
     if (engine === RendererType.SVG) {
-      const tHelper = createNS('text')
+      const tHelper = createNS<SVGTextElement>('text')
+
       tHelper.style.fontSize = '100px'
       tHelper.setAttribute('font-family', fontData.fFamily)
       tHelper.setAttribute('font-style', fontProps.style)
@@ -440,18 +503,22 @@ export default class FontManager {
       helper = tHelper
     } else {
       const tCanvasHelper = new OffscreenCanvas(500, 500).getContext('2d')
+
       if (tCanvasHelper) {
         tCanvasHelper.font = `${fontProps.style} ${fontProps.weight} 100px ${fontData.fFamily}`
         helper = tCanvasHelper
       }
     }
+
     return {
       measureText: (text: string) => {
         if (engine === RendererType.SVG) {
-          helper.textContent = text
-          return helper.getComputedTextLength()
+          ;(helper as SVGTextElement).textContent = text
+
+          return (helper as SVGTextElement).getComputedTextLength()
         }
-        return helper.measureText(text).width
+
+        return (helper as OffscreenCanvasRenderingContext2D).measureText(text).width
       },
     }
   }
@@ -467,30 +534,38 @@ export function getFontProperties(fontData: FontList) {
   let fWeight = 'normal'
   let fStyle = 'normal'
   const { length } = styles
+
   for (let i = 0; i < length; i++) {
     switch (styles[i].toLowerCase()) {
-      case 'italic':
+      case 'italic': {
         fStyle = 'italic'
         break
-      case 'bold':
+      }
+      case 'bold': {
         fWeight = '700'
         break
-      case 'black':
+      }
+      case 'black': {
         fWeight = '900'
         break
-      case 'medium':
+      }
+      case 'medium': {
         fWeight = '500'
         break
+      }
       case 'regular':
-      case 'normal':
+      case 'normal': {
         fWeight = '400'
         break
+      }
       case 'light':
-      case 'thin':
+      case 'thin': {
         fWeight = '200'
         break
-      default:
+      }
+      default: {
         break
+      }
     }
   }
 

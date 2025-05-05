@@ -272,7 +272,7 @@ export interface ExpressionInterfaces {
   /**
    * EffectInterface.
    */
-  effects: unknown 
+  effects: unknown
   footage: typeof FootageInterface
   layer: typeof LayerExpressionInterface
   shape: typeof ShapeExpressionInterface
@@ -539,7 +539,7 @@ export interface Shape {
   r?: VectorProperty<{
     e: number;
     s: number;
-    t: number 
+    t: number
   }[]>
   rx?: VectorProperty
   ry?: VectorProperty
@@ -805,12 +805,12 @@ export interface TextRangeValue {
     k: number
   }
   /** Min Ease. */
-  ne: {
+  ne?: {
     a: 0 | 1
     k: number
   }
   /** Offset. */
-  o: {
+  o?: {
     a: 0 | 1
     k: number
   }
@@ -819,21 +819,21 @@ export interface TextRangeValue {
   /** Randomize. */
   rn: 0 | 1
   /** Start. */
-  s: {
+  s?: {
     a: 0 | 1
     k: number
   }
   /** Shape. */
   sh: number
   /** Smoothness. */
-  sm: {
+  sm?: {
     a: 0 | 1
     k: number
   }
   t: 0 | 1
   totalChars: number
   /** Max Ease. */
-  xe: {
+  xe?: {
     a: 0 | 1
     k: number
   }
