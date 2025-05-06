@@ -128,6 +128,14 @@ export default class HCompElement extends CompElement {
   build3dContainers() {
     throw new Error(`${this.constructor.name}: Method build3dContainers is not implemented`)
   }
+
+  buildElementParenting(
+    _element: ElementInterfaceIntersect,
+    _parentName?: number,
+    _hierarchy: ElementInterfaceIntersect[] = []
+  ) {
+    throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
+  }
   checkBlendMode() {
     throw new Error(`${this.constructor.name}: Method checkBlendMode is not implemented`)
   }

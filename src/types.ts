@@ -758,6 +758,13 @@ interface LayerStyle {
   ty: number
 }
 
+export interface TransformSequence {
+  _mdf?: boolean
+  [key: string]: unknown
+  finalTransform?: Matrix
+  transforms?: { transform: Transformer }[]
+}
+
 export interface DocumentData extends FontList {
   __complete?: boolean
   ascent?: number
@@ -860,7 +867,7 @@ export interface ShapeDataInterface {
       v: number[][]
       o: number[][]
       i: number[][]
-      c: number[][]
+      c?: number[][]
       _length: number
     }
   }
@@ -1001,7 +1008,7 @@ export interface FontList {
 
 export interface Characacter {
   ch?: Characacter
-  data: LottieLayer
+  data?: LottieLayer
   fFamily?: string
   shapes: Shape[]
   size: number
@@ -1019,7 +1026,7 @@ export interface AnimationData {
   chars: Characacter[] | null
   /** Is three dimensional. */
   ddd: 0 | 1
-  fonts: { list: DocumentData[] }
+  fonts?: { list: DocumentData[] }
   /** Framerate. */
   fr: number
   /** Height. */
@@ -1041,7 +1048,7 @@ export interface AnimationData {
   nm: string
   /** Out point. */
   op: number
-  segments: { time: number }[]
+  segments?: { time: number }[]
   slots?: { [key: string]: { p: any } }
   /** Version. */
   v: string
@@ -1137,6 +1144,17 @@ export interface Marker {
   dr: number
   /** Time. */
   tm: number
+}
+
+export interface BoundingBox {
+  h: number
+  height: number
+  w: number
+  width: number
+  x: number
+  xMax: number
+  y: number
+  yMax: number
 }
 
 export interface MarkerData {

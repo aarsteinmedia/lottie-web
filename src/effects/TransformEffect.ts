@@ -29,7 +29,7 @@ export default abstract class TransformEffect {
     if (!forceFrame && !this.effectsManager?._mdf) {
       return
     }
-    const effectElements = this.effectsManager?.effectElements || [],
+    const effectElements = this.effectsManager?.effectElements ?? [],
       anchor = effectElements[0].p.v as Vector3,
       position = effectElements[1].p.v as Vector2,
       isUniformScale = effectElements[2].p.v === 1,

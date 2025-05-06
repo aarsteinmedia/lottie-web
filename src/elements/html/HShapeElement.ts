@@ -1,5 +1,8 @@
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type {
+  BoundingBox,
   CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
@@ -9,13 +12,14 @@ import type {
   Transformer,
   Vector2,
 } from '@/types'
+import type { ValueProperty } from '@/utils/Properties'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import { createNS } from '@/utils'
 
 export default class HShapeElement extends RenderableElement {
   animatedContents: any[]
-  currentBBox: any
+  currentBBox: BoundingBox
   prevViewData: HShapeElement[]
 
   processedElements: any[]
@@ -80,7 +84,7 @@ export default class HShapeElement extends RenderableElement {
       w: 0,
       x: 999999,
       y: -999999,
-    }
+    } as BoundingBox
 
     this._renderShapeFrame = this.renderInnerContent
   }
@@ -92,7 +96,7 @@ export default class HShapeElement extends RenderableElement {
     throw new Error(`${this.constructor.name}: Method _renderShapeFrame is not implemented`)
   }
 
-  calculateBoundingBox(itemsData: any, boundingBox: DOMRect) {
+  calculateBoundingBox(itemsData: ShapeDataInterface[], boundingBox: BoundingBox) {
     const { length } = itemsData
 
     for (let i = 0; i < length; i++) {
@@ -126,7 +130,7 @@ export default class HShapeElement extends RenderableElement {
     )
   }
 
-  calculateShapeBoundingBox(item: ShapeDataInterface, boundingBox: DOMRect) {
+  calculateShapeBoundingBox(item: ShapeDataInterface, boundingBox: BoundingBox) {
     const shape = item.sh.v
     const { transformers } = item
     let i
@@ -166,7 +170,7 @@ export default class HShapeElement extends RenderableElement {
     oPoint: Vector2,
     nextIPoint: Vector2,
     nextVPoint: Vector2,
-    boundingBox: any
+    boundingBox: BoundingBox
   ) {
     this.getBoundsOfCurve(
       vPoint, oPoint, nextIPoint, nextVPoint
@@ -191,7 +195,7 @@ export default class HShapeElement extends RenderableElement {
       cont = this.svgElement
     } else {
       cont = createNS<SVGSVGElement>('svg')
-      const size = this.comp?.data ? this.comp.data : this.globalData?.compSize
+      const size = this.comp?.data ?? this.globalData?.compSize
 
       if (size) {
         cont.setAttribute('width', `${size.w}`)
@@ -214,7 +218,7 @@ export default class HShapeElement extends RenderableElement {
     this.shapeCont = cont
   }
 
-  currentBoxContains(box: DOMRect) {
+  currentBoxContains(box: BoundingBox) {
     return (
       this.currentBBox.x <= box.x &&
       this.currentBBox.y <= box.y &&
@@ -223,20 +227,21 @@ export default class HShapeElement extends RenderableElement {
     )
   }
 
-  expandStrokeBoundingBox(widthProperty: any, boundingBox: any) {
+  expandStrokeBoundingBox(widthProperty: ValueProperty, boundingBox: BoundingBox) {
     let width = 0
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (widthProperty.keyframes) {
       for (let i = 0; i < widthProperty.keyframes.length; i++) {
-        const kfw = widthProperty.keyframes[i].s
+        const kfw = widthProperty.keyframes[i].s as unknown as number
 
         if (kfw > width) {
           width = kfw
         }
       }
-      width *= widthProperty.mult
+      width *= widthProperty.mult ?? 1
     } else {
-      width = widthProperty.v * widthProperty.mult
+      width = widthProperty.v * (widthProperty.mult ?? 1)
     }
 
     boundingBox.x -= width
@@ -337,7 +342,7 @@ export default class HShapeElement extends RenderableElement {
       tempBoundingBox.xMax = -max
       tempBoundingBox.y = max
       tempBoundingBox.yMax = -max
-      this.calculateBoundingBox(this.itemsData, tempBoundingBox as any)
+      this.calculateBoundingBox(this.itemsData, tempBoundingBox as BoundingBox)
       tempBoundingBox.width =
         tempBoundingBox.xMax < tempBoundingBox.x
           ? 0

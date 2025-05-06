@@ -52,8 +52,10 @@ export default class CVContextData {
     this.cArrPos = 0
     this.cTr = new Matrix()
     const len = 15
+
     for (let i = 0; i < len; i++) {
       const canvasContext = new CanvasContext()
+
       this.stack[i] = canvasContext
     }
     this._length = len
@@ -82,6 +84,7 @@ export default class CVContextData {
 
   duplicate() {
     const newLength = this._length * 2
+
     for (let i = this._length; i < newLength; i++) {
       this.stack[i] = new CanvasContext()
     }
@@ -96,51 +99,61 @@ export default class CVContextData {
     this.nativeContext?.fill(rule)
   }
 
-  fillRect(x: number, y: number, w: number, h: number) {
+  fillRect(
+    x: number, y: number, w: number, h: number
+  ) {
     if (this.nativeContext && this.appliedFillStyle !== this.currentFillStyle) {
       this.appliedFillStyle = this.currentFillStyle
       this.nativeContext.fillStyle = this.appliedFillStyle
     }
-    this.nativeContext?.fillRect(x, y, w, h)
+    this.nativeContext?.fillRect(
+      x, y, w, h
+    )
   }
 
   fillStyle(value: string) {
-    if (this.stack[this.cArrPos].fillStyle !== value) {
-      this.currentFillStyle = value
-      this.stack[this.cArrPos].fillStyle = value
+    if (this.stack[this.cArrPos].fillStyle === value) {
+      return
     }
+    this.currentFillStyle = value
+    this.stack[this.cArrPos].fillStyle = value
   }
 
   lineCap(value: string) {
-    if (this.stack[this.cArrPos].lineCap !== value) {
-      this.currentLineCap = value
-      this.stack[this.cArrPos].lineCap = value
+    if (this.stack[this.cArrPos].lineCap === value) {
+      return
     }
+    this.currentLineCap = value
+    this.stack[this.cArrPos].lineCap = value
   }
 
   lineJoin(value: string) {
-    if (this.stack[this.cArrPos].lineJoin !== value) {
-      this.currentLineJoin = value
-      this.stack[this.cArrPos].lineJoin = value
+    if (this.stack[this.cArrPos].lineJoin === value) {
+      return
     }
+    this.currentLineJoin = value
+    this.stack[this.cArrPos].lineJoin = value
   }
 
   lineWidth(value: number) {
-    if (this.stack[this.cArrPos].lineWidth !== value) {
-      this.currentLineWidth = value
-      this.stack[this.cArrPos].lineWidth = value
+    if (this.stack[this.cArrPos].lineWidth === value) {
+      return
     }
+    this.currentLineWidth = value
+    this.stack[this.cArrPos].lineWidth = value
   }
 
   miterLimit(value: number) {
-    if (this.stack[this.cArrPos].miterLimit !== value) {
-      this.currentMiterLimit = value
-      this.stack[this.cArrPos].miterLimit = value
+    if (this.stack[this.cArrPos].miterLimit === value) {
+      return
     }
+    this.currentMiterLimit = value
+    this.stack[this.cArrPos].miterLimit = value
   }
 
   opacity(op: number) {
     let currentOpacity = this.stack[this.cArrPos].opacity
+
     currentOpacity *= op < 0 ? 0 : op
     if (this.stack[this.cArrPos].opacity !== currentOpacity) {
       if (this.nativeContext && this.currentOpacity !== op) {
@@ -159,15 +172,19 @@ export default class CVContextData {
 
   restore(forceRestore?: boolean) {
     this.cArrPos -= 1
-    const currentContext = this.stack[this.cArrPos]
-    const transform = currentContext.transform
-    const arr = this.cTr.props
+    const currentContext = this.stack[this.cArrPos],
+      {
+        fillStyle, lineCap, lineJoin, lineWidth, miterLimit, opacity, strokeStyle, transform
+      } = currentContext,
+      arr = this.cTr.props
+
     for (let i = 0; i < 16; i++) {
       arr[i] = transform[i]
     }
     if (forceRestore) {
       this.nativeContext?.restore()
       const prevStack = this.stack[this.cArrPos + 1]
+
       this.appliedFillStyle = prevStack.fillStyle
       this.appliedStrokeStyle = prevStack.strokeStyle
       this.appliedLineWidth = prevStack.lineWidth
@@ -186,36 +203,39 @@ export default class CVContextData {
     if (
       this.nativeContext &&
       (forceRestore ||
-        (currentContext.opacity !== -1 &&
-          this.currentOpacity !== currentContext.opacity))
+        opacity !== -1 &&
+          this.currentOpacity !== opacity)
     ) {
-      this.nativeContext.globalAlpha = currentContext.opacity
-      this.currentOpacity = currentContext.opacity
+      this.nativeContext.globalAlpha = opacity
+      this.currentOpacity = opacity
     }
-    this.currentFillStyle = currentContext.fillStyle
-    this.currentStrokeStyle = currentContext.strokeStyle
-    this.currentLineWidth = currentContext.lineWidth
-    this.currentLineCap = currentContext.lineCap
-    this.currentLineJoin = currentContext.lineJoin
-    this.currentMiterLimit = currentContext.miterLimit
+    this.currentFillStyle = fillStyle
+    this.currentStrokeStyle = strokeStyle
+    this.currentLineWidth = lineWidth
+    this.currentLineCap = lineCap
+    this.currentLineJoin = lineJoin
+    this.currentMiterLimit = miterLimit
   }
 
   save(saveOnNativeFlag?: boolean) {
     if (saveOnNativeFlag) {
       this.nativeContext?.save()
     }
-    const props = this.cTr.props
+    const { props } = this.cTr
+
     if (this._length <= this.cArrPos) {
       this.duplicate()
     }
 
     const currentStack = this.stack[this.cArrPos]
     let i
+
     for (i = 0; i < 16; i++) {
       currentStack.transform[i] = props[i]
     }
     this.cArrPos++
     const newStack = this.stack[this.cArrPos]
+
     newStack.opacity = currentStack.opacity
     newStack.fillStyle = currentStack.fillStyle
     newStack.strokeStyle = currentStack.strokeStyle
@@ -235,9 +255,7 @@ export default class CVContextData {
 
   stroke() {
     if (!this.nativeContext) {
-      throw new Error(
-        `${this.constructor.name}: nativeContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: nativeContext is not implemented`)
     }
 
     if (this.appliedStrokeStyle !== this.currentStrokeStyle) {
@@ -264,21 +282,24 @@ export default class CVContextData {
   }
 
   strokeStyle(value: string) {
-    if (this.stack[this.cArrPos].strokeStyle !== value) {
-      this.currentStrokeStyle = value
-      this.stack[this.cArrPos].strokeStyle = value
+    if (this.stack[this.cArrPos].strokeStyle === value) {
+      return
     }
+    this.currentStrokeStyle = value
+    this.stack[this.cArrPos].strokeStyle = value
   }
 
   transform(props: Float32Array) {
     this.transformMat.cloneFromProps(props)
     // Taking the last transform value from the stored stack of transforms
     const currentTransform = this.cTr
+
     // Applying the last transform value after the new transform to respect the order of transformations
     this.transformMat.multiply(currentTransform)
     // Storing the new transformed value in the stored transform
     currentTransform.cloneFromProps(this.transformMat.props)
     const trProps = currentTransform.props
+
     // Applying the new transform to the canvas
     this.nativeContext?.setTransform(
       trProps[0],

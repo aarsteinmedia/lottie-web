@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type HCompElement from '@/elements/html/HCompElement'
 import type {
   ElementInterfaceIntersect,
@@ -89,7 +91,7 @@ export default class HCameraElement extends FrameElement {
       ) as ValueProperty<Vector3>
     }
     if (data.ks.or?.k.length && data.ks.or.k[0].to) {
-      const { length } = data.ks.or?.k || []
+      const { length } = data.ks.or.k
 
       for (let i = 0; i < length; i++) {
         data.ks.or.k[i].to = null
@@ -155,17 +157,17 @@ export default class HCameraElement extends FrameElement {
     if (!this.globalData?.compSize) {
       throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
     }
-    let _mdf = this._isFirstFrame
+    let isFirst = this._isFirstFrame
 
     if (this.hierarchy) {
       const { length } = this.hierarchy
 
       for (let i = 0; i < length; i++) {
-        _mdf = this.hierarchy[i].finalTransform?.mProp._mdf || _mdf
+        isFirst = this.hierarchy[i].finalTransform?.mProp._mdf || isFirst
       }
     }
     if (
-      _mdf ||
+      isFirst ||
       this.pe?._mdf ||
       this.p?._mdf ||
       this.px && (this.px._mdf || this.py?._mdf || this.pz?._mdf) ||
@@ -278,15 +280,15 @@ export default class HCameraElement extends FrameElement {
 
       if (
         (hasMatrixChanged || this.pe?._mdf) &&
-        (this.comp as HCompElement)?.threeDElements
+        this.comp?.threeDElements
       ) {
-        const { length: len } = this.comp?.threeDElements || []
+        const { length: len } = this.comp.threeDElements
         let comp
         let perspectiveStyle
         let containerStyle: CSSStyleDeclaration
 
         for (let i = 0; i < len; i++) {
-          comp = this.comp?.threeDElements[i]
+          comp = this.comp.threeDElements[i]
           if (comp?.type !== '3d') {
             continue
           }
@@ -309,7 +311,7 @@ export default class HCameraElement extends FrameElement {
     this._isFirstFrame = false
   }
   setup() {
-    const { length } = this.comp?.threeDElements || []
+    const { length } = this.comp?.threeDElements ?? []
 
     for (let i = 0; i < length; i++) {
       // [perspectiveElem,container]

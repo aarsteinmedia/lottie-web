@@ -4,9 +4,8 @@ import type { ValueProperty } from '@/utils/Properties'
 
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export class SliderEffect {
+abstract class EffectZero {
   p?: ValueProperty
-
   constructor(
     data: EffectValue,
     elem: ElementInterfaceIntersect,
@@ -22,25 +21,7 @@ export class SliderEffect {
   }
 }
 
-export class AngleEffect {
-  p?: ValueProperty
-
-  constructor(
-    data: EffectValue,
-    elem: ElementInterfaceIntersect,
-    container: GroupEffect
-  ) {
-    this.p = PropertyFactory.getProp(
-      elem,
-      data.v,
-      0,
-      0,
-      container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-  }
-}
-
-export class ColorEffect {
+abstract class EffectOne {
   p?: ValueProperty
 
   constructor(
@@ -58,77 +39,19 @@ export class ColorEffect {
   }
 }
 
-export class PointEffect {
-  p?: ValueProperty
+export class SliderEffect extends EffectZero { }
 
-  constructor(
-    data: EffectValue,
-    elem: ElementInterfaceIntersect,
-    container: GroupEffect
-  ) {
-    this.p = PropertyFactory.getProp(
-      elem,
-      data.v,
-      1,
-      0,
-      container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-  }
-}
+export class AngleEffect extends EffectZero { }
 
-export class LayerIndexEffect {
-  p?: ValueProperty
+export class ColorEffect extends EffectOne { }
 
-  constructor(
-    data: EffectValue,
-    elem: ElementInterfaceIntersect,
-    container: GroupEffect
-  ) {
-    this.p = PropertyFactory.getProp(
-      elem,
-      data.v,
-      0,
-      0,
-      container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-  }
-}
+export class PointEffect extends EffectOne { }
 
-export class MaskIndexEffect {
-  p?: ValueProperty
+export class LayerIndexEffect extends EffectZero { }
 
-  constructor(
-    data: EffectValue,
-    elem: ElementInterfaceIntersect,
-    container: GroupEffect
-  ) {
-    this.p = PropertyFactory.getProp(
-      elem,
-      data.v,
-      0,
-      0,
-      container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-  }
-}
+export class MaskIndexEffect extends EffectZero { }
 
-export class CheckboxEffect {
-  p?: ValueProperty
-
-  constructor(
-    data: EffectValue,
-    elem: ElementInterfaceIntersect,
-    container: GroupEffect
-  ) {
-    this.p = PropertyFactory.getProp(
-      elem,
-      data.v,
-      0,
-      0,
-      container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-  }
-}
+export class CheckboxEffect extends EffectZero { }
 
 export class NoValueEffect {
   p: object

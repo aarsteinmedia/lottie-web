@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
@@ -119,8 +120,8 @@ export default class CVShapeElement extends ShapeElement {
   override createContent() {
     this.searchShapes(
       this.shapesData,
-      this.itemsData as any,
-      this.prevViewData as any,
+      this.itemsData,
+      this.prevViewData as unknown as CVShapeElement[],
       true,
       []
     )
@@ -197,14 +198,14 @@ export default class CVShapeElement extends ShapeElement {
         ) as MultiDimensionalProperty
         elementData.h = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
-          (data.h || { k: 0 }) as VectorProperty,
+          (data.h ?? { k: 0 }) as VectorProperty,
           0,
           0.01,
           this as unknown as ElementInterfaceIntersect
         ) as ValueProperty
         elementData.a = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
-          (data.a || { k: 0 }) as VectorProperty,
+          (data.a ?? { k: 0 }) as VectorProperty,
           0,
           degToRads,
           this as unknown as ElementInterfaceIntersect
@@ -219,6 +220,7 @@ export default class CVShapeElement extends ShapeElement {
 
         break
       }
+      default:
     }
 
     elementData.o = PropertyFactory.getProp(
@@ -315,7 +317,9 @@ export default class CVShapeElement extends ShapeElement {
 
     for (let i = 0; i < length; i++) {
       currentStyle = this.stylesList[i]
-      const { type } = currentStyle,
+      const {
+          co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, type, wi
+        } = currentStyle,
         isStroke =
           type === ShapeType.Stroke || type === ShapeType.GradientStroke
 
@@ -325,45 +329,46 @@ export default class CVShapeElement extends ShapeElement {
       // current opacity equals 0
       // global opacity equals 0
       if (
-        isStroke && currentStyle.wi === 0 ||
-        !currentStyle.data._shouldRender ||
-        currentStyle.coOp === 0 ||
+        isStroke && wi === 0 ||
+        !data._shouldRender ||
+        coOp === 0 ||
         this.globalData.currentGlobalAlpha === 0
       ) {
         continue
       }
       renderer.save()
-      const elems = currentStyle.elements
+      const elems = elements
 
       if (isStroke) {
-        renderer.ctxStrokeStyle(type === ShapeType.Stroke ? currentStyle.co : currentStyle.grd)
-        renderer.ctxLineWidth(currentStyle.wi || 0)
+        renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
+        renderer.ctxLineWidth(wi || 0)
 
-        if (currentStyle.lc) {
-          renderer.ctxLineCap(currentStyle.lc)
+        if (lc) {
+          renderer.ctxLineCap(lc)
         }
 
-        if (currentStyle.lj) {
-          renderer.ctxLineJoin(currentStyle.lj)
+        if (lj) {
+          renderer.ctxLineJoin(lj)
         }
 
-        renderer.ctxMiterLimit(currentStyle.ml || 0)
+        renderer.ctxMiterLimit(ml || 0)
       } else {
-        renderer.ctxFillStyle(type === ShapeType.Fill ? currentStyle.co : currentStyle.grd)
+        renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
         // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
       }
-      renderer.ctxOpacity(currentStyle.coOp)
+      renderer.ctxOpacity(coOp)
       if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
         ctx?.beginPath()
       }
-      renderer.ctxTransform(currentStyle.preTransforms.finalTransform.props)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      renderer.ctxTransform(preTransforms.finalTransform.props)
       const { length: jLen } = elems
 
       for (let j = 0; j < jLen; j++) {
         if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
           ctx?.beginPath()
-          if (ctx && currentStyle.da) {
-            ctx.setLineDash(currentStyle.da)
+          if (ctx && da) {
+            ctx.setLineDash(da)
             ctx.lineDashOffset = currentStyle.do || 0
           }
         }
@@ -389,7 +394,7 @@ export default class CVShapeElement extends ShapeElement {
         if (isStroke) {
           // ctx.stroke();
           renderer.ctxStroke()
-          if (currentStyle.da) {
+          if (da) {
             ctx?.setLineDash(this.dashResetter)
           }
         }

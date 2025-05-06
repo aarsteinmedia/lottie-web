@@ -18,7 +18,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 
 export default class SVGStrokeStyleData extends SVGFillStyleData {
-  d: DashProperty
+  d?: DashProperty
   constructor(
     elem: ElementInterfaceUnion,
     data: Shape,

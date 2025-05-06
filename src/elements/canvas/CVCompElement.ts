@@ -6,13 +6,14 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
+import type { ValueProperty } from '@/utils/Properties'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CompElement from '@/elements/CompElement'
 import CanvasRendererBase from '@/renderers/CanvasRendererBase'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import { ValueProperty } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
+
 export default class CVCompElement extends CompElement {
   canvasContext?: CanvasRenderingContext2D
   pendingElements: ElementInterfaceIntersect[]
@@ -23,7 +24,7 @@ export default class CVCompElement extends CompElement {
   ) {
     super()
     this.completeLayers = false
-    this.layers = data.layers || []
+    this.layers = data.layers ?? []
     this.pendingElements = []
     this.elements = createSizedArray(this.layers.length)
 
@@ -107,154 +108,128 @@ export default class CVCompElement extends CompElement {
     this.setBlendMode = setBlendMode
     this.showElement = showElement
 
-    this.initElement(data, globalData, comp)
+    this.initElement(
+      data, globalData, comp
+    )
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.tm as VectorProperty<number>,
-            0,
-            globalData.frameRate,
-            this as unknown as ElementInterfaceIntersect
-          )
+          this as unknown as ElementInterfaceIntersect,
+          data.tm as VectorProperty,
+          0,
+          globalData.frameRate,
+          this as unknown as ElementInterfaceIntersect
+        )
         : { _placeholder: true }
     ) as ValueProperty
   }
 
+  buildElementParenting(
+    _element: ElementInterfaceIntersect,
+    _parentName?: number,
+    _hierarchy: ElementInterfaceIntersect[] = []
+  ) {
+    throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
+  }
+
   buildItem(_pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method buildItem is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method buildItem is not implemented`)
   }
 
   checkPendingElements() {
-    throw new Error(
-      `${this.constructor.name}: Method checkPendingElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method checkPendingElements is not implemented`)
   }
 
-  clearCanvas(
-    _canvasContext?:
+  clearCanvas(_canvasContext?:
       | CanvasRenderingContext2D
       | OffscreenCanvasRenderingContext2D
-      | null
-  ) {
-    throw new Error(
-      `${this.constructor.name}: Method clearCanvas is not implemented`
-    )
+      | null) {
+    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
 
   configAnimation(_data: AnimationData) {
-    throw new Error(
-      `${this.constructor.name}: Method configAnimation is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method configAnimation is not implemented`)
   }
 
   createComp(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
-    return new CVCompElement(data, this.globalData, this)
+
+    return new CVCompElement(
+      data, this.globalData, this
+    )
   }
 
   createElements() {
-    throw new Error(
-      `${this.constructor.name}: Method createElements is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
 
   createImage(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createImage is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
   }
 
   createShape(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createShape is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createShape is not implemented`)
   }
 
   createSolid(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createSolid is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createSolid is not implemented`)
   }
 
   createText(_data: LottieLayer) {
-    throw new Error(
-      `${this.constructor.name}: Method createText is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method createText is not implemented`)
   }
 
   ctxFill(_rule?: CanvasFillRule) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxFill is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxFill is not implemented`)
   }
 
-  ctxFillRect(_x: number, _y: number, _w: number, _h: number) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxFillRect is not implemented`
-    )
+  ctxFillRect(
+    _x: number, _y: number, _w: number, _h: number
+  ) {
+    throw new Error(`${this.constructor.name}: Method ctxFillRect is not implemented`)
   }
 
   ctxFillStyle(_val: string) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxFillStyle is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxFillStyle is not implemented`)
   }
 
   ctxLineCap(_value: CanvasLineCap) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxLineCap is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxLineCap is not implemented`)
   }
 
   ctxLineJoin(_value: CanvasLineJoin) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxLineJoin is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxLineJoin is not implemented`)
   }
 
   ctxLineWidth(_value: number) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxLineWidth is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxLineWidth is not implemented`)
   }
 
   ctxMiterLimit(_value: number) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxMiterLimit is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxMiterLimit is not implemented`)
   }
 
   ctxOpacity(_value: number) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxOpacity is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxOpacity is not implemented`)
   }
 
   ctxStroke(_value: number) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxStroke is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxStroke is not implemented`)
   }
 
   ctxStrokeStyle(_value: string) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxStrokeStyle is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxStrokeStyle is not implemented`)
   }
 
   ctxTransform(_value: Float32Array) {
-    throw new Error(
-      `${this.constructor.name}: Method ctxTransform is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method ctxTransform is not implemented`)
   }
 
   override destroy() {
     const { length } = this.layers
+
     for (let i = length - 1; i >= 0; i--) {
       if (this.elements[i]) {
         this.elements[i].destroy()
@@ -265,46 +240,42 @@ export default class CVCompElement extends CompElement {
   }
 
   exitLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method exitLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
 
   hideElement() {
-    throw new Error(
-      `${this.constructor.name}: Method hideElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
 
   prepareLayer() {
-    throw new Error(
-      `${this.constructor.name}: Method prepareLayer is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
 
   override renderInnerContent() {
     if (!this.data?.w || !this.data.h) {
-      throw new Error(
-        `${this.constructor.name} data (LottieLayer) is not implemented`
-      )
+      throw new Error(`${this.constructor.name} data (LottieLayer) is not implemented`)
     }
-    const { canvasContext: ctx } = this
+
+    const {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      canvasContext: ctx, completeLayers, data, elements, layers
+    } = this
+
     if (!ctx) {
-      throw new Error(
-        `${this.constructor.name}: canvasContext is not implemented`
-      )
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     ctx.beginPath()
     ctx.moveTo(0, 0)
-    ctx.lineTo(this.data.w, 0)
-    ctx.lineTo(this.data.w, this.data.h)
-    ctx.lineTo(0, this.data.h)
+    ctx.lineTo(data.w || 0, 0)
+    ctx.lineTo(data.w || 0, data.h || 0)
+    ctx.lineTo(0, data.h || 0)
     ctx.lineTo(0, 0)
     ctx.clip()
-    const { length } = this.layers
+    const { length } = layers
+
     for (let i = length - 1; i >= 0; i--) {
-      if (this.completeLayers || this.elements[i]) {
-        this.elements[i].renderFrame()
+      if (completeLayers || elements[i]) {
+        elements[i].renderFrame()
       }
     }
   }
@@ -314,9 +285,7 @@ export default class CVCompElement extends CompElement {
   }
 
   restore(_flag?: boolean) {
-    throw new Error(
-      `${this.constructor.name}: Method restore is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method restore is not implemented`)
   }
 
   save(_flag?: boolean) {
@@ -324,14 +293,10 @@ export default class CVCompElement extends CompElement {
   }
 
   showElement(_pos: number) {
-    throw new Error(
-      `${this.constructor.name}: Method showElement is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 
   updateContainerSize(_width?: number, _height?: number) {
-    throw new Error(
-      `${this.constructor.name}: Method updateContainerSize is not implemented`
-    )
+    throw new Error(`${this.constructor.name}: Method updateContainerSize is not implemented`)
   }
 }

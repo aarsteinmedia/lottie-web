@@ -6,7 +6,7 @@ import { registeredEffects } from '@/utils/getterSetter'
 export default class CVEffects {
   filters: GroupEffect[]
   constructor(elem: ElementInterfaceIntersect) {
-    const { length } = elem.data.ef || []
+    const { length } = elem.data.ef ?? []
 
     this.filters = []
     let filterManager
@@ -17,13 +17,15 @@ export default class CVEffects {
 
       if (type && registeredEffects[type]) {
         /**
-         * TODO:
+         * TODO:.
          */
         const Effect = registeredEffects[type].effect as any
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         filterManager = new Effect(elem.effectsManager?.effectElements[i], elem)
       }
       if (filterManager) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.filters.push(filterManager)
       }
     }

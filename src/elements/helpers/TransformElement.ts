@@ -64,6 +64,7 @@ export default class TransformElement extends BaseElement {
       localMat: mat,
       localOpacity: 1,
       mat,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       mProp: this.data.ks
         ? new TransformProperty(
           this as unknown as ElementInterfaceIntersect,
@@ -155,7 +156,12 @@ export default class TransformElement extends BaseElement {
         finalMat.cloneFromProps(mat)
         for (i = 0; i < length; i++) {
           if (this.hierarchy[i].finalTransform?.mProp.v) {
-            finalMat.multiply(this.hierarchy[i].finalTransform.mProp.v)
+            const { v: matrix } = this.hierarchy[i].finalTransform?.mProp ?? { v: null }
+
+            if (matrix) {
+              finalMat.multiply(matrix)
+            }
+
           }
         }
       }

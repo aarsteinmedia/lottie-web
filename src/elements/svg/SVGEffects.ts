@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect } from '@/types'
 
@@ -22,22 +23,24 @@ export default class SVGEffects {
 
     this.filters = []
     let filterManager: null | GroupEffect
-    const { length } = elem.data.ef || []
+    const { length } = elem.data.ef ?? []
 
     for (let i = 0; i < length; i++) {
       filterManager = null
-      if (elem.data.ef?.[i].ty && registeredEffects[elem.data.ef[i].ty]) {
-        const Effect = registeredEffects[elem.data.ef[i].ty].effect
 
+      const { ty } = elem.data.ef?.[i] ?? { ty: null },
+        Effect = ty !== null && registeredEffects[ty]?.effect
+
+      if (Effect && ty) {
         filterManager = new Effect(
           fil as any,
           elem.effectsManager?.effectElements[i] as any,
           elem as any,
-          idPrefix + count,
+          `${idPrefix}${count}`,
           source
         ) as GroupEffect
-        source = idPrefix + count
-        if (registeredEffects[elem.data.ef[i].ty].countsAsEffect) {
+        source = `${idPrefix}${count}`
+        if (registeredEffects[ty]?.countsAsEffect) {
           count++
         }
       }

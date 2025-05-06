@@ -30,7 +30,6 @@ export default class CVShapeData {
       0]
     let ty
 
-    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
     switch (data.ty) {
       case ShapeType.Rectangle: {
         ty = 5
@@ -59,7 +58,8 @@ export default class CVShapeData {
     for (let i = 0; i < length; i++) {
       if (!styles[i].closed) {
         styledShape = {
-          transforms: transformsManager.addTransformSequence(styles[i].transforms),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          transforms: transformsManager.addTransformSequence(styles[i].transforms as any),
           trNodes: [],
         } as unknown as CVShapeData
         this.styledShapes.push(styledShape)

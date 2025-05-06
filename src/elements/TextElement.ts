@@ -64,7 +64,6 @@ export default class TextElement extends RenderableDOMElement {
         )
         break
       }
-      case undefined:
       default: {
         break
       }

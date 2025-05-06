@@ -366,7 +366,7 @@ export default class SVGShapeElement extends ShapeElement {
     for (let i = 0; i < length; i++) {
       if (
         !this._isFirstFrame &&
-          !this.animatedContents[i].element._isAnimated ||
+        !this.animatedContents[i].element._isAnimated ||
         this.animatedContents[i].data === (true as unknown as Shape) ||
         !this.animatedContents[i].fn
       ) {
@@ -374,6 +374,7 @@ export default class SVGShapeElement extends ShapeElement {
       }
       this.animatedContents[i].fn?.(
         this.animatedContents[i].data,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.animatedContents[i].element as any,
         this._isFirstFrame
       )
@@ -405,7 +406,6 @@ export default class SVGShapeElement extends ShapeElement {
         arr[i]._render = shouldRender
       }
 
-      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (arr[i].ty) {
         case ShapeType.Fill:
         case ShapeType.Stroke:
@@ -413,13 +413,22 @@ export default class SVGShapeElement extends ShapeElement {
         case ShapeType.GradientStroke:
         case ShapeType.NoStyle: {
           if (processedPos) {
-            itemsData[i].style.closed = false
+            const { style } = itemsData[i] ?? { style: null }
+
+            if (style) {
+              style.closed = false
+            }
           } else {
             itemsData[i] = this.createStyleElement(arr[i],
               level) as SVGElementInterface
           }
           if (arr[i]._render && itemsData[i]?.style?.pElem.parentNode !== container) {
-            container.appendChild(itemsData[i].style.pElem)
+            const { pElem } = itemsData[i].style ?? { pElem: null }
+
+            if (pElem) {
+              container.appendChild(pElem)
+            }
+
           }
           ownStyles.push(itemsData[i]?.style)
           break
@@ -429,7 +438,16 @@ export default class SVGShapeElement extends ShapeElement {
             const { length: jLen } = itemsData[i]?.it ?? []
 
             for (let j = 0; j < jLen; j++) {
-              itemsData[i].prevViewData[j] = itemsData[i].it[j]
+              const { it, prevViewData: pr } = itemsData[i] ?? {
+                it: null,
+                prevViewData: null
+              }
+
+              if (!pr || !it) {
+                continue
+              }
+
+              pr[j] = it[j]
             }
           } else {
             itemsData[i] = this.createGroupElement(arr[i]) as SVGElementInterface
@@ -443,9 +461,16 @@ export default class SVGShapeElement extends ShapeElement {
             ownTransformers,
             shouldRender
           )
+
           if (arr[i]._render && itemsData[i]?.gr?.parentNode !== container) {
-            container.appendChild(itemsData[i].gr)
+            const { gr } = itemsData[i]
+
+            if (gr) {
+              container.appendChild(gr)
+            }
+
           }
+
           break
         }
         case ShapeType.Transform: {
@@ -485,7 +510,7 @@ export default class SVGShapeElement extends ShapeElement {
           } else {
             Modifier = getModifier<TrimModifier>(arr[i].ty)
             Modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
-            ;(itemsData as unknown as TrimModifier[])[i] = Modifier
+            ; (itemsData as unknown as TrimModifier[])[i] = Modifier
             this.shapeModifiers.push(Modifier)
           }
           ownModifiers.push(Modifier)
@@ -499,7 +524,7 @@ export default class SVGShapeElement extends ShapeElement {
             break
           }
           Modifier = getModifier<RepeaterModifier>(arr[i].ty)
-          ;(itemsData as unknown as RepeaterModifier[])[i] = Modifier
+          ; (itemsData as unknown as RepeaterModifier[])[i] = Modifier
           Modifier.init(
             this as unknown as ElementInterfaceIntersect,
             arr,
@@ -510,7 +535,9 @@ export default class SVGShapeElement extends ShapeElement {
 
           shouldRender = false
           ownModifiers.push(Modifier)
+          break
         }
+        default:
       }
 
       this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
@@ -519,8 +546,14 @@ export default class SVGShapeElement extends ShapeElement {
     const { length: sLen } = ownStyles
 
     for (let i = 0; i < sLen; i++) {
-      ownStyles[i].closed = true
+      const ownStyle = ownStyles[i]
+
+      if (ownStyle) {
+        ownStyle.closed = true
+      }
+
     }
+
     const { length: mLen } = ownModifiers
 
     for (let i = 0; i < mLen; i++) {

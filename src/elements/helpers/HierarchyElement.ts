@@ -19,9 +19,10 @@ export default class HierarchyElement extends TransformElement {
     if (!this.comp) {
       throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`)
     }
-    if (!this.data.parent || !('buildElementParenting' in this.comp)) {
+    if (this.data.parent === undefined) {
       return
     }
+
     this.comp.buildElementParenting(
       this as unknown as ElementInterfaceIntersect,
       this.data.parent,

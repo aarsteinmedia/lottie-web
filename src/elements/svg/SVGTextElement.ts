@@ -145,7 +145,6 @@ export default class SVGTextLottieElement extends TextElement {
           justify = 'middle'
           break
         }
-        case undefined:
         default: {
           justify = 'start'
           break

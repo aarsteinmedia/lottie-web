@@ -17,7 +17,6 @@ const _identityMatrix = new Matrix(),
   _matrixHelper = new Matrix()
 
 export function createRenderFunction(data: Shape) {
-  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
   switch (data.ty) {
     case ShapeType.Fill: {
       return renderFill
@@ -59,7 +58,7 @@ function renderContentTransform(
   }
   if (isFirstFrame || itemData.transform.op._mdf) {
     itemData.transform.container.setAttribute('opacity',
-      `${itemData.transform.op.v ?? 1}`)
+      `${itemData.transform.op.v}`)
   }
   if (isFirstFrame || itemData.transform.mProps._mdf) {
     itemData.transform.container.setAttribute('transform',
@@ -96,11 +95,11 @@ function renderGradient(
   }
   const gfill = itemData.gf,
     hasOpacity = itemData.g?._hasOpacity,
-    pt1 = itemData.s?.v || [0, 0],
-    pt2 = itemData.e?.v || [0, 0]
+    pt1 = itemData.s?.v ?? [0, 0],
+    pt2 = itemData.e?.v ?? [0, 0]
 
   if (itemData.o?._mdf || isFirstFrame) {
-    const attr = styleData.ty === 'gf' ? 'fill-opacity' : 'stroke-opacity'
+    const attr = styleData.ty === ShapeType.GradientFill ? 'fill-opacity' : 'stroke-opacity'
 
     itemData.style?.pElem.setAttribute(attr, `${itemData.o?.v}`)
   }
@@ -118,7 +117,7 @@ function renderGradient(
   let stops: SVGStopElement[], stop: SVGStopElement
 
   if (itemData.g && (itemData.g._cmdf || isFirstFrame)) {
-    stops = itemData.cst || []
+    stops = itemData.cst
     const cValues = itemData.g.c,
       { length } = stops
 
@@ -133,9 +132,9 @@ function renderGradient(
     const oValues = itemData.g.o
 
     if (itemData.g._collapsable) {
-      stops = itemData.cst || []
+      stops = itemData.cst
     } else {
-      stops = itemData.ost || []
+      stops = itemData.ost
     }
     const { length: sLen } = stops
 
@@ -224,30 +223,32 @@ function renderPath(
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderPath is missing data')
   }
-  let pathStringTransformed, redraw: boolean, pathNodes: ShapePath | undefined
-  const { length } = itemData.styles,
-    { lvl } = itemData
+  let pathStringTransformed, shouldRedraw: boolean, pathNodes: ShapePath | undefined
+  const {
+      caches, lvl, sh, styles, transformers
+    } = itemData,
+    { length } = styles
   let paths: ShapeElement | ShapeCollection | undefined,
     mat: Matrix,
     iterations,
     k
 
   for (let i = 0; i < length; i++) {
-    redraw = itemData.sh?._mdf || Boolean(isFirstFrame)
-    if (itemData.styles[i].lvl < lvl) {
+    shouldRedraw = sh._mdf || Boolean(isFirstFrame)
+    if (styles[i].lvl < lvl) {
       mat = _matrixHelper.reset()
-      iterations = lvl - itemData.styles[i].lvl
-      k = itemData.transformers.length - 1
-      while (!redraw && iterations > 0) {
-        redraw = itemData.transformers[k].mProps._mdf || redraw
+      iterations = lvl - styles[i].lvl
+      k = transformers.length - 1
+      while (!shouldRedraw && iterations > 0) {
+        shouldRedraw = transformers[k].mProps._mdf || shouldRedraw
         iterations--
         k--
       }
-      if (redraw) {
-        iterations = lvl - itemData.styles[i].lvl
-        k = itemData.transformers.length - 1
+      if (shouldRedraw) {
+        iterations = lvl - styles[i].lvl
+        k = transformers.length - 1
         while (iterations > 0) {
-          mat.multiply(itemData?.transformers[k].mProps.v)
+          mat.multiply(transformers[k].mProps.v)
           iterations--
           k--
         }
@@ -255,14 +256,14 @@ function renderPath(
     } else {
       mat = _identityMatrix
     }
-    paths = itemData.sh.paths
+    paths = sh.paths
     const jLen = paths?._length || 0
 
-    if (redraw) {
+    if (shouldRedraw) {
       pathStringTransformed = ''
       for (let j = 0; j < jLen; j++) {
-        pathNodes = paths?.shapes?.[j] as ShapePath
-        if (pathNodes && pathNodes._length) {
+        pathNodes = paths?.shapes[j]
+        if (pathNodes?._length) {
           pathStringTransformed += buildShapeString(
             pathNodes,
             pathNodes._length,
@@ -271,14 +272,15 @@ function renderPath(
           )
         }
       }
-      itemData.caches[i] = pathStringTransformed
+      caches[i] = pathStringTransformed
     } else {
-      pathStringTransformed = itemData.caches[i]
+      pathStringTransformed = caches[i]
     }
-    itemData.styles[i].d += styleData.hd === true ? '' : pathStringTransformed
-    itemData.styles[i]._mdf = redraw || itemData.styles[i]._mdf
+    styles[i].d += styleData.hd === true ? '' : pathStringTransformed
+    styles[i]._mdf = shouldRedraw || styles[i]._mdf
   }
 }
+
 
 function renderStroke(
   _: Shape,
@@ -288,25 +290,26 @@ function renderStroke(
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderStroke is missing data')
   }
-  const styleElem = itemData.style
+
   const {
-    c, d, o, w
+    c, d, o, style, w
   } = itemData
 
-  if ((d._mdf || isFirstFrame) && d.dashStr) {
-    styleElem?.pElem.setAttribute('stroke-dasharray', d.dashStr)
-    styleElem?.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
+  if (d && (d._mdf || isFirstFrame) && d.dashStr) {
+    style?.pElem.setAttribute('stroke-dasharray', d.dashStr)
+    style?.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
-  if (c?._mdf || isFirstFrame) {
-    styleElem?.pElem.setAttribute('stroke',
-      `rgb(${Math.floor((c?.v as number[])[0])},${Math.floor((c?.v as number[])[1])},${(c?.v as number[])[2]})`)
+  if (c && (c._mdf || isFirstFrame)) {
+    style?.pElem.setAttribute('stroke', `rgb(${  Math.floor(c.v[0])  },${  Math.floor(c.v[1])  },${  Math.floor(c.v[2])  })`)
   }
   if (o?._mdf || isFirstFrame) {
-    styleElem?.pElem.setAttribute('stroke-opacity', `${o?.v}`)
+    style?.pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)
   }
   if (w?._mdf || isFirstFrame) {
-    styleElem?.pElem.setAttribute('stroke-width', `${w?.v}`)
-    styleElem?.msElem?.setAttribute('stroke-width', `${w?.v}`)
+    style?.pElem.setAttribute('stroke-width', `${w?.v || 0}`)
+    if (style?.msElem) {
+      style.msElem.setAttribute('stroke-width', `${w?.v || 0}`)
+    }
   }
 }
 

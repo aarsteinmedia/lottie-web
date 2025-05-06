@@ -37,7 +37,9 @@ export default class SVGCompElement extends SVGBaseElement {
     this.elements = createSizedArray(this.layers.length)
     const {
         appendElementInPos,
+        buildElementParenting,
         buildItem,
+        checkLayers,
         checkPendingElements,
         configAnimation,
         createImage,
@@ -60,6 +62,8 @@ export default class SVGCompElement extends SVGBaseElement {
 
     this.appendElementInPos = appendElementInPos
     this.buildItem = buildItem
+    this.buildElementParenting = buildElementParenting
+    this.checkLayers = checkLayers
     this.checkPendingElements = checkPendingElements
     this.configAnimation = configAnimation
     this.createImage = createImage
@@ -94,6 +98,14 @@ export default class SVGCompElement extends SVGBaseElement {
 
   appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
     throw new Error(`${this.constructor.name}: Method appendElementInPos is not impelemented`)
+  }
+
+  buildElementParenting(
+    _element: ElementInterfaceIntersect,
+    _parentName?: number,
+    _hierarchy: ElementInterfaceIntersect[] = []
+  ) {
+    throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
   }
 
   buildItem(_pos: number) {

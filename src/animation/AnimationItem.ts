@@ -242,7 +242,7 @@ export default class AnimationItem extends BaseEvent {
   }
   public checkSegments(offset: number) {
     if (this.segments.length > 0) {
-      this.adjustSegment(this.segments.shift(), offset)
+      this.adjustSegment(this.segments.shift() ?? [0, 0], offset)
 
       return true
     }
@@ -420,21 +420,21 @@ export default class AnimationItem extends BaseEvent {
     this.trigger('drawnFrame')
   }
   public hide() {
-    this.renderer?.hide()
+    this.renderer.hide()
   }
   public imagesLoaded() {
     this.trigger('loaded_images')
     this.checkLoaded()
   }
   public includeLayers(data: AnimationData) {
-    if (!this.renderer) {
-      throw new Error(`${this.constructor.name}: renderer is not implemented`)
-    }
+    // if (!this.renderer) {
+    //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
+    // }
     if (this.animationData.op && data.op > this.animationData.op) {
       this.animationData.op = data.op
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
     }
-    const { layers } = this.animationData
+    const { assets, layers } = this.animationData
     let i,
       len = layers.length
     const newLayers = data.layers,
@@ -455,11 +455,9 @@ export default class AnimationItem extends BaseEvent {
       this.renderer.globalData?.fontManager?.addFonts(data.fonts,
         this.renderer.globalData.defs)
     }
-    if (data.assets) {
-      len = data.assets.length
-      for (i = 0; i < len; i++) {
-        this.animationData.assets?.push(data.assets[i])
-      }
+    len = data.assets.length
+    for (i = 0; i < len; i++) {
+      assets.push(data.assets[i])
     }
     this.animationData.__complete = false
     completeAnimation(this.animationData,
@@ -477,7 +475,7 @@ export default class AnimationItem extends BaseEvent {
     const segment = segments.shift()
 
     this.timeCompleted = Number(segment?.time) * this.frameRate
-    const segmentPath = `${this.path + this.fileName}_${this.segmentPos}.json`
+    const segmentPath = `${this.path + (this.fileName || '')}_${this.segmentPos}.json`
 
     this.segmentPos++
     loadData(
@@ -553,7 +551,7 @@ export default class AnimationItem extends BaseEvent {
       this.segments.push(arr as Vector2)
     }
     if (this.segments.length > 0 && forceFlag) {
-      this.adjustSegment(this.segments.shift()!, 0)
+      this.adjustSegment(this.segments.shift() ?? [0, 0], 0)
     }
     if (this.isPaused) {
       this.play()
@@ -565,11 +563,11 @@ export default class AnimationItem extends BaseEvent {
     }
     this.imagePreloader.setAssetsPath(this.assetsPath)
     this.imagePreloader.setPath(this.path)
-    this.imagePreloader.loadAssets(this.animationData.assets || [],
+    this.imagePreloader.loadAssets(this.animationData.assets,
       this.imagesLoaded.bind(this))
   }
   public renderFrame(_num?: number | null) {
-    if (!this.isLoaded || !this.renderer) {
+    if (!this.isLoaded) {
       return
     }
     try {
@@ -607,10 +605,8 @@ export default class AnimationItem extends BaseEvent {
     try {
       let animationData = animationDatFromProps
 
-      if (animationData) {
-        if (typeof animationData !== 'object') {
-          animationData = JSON.parse(animationData)
-        }
+      if (animationData && typeof animationData !== 'object') {
+        animationData = JSON.parse(animationData)
       }
 
       const params: AnimationConfiguration = {
@@ -630,7 +626,7 @@ export default class AnimationItem extends BaseEvent {
         wrapperAttributes.getNamedItem('bm-type')?.value ??
         wrapperAttributes.getNamedItem('data-bm-renderer')?.value ??
         wrapperAttributes.getNamedItem('bm-renderer')?.value ??
-        (getRegisteredRenderer() || RendererType.Canvas)
+        getRegisteredRenderer()
 
       if (Object.values(RendererType).includes(animType as RendererType)) {
         params.animType = animType as RendererType
@@ -696,7 +692,7 @@ export default class AnimationItem extends BaseEvent {
   public setParams(params: AnimationConfiguration) {
     try {
       if (params.wrapper || params.container) {
-        this.wrapper = params.wrapper || params.container || null
+        this.wrapper = params.wrapper ?? params.container ?? null
       }
       let animType = RendererType.SVG
 
@@ -707,13 +703,14 @@ export default class AnimationItem extends BaseEvent {
       }
       const RendererClass = getRenderer(animType)
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.renderer = new RendererClass(this, params.rendererSettings as any)
-      if (this.renderer?.globalData?.defs) {
+      if (this.renderer.globalData?.defs) {
         this.imagePreloader?.setCacheType(animType,
           this.renderer.globalData.defs)
       }
 
-      this.renderer?.setProjectInterface(this.projectInterface)
+      this.renderer.setProjectInterface(this.projectInterface)
       this.animType = animType
       if (
         params.loop === '' ||
@@ -728,7 +725,7 @@ export default class AnimationItem extends BaseEvent {
         this.loop = parseInt(`${params.loop}`, 10)
       }
       this.autoplay = Boolean('autoplay' in params ? params.autoplay : true)
-      this.name = params.name ? params.name : ''
+      this.name = params.name ?? ''
       this.autoloadSegments = Boolean(Object.hasOwn(params,
         'autoloadSegments')
         ? params.autoloadSegments
@@ -741,11 +738,11 @@ export default class AnimationItem extends BaseEvent {
       if (params.animationData) {
         this.setupAnimation(params.animationData)
       } else if (params.path) {
-        if (!params.path.includes('\\')) {
-          this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
-        } else {
+        if (params.path.includes('\\')) {
           this.path = params.path.slice(0,
             Math.max(0, params.path.lastIndexOf('\\') + 1))
+        } else {
+          this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
         }
         this.fileName = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
         this.fileName = this.fileName.slice(0,
@@ -797,7 +794,7 @@ export default class AnimationItem extends BaseEvent {
     this.audioController.setVolume(val)
   }
   public show() {
-    this.renderer?.show()
+    this.renderer.show()
   }
   public stop(name?: string) {
     if (name && this.name !== name) {
@@ -820,7 +817,7 @@ export default class AnimationItem extends BaseEvent {
   }
   public trigger(name: AnimationEventName) {
     try {
-      if (!this._cbs?.[name]) {
+      if (!this._cbs[name]) {
         return
       }
       switch (name) {
@@ -832,13 +829,12 @@ export default class AnimationItem extends BaseEvent {
               this.totalFrames,
               this.frameModifier
             ))
-          this.onEnterFrame?.call(this,
-            new BMEnterFrameEvent(
-              name,
-              this.currentFrame,
-              this.totalFrames,
-              this.frameMult
-            ))
+          this.onEnterFrame?.(new BMEnterFrameEvent(
+            name,
+            this.currentFrame,
+            this.totalFrames,
+            this.frameMult
+          ))
           break
         }
         case 'drawnFrame': {
@@ -859,18 +855,17 @@ export default class AnimationItem extends BaseEvent {
               this.playCount,
               this.frameMult
             ))
-          this.onLoopComplete?.call(this,
-            new BMCompleteLoopEvent(
-              name,
-              this.loop,
-              this.playCount,
-              this.frameMult
-            ))
+          this.onLoopComplete?.(new BMCompleteLoopEvent(
+            name,
+            this.loop,
+            this.playCount,
+            this.frameMult
+          ))
           break
         }
         case 'complete': {
           this.triggerEvent(name, new BMCompleteEvent(name, this.frameMult))
-          this.onComplete?.call(this, new BMCompleteEvent(name, this.frameMult))
+          this.onComplete?.(new BMCompleteEvent(name, this.frameMult))
           break
         }
         case 'segmentStart': {
@@ -878,15 +873,14 @@ export default class AnimationItem extends BaseEvent {
             new BMSegmentStartEvent(
               name, this.firstFrame, this.totalFrames
             ))
-          this.onSegmentStart?.call(this,
-            new BMSegmentStartEvent(
-              name, this.firstFrame, this.totalFrames
-            ))
+          this.onSegmentStart?.(new BMSegmentStartEvent(
+            name, this.firstFrame, this.totalFrames
+          ))
           break
         }
         case 'destroy': {
           this.triggerEvent(name, new BMDestroyEvent(name, this))
-          this.onDestroy?.call(this, new BMDestroyEvent(name, this))
+          this.onDestroy?.(new BMDestroyEvent(name, this))
           break
         }
         default: {
@@ -901,17 +895,14 @@ export default class AnimationItem extends BaseEvent {
     const error = new BMConfigErrorEvent(nativeError, this.currentFrame)
 
     this.triggerEvent('error', error)
-
-    if (this.onError) {
-      this.onError.call(this, error)
-    }
+    this.onError?.(error)
   }
   public triggerRenderFrameError(nativeError: unknown) {
     const error = new BMRenderFrameErrorEvent(nativeError, this.currentFrame)
 
     this.triggerEvent('error', error)
 
-    this.onError?.call(this, error)
+    this.onError?.(error)
   }
   public unmute(name?: string) {
     if (name && this.name !== name) {

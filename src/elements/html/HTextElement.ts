@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   DocumentData,
   ElementInterfaceIntersect,
@@ -80,8 +82,8 @@ export default class HTextElement extends TextElement {
     if (innerElemStyle && !this.globalData?.fontManager?.chars) {
       innerElemStyle.fontSize = `${documentData?.finalSize || 0}px`
       innerElemStyle.lineHeight = `${documentData?.finalSize || 0}px`
-      if (this.innerElem && fontData?.fClass && this.innerElem) {
-        ;(this.innerElem as any).className = fontData.fClass
+      if (this.innerElem && fontData?.fClass) {
+        ;(this.innerElem as HTMLElement).className = fontData.fClass
       } else {
         if (fontData) {
           innerElemStyle.fontFamily = fontData.fFamily
@@ -97,13 +99,13 @@ export default class HTextElement extends TextElement {
       }
     }
 
-    const letters = documentData?.l || []
+    const letters = documentData?.l ?? []
     let tSpan: SVGElement | HTMLElement,
       tParent: null | HTMLElement = null,
       tCont: null | HTMLElement | SVGSVGElement = null
     const matrixHelper = this.mHelper
     let shapes,
-      shapeStr = '',
+      shapeStr,
       cnt = 0
     const { length } = letters
 
@@ -130,7 +132,7 @@ export default class HTextElement extends TextElement {
           }
         }
       } else if (this.isMasked) {
-        tSpan = this.textPaths[cnt] ? this.textPaths[cnt] : createNS('text')
+        tSpan = this.textPaths[cnt] ?? createNS<SVGTextElement>('text')
       } else if (this.textSpans[cnt]) {
         tParent = this.textSpans[cnt]
         tSpan = this.textPaths[cnt]
@@ -150,14 +152,15 @@ export default class HTextElement extends TextElement {
         )
         let shapeData
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (charData) {
           shapeData = charData.data
         } else {
           shapeData = null
         }
         matrixHelper.reset()
-        if (shapeData && shapeData.shapes && shapeData.shapes.length > 0) {
-          shapes = shapeData.shapes[0].it || []
+        if (shapeData?.shapes && shapeData.shapes.length > 0) {
+          shapes = shapeData.shapes[0].it ?? []
           matrixHelper.scale((documentData?.finalSize || 0) / 100,
             (documentData?.finalSize || 0) / 100)
           shapeStr = this.createPathShape(matrixHelper, shapes)
@@ -258,7 +261,7 @@ export default class HTextElement extends TextElement {
       if (this.isMasked && this.finalTransform?._matMdf) {
         // Todo Benchmark if using this is better than getBBox
         this.svgElement?.setAttribute('viewBox',
-          `${-(this.finalTransform?.mProp.p?.v as any[])[0]} ${-(
+          `${-(this.finalTransform.mProp.p?.v as any[])[0]} ${-(
             this.finalTransform.mProp.p?.v as any[]
           )[1].v[1]} ${this.compW} ${this.compH}`)
         svgStyle = this.svgElement?.style
@@ -277,8 +280,8 @@ export default class HTextElement extends TextElement {
       return
     }
     let count = 0
-    const renderedLetters = this.textAnimator?.renderedLetters || [],
-      letters = this.textProperty?.currentData.l || []
+    const renderedLetters = this.textAnimator?.renderedLetters ?? [],
+      letters = this.textProperty?.currentData.l ?? []
 
     const { length } = letters
     let renderedLetter
@@ -307,16 +310,16 @@ export default class HTextElement extends TextElement {
         textPath.setAttribute('stroke-width', `${renderedLetter.sw}`)
       }
       if (renderedLetter.sc && renderedLetter._mdf.sc) {
-        textPath.setAttribute('stroke', `${renderedLetter.sc}`)
+        textPath.setAttribute('stroke', renderedLetter.sc as string)
       }
       if (renderedLetter.fc && renderedLetter._mdf.fc) {
-        textPath.setAttribute('fill', `${renderedLetter.fc}`)
+        textPath.setAttribute('fill', renderedLetter.fc as string)
         textPath.style.color = renderedLetter.fc as string
       }
     }
 
     if (
-      (this.innerElem as SVGGraphicsElement)?.getBBox &&
+      (this.innerElem as SVGGraphicsElement | undefined)?.getBBox &&
       !this.hidden &&
       (this._isFirstFrame || this._mdf)
     ) {
@@ -335,9 +338,9 @@ export default class HTextElement extends TextElement {
 
       if (
         this.currentBBox &&
-        (this.currentBBox?.w !== boundingBox.width + margin * 2 ||
-          this.currentBBox?.h !== boundingBox.height + margin * 2 ||
-          this.currentBBox?.x !== boundingBox.x - margin ||
+        (this.currentBBox.w !== boundingBox.width + margin * 2 ||
+          this.currentBBox.h !== boundingBox.height + margin * 2 ||
+          this.currentBBox.x !== boundingBox.x - margin ||
           this.currentBBox.y !== boundingBox.y - margin)
       ) {
         this.currentBBox.w = boundingBox.width + margin * 2

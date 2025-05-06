@@ -18,7 +18,7 @@ export default class CVMaskElement {
   constructor(data: LottieLayer, element: CVShapeElement | CVBaseElement) {
     this.data = data
     this.element = element
-    this.masksProperties = this.data.masksProperties || []
+    this.masksProperties = this.data.masksProperties ?? []
     this.viewData = createSizedArray(this.masksProperties.length)
     const { length } = this.masksProperties
     let hasMasks = false
@@ -68,7 +68,7 @@ export default class CVMaskElement {
           ctx?.lineTo(this.element.globalData.compSize.w, 0)
           ctx?.lineTo(this.element.globalData.compSize.w,
             this.element.globalData.compSize.h)
-          ctx?.lineTo(0, this.element.globalData.compSize?.h)
+          ctx?.lineTo(0, this.element.globalData.compSize.h)
           ctx?.lineTo(0, 0)
         }
         const data = this.viewData[i].v
@@ -79,7 +79,7 @@ export default class CVMaskElement {
         const pt =
           transform?.applyToPointArray(
             data.v[0][0], data.v[0][1], 0
-          ) || []
+          ) ?? []
 
         ctx?.moveTo(pt[0], pt[1])
         const jLen = data._length
@@ -90,7 +90,7 @@ export default class CVMaskElement {
               data.o[j - 1],
               data.i[j],
               data.v[j]
-            ) || []
+            ) ?? []
           ctx?.bezierCurveTo(
             pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]
           )
@@ -98,7 +98,7 @@ export default class CVMaskElement {
         pts =
           transform?.applyToTriplePoints(
             data.o[j - 1], data.i[0], data.v[0]
-          ) ||
+          ) ??
           []
         ctx?.bezierCurveTo(
           pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]

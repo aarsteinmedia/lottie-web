@@ -127,9 +127,10 @@ export function searchAnimations(
     return
   }
   let renderer = rendererFromProps
-  const animElements = [].concat(Array.prototype.slice.call(document.getElementsByClassName('lottie')),
-    Array.prototype.slice.call(document.getElementsByClassName('bodymovin'))) as HTMLElement[]
-  const { length } = animElements
+  const animElements = [
+      ...document.getElementsByClassName('lottie'), ...document.getElementsByClassName('bodymovin')
+    ] as HTMLElement[],
+    { length } = animElements
 
   for (let i = 0; i < length; i++) {
     if (renderer) {

@@ -109,6 +109,7 @@ const config: ConfigArray = tseslint.config(
       '@typescript-eslint/restrict-template-expressions': [
         'error', { allowNumber: true, },
       ],
+      '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
       '@typescript-eslint/unbound-method': 0,
       'arrow-return-style/arrow-return-style': 0,
       'fsecond/prefer-destructured-optionals': 0,

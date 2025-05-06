@@ -65,6 +65,7 @@ export class BMCompleteLoopEvent {
     this.currentLoop = currentLoop
     this.totalLoops = totalLoops
     this.direction = frameMultiplier < 0 ? -1 : 1
+
   }
 }
 
@@ -130,10 +131,8 @@ export class BaseEvent {
     Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>
   > = {}
 
-  addEventListener(
-    eventName: AnimationEventName,
-    callback: (ev?: LottieEvent) => unknown
-  ): () => void {
+  addEventListener(eventName: AnimationEventName,
+    callback: (ev?: LottieEvent) => unknown): () => void {
     this._cbs[eventName] = this._cbs[eventName] ?? []
     this._cbs[eventName].push(callback)
 
@@ -142,10 +141,8 @@ export class BaseEvent {
     }
   }
 
-  removeEventListener(
-    eventName: AnimationEventName,
-    callback?: (ev: LottieEvent) => unknown
-  ): void {
+  removeEventListener(eventName: AnimationEventName,
+    callback?: (ev: LottieEvent) => unknown): void {
     if (!callback) {
       this._cbs[eventName] = null
 
@@ -188,7 +185,7 @@ export type LottieEvent =
   | BMCompleteEvent
   | BMCompleteLoopEvent
   | BMSegmentStartEvent
-   
+
   | BMConfigErrorEvent
   | BMDestroyEvent
   | BMDrawnFrameEvent

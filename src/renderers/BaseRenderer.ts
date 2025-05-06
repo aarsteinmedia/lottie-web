@@ -56,9 +56,9 @@ export default class BaseRenderer extends FrameElement {
     parentName?: number,
     hierarchy: ElementInterfaceIntersect[] = []
   ) {
-    const { elements, layers } = this
+    const { elements, layers } = this,
+      { length } = layers
     let i = 0
-    const { length } = layers
 
     while (i < length) {
       if (layers[i].ind !== parentName) {

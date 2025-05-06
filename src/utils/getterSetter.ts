@@ -79,7 +79,13 @@ const renderers: {
 export const registerRenderer = (key: RendererType, value: Renderer) => {
     renderers[key] = value
   },
-  getRenderer = (key: RendererType) => renderers[key],
+  getRenderer = (key: RendererType) => {
+    if (!renderers[key]) {
+      throw new Error('Could not get renderer')
+    }
+
+    return renderers[key]
+  },
   getRegisteredRenderer = () => {
     // Returns canvas by default for compatibility
     if (renderers.canvas) {
@@ -116,7 +122,7 @@ export const registeredEffects: {
     [id: string]: {
       countsAsEffect?: boolean
       effect: EffectElement
-    }
+    } | undefined
   } = {},
   registerEffect = (
     id: number,

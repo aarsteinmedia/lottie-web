@@ -1,8 +1,10 @@
+import type { Transformer, TransformSequence } from '@/types'
+
 import Matrix from '@/utils/Matrix'
 
 export default class ShapeTransformManager {
-  sequenceList: any[]
-  sequences: any
+  sequenceList: TransformSequence[]
+  sequences: TransformSequence
   // eslint-disable-next-line @typescript-eslint/naming-convention
   transform_key_count: number
   constructor() {
@@ -10,11 +12,12 @@ export default class ShapeTransformManager {
     this.sequenceList = []
     this.transform_key_count = 0
   }
-  addTransformSequence(transforms: any[]) {
+  addTransformSequence(transforms: { transform: Transformer }[]) {
     const { length } = transforms
     let key = '_'
 
     for (let i = 0; i < length; i++) {
+
       key += `${transforms[i].transform.key}_`
     }
     let sequence = this.sequences[key]
@@ -26,7 +29,7 @@ export default class ShapeTransformManager {
         transforms: [...transforms],
       }
       this.sequences[key] = sequence
-      this.sequenceList.push(sequence)
+      this.sequenceList.push(sequence as TransformSequence)
     }
 
     return sequence
@@ -36,14 +39,15 @@ export default class ShapeTransformManager {
 
     return `_${this.transform_key_count}`
   }
-  processSequence(sequence: any, isFirstFrame?: boolean) {
+  processSequence(sequence: TransformSequence, isFirstFrame?: boolean) {
     let i = 0
-    const { length } = sequence.transforms
+    const { length } = sequence.transforms ?? []
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     let _mdf = isFirstFrame
 
     if (!isFirstFrame) {
       while (i < length) {
-        if (sequence.transforms[i].transform.mProps._mdf) {
+        if (sequence.transforms?.[i].transform.mProps._mdf) {
           _mdf = true
           break
         }
@@ -52,9 +56,13 @@ export default class ShapeTransformManager {
     }
 
     if (_mdf) {
-      sequence.finalTransform.reset()
+      sequence.finalTransform?.reset()
       for (i = length - 1; i >= 0; i -= 1) {
-        sequence.finalTransform.multiply(sequence.transforms[i].transform.mProps.v)
+        const { v: matrix } = sequence.transforms?.[i].transform.mProps ?? { v: null }
+
+        if (matrix) {
+          sequence.finalTransform?.multiply(matrix)
+        }
       }
     }
     sequence._mdf = _mdf

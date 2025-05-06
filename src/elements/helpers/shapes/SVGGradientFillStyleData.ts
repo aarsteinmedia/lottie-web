@@ -86,9 +86,10 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
-    this.h = PropertyFactory.getProp(
+    this.h = PropertyFactory.getProp<KeyframedValueProperty>(
       elem as ElementInterfaceIntersect,
-      data.h ?? ({ k: 0 } as VectorProperty),
+      // @ts-expect-error: ignore
+      data.h ?? ({ k: 0 } as unknown as VectorProperty<KeyframedValueProperty>),
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
@@ -154,7 +155,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     opFill.setAttribute('spreadMethod', 'pad')
     opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
     const jLen =
-          ((data.g?.k.k as Stop[])[0].s
+          ((data.g?.k.k as Stop[] | undefined)?.[0].s
             ? (data.g?.k.k as Stop[])[0].s.length
             : data.g?.k.k.length) || 0,
       { stops } = this

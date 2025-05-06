@@ -40,9 +40,9 @@ export default class HImageElement extends HSolidElement {
 
     if (this.data?.hasMask) {
       this.imageElem = createNS('image')
-      this.imageElem?.setAttribute('width', `${this.assetData.w}px`)
-      this.imageElem?.setAttribute('height', `${this.assetData.h}px`)
-      this.imageElem?.setAttributeNS(
+      this.imageElem.setAttribute('width', `${this.assetData.w}px`)
+      this.imageElem.setAttribute('height', `${this.assetData.h}px`)
+      this.imageElem.setAttributeNS(
         'http://www.w3.org/1999/xlink',
         'href',
         assetPath

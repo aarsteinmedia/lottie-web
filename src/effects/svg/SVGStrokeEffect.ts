@@ -173,7 +173,7 @@ export default class SVGStrokeEffect {
 
     if (forceRender || this.filterManager.effectElements[6].p._mdf) {
       this.pathMasker?.setAttribute('opacity',
-        `${this.filterManager.effectElements[6].p.v}`)
+        `${Number(this.filterManager.effectElements[6].p.v)}`)
     }
     if ((this.filterManager.effectElements[10].p.v === 1 ||
         this.filterManager.effectElements[10].p.v === 2) &&

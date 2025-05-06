@@ -2,6 +2,7 @@ import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import { createNS } from '@/utils'
+import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class SVGProLevelsFilter {
   feFuncA?: SVGFEFuncAElement
@@ -115,6 +116,7 @@ export default class SVGProLevelsFilter {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   createFeFunc<T extends SVGElement>(type: string,
     feComponentTransfer: SVGFEComponentTransferElement) {
     const feFunc = createNS<T>(type)
@@ -137,7 +139,7 @@ export default class SVGProLevelsFilter {
     let perc
     const min = Math.min(inputBlack, inputWhite),
       max = Math.max(inputBlack, inputWhite),
-      table = Array.call(null, { length: segments })
+      table = createSizedArray(segments)
     let colorValue,
       pos = 0
     const outputDelta = outputWhite - outputBlack,
@@ -164,8 +166,7 @@ export default class SVGProLevelsFilter {
 
   renderFrame(forceRender?: boolean) {
     if (
-      !forceRender && !this.filterManager._mdf ||
-      !this.filterManager.effectElements
+      !forceRender && !this.filterManager._mdf
     ) {
       return
     }
