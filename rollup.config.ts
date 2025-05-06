@@ -1,32 +1,25 @@
+import type { Plugin, RollupOptions } from 'rollup'
+
 import commonjs from '@rollup/plugin-commonjs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { readFile } from 'fs/promises'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dts } from 'rollup-plugin-dts'
 import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-serve'
-import { summary } from 'rollup-plugin-summary'
+import pluginSummary from 'rollup-plugin-summary'
 import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
 
 const isProd = process.env.NODE_ENV !== 'development',
   __dirname = path.dirname(fileURLToPath(import.meta.url)),
-  /**
-   * @type {typeof import('./package.json')}
-   * */
-  pkg = JSON.parse(
-    (
-      await readFile(
-        new URL(path.resolve(__dirname, 'package.json'), import.meta.url)
-      )
-    ).toString()
-  ),
-  toPascalCase = (str) => {
+
+  pkgBuffer = await readFile(new URL(path.resolve(__dirname, 'package.json'), import.meta.url)),
+  pkg: typeof import('./package.json') = JSON.parse(pkgBuffer.toString()),
+  toPascalCase = (str: string) => {
     // Use regex to match words regardless of delimiter
-    const words = str.match(
-      /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-    )
+    const words = str.match(/[A-Z]{2,}(?=[A-Z][a-z]+\d|\b)|[A-Z]?[a-z]+\d*|[A-Z]|\d+/g)
 
     // If no words are found, return an empty string
     if (!words) {
@@ -38,11 +31,12 @@ const isProd = process.env.NODE_ENV !== 'development',
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join('')
   },
-  injectVersion = () => ({
+  injectVersion = (): Plugin => ({
     name: 'inject-version',
-    renderChunk: (code) => code.replace('[[BM_VERSION]]', pkg.version),
+    renderChunk: (code: string) => code.replace('[[BM_VERSION]]', pkg.version),
   }),
-  plugins = () => [
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  plugins = (): Plugin[] => isProd ? [
     typescriptPaths(),
     nodeResolve({
       extensions: ['.ts'],
@@ -51,33 +45,51 @@ const isProd = process.env.NODE_ENV !== 'development',
     commonjs(),
     injectVersion(),
     swc(),
-    isProd && summary(),
-    !isProd &&
-      serve({
-        open: true,
-      }),
-    !isProd && livereload(),
+    pluginSummary(),
+  ] : [
+    typescriptPaths(),
+    nodeResolve({
+      extensions: ['.ts'],
+      preferBuiltins: true,
+    }),
+    commonjs(),
+    injectVersion(),
+    swc(),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    serve({ open: true, }),
+    livereload()
   ],
   inputs = [
-    { file: path.resolve(__dirname, 'src', 'Lottie.ts'), name: 'lottie' },
     {
-      file: path.resolve(__dirname, 'src', 'LottieLight.ts'),
+      file: path.resolve(
+        __dirname, 'src', 'Lottie.ts'
+      ),
+      name: 'lottie'
+    },
+    {
+      file: path.resolve(
+        __dirname, 'src', 'LottieLight.ts'
+      ),
       name: 'lottie-light',
     },
     {
-      file: path.resolve(__dirname, 'src', 'LottieUtils.ts'),
+      file: path.resolve(
+        __dirname, 'src', 'LottieUtils.ts'
+      ),
       name: 'lottie-utils',
     },
   ],
-  types = inputs.map((input) => ({
-    input: path.resolve(__dirname, 'types', `${toPascalCase(input.name)}.d.ts`),
+  types: RollupOptions[] = inputs.map((input) => ({
+    input: path.resolve(
+      __dirname, 'types', `${toPascalCase(input.name)}.d.ts`
+    ),
     output: {
       file: `./dist/${input.name}.d.ts`,
       format: 'esm',
     },
     plugins: [dts()],
   })),
-  outputs = inputs.map((input) => ({
+  outputs: RollupOptions[] = inputs.map((input) => ({
     input: input.file,
     onwarn(warning, warn) {
       if (warning.code === 'CIRCULAR_DEPENDENCY') {
@@ -93,6 +105,6 @@ const isProd = process.env.NODE_ENV !== 'development',
 
     plugins: plugins(),
   })),
-  output = outputs.concat(types)
+  output = [...outputs, ...types]
 
 export default isProd ? output : outputs[0]

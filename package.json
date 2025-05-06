@@ -25,11 +25,11 @@
   "license": "GPL-2.0-or-later",
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "rollup -c",
+    "build": "rollup -c --configPlugin typescript",
     "prebuild:types": "rimraf ./types ",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
-    "dev": "rollup -c -w --environment NODE_ENV:development",
+    "dev": "rollup -c --configPlugin typescript -w --environment NODE_ENV:development",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
   },

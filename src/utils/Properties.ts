@@ -7,6 +7,7 @@ import type {
   ElementInterfaceIntersect,
   Keyframe,
   Shape,
+  Svalue,
   TextData,
   TextRangeValue,
   Vector2,
@@ -114,7 +115,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   }
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
     const offsetTime = Number(this.offsetTime)
-    let newValue: Vector3 = [0,
+    let newValue: Vector3 | Svalue = [0,
       0,
       0]
 
@@ -163,7 +164,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     if (keyData.to && keyData.s) {
       keyframeMetadata.bezierData = keyframeMetadata.bezierData ?? buildBezierData(
-        keyData.s as Vector2,
+        keyData.s as unknown as Vector2,
         (nextKeyData.s ?? keyData.e) as Vector2,
         keyData.to,
         keyData.ti
@@ -268,8 +269,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           newValue[1] = keyData.s[1]
           newValue[2] = keyData.s[2]
         } else {
-          const quatStart = createQuaternion(keyData.s as Vector3)
-          const quatEnd = createQuaternion(endValue as Vector3)
+          const quatStart = createQuaternion(keyData.s as unknown as Vector3)
+          const quatEnd = createQuaternion(endValue as unknown as Vector3)
           const time = (frameNum - keyTime) / (nextKeyTime - keyTime)
 
           quaternionToEuler(newValue, slerp(
@@ -335,7 +336,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               newValue = keyValue as unknown as Vector3
             }
           }
-          
+
         }
       }
     }

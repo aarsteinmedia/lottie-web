@@ -50,7 +50,7 @@ const funcitonNotImplemented = 'Function not implemented.',
     postMessage: (data: {
       id: string;
       payload?: unknown;
-      status: string 
+      status: string
     }) => {
       if (!workerProxy.onmessage) {
         return
@@ -174,10 +174,8 @@ export function loadData(
   })
 }
 
-function createProcess(
-  onComplete: (data: AnimationData) => void,
-  onError?: (error?: unknown) => void
-) {
+function createProcess(onComplete: (data: AnimationData) => void,
+  onError?: (error?: unknown) => void) {
   _counterId++
   const id = `processId_${_counterId}`
 
@@ -196,10 +194,8 @@ function createProcess(
 
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
   if (!isServer() && getWebWorker()) {
-    const blob = new Blob(
-      ['var _workerSelf = self; self.onmessage = ', fn.toString()],
-      { type: 'text/javascript' }
-    )
+    const blob = new Blob(['var _workerSelf = self; self.onmessage = ', fn.toString()],
+      { type: 'text/javascript' })
     const url = URL.createObjectURL(blob)
 
     return new Worker(url)
@@ -218,7 +214,9 @@ function setupWorker() {
         e.data.path,
         e.data.fullPath,
         (data) => {
-          completeData(data)
+          if (data) {
+            completeData(data)
+          }
 
           _workerSelf.postMessage({
             id: e.data.id,
@@ -271,11 +269,11 @@ function setupWorker() {
 
   workerInstance.onmessage = ({ data }) => {
     const {
-        id, payload, status 
+        id, payload, status
       } = data as {
         id: string;
         status: string;
-        payload: AnimationData 
+        payload: AnimationData
       },
       process = processes[id]
 

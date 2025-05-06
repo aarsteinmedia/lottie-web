@@ -258,14 +258,14 @@ export default class SVGTextLottieElement extends TextElement {
           // t === 1 means the character has been replaced with an animated shaped
           if (charData?.t === 1) {
             glyphElement = new SVGCompElement(
-              charData.data,
+              charData.data as LottieLayer,
               this.globalData,
               this as unknown as ElementInterfaceIntersect
             )
           } else {
             let data = this.emptyShapeData
 
-            if (charData?.data.shapes) {
+            if (charData?.data?.shapes) {
               data = this.buildShapeData(charData.data,
                 Number(documentData.finalSize))
             }

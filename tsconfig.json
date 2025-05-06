@@ -47,6 +47,7 @@
   "include": [
     "src/**/*",
     "eslint.config.ts",
+    "rollup.config.ts"
   ],
   "exclude": [
     "**/node_modules",

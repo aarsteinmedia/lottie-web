@@ -317,25 +317,25 @@ export default class TransformProperty extends BaseProperty {
             this.p.keyframes[0].t
           ) {
             v1 = this.p.getValueAtTime((this.p.keyframes[0].t + 0.01) / frameRate,
-              0)
+              0) as Vector2
             v2 = this.p.getValueAtTime(Number(this.p.keyframes[0].t) / frameRate,
-              0)
+              0) as Vector2
           } else if (
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) >=
             this.p.keyframes[this.p.keyframes.length - 1].t
           ) {
             v1 = this.p.getValueAtTime(this.p.keyframes[this.p.keyframes.length - 1].t / frameRate,
-              0)
+              0) as Vector2
             v2 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) /
                 frameRate,
-            0)
+            0) as Vector2
           } else {
             v1 = this.p.pv as Vector2
             v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
                 Number(this.p.offsetTime) -
                 0.01) /
                 frameRate,
-            Number(this.p.offsetTime))
+            Number(this.p.offsetTime)) as Vector2
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
           v1 = [0, 0] // TODO: Used to be []. Check if works
@@ -348,39 +348,39 @@ export default class TransformProperty extends BaseProperty {
             px.keyframes[0].t
           ) {
             v1[0] = px.getValueAtTime((px.keyframes[0].t + 0.01) / frameRate,
-              0)
+              0) as number
             v1[1] = py.getValueAtTime((py.keyframes[0].t + 0.01) / frameRate,
-              0)
+              0) as number
             v2[0] = px.getValueAtTime(px.keyframes[0].t / frameRate,
-              0)
+              0) as number
             v2[1] = py.getValueAtTime(Number(py.keyframes[0]?.t) / frameRate,
-              0)
+              0) as number
           } else if (
             Number(px._caching?.lastFrame) + px.offsetTime >=
             px.keyframes[px.keyframes.length - 1].t
           ) {
             v1[0] = px.getValueAtTime(px.keyframes[px.keyframes.length - 1].t /
                 frameRate,
-            0)
+            0) as number
             v1[1] = py.getValueAtTime(py.keyframes[py.keyframes.length - 1].t /
                 frameRate,
-            0)
+            0) as number
             v2[0] = px.getValueAtTime((px.keyframes[px.keyframes.length - 1].t -
                 0.01) /
                 frameRate,
-            0)
+            0) as number
             v2[1] = py.getValueAtTime((py.keyframes[py.keyframes.length - 1].t -
                 0.01) /
                 frameRate,
-            0)
+            0) as number
           } else {
             v1 = [px.pv, py.pv]
             v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
                 frameRate,
-            px.offsetTime)
+            px.offsetTime) as number
             v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
                 frameRate,
-            py.offsetTime)
+            py.offsetTime) as number
           }
         } else {
           v2 = this.defaultVector

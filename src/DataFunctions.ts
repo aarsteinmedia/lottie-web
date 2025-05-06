@@ -26,10 +26,8 @@ export function completeData(animationData: AnimationData) {
   animationData.__complete = true
 }
 
-export function completeLayers(
-  layers: LottieLayer[],
-  comps: (LottieLayer | LottieAsset)[]
-) {
+export function completeLayers(layers: LottieLayer[],
+  comps: (LottieLayer | LottieAsset)[]) {
   const { length } = layers
 
   for (let i = 0; i < length; i++) {
@@ -45,9 +43,7 @@ export function completeLayers(
 
       for (let j = 0; j < jLen; j++) {
         if ((layers[i].masksProperties?.[j].pt?.k as ShapePath | undefined)?.i) {
-          convertPathsToAbsoluteValues(
-            layers[i].masksProperties?.[j].pt?.k as ShapePath
-          )
+          convertPathsToAbsoluteValues(layers[i].masksProperties?.[j].pt?.k as ShapePath)
           continue
         }
         if (!layers[i].masksProperties?.[j]) {
@@ -57,12 +53,8 @@ export function completeLayers(
           (layers[i].masksProperties?.[j].pt?.k as ShapePath[] | undefined) ?? []
 
         for (let k = 0; k < kLen; k++) {
-          convertPathsToAbsoluteValues(
-            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].s?.[0]
-          )
-          convertPathsToAbsoluteValues(
-            (layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].e?.[0]
-          )
+          convertPathsToAbsoluteValues((layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].s?.[0])
+          convertPathsToAbsoluteValues((layers[i].masksProperties?.[j].pt?.k as ShapePath[])[k].e?.[0])
         }
       }
     }
@@ -106,10 +98,8 @@ export function completeShapes(arr: Shape[]) {
   }
 }
 
-function completeChars(
-  chars: Characacter[] | null,
-  assets: (LottieLayer | LottieAsset)[]
-) {
+function completeChars(chars: Characacter[] | null,
+  assets: (LottieLayer | LottieAsset)[]) {
   if (!chars) {
     return
   }
@@ -119,8 +109,12 @@ function completeChars(
     if (chars[i].t !== 1) {
       continue
     }
-    chars[i].data.layers = findCompLayers(chars[i].data.refId, assets) as LottieLayer[]
-    completeLayers(chars[i].data.layers ?? [], assets)
+    const { data } = chars[i]
+
+    if (data) {
+      data.layers = findCompLayers(data.refId, assets) as LottieLayer[]
+    }
+    completeLayers(chars[i].data?.layers ?? [], assets)
   }
 }
 
@@ -174,7 +168,9 @@ function findCompLayers(id?: string, comps?: (LottieLayer | LottieAsset)[]) {
 export function checkVersion(minimum: Vector3, animVersionString: string) {
   const animVersion = animVersionString
     ? animVersionString.split('.').map(Number)
-    : [100, 100, 100]
+    : [100,
+      100,
+      100]
 
   if (minimum[0] > animVersion[0]) {
     return true
@@ -199,7 +195,9 @@ export function checkVersion(minimum: Vector3, animVersionString: string) {
 }
 
 abstract class CheckProperties {
-  minimumVersion: Vector3 = [0, 0, 0]
+  minimumVersion: Vector3 = [0,
+    0,
+    0]
   constructor(animationData: AnimationData) {
     if (!checkVersion(this.minimumVersion, animationData.v)) {
       return
@@ -232,7 +230,9 @@ abstract class CheckProperties {
 }
 
 class CheckText extends CheckProperties {
-  override minimumVersion: Vector3 = [4, 4, 14]
+  override minimumVersion: Vector3 = [4,
+    4,
+    14]
 
   override updateTextLayer(textLayer: LottieLayer) {
     const documentData = textLayer.t?.d
@@ -252,7 +252,9 @@ class CheckText extends CheckProperties {
 }
 
 class CheckChars {
-  private minimumVersion: Vector3 = [4, 7, 99]
+  private minimumVersion: Vector3 = [4,
+    7,
+    99]
   constructor(animationData: AnimationData) {
     if (
       !animationData.chars ||
@@ -263,73 +265,82 @@ class CheckChars {
     const { length } = animationData.chars
 
     for (let i = 0; i < length; i++) {
-      completeShapes(animationData.chars[i].data.shapes)
-      animationData.chars[i].data.ip = 0
-      animationData.chars[i].data.op = 99999
-      animationData.chars[i].data.st = 0
-      animationData.chars[i].data.sr = 1
-      animationData.chars[i].data.ks = {
+      const { data, t } = animationData.chars[i]
+
+      if (!data) {
+        continue
+      }
+      completeShapes(data.shapes)
+      data.ip = 0
+      data.op = 99999
+      data.st = 0
+      data.sr = 1
+      data.ks = {
         a: {
           a: 0,
-          k: [0, 0] 
+          k: [0, 0]
         },
         o: {
           a: 0,
-          k: 100 
+          k: 100
         },
         p: {
           a: 0,
-          k: [0, 0] 
+          k: [0, 0]
         },
         r: {
           a: 0,
-          k: 0 as any 
+          k: 0 as any
         },
         s: {
           a: 0,
-          k: [100, 100] 
+          k: [100, 100]
         },
-      } as any
-      if (!animationData.chars[i].t) {
-        animationData.chars[i].data.shapes.push({ ty: ShapeType.NoStyle, } as Shape)
-        animationData.chars[i].data.shapes[0].it?.push({
-          a: {
-            a: 0,
-            k: [0, 0] 
-          },
-          o: {
-            a: 0,
-            k: 100 
-          },
-          p: {
-            a: 0,
-            k: [0, 0] 
-          },
-          r: {
-            a: 0,
-            k: 0 
-          },
-          s: {
-            a: 0,
-            k: [100, 100] 
-          },
-          sa: {
-            a: 0,
-            k: 0 
-          },
-          sk: {
-            a: 0,
-            k: 0 
-          },
-          ty: ShapeType.Transform,
-        } as unknown as Shape)
+      } as Shape
+
+      if (t) {
+        continue
       }
+      data.shapes.push({ ty: ShapeType.NoStyle, } as Shape)
+      data.shapes[0].it?.push({
+        a: {
+          a: 0,
+          k: [0, 0]
+        },
+        o: {
+          a: 0,
+          k: 100
+        },
+        p: {
+          a: 0,
+          k: [0, 0]
+        },
+        r: {
+          a: 0,
+          k: 0
+        },
+        s: {
+          a: 0,
+          k: [100, 100]
+        },
+        sa: {
+          a: 0,
+          k: 0
+        },
+        sk: {
+          a: 0,
+          k: 0
+        },
+        ty: ShapeType.Transform,
+      } as unknown as Shape)
     }
   }
 }
 
 class CheckPathProperties extends CheckProperties {
-  override minimumVersion: Vector3 = [5, 7, 15]
+  override minimumVersion: Vector3 = [5,
+    7,
+    15]
 
   override updateTextLayer(textLayer: LottieLayer) {
     const pathData = textLayer.t?.p
@@ -359,7 +370,9 @@ class CheckPathProperties extends CheckProperties {
 }
 
 class CheckColors extends CheckProperties {
-  override minimumVersion: Vector3 = [4, 1, 9]
+  override minimumVersion: Vector3 = [4,
+    1,
+    9]
 
   override iterateLayers(layers: LottieLayer[]) {
     const len = layers.length
@@ -413,7 +426,9 @@ class CheckColors extends CheckProperties {
 }
 
 class CheckShapes extends CheckProperties {
-  override minimumVersion: Vector3 = [4, 4, 18]
+  override minimumVersion: Vector3 = [4,
+    4,
+    18]
 
   override iterateLayers(layers: LottieLayer[]) {
     const { length } = layers
@@ -442,7 +457,7 @@ class CheckShapes extends CheckProperties {
           const { length: kLen } = (maskProps[j].pt?.k as ShapePath[] | undefined) ?? []
 
           for (let k = 0; k < kLen; k++) {
-             
+
             const sShapePaths = (maskProps[j].pt?.k as ShapePath[])[k].s
 
             if (sShapePaths) {
@@ -450,7 +465,7 @@ class CheckShapes extends CheckProperties {
             }
 
             const eShapePaths = (maskProps[j].pt?.k as ShapePath[])[k].e
-             
+
             if (eShapePaths) {
               eShapePaths[0].c = Boolean(maskProps[j].cl)
             }
