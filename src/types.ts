@@ -9,6 +9,7 @@ import type {
   PointEffect,
   SliderEffect,
 } from '@/effects'
+import type CVTransformEffect from '@/effects/canvas/CVTransformEffect'
 import type SVGDropShadowEffect from '@/effects/svg/SVGDropShadowEffect'
 import type SVGFillFilter from '@/effects/svg/SVGFillFilter'
 import type SVGGaussianBlurEffect from '@/effects/svg/SVGGaussianBlurEffect'
@@ -22,7 +23,6 @@ import type AudioElement from '@/elements/AudioElement'
 import type CVCompElement from '@/elements/canvas/CVCompElement'
 import type CVEffects from '@/elements/canvas/CVEffects'
 import type CVMaskElement from '@/elements/canvas/CVMaskElement'
-import type CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import type CompElement from '@/elements/CompElement'
 import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'

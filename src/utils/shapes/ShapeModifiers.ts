@@ -1,4 +1,5 @@
 import type { ElementInterfaceIntersect } from '@/types'
+import type MouseModifier from '@/utils/shapes/MouseModifier'
 import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
 import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
 import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
@@ -18,6 +19,7 @@ type Modifier =
   | typeof RepeaterModifier
   | typeof ZigZagModifier
   | typeof OffsetPathModifier
+  | typeof MouseModifier
 
 const Modifiers: { [key: string]: Modifier | undefined } = {}
 

@@ -23,6 +23,7 @@ import {
   searchAnimations,
   loadAnimation,
 } from '@/animation/AnimationManager'
+import CVTransformEffect from '@/effects/canvas/CVTransformEffect'
 import SVGDropShadowEffect from '@/effects/svg/SVGDropShadowEffect'
 import SVGFillFilter from '@/effects/svg/SVGFillFilter'
 import SVGGaussianBlurEffect from '@/effects/svg/SVGGaussianBlurEffect'
@@ -32,7 +33,6 @@ import SVGStrokeEffect from '@/effects/svg/SVGStrokeEffect'
 import SVGTintFilter from '@/effects/svg/SVGTintFilter'
 import SVGTransformEffect from '@/effects/svg/SVGTransformEffect'
 import SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
-import CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'

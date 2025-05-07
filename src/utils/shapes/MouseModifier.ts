@@ -4,6 +4,8 @@ import type { ElementInterfaceUnion, Shape } from '@/types'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import { registerModifier } from '@/utils/shapes/ShapeModifiers'
 
+import type ShapeCollection from './ShapeCollection'
+
 export default class MouseModifier extends ShapeModifier {
   data?: Shape | Shape[]
   positions: unknown[] = []
@@ -212,7 +214,10 @@ export default class MouseModifier extends ShapeModifier {
               shapePaths[j], localMouseCoords, this.positions[i][j]
             ))
           }
-          shapeData.shape.paths = newPaths
+          if (shapeData.shape) {
+            shapeData.shape.paths = newPaths as unknown as ShapeCollection
+          }
+
           shapeData.last = newPaths
         }
       }
