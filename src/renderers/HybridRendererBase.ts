@@ -17,12 +17,12 @@ import ImageElement from '@/elements/ImageElement'
 import ISolidElement from '@/elements/SolidElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
-import { RendererType } from '@/utils/enums'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import {
   createNS, createTag, styleDiv
 } from '@/utils'
+import { RendererType } from '@/utils/enums'
 
 export default class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement

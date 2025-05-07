@@ -7,7 +7,8 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import { ArrayType } from '@/utils/enums'
 import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
-import { bezierLengthPool, segmentsLengthPool } from '@/utils/pooling'
+import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
+import segmentsLengthPool from '@/utils/pooling/segmentLengthsPool'
 
 const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8)
 

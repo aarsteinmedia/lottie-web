@@ -1,5 +1,5 @@
 import type { AnimationItem } from '@/Lottie'
-import type PoolFactory from '@/utils/pooling'
+import type PoolFactory from '@/utils/pooling/PoolFactory'
 
 import CompExpressionInterface from '@/utils/expressions/CompInterface'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
@@ -17,6 +17,7 @@ export default class Expressions {
 
     this.resetFrame = resetFrame
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!animation.renderer) {
       // TODO: This does not work for now
       return

@@ -10,11 +10,11 @@ import type {
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/Properties'
 
-import { RendererType } from '@/utils/enums'
 import {
   addBrightnessToRGB, addHueToRGB, addSaturationToRGB
 } from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
+import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import Matrix from '@/utils/Matrix'

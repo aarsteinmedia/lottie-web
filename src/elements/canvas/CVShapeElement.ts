@@ -24,10 +24,10 @@ import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
+import { degToRads } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, RendererType, ShapeType
 } from '@/utils/enums'
-import { degToRads } from '@/utils'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'

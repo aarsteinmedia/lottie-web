@@ -9,8 +9,8 @@ import type { Shape } from '@/types'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ShapeType } from '@/utils/enums'
 import { buildShapeString } from '@/utils'
+import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 
 const _identityMatrix = new Matrix(),

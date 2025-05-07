@@ -21,7 +21,10 @@ const config: ConfigArray = tseslint.config(
   sheriff(sheriffOptions),
   {
     files: ['**/*.{ts,js}'],
-    ignores: ['**/node_modules/*'],
+    ignores: ['**/node_modules/*',
+      './types',
+      './player.js',
+      './player-light.js'],
     plugins: { perfectionist },
     rules: {
       '@stylistic/array-element-newline': ['warn', { minItems: 3 }],

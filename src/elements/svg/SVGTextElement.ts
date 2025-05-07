@@ -13,8 +13,8 @@ import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
-import { RendererType } from '@/utils/enums'
 import { createNS } from '@/utils'
+import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class SVGTextLottieElement extends TextElement {

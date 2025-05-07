@@ -1,5 +1,5 @@
 import { createSizedArray } from '@/utils/helpers/arrays'
-import { double } from '@/utils/pooling'
+import double from '@/utils/pooling/double'
 import { release } from '@/utils/pooling/ShapePool'
 import ShapeCollection from '@/utils/shapes/ShapeCollection'
 

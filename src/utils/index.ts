@@ -12,8 +12,8 @@ import type {
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import PolynomialBezier from '@/elements/PolynomialBezier'
 import { roundCorner } from '@/utils/getterSetter'
+import PolynomialBezier from '@/utils/PolynomialBezier'
 
 /**
  * Exported functions that are also used locally.

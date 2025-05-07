@@ -23,10 +23,10 @@ import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+import { getBlendMode } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
-import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'

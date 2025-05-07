@@ -54,4 +54,4 @@ function createSizedArray<T = unknown>(length: number) {
   return Array.from<T>({ length })
 }
 
-export { createSizedArray,createTypedArray }
+export { createSizedArray, createTypedArray }

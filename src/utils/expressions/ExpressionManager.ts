@@ -15,9 +15,9 @@ import type { BaseProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
-import { ArrayType } from '@/utils/enums'
 import { degToRads, isArrayOfNum } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
+import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { newElement } from '@/utils/pooling/ShapePool'
 

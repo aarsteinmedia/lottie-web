@@ -3,10 +3,10 @@ import type {
   Characacter, DocumentData, FontList, LottieLayer
 } from '@/types'
 
-import { RendererType } from '@/utils/enums'
 import {
   createNS, createTag, isServer
 } from '@/utils'
+import { RendererType } from '@/utils/enums'
 
 const A_TAG_CODE_POINT = 917601,
   BLACK_FLAG_CODE_POINT = 127988,

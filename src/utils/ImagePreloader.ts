@@ -1,10 +1,10 @@
 import type { ImageData, LottieAsset } from '@/types'
 
 import { loadData } from '@/DataManager'
-import { RendererType } from '@/utils/enums'
 import {
-  createNS, createTag, isSafari, isServer 
+  createNS, createTag, isSafari, isServer
 } from '@/utils'
+import { RendererType } from '@/utils/enums'
 
 export default class ImagePreloader {
   assetsPath: string
@@ -98,7 +98,7 @@ export default class ImagePreloader {
     } else {
       this._elementHelper?.appendChild(img)
     }
-    
+
     return obj
   }
   public destroy() {
@@ -154,7 +154,7 @@ export default class ImagePreloader {
         if (imageData) {
           this.images.push(imageData)
         }
-        
+
         continue
       }
 
@@ -237,7 +237,7 @@ export default class ImagePreloader {
       false
     )
     img.src = path
-    
+
 
     return obj
   }

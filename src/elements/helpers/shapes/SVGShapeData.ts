@@ -1,10 +1,10 @@
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
-import type { ShapeType } from '@/utils/enums'
 import type {
   ShapeDataInterface,
   SVGElementInterface,
   Transformer,
 } from '@/types'
+import type { ShapeType } from '@/utils/enums'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'

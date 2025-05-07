@@ -1,6 +1,5 @@
 
 
-
 // import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import type Expressions from '@/utils/expressions/Expressions'
 
@@ -34,11 +33,11 @@ import SVGTintFilter from '@/effects/svg/SVGTintFilter'
 import SVGTransformEffect from '@/effects/svg/SVGTransformEffect'
 import SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
 import CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
-import { Modifier, RendererType } from '@/utils/enums'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
+import { Modifier, RendererType } from '@/utils/enums'
 // import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 // import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
@@ -106,7 +105,7 @@ function checkReady() {
     return
   }
   if (document.readyState === 'complete') {
-     
+
     clearInterval(readyStateCheckInterval)
     searchAnimations()
   }
@@ -132,15 +131,33 @@ registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 // addTextDecorator()
 
 // Registering effects
-registerEffect(20, SVGTintFilter, true)
-registerEffect(21, SVGFillFilter, true)
-registerEffect(22, SVGStrokeEffect, false)
-registerEffect(23, SVGTritoneFilter, true)
-registerEffect(24, SVGProLevelsFilter, true)
-registerEffect(25, SVGDropShadowEffect, true)
-registerEffect(28, SVGMatte3Effect, false)
-registerEffect(29, SVGGaussianBlurEffect, true)
-registerEffect(35, SVGTransformEffect, false)
+registerEffect(
+  20, SVGTintFilter, true
+)
+registerEffect(
+  21, SVGFillFilter, true
+)
+registerEffect(
+  22, SVGStrokeEffect, false
+)
+registerEffect(
+  23, SVGTritoneFilter, true
+)
+registerEffect(
+  24, SVGProLevelsFilter, true
+)
+registerEffect(
+  25, SVGDropShadowEffect, true
+)
+registerEffect(
+  28, SVGMatte3Effect, false
+)
+registerEffect(
+  29, SVGGaussianBlurEffect, true
+)
+registerEffect(
+  35, SVGTransformEffect, false
+)
 registerEffect(35, CVTransformEffect)
 
 export default Lottie

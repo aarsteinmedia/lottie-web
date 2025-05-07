@@ -6,16 +6,16 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import {
-  type default as PolynomialBezier,
-  shapeSegment,
-  shapeSegmentInverted,
-} from '@/elements/PolynomialBezier'
-import {
   joinLines,
   offsetSegmentSplit,
   pointEqual,
   pruneIntersections,
 } from '@/utils'
+import {
+  type default as PolynomialBezier,
+  shapeSegment,
+  shapeSegmentInverted,
+} from '@/utils/PolynomialBezier'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'

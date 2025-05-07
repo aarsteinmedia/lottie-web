@@ -1,6 +1,7 @@
 import type { Vector2 } from '@/types'
 
-import PoolFactory, { pointPool } from '@/utils/pooling'
+import pointPool from '@/utils/pooling/pointPool'
+import PoolFactory from '@/utils/pooling/PoolFactory'
 import ShapePath from '@/utils/shapes/ShapePath'
 
 const _factory = new PoolFactory(

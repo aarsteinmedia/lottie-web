@@ -9,8 +9,8 @@ import type {
 
 import HCompElement from '@/elements/html/HCompElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
-import { RendererType } from '@/utils/enums'
 import HybridRendererBase from '@/renderers/HybridRendererBase'
+import { RendererType } from '@/utils/enums'
 
 export default class HybridRenderer extends HybridRendererBase {
   constructor(animationItem: AnimationItem, config?: HTMLRendererConfig) {

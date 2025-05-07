@@ -11,9 +11,9 @@ import type {
 import type { BaseProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ArrayType } from '@/utils/enums'
 import { extendPrototype, isArrayOfNum } from '@/utils'
 import { getPointInSegment, getSegmentsLength } from '@/utils/Bezier'
+import { ArrayType } from '@/utils/enums'
 import {
   getSpeedAtTime,
   getStaticValueAtTime,

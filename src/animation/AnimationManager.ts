@@ -6,8 +6,8 @@ import type {
 } from '@/types'
 
 import AnimationItem from '@/animation/AnimationItem'
-import { RendererType } from '@/utils/enums'
 import { createTag, isServer } from '@/utils'
+import { RendererType } from '@/utils/enums'
 
 let _isFrozen = false,
   // eslint-disable-next-line @typescript-eslint/naming-convention

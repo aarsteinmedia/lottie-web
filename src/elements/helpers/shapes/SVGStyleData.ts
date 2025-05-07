@@ -1,4 +1,3 @@
-import type { ShapeType } from '@/utils/enums'
 import type {
   AnimatedProperty,
   Shape,
@@ -6,6 +5,7 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
+import type { ShapeType } from '@/utils/enums'
 
 import { createNS } from '@/utils'
 

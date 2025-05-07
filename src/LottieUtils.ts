@@ -1,4 +1,4 @@
 export {
-  degToRads, floatEqual, floatZero, inBrowser, isSafari, isServer 
+  degToRads, floatEqual, floatZero, inBrowser, isSafari, isServer
 } from '@/utils'
 export { createElementID } from '@/utils/getterSetter'

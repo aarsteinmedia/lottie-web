@@ -12,10 +12,10 @@ import CVImageElement from '@/elements/canvas/CVImageElement'
 import CVShapeElement from '@/elements/canvas/CVShapeElement'
 import CVSolidElement from '@/elements/canvas/CVSolidElement'
 import CVTextElement from '@/elements/canvas/CVTextElement'
-import { PreserveAspectRatio } from '@/utils/enums'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { createTag } from '@/utils'
+import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class CanvasRendererBase extends BaseRenderer {

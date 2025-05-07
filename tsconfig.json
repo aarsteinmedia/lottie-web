@@ -52,5 +52,7 @@
   "exclude": [
     "**/node_modules",
     "**/dist",
+    "./player-light.js",
+    "./player.js"
   ]
 }

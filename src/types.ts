@@ -38,22 +38,21 @@ import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type HCompElement from '@/elements/html/HCompElement'
 import type MaskElement from '@/elements/MaskElement'
-import type PolynomialBezier from '@/elements/PolynomialBezier'
 import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import type SVGCompElement from '@/elements/svg/SVGCompElement'
 import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type TextElement from '@/elements/TextElement'
+import type BaseRenderer from '@/renderers/BaseRenderer'
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type HybridRenderer from '@/renderers/HybridRenderer'
+import type SVGRenderer from '@/renderers/SVGRenderer'
+import type AudioController from '@/utils/audio/AudioController'
 import type {
   PlayMode,
   ShapeType,
   RendererType,
   PreserveAspectRatio,
 } from '@/utils/enums'
-import type BaseRenderer from '@/renderers/BaseRenderer'
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
-import type SVGRenderer from '@/renderers/SVGRenderer'
-import type AudioController from '@/utils/audio/AudioController'
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 // import type { EffectInterface } from '@/effects/EffectsManager'
 import type FootageInterface from '@/utils/expressions/FootageInterface'
@@ -65,6 +64,7 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import type ImagePreloader from '@/utils/ImagePreloader'
 import type Matrix from '@/utils/Matrix'
+import type PolynomialBezier from '@/utils/PolynomialBezier'
 import type {
   BaseProperty,
   MultiDimensionalProperty,

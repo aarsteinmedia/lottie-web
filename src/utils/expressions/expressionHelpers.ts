@@ -7,8 +7,8 @@ import type {
 } from '@/utils/shapes/ShapeProperty'
 import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
-import { ArrayType } from '@/utils/enums'
 import { isArrayOfNum } from '@/utils'
+import { ArrayType } from '@/utils/enums'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { createTypedArray } from '@/utils/helpers/arrays'
 

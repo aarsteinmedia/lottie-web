@@ -1,5 +1,5 @@
 import type {
-  DocumentData, LottieAsset, LottieLayer 
+  DocumentData, LottieAsset, LottieLayer
 } from '@/types'
 
 export default class SlotManager {
@@ -16,10 +16,8 @@ export default class SlotManager {
     ) {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Object.assign(
-        data,
-        this.animationData.slots[sid].p
-      )
+      return Object.assign(data,
+        this.animationData.slots[sid].p)
     }
 
     return data

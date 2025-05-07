@@ -17,7 +17,6 @@ import type Expressions from '@/utils/expressions/Expressions'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/DataManager'
-import { RendererType } from '@/utils/enums'
 import {
   BaseEvent,
   BMCompleteEvent,
@@ -32,6 +31,7 @@ import {
 } from '@/events'
 import { markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
+import { RendererType } from '@/utils/enums'
 import {
   createElementID,
   getExpressionsPlugin,

@@ -1,21 +1,20 @@
-import { ArrayType } from '@/utils/enums'
-import { getDefaultCurveSegments } from '@/utils/getterSetter'
-import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
-import type ShapePath from '../shapes/ShapePath'
+import { createSizedArray } from '@/utils/helpers/arrays'
+import double from '@/utils/pooling/double'
 
 export default class PoolFactory {
-  private _create: () => void
+  private _create: (_element?: ShapePath) => void
   private _length = 0
   private _maxLength: number
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  private _release?: <Release = unknown>(el: Release) => void
+  private _release?: <Release = unknown>(el?: Release) => void
   private pool: unknown[]
   constructor(
     initialLength: number,
-    _create: () => unknown,
+    _create: (_element?: ShapePath) => unknown,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-    _release?: <Release = unknown>(el: Release) => void
+    _release?: <Release = unknown>(el?: Release) => void
   ) {
     this._maxLength = initialLength
     this._create = _create
@@ -52,33 +51,3 @@ export default class PoolFactory {
     this._length++
   }
 }
-
-export function double(arr: unknown[]) {
-  return [...arr, ...createSizedArray(arr.length)]
-}
-
-export const pointPool = (() =>
-    new PoolFactory(8, () => createTypedArray(ArrayType.Float32, 2)))(),
-  bezierLengthPool = (() =>
-    new PoolFactory(8, () => ({
-      addedLength: 0,
-      lengths: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()),
-      percents: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()),
-    })))(),
-  segmentsLengthPool = (() =>
-    new PoolFactory(
-      8,
-      () => ({
-        lengths: [],
-        totalLength: 0,
-      }),
-      // @ts-expect-error TODO:
-      (element: ShapePath) => {
-        const { length } = element.lengths
-
-        for (let i = 0; i < length; i++) {
-          bezierLengthPool.release(element.lengths[i])
-        }
-        element.lengths.length = 0
-      }
-    ))()

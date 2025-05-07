@@ -18,9 +18,9 @@ import {
   searchAnimations,
   loadAnimation,
 } from '@/animation/AnimationManager'
-import { Modifier, RendererType } from '@/utils/enums'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { inBrowser, isServer } from '@/utils'
+import { Modifier, RendererType } from '@/utils/enums'
 import {
   registerRenderer,
   setIDPrefix,

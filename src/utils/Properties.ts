@@ -18,7 +18,6 @@ import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ArrayType } from '@/utils/enums'
 import {
   createQuaternion, quaternionToEuler, slerp
 } from '@/utils'
@@ -29,6 +28,7 @@ import {
   type BezierData,
 } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
+import { ArrayType } from '@/utils/enums'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'

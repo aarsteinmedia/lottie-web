@@ -10,11 +10,11 @@ import type {
 
 import TextElement from '@/elements/TextElement'
 import {
-  lineCapEnum, lineJoinEnum, RendererType
-} from '@/utils/enums'
-import {
   createNS, createTag, styleDiv
 } from '@/utils'
+import {
+  lineCapEnum, lineJoinEnum, RendererType
+} from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default class HTextElement extends TextElement {
