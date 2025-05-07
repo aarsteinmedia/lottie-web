@@ -33,7 +33,7 @@ import ShapePropertyFactory, {
   ShapeBaseProperty,
   ShapeProperty,
 } from '@/utils/shapes/ShapeProperty'
-import { type default as TransformProperty,  TransformPropertyFactory } from '@/utils/TransformProperty'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default function addPropertyDecorator() {
   function loopOut(

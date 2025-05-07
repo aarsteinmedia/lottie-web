@@ -32,7 +32,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import TransformProperty from '@/utils/TransformProperty'
+import TransformPropertyFactory, { type TransformProperty  } from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
@@ -275,7 +275,7 @@ export default class CVShapeElement extends ShapeElement {
       transform: {
         _opMdf: false,
         key: this.transformsManager.getNewKey(),
-        mProps: new TransformProperty(
+        mProps: TransformPropertyFactory.getTransformProperty(
           this as unknown as ElementInterfaceIntersect,
           data,
           this as unknown as ElementInterfaceIntersect

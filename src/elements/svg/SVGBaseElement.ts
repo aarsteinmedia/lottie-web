@@ -152,7 +152,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
           masker.setAttribute('id', id)
           masker.setAttribute('mask-type',
             matteType === 3 ? 'luminance' : 'alpha')
-          useElement = createNS('use')
+          useElement = createNS<SVGUseElement>('use')
           useElement.setAttributeNS(
             'http://www.w3.org/1999/xlink',
             'href',

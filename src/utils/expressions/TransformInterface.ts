@@ -1,5 +1,5 @@
 import type { Vector2 } from '@/types'
-import type TransformProperty from '@/utils/TransformProperty'
+import type { TransformProperty } from '@/utils/TransformProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 

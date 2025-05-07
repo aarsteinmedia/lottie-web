@@ -1,9 +1,9 @@
 import type { ImageData, LottieAsset } from '@/types'
 
-import { loadData } from '@/utils/DataManager'
 import {
   createNS, createTag, isSafari, isServer
 } from '@/utils'
+import { loadData } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 
 export default class ImagePreloader {

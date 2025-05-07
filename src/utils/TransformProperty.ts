@@ -19,7 +19,7 @@ import {
 } from '@/utils/Properties'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class TransformProperty extends BaseProperty {
+export class TransformProperty extends BaseProperty {
   _isDirty?: boolean
   _opMdf?: boolean
   _transformCachingAtTime?: { v: Matrix }
@@ -486,4 +486,4 @@ const TransformPropertyFactory = {
   ),
 }
 
-export { TransformPropertyFactory }
+export default TransformPropertyFactory

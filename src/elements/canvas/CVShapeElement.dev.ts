@@ -30,7 +30,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import TransformProperty from '@/utils/TransformProperty'
+import TransformPropertyFactory from '@/utils/TransformProperty'
 
 // import ShapeGroupData from '../helpers/shapes/ShapeGroupData'
 import BaseElement from '../BaseElement'
@@ -179,7 +179,7 @@ CVShapeElement.prototype.createTransformElement = function (data) {
     transform: {
       _opMdf: false,
       key: this.transformsManager.getNewKey(),
-      mProps: new TransformProperty(
+      mProps: TransformPropertyFactory.getTransformProperty(
         this, data, this
       ),
       op: PropertyFactory.getProp(

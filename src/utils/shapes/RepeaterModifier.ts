@@ -12,7 +12,7 @@ import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import TransformProperty from '@/utils/TransformProperty'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []
@@ -140,7 +140,7 @@ export default class RepeaterModifier extends ShapeModifier {
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     if (data.tr) {
-      this.tr = new TransformProperty(
+      this.tr = TransformPropertyFactory.getTransformProperty(
         elem,
         data.tr,
         this as unknown as ElementInterfaceIntersect

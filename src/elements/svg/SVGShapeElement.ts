@@ -30,7 +30,7 @@ import {
 import { getLocationHref } from '@/utils/getterSetter'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
-import TransformProperty from '@/utils/TransformProperty'
+import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean
@@ -253,7 +253,7 @@ export default class SVGShapeElement extends ShapeElement {
     return elementData
   }
   createTransformElement(data: Shape, container: SVGGElement) {
-    const transformProperty = new TransformProperty(
+    const transformProperty = TransformPropertyFactory.getTransformProperty(
       this as unknown as ElementInterfaceIntersect,
       data,
       this as unknown as ElementInterfaceIntersect

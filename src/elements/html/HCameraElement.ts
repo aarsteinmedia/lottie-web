@@ -11,7 +11,7 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
-import type TransformProperty from '@/utils/TransformProperty'
+import type { TransformProperty } from '@/utils/TransformProperty'
 
 import FrameElement from '@/elements/helpers/FrameElement'
 import { degToRads } from '@/utils'

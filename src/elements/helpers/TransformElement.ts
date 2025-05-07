@@ -5,7 +5,7 @@ import type {
 
 import BaseElement from '@/elements/BaseElement'
 import Matrix from '@/utils/Matrix'
-import TransformProperty from '@/utils/TransformProperty'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect' }
 
@@ -66,7 +66,7 @@ export default class TransformElement extends BaseElement {
       mat,
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       mProp: this.data.ks
-        ? new TransformProperty(
+        ? TransformPropertyFactory.getTransformProperty(
           this as unknown as ElementInterfaceIntersect,
           this.data.ks,
           this as unknown as ElementInterfaceIntersect
