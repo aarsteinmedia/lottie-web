@@ -1,4 +1,4 @@
-import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import type ShapeElement from '@/elements/ShapeElement'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CVStyleElement, Shape } from '@/types'
 

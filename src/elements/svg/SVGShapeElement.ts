@@ -11,7 +11,7 @@ import type {
 import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 
-import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import ShapeElement from '@/elements/ShapeElement'
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
