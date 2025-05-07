@@ -288,7 +288,7 @@ function getBezierLength(
     addedLength = 0,
     ptDistance
   const point = [],
-    lastPoint: (number | null)[] = [],
+    lastPoint: number[] = [],
     lengthData: {
       percents: number[]
       lengths: number[]
@@ -306,8 +306,8 @@ function getBezierLength(
         3 * (1 - perc) * Math.pow(perc, 2) * pt4[i] +
         Math.pow(perc, 3) * pt2[i]
       point[i] = ptCoord
-      if (lastPoint[i] !== null) {
-        ptDistance += Math.pow(point[i] - (lastPoint[i] || 0), 2)
+      if (typeof lastPoint[i] === 'number') {
+        ptDistance += Math.pow(point[i] - lastPoint[i], 2)
       }
       lastPoint[i] = point[i]
     }
