@@ -7,7 +7,7 @@ import BaseElement from '@/elements/BaseElement'
 import Matrix from '@/utils/Matrix'
 import TransformProperty from '@/utils/TransformProperty'
 
-export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect', }
+export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect' }
 
 export default class TransformElement extends BaseElement {
   _isFirstFrame?: boolean

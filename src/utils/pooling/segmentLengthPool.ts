@@ -3,7 +3,7 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
 import PoolFactory from '@/utils/pooling/PoolFactory'
 
-const segmentsLengthsPool = (() =>
+const segmentsLengthPool = (() =>
   new PoolFactory(
     8,
     () => ({
@@ -21,4 +21,4 @@ const segmentsLengthsPool = (() =>
     }
   ))()
 
-export default segmentsLengthsPool
+export default segmentsLengthPool

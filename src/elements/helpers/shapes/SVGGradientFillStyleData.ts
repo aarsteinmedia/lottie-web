@@ -16,12 +16,11 @@ import type {
   ValueProperty,
 } from '@/utils/Properties'
 
-import { createElementID } from '@/LottieUtils'
 import { createNS, degToRads } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
-import { getLocationHref } from '@/utils/getterSetter'
+import { createElementID, getLocationHref } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 import GradientProperty from '@/utils/shapes/GradientProperty'

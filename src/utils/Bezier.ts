@@ -8,7 +8,7 @@ import { ArrayType } from '@/utils/enums'
 import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
-import segmentsLengthPool from '@/utils/pooling/segmentLengthsPool'
+import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
 
 const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8)
 

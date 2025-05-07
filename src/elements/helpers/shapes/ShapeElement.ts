@@ -16,18 +16,18 @@ export default class ShapeElement extends RenderableDOMElement {
   shapes: (SVGShapeData | CVShapeData)[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
-    const elements = this.processedElements
-    let i = elements.length
+    const { processedElements } = this
+    let i = processedElements.length
 
     while (i) {
       i--
-      if (elements[i].elem === elem) {
-        elements[i].pos = pos
+      if (processedElements[i].elem === elem) {
+        processedElements[i].pos = pos
 
         return
       }
     }
-    elements.push(new ProcessedElement(elem, pos))
+    processedElements.push(new ProcessedElement(elem, pos))
   }
 
   addShapeToModifiers(data: SVGShapeData | CVShapeData) {
@@ -80,13 +80,13 @@ export default class ShapeElement extends RenderableDOMElement {
     }
   }
   searchProcessedElement(elem: unknown) {
-    const elements = this.processedElements
+    const { processedElements } = this
     let i = 0
-    const { length } = elements
+    const { length } = processedElements
 
     while (i < length) {
-      if (elements[i].elem === elem) {
-        return elements[i].pos
+      if (processedElements[i].elem === elem) {
+        return processedElements[i].pos
       }
       i++
     }

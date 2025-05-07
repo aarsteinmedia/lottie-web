@@ -5,7 +5,6 @@ import HierarchyElement from '@/elements/helpers/HierarchyElement'
 export default class FrameElement extends HierarchyElement {
   _mdf?: boolean
   displayStartTime = 0
-  dynamicProperties: DynamicPropertyContainer[] = []
   /**
    * Default fps is 60, so default frameDuration is 1 / 60.
    */
@@ -23,7 +22,7 @@ export default class FrameElement extends HierarchyElement {
     // If layer has been modified in current tick this will be true
     this._mdf = false
   }
-  prepareProperties(_: number, isVisible?: boolean) {
+  prepareProperties(_number: number, isVisible?: boolean) {
     const { length } = this.dynamicProperties
 
     for (let i = 0; i < length; i++) {

@@ -9,7 +9,7 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import { getNewSegment, getSegmentsLength } from '@/utils/Bezier'
-import segmentsLengthPool from '@/utils/pooling/segmentLengthsPool'
+import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
