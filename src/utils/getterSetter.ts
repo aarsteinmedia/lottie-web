@@ -135,6 +135,13 @@ export const registeredEffects: {
     }
   }
 
+const idPrefix = { current: '' }
+
+export const setIDPrefix = (value: string) => {
+    idPrefix.current = value
+  },
+  getIDPrefix = () => idPrefix.current
+
 /**
  *
  * Quality.

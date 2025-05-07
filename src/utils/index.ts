@@ -12,10 +12,8 @@ import type {
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { roundCorner } from '@/utils/getterSetter'
+import { getIDPrefix, roundCorner } from '@/utils/getterSetter'
 import PolynomialBezier from '@/utils/PolynomialBezier'
-
-let idPrefix = ''
 
 /**
  * Exported functions that are also used locally.
@@ -433,7 +431,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     return () => {
       _count++
 
-      return `${idPrefix}__lottie_element_${_count}`
+      return `${getIDPrefix()}__lottie_element_${_count}`
     }
   }()),
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
@@ -1016,8 +1014,4 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     element.style.transformOrigin = '0 0'
     element.style.backfaceVisibility = 'visible'
     element.style.transformStyle = 'preserve-3d'
-  },
-  setIDPrefix = (value: string) => {
-    idPrefix = value
-  },
-  getIDPrefix = () => idPrefix
+  }

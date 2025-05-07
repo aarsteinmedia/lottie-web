@@ -56,7 +56,7 @@ const isProd = process.env.NODE_ENV !== 'development',
     injectVersion(),
     swc(),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    serve({ open: true, }),
+    serve(),
     livereload()
   ],
   inputs = [
