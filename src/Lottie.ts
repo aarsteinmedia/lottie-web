@@ -36,7 +36,7 @@ import CVTransformEffect from '@/elements/canvas/effects/CVTransformEffect'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { isServer } from '@/utils'
+import { isServer, setIDPrefix, } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
 // import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 // import getInterface from '@/utils/expressions/InterfacesProvider'
@@ -45,7 +45,6 @@ import {
   registerRenderer,
   // setExpressionInterfaces,
   setExpressionsPlugin,
-  setIDPrefix,
   setLocationHref,
   setQuality,
   setSubframeEnabled,
@@ -84,8 +83,8 @@ const Lottie = {
   registerAnimation,
   resize,
   setDirection,
-  setIDPrefix,
   setLocationHref,
+  setPrefix: setIDPrefix,
   setQuality,
   setSpeed,
   setSubframeRendering,

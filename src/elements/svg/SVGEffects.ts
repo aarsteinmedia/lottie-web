@@ -2,9 +2,9 @@
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect } from '@/types'
 
+import { createElementID } from '@/utils'
 import { createFilter } from '@/utils/FiltersFactory'
 import {
-  createElementID,
   getLocationHref,
   registeredEffects,
 } from '@/utils/getterSetter'

@@ -134,25 +134,7 @@ export const registeredEffects: {
       effect,
     }
   }
-/**
- *
- * Element ID.
- */
-const idPrefix$1 = { current: '', }
 
-export const createElementID = (() => {
-    let _count = 0
-
-    return () => {
-      _count++
-
-      return `${idPrefix$1.current}__lottie_element_${_count}`
-    }
-  })(),
-  setIDPrefix = (value: string) => {
-    idPrefix$1.current = value
-  },
-  getIDPrefix = () => idPrefix$1.current
 /**
  *
  * Quality.

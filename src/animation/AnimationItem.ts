@@ -29,11 +29,10 @@ import {
   BMSegmentStartEvent,
   type LottieEvent,
 } from '@/events'
-import { markerParser } from '@/utils'
+import { createElementID, markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
 import { RendererType } from '@/utils/enums'
 import {
-  createElementID,
   getExpressionsPlugin,
   getRegisteredRenderer,
   getRenderer,

@@ -13,9 +13,8 @@ import SolidElement from '@/elements/SolidElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import { createNS } from '@/utils'
+import { createElementID, createNS } from '@/utils'
 import {
-  createElementID,
   getExpressionsPlugin,
   getLocationHref,
 } from '@/utils/getterSetter'

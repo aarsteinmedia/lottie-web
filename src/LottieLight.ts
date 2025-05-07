@@ -19,11 +19,12 @@ import {
   loadAnimation,
 } from '@/animation/AnimationManager'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { inBrowser, isServer } from '@/utils'
+import {
+  inBrowser, isServer, setIDPrefix
+} from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
 import {
   registerRenderer,
-  setIDPrefix,
   setLocationHref,
   setQuality,
   setSubframeEnabled,
@@ -56,8 +57,8 @@ const Lottie = {
   registerAnimation,
   resize,
   setDirection,
-  setIDPrefix,
   setLocationHref,
+  setPrefix: setIDPrefix,
   setQuality,
   setSpeed,
   setSubframeRendering,

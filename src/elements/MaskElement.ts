@@ -9,8 +9,8 @@ import type {
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { createNS } from '@/utils'
-import { createElementID, getLocationHref } from '@/utils/getterSetter'
+import { createElementID, createNS } from '@/utils'
+import { getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory from '@/utils/shapes/ShapeProperty'

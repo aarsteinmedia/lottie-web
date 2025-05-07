@@ -1,8 +1,7 @@
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect } from '@/types'
 
-import { createNS } from '@/utils'
-import { createElementID } from '@/utils/getterSetter'
+import { createElementID, createNS } from '@/utils'
 
 const _svgMatteSymbols: ElementInterfaceIntersect[] = []
 

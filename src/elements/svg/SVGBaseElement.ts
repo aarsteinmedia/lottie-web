@@ -3,13 +3,13 @@ import type { ElementInterfaceIntersect } from '@/types'
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGEffects from '@/elements/svg/SVGEffects'
-import { createNS } from '@/utils'
+import { createElementID, createNS } from '@/utils'
 import {
   createAlphaToLuminanceFilter,
   createFilter,
   FeatureSupport,
 } from '@/utils/FiltersFactory'
-import { createElementID, getLocationHref } from '@/utils/getterSetter'
+import { getLocationHref } from '@/utils/getterSetter'
 
 export default class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
