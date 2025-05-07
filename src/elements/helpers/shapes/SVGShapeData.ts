@@ -1,5 +1,5 @@
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
-import type { ShapeType } from '@/enums'
+import type { ShapeType } from '@/utils/enums'
 import type {
   ShapeDataInterface,
   SVGElementInterface,

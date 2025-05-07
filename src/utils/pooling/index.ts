@@ -1,4 +1,4 @@
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 

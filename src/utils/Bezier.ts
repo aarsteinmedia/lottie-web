@@ -4,7 +4,7 @@ import type {
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import { bezierLengthPool, segmentsLengthPool } from '@/utils/pooling'

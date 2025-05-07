@@ -119,7 +119,7 @@ export default class RenderableElement extends FrameElement {
     throw new Error(`${this.constructor.name}: Method show not implemented yet`)
   }
 
-  sourceRectAtTime(): SourceRect | null {
+  override sourceRectAtTime(): SourceRect | null {
     return {
       height: 100,
       left: 0,

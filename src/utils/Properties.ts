@@ -18,7 +18,7 @@ import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import {
   createQuaternion, quaternionToEuler, slerp
 } from '@/utils'

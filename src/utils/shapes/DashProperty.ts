@@ -1,6 +1,6 @@
 import type { ElementInterfaceIntersect, StrokeData } from '@/types'
 
-import { ArrayType, RendererType } from '@/enums'
+import { ArrayType, RendererType } from '@/utils/enums'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'

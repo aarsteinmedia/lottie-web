@@ -3,7 +3,7 @@ import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransform
 import type { CVStyleElement, Shape } from '@/types'
 
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import { ShapeType } from '@/enums'
+import { ShapeType } from '@/utils/enums'
 import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {

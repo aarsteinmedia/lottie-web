@@ -25,7 +25,7 @@ import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
-} from '@/enums'
+} from '@/utils/enums'
 import { getBlendMode } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'

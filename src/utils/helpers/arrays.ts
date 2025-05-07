@@ -1,4 +1,4 @@
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 
 const createTypedArray = (() => {
 

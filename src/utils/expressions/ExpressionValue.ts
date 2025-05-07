@@ -2,7 +2,7 @@ import type { Vector3 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { ValueProperty } from '@/utils/Properties'
 
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
 export default class ExpressionValue {

@@ -1,7 +1,7 @@
 import type { ImageData, LottieAsset } from '@/types'
 
 import { loadData } from '@/DataManager'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import {
   createNS, createTag, isSafari, isServer 
 } from '@/utils'

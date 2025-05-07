@@ -11,7 +11,7 @@ import type LetterProps from '@/utils/text/LetterProps'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import TextElement from '@/elements/TextElement'
-import { RendererType, ShapeType } from '@/enums'
+import { RendererType, ShapeType } from '@/utils/enums'
 import { createTag } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 

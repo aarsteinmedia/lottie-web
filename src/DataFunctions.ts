@@ -10,7 +10,7 @@ import type {
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ShapeType } from '@/enums'
+import { ShapeType } from '@/utils/enums'
 
 export function completeData(animationData: AnimationData) {
   if (animationData.__complete) {

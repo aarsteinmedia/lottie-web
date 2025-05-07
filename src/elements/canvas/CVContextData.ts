@@ -1,4 +1,4 @@
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import Matrix from '@/utils/Matrix'
 

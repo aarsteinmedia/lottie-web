@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 
 import AnimationItem from '@/animation/AnimationItem'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import { createTag, isServer } from '@/utils'
 
 let _isFrozen = false,

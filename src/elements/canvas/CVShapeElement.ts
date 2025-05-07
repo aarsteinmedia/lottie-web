@@ -26,7 +26,7 @@ import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import {
   lineCapEnum, lineJoinEnum, RendererType, ShapeType
-} from '@/enums'
+} from '@/utils/enums'
 import { degToRads } from '@/utils'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'

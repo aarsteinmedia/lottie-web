@@ -10,7 +10,7 @@ import type {
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/Properties'
 
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import {
   addBrightnessToRGB, addHueToRGB, addSaturationToRGB
 } from '@/utils'

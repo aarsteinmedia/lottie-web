@@ -7,7 +7,7 @@ import type {
 } from '@/types'
 
 import SVGCompElement from '@/elements/svg/SVGCompElement'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import SVGRendererBase from '@/renderers/SVGRendererBase'
 import { createNS } from '@/utils'
 import { createElementID } from '@/utils/getterSetter'

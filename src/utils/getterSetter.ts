@@ -9,7 +9,7 @@ import type {
 } from '@/types'
 import type Expressions from '@/utils/expressions/Expressions'
 
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 
 export const initialDefaultFrame = -999999,
   roundCorner = 0.5519

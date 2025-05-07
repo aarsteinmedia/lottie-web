@@ -18,7 +18,7 @@ import type {
 
 import {
   lineCapEnum, lineJoinEnum, ShapeType
-} from '@/enums'
+} from '@/utils/enums'
 import { createElementID } from '@/LottieUtils'
 import { createNS, degToRads } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'

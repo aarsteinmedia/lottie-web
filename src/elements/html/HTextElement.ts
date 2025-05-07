@@ -11,7 +11,7 @@ import type {
 import TextElement from '@/elements/TextElement'
 import {
   lineCapEnum, lineJoinEnum, RendererType
-} from '@/enums'
+} from '@/utils/enums'
 import {
   createNS, createTag, styleDiv
 } from '@/utils'

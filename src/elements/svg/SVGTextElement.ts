@@ -13,7 +13,7 @@ import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import { createNS } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 

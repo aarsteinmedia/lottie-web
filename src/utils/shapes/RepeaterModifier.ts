@@ -8,7 +8,7 @@ import type {
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
-import { ShapeType } from '@/enums'
+import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'

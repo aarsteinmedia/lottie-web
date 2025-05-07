@@ -17,7 +17,7 @@ import type Expressions from '@/utils/expressions/Expressions'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/DataManager'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import {
   BaseEvent,
   BMCompleteEvent,

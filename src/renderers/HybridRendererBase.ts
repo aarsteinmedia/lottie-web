@@ -17,7 +17,7 @@ import ImageElement from '@/elements/ImageElement'
 import ISolidElement from '@/elements/SolidElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import {

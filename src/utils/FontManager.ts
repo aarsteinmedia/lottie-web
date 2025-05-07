@@ -3,7 +3,7 @@ import type {
   Characacter, DocumentData, FontList, LottieLayer
 } from '@/types'
 
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import {
   createNS, createTag, isServer
 } from '@/utils'

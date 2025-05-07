@@ -9,7 +9,7 @@ import type { Shape } from '@/types'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { ShapeType } from '@/enums'
+import { ShapeType } from '@/utils/enums'
 import { buildShapeString } from '@/utils'
 import Matrix from '@/utils/Matrix'
 

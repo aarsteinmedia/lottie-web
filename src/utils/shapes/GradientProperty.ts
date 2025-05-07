@@ -5,7 +5,7 @@ import type {
   VectorProperty,
 } from '@/types'
 
-import { ArrayType } from '@/enums'
+import { ArrayType } from '@/utils/enums'
 import { isArrayOfNum } from '@/utils'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'

@@ -13,7 +13,7 @@ import type {
 } from '@/utils/Properties'
 
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 

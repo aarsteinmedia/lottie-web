@@ -8,7 +8,7 @@ import type {
 
 import CVCompElement from '@/elements/canvas/CVCompElement'
 import CVContextData from '@/elements/canvas/CVContextData'
-import { PreserveAspectRatio, RendererType } from '@/enums'
+import { PreserveAspectRatio, RendererType } from '@/utils/enums'
 import CanvasRendererBase from '@/renderers/CanvasRendererBase'
 import Matrix from '@/utils/Matrix'
 

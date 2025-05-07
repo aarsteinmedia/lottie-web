@@ -14,6 +14,7 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import EffectsManager from '@/effects/EffectsManager'
 import { getBlendMode } from '@/utils'
@@ -24,6 +25,7 @@ export default abstract class BaseElement {
   comp?: CompElementInterface
   compInterface?: CompExpressionInterface
   data?: LottieLayer
+  dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
   globalData?: GlobalData
   itemsData: ShapeGroupData[] = []
@@ -72,9 +74,10 @@ export default abstract class BaseElement {
     if (!this.data.sr) {
       this.data.sr = 1
     }
-    this.effectsManager = new EffectsManager(this.data,
-      this as unknown as ElementInterfaceIntersect
-      // this.dynamicProperties
+    this.effectsManager = new EffectsManager(
+      this.data,
+      this as unknown as ElementInterfaceIntersect,
+      this.dynamicProperties
     )
   }
   initExpressions() {
@@ -137,5 +140,8 @@ export default abstract class BaseElement {
       throw new Error(`${this.constructor.name}: Both baseElement and layerElement are not implemented`)
     }
     elem.style.mixBlendMode = blendModeValue
+  }
+  sourceRectAtTime() {
+    //TODO: Pass through?
   }
 }

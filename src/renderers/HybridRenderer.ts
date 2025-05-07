@@ -9,7 +9,7 @@ import type {
 
 import HCompElement from '@/elements/html/HCompElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
-import { RendererType } from '@/enums'
+import { RendererType } from '@/utils/enums'
 import HybridRendererBase from '@/renderers/HybridRendererBase'
 
 export default class HybridRenderer extends HybridRendererBase {

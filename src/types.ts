@@ -48,7 +48,7 @@ import type {
   ShapeType,
   RendererType,
   PreserveAspectRatio,
-} from '@/enums'
+} from '@/utils/enums'
 import type BaseRenderer from '@/renderers/BaseRenderer'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type HybridRenderer from '@/renderers/HybridRenderer'
