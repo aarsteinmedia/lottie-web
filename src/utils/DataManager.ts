@@ -1,8 +1,8 @@
 import type { AnimationData, WorkerEvent } from '@/types'
 
-import { completeData } from '@/DataFunctions'
 import { isServer } from '@/utils'
 import { loadAsset } from '@/utils/AssetLoader'
+import { completeData } from '@/utils/DataFunctions'
 import { getWebWorker } from '@/utils/getterSetter'
 
 let _counterId = 1,

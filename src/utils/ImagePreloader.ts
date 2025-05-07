@@ -1,6 +1,6 @@
 import type { ImageData, LottieAsset } from '@/types'
 
-import { loadData } from '@/DataManager'
+import { loadData } from '@/utils/DataManager'
 import {
   createNS, createTag, isSafari, isServer
 } from '@/utils'

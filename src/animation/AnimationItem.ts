@@ -16,7 +16,7 @@ import type Expressions from '@/utils/expressions/Expressions'
 
 import {
   completeAnimation, loadAnimation, loadData
-} from '@/DataManager'
+} from '@/utils/DataManager'
 import {
   BaseEvent,
   BMCompleteEvent,
