@@ -1,4 +1,4 @@
-import type ShapeElement from '@/elements/ShapeElement'
+import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import type SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
@@ -300,7 +300,7 @@ function renderStroke(
     style?.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
   if (c && (c._mdf || isFirstFrame)) {
-    style?.pElem.setAttribute('stroke', `rgb(${  Math.floor(c.v[0])  },${  Math.floor(c.v[1])  },${  Math.floor(c.v[2])  })`)
+    style?.pElem.setAttribute('stroke', `rgb(${Math.floor(c.v[0])},${Math.floor(c.v[1])},${Math.floor(c.v[2])})`)
   }
   if (o?._mdf || isFirstFrame) {
     style?.pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)

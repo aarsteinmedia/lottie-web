@@ -16,7 +16,7 @@ import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
 import TextProperty from '@/utils/text/TextProperty'
 
-export default class TextElement extends RenderableDOMElement {
+export default abstract class TextElement extends RenderableDOMElement {
   emptyProp?: LetterProps
 
   lettersChangedFlag?: boolean
@@ -46,8 +46,8 @@ export default class TextElement extends RenderableDOMElement {
       case 1: {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
-            (Number(documentData.boxWidth) -
-              Number(documentData.lineWidths[lineNumber])),
+          (Number(documentData.boxWidth) -
+            Number(documentData.lineWidths[lineNumber])),
           0,
           0
         )
@@ -56,9 +56,9 @@ export default class TextElement extends RenderableDOMElement {
       case 2: {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
-            (Number(documentData.boxWidth) -
-              Number(documentData.lineWidths[lineNumber])) /
-              2,
+          (Number(documentData.boxWidth) -
+            Number(documentData.lineWidths[lineNumber])) /
+          2,
           0,
           0
         )

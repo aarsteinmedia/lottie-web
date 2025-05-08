@@ -2,7 +2,7 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 
 import HierarchyElement from '@/elements/helpers/HierarchyElement'
 
-export default class FrameElement extends HierarchyElement {
+export default abstract class FrameElement extends HierarchyElement {
   _mdf?: boolean
   displayStartTime = 0
   /**
