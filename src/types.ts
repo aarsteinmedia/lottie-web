@@ -114,7 +114,10 @@ export interface SVGGeometry {
   width: number
 }
 
-export interface Constructor {prototype: any}
+export interface Constructor {
+  name: string
+  prototype: any
+}
 export interface TextSpan {
   children: SVGSVGElement[]
   childSpan?: null | SVGTextElement | SVGGElement

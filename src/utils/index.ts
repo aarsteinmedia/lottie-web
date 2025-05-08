@@ -484,14 +484,13 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     for (let i = 0; i < length; i++) {
       sourcePrototype = sources[i].prototype
-
-      const attributes = Object.keys(sourcePrototype),
-        { length: jLen } = attributes
+      const properties = Object.keys(sourcePrototype),
+        { length: jLen } = properties
 
       for (let j = 0; j < jLen; j++) {
-        if (Object.hasOwn(sourcePrototype, attributes[j])) {
+        if (Object.hasOwn(sourcePrototype, properties[j])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          destination.prototype[attributes[j]] = sourcePrototype[attributes[j]]
+          destination.prototype[properties[j]] = sourcePrototype[properties[j]]
         }
       }
     }
@@ -722,6 +721,28 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       p0[1], p1[1], amount
     ),
   ],
+  logPrototype = (sources: Constructor[]) => {
+    const combinedPrototypes: string[] = [],
+      { length } = sources
+
+    let sourcePrototype: Record<string, unknown>
+
+    for (let i = length - 1; i >= 0; i--) {
+      sourcePrototype = sources[i].prototype
+
+      const properties = Object.keys(sourcePrototype),
+        { length: jLen } = properties
+
+      for (let j = 0; j < jLen; j++) {
+        if (combinedPrototypes.includes(properties[j])) {
+          continue
+        }
+        combinedPrototypes.push(properties[j])
+      }
+    }
+
+    console.debug(combinedPrototypes)
+  },
   markerParser = (markersFromProps: (MarkerData | Marker)[]) => {
     const markers = [],
       { length } = markersFromProps
