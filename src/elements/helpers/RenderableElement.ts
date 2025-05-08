@@ -39,10 +39,6 @@ export default class RenderableElement extends FrameElement {
     }
   }
 
-  checkLayers(_val?: number) {
-    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
-  }
-
   checkTransparency() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not implemented`)

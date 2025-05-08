@@ -20,7 +20,7 @@ import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement_'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
-import ShapeElement from '@/elements/ShapeElement'
+import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import { degToRads, extendPrototype } from '@/utils'
 import {

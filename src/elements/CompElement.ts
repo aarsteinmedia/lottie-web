@@ -8,20 +8,27 @@ import type { ValueProperty } from '@/utils/Properties'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 
-export default class CompElement extends RenderableDOMElement {
+export default abstract class CompElement extends RenderableDOMElement {
   completeLayers?: boolean
   currentFrame = 0
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
   renderedFrame?: number
   tm?: ValueProperty
+
   buildAllItems() {
     throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
   }
+
+  checkLayers(_num?: number) {
+    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
+  }
+
   override destroy() {
     this.destroyElements()
     this.destroyBaseElement()
   }
+
   destroyElements() {
     const { length } = this.layers
 

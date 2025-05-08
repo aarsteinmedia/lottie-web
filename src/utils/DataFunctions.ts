@@ -75,7 +75,7 @@ export function completeLayers(layers: LottieLayer[],
   }
 }
 
-export function completeShapes(arr: Shape[]) {
+export function completeShapes(arr: Shape[] = []) {
   const { length } = arr
 
   for (let i = length - 1; i >= 0; i--) {
@@ -267,7 +267,7 @@ class CheckChars {
     for (let i = 0; i < length; i++) {
       const { data, t } = animationData.chars[i]
 
-      if (!data) {
+      if (!data?.shapes) {
         continue
       }
       completeShapes(data.shapes)
