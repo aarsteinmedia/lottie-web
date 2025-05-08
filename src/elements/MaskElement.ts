@@ -238,13 +238,11 @@ export default class MaskElement {
     const len = pathNodes._length || 0
 
     for (i = 1; i < len; i++) {
-      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${
-        pathNodes.i[i]?.[0]
+      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${pathNodes.i[i]?.[0]
       },${pathNodes.i[i]?.[1]} ${pathNodes.v[i]?.[0]},${pathNodes.v[i]?.[1]}`
     }
     if (pathNodes.c && len > 1) {
-      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${
-        pathNodes.i[0]?.[0]
+      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${pathNodes.i[0]?.[0]
       },${pathNodes.i[0]?.[1]} ${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
     }
 

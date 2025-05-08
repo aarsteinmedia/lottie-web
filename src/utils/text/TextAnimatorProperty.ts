@@ -364,8 +364,8 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 Number(this._pathData.f?.v) -
                 (letters[0].an || 0) * 0.5 -
                 letters[letters.length - 1].an * 0.5) *
-                ind /
-                (len - 1)
+              ind /
+              (len - 1)
             currentLength += Number(this._pathData.f?.v)
           }
           while (shouldMeasure) {
@@ -379,11 +379,11 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               xPathPos =
                 Number(prevPoint?.point[0]) +
                 (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
-                  perc
+                perc
               yPathPos =
                 Number(prevPoint?.point[1]) +
                 (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
-                  perc
+                perc
               matrixHelper.translate(-alignment[0] * Number(letters[i].an) * 0.005,
                 -(alignment[1] * yOff) * 0.01)
               shouldMeasure = false
@@ -724,9 +724,9 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             case 1: {
               matrixHelper.translate(
                 letters[i].animatorJustifyOffset +
-                  Number(documentData.justifyOffset) +
-                  (Number(documentData.boxWidth) -
-                    Number(documentData.lineWidths[letters[i].line])),
+                Number(documentData.justifyOffset) +
+                (Number(documentData.boxWidth) -
+                  Number(documentData.lineWidths[letters[i].line])),
                 0,
                 0
               )
@@ -735,10 +735,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             case 2: {
               matrixHelper.translate(
                 letters[i].animatorJustifyOffset +
-                  Number(documentData.justifyOffset) +
-                  (Number(documentData.boxWidth) -
-                    Number(documentData.lineWidths[letters[i].line])) /
-                    2,
+                Number(documentData.justifyOffset) +
+                (Number(documentData.boxWidth) -
+                  Number(documentData.lineWidths[letters[i].line])) /
+                2,
                 0,
                 0
               )

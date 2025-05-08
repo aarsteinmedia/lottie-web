@@ -11,7 +11,7 @@ import {
 } from '@/utils/FiltersFactory'
 import { getLocationHref } from '@/utils/getterSetter'
 
-export default class SVGBaseElement extends RenderableDOMElement {
+export default abstract class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
   maskedElement?: HTMLElement | SVGGElement
   matteElement?: SVGGElement
@@ -71,8 +71,7 @@ export default class SVGBaseElement extends RenderableDOMElement {
         pt = createNS<SVGPathElement>('path')
 
       pt.setAttribute('d',
-        `M0,0 L${this.data.w},0 L${this.data.w},${this.data.h} L0,${
-          this.data.h
+        `M0,0 L${this.data.w},0 L${this.data.w},${this.data.h} L0,${this.data.h
         }z`)
       const clipId = createElementID()
 

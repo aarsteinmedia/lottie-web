@@ -424,7 +424,7 @@ export default class TextProperty extends BaseProperty {
           based === 1 && letterData.val !== '' ||
           based === 2 && letterData.val !== '' && letterData.val !== ' ' ||
           based === 3 &&
-            (letterData.n || letterData.val === ' ' || i === len - 1) ||
+          (letterData.n || letterData.val === ' ' || i === len - 1) ||
           based === 4 && (letterData.n || i === len - 1)
         ) {
           if (Number(animatorData.s?.rn) === 1) {

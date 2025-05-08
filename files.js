@@ -22,6 +22,7 @@ const files = [
   'blackCat.lottie',
   'ux.lottie',
   'menuAnimation.json',
+  'optimized_m2acyje2.lottie',
 ]
 
 export default files

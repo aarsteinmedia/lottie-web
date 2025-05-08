@@ -156,9 +156,9 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     opFill.setAttribute('spreadMethod', 'pad')
     opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
     const jLen =
-          ((data.g?.k.k as Stop[] | undefined)?.[0].s
-            ? (data.g?.k.k as Stop[])[0].s.length
-            : data.g?.k.k.length) || 0,
+      ((data.g?.k.k as Stop[] | undefined)?.[0].s
+        ? (data.g?.k.k as Stop[])[0].s.length
+        : data.g?.k.k.length) || 0,
       { stops } = this
 
     for (let j = (data.g?.p || 1) * 4; j < jLen; j += 2) {

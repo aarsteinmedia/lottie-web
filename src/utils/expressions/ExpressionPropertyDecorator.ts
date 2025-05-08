@@ -1,6 +1,6 @@
 // import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 
-import type ShapeElement from '@/elements/ShapeElement'
+import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type {
   Caching,
   ElementInterfaceIntersect,

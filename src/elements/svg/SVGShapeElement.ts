@@ -11,7 +11,6 @@ import type {
 import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 
-import ShapeElement from '@/elements/ShapeElement'
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
@@ -22,6 +21,7 @@ import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
+import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { getBlendMode } from '@/utils'
 import {
@@ -37,6 +37,7 @@ export default class SVGShapeElement extends ShapeElement {
   animatedContents: AnimatedContent[]
   prevViewData: SVGElementInterface[]
   stylesList: SVGStyleData[]
+
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -84,6 +85,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.prevViewData = []
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
   }
+
   addToAnimatedContents(data: Shape, element: SVGElementInterface) {
     let i = 0
     const len = this.animatedContents.length

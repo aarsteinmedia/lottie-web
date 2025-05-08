@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import type ShapeElement from '@/elements/ShapeElement'
+import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
 import type {
   Caching,
   CompElementInterface,

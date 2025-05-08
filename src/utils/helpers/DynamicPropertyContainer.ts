@@ -6,6 +6,7 @@ export default abstract class DynamicPropertyContainer {
   container?: ElementInterfaceIntersect | null
   dynamicProperties: DynamicPropertyContainer[] = []
   propType?: string | false
+
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (this.dynamicProperties.includes(prop)) {
       return
@@ -14,15 +15,18 @@ export default abstract class DynamicPropertyContainer {
     this.container?.addDynamicProperty(this)
     this._isAnimated = true
   }
+
   getValue(_flag?: boolean) {
     throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
   }
+
   initDynamicPropertyContainer(container: ElementInterfaceIntersect) {
     this.container = container
     this.dynamicProperties = []
     this._mdf = false
     this._isAnimated = false
   }
+
   iterateDynamicProperties() {
     this._mdf = false
     const { length } = this.dynamicProperties
@@ -35,3 +39,5 @@ export default abstract class DynamicPropertyContainer {
     }
   }
 }
+
+

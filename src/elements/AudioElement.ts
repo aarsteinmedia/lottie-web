@@ -121,7 +121,7 @@ export default class AudioElement extends RenderableElement {
     if (
       !this.audio.playing() ||
       Math.abs(this._currentTime / Number(this.globalData?.frameRate) -
-          this.audio.seek()) > 0.1
+        this.audio.seek()) > 0.1
     ) {
       this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }

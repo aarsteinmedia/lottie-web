@@ -190,6 +190,6 @@ export default class TextAnimatorDataProperty {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     this.s = new TextSelectorProperty(elem, animatorProps?.s as any)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ;(this.s as any).t = (animatorProps as any)?.s?.t
+    ; (this.s as any).t = (animatorProps as any)?.s?.t
   }
 }

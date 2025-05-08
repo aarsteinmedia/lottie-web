@@ -301,8 +301,7 @@ export default class SVGTextLottieElement extends TextElement {
           // this might have issues with strokes and might need a different solution
           if (charData?.t === 1) {
             this.textSpans[i]?.childSpan?.setAttribute('transform',
-              `scale(${Number(documentData.finalSize) / 100},${
-                Number(documentData.finalSize) / 100
+              `scale(${Number(documentData.finalSize) / 100},${Number(documentData.finalSize) / 100
               })`)
           }
 
