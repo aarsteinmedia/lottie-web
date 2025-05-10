@@ -1,4 +1,4 @@
-import type ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import type ShapeElement from '@/elements/ShapeElement'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import type SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'

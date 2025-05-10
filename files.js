@@ -23,6 +23,8 @@ const files = [
   'ux.lottie',
   'menuAnimation.json',
   'optimized_m2acyje2.lottie',
+  'hp-section-2.lottie',
+  'dev.lottie',
 ]
 
 export default files

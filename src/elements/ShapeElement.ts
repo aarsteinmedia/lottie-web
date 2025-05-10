@@ -6,7 +6,7 @@ import type { ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import ProcessedElement from '@/elements/helpers/shapes/ProcessedElement'
 
-export default class ShapeElement extends RenderableDOMElement {
+export default abstract class ShapeElement extends RenderableDOMElement {
   _length?: number
 
   processedElements: ProcessedElement[] = []

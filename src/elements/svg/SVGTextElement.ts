@@ -418,7 +418,7 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
-  override renderInnerContent(this: SVGTextLottieElement) {
+  override renderInnerContent() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

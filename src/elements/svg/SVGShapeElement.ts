@@ -21,7 +21,7 @@ import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
-import ShapeElement from '@/elements/helpers/shapes/ShapeElement'
+import ShapeElement from '@/elements/ShapeElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import { getBlendMode } from '@/utils'
 import {
@@ -51,7 +51,7 @@ export default class SVGShapeElement extends ShapeElement {
     // List of styles that will be applied to shapes
     this.stylesList = []
     // List of modifiers that will be applied to shapes
-    this.shapes = []
+    this.shapeModifiers = []
     // List of items in shape tree
     this.itemsData = []
     // List of items in previous shape tree
@@ -88,9 +88,9 @@ export default class SVGShapeElement extends ShapeElement {
 
   addToAnimatedContents(data: Shape, element: SVGElementInterface) {
     let i = 0
-    const len = this.animatedContents.length
+    const { length } = this.animatedContents
 
-    while (i < len) {
+    while (i < length) {
       if (this.animatedContents[i].element === element) {
         return
       }
@@ -127,10 +127,10 @@ export default class SVGShapeElement extends ShapeElement {
     const elementData = new ShapeGroupData()
 
     if (data.ln) {
-      elementData.gr.setAttribute('id', data.ln)
+      elementData.gr.id = data.ln
     }
     if (data.cl) {
-      elementData.gr.setAttribute('class', data.cl)
+      elementData.gr.classList.add(data.cl)
     }
     if (data.bm) {
       elementData.gr.style.mixBlendMode = getBlendMode(data.bm)

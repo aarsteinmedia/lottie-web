@@ -6,7 +6,7 @@ import type {
 
 import FrameElement from '@/elements/helpers/FrameElement'
 
-export default class RenderableElement extends FrameElement {
+export default abstract class RenderableElement extends FrameElement {
   hidden?: boolean
   isInRange?: boolean
   isTransparent?: boolean

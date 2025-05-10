@@ -1,4 +1,4 @@
-import type { AnimationItem } from '@/Lottie'
+import type AnimationItem from '@/animation/AnimationItem'
 import type {
   AnimationData,
   CompElementInterface,
@@ -20,7 +20,7 @@ import {
 } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
-export default class SVGRendererBase extends BaseRenderer {
+export default abstract class SVGRendererBase extends BaseRenderer {
   destroyed?: boolean
   renderConfig?: SVGRendererConfig
   svgElement?: SVGSVGElement
@@ -114,31 +114,30 @@ export default class SVGRendererBase extends BaseRenderer {
   }
 
   override checkPendingElements() {
-    while (this.pendingElements.length > 0) {
-      const element = this.pendingElements.pop()
+    if (this.pendingElements.length === 0) {
+      return
+    }
+    const element = this.pendingElements.pop()
 
-      element?.checkParenting()
-      if (element?.data.tt) {
-        let i = 0
-        const { length } = this.elements
+    element?.checkParenting()
+    if (!element?.data.tt) {
+      return
+    }
+    let i = 0
+    const { length } = this.elements
 
-        while (i < length) {
-          if (this.elements[i] !== element) {
-            i++
-            continue
-          }
-          const elementIndex =
-              'tp' in element.data
-                ? this.findIndexByInd(element.data.tp)
-                : i - 1,
-            matteElement = this.elements[elementIndex],
-            matteMask = matteElement.getMatte(this.layers[i].tt)
-
-          element.setMatte(matteMask)
-          break
-        }
-        // i++
+    while (i < length) {
+      if (this.elements[i] !== element) {
+        i++
+        continue
       }
+      const elementIndex = 'tp' in element.data
+          ? this.findIndexByInd(element.data.tp)
+          : i - 1,
+        matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
+
+      element.setMatte(matteMask)
+      break
     }
   }
 

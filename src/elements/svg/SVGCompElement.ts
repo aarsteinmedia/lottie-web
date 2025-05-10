@@ -185,7 +185,7 @@ export default class SVGCompElement extends SVGBaseElement {
   getElementById(_ind: number) {
     throw new Error(`${this.constructor.name}: Method getElementById not implemented yet`)
   }
-  getElementByPath(_path: unknown[]) {
+  getElementByPath(_path: unknown[]): ElementInterfaceIntersect | undefined {
     throw new Error(`${this.constructor.name}: Method getElementByPath not implemented yet`)
   }
   includeLayers(_data: LottieLayer[]) {
@@ -193,9 +193,6 @@ export default class SVGCompElement extends SVGBaseElement {
   }
   initItems() {
     throw new Error(`${this.constructor.name}: Method initItems not implemented yet`)
-  }
-  renderInnerContent() {
-    throw new Error(`${this.constructor.name}: Method renderInnerContent not implemented yet`)
   }
   searchExtraCompositions(_assets: LottieLayer[]) {
     throw new Error(`${this.constructor.name}: Method searchExtraCompositions not implemented yet`)

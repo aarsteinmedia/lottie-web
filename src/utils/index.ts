@@ -721,23 +721,35 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       p0[1], p1[1], amount
     ),
   ],
-  logPrototype = (sources: Constructor[]) => {
-    const combinedPrototypes: string[] = [],
+  logPrototype = (sources: Constructor[], destination?: Constructor) => {
+    const combinedPrototypes: {
+        name: string
+        prop: string
+      }[] = [],
       { length } = sources
 
     let sourcePrototype: Record<string, unknown>
 
+    const destinationProperties = Object.keys(destination?.prototype as Record<string, unknown> | undefined ?? {})
+
     for (let i = length - 1; i >= 0; i--) {
       sourcePrototype = sources[i].prototype
 
-      const properties = Object.keys(sourcePrototype),
+      const { name } = sources[i],
+        properties = Object.keys(sourcePrototype),
         { length: jLen } = properties
 
       for (let j = 0; j < jLen; j++) {
-        if (combinedPrototypes.includes(properties[j])) {
+        if (
+          combinedPrototypes.some(({ prop }) => prop === properties[j]) ||
+          destinationProperties.includes(properties[j])
+        ) {
           continue
         }
-        combinedPrototypes.push(properties[j])
+        combinedPrototypes.push({
+          name,
+          prop: properties[j]
+        })
       }
     }
 
