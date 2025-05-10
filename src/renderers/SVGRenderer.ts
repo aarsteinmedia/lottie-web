@@ -19,23 +19,23 @@ export default class SVGRenderer extends SVGRendererBase {
     this.animationItem = animationItem
     this.layers = []
     this.renderedFrame = -1
-    this.svgElement = createNS('svg')
+    this.svgElement = createNS<SVGSVGElement>('svg')
     let ariaLabel = ''
 
     if (config?.title) {
-      const titleElement = createNS('title')
-      const titleId = createElementID()
+      const titleElement = createNS<SVGTitleElement>('title'),
+        titleId = createElementID()
 
-      titleElement.setAttribute('id', titleId)
+      titleElement.id = titleId
       titleElement.textContent = config.title
       this.svgElement.appendChild(titleElement)
       ariaLabel += titleId
     }
     if (config?.description) {
-      const descElement = createNS('desc')
-      const descId = createElementID()
+      const descElement = createNS<SVGDescElement>('desc'),
+        descId = createElementID()
 
-      descElement.setAttribute('id', descId)
+      descElement.id = descId
       descElement.textContent = config.description
       this.svgElement.appendChild(descElement)
       ariaLabel += ` ${descId}`

@@ -187,7 +187,7 @@ function createProcess(onComplete: (data: AnimationData) => void,
 
     return id
   } catch (error) {
-    console.error(error)
+    console.error('DataManager}:\n', error)
     throw new Error('Could not create animation proccess')
   }
 }

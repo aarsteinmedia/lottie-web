@@ -15,9 +15,6 @@ import type {
 import type Expressions from '@/utils/expressions/Expressions'
 
 import {
-  completeAnimation, loadAnimation, loadData
-} from '@/utils/DataManager'
-import {
   BaseEvent,
   BMCompleteEvent,
   BMCompleteLoopEvent,
@@ -31,6 +28,9 @@ import {
 } from '@/events'
 import { createElementID, markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
+import {
+  completeAnimation, loadAnimation, loadData
+} from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import {
   getExpressionsPlugin,
@@ -674,7 +674,7 @@ export default class AnimationItem extends BaseEvent {
         this.trigger('destroy')
       }
     } catch (error) {
-      console.error(error)
+      console.error(`${this.constructor.name}:\n`, error)
       throw new Error(`${this.constructor.name}: Could not set data`)
     }
   }
@@ -751,7 +751,7 @@ export default class AnimationItem extends BaseEvent {
         )
       }
     } catch (error) {
-      console.error(error)
+      console.error(`${this.constructor.name}:\n`, error)
       throw new Error(`${this.constructor.name}: Could not set params`)
     }
   }
@@ -887,7 +887,7 @@ export default class AnimationItem extends BaseEvent {
         }
       }
     } catch (error) {
-      console.error(error)
+      console.error(`${this.constructor.name}:\n`, error)
     }
   }
   public triggerConfigError(nativeError: unknown) {

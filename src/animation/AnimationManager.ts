@@ -10,8 +10,8 @@ import { createTag, isServer } from '@/utils'
 import { RendererType } from '@/utils/enums'
 
 let _isFrozen = false,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  _stopped = true,
+
+  _isStopped = true,
   initTime = 0,
   len = 0,
   playingAnimationsNum = 0
@@ -61,7 +61,7 @@ export function loadAnimation(params: AnimationConfiguration) {
 
     return animItem
   } catch (error) {
-    console.error(error)
+    console.error('AnimationManager:\n', error)
     throw new Error('Could not load animation')
   }
 }
@@ -108,7 +108,7 @@ export function registerAnimation(element: HTMLElement | null,
 
     return animItem
   } catch (error) {
-    console.error(error)
+    console.error('AnimationManager:\n', error)
     throw new Error('Could not register animation')
   }
 }
@@ -198,11 +198,11 @@ export function unmute(animation?: string) {
   }
 }
 function activate() {
-  if (_isFrozen || !playingAnimationsNum || !_stopped || isServer()) {
+  if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer()) {
     return
   }
   window.requestAnimationFrame(first)
-  _stopped = false
+  _isStopped = false
 }
 function addPlayingCount() {
   playingAnimationsNum++
@@ -247,7 +247,7 @@ function resume(nowTime: number) {
       window.requestAnimationFrame(resume)
     }
   } else {
-    _stopped = true
+    _isStopped = true
   }
 }
 

@@ -114,30 +114,29 @@ export default abstract class SVGRendererBase extends BaseRenderer {
   }
 
   override checkPendingElements() {
-    if (this.pendingElements.length === 0) {
-      return
-    }
-    const element = this.pendingElements.pop()
+    while (this.pendingElements.length > 0) {
+      const element = this.pendingElements.pop()
 
-    element?.checkParenting()
-    if (!element?.data.tt) {
-      return
-    }
-    let i = 0
-    const { length } = this.elements
-
-    while (i < length) {
-      if (this.elements[i] !== element) {
-        i++
-        continue
+      element?.checkParenting()
+      if (!element?.data.tt) {
+        return
       }
-      const elementIndex = 'tp' in element.data
-          ? this.findIndexByInd(element.data.tp)
-          : i - 1,
-        matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
+      let i = 0
+      const { length } = this.elements
 
-      element.setMatte(matteMask)
-      break
+      while (i < length) {
+        if (this.elements[i] !== element) {
+          i++
+          continue
+        }
+        const elementIndex = 'tp' in element.data
+            ? this.findIndexByInd(element.data.tp)
+            : i - 1,
+          matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
+
+        element.setMatte(matteMask)
+        break
+      }
     }
   }
 
@@ -224,7 +223,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
     } catch (error) {
-      console.error(error)
+      console.error(`${this.constructor.name}:\n`, error)
     }
   }
 
@@ -324,9 +323,10 @@ export default abstract class SVGRendererBase extends BaseRenderer {
   }
 
   hide() {
-    if (this.layerElement) {
-      this.layerElement.style.display = 'none'
+    if (!this.layerElement) {
+      throw new Error(`${this.constructor.name}: layerElement is not implemented`)
     }
+    this.layerElement.style.display = 'none'
   }
 
   renderFrame(numFromProps?: number | null) {
