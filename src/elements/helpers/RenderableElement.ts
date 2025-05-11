@@ -74,6 +74,9 @@ export default abstract class RenderableElement extends FrameElement {
       w: Number(this.data.width)
     }
   }
+  hide() {
+    throw new Error(`${this.constructor.name}: Method hide is not implemented`)
+  }
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
     this.isInRange = false
@@ -101,6 +104,9 @@ export default abstract class RenderableElement extends FrameElement {
     }
     /* this.maskManager.renderFrame(this.finalTransform.mat);
         this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
+  }
+  show() {
+    throw new Error(`${this.constructor.name}: Method show is not implemented`)
   }
   override sourceRectAtTime(): SourceRect | null {
     return {

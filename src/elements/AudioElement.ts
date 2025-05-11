@@ -78,7 +78,7 @@ export default class AudioElement extends RenderableElement {
     return null
   }
 
-  hide() {
+  override hide() {
     this.audio.pause()
     this._isPlaying = false
   }
@@ -142,7 +142,7 @@ export default class AudioElement extends RenderableElement {
     this.audio.rate(rateValue)
   }
 
-  show() {
+  override show() {
     // Pass through
     // this.audio.play()
   }

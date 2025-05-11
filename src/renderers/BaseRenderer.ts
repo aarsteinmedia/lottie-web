@@ -43,7 +43,7 @@ export default abstract class BaseRenderer extends FrameElement {
     this.pendingElements.push(element)
   }
 
-  buildAllItems() {
+  override buildAllItems() {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
@@ -96,7 +96,7 @@ export default abstract class BaseRenderer extends FrameElement {
     throw new Error(`${this.constructor.name}: Method buildItem not yet implemented`)
   }
 
-  checkLayers(val?: number) {
+  override checkLayers(val?: number) {
     this.completeLayers = true
     const { length } = this.layers
 

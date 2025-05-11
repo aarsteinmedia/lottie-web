@@ -130,18 +130,14 @@ export default class SVGCompElement extends SVGBaseElement {
   appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
     throw new Error(`${this.constructor.name}: Method appendElementInPos not implemented yet`)
   }
-  buildAllItems() {
-    throw new Error(`${this.constructor.name}: Method buildAllItems not implemented yet`)
-  }
+
   buildElementParenting(_el: ElementInterfaceIntersect) {
     throw new Error(`${this.constructor.name}: Method buildElementParenting not implemented yet`)
   }
   buildItem(_pos: number) {
     throw new Error(`${this.constructor.name}: Method buildItem not implemented yet`)
   }
-  checkLayers() {
-    throw new Error(`${this.constructor.name}: Method checkLayers not implemented yet`)
-  }
+
   checkPendingElements() {
     throw new Error(`${this.constructor.name}: Method checkPendingElements not implemented yet`)
   }

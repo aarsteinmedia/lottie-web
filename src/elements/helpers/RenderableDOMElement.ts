@@ -25,7 +25,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.destroyBaseElement()
   }
 
-  hide() {
+  override hide() {
     if (this.hidden || this.isInRange && !this.isTransparent) {
       return
     }
@@ -88,7 +88,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   renderInnerContent() {
     throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
   }
-  show() {
+  override show() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

@@ -34,22 +34,6 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     }
   }
 
-  createContainerElements() {
-    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
-  }
-
-  createRenderableComponents() {
-    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
-  }
-
-  destroyBaseElement() {
-    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
-  }
-
-  initRendererElement() {
-    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
-  }
-
   isShapeInAnimatedModifiers(data: Shape) {
     let i = 0
     const { length } = this.shapeModifiers
@@ -68,9 +52,7 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
   }
-  renderElement() {
-    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
-  }
+
   renderModifiers() {
     if (this.shapeModifiers.length === 0) {
       return

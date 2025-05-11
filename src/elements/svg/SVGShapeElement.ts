@@ -110,7 +110,7 @@ export default class SVGShapeElement extends ShapeElement {
     // Pass through
   }
 
-  createContent() {
+  override createContent() {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access Layer`)
     }

@@ -18,7 +18,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
   matteMasks?: { [key: number]: string }
   transformedElement?: HTMLElement | SVGGElement
 
-  createContainerElements() {
+  override createContainerElements() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
@@ -101,7 +101,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
       this.setBlendMode()
     }
   }
-  createRenderableComponents() {
+  override createRenderableComponents() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: layerData is not initialized`)
     }
@@ -116,7 +116,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
     this.renderableEffectsManager = new SVGEffects(this as unknown as ElementInterfaceIntersect)
     this.searchEffectTransforms()
   }
-  destroyBaseElement() {
+  override destroyBaseElement() {
     this.layerElement = null as unknown as SVGGElement
     this.matteElement = null as unknown as SVGGElement
     this.maskManager?.destroy()
@@ -235,10 +235,10 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
 
     return this.matteMasks[matteType]
   }
-  initRendererElement() {
+  override initRendererElement() {
     this.layerElement = createNS<SVGGElement>('g')
   }
-  renderElement() {
+  override renderElement() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not implemented`)
     }
