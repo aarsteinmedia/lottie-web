@@ -1,9 +1,9 @@
 import type { ElementInterfaceIntersect, Shape, Vector3 } from '../types';
 import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
-import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
+import type DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 import Matrix from '../utils/Matrix';
 import { BaseProperty, type MultiDimensionalProperty, type ValueProperty } from '../utils/Properties';
-export default class TransformProperty extends BaseProperty {
+export declare class TransformProperty extends BaseProperty {
     _isDirty?: boolean;
     _opMdf?: boolean;
     _transformCachingAtTime?: {
@@ -32,7 +32,7 @@ export default class TransformProperty extends BaseProperty {
     sk?: ValueProperty;
     v: Matrix;
     private defaultVector;
-    constructor(elem: ElementInterfaceIntersect, data: Shape, container: ElementInterfaceIntersect);
+    constructor(elem: ElementInterfaceIntersect, data: Shape, container: ElementInterfaceIntersect | null);
     addDynamicProperty(prop: DynamicPropertyContainer): void;
     applyToMatrix(mat: Matrix): void;
     autoOrient(): void;
@@ -43,4 +43,4 @@ export default class TransformProperty extends BaseProperty {
 declare const TransformPropertyFactory: {
     getTransformProperty: (elem: ElementInterfaceIntersect, data: Shape, container: ElementInterfaceIntersect) => TransformProperty;
 };
-export { TransformPropertyFactory };
+export default TransformPropertyFactory;

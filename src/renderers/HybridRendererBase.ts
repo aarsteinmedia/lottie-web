@@ -73,7 +73,7 @@ export default class HybridRendererBase extends BaseRenderer {
     this.renderFrame = renderFrame
   }
 
-  addTo3dContainer(elem: SVGElement, pos: number) {
+  addTo3dContainer(elem: HTMLElement, pos: number) {
     let i = 0
     const len = this.threeDElements.length
 
@@ -98,7 +98,7 @@ export default class HybridRendererBase extends BaseRenderer {
   }
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
-    const newDOMElement = element.getBaseElement()
+    const newDOMElement = element.getBaseElement() as HTMLElement | null
 
     if (!newDOMElement) {
       return

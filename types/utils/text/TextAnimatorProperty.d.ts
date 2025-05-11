@@ -1,5 +1,5 @@
 import type { DocumentData, ElementInterfaceIntersect, TextData } from '../../types';
-import { RendererType } from '../../enums';
+import { RendererType } from '../../utils/enums';
 import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
 import LetterProps from '../../utils/text/LetterProps';
 export default class TextAnimatorProperty extends DynamicPropertyContainer {

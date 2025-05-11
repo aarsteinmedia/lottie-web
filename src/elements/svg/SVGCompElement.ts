@@ -190,7 +190,7 @@ export default class SVGCompElement extends SVGBaseElement {
   findIndexByInd() {
     throw new Error(`${this.constructor.name}: Method findIndexByInd not implemented yet`)
   }
-  getElementById(_ind: number) {
+  getElementById(_ind: number): ElementInterfaceIntersect | null {
     throw new Error(`${this.constructor.name}: Method getElementById not implemented yet`)
   }
   getElementByPath(_path: unknown[]): ElementInterfaceIntersect | undefined {

@@ -21,7 +21,6 @@ export default class ShapeCollection {
     this._length++
   }
   releaseShapes() {
-    // const { _length } = this
     for (let i = 0; i < this._length; i++) {
       release(this.shapes[i])
     }

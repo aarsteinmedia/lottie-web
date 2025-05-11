@@ -1,6 +1,6 @@
 import type { AnimationConfiguration, AnimationData, AnimationDirection } from '../types';
 import AnimationItem from '../animation/AnimationItem';
-import { RendererType } from '../enums';
+import { RendererType } from '../utils/enums';
 export declare function destroy(animation?: string): void;
 export declare function freeze(): void;
 export declare function getRegisteredAnimations(): AnimationItem[];

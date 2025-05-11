@@ -165,7 +165,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     if (keyData.to && keyData.s) {
       keyframeMetadata.bezierData = keyframeMetadata.bezierData ?? buildBezierData(
         keyData.s as unknown as Vector2,
-        (nextKeyData.s ?? keyData.e) as Vector2,
+        (nextKeyData.s ?? keyData.e) as unknown as Vector2,
         keyData.to,
         keyData.ti
       )
@@ -251,27 +251,27 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         caching._lastKeyframeIndex = i
       }
     } else {
-      let outX
-      let outY
-      let inX
-      let inY
-      let keyValue
+      let outX,
+        outY,
+        inX,
+        inY,
+        keyValue
 
       len = keyData.s?.length || 0
-      endValue = nextKeyData.s ?? keyData.e
+      endValue = (nextKeyData.s ?? keyData.e) as Vector3
       if (this.sh && keyData.h !== 1) {
         if (frameNum >= nextKeyTime) {
           newValue[0] = endValue[0]
           newValue[1] = endValue[1]
           newValue[2] = endValue[2]
         } else if (frameNum <= keyTime && keyData.s) {
-          newValue[0] = keyData.s[0]
-          newValue[1] = keyData.s[1]
-          newValue[2] = keyData.s[2]
+          newValue[0] = keyData.s[0] as unknown as number
+          newValue[1] = keyData.s[1] as unknown as number
+          newValue[2] = keyData.s[2] as unknown as number
         } else {
-          const quatStart = createQuaternion(keyData.s as unknown as Vector3)
-          const quatEnd = createQuaternion(endValue as unknown as Vector3)
-          const time = (frameNum - keyTime) / (nextKeyTime - keyTime)
+          const quatStart = createQuaternion(keyData.s as unknown as Vector3),
+            quatEnd = createQuaternion(endValue as unknown as Vector3),
+            time = (frameNum - keyTime) / (nextKeyTime - keyTime)
 
           quaternionToEuler(newValue, slerp(
             quatStart, quatEnd, time
@@ -327,11 +327,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           keyValue =
             keyData.h === 1
               ? keyData.s?.[i]
-              : Number(keyData.s?.[i]) + (endValue[i] - Number(keyData.s?.[i])) * Number(perc)
+              : Number(keyData.s?.[i]) + ((endValue as number[])[i] - Number(keyData.s?.[i])) * Number(perc)
 
           if (keyValue !== undefined) {
             if (this.propType === 'multidimensional') {
-              newValue[i] = keyValue
+              newValue[i] = keyValue as number
             } else {
               newValue = keyValue as unknown as Vector3
             }

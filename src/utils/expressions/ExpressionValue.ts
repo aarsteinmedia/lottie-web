@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Vector3 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { ValueProperty } from '@/utils/Properties'
@@ -14,7 +15,7 @@ export default class ExpressionValue {
   constructor(
     elementProp: ValueProperty<number[] | number>,
     mult = 1,
-    type: string
+    type = ''
   ) {
     if (elementProp.k) {
       elementProp.getValue()

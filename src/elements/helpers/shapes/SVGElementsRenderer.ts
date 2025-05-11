@@ -1,10 +1,10 @@
-import type ShapeElement from '@/elements/ShapeElement'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import type SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
+import type ShapeElement from '@/elements/ShapeElement'
 import type { Shape } from '@/types'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -256,7 +256,7 @@ function renderPath(
     } else {
       mat = _identityMatrix
     }
-    paths = sh.paths
+    paths = sh.paths as ShapeCollection | undefined
     const jLen = paths?._length || 0
 
     if (shouldRedraw) {

@@ -5,7 +5,7 @@ import SolidElement from '../elements/SolidElement';
 import SVGShapeElement from '../elements/svg/SVGShapeElement';
 import SVGTextLottieElement from '../elements/svg/SVGTextElement';
 import BaseRenderer from '../renderers/BaseRenderer';
-export default class SVGRendererBase extends BaseRenderer {
+export default abstract class SVGRendererBase extends BaseRenderer {
     destroyed?: boolean;
     renderConfig?: SVGRendererConfig;
     svgElement?: SVGSVGElement;

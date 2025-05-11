@@ -1,4 +1,5 @@
 import type { AnimationData, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import type ProjectInterface from '../../utils/helpers/ProjectInterface';
 import type { KeyframedValueProperty } from '../../utils/Properties';
 import SVGBaseElement from '../../elements/svg/SVGBaseElement';
 export default class SVGCompElement extends SVGBaseElement {
@@ -6,24 +7,38 @@ export default class SVGCompElement extends SVGBaseElement {
     completeLayers: boolean;
     currentFrame: number;
     elements: ElementInterfaceIntersect[];
-    layers: LottieLayer[];
+    layers?: LottieLayer[];
     pendingElements: ElementInterfaceIntersect[];
     renderedFrame: number;
     supports3d: boolean;
     tm?: KeyframedValueProperty;
     constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
+    addPendingElement(_el: ElementInterfaceIntersect): void;
     appendElementInPos(_element: ElementInterfaceIntersect, _pos: number): void;
+    buildElementParenting(_el: ElementInterfaceIntersect): void;
     buildItem(_pos: number): void;
     checkPendingElements(): void;
     configAnimation(_data: AnimationData): void;
+    createAudio(_data: LottieLayer): void;
+    createCamera(_data: LottieLayer): void;
     createComp(data: LottieLayer): SVGCompElement;
+    createFootage(_data: LottieLayer): void;
     createImage(_data: LottieLayer): void;
+    createItem(_data: LottieLayer): void;
     createNull(_data: LottieLayer): void;
     createShape(_data: LottieLayer): void;
     createSolid(_data: LottieLayer): void;
     createText(_data: LottieLayer): void;
     destroyElements(): void;
-    findIndexByInd(_ind: number): void;
+    findIndexByInd(): void;
+    getElementById(_ind: number): ElementInterfaceIntersect | null;
+    getElementByPath(_path: unknown[]): ElementInterfaceIntersect | undefined;
     getElements(): void;
+    includeLayers(_data: LottieLayer[]): void;
+    initItems(): void;
+    searchExtraCompositions(_assets: LottieLayer[]): void;
     setElements(_elems: ElementInterfaceIntersect[]): void;
+    setProjectInterface(_interface: null | ProjectInterface): void;
+    setupGlobalData(_animData: AnimationData, _fontsContainer: HTMLElement | SVGDefsElement): void;
+    updateContainerSize(_width?: number, _height?: number): void;
 }

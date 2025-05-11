@@ -1,6 +1,6 @@
 import type { CompElementInterface } from '../../types';
-import LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import { MaskInterface } from '../../utils/expressions/MaskInterface';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import type { MaskInterface } from '../../utils/expressions/MaskInterface';
 export default class ProjectInterface {
     compositions: CompElementInterface[];
     content?: ProjectInterface;

@@ -6,6 +6,8 @@ import type CVSolidElement from '../elements/canvas/CVSolidElement';
 import type CVTextElement from '../elements/canvas/CVTextElement';
 import type HCameraElement from '../elements/html/HCameraElement';
 import type HCompElement from '../elements/html/HCompElement';
+import type HImageElement from '../elements/html/HImageElement';
+import type HShapeElement from '../elements/html/HShapeElement';
 import type HTextElement from '../elements/html/HTextElement';
 import type ImageElement from '../elements/ImageElement';
 import type NullElement from '../elements/NullElement';
@@ -18,9 +20,7 @@ import type ProjectInterface from '../utils/helpers/ProjectInterface';
 import AudioElement from '../elements/AudioElement';
 import FootageElement from '../elements/FootageElement';
 import FrameElement from '../elements/helpers/FrameElement';
-import HImageElement from '../elements/html/HImageElement';
-import HShapeElement from '../elements/html/HShapeElement';
-export default class BaseRenderer extends FrameElement {
+export default abstract class BaseRenderer extends FrameElement {
     animationItem?: AnimationItem;
     completeLayers?: boolean;
     currentFrame: number;
@@ -39,7 +39,7 @@ export default class BaseRenderer extends FrameElement {
     createComp(_data: LottieLayer, _container?: HTMLElement, _comp?: CompElementInterface, _?: unknown): SVGCompElement | CVCompElement | HCompElement;
     createFootage(data: LottieLayer): FootageElement;
     createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement;
-    createItem(layer: LottieLayer): CVCompElement | HCompElement | SVGCompElement | AudioElement | SVGShapeElement | CVImageElement | ImageElement | HImageElement | CVSolidElement | NullElement | CVShapeElement | HShapeElement | SVGTextLottieElement | CVTextElement | HTextElement | HCameraElement | FootageElement;
+    createItem(layer: LottieLayer): CVCompElement | AudioElement | SVGCompElement | SVGShapeElement | HCompElement | CVShapeElement | HShapeElement | CVImageElement | ImageElement | HImageElement | CVSolidElement | NullElement | SVGTextLottieElement | CVTextElement | HTextElement | HCameraElement | FootageElement;
     createNull(_layer: LottieLayer): NullElement;
     createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement;
     createSolid(_layer: LottieLayer): CVSolidElement | SolidElement;

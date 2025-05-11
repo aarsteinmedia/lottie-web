@@ -1,5 +1,5 @@
-import type { ShapeType } from '../../../enums';
-import type { AnimatedProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
+import type { VectorProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
+import type { ShapeType } from '../../../utils/enums';
 export default class SVGStyleData {
     _mdf: boolean;
     closed: boolean;
@@ -12,7 +12,7 @@ export default class SVGStyleData {
     msElem: null | SVGMaskElement | SVGPathElement;
     pElem: SVGPathElement;
     prevViewData?: SVGElementInterface[];
-    pt?: AnimatedProperty;
+    pt?: VectorProperty;
     style?: SVGStyleData;
     t?: number;
     transform?: Transformer;

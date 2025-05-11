@@ -5,7 +5,7 @@ import Matrix from '../../utils/Matrix';
 export declare const effectTypes: {
     TRANSFORM_EFFECT: string;
 };
-export default class TransformElement extends BaseElement {
+export default abstract class TransformElement extends BaseElement {
     _isFirstFrame?: boolean;
     finalTransform?: Transformer;
     hierarchy?: ElementInterfaceIntersect[];

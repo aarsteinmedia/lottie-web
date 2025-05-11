@@ -495,6 +495,7 @@ export interface Shape {
   cl?: string
   closed?: boolean
   d?: number | StrokeData[]
+  dc?: number
   /** Endpoint for gradient. */
   e?: VectorProperty<Vector2>
   eo?: VectorProperty
@@ -515,6 +516,7 @@ export interface Shape {
   ln?: string
   /** Stacking order. 1: Above 2: Below. */
   m?: 1 | 2
+  maxDist?: number
   ml?: number
   mn?: string
   mode?: string
@@ -553,9 +555,9 @@ export interface Shape {
   sa?: VectorProperty
   /** Skew. */
   sk?: VectorProperty
+
   so?: VectorProperty
   sy?: number
-
   /** Gradient type. */
   t?: number
   tr?: Shape
@@ -1208,7 +1210,7 @@ export interface Svalue {
 }
 
 export interface Keyframe {
-  e: Vector2
+  e: Vector3
   h?: number
   i: Coordinates
   keyframeMetadata?: {
@@ -1261,6 +1263,8 @@ export interface GlobalData {
   getAssetsPath: AnimationItem['getAssetsPath']
   imageLoader?: ImagePreloader | null
   isDashed?: boolean
+  mouseX?: number
+  mouseY?: number
   nm?: string
   popExpression: () => void
   progressiveLoad?: boolean

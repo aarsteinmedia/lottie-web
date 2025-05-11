@@ -4,7 +4,7 @@ import type { ElementInterfaceIntersect, ElementInterfaceUnion, Shape } from '..
 import type { ValueProperty } from '../../utils/Properties';
 import Matrix from '../../utils/Matrix';
 import ShapeModifier from '../../utils/shapes/ShapeModifier';
-import TransformProperty from '../../utils/TransformProperty';
+import { type TransformProperty } from '../../utils/TransformProperty';
 export default class RepeaterModifier extends ShapeModifier {
     arr: Shape[];
     c?: ValueProperty;

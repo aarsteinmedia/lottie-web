@@ -1,6 +1,6 @@
+import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import type { Shape } from '../../types';
 import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import ShapePathInterface from '../../utils/expressions/shapes/ShapePathInterface';
 export default class ShapeExpressionInterface {
     _name: string;

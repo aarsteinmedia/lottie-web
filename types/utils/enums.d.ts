@@ -52,6 +52,7 @@ export declare enum RendererType {
     SVG = "svg"
 }
 export declare enum Modifier {
+    MouseModifier = "ms",
     OffsetPathModifier = "op",
     PuckerAndBloatModifier = "pb",
     RepeaterModifier = "rp",

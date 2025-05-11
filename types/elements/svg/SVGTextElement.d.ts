@@ -12,16 +12,14 @@ export default class SVGTextLottieElement extends TextElement {
     renderedLetters: string[];
     textContainer?: SVGTextElement;
     textSpans: TextSpan[];
-    private emptyShapeData;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     buildNewText(): void;
     buildShapeData(data: LottieLayer, scale: number): LottieLayer;
     buildTextContents(textArray: string[]): string[];
     createContent(): void;
-    getBaseElement(): SVGGElement | HTMLElement | null;
     getMatte(_type?: number): string;
     getValue(): void;
-    renderInnerContent(this: SVGTextLottieElement): void;
+    renderInnerContent(): void;
     setMatte(_id: string): void;
     sourceRectAtTime(): SourceRect | null;
 }

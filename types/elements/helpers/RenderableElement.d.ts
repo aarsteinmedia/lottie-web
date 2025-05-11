@@ -1,13 +1,12 @@
 import type { RenderableComponent, SourceRect } from '../../types';
 import FrameElement from '../../elements/helpers/FrameElement';
-export default class RenderableElement extends FrameElement {
+export default abstract class RenderableElement extends FrameElement {
     hidden?: boolean;
     isInRange?: boolean;
     isTransparent?: boolean;
     private renderableComponents;
     addRenderableComponent(component: RenderableComponent): void;
     checkLayerLimits(num: number): void;
-    checkLayers(_val?: number): void;
     checkTransparency(): void;
     getLayerSize(): {
         h: number;

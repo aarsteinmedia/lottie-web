@@ -1,5 +1,5 @@
-import { GroupEffect } from '../../effects/EffectsManager';
-import { ElementInterfaceIntersect } from '../../types';
+import type { GroupEffect } from '../../effects/EffectsManager';
+import type { ElementInterfaceIntersect } from '../../types';
 export default class SVGEffects {
     filters: GroupEffect[];
     constructor(elem: ElementInterfaceIntersect);

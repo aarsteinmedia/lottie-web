@@ -57,6 +57,7 @@ export enum RendererType {
 }
 
 export enum Modifier {
+  MouseModifier = 'ms',
   OffsetPathModifier = 'op',
   PuckerAndBloatModifier = 'pb',
   RepeaterModifier = 'rp',

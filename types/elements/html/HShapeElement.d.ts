@@ -1,9 +1,10 @@
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
+import type { BoundingBox, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
+import type { ValueProperty } from '../../utils/Properties';
 import RenderableElement from '../../elements/helpers/RenderableElement';
 export default class HShapeElement extends RenderableElement {
     animatedContents: any[];
-    currentBBox: any;
+    currentBBox: BoundingBox;
     prevViewData: HShapeElement[];
     processedElements: any[];
     shapeBoundingBox: {
@@ -28,13 +29,13 @@ export default class HShapeElement extends RenderableElement {
     };
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     _renderShapeFrame(): void;
-    calculateBoundingBox(itemsData: any, boundingBox: DOMRect): void;
+    calculateBoundingBox(itemsData: ShapeDataInterface[], boundingBox: BoundingBox): void;
     calculateF(t: number, p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, i: number): number;
-    calculateShapeBoundingBox(item: ShapeDataInterface, boundingBox: DOMRect): void;
-    checkBounds(vPoint: Vector2, oPoint: Vector2, nextIPoint: Vector2, nextVPoint: Vector2, boundingBox: any): void;
+    calculateShapeBoundingBox(item: ShapeDataInterface, boundingBox: BoundingBox): void;
+    checkBounds(vPoint: Vector2, oPoint: Vector2, nextIPoint: Vector2, nextVPoint: Vector2, boundingBox: BoundingBox): void;
     createContent(): void;
-    currentBoxContains(box: DOMRect): boolean;
-    expandStrokeBoundingBox(widthProperty: any, boundingBox: any): void;
+    currentBoxContains(box: BoundingBox): boolean;
+    expandStrokeBoundingBox(widthProperty: ValueProperty, boundingBox: BoundingBox): void;
     filterUniqueShapes(): void;
     getBoundsOfCurve(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): void;
     getTransformedPoint(transformers: Transformer[], pointFromProps: number[]): number[];

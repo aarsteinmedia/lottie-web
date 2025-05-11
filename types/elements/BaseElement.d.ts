@@ -3,12 +3,14 @@ import type MaskElement from '../elements/MaskElement';
 import type { CompElementInterface, GlobalData, LottieLayer, Shape } from '../types';
 import type CompExpressionInterface from '../utils/expressions/CompInterface';
 import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
+import type DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 import EffectsManager from '../effects/EffectsManager';
 export default abstract class BaseElement {
     baseElement?: HTMLElement | SVGGElement;
     comp?: CompElementInterface;
     compInterface?: CompExpressionInterface;
     data?: LottieLayer;
+    dynamicProperties: DynamicPropertyContainer[];
     effectsManager?: EffectsManager;
     globalData?: GlobalData;
     itemsData: ShapeGroupData[];
@@ -18,9 +20,14 @@ export default abstract class BaseElement {
     maskManager?: MaskElement;
     shapesData: Shape[];
     type?: unknown;
+    buildAllItems(): void;
+    checkLayers(_frame?: number): void;
     checkMasks(): boolean;
+    destroyBaseElement(): void;
+    getBaseElement(): SVGElement | HTMLElement | null;
     getType(): unknown;
     initBaseData(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface): void;
     initExpressions(): void;
     setBlendMode(): void;
+    sourceRectAtTime(): void;
 }

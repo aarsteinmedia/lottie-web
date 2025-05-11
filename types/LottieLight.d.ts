@@ -1,7 +1,5 @@
-import type AnimationItem from './animation/AnimationItem';
-import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from './types';
 import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
-export declare function setSubframeRendering(flag: boolean): void;
+export declare const setSubframeRendering: (flag: boolean) => void;
 declare const Lottie: {
     destroy: typeof destroy;
     freeze: typeof freeze;
@@ -15,11 +13,11 @@ declare const Lottie: {
     registerAnimation: typeof registerAnimation;
     resize: typeof resize;
     setDirection: typeof setDirection;
-    setIDPrefix: (value: string) => void;
     setLocationHref: (value: string) => void;
+    setPrefix: (value: string) => void;
     setQuality: (value: string | number) => void;
     setSpeed: typeof setSpeed;
-    setSubframeRendering: typeof setSubframeRendering;
+    setSubframeRendering: (flag: boolean) => void;
     setVolume: typeof setVolume;
     stop: typeof stop;
     togglePause: typeof togglePause;
@@ -28,5 +26,6 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
-export type { AnimationConfiguration, AnimationItem, AnimationData, AnimationDirection, AnimationSettings, LottieAsset, LottieManifest, Vector2, };
 export default Lottie;
+export { type default as AnimationItem } from './animation/AnimationItem';
+export type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from './types';

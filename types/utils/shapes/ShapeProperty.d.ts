@@ -1,21 +1,23 @@
-import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData, Vector2 } from '../../types';
+import type CVShapeElement from '../../elements/canvas/CVShapeElement';
+import type HShapeElement from '../../elements/html/HShapeElement';
+import type SVGShapeElement from '../../elements/svg/SVGShapeElement';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData } from '../../types';
 import type PropertyInterface from '../../utils/expressions/PropertyInterface';
 import type { MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
 import type ShapeCollection from '../../utils/shapes/ShapeCollection';
+import type ShapePath from '../../utils/shapes/ShapePath';
 import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
-import ShapeElement from '../../elements/helpers/shapes/ShapeElement';
 import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
-import ShapePath from '../../utils/shapes/ShapePath';
 declare function getConstructorFunction(): typeof ShapeProperty;
 declare function getKeyframedConstructorFunction(): typeof KeyframedShapeProperty;
-declare function getShapeProp(elem: ShapeElement, data: Shape, type: number, _arr?: any[], _trims?: any[]): ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | null;
+declare function getShapeProp(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number, _arr?: any[], _trims?: any[]): ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | null;
 export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
     comp?: CompElementInterface;
     data?: Shape;
     effectsSequence: ((arg: unknown) => ShapePath)[];
-    elem?: ShapeElement;
+    elem?: SVGShapeElement | CVShapeElement | HShapeElement;
     frameId?: number;
     k?: boolean;
     keyframes: Keyframe[];
@@ -24,7 +26,7 @@ export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer
     localShapeCollection?: ShapeCollection;
     lock?: boolean;
     offsetTime: number;
-    paths?: ShapeCollection;
+    paths?: ShapePath[] | ShapeCollection;
     pv?: ShapePath;
     v?: ShapePath;
     getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath;
@@ -42,10 +44,10 @@ export declare class RectShapeProperty extends ShapeBaseProperty {
     is?: ValueProperty;
     or?: ValueProperty;
     os?: ValueProperty;
-    p: MultiDimensionalProperty<Vector2>;
+    p: MultiDimensionalProperty;
     pt?: ValueProperty;
     r: ValueProperty;
-    s: MultiDimensionalProperty<Vector2>;
+    s: MultiDimensionalProperty;
     constructor(elem: ElementInterfaceIntersect, data: Shape);
     convertRectToPath(): void;
     getValue(): void;
@@ -56,11 +58,11 @@ export declare class StarShapeProperty extends ShapeBaseProperty {
     is?: ValueProperty;
     or: ValueProperty;
     os: ValueProperty;
-    p: MultiDimensionalProperty<Vector2>;
+    p: MultiDimensionalProperty;
     pt: ValueProperty;
     r: ValueProperty;
     s?: ValueProperty;
-    constructor(elem: ElementInterfaceIntersect, data: any);
+    constructor(elem: ElementInterfaceIntersect, data: Shape);
     convertPolygonToPath(): void;
     convertStarToPath(): void;
     convertToPath(): void;
@@ -69,8 +71,8 @@ export declare class StarShapeProperty extends ShapeBaseProperty {
 export declare class EllShapeProperty extends ShapeBaseProperty {
     _cPoint: number;
     d?: number;
-    p: MultiDimensionalProperty<Vector2>;
-    s: MultiDimensionalProperty<Vector2>;
+    p: MultiDimensionalProperty;
+    s: MultiDimensionalProperty;
     constructor(elem: ElementInterfaceIntersect, data: Shape);
     convertEllToPath(): void;
     getValue(): void;
@@ -88,12 +90,12 @@ export declare class ShapeProperty extends ShapeBaseProperty {
     };
     totalShapeLength?: number;
     x?: boolean;
-    constructor(elem: ShapeElement, data: Shape, type: number);
+    constructor(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number);
     setGroupProperty(_propertyInterface: PropertyInterface): void;
 }
 export declare class KeyframedShapeProperty extends ShapeBaseProperty {
     lastFrame: number;
-    constructor(elem: ShapeElement, data: Shape, type: number);
+    constructor(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number);
 }
 declare const ShapePropertyFactory: {
     getConstructorFunction: typeof getConstructorFunction;

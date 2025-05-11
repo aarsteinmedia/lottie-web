@@ -39,7 +39,7 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
     getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
-    getValueAtTime<T extends number | number[] = number>(_a: number, _b?: number): T;
+    getValueAtTime(_a: number, _b?: number): number | number[];
     getVelocityAtTime(_frameNum: number): number;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
     processEffectsSequence(): void;
@@ -51,7 +51,7 @@ export declare class ValueProperty<T extends number | number[] = number> extends
     v: T;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }
-export declare class MultiDimensionalProperty<T extends Array<any> = Vector2> extends BaseProperty {
+export declare class MultiDimensionalProperty<T extends any[] = Vector2> extends BaseProperty {
     v: T;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty<T>, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }
@@ -60,7 +60,7 @@ export declare class KeyframedValueProperty extends BaseProperty {
     v: number;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty<Keyframe[]>, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }
-export declare class KeyframedMultidimensionalProperty<T extends Array<any> = Vector2> extends BaseProperty {
+export declare class KeyframedMultidimensionalProperty<T extends any[] = Vector2> extends BaseProperty {
     pv: T;
     v: T;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty<any[]>, mult?: null | number, container?: ElementInterfaceIntersect | null);

@@ -1,4 +1,5 @@
 import type { ImageData, LottieAsset } from '../types';
+import { RendererType } from '../utils/enums';
 export default class ImagePreloader {
     assetsPath: string;
     images: ImageData[];
@@ -24,7 +25,7 @@ export default class ImagePreloader {
     loadedFootages(): boolean;
     loadedImages(): boolean;
     setAssetsPath(path?: string): void;
-    setCacheType(type: string, elementHelper: SVGElement): void;
+    setCacheType(type: RendererType, elementHelper: SVGElement): void;
     setPath(path?: string): void;
     private _createProxyImage;
     private createImgData;

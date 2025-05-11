@@ -1,10 +1,13 @@
+import type { Transformer, TransformSequence } from '../../../types';
 export default class ShapeTransformManager {
-    sequenceList: any[];
-    sequences: any;
+    sequenceList: TransformSequence[];
+    sequences: TransformSequence;
     transform_key_count: number;
     constructor();
-    addTransformSequence(transforms: any[]): any;
+    addTransformSequence(transforms: {
+        transform: Transformer;
+    }[]): unknown;
     getNewKey(): string;
-    processSequence(sequence: any, isFirstFrame?: boolean): void;
+    processSequence(sequence: TransformSequence, isFirstFrame?: boolean): void;
     processSequences(isFirstFrame?: boolean): void;
 }

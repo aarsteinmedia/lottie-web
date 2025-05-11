@@ -9,8 +9,8 @@ import ImageElement from '../elements/ImageElement';
 import ISolidElement from '../elements/SolidElement';
 import SVGShapeElement from '../elements/svg/SVGShapeElement';
 import SVGTextLottieElement from '../elements/svg/SVGTextElement';
-import { RendererType } from '../enums';
 import BaseRenderer from '../renderers/BaseRenderer';
+import { RendererType } from '../utils/enums';
 export default class HybridRendererBase extends BaseRenderer {
     camera?: HCameraElement;
     destroyed: boolean;
@@ -20,7 +20,7 @@ export default class HybridRendererBase extends BaseRenderer {
     supports3d: boolean;
     threeDElements: ThreeDElements[];
     constructor(animationItem: AnimationItem, config?: HTMLRendererConfig);
-    addTo3dContainer(elem: SVGElement, pos: number): void;
+    addTo3dContainer(elem: HTMLElement, pos: number): void;
     appendElementInPos(element: ElementInterfaceIntersect, pos: number): void;
     build3dContainers(): void;
     checkPendingElements(): void;

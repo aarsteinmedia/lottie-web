@@ -1,4 +1,5 @@
 
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type {

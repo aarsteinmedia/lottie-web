@@ -1,5 +1,5 @@
+import type MaskElement from '../../elements/MaskElement';
 import type { Shape, ViewData } from '../../types';
-import MaskElement from '../../elements/MaskElement';
 export declare class MaskInterface {
     _data: Shape;
     _mask: ViewData;

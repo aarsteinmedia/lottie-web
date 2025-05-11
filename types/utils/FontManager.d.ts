@@ -16,7 +16,7 @@ export default class FontManager {
     private initTime;
     private setIsLoadedBinded;
     constructor();
-    addChars(chars?: Characacter[]): void;
+    addChars(chars?: null | Characacter[]): void;
     addFonts(fontData?: {
         list: DocumentData[];
     }, defs?: HTMLElement | SVGDefsElement): void;

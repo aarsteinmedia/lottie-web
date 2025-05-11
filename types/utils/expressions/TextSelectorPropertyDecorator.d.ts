@@ -1,7 +1,7 @@
 import type { CompElementInterface, ElementInterfaceIntersect, Vector3 } from '../../types';
+import type ShapePath from '../../utils/shapes/ShapePath';
+import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
 import ExpressionManager from '../../utils/expressions/ExpressionManager';
-import ShapePath from '../../utils/shapes/ShapePath';
-import TextSelectorProperty from '../../utils/text/TextSelectorProperty';
 export default class TextExpressionSelectorPropFactory {
     comp?: CompElementInterface;
     elem: ElementInterfaceIntersect;

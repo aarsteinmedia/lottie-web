@@ -6,5 +6,6 @@ export default class ImageElement extends SVGBaseElement {
     sourceRect: SourceRect | null;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     createContent(): void;
+    renderInnerContent(): void;
     sourceRectAtTime(): SourceRect | null;
 }

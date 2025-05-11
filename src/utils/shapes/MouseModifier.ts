@@ -1,10 +1,15 @@
+// @ts-nocheck
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import type { ElementInterfaceUnion, Shape } from '@/types'
+import type {
+  ElementInterfaceUnion, Shape, Vector2
+} from '@/types'
 
+import { Modifier } from '@/utils/enums'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import { registerModifier } from '@/utils/shapes/ShapeModifiers'
 
 import type ShapeCollection from './ShapeCollection'
+import type ShapePath from './ShapePath'
 
 export default class MouseModifier extends ShapeModifier {
   data?: Shape | Shape[]
@@ -28,15 +33,28 @@ export default class MouseModifier extends ShapeModifier {
   }
 
   processPath(
-    path, mouseCoords, positions
+    path: {
+      v: Vector2[]
+      o: Vector2[]
+      i: Vector2[]
+      c: Vector2[]
+    }, mouseCoords: Vector2, positions: {
+      v: Vector2[]
+      o: Vector2[]
+      i: Vector2[]
+      distV: number[]
+      distO: number[]
+      distI: number[]
+    }
   ) {
-    const { length } = path.v
-    const vValues = []
-    const oValues = []
-    const iValues = []
-    let theta
-    let x
-    let y
+    const { length } = path.v,
+      vValues = [],
+      oValues = [],
+      iValues = [],
+      { dc = 1, maxDist = 0 } = this.data as Shape | undefined ?? {}
+    let theta,
+      x,
+      y
 
     /// / OPTION A
     for (let i = 0; i < length; i++) {
@@ -55,10 +73,10 @@ export default class MouseModifier extends ShapeModifier {
       y = mouseCoords[1] - positions.v[i][1]
       let distance = Math.sqrt(x * x + y * y)
 
-      positions.distV[i] += (distance - positions.distV[i]) * this.data.dc
+      positions.distV[i] += (distance - positions.distV[i]) * dc
 
-      positions.v[i][0] = Math.cos(theta) * Math.max(0, this.data.maxDist - positions.distV[i]) / 2 + path.v[i][0]
-      positions.v[i][1] = Math.sin(theta) * Math.max(0, this.data.maxDist - positions.distV[i]) / 2 + path.v[i][1]
+      positions.v[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distV[i]) / 2 + path.v[i][0]
+      positions.v[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distV[i]) / 2 + path.v[i][1]
 
       theta = Math.atan2(path.o[i][1] - mouseCoords[1],
         path.o[i][0] - mouseCoords[0])
@@ -66,10 +84,10 @@ export default class MouseModifier extends ShapeModifier {
       x = mouseCoords[0] - positions.o[i][0]
       y = mouseCoords[1] - positions.o[i][1]
       distance = Math.sqrt(x * x + y * y)
-      positions.distO[i] += (distance - positions.distO[i]) * this.data.dc
+      positions.distO[i] += (distance - positions.distO[i]) * dc
 
-      positions.o[i][0] = Math.cos(theta) * Math.max(0, this.data.maxDist - positions.distO[i]) / 2 + path.o[i][0]
-      positions.o[i][1] = Math.sin(theta) * Math.max(0, this.data.maxDist - positions.distO[i]) / 2 + path.o[i][1]
+      positions.o[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distO[i]) / 2 + path.o[i][0]
+      positions.o[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distO[i]) / 2 + path.o[i][1]
 
       theta = Math.atan2(path.i[i][1] - mouseCoords[1],
         path.i[i][0] - mouseCoords[0])
@@ -77,10 +95,10 @@ export default class MouseModifier extends ShapeModifier {
       x = mouseCoords[0] - positions.i[i][0]
       y = mouseCoords[1] - positions.i[i][1]
       distance = Math.sqrt(x * x + y * y)
-      positions.distI[i] += (distance - positions.distI[i]) * this.data.dc
+      positions.distI[i] += (distance - positions.distI[i]) * dc
 
-      positions.i[i][0] = Math.cos(theta) * Math.max(0, this.data.maxDist - positions.distI[i]) / 2 + path.i[i][0]
-      positions.i[i][1] = Math.sin(theta) * Math.max(0, this.data.maxDist - positions.distI[i]) / 2 + path.i[i][1]
+      positions.i[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distI[i]) / 2 + path.i[i][0]
+      positions.i[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distI[i]) / 2 + path.i[i][1]
 
       /// //OPTION 1
       vValues.push(positions.v[i])
@@ -175,54 +193,60 @@ export default class MouseModifier extends ShapeModifier {
   }
 
   processShapes() {
-    const { mouseX, mouseY } = this.elem.globalData
+    const { mouseX, mouseY = 0 } = this.elem?.globalData ?? {}
     let shapePaths
 
-    let i
-    const len = this.shapes.length
-    let j
-    let jLen
+    const { length } = this.shapes
 
-    if (mouseX) {
-      const localMouseCoords = this.elem.globalToLocal([mouseX,
-        mouseY,
-        0])
+    if (!mouseX) {
+      return
+    }
+    const localMouseCoords = this.elem?.globalToLocal([mouseX,
+      mouseY,
+      0])
 
-      let shapeData
-      const newPaths = []
+    let shapeData
+    const newPaths = []
 
-      for (i = 0; i < len; i += 1) {
-        shapeData = this.shapes[i]
-        if (!shapeData.shape._mdf && !this._mdf) {
+    for (let i = 0; i < length; i += 1) {
+      shapeData = this.shapes[i]
+
+      if (!shapeData.shape?._mdf && !this._mdf) {
+        if (shapeData.shape) {
           shapeData.shape.paths = shapeData.last
-        } else {
-          shapeData.shape._mdf = true
-          shapePaths = shapeData.shape.paths
-          jLen = shapePaths.length
-          for (j = 0; j < jLen; j += 1) {
-            if (!this.positions[i][j]) {
-              this.positions[i][j] = {
-                distI: [],
-                distO: [],
-                distV: [],
-                i: [],
-                o: [],
-                v: [],
-              }
-            }
-            newPaths.push(this.processPath(
-              shapePaths[j], localMouseCoords, this.positions[i][j]
-            ))
-          }
-          if (shapeData.shape) {
-            shapeData.shape.paths = newPaths as unknown as ShapeCollection
-          }
-
-          shapeData.last = newPaths
         }
+      } else {
+        if (shapeData.shape) {
+          shapeData.shape._mdf = true
+        }
+
+        shapePaths = shapeData.shape?.paths ?? []
+
+        const { length: jLen } = shapePaths as ShapePath[]
+
+        for (let j = 0; j < jLen; j += 1) {
+          if (!this.positions[i][j]) {
+            this.positions[i][j] = {
+              distI: [],
+              distO: [],
+              distV: [],
+              i: [],
+              o: [],
+              v: [],
+            }
+          }
+          newPaths.push(this.processPath(
+            shapePaths[j], localMouseCoords, this.positions[i][j]
+          ))
+        }
+        if (shapeData.shape) {
+          shapeData.shape.paths = newPaths as unknown as ShapeCollection
+        }
+
+        shapeData.last = newPaths
       }
     }
   }
 }
 
-registerModifier('ms', MouseModifier)
+registerModifier(Modifier.MouseModifier, MouseModifier)

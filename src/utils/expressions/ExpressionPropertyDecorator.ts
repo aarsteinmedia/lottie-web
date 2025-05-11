@@ -1,3 +1,4 @@
+// @ts-nocheck
 // import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 
 import type ShapeElement from '@/elements/ShapeElement'

@@ -1,11 +1,11 @@
-import type { Vector2 } from '../../types';
+import type { BezierLength, Vector2 } from '../../types';
 export default class ShapePath {
     _length: number;
     _maxLength: number;
     c: boolean;
     e?: ShapePath[];
     i: Vector2[];
-    lengths: number[];
+    lengths: BezierLength[];
     o: Vector2[];
     s?: ShapePath[];
     v: Vector2[];

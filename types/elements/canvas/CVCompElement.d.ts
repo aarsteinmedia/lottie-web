@@ -4,6 +4,7 @@ export default class CVCompElement extends CompElement {
     canvasContext?: CanvasRenderingContext2D;
     pendingElements: ElementInterfaceIntersect[];
     constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
+    buildElementParenting(_element: ElementInterfaceIntersect, _parentName?: number, _hierarchy?: ElementInterfaceIntersect[]): void;
     buildItem(_pos: number): void;
     checkPendingElements(): void;
     clearCanvas(_canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null): void;

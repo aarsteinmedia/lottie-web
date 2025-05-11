@@ -59,7 +59,7 @@ export default class ShapeExpressionInterface {
   ) {
     const interfaceFunction = (value: string | number) => {
       let i = 0
-      const { length } = this.interfaces || []
+      const { length } = this.interfaces
 
       while (i < length) {
         if (
@@ -89,7 +89,7 @@ export default class ShapeExpressionInterface {
     ) as ShapePathInterface[]
     interfaceFunction.numProperties = this.interfaces.length
     const transformInterface = this.transformInterfaceFactory(
-      shape.it?.[Number(shape.it?.length) - 1] as Shape,
+      shape.it?.[Number(shape.it.length) - 1] as Shape,
       view.it[view.it.length - 1],
       interfaceFunction.propertyGroup
     )

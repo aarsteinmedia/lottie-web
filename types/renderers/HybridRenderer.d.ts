@@ -5,5 +5,5 @@ import SVGCompElement from '../elements/svg/SVGCompElement';
 import HybridRendererBase from '../renderers/HybridRendererBase';
 export default class HybridRenderer extends HybridRendererBase {
     constructor(animationItem: AnimationItem, config?: HTMLRendererConfig);
-    createComp(data: LottieLayer): HCompElement | SVGCompElement;
+    createComp(data: LottieLayer): SVGCompElement | HCompElement;
 }

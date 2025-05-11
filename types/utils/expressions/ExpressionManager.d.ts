@@ -1,12 +1,12 @@
+import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, Vector2, Vector3 } from '../../types';
 import type CompExpressionInterface from '../../utils/expressions/CompInterface';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
 import type MaskManager from '../../utils/expressions/MaskInterface';
 import type TextExpressionInterface from '../../utils/expressions/TextInterface';
 import type TextExpressionSelectorPropFactory from '../../utils/expressions/TextSelectorPropertyDecorator';
 import type { BaseProperty, ValueProperty } from '../../utils/Properties';
 import type ShapePath from '../../utils/shapes/ShapePath';
 import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
-import { CompElementInterface, ElementInterfaceIntersect, GlobalData, Vector2, Vector3 } from '../../types';
-import LayerExpressionInterface from '../../utils/expressions/LayerInterface';
 export default class ExpressionManager {
     _lottieGlobal: {};
     _needsRandom?: boolean;
@@ -65,7 +65,7 @@ export default class ExpressionManager {
     XMLHttpRequest: null;
     private propTypes;
     $bm_isInstanceOfArray(arr: unknown): arr is number[];
-    $bm_neg(a: number | boolean | BaseProperty): string | number | number[] | import("../../types").DocumentData | import("../Matrix").default | undefined;
+    $bm_neg(a: number | boolean | BaseProperty): string | number | number[] | import("../Matrix").default | import("../../types").DocumentData | undefined;
     add(_a: number | number[], _b: number | number[]): void;
     applyEase(fn: (val: number) => number, tFromProps: number, tMin: number, tMax: number, val1FromProps?: number | number[], val2FromProps?: number | number[]): number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>;
     clamp(num: number, minFromProps: number, maxFromProps: number): number;

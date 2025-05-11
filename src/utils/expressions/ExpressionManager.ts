@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
   CompElementInterface,

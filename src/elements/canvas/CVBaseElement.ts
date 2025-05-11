@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {

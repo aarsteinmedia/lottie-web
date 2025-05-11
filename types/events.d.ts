@@ -1,5 +1,5 @@
 import type AnimationItem from './animation/AnimationItem';
-import { AnimationDirection, AnimationEventName } from './types';
+import type { AnimationDirection, AnimationEventName } from './types';
 export declare class BMEnterFrameEvent {
     currentTime: number;
     direction: AnimationDirection;
@@ -61,10 +61,10 @@ export declare class BMAnimationConfigErrorEvent {
     type: AnimationEventName;
     constructor(type: AnimationEventName, nativeError: unknown);
 }
-export declare class BaseEvent {
+export declare abstract class BaseEvent {
     _cbs: Partial<Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>>;
     addEventListener(eventName: AnimationEventName, callback: (ev?: LottieEvent) => unknown): () => void;
     removeEventListener(eventName: AnimationEventName, callback?: (ev: LottieEvent) => unknown): void;
     triggerEvent(eventName: AnimationEventName, ev?: LottieEvent): void;
 }
-export type LottieEvent = BMAnimationConfigErrorEvent | BMEnterFrameEvent | BMCompleteEvent | BMCompleteLoopEvent | BMSegmentStartEvent | BMAnimationConfigErrorEvent | BMConfigErrorEvent | BMDestroyEvent | BMDrawnFrameEvent;
+export type LottieEvent = BMAnimationConfigErrorEvent | BMEnterFrameEvent | BMCompleteEvent | BMCompleteLoopEvent | BMSegmentStartEvent | BMConfigErrorEvent | BMDestroyEvent | BMDrawnFrameEvent;

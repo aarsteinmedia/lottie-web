@@ -17,6 +17,7 @@ export default class SVGShapeData {
   gr?: SVGGElement
   hd?: boolean
   it: ShapeDataInterface[] = []
+  last?: ShapeCollection
   localShapeCollection?: ShapeCollection
   lStr: string
   lvl: number

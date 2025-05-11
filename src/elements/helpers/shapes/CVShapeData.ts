@@ -1,6 +1,7 @@
-import type ShapeElement from '@/elements/ShapeElement'
+import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CVStyleElement, Shape } from '@/types'
+import type Matrix from '@/utils/Matrix'
 
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import { ShapeType } from '@/utils/enums'
@@ -11,12 +12,10 @@ export default class CVShapeData {
   sh: ShapeProperty | null
   styledShapes: CVShapeData[]
   tr: number[]
-  transforms: ReturnType<
-    typeof ShapeTransformManager.prototype.addTransformSequence
-  >
+  transforms?: { finalTransform: Matrix }
   trNodes: any[] = []
   constructor(
-    element: ShapeElement,
+    element: CVShapeElement,
     data: Shape,
     styles: CVStyleElement[],
     transformsManager: ShapeTransformManager

@@ -4,7 +4,7 @@ import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer'
 export default class EffectsManager {
     _mdf?: boolean;
     effectElements: EffectInterface[];
-    constructor(data: LottieLayer, element: ElementInterfaceIntersect);
+    constructor(data: LottieLayer, element: ElementInterfaceIntersect, _dynamicProperties?: DynamicPropertyContainer[]);
 }
 export declare class GroupEffect extends DynamicPropertyContainer {
     data?: Effect;

@@ -19,7 +19,7 @@ export default class TextProperty extends BaseProperty {
     calculateExpression(_text: string): number;
     canResizeFont(_canResize: boolean): void;
     completeTextData(documentData: DocumentData): void;
-    copyData(obj: DocumentData, data?: DocumentData | LetterProps): DocumentData;
+    copyData(obj: DocumentData, data: DocumentData | LetterProps): DocumentData;
     getExpressionValue(_currentValue: any, _text: any): void;
     getKeyframeValue(): DocumentData | LetterProps | undefined;
     getValue(_finalValue?: unknown): void;
@@ -29,5 +29,5 @@ export default class TextProperty extends BaseProperty {
     searchProperty(): boolean;
     setCurrentData(data: DocumentData): void;
     setMinimumFontSize(_fontValue: number): void;
-    updateDocumentData(newData: DocumentData, indexFromProps: number): void;
+    updateDocumentData(newData: DocumentData, indexFromProps?: number): void;
 }

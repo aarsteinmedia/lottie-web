@@ -1,4 +1,4 @@
-import type { ElementInterfaceIntersect, Vector2 } from '../../types';
+import type { ElementInterfaceIntersect } from '../../types';
 import type { MultiDimensionalProperty, NoProperty, ValueProperty } from '../../utils/Properties';
 import TextSelectorProperty from '../../utils/text/TextSelectorProperty';
 export default class TextAnimatorDataProperty {
@@ -9,7 +9,7 @@ export default class TextAnimatorDataProperty {
         fh: ValueProperty | NoProperty;
         fs: ValueProperty | NoProperty;
         o: ValueProperty | NoProperty;
-        p: MultiDimensionalProperty<Vector2> | NoProperty;
+        p: MultiDimensionalProperty | NoProperty;
         r: ValueProperty | NoProperty;
         rx: ValueProperty | NoProperty;
         ry: ValueProperty | NoProperty;

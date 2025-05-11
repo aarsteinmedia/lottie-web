@@ -1,11 +1,11 @@
 import type TransformEffect from '../../effects/TransformEffect';
+import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import type { CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
 import type { ShapeProperty } from '../../utils/shapes/ShapeProperty';
 import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
-import ShapeElement from '../../elements/helpers/shapes/ShapeElement';
-import ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
-import TransformProperty from '../../utils/TransformProperty';
+import ShapeElement from '../../elements/ShapeElement';
+import { type TransformProperty } from '../../utils/TransformProperty';
 export default class CVShapeElement extends ShapeElement {
     canvasContext?: CanvasRenderingContext2D;
     dashResetter: never[];

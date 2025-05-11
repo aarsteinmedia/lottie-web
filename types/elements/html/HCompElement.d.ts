@@ -13,11 +13,12 @@ export default class HCompElement extends CompElement {
     addTo3dContainer(elem: ElementInterfaceIntersect, pos: number): void;
     appendElementInPos(_element: ElementInterfaceIntersect, _pos: number): void;
     build3dContainers(): void;
+    buildElementParenting(_element: ElementInterfaceIntersect, _parentName?: number, _hierarchy?: ElementInterfaceIntersect[]): void;
     checkBlendMode(): void;
     checkPendingElements(): void;
     configAnimation(_data: AnimationData): void;
     createCamera(_data: LottieLayer): void;
-    createComp(data: LottieLayer): HCompElement | SVGCompElement;
+    createComp(data: LottieLayer): SVGCompElement | HCompElement;
     createContainerElements(): void;
     createImage(_data: LottieLayer): void;
     createShape(_data: LottieLayer): void;

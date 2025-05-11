@@ -99,7 +99,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public localShapeCollection?: ShapeCollection
   lock?: boolean
   offsetTime = 0
-  public paths?: ShapeCollection
+  public paths?: ShapePath[] | ShapeCollection
   public pv?: ShapePath
   public v?: ShapePath
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {

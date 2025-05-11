@@ -1,8 +1,8 @@
+import type { Vector2 } from '../../Lottie';
 import type { MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
-import { Vector2 } from '../../Lottie';
-declare const ExpressionPropertyInterface: (property?: ValueProperty | MultiDimensionalProperty<number[]>) => ValueProperty<number> | (() => {
+declare const ExpressionPropertyInterface: (property?: ValueProperty | MultiDimensionalProperty<number[]>) => ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
     mult: number;
     pv: number;
     v: number;
-}) | MultiDimensionalProperty<Vector2>;
+});
 export default ExpressionPropertyInterface;

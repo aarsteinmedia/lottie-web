@@ -1,11 +1,11 @@
+import type CanvasRenderer from '../renderers/CanvasRenderer';
+import type HybridRenderer from '../renderers/HybridRenderer';
+import type SVGRenderer from '../renderers/SVGRenderer';
 import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
 import type Expressions from '../utils/expressions/Expressions';
-import { RendererType } from '../enums';
 import { BaseEvent, type LottieEvent } from '../events';
-import CanvasRenderer from '../renderers/CanvasRenderer';
-import HybridRenderer from '../renderers/HybridRenderer';
-import SVGRenderer from '../renderers/SVGRenderer';
 import AudioController from '../utils/audio/AudioController';
+import { RendererType } from '../utils/enums';
 import ProjectInterface from '../utils/helpers/ProjectInterface';
 import ImagePreloader from '../utils/ImagePreloader';
 export default class AnimationItem extends BaseEvent {

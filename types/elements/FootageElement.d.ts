@@ -4,8 +4,10 @@ export default class FootageElement extends RenderableElement {
     assetData: null | LottieAsset;
     footageData: null | SVGElement;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
-    getBaseElement(): SVGGElement | null;
+    destroy(): void;
+    getBaseElement(): null;
     getFootageData(): SVGElement | null;
     initExpressions(): void;
-    setMatte(_id: string): void;
+    prepareFrame(): void;
+    renderFrame(): void;
 }
