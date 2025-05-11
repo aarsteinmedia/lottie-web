@@ -31,7 +31,11 @@ export default class FootageElement extends RenderableElement {
     )
   }
 
-  getBaseElement(): SVGGElement | null {
+  destroy() {
+    /* Pass Through*/
+  }
+
+  getBaseElement() {
     return null
   }
 
@@ -52,7 +56,11 @@ export default class FootageElement extends RenderableElement {
     this.layerInterface = new FootageInterface(this)
   }
 
-  setMatte(_id: string) {
-    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
+  prepareFrame() {
+    /* Pass Through*/
+  }
+
+  renderFrame() {
+    /* Pass Through*/
   }
 }

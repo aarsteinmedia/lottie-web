@@ -7,11 +7,9 @@ import type { ElementInterfaceIntersect } from '@/types'
 
 import TransformElement from '@/elements/helpers/TransformElement'
 
-export default abstract class HierarchyElement extends TransformElement {
+export default class HierarchyElement extends TransformElement {
   _isParent?: boolean
-  /**
-   * Searches layer's parenting chain.
-   */
+
   checkParenting() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -29,9 +27,6 @@ export default abstract class HierarchyElement extends TransformElement {
       []
     )
   }
-  /**
-   * Initializes hierarchy properties.
-   */
   initHierarchy() {
     // element's parent list
     this.hierarchy = []
@@ -39,18 +34,9 @@ export default abstract class HierarchyElement extends TransformElement {
     this._isParent = false
     this.checkParenting()
   }
-  /**
-   * Sets layer as parent.
-   */
   setAsParent() {
     this._isParent = true
   }
-  /**
-   * Sets layer's hierarchy.
-   *
-   * @param hierarchy
-   * - layer's parent list.
-   */
   setHierarchy(hierarchy: ElementInterfaceIntersect[]) {
     this.hierarchy = hierarchy
   }

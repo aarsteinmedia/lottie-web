@@ -8,13 +8,23 @@ const previewForm = document.querySelector('form#preview'),
 previewForm?.addEventListener('submit', viewFile)
 pathSelect?.addEventListener('change', viewFile)
 
+const { length } = files.sort()
+
+for (let i = 0; i < length; i++) {
+  const opt = document.createElement('option')
+
+  opt.innerText = files[i]
+  opt.value = `/assets/${files[i].split(' ')[0]}`
+  pathSelect.appendChild(opt)
+}
+
 handleRefresh()
 
 function handleRefresh() {
   const selection = localStorage.getItem('selection')
 
   if (selection) {
-    previewForm.path.value = selection
+    pathSelect.value = selection
     viewFile(selection)
 
     return
@@ -96,12 +106,4 @@ async function viewFile(e) {
   } catch (error) {
     console.error(error)
   }
-}
-
-for (const file of files.sort()) {
-  const opt = document.createElement('option')
-
-  opt.innerText = file
-  opt.value = `/assets/${file.split(' ')[0]}`
-  pathSelect.appendChild(opt)
 }

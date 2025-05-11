@@ -35,6 +35,7 @@ export default abstract class BaseElement {
   maskManager?: MaskElement
   shapesData: Shape[] = []
   type?: unknown
+
   checkMasks() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not initialized`)
@@ -142,6 +143,6 @@ export default abstract class BaseElement {
     elem.style.mixBlendMode = blendModeValue
   }
   sourceRectAtTime() {
-    //TODO: Pass through?
+    throw new Error(`${this.constructor.name}: Method sourceRectAtTime is not implemented`)
   }
 }

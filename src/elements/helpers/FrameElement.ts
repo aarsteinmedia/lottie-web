@@ -2,18 +2,22 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 
 import HierarchyElement from '@/elements/helpers/HierarchyElement'
 
+/**
+ * Handles element's layer frame update.
+ * Checks layer in point and out point.
+ *
+ */
+
 export default abstract class FrameElement extends HierarchyElement {
   _mdf?: boolean
   displayStartTime = 0
-  /**
-   * Default fps is 60, so default frameDuration is 1 / 60.
-   */
-  frameDuration = 0.016
+
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (!this.dynamicProperties.includes(prop)) {
       this.dynamicProperties.push(prop)
     }
   }
+
   initFrame() {
     // set to true when inpoint is rendered
     this._isFirstFrame = false

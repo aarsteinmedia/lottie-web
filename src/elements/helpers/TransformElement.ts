@@ -9,13 +9,14 @@ import TransformPropertyFactory, { type TransformProperty } from '@/utils/Transf
 
 export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect' }
 
-export default abstract class TransformElement extends BaseElement {
+export default class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
   finalTransform?: Transformer
   hierarchy?: ElementInterfaceIntersect[]
   localTransforms?: Transformer[]
   mHelper = new Matrix()
   renderableEffectsManager?: SVGEffects
+
   globalToLocal(point: Vector3) {
     let pt = point
     const transforms = []

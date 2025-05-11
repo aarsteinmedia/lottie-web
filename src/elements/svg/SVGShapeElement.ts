@@ -28,6 +28,7 @@ import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
 import { getLocationHref } from '@/utils/getterSetter'
+// import Matrix from '@/utils/Matrix'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory from '@/utils/TransformProperty'
@@ -58,6 +59,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.processedElements = []
     // List of animated components
     this.animatedContents = []
+
     const {
       createContainerElements,
       createRenderableComponents,
@@ -77,6 +79,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.renderElement = renderElement
     this.getMatte = getMatte
     this.setMatte = setMatte
+
     this.initElement(
       data, globalData, comp
     )
@@ -102,10 +105,12 @@ export default class SVGShapeElement extends ShapeElement {
       fn: createRenderFunction(data),
     })
   }
+
   buildExpressionInterface() {
-    throw new Error(`${this.constructor.name}: Method buildExpressionInterface not implemented`)
+    // Pass through
   }
-  override createContent() {
+
+  createContent() {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access Layer`)
     }
@@ -123,6 +128,7 @@ export default class SVGShapeElement extends ShapeElement {
     )
     this.filterUniqueShapes()
   }
+
   createGroupElement(data: Shape) {
     const elementData = new ShapeGroupData()
 
@@ -138,6 +144,7 @@ export default class SVGShapeElement extends ShapeElement {
 
     return elementData
   }
+
   createShapeElement(
     data: Shape,
     ownTransformers: Transformer[],
@@ -174,6 +181,7 @@ export default class SVGShapeElement extends ShapeElement {
 
     return elementData
   }
+
   createStyleElement(data: Shape, level: number) {
     // TODO: prevent drawing of hidden styles
     let elementData: SVGElementInterface | null = null
@@ -254,6 +262,7 @@ export default class SVGShapeElement extends ShapeElement {
 
     return elementData
   }
+
   createTransformElement(data: Shape, container: SVGGElement) {
     const transformProperty = TransformPropertyFactory.getTransformProperty(
       this as unknown as ElementInterfaceIntersect,
@@ -274,11 +283,17 @@ export default class SVGShapeElement extends ShapeElement {
 
     return elementData
   }
+
   override destroy() {
     this.destroyBaseElement()
     this.shapesData = null as unknown as Shape[]
     this.itemsData = null as any
   }
+
+  /**
+   *
+  * This method searches for multiple shapes that affect a single element and one of them is animated.
+   */
   filterUniqueShapes() {
     const { length } = this.shapes,
       jLen = this.stylesList.length,
@@ -301,6 +316,7 @@ export default class SVGShapeElement extends ShapeElement {
       }
     }
   }
+
   getBaseElement() {
     throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
@@ -310,8 +326,9 @@ export default class SVGShapeElement extends ShapeElement {
   }
 
   initSecondaryElement() {
-    throw new Error(`${this.constructor.name}: Method initSecondaryElement not yet implemented`)
+    // Pass through
   }
+
   reloadShapes() {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access layerElement`)
@@ -342,6 +359,7 @@ export default class SVGShapeElement extends ShapeElement {
     }
     this.renderModifiers()
   }
+
   override renderInnerContent() {
     this.renderModifiers()
     const { length } = this.stylesList
@@ -362,6 +380,7 @@ export default class SVGShapeElement extends ShapeElement {
       this.stylesList[i].pElem.setAttribute('d', this.stylesList[i].d || 'M0 0')
     }
   }
+
   renderShape() {
     const { length } = this.animatedContents
 
@@ -382,6 +401,7 @@ export default class SVGShapeElement extends ShapeElement {
       )
     }
   }
+
   searchShapes(
     arr: Shape[],
     itemsData: SVGElementInterface[],
@@ -562,6 +582,7 @@ export default class SVGShapeElement extends ShapeElement {
       ownModifiers[i].closed = true
     }
   }
+
   setElementStyles(elementData: SVGShapeData) {
     const { length } = this.stylesList
 
@@ -571,9 +592,11 @@ export default class SVGShapeElement extends ShapeElement {
       }
     }
   }
+
   setMatte(_id: string) {
     throw new Error(`${this.constructor.name}: Method setMatte not yet implemented`)
   }
+
   setShapesAsAnimated(shapes: ShapeDataInterface[]) {
     const { length } = shapes
 

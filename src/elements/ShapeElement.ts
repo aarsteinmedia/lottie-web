@@ -8,11 +8,8 @@ import ProcessedElement from '@/elements/helpers/shapes/ProcessedElement'
 
 export default abstract class ShapeElement extends RenderableDOMElement {
   _length?: number
-
   processedElements: ProcessedElement[] = []
-
   shapeModifiers: ShapeModifierInterface[] = []
-
   shapes: (SVGShapeData | CVShapeData)[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
@@ -29,13 +26,28 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     }
     processedElements.push(new ProcessedElement(elem, pos))
   }
-
   addShapeToModifiers(data: SVGShapeData | CVShapeData) {
     const { length } = this.shapeModifiers
 
     for (let i = 0; i < length; i++) {
       this.shapeModifiers[i].addShape(data)
     }
+  }
+
+  createContainerElements() {
+    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
+  }
+
+  createRenderableComponents() {
+    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
+  }
+
+  destroyBaseElement() {
+    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
+  }
+
+  initRendererElement() {
+    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
   }
 
   isShapeInAnimatedModifiers(data: Shape) {
@@ -56,7 +68,9 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
   }
-
+  renderElement() {
+    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
+  }
   renderModifiers() {
     if (this.shapeModifiers.length === 0) {
       return

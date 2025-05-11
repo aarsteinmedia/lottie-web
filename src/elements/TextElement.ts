@@ -18,13 +18,11 @@ import TextProperty from '@/utils/text/TextProperty'
 
 export default abstract class TextElement extends RenderableDOMElement {
   emptyProp?: LetterProps
-
   lettersChangedFlag?: boolean
-
   renderType?: RendererType
-
   textAnimator?: TextAnimatorProperty
   textProperty?: TextProperty
+
   applyTextPropertiesToMatrix(
     documentData: DocumentData,
     matrixHelper: Matrix,
@@ -72,16 +70,24 @@ export default abstract class TextElement extends RenderableDOMElement {
       xPos, yPos, 0
     )
   }
+
   buildColor(colorData: Vector3) {
     return `rgb(${Math.round(colorData[0] * 255)},${Math.round(colorData[1] * 255)},${Math.round(colorData[2] * 255)})`
   }
+
   buildNewText() {
-    throw new Error(`${this.constructor.name}: Method buildNewText it not implemented`)
+    throw new Error(`${this.constructor.name}: Method buildNewText is not implemented`)
   }
+
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)
   }
-
+  createContainerElements() {
+    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
+  }
+  createContent() {
+    throw new Error(`${this.constructor.name}: Method createContent is not implemented`)
+  }
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     let pathNodes: ShapePath,
       shapeStr = ''
@@ -101,6 +107,16 @@ export default abstract class TextElement extends RenderableDOMElement {
     }
 
     return shapeStr
+  }
+  createRenderableComponents() {
+    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
+  }
+  override destroy() {
+    // Pass through
+  }
+
+  destroyBaseElement() {
+    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
   }
 
   override initElement(
@@ -135,10 +151,18 @@ export default abstract class TextElement extends RenderableDOMElement {
     this.textAnimator.searchProperties(this.dynamicProperties)
   }
 
+  initRendererElement() {
+    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
+  }
+
   override prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
+  }
+
+  renderElement() {
+    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
   }
 
   setMinimumFontSize(_fontSize: number) {

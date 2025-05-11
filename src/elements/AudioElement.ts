@@ -24,7 +24,6 @@ export default class AudioElement extends RenderableElement {
   assetData: null | LottieAsset
   audio: Audio
   lv: MultiDimensionalProperty
-
   tm: ValueProperty
 
   constructor(
@@ -53,7 +52,7 @@ export default class AudioElement extends RenderableElement {
       data.tm
         ? PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
-          data.tm as VectorProperty,
+          data.tm,
           0,
           globalData.frameRate,
           this as unknown as ElementInterfaceIntersect
@@ -71,13 +70,21 @@ export default class AudioElement extends RenderableElement {
     ) as MultiDimensionalProperty
   }
 
-  getBaseElement(): SVGGElement | null {
+  destroy() {
+    // Pass through
+  }
+
+  getBaseElement() {
     return null
   }
 
-  override hide() {
+  hide() {
     this.audio.pause()
     this._isPlaying = false
+  }
+
+  override initExpressions() {
+    // Pass through
   }
 
   pause() {
@@ -106,7 +113,7 @@ export default class AudioElement extends RenderableElement {
     }
   }
 
-  renderFrame(_frame?: number | null) {
+  renderFrame() {
     if (!this.isInRange || !this._canPlay) {
       return
     }
@@ -131,12 +138,19 @@ export default class AudioElement extends RenderableElement {
     this._canPlay = true
   }
 
-  setMatte(_id: string) {
-    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
-  }
   setRate(rateValue: number) {
     this.audio.rate(rateValue)
   }
+
+  show() {
+    // Pass through
+    // this.audio.play()
+  }
+
+  override sourceRectAtTime() {
+    return null
+  }
+
   volume(volumeValue: number) {
     this._volumeMultiplier = volumeValue
     this._previousVolume = volumeValue * this._volume

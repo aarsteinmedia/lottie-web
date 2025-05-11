@@ -16,14 +16,6 @@ export default abstract class CompElement extends RenderableDOMElement {
   renderedFrame?: number
   tm?: ValueProperty
 
-  buildAllItems() {
-    throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
-  }
-
-  checkLayers(_num?: number) {
-    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
-  }
-
   override destroy() {
     this.destroyElements()
     this.destroyBaseElement()
@@ -42,6 +34,7 @@ export default abstract class CompElement extends RenderableDOMElement {
   getElements(): ElementInterfaceIntersect[] | undefined {
     return this.elements
   }
+
 
   override initElement(
     data: LottieLayer,

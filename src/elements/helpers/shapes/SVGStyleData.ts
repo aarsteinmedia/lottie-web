@@ -1,5 +1,5 @@
 import type {
-  AnimatedProperty,
+  VectorProperty,
   Shape,
   ShapeDataInterface,
   SVGElementInterface,
@@ -21,7 +21,7 @@ export default class SVGStyleData {
   msElem: null | SVGMaskElement | SVGPathElement
   pElem: SVGPathElement
   prevViewData?: SVGElementInterface[]
-  pt?: AnimatedProperty
+  pt?: VectorProperty
   style?: SVGStyleData
   t?: number
   transform?: Transformer

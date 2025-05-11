@@ -501,7 +501,7 @@ export interface Shape {
   /** Gradient colors. */
   g?: GradientColor
   /** Highlight length for radial gradient. */
-  h?: GenericAnimatedProperty
+  h?: VectorProperty
   hd?: boolean
   ind?: number
   inv?: boolean
@@ -681,7 +681,7 @@ export interface VectorProperty<T = Vector1> {
   ix?: number
   k: T
   sid?: number
-  v?: number
+  v?: T
 }
 
 export interface Coordinates {
@@ -1119,7 +1119,7 @@ export interface LottieLayer {
   /** TagName. */
   tg?: string
   /** Time remappoing. */
-  tm?: AnimatedProperty
+  tm?: VectorProperty
   /** Matte reference (for shape). */
   tp?: number
   /** Matte mode. */
@@ -1130,16 +1130,6 @@ export interface LottieLayer {
   width?: number
   xt?: number
 }
-
-export interface AnimatedProperty<T = number> {
-  _placeholder?: boolean
-  a: 0 | 1
-  ix?: number
-  v?: T
-}
-
-interface GenericAnimatedProperty extends AnimatedProperty {k: number | number[]}
-
 export interface Marker {
   /** Comment. */
   cm: string

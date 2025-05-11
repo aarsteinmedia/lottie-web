@@ -8,31 +8,14 @@ import type {
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 
-export default class RenderableDOMElement extends RenderableElement {
+export default abstract class RenderableDOMElement extends RenderableElement {
   innerElem?: SVGGraphicsElement | HTMLElement | null
-
-  createContainerElements() {
-    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
-  }
-
-  createContent() {
-    throw new Error(`${this.constructor.name}: Method createContent is not implemented`)
-  }
-
-  createRenderableComponents() {
-    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
-  }
 
   destroy() {
     this.innerElem = null
     this.destroyBaseElement()
   }
-
-  destroyBaseElement() {
-    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
-  }
-
-  override hide() {
+  hide() {
     if (this.hidden || this.isInRange && !this.isTransparent) {
       return
     }
@@ -44,7 +27,6 @@ export default class RenderableDOMElement extends RenderableElement {
 
     this.hidden = true
   }
-
   initElement(
     data: LottieLayer,
     globalData: GlobalData,
@@ -63,20 +45,11 @@ export default class RenderableDOMElement extends RenderableElement {
     this.createContent()
     this.hide()
   }
-
-  initRendererElement() {
-    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
-  }
-
   prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
     this.checkTransparency()
-  }
-
-  renderElement() {
-    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
   }
 
   renderFrame() {
@@ -97,12 +70,10 @@ export default class RenderableDOMElement extends RenderableElement {
       this._isFirstFrame = false
     }
   }
-
   renderInnerContent() {
-    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
+    // Pass through
   }
-
-  override show() {
+  show() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

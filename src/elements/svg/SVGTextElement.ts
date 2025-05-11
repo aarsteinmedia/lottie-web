@@ -17,6 +17,8 @@ import { createNS } from '@/utils'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
+const emptyShapeData = { shapes: [] } as unknown as LottieLayer
+
 export default class SVGTextLottieElement extends TextElement {
   _sizeChanged?: boolean
   bbox?: {
@@ -30,7 +32,6 @@ export default class SVGTextLottieElement extends TextElement {
   renderedLetters: string[] = []
   textContainer?: SVGTextElement
   textSpans: TextSpan[]
-  private emptyShapeData = { shapes: [], } as unknown as LottieLayer
 
   constructor(
     data: LottieLayer,
@@ -40,6 +41,7 @@ export default class SVGTextLottieElement extends TextElement {
     super()
     this.textSpans = []
     this.renderType = RendererType.SVG
+
     const {
       createContainerElements,
       createRenderableComponents,
@@ -59,6 +61,7 @@ export default class SVGTextLottieElement extends TextElement {
     this.initRendererElement = initRendererElement
     this.renderElement = renderElement
     this.setMatte = setMatte
+
     this.initElement(
       data, globalData, comp
     )
@@ -263,7 +266,7 @@ export default class SVGTextLottieElement extends TextElement {
               this as unknown as ElementInterfaceIntersect
             )
           } else {
-            let data = this.emptyShapeData
+            let data = emptyShapeData
 
             if (charData?.data?.shapes) {
               data = this.buildShapeData(charData.data,
@@ -338,7 +341,6 @@ export default class SVGTextLottieElement extends TextElement {
 
     this._sizeChanged = true
   }
-
   buildShapeData(data: LottieLayer, scale: number) {
     // data should probably be cloned to apply scale separately to each instance of a text on different layers
     // but since text internal content gets only rendered once and then it's never rerendered,
@@ -359,7 +361,6 @@ export default class SVGTextLottieElement extends TextElement {
 
     return data
   }
-
   buildTextContents(textArray: string[]) {
     let i = 0
     const len = textArray.length
@@ -394,12 +395,16 @@ export default class SVGTextLottieElement extends TextElement {
       this.textContainer = createNS<SVGTextElement>('text')
     }
   }
+
   getBaseElement(): SVGGElement | HTMLElement | null {
     throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
+
   getMatte(_type?: number): string {
     throw new Error(`${this.constructor.name}: Method getMatte is not implemented`)
   }
+
+
   getValue() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -418,6 +423,7 @@ export default class SVGTextLottieElement extends TextElement {
       }
     }
   }
+
   override renderInnerContent() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -433,11 +439,9 @@ export default class SVGTextLottieElement extends TextElement {
       this.lettersChangedFlag)
     if (this.lettersChangedFlag || this.textAnimator?.lettersChangedFlag) {
       this._sizeChanged = true
-      const renderedLetters = this.textAnimator?.renderedLetters
-
-      const letters = this.textProperty.currentData.l
-
-      const { length } = letters
+      const renderedLetters = this.textAnimator?.renderedLetters,
+        letters = this.textProperty.currentData.l,
+        { length } = letters
       let renderedLetter, textSpan, glyphElement
 
       for (let i = 0; i < length; i++) {

@@ -17,7 +17,6 @@ export default abstract class RenderableElement extends FrameElement {
       this.renderableComponents.push(component)
     }
   }
-
   checkLayerLimits(num: number) {
     if (!this.data || !this.globalData) {
       return
@@ -38,7 +37,6 @@ export default abstract class RenderableElement extends FrameElement {
       this.hide()
     }
   }
-
   checkTransparency() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not implemented`)
@@ -60,7 +58,6 @@ export default abstract class RenderableElement extends FrameElement {
       this.show()
     }
   }
-
   getLayerSize() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -77,11 +74,6 @@ export default abstract class RenderableElement extends FrameElement {
       w: Number(this.data.width)
     }
   }
-
-  hide() {
-    throw new Error(`${this.constructor.name}: Method hide not implemented yet`)
-  }
-
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
     this.isInRange = false
@@ -108,13 +100,8 @@ export default abstract class RenderableElement extends FrameElement {
       this.renderableComponents[i].renderFrame(Number(this._isFirstFrame))
     }
     /* this.maskManager.renderFrame(this.finalTransform.mat);
-      this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
+        this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
   }
-
-  show() {
-    throw new Error(`${this.constructor.name}: Method show not implemented yet`)
-  }
-
   override sourceRectAtTime(): SourceRect | null {
     return {
       height: 100,

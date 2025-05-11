@@ -6,9 +6,8 @@ import type {
   SourceRect,
 } from '@/types'
 
-import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { createNS } from '@/utils'
+import { createNS, } from '@/utils'
 
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
@@ -27,9 +26,11 @@ export default class ImageElement extends SVGBaseElement {
     if (this.assetData?.sid) {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
-    const { renderInnerContent } = CompElement.prototype
 
-    this.renderInnerContent = renderInnerContent
+    // const { renderInnerContent } = CompElement.prototype
+
+    // this.renderInnerContent = renderInnerContent
+
     this.initElement(
       data, globalData, comp
     )
@@ -41,7 +42,7 @@ export default class ImageElement extends SVGBaseElement {
     }
   }
 
-  override createContent() {
+  createContent() {
     let assetPath = ''
 
     if (this.assetData && this.globalData?.getAssetsPath) {
