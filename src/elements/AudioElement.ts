@@ -74,7 +74,7 @@ export default class AudioElement extends RenderableElement {
     // Pass through
   }
 
-  getBaseElement() {
+  override getBaseElement() {
     return null
   }
 

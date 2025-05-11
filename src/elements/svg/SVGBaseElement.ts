@@ -121,7 +121,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
     this.matteElement = null as unknown as SVGGElement
     this.maskManager?.destroy()
   }
-  getBaseElement() {
+  override getBaseElement() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

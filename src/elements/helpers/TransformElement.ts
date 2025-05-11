@@ -9,7 +9,7 @@ import TransformPropertyFactory, { type TransformProperty } from '@/utils/Transf
 
 export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect' }
 
-export default class TransformElement extends BaseElement {
+export default abstract class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
   finalTransform?: Transformer
   hierarchy?: ElementInterfaceIntersect[]

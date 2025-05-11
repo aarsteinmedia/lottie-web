@@ -21,7 +21,7 @@ export default class NullElement extends FrameElement {
     this.initHierarchy()
   }
 
-  getBaseElement(): SVGGElement | null {
+  override getBaseElement() {
     return null
   }
 

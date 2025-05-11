@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import type ShapeElement from '@/elements/ShapeElement'
+import type CVShapeElement from '@/elements/canvas/CVShapeElement'
+import type HShapeElement from '@/elements/html/HShapeElement'
+import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type {
   Caching,
   CompElementInterface,
@@ -37,7 +39,7 @@ function getKeyframedConstructorFunction() {
 }
 
 function getShapeProp(
-  elem: ShapeElement,
+  elem: SVGShapeElement | CVShapeElement | HShapeElement,
   data: Shape,
   type: number,
   _arr?: any[],
@@ -88,7 +90,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public comp?: CompElementInterface
   public data?: Shape
   public effectsSequence: ((arg: unknown) => ShapePath)[] = []
-  public elem?: ShapeElement
+  public elem?: SVGShapeElement | CVShapeElement | HShapeElement
   frameId?: number
   public k?: boolean
   keyframes: Keyframe[] = []
@@ -940,7 +942,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   totalShapeLength?: number
   x?: boolean
   constructor(
-    elem: ShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {
     super()
     this.propType = 'shape'
@@ -972,7 +974,7 @@ export class ShapeProperty extends ShapeBaseProperty {
 export class KeyframedShapeProperty extends ShapeBaseProperty {
   public lastFrame
   constructor(
-    elem: ShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {
     super()
     this.data = data

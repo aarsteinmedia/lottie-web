@@ -142,7 +142,7 @@ export default class HCameraElement extends FrameElement {
     // TODO: Pass Through
   }
 
-  getBaseElement() {
+  override getBaseElement() {
     return null
   }
 

@@ -396,14 +396,9 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
-  getBaseElement(): SVGGElement | HTMLElement | null {
-    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
-  }
-
   getMatte(_type?: number): string {
     throw new Error(`${this.constructor.name}: Method getMatte is not implemented`)
   }
-
 
   getValue() {
     if (!this.data) {

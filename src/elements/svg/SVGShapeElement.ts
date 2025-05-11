@@ -317,10 +317,6 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
 
-  getBaseElement() {
-    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
-  }
-
   getMatte(_type?: number) {
     throw new Error(`${this.constructor.name}: Method getMatte not yet implemented`)
   }

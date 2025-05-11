@@ -36,6 +36,12 @@ export default abstract class BaseElement {
   shapesData: Shape[] = []
   type?: unknown
 
+  buildAllItems() {
+    throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
+  }
+  checkLayers(_frame?: number) {
+    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
+  }
   checkMasks() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not initialized`)
@@ -57,6 +63,12 @@ export default abstract class BaseElement {
     }
 
     return false
+  }
+  destroyBaseElement() {
+    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
+  }
+  getBaseElement(): SVGElement | HTMLElement | null {
+    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
   getType() {
     return this.type

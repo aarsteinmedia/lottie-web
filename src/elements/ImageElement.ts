@@ -27,10 +27,6 @@ export default class ImageElement extends SVGBaseElement {
       this.assetData = globalData.slotManager?.getProp(this.assetData) || null
     }
 
-    // const { renderInnerContent } = CompElement.prototype
-
-    // this.renderInnerContent = renderInnerContent
-
     this.initElement(
       data, globalData, comp
     )
@@ -42,7 +38,7 @@ export default class ImageElement extends SVGBaseElement {
     }
   }
 
-  createContent() {
+  override createContent() {
     let assetPath = ''
 
     if (this.assetData && this.globalData?.getAssetsPath) {
@@ -65,6 +61,10 @@ export default class ImageElement extends SVGBaseElement {
 
       this.layerElement?.appendChild(this.innerElem)
     }
+  }
+
+  override renderInnerContent() {
+    // Pass through
   }
 
   override sourceRectAtTime() {

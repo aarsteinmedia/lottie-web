@@ -30,7 +30,7 @@ import FrameElement from '@/elements/helpers/FrameElement'
 import FontManager from '@/utils/FontManager'
 import SlotManager from '@/utils/SlotManager'
 
-export default class BaseRenderer extends FrameElement {
+export default abstract class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
   completeLayers?: boolean
   currentFrame = 0
