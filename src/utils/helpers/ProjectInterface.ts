@@ -38,6 +38,7 @@ export default class ProjectInterface {
     }
     // i++
   }
+
   registerComposition(comp: CompElementInterface) {
     this.compositions.push(comp)
   }

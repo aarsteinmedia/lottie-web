@@ -24,13 +24,14 @@ export default class SVGStrokeEffect {
     this.elem = elem
     this.paths = []
   }
+
   initialize() {
     // if (!this.filterManager.effectElements) {
     //   throw new Error(`${this.constructor.name}: Missing Effects Elements`)
     // }
     let elemChildren = [...this.elem.layerElement?.children ??
-        this.elem.layerElement?.childNodes ??
-        []]
+      this.elem.layerElement?.childNodes ??
+      []]
     let path
     let i
     let len
@@ -78,8 +79,8 @@ export default class SVGStrokeEffect {
     ) {
       if (this.filterManager.effectElements[10].p.v === 2) {
         elemChildren = [...this.elem.layerElement?.children ??
-            this.elem.layerElement?.childNodes ??
-            []]
+        this.elem.layerElement?.childNodes ??
+        []]
         while (elemChildren.length > 0) {
           this.elem.layerElement?.removeChild(elemChildren[0])
         }
@@ -141,9 +142,9 @@ export default class SVGStrokeEffect {
             segment =
               1 +
               (this.filterManager.effectElements[4].p.v as number) *
-                2 *
-                (this.filterManager.effectElements[9].p.v as number) *
-                0.01
+              2 *
+              (this.filterManager.effectElements[9].p.v as number) *
+              0.01
           const units = Math.floor(lineLength / segment)
 
           for (let j = 0; j < units; j++) {
@@ -176,8 +177,8 @@ export default class SVGStrokeEffect {
         `${Number(this.filterManager.effectElements[6].p.v)}`)
     }
     if ((this.filterManager.effectElements[10].p.v === 1 ||
-        this.filterManager.effectElements[10].p.v === 2) &&
-        (forceRender || this.filterManager.effectElements[3].p._mdf)
+      this.filterManager.effectElements[10].p.v === 2) &&
+      (forceRender || this.filterManager.effectElements[3].p._mdf)
     ) {
       const color = this.filterManager.effectElements[3].p.v as Vector3
 

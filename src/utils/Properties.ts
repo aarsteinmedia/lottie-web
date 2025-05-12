@@ -76,6 +76,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   getSpeedAtTime(_frameNum: number) {
     throw new Error(`${this.constructor.name}: Method getSpeedAtTime is not implemented`)
   }
+
   getValueAtCurrentTime() {
     this._caching = this._caching ?? {} as Caching
     const offsetTime = Number(this.offsetTime),
@@ -106,13 +107,16 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     return this.pv
   }
+
   getValueAtTime(_a: number,
     _b?: number): number | number[] {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }
+
   getVelocityAtTime(_frameNum: number): number {
     throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
   }
+
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
     const offsetTime = Number(this.offsetTime)
     let newValue: Vector3 | Svalue = [0,
@@ -198,13 +202,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         let segmentPerc,
           addedLength =
             Number(caching.lastFrame) < frameNum &&
-              caching._lastKeyframeIndex === i
+            caching._lastKeyframeIndex === i
               ? caching._lastAddedLength
               : 0
 
         j =
           Number(caching.lastFrame) < frameNum &&
-            caching._lastKeyframeIndex === i
+          caching._lastKeyframeIndex === i
             ? caching._lastPoint
             : 0
         shouldInterpolate = true
@@ -224,7 +228,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           } else if (
             distanceInLine >= addedLength &&
             distanceInLine <
-            addedLength + bezierData.points[j + 1].partialLength
+              addedLength + bezierData.points[j + 1].partialLength
           ) {
             segmentPerc =
               (distanceInLine - addedLength) /
@@ -235,7 +239,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
                 bezierData.points[j].point[k] +
                 (bezierData.points[j + 1].point[k] -
                   bezierData.points[j].point[k]) *
-                segmentPerc
+                  segmentPerc
             }
             break
           }
@@ -344,6 +348,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     return newValue
   }
+
   processEffectsSequence() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -377,6 +382,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this.lock = false
     this.frameId = this.elem.globalData.frameId
   }
+
   setVValue(val?: number | number[] | Keyframe[]) {
     let multipliedValue
 
@@ -401,6 +407,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       i++
     }
   }
+
   valueAtTime(_a: number, _b?: number) {
     throw new Error(`${this.constructor.name}: Method valueAtTime is not implemented`)
   }

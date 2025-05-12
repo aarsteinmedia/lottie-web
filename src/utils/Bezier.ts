@@ -138,28 +138,28 @@ export function getNewSegment(
   for (let i = 0; i < length; i++) {
     bezierSegmentPoints[i * 4] =
       Math.round((u0u0u0 * pt1[i] +
-          t0u0u0_3 * pt3[i] +
-          t0t0u0_3 * pt4[i] +
-          t0t0t0 * pt2[i]) *
-          1000) / 1000
+        t0u0u0_3 * pt3[i] +
+        t0t0u0_3 * pt4[i] +
+        t0t0t0 * pt2[i]) *
+        1000) / 1000
     bezierSegmentPoints[i * 4 + 1] =
       Math.round((u0u0u1 * pt1[i] +
-          t0u0u1_3 * pt3[i] +
-          t0t0u1_3 * pt4[i] +
-          t0t0t1 * pt2[i]) *
-          1000) / 1000
+        t0u0u1_3 * pt3[i] +
+        t0t0u1_3 * pt4[i] +
+        t0t0t1 * pt2[i]) *
+        1000) / 1000
     bezierSegmentPoints[i * 4 + 2] =
       Math.round((u0u1u1 * pt1[i] +
-          t0u1u1_3 * pt3[i] +
-          t0t1u1_3 * pt4[i] +
-          t0t1t1 * pt2[i]) *
-          1000) / 1000
+        t0u1u1_3 * pt3[i] +
+        t0t1u1_3 * pt4[i] +
+        t0t1t1 * pt2[i]) *
+        1000) / 1000
     bezierSegmentPoints[i * 4 + 3] =
       Math.round((u1u1u1 * pt1[i] +
-          t1u1u1_3 * pt3[i] +
-          t1t1u1_3 * pt4[i] +
-          t1t1t1 * pt2[i]) *
-          1000) / 1000
+        t1u1u1_3 * pt3[i] +
+        t1t1u1_3 * pt4[i] +
+        t1t1t1 * pt2[i]) *
+        1000) / 1000
   }
 
   return bezierSegmentPoints
@@ -177,16 +177,16 @@ export function getPointInSegment(
     u1 = 1 - t1,
     ptX =
       Math.round((u1 * u1 * u1 * pt1[0] +
-          (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
-          (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
-          t1 * t1 * t1 * pt2[0]) *
-          1000) / 1000,
+        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
+        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
+        t1 * t1 * t1 * pt2[0]) *
+        1000) / 1000,
     ptY =
       Math.round((u1 * u1 * u1 * pt1[1] +
-          (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
-          (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
-          t1 * t1 * t1 * pt2[1]) *
-          1000) / 1000
+        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
+        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
+        t1 * t1 * t1 * pt2[1]) *
+        1000) / 1000
 
   return [ptX, ptY]
 }

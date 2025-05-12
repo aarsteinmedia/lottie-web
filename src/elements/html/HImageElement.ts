@@ -26,6 +26,7 @@ export default class HImageElement extends HSolidElement {
       data, globalData, comp
     )
   }
+
   override createContent() {
     if (!this.assetData) {
       throw new Error(`${this.constructor.name}: assetData is not implemented`)

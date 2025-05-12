@@ -11,7 +11,7 @@ export default class TextExpressionInterface {
 
     if (!this._sourceText || stringValue !== this._sourceText.value) {
       this._sourceText = {
-        style: { fillColor: this.elem.textProperty?.currentData.fc as number[], },
+        style: { fillColor: this.elem.textProperty?.currentData.fc as number[] },
         value:
           typeof stringValue === 'string'
             ? stringValue

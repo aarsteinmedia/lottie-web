@@ -511,7 +511,7 @@ export default class TextProperty extends BaseProperty {
     if (
       (this.elem.globalData.frameId === this.frameId ||
         this.effectsSequence.length === 0) &&
-      !_finalValue
+        !_finalValue
     ) {
       return
     }

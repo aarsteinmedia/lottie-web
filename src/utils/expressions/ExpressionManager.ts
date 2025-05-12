@@ -108,11 +108,12 @@ export default class ExpressionManager {
   window = null
 
   XMLHttpRequest = null
-  private propTypes = { SHAPE: 'shape', }
+  private propTypes = { SHAPE: 'shape' }
 
   $bm_isInstanceOfArray(arr: unknown): arr is number[] {
     return arr?.constructor === Array || arr?.constructor === Float32Array
   }
+
   $bm_neg(a: number | boolean | BaseProperty) {
     const tOfA = typeof a
 
@@ -135,9 +136,11 @@ export default class ExpressionManager {
 
     return -a
   }
+
   add(_a: number | number[], _b: number | number[]) {
     throw new Error(`${this.constructor.name}: Method add is not implemented`)
   }
+
   applyEase(
     fn: (val: number) => number,
     tFromProps: number,
@@ -180,6 +183,7 @@ export default class ExpressionManager {
 
     return (val2 - val1) * mult + val1
   }
+
   clamp(
     num: number, minFromProps: number, maxFromProps: number
   ) {
@@ -195,6 +199,7 @@ export default class ExpressionManager {
 
     return Math.min(Math.max(num, min), max)
   }
+
   createPath(
     points: Vector2[],
     inTangents?: Vector2[],
@@ -226,12 +231,15 @@ export default class ExpressionManager {
 
     return path
   }
+
   degrees_to_radians(_val: number) {
     throw new Error(`${this.constructor.name}: Method degrees_to_radians is not implemented`)
   }
+
   degreesToRadians(val: number) {
     return val * degToRads
   }
+
   div(a: number | number[], b: number | number[]) {
     const tOfA = typeof a
     const tOfB = typeof b
@@ -263,6 +271,7 @@ export default class ExpressionManager {
 
     return 0
   }
+
   ease(
     t: number,
     tMin: number,
@@ -274,6 +283,7 @@ export default class ExpressionManager {
       this.easeInOutBez, t, tMin, tMax, val1, val2
     )
   }
+
   easeIn(
     t: number,
     tMin: number,
@@ -289,6 +299,7 @@ export default class ExpressionManager {
   easeInBez(_val: number): number {
     throw new Error(`${this.constructor.name}: Method easeInBez is not implemented`)
   }
+
   easeInOutBez(_val: number): number {
     throw new Error(`${this.constructor.name}: Method easeInOutBez is not implemented`)
   }
@@ -304,6 +315,7 @@ export default class ExpressionManager {
       this.easeOutBez, t, tMin, tMax, val1, val2
     )
   }
+
   easeOutBez(_val: number): number {
     throw new Error(`${this.constructor.name}: Method easeOutBez is not implemented`)
   }
@@ -649,6 +661,7 @@ export default class ExpressionManager {
   ) {
     throw new Error(`${this.constructor.name}: Method loopIn is not implemented`)
   }
+
   loopInDuration(type: string, duration: number) {
     this.loopIn(
       type, duration, true

@@ -132,8 +132,9 @@ export default class HCameraElement extends FrameElement {
     this._isFirstFrame = true
 
     // TODO: find a better way to make the HCamera element to be compatible with the LayerInterface and TransformInterface.
-    this.finalTransform = { mProp: this as unknown as TransformProperty, } as Transformer
+    this.finalTransform = { mProp: this as unknown as TransformProperty } as Transformer
   }
+
   createElements() {
     // TODO: Pass Through
   }
@@ -153,6 +154,7 @@ export default class HCameraElement extends FrameElement {
   prepareFrame(num: number) {
     this.prepareProperties(num, true)
   }
+
   renderFrame() {
     if (!this.globalData?.compSize) {
       throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
@@ -243,8 +245,8 @@ export default class HCameraElement extends FrameElement {
           ]
         }
         const mag = Math.sqrt(Math.pow(diffVector[0], 2) +
-            Math.pow(diffVector[1], 2) +
-            Math.pow(diffVector[2], 2))
+          Math.pow(diffVector[1], 2) +
+          Math.pow(diffVector[2], 2))
         // var lookDir = getNormalizedPoint(getDiffVector(this.a.v,this.p.v));
         const lookDir = [
           diffVector[0] / mag,
@@ -310,6 +312,7 @@ export default class HCameraElement extends FrameElement {
     }
     this._isFirstFrame = false
   }
+
   setup() {
     const { length } = this.comp?.threeDElements ?? []
 

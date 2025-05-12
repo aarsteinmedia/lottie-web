@@ -92,6 +92,7 @@ export default class CVTextElement extends TextElement {
       data, globalData, comp
     )
   }
+
   override buildNewText() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -258,24 +259,30 @@ export default class CVTextElement extends TextElement {
       cnt++
     }
   }
+
   clearCanvas(_canvasContext?:
-      | CanvasRenderingContext2D
-      | OffscreenCanvasRenderingContext2D
-      | null) {
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null) {
     throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
+
   createElements() {
     throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
+
   exitLayer() {
     throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
+
   hideElement() {
     throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
+
   prepareLayer() {
     throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
+
   override renderInnerContent() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -420,6 +427,7 @@ export default class CVTextElement extends TextElement {
       ;(this.globalData.renderer as CanvasRenderer | undefined)?.restore()
     }
   }
+
   showElement() {
     throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }

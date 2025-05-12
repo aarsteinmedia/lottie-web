@@ -101,6 +101,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
       this.setBlendMode()
     }
   }
+
   override createRenderableComponents() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: layerData is not initialized`)
@@ -116,11 +117,13 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
     this.renderableEffectsManager = new SVGEffects(this as unknown as ElementInterfaceIntersect)
     this.searchEffectTransforms()
   }
+
   override destroyBaseElement() {
     this.layerElement = null as unknown as SVGGElement
     this.matteElement = null as unknown as SVGGElement
     this.maskManager?.destroy()
   }
+
   override getBaseElement() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -131,6 +134,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
 
     return this.baseElement ?? null
   }
+
   getMatte(matteType = 1): string {
     // This should not be a common case. But for backward compatibility, we'll create the matte object.
     // It solves animations that have two consecutive layers marked as matte masks.
@@ -235,9 +239,11 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
 
     return this.matteMasks[matteType]
   }
+
   override initRendererElement() {
     this.layerElement = createNS<SVGGElement>('g')
   }
+
   override renderElement() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not implemented`)
@@ -251,6 +257,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
         `${this.finalTransform.localOpacity}`)
     }
   }
+
   setMatte(id: string) {
     if (!this.matteElement) {
       return

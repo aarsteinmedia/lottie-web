@@ -35,9 +35,11 @@ export default class HBaseElement {
     this.destroyBaseElement = this.destroy
     this.buildElementParenting = buildElementParenting
   }
+
   addEffects() {
     // TODO: Pass Through
   }
+
   buildElementParenting(
     _element: ElementInterfaceIntersect,
     _parentName?: number,
@@ -45,9 +47,11 @@ export default class HBaseElement {
   ) {
     throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
   }
+
   checkBlendMode() {
     // TODO: Pass Through
   }
+
   createContainerElements() {
     this.renderableEffectsManager = new CVEffects(this as unknown as ElementInterfaceIntersect)
     this.transformedElement = this.baseElement
@@ -62,6 +66,7 @@ export default class HBaseElement {
       this.setBlendMode()
     }
   }
+
   createRenderableComponents() {
     if (!this.data || !this.globalData) {
       throw new Error(`${this.constructor.name}: data or globalData is not implemented`)
@@ -70,6 +75,7 @@ export default class HBaseElement {
       this.data, this as unknown as ElementInterfaceIntersect, this.globalData
     )
   }
+
   destroy() {
     this.layerElement = null as unknown as SVGGElement
     this.transformedElement = null as unknown as SVGGElement
@@ -81,12 +87,15 @@ export default class HBaseElement {
       this.maskManager = null as unknown as MaskElement
     }
   }
+
   destroyBaseElement() {
     throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
   }
+
   getBaseElement(): null | HTMLElement | SVGGElement {
     throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
+
   initRendererElement() {
     this.baseElement = createTag(this.data?.tg || 'div')
     if (this.data?.hasMask) {
@@ -100,6 +109,7 @@ export default class HBaseElement {
     }
     styleDiv(this.baseElement)
   }
+
   renderElement() {
     const transformedElementStyle = this.transformedElement
       ? this.transformedElement.style
@@ -114,6 +124,7 @@ export default class HBaseElement {
       transformedElementStyle.opacity = `${this.finalTransform.mProp.o?.v}`
     }
   }
+
   renderFrame() {
     // If it is exported as hidden (data.hd === true) no need to render
     // If it is not visible no need to render
@@ -128,15 +139,19 @@ export default class HBaseElement {
       this._isFirstFrame = false
     }
   }
+
   renderInnerContent() {
     throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
   }
+
   renderRenderable() {
     throw new Error(`${this.constructor.name}: Method renderRenderable is not implemented`)
   }
+
   renderTransform() {
     throw new Error(`${this.constructor.name}: Method renderTransform is not implemented`)
   }
+
   setBlendMode() {
     throw new Error(`${this.constructor.name}: Method setBlendMode is not implemented`)
   }

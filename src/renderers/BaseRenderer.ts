@@ -51,6 +51,7 @@ export default abstract class BaseRenderer extends FrameElement {
     }
     this.checkPendingElements()
   }
+
   buildElementParenting(
     element: ElementInterfaceIntersect,
     parentName?: number,
@@ -102,10 +103,10 @@ export default abstract class BaseRenderer extends FrameElement {
 
     for (let i = length - 1; i >= 0; i--) {
       if (!this.elements[i] &&
-          (this.layers[i].ip - this.layers[i].st <=
-            Number(val) - this.layers[i].st &&
+        (this.layers[i].ip - this.layers[i].st <=
+          Number(val) - this.layers[i].st &&
           this.layers[i].op - this.layers[i].st >
-            Number(val) - this.layers[i].st)
+          Number(val) - this.layers[i].st)
       ) {
         this.buildItem(i)
       }
@@ -117,6 +118,7 @@ export default abstract class BaseRenderer extends FrameElement {
   checkPendingElements() {
     throw new Error(`${this.constructor.name}: Method checkPendingElements not yet implemented`)
   }
+
   createAudio(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
@@ -128,9 +130,11 @@ export default abstract class BaseRenderer extends FrameElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
+
   createCamera(_data: LottieLayer): HCameraElement {
     throw new Error('You\'re using a 3d camera. Try the html renderer.')
   }
+
   createComp(
     _data: LottieLayer,
     _container?: HTMLElement,
@@ -155,6 +159,7 @@ export default abstract class BaseRenderer extends FrameElement {
   createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement {
     throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
   }
+
   createItem(layer: LottieLayer) {
     switch (layer.ty) {
       case 2: {
@@ -189,18 +194,23 @@ export default abstract class BaseRenderer extends FrameElement {
       }
     }
   }
+
   createNull(_layer: LottieLayer): NullElement {
     throw new Error(`${this.constructor.name}: Method createNull not implemented`)
   }
+
   createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement {
     throw new Error(`${this.constructor.name}: Method createShape not implemented`)
   }
+
   createSolid(_layer: LottieLayer): CVSolidElement | SolidElement {
     throw new Error(`${this.constructor.name}: Method createSolid not implemented`)
   }
+
   createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement | HTextElement {
     throw new Error(`${this.constructor.name}: Method createText not implemented`)
   }
+
   getElementById(ind: number) {
     const { length } = this.elements
 
@@ -212,6 +222,7 @@ export default abstract class BaseRenderer extends FrameElement {
 
     return null
   }
+
   getElementByPath(path: unknown[]): ElementInterfaceIntersect | undefined {
     const pathValue = path.shift()
     let element

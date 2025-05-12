@@ -48,7 +48,7 @@ const A_TAG_CODE_POINT = 917601,
     2403,
   ],
   emptyChar = {
-    data: { shapes: [], } as unknown as LottieLayer,
+    data: { shapes: [] } as unknown as LottieLayer,
     shapes: [],
     size: 0,
     w: 0,

@@ -26,6 +26,7 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     }
     processedElements.push(new ProcessedElement(elem, pos))
   }
+
   addShapeToModifiers(data: SVGShapeData | CVShapeData) {
     const { length } = this.shapeModifiers
 
@@ -75,6 +76,7 @@ export default abstract class ShapeElement extends RenderableDOMElement {
       }
     }
   }
+
   searchProcessedElement(elem: unknown) {
     const { processedElements } = this
     let i = 0

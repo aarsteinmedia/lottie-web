@@ -10,6 +10,7 @@ export class MaskInterface {
     this._mask = mask
     this._data = data
   }
+
   maskOpacity() {
     if (this._mask.op.k) {
       this._mask.op.getValue()
@@ -17,6 +18,7 @@ export class MaskInterface {
 
     return this._mask.op.v * 100
   }
+
   maskPath() {
     if (this._mask.prop?.k) {
       this._mask.prop.getValue()

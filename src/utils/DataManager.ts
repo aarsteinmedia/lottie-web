@@ -13,7 +13,7 @@ const funcitonNotImplemented = 'Function not implemented.',
   workerProxy: Worker = {
     addEventListener: <K extends keyof WorkerEventMap>(
       _type: K,
-      _listener: (this: Worker, ev: WorkerEventMap[K]) => unknown,
+      _listener: (ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | AddEventListenerOptions
     ): void => {
       throw new Error(funcitonNotImplemented)
@@ -27,11 +27,11 @@ const funcitonNotImplemented = 'Function not implemented.',
     },
     onmessageerror: null,
     postMessage: (data: WorkerEvent['data']) => {
-      workerFn({ data, })
+      workerFn({ data })
     },
     removeEventListener: <K extends keyof WorkerEventMap>(
       _type: K,
-      _listener: (this: Worker, ev: WorkerEventMap[K]) => unknown,
+      _listener: (ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | EventListenerOptions
     ): void => {
       throw new Error(funcitonNotImplemented)

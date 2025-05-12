@@ -130,8 +130,8 @@ export default function addPropertyDecorator() {
             ret[i] =
             (lastValue as number[])[i] +
             ((lastValue as number[])[i] - (nextLastValue as number[])[i]) *
-              ((currentFrame - lastKeyFrame) / frameRate) /
-              0.0005
+            ((currentFrame - lastKeyFrame) / frameRate) /
+            0.0005
           }
 
           return ret
@@ -139,7 +139,7 @@ export default function addPropertyDecorator() {
 
         return (
           (lastValue as number) +
-        ((lastValue as number) - (nextLastValue as number)) *
+          ((lastValue as number) - (nextLastValue as number)) *
           ((currentFrame - lastKeyFrame) / 0.001)
         )
       }
@@ -148,7 +148,7 @@ export default function addPropertyDecorator() {
     }
 
     return this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) /
-        frameRate,
+      frameRate,
     0)
   }
 
@@ -246,8 +246,8 @@ export default function addPropertyDecorator() {
             ret[i] =
             (firstValue as number[])[i] +
             ((firstValue as number[])[i] - (nextFirstValue as number[])[i]) *
-              (firstKeyFrame - currentFrame) /
-              0.001
+            (firstKeyFrame - currentFrame) /
+            0.001
           }
 
           return ret
@@ -255,7 +255,7 @@ export default function addPropertyDecorator() {
 
         return (
           (firstValue as number) +
-        ((firstValue as number) - (nextFirstValue as number)) *
+          ((firstValue as number) - (nextFirstValue as number)) *
           (firstKeyFrame - currentFrame) /
           0.001
         )
@@ -265,8 +265,8 @@ export default function addPropertyDecorator() {
     }
 
     return this.getValueAtTime((cycleDuration -
-        ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) /
-        frameRate,
+      ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) /
+      frameRate,
     0)
   }
 
@@ -325,7 +325,7 @@ export default function addPropertyDecorator() {
 
   function getTransformValueAtTime(this: TransformProperty, time: number) {
     if (!this._transformCachingAtTime) {
-      this._transformCachingAtTime = { v: new Matrix(), }
+      this._transformCachingAtTime = { v: new Matrix() }
     }
     // / /
     const matrix = this._transformCachingAtTime.v
@@ -527,6 +527,7 @@ export default function addPropertyDecorator() {
     get setGroupProperty() {
       return setGroupProperty
     }
+
     override getValueAtTime(_time: number, _pos?: number) {
       return getStaticValueAtTime as any
     }
@@ -534,17 +535,21 @@ export default function addPropertyDecorator() {
     inTangents(time: number) {
       return this.vertices('i', time)
     }
+
     isClosed() {
       return this.v?.c
     }
+
     normalOnPath(perc: number, time: number) {
       return this.vectorOnPath(
         perc, time, 'normal'
       )
     }
+
     outTangents(time: number) {
       return this.vertices('o', time)
     }
+
     pointOnPath(perc: number, time: number) {
       let shapePath = this.v
 
@@ -597,9 +602,11 @@ export default function addPropertyDecorator() {
 
       return pt
     }
+
     points(time: number) {
       return this.vertices('v', time)
     }
+
     // setGroupProperty(_propertyGroup: LayerExpressionInterface) {
     //   throw new Error(
     //     `${this.constructor.name}: Method setGroupProperty is not inmplemented`
@@ -612,6 +619,7 @@ export default function addPropertyDecorator() {
         perc, time, 'tangent'
       )
     }
+
     vectorOnPath(
       percFromProps: number, time: number, vectorType: string
     ) {
@@ -640,6 +648,7 @@ export default function addPropertyDecorator() {
 
       return unitVector
     }
+
     vertices(prop: string, time: number) {
       if (this.k) {
         this.getValue()

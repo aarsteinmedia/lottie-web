@@ -38,7 +38,7 @@ export const setExpressionsPlugin = (value: typeof Expressions) => {
  *
  * Curve segments.
  */
-const curveSegments = { default: 150, }
+const curveSegments = { default: 150 }
 
 export const setDefaultCurveSegments = (value: number) => {
     curveSegments.default = value
@@ -48,7 +48,7 @@ export const setDefaultCurveSegments = (value: number) => {
  *
  * Web worker.
  */
-const isWebWorkerActive = { current: false, }
+const isWebWorkerActive = { current: false }
 
 export const setWebWorker = (flag: boolean) => {
     isWebWorkerActive.current = flag
@@ -58,7 +58,7 @@ export const setWebWorker = (flag: boolean) => {
  *
  * Subframe.
  */
-const isSubframeEnabled = { current: true, }
+const isSubframeEnabled = { current: true }
 
 export const setSubframeEnabled = (flag: boolean) => {
     isSubframeEnabled.current = flag
@@ -108,7 +108,7 @@ export const registerRenderer = (key: RendererType, value: Renderer) => {
  *
  * Location HREF.
  */
-const locationHref = { current: '', }
+const locationHref = { current: '' }
 
 export const setLocationHref = (value: string) => {
     locationHref.current = value
@@ -146,7 +146,7 @@ export const setIDPrefix = (value: string) => {
  *
  * Quality.
  */
-const shouldRoundValues = { current: false, }
+const shouldRoundValues = { current: false }
 
 export const getShouldRoundValues = () => shouldRoundValues.current,
   setShouldRoundValues = (value: boolean) => {

@@ -4,7 +4,6 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
-  VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
@@ -115,7 +114,7 @@ export default class CVCompElement extends CompElement {
       data.tm
         ? PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
-          data.tm as VectorProperty,
+          data.tm,
           0,
           globalData.frameRate,
           this as unknown as ElementInterfaceIntersect
@@ -141,9 +140,9 @@ export default class CVCompElement extends CompElement {
   }
 
   clearCanvas(_canvasContext?:
-      | CanvasRenderingContext2D
-      | OffscreenCanvasRenderingContext2D
-      | null) {
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null) {
     throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
 

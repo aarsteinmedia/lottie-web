@@ -20,8 +20,8 @@ import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement_'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
-import ShapeElement from '@/elements/ShapeElement'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
+import ShapeElement from '@/elements/ShapeElement'
 import { degToRads, extendPrototype } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, RendererType, ShapeType
@@ -629,7 +629,7 @@ CVShapeElement.prototype.renderStyledShape = function (styledShape, shape) {
               pathNodes.v[0]
             ),
             t: 'c',
-          }, { t: 'z', })
+          }, { t: 'z' })
         }
       }
     }

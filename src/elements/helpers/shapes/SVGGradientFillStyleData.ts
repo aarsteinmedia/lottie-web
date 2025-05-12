@@ -61,6 +61,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
       elem, data, styleData
     )
   }
+
   initGradientData(
     elem: ElementInterfaceUnion,
     data: Shape,
@@ -113,6 +114,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     this.setGradientOpacity(data, styleData)
     this._isAnimated = Boolean(this._isAnimated)
   }
+
   setGradientData(pathElement: SVGElement, data: Shape) {
     const gradientId = createElementID(),
       gfill = createNS<SVGGradientElement>(data.t === 1 ? 'linearGradient' : 'radialGradient')
@@ -134,6 +136,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     this.gf = gfill
     this.cst = stops
   }
+
   setGradientOpacity(data: Shape, styleData: SVGStyleData) {
     if (!this.g?._hasOpacity || this.g._collapsable) {
       return

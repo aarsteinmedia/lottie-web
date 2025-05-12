@@ -53,7 +53,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     this._elem = elem
     this._animatorsData = createSizedArray(Number(this._textData.a?.length))
     this._pathData = {}
-    this._moreOptions = { alignment: {} as MultiDimensionalProperty, }
+    this._moreOptions = { alignment: {} as MultiDimensionalProperty }
     this.renderedLetters = []
     this.lettersChangedFlag = false
     this.initDynamicPropertyContainer(elem)
@@ -299,7 +299,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 currentLength +=
                   (totalLength -
                     documentData.lineWidths[letters[i].line]) /
-                  2
+                    2
                 break
               }
               case undefined:
@@ -364,8 +364,8 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 Number(this._pathData.f?.v) -
                 (letters[0].an || 0) * 0.5 -
                 letters[letters.length - 1].an * 0.5) *
-              ind /
-              (len - 1)
+                ind /
+                (len - 1)
             currentLength += Number(this._pathData.f?.v)
           }
           while (shouldMeasure) {
@@ -738,7 +738,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 Number(documentData.justifyOffset) +
                 (Number(documentData.boxWidth) -
                   Number(documentData.lineWidths[letters[i].line])) /
-                2,
+                  2,
                 0,
                 0
               )
@@ -824,6 +824,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     this._frameId = this._elem.globalData.frameId
     this.iterateDynamicProperties()
   }
+
   searchProperties(_: DynamicPropertyContainer[]) {
     const len = this._textData.a?.length || 0
 

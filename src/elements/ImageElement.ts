@@ -7,11 +7,13 @@ import type {
 } from '@/types'
 
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { createNS, } from '@/utils'
+import { createNS } from '@/utils'
 
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
+
   layers: LottieLayer[] = []
+
   sourceRect: SourceRect | null
 
   constructor(

@@ -341,6 +341,7 @@ export default class SVGTextLottieElement extends TextElement {
 
     this._sizeChanged = true
   }
+
   buildShapeData(data: LottieLayer, scale: number) {
     // data should probably be cloned to apply scale separately to each instance of a text on different layers
     // but since text internal content gets only rendered once and then it's never rerendered,
@@ -361,6 +362,7 @@ export default class SVGTextLottieElement extends TextElement {
 
     return data
   }
+
   buildTextContents(textArray: string[]) {
     let i = 0
     const len = textArray.length

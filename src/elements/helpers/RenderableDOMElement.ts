@@ -14,12 +14,15 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   createContainerElements() {
     throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
   }
+
   createContent() {
     throw new Error(`${this.constructor.name}: Method createContent is not implemented`)
   }
+
   createRenderableComponents() {
     throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
   }
+
   destroy() {
     this.innerElem = null
     this.destroyBaseElement()
@@ -37,6 +40,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
 
     this.hidden = true
   }
+
   initElement(
     data: LottieLayer,
     globalData: GlobalData,
@@ -55,18 +59,22 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     this.createContent()
     this.hide()
   }
+
   initRendererElement() {
     throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
   }
+
   prepareFrame(num: number) {
     this._mdf = false
     this.prepareRenderableFrame(num)
     this.prepareProperties(num, this.isInRange)
     this.checkTransparency()
   }
+
   renderElement() {
     throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
   }
+
   renderFrame() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -85,9 +93,11 @@ export default abstract class RenderableDOMElement extends RenderableElement {
       this._isFirstFrame = false
     }
   }
+
   renderInnerContent() {
     throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
   }
+
   override show() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)

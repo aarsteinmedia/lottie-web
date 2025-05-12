@@ -62,13 +62,16 @@ export default class ExpressionValue {
 
     this.velocity = getVelocityAtTime(elementProp.comp?.currentFrame || 0)
   }
+
   speedAtTime(_frameNum: number) {
     throw new Error(`${this.constructor.name}: Method speedAtTime is not implemented`)
   }
+
   valueAtTime<T extends number | number[] = number>(_a: number,
     _b?: number): T {
     throw new Error(`${this.constructor.name}: Method valueAtTime is not implemented`)
   }
+
   velocityAtTime(_frameNum: number): number {
     throw new Error(`${this.constructor.name}: Method velocityAtTime is not implemented`)
   }

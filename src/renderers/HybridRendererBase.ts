@@ -117,7 +117,7 @@ export default class HybridRendererBase extends BaseRenderer {
         while (i < pos) {
           if (
             this.elements[i] !==
-              (true as unknown as ElementInterfaceIntersect) &&
+            (true as unknown as ElementInterfaceIntersect) &&
             Boolean(this.elements[i]?.getBaseElement)
           ) {
             nextLayer = this.elements[i]
@@ -475,16 +475,16 @@ export default class HybridRendererBase extends BaseRenderer {
       ty =
         (elementHeight -
           this.globalData.compSize.h *
-            (elementWidth / this.globalData.compSize.w)) /
-        2
+          (elementWidth / this.globalData.compSize.w)) /
+          2
     } else {
       sx = elementHeight / this.globalData.compSize.h
       sy = elementHeight / this.globalData.compSize.h
       tx =
         (elementWidth -
           this.globalData.compSize.w *
-            (elementHeight / this.globalData.compSize.h)) /
-        2
+          (elementHeight / this.globalData.compSize.h)) /
+          2
       ty = 0
     }
     if (this.resizerElem) {

@@ -35,6 +35,7 @@ export default class ImagePreloader {
     this.images = []
     this.proxyImage = this._createProxyImage()
   }
+
   createFootageData(data: LottieAsset) {
     const obj: ImageData = {
       assetData: data,
@@ -46,19 +47,20 @@ export default class ImagePreloader {
 
     loadData(
       path,
-      function (this: ImagePreloader, footageData: unknown) {
+      (footageData: unknown) => {
         if (footageData) {
           obj.img = footageData as SVGElement
         }
         this._footageLoaded()
       },
-      function (this: ImagePreloader) {
+      () => {
         this._footageLoaded()
       }
     )
 
     return obj
   }
+
   public createImageData(assetData: LottieAsset) {
     const path = this.getAssetsPath(
       assetData, this.assetsPath, this.path
@@ -82,7 +84,7 @@ export default class ImagePreloader {
     }
     img.addEventListener(
       'error',
-      function (this: ImagePreloader) {
+      () => {
         if (this.proxyImage) {
           obj.img = this.proxyImage
         }
@@ -101,10 +103,12 @@ export default class ImagePreloader {
 
     return obj
   }
+
   public destroy() {
     this.imagesLoadedCb = null
     this.images.length = 0
   }
+
   public footageLoaded() {
     this.loadedFootagesCount++
     if (
@@ -115,6 +119,7 @@ export default class ImagePreloader {
       this.imagesLoadedCb(null)
     }
   }
+
   public getAsset(assetData: null | LottieAsset) {
     let i = 0
     const { length } = this.images
@@ -128,6 +133,7 @@ export default class ImagePreloader {
 
     return null
   }
+
   public imageLoaded() {
     this.loadedAssets++
     if (
@@ -138,6 +144,7 @@ export default class ImagePreloader {
       this.imagesLoadedCb(null)
     }
   }
+
   public loadAssets(assets: LottieAsset[],
     cb: ImagePreloader['imagesLoadedCb']) {
     this.imagesLoadedCb = cb
@@ -164,15 +171,19 @@ export default class ImagePreloader {
       }
     }
   }
+
   public loadedFootages() {
     return this.totalFootages === this.loadedFootagesCount
   }
+
   public loadedImages() {
     return this.totalImages === this.loadedAssets
   }
+
   public setAssetsPath(path?: string) {
     this.assetsPath = path || ''
   }
+
   public setCacheType(type: RendererType, elementHelper: SVGElement) {
     if (type === RendererType.SVG) {
       this._elementHelper = elementHelper
@@ -181,9 +192,11 @@ export default class ImagePreloader {
       this._createImageData = this.createImgData.bind(this)
     }
   }
+
   public setPath(path?: string) {
     this.path = path || ''
   }
+
   private _createProxyImage() {
     if (isServer()) {
       return null
@@ -206,6 +219,7 @@ export default class ImagePreloader {
 
     return canvas
   }
+
   private createImgData(assetData: LottieAsset) {
     const path = this.getAssetsPath(
       assetData, this.assetsPath, this.path
@@ -227,7 +241,7 @@ export default class ImagePreloader {
     )
     img.addEventListener(
       'error',
-      function (this: ImagePreloader) {
+      () => {
         if (this.proxyImage) {
           obj.img = this.proxyImage
         }
@@ -241,6 +255,7 @@ export default class ImagePreloader {
 
     return obj
   }
+
   private getAssetsPath(
     assetData: LottieAsset,
     assetsPath: string,
@@ -266,6 +281,7 @@ export default class ImagePreloader {
 
     return path
   }
+
   private testImageLoaded(img: SVGGraphicsElement) {
     if (isServer()) {
       return

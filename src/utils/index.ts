@@ -97,7 +97,7 @@ export const degToRads = Math.PI / 180,
  */
 const boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
     Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
-  Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
+    Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
   crossProduct = (a: number[], b: number[]) => [
     a[1] * b[2] - a[2] * b[1],
     a[2] * b[0] - a[0] * b[2],
@@ -776,7 +776,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
         try {
           markerData.payload = parsePayloadLines((markersFromProps[i] as Marker).cm)
         } catch (error) {
-          markerData.payload = { name: (markersFromProps[i] as Marker).cm, }
+          markerData.payload = { name: (markersFromProps[i] as Marker).cm }
         }
       }
       markers.push(markerData)

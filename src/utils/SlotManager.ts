@@ -7,6 +7,7 @@ export default class SlotManager {
   constructor(animationData: LottieLayer) {
     this.animationData = animationData
   }
+
   getProp(data: DocumentData | LottieLayer | LottieAsset) {
     const { sid } = data as LottieAsset
 

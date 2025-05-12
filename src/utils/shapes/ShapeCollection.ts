@@ -12,6 +12,7 @@ export default class ShapeCollection {
     this._maxLength = 4
     this.shapes = createSizedArray(this._maxLength)
   }
+
   addShape(shapeData: ShapePath) {
     if (this._length === this._maxLength) {
       this.shapes = [...this.shapes, ...createSizedArray(this._maxLength)] as ShapePath[]
@@ -20,6 +21,7 @@ export default class ShapeCollection {
     this.shapes[this._length] = shapeData
     this._length++
   }
+
   releaseShapes() {
     for (let i = 0; i < this._length; i++) {
       release(this.shapes[i])

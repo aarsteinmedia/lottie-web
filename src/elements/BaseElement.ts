@@ -39,9 +39,11 @@ export default abstract class BaseElement {
   buildAllItems() {
     throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
   }
+
   checkLayers(_frame?: number) {
     throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
   }
+
   checkMasks() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not initialized`)
@@ -64,15 +66,19 @@ export default abstract class BaseElement {
 
     return false
   }
+
   destroyBaseElement() {
     throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
   }
+
   getBaseElement(): SVGElement | HTMLElement | null {
     throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
+
   getType() {
     return this.type
   }
+
   initBaseData(
     data: LottieLayer,
     globalData: GlobalData,
@@ -93,6 +99,7 @@ export default abstract class BaseElement {
       this.dynamicProperties
     )
   }
+
   initExpressions() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -142,6 +149,7 @@ export default abstract class BaseElement {
       this.layerInterface.text = this.layerInterface.textInterface
     }
   }
+
   setBlendMode() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -154,6 +162,7 @@ export default abstract class BaseElement {
     }
     elem.style.mixBlendMode = blendModeValue
   }
+
   sourceRectAtTime() {
     throw new Error(`${this.constructor.name}: Method sourceRectAtTime is not implemented`)
   }

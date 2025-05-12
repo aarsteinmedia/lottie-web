@@ -45,9 +45,9 @@ export default class CVBaseElement {
   transformCanvas?: TransformCanvas
   transformEffects: GroupEffect[] = []
   clearCanvas(canvasContext?:
-      | CanvasRenderingContext2D
-      | OffscreenCanvasRenderingContext2D
-      | null) {
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null) {
     if (!this.transformCanvas) {
       throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
     }
@@ -58,6 +58,7 @@ export default class CVBaseElement {
       this.transformCanvas.h * this.transformCanvas.sy
     )
   }
+
   createContainerElements() {
     // If the layer is masked we will use two buffers to store each different states of the drawing
     // This solution is not ideal for several reason. But unfortunately, because of the recursive
@@ -96,14 +97,17 @@ export default class CVBaseElement {
     this.renderableEffectsManager = new CVEffects(this as unknown as ElementInterfaceIntersect)
     this.searchEffectTransforms()
   }
+
   createContent() {
     // TODO: Pass through?
     throw new Error(`${this.constructor.name}: createContent is not implemented`)
   }
+
   createElements() {
     // TODO: Pass through?
     throw new Error(`${this.constructor.name}: createElements is not implemented`)
   }
+
   createRenderableComponents() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -114,12 +118,14 @@ export default class CVBaseElement {
       this.transformEffects = this.renderableEffectsManager.getEffects(effectTypes.TRANSFORM_EFFECT)
     }
   }
+
   destroy() {
     this.canvasContext = null as unknown as CanvasRenderingContext2D
     this.data = null as unknown as LottieLayer
     this.globalData = null as unknown as GlobalData
     this.maskManager?.destroy()
   }
+
   exitLayer() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -197,6 +203,7 @@ export default class CVBaseElement {
     // We reset the globalCompositeOperation to source-over, the standard type of operation
     this.canvasContext.globalCompositeOperation = 'source-over'
   }
+
   hideElement() {
     if (!this.hidden && (!this.isInRange || this.isTransparent)) {
       this.hidden = true
@@ -207,6 +214,7 @@ export default class CVBaseElement {
     // TODO: Pass through?
     throw new Error(`${this.constructor.name}: initRendererElement is not implemented`)
   }
+
   prepareLayer() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -237,6 +245,7 @@ export default class CVBaseElement {
     this.clearCanvas(this.canvasContext)
     this.canvasContext.setTransform(this.currentTransform)
   }
+
   renderFrame(forceRender?: number) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
@@ -286,12 +295,15 @@ export default class CVBaseElement {
   renderRenderable() {
     throw new Error(`${this.constructor.name}: Method renderRenderable is not implemented`)
   }
+
   renderTransform() {
     throw new Error(`${this.constructor.name}: Method renderTransform is not implemented`)
   }
+
   searchEffectTransforms() {
     throw new Error(`${this.constructor.name}: Method searchEffectTransforms is not implemented`)
   }
+
   setBlendMode() {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
@@ -311,6 +323,7 @@ export default class CVBaseElement {
       globalData.canvasContext.globalCompositeOperation = blendModeValue as GlobalCompositeOperation
     }
   }
+
   showElement() {
     if (!this.maskManager) {
       throw new Error(`${this.constructor.name}: Method maskManager is not implemented`)

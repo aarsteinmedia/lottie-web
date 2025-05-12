@@ -9,7 +9,7 @@ import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 const EffectsExpressionInterface = (function () {
-  const ob = { createEffectsInterface, }
+  const ob = { createEffectsInterface }
 
   function createEffectsInterface(elem: ElementInterfaceIntersect,
     propertyGroup: LayerExpressionInterface) {

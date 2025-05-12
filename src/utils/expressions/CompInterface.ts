@@ -20,6 +20,7 @@ export default class CompExpressionInterface {
     this.displayStartTime = 0
     this.numLayers = comp.layers?.length ?? 0
   }
+
   public layer(name: string | number) {
     let i = 0
     const { length } = this.comp.layers ?? []

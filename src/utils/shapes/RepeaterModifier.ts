@@ -72,6 +72,7 @@ export default class RepeaterModifier extends ShapeModifier {
       transform.a.v[0], transform.a.v[1], transform.a.v[2]
     )
   }
+
   changeGroupRender(elements: Shape[], renderFlag?: boolean) {
     const { length } = elements
 
@@ -82,6 +83,7 @@ export default class RepeaterModifier extends ShapeModifier {
       }
     }
   }
+
   cloneElements(elements: Shape[]): Shape[] {
     const newElements = JSON.parse(JSON.stringify(elements)) as Shape[]
 
@@ -89,6 +91,7 @@ export default class RepeaterModifier extends ShapeModifier {
 
     return newElements
   }
+
   override init(
     elem: ElementInterfaceUnion,
     arr: Shape | Shape[],
@@ -397,7 +400,7 @@ export default class RepeaterModifier extends ShapeModifier {
           ? Number(this.so?.v)
           : Number(this.so?.v) +
             (Number(this.eo?.v) - Number(this.so?.v)) *
-              (i / (this._currentCopies - 1))
+            (i / (this._currentCopies - 1))
 
       if (iteration === 0) {
         this.matrix.reset()

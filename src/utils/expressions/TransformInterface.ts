@@ -10,12 +10,15 @@ export default class TransformExpressionInterface {
   get anchorPoint() {
     return ExpressionPropertyInterface(this.transform.a) as unknown as Vector2
   }
+
   get opacity() {
     return ExpressionPropertyInterface(this.transform.o)
   }
+
   get orientation() {
     return ExpressionPropertyInterface(this.transform.or)
   }
+
   get position() {
     if (this.transform.p) {
       return this._transformFactory()
@@ -28,9 +31,11 @@ export default class TransformExpressionInterface {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
       this._pz()]
   }
+
   get rotation() {
     return ExpressionPropertyInterface(this.transform.r ?? this.transform.rz)
   }
+
   get scale() {
     return ExpressionPropertyInterface(this.transform.s)
   }
@@ -50,18 +55,23 @@ export default class TransformExpressionInterface {
   get xRotation() {
     return ExpressionPropertyInterface(this.transform.rx)
   }
+
   get yPosition() {
     return ExpressionPropertyInterface(this.transform.py)
   }
+
   get yRotation() {
     return ExpressionPropertyInterface(this.transform.ry)
   }
+
   get zPosition() {
     return ExpressionPropertyInterface(this.transform.pz)
   }
+
   get zRotation() {
     return ExpressionPropertyInterface(this.transform.rz ?? this.transform.r)
   }
+
   constructor(transform: TransformProperty) {
     this.transform = transform
 
@@ -80,9 +90,11 @@ export default class TransformExpressionInterface {
   _px() {
     throw new Error(`${this.constructor.name}: Method _px is not implemented`)
   }
+
   _py() {
     throw new Error(`${this.constructor.name}: Method _py is not implemented`)
   }
+
   _pz() {
     throw new Error(`${this.constructor.name}: Method _pz is not implemented`)
   }

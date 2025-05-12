@@ -12,6 +12,7 @@ export default class ShapeTransformManager {
     this.sequenceList = []
     this.transform_key_count = 0
   }
+
   addTransformSequence(transforms: { transform: Transformer }[]) {
     const { length } = transforms
     let key = '_'
@@ -34,11 +35,13 @@ export default class ShapeTransformManager {
 
     return sequence
   }
+
   getNewKey() {
     this.transform_key_count++
 
     return `_${this.transform_key_count}`
   }
+
   processSequence(sequence: TransformSequence, isFirstFrame?: boolean) {
     let i = 0
     const { length } = sequence.transforms ?? []
@@ -67,6 +70,7 @@ export default class ShapeTransformManager {
     }
     sequence._mdf = _mdf
   }
+
   processSequences(isFirstFrame?: boolean) {
     const { length } = this.sequenceList
 

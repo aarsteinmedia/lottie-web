@@ -30,7 +30,7 @@ import {
 import { getLocationHref } from '@/utils/getterSetter'
 // import Matrix from '@/utils/Matrix'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class SVGShapeElement extends ShapeElement {

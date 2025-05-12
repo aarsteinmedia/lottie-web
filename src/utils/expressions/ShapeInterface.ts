@@ -52,6 +52,7 @@ export default class ShapeExpressionInterface {
     this.numProperties = this.interfaces.length
     this._name = 'Contents'
   }
+
   contentsInterfaceFactory(
     shape: Shape,
     view: ShapeGroupData,
@@ -133,8 +134,8 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      position: { get: ExpressionPropertyInterface(prop.p) as any, },
-      size: { get: ExpressionPropertyInterface(prop.s) as any, },
+      position: { get: ExpressionPropertyInterface(prop.p) as any },
+      size: { get: ExpressionPropertyInterface(prop.s) as any },
     })
     interfaceFunction.mn = shape.mn
 
@@ -157,9 +158,9 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      color: { get: ExpressionPropertyInterface(view.c) as any, },
+      color: { get: ExpressionPropertyInterface(view.c) as any },
       mn: { value: shape.mn },
-      opacity: { get: ExpressionPropertyInterface(view.o) as any, },
+      opacity: { get: ExpressionPropertyInterface(view.o) as any },
     })
 
     view.c.setGroupProperty(new PropertyInterface('Color', propertyGroup))
@@ -187,11 +188,11 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      endPoint: { get: ExpressionPropertyInterface(view.e) as any, },
+      endPoint: { get: ExpressionPropertyInterface(view.e) as any },
       mn: { value: shape.mn },
-      opacity: { get: ExpressionPropertyInterface(view.o) as any, },
-      startPoint: { get: ExpressionPropertyInterface(view.s) as any, },
-      type: { get: () => 'a', },
+      opacity: { get: ExpressionPropertyInterface(view.o) as any },
+      startPoint: { get: ExpressionPropertyInterface(view.s) as any },
+      type: { get: () => 'a' },
     })
 
     view.s.setGroupProperty(new PropertyInterface('Start Point', propertyGroup))
@@ -200,6 +201,7 @@ export default class ShapeExpressionInterface {
 
     return interfaceFunction
   }
+
   groupInterfaceFactory(
     shape: Shape, view: any, propertyGroup: any
   ) {
@@ -387,9 +389,9 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      position: { get: ExpressionPropertyInterface(prop.p) as any, },
-      roundness: { get: ExpressionPropertyInterface(prop.r) as any, },
-      size: { get: ExpressionPropertyInterface(prop.s) as any, },
+      position: { get: ExpressionPropertyInterface(prop.p) as any },
+      roundness: { get: ExpressionPropertyInterface(prop.r) as any },
+      size: { get: ExpressionPropertyInterface(prop.s) as any },
     })
     interfaceFunction.mn = shape.mn
 
@@ -419,8 +421,8 @@ export default class ShapeExpressionInterface {
     prop.o.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      copies: { get: ExpressionPropertyInterface(prop.c) as any, },
-      offset: { get: ExpressionPropertyInterface(prop.o) as any, },
+      copies: { get: ExpressionPropertyInterface(prop.c) as any },
+      offset: { get: ExpressionPropertyInterface(prop.o) as any },
     })
     interfaceFunction.mn = shape.mn
 
@@ -447,7 +449,7 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      radius: { get: ExpressionPropertyInterface(prop.rd) as any, },
+      radius: { get: ExpressionPropertyInterface(prop.rd) as any },
     })
     interfaceFunction.mn = shape.mn
 
@@ -500,13 +502,13 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      innerRadius: { get: ExpressionPropertyInterface(prop.ir) as any, },
-      innerRoundness: { get: ExpressionPropertyInterface(prop.is) as any, },
-      outerRadius: { get: ExpressionPropertyInterface(prop.or) as any, },
-      outerRoundness: { get: ExpressionPropertyInterface(prop.os) as any, },
-      points: { get: ExpressionPropertyInterface(prop.pt) as any, },
-      position: { get: ExpressionPropertyInterface(prop.p) as any, },
-      rotation: { get: ExpressionPropertyInterface(prop.r) as any, },
+      innerRadius: { get: ExpressionPropertyInterface(prop.ir) as any },
+      innerRoundness: { get: ExpressionPropertyInterface(prop.is) as any },
+      outerRadius: { get: ExpressionPropertyInterface(prop.or) as any },
+      outerRoundness: { get: ExpressionPropertyInterface(prop.os) as any },
+      points: { get: ExpressionPropertyInterface(prop.pt) as any },
+      position: { get: ExpressionPropertyInterface(prop.p) as any },
+      rotation: { get: ExpressionPropertyInterface(prop.r) as any },
     })
     interfaceFunction.mn = shape.mn
 
@@ -537,7 +539,7 @@ export default class ShapeExpressionInterface {
       Object.defineProperty(
         dashOb,
         (shape.d as StrokeData[])[i].nm as PropertyKey,
-        { get: ExpressionPropertyInterface(view.d.dataProps[i].p) as any, }
+        { get: ExpressionPropertyInterface(view.d.dataProps[i].p) as any }
       )
     }
     const { length } = (shape.d as StrokeData[]) || []
@@ -551,15 +553,15 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      color: { get: ExpressionPropertyInterface(view.c) as any, },
+      color: { get: ExpressionPropertyInterface(view.c) as any },
       dash: {
         get () {
           return dashOb
         },
       },
       mn: { value: shape.mn },
-      opacity: { get: ExpressionPropertyInterface(view.o) as any, },
-      strokeWidth: { get: ExpressionPropertyInterface(view.w) as any, },
+      opacity: { get: ExpressionPropertyInterface(view.o) as any },
+      strokeWidth: { get: ExpressionPropertyInterface(view.w) as any },
     })
 
     view.c.setGroupProperty(new PropertyInterface('Color', _propertyGroup))
@@ -617,13 +619,13 @@ export default class ShapeExpressionInterface {
     view.transform.op.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      anchorPoint: { get: ExpressionPropertyInterface(view.transform.mProps.a) as any, },
-      opacity: { get: ExpressionPropertyInterface(view.transform.mProps.o) as any, },
-      position: { get: ExpressionPropertyInterface(view.transform.mProps.p) as any, },
-      rotation: { get: ExpressionPropertyInterface(view.transform.mProps.r) as any, },
-      scale: { get: ExpressionPropertyInterface(view.transform.mProps.s) as any, },
-      skew: { get: ExpressionPropertyInterface(view.transform.mProps.sk) as any, },
-      skewAxis: { get: ExpressionPropertyInterface(view.transform.mProps.sa) as any, },
+      anchorPoint: { get: ExpressionPropertyInterface(view.transform.mProps.a) as any },
+      opacity: { get: ExpressionPropertyInterface(view.transform.mProps.o) as any },
+      position: { get: ExpressionPropertyInterface(view.transform.mProps.p) as any },
+      rotation: { get: ExpressionPropertyInterface(view.transform.mProps.r) as any },
+      scale: { get: ExpressionPropertyInterface(view.transform.mProps.s) as any },
+      skew: { get: ExpressionPropertyInterface(view.transform.mProps.sk) as any },
+      skewAxis: { get: ExpressionPropertyInterface(view.transform.mProps.sa) as any },
     })
     interfaceFunction.ty = 'tr'
     interfaceFunction.mn = shape.mn
@@ -662,9 +664,9 @@ export default class ShapeExpressionInterface {
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
-      end: { get: ExpressionPropertyInterface(view.e) as any, },
-      offset: { get: ExpressionPropertyInterface(view.o) as any, },
-      start: { get: ExpressionPropertyInterface(view.s) as any, },
+      end: { get: ExpressionPropertyInterface(view.e) as any },
+      offset: { get: ExpressionPropertyInterface(view.o) as any },
+      start: { get: ExpressionPropertyInterface(view.s) as any },
     })
     interfaceFunction.mn = shape.mn
 

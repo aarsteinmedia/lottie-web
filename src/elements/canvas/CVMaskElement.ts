@@ -5,7 +5,7 @@ import type { LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVMaskElement {
   _isFirstFrame?: boolean
@@ -47,6 +47,7 @@ export default class CVMaskElement {
   getMaskProperty(_pos: number) {
     throw new Error(`${this.constructor.name}: Method getMaskProperty is not implemented`)
   }
+
   renderFrame(_num?: number) {
     if (!this.element.globalData?.compSize) {
       throw new Error(`${this.constructor.name}: element->globalData->compSize is not implemented`)

@@ -250,6 +250,7 @@ export default class HTextElement extends TextElement {
 
     this.checkParenting()
   }
+
   override renderInnerContent() {
     this.validateText()
     let svgStyle

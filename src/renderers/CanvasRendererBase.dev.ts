@@ -245,7 +245,7 @@ CanvasRendererBase.prototype.updateContainerSize = function (width, height) {
         (elementWidth -
           this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
           2 *
-        this.renderConfig.dpr
+          this.renderConfig.dpr
     } else if (
       xPos === 'xMax' &&
       (animationRel < elementRel && fillType === 'meet' ||
@@ -254,7 +254,7 @@ CanvasRendererBase.prototype.updateContainerSize = function (width, height) {
       this.transformCanvas.tx =
         (elementWidth -
           this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) *
-        this.renderConfig.dpr
+          this.renderConfig.dpr
     } else {
       this.transformCanvas.tx = 0
     }
@@ -267,7 +267,7 @@ CanvasRendererBase.prototype.updateContainerSize = function (width, height) {
         (elementHeight -
           this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
           2 *
-        this.renderConfig.dpr
+          this.renderConfig.dpr
     } else if (
       yPos === 'YMax' &&
       (animationRel > elementRel && fillType === 'meet' ||
@@ -276,7 +276,7 @@ CanvasRendererBase.prototype.updateContainerSize = function (width, height) {
       this.transformCanvas.ty =
         (elementHeight -
           this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) *
-        this.renderConfig.dpr
+          this.renderConfig.dpr
     } else {
       this.transformCanvas.ty = 0
     }
@@ -349,8 +349,8 @@ CanvasRendererBase.prototype.destroy = function () {
 CanvasRendererBase.prototype.renderFrame = function (num, forceRender) {
   if (
     this.renderedFrame === num &&
-      this.renderConfig.clearCanvas === true &&
-      !forceRender ||
+    this.renderConfig.clearCanvas === true &&
+    !forceRender ||
     this.destroyed ||
     num === -1
   ) {

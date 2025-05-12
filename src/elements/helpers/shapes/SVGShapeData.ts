@@ -57,6 +57,7 @@ export default class SVGShapeData {
       i++
     }
   }
+
   setAsAnimated() {
     this._isAnimated = true
   }

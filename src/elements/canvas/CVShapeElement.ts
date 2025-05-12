@@ -105,9 +105,9 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   clearCanvas(_canvasContext?:
-      | CanvasRenderingContext2D
-      | OffscreenCanvasRenderingContext2D
-      | null) {
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null) {
     throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
 
@@ -712,7 +712,7 @@ export default class CVShapeElement extends ShapeElement {
             pathNodes.v[0]
           ),
           t: 'c',
-        }, { t: 'z', })
+        }, { t: 'z' })
       }
     }
     styledShape.trNodes = shapeNodes

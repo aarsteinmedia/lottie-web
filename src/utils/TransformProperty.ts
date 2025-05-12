@@ -207,11 +207,13 @@ export class TransformProperty extends BaseProperty {
       this.getValue(true)
     }
   }
+
   override addDynamicProperty(prop: DynamicPropertyContainer) {
     super.addDynamicProperty(prop)
     this.elem.addDynamicProperty(prop)
     this._isDirty = true
   }
+
   applyToMatrix(mat: Matrix) {
     // This check is useful for develpment
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -265,9 +267,11 @@ export class TransformProperty extends BaseProperty {
       )
     }
   }
+
   autoOrient() {
     throw new Error(`${this.constructor.name}: Method autoOrient not implemented`)
   }
+
   override getValue(forceRender?: boolean) {
     if (this.elem.globalData.frameId === this.frameId) {
       return
@@ -327,14 +331,14 @@ export class TransformProperty extends BaseProperty {
             v1 = this.p.getValueAtTime(this.p.keyframes[this.p.keyframes.length - 1].t / frameRate,
               0) as Vector2
             v2 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) /
-                frameRate,
+              frameRate,
             0) as Vector2
           } else {
             v1 = this.p.pv as Vector2
             v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
-                Number(this.p.offsetTime) -
-                0.01) /
-                frameRate,
+              Number(this.p.offsetTime) -
+              0.01) /
+              frameRate,
             Number(this.p.offsetTime)) as Vector2
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
@@ -360,26 +364,26 @@ export class TransformProperty extends BaseProperty {
             px.keyframes[px.keyframes.length - 1].t
           ) {
             v1[0] = px.getValueAtTime(px.keyframes[px.keyframes.length - 1].t /
-                frameRate,
+              frameRate,
             0) as number
             v1[1] = py.getValueAtTime(py.keyframes[py.keyframes.length - 1].t /
-                frameRate,
+              frameRate,
             0) as number
             v2[0] = px.getValueAtTime((px.keyframes[px.keyframes.length - 1].t -
-                0.01) /
-                frameRate,
+              0.01) /
+              frameRate,
             0) as number
             v2[1] = py.getValueAtTime((py.keyframes[py.keyframes.length - 1].t -
-                0.01) /
-                frameRate,
+              0.01) /
+              frameRate,
             0) as number
           } else {
             v1 = [px.pv, py.pv]
             v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
-                frameRate,
+              frameRate,
             px.offsetTime) as number
             v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
-                frameRate,
+              frameRate,
             py.offsetTime) as number
           }
         } else {
@@ -471,6 +475,7 @@ export class TransformProperty extends BaseProperty {
       this.appliedTransformations = 4
     }
   }
+
   setGroupProperty(_propertyGroup: LayerExpressionInterface) {
     throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }

@@ -56,7 +56,7 @@ export default abstract class TextElement extends RenderableDOMElement {
           Number(documentData.justifyOffset) +
           (Number(documentData.boxWidth) -
             Number(documentData.lineWidths[lineNumber])) /
-          2,
+            2,
           0,
           0
         )

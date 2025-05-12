@@ -39,6 +39,7 @@ export default class Expressions {
   public resetFrame() {
     throw new Error(`${this.constructor.name}: Method resetFrame is not implemented`)
   }
+
   private popExpression() {
     this.stackCount -= 1
     if (this.stackCount === 0) {
@@ -49,11 +50,13 @@ export default class Expressions {
   private pushExpression() {
     this.stackCount += 1
   }
+
   private registerExpressionProperty(expression: PoolFactory) {
     if (!this.registers.includes(expression)) {
       this.registers.push(expression)
     }
   }
+
   private releaseInstances() {
     const { length } = this.registers
 

@@ -164,6 +164,7 @@ export default class AnimationItem extends BaseEvent {
     }
     this.trigger('segmentStart')
   }
+
   public advanceTime(value: number) {
     if (this.isPaused || !this.isLoaded) {
       return
@@ -214,12 +215,13 @@ export default class AnimationItem extends BaseEvent {
       this.trigger('complete')
     }
   }
+
   public checkLoaded() {
     if (
       this.isLoaded ||
       !this.renderer.globalData?.fontManager?.isLoaded ||
       !this.imagePreloader?.loadedImages() &&
-        this.renderer.rendererType === RendererType.Canvas ||
+      this.renderer.rendererType === RendererType.Canvas ||
       !this.imagePreloader?.loadedFootages()
     ) {
       return
@@ -239,6 +241,7 @@ export default class AnimationItem extends BaseEvent {
       this.play()
     }
   }
+
   public checkSegments(offset: number) {
     if (this.segments.length > 0) {
       this.adjustSegment(this.segments.shift() ?? [0, 0], offset)
@@ -248,6 +251,7 @@ export default class AnimationItem extends BaseEvent {
 
     return false
   }
+
   public configAnimation(animData: AnimationData) {
     // if (!this.renderer) {
     //   return
@@ -285,6 +289,7 @@ export default class AnimationItem extends BaseEvent {
       this.triggerConfigError(error)
     }
   }
+
   public destroy(name?: string) {
     if (name && this.name !== name) {
       return
@@ -303,6 +308,7 @@ export default class AnimationItem extends BaseEvent {
     this.imagePreloader = null
     this.projectInterface = null as unknown as ProjectInterface
   }
+
   public getAssetData(id?: string) {
     let i = 0
     const len = this.assets.length
@@ -316,6 +322,7 @@ export default class AnimationItem extends BaseEvent {
 
     return null
   }
+
   public getAssetsPath(assetData: null | LottieAsset) {
     if (!assetData) {
       return ''
@@ -339,9 +346,11 @@ export default class AnimationItem extends BaseEvent {
 
     return path
   }
+
   public getDuration(isFrame?: boolean) {
     return isFrame ? this.totalFrames : this.totalFrames / this.frameRate
   }
+
   public getMarkerData(markerName: number) {
     for (let i = 0; i < this.markers.length; i++) {
       if (this.markers[i].payload?.name === markerName) {
@@ -351,12 +360,15 @@ export default class AnimationItem extends BaseEvent {
 
     return null
   }
+
   public getPath() {
     return this.path
   }
+
   public getVolume() {
     return this.audioController.getVolume()
   }
+
   public goToAndPlay(
     value: number, isFrame?: boolean, name?: string
   ) {
@@ -382,6 +394,7 @@ export default class AnimationItem extends BaseEvent {
     }
     this.play()
   }
+
   public goToAndStop(
     value: number, isFrame?: boolean, name?: string
   ) {
@@ -403,6 +416,7 @@ export default class AnimationItem extends BaseEvent {
     }
     this.pause()
   }
+
   public gotoFrame() {
     this.currentFrame = this.isSubframeEnabled
       ? this.currentRawFrame
@@ -418,13 +432,16 @@ export default class AnimationItem extends BaseEvent {
     this.renderFrame()
     this.trigger('drawnFrame')
   }
+
   public hide() {
     this.renderer.hide()
   }
+
   public imagesLoaded() {
     this.trigger('loaded_images')
     this.checkLoaded()
   }
+
   public includeLayers(data: AnimationData) {
     // if (!this.renderer) {
     //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
@@ -462,6 +479,7 @@ export default class AnimationItem extends BaseEvent {
     completeAnimation(this.animationData,
       this.onSegmentComplete)
   }
+
   public loadNextSegment() {
     const { segments } = this.animationData
 
@@ -483,6 +501,7 @@ export default class AnimationItem extends BaseEvent {
       }
     )
   }
+
   public loadSegments() {
     const { segments } = this.animationData
 
@@ -491,12 +510,14 @@ export default class AnimationItem extends BaseEvent {
     }
     this.loadNextSegment()
   }
+
   public mute(name?: string) {
     if (name && this.name !== name) {
       return
     }
     this.audioController.mute()
   }
+
   public onSegmentComplete(data: AnimationData) {
     this.animationData = data
     const ExpressionsPlugin = getExpressionsPlugin()
@@ -506,9 +527,11 @@ export default class AnimationItem extends BaseEvent {
     }
     this.loadNextSegment()
   }
+
   public onSetupError() {
     this.trigger('data_failed')
   }
+
   public pause(name?: string) {
     if (name && this.name !== name) {
       return
@@ -521,6 +544,7 @@ export default class AnimationItem extends BaseEvent {
       this.audioController.pause()
     }
   }
+
   public play(name?: string) {
     if (name && this.name !== name) {
       return
@@ -536,6 +560,7 @@ export default class AnimationItem extends BaseEvent {
       }
     }
   }
+
   public playSegments(arr: Vector2 | Vector2[], forceFlag?: boolean) {
     if (forceFlag) {
       this.segments.length = 0
@@ -556,6 +581,7 @@ export default class AnimationItem extends BaseEvent {
       this.play()
     }
   }
+
   public preloadImages() {
     if (!this.imagePreloader) {
       return
@@ -565,6 +591,7 @@ export default class AnimationItem extends BaseEvent {
     this.imagePreloader.loadAssets(this.animationData.assets,
       this.imagesLoaded.bind(this))
   }
+
   public renderFrame(_num?: number | null) {
     if (!this.isLoaded) {
       return
@@ -578,6 +605,7 @@ export default class AnimationItem extends BaseEvent {
       this.triggerRenderFrameError(error)
     }
   }
+
   public resetSegments(forceFlag?: boolean) {
     this.segments.length = 0
     this.segments.push([this.animationData.ip, this.animationData.op])
@@ -585,6 +613,7 @@ export default class AnimationItem extends BaseEvent {
       this.checkSegments(0)
     }
   }
+
   public resize(width?: number, height?: number) {
     // if (!this.renderer) {
     //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
@@ -595,6 +624,7 @@ export default class AnimationItem extends BaseEvent {
 
     this.renderer.updateContainerSize(_width, _height)
   }
+
   public setCurrentRawFrameValue(value: number) {
     this.currentRawFrame = value
     this.gotoFrame()
@@ -678,6 +708,7 @@ export default class AnimationItem extends BaseEvent {
       throw new Error(`${this.constructor.name}: Could not set data`)
     }
   }
+
   public setDirection(val: AnimationDirection, name?: string) {
     if (name && this.name !== name) {
       return
@@ -685,9 +716,11 @@ export default class AnimationItem extends BaseEvent {
     this.playDirection = val < 0 ? -1 : 1
     this.updaFrameModifier()
   }
+
   public setLoop(isLooping: boolean) {
     this.loop = isLooping
   }
+
   public setParams(params: AnimationConfiguration) {
     try {
       if (params.wrapper || params.container) {
@@ -755,6 +788,7 @@ export default class AnimationItem extends BaseEvent {
       throw new Error(`${this.constructor.name}: Could not set params`)
     }
   }
+
   public setSegment(init: number, end: number) {
     let pendingFrame = -1
 
@@ -773,6 +807,7 @@ export default class AnimationItem extends BaseEvent {
       this.goToAndStop(pendingFrame, true)
     }
   }
+
   public setSpeed(val: number, name?: string) {
     if (name && this.name !== name) {
       return
@@ -780,21 +815,26 @@ export default class AnimationItem extends BaseEvent {
     this.playSpeed = val
     this.updaFrameModifier()
   }
+
   public setSubframe(flag: boolean) {
     this.isSubframeEnabled = Boolean(flag)
   }
+
   public setupAnimation(data: AnimationData) {
     completeAnimation(data, this.configAnimation)
   }
+
   public setVolume(val: number, name?: string) {
     if (name && this.name !== name) {
       return
     }
     this.audioController.setVolume(val)
   }
+
   public show() {
     this.renderer.show()
   }
+
   public stop(name?: string) {
     if (name && this.name !== name) {
       return
@@ -804,6 +844,7 @@ export default class AnimationItem extends BaseEvent {
     this._completedLoop = false
     this.setCurrentRawFrameValue(0)
   }
+
   public togglePause(name?: string) {
     if (name && this.name !== name) {
       return
@@ -814,6 +855,7 @@ export default class AnimationItem extends BaseEvent {
       this.pause()
     }
   }
+
   public trigger(name: AnimationEventName) {
     try {
       if (!this._cbs[name]) {
@@ -890,12 +932,14 @@ export default class AnimationItem extends BaseEvent {
       console.error(`${this.constructor.name}:\n`, error)
     }
   }
+
   public triggerConfigError(nativeError: unknown) {
     const error = new BMConfigErrorEvent(nativeError, this.currentFrame)
 
     this.triggerEvent('error', error)
     this.onError?.(error)
   }
+
   public triggerRenderFrameError(nativeError: unknown) {
     const error = new BMRenderFrameErrorEvent(nativeError, this.currentFrame)
 
@@ -903,12 +947,14 @@ export default class AnimationItem extends BaseEvent {
 
     this.onError?.(error)
   }
+
   public unmute(name?: string) {
     if (name && this.name !== name) {
       return
     }
     this.audioController.unmute()
   }
+
   public updaFrameModifier() {
     this.frameModifier = (this.frameMult *
       this.playSpeed *
@@ -931,6 +977,7 @@ export default class AnimationItem extends BaseEvent {
       console.warn(_error)
     }
   }
+
   public waitForFontsLoaded() {
     // if (!this.renderer) {
     //   return

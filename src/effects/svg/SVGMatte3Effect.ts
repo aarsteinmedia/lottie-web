@@ -29,6 +29,7 @@ export default class SVGMatte3Effect {
     }
     elem.baseElement = elem.matteElement
   }
+
   findSymbol(mask: ElementInterfaceIntersect) {
     let i = 0
     const len = _svgMatteSymbols.length
@@ -42,6 +43,7 @@ export default class SVGMatte3Effect {
 
     return null
   }
+
   initialize() {
     const ind = this.filterManager.effectElements[0].p.v
     const elements = this.elem.comp?.elements ?? []
@@ -56,6 +58,7 @@ export default class SVGMatte3Effect {
     }
     this.initialized = true
   }
+
   renderFrame() {
     if (!this.initialized) {
       this.initialize()

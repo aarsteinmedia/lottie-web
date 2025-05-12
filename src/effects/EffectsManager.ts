@@ -53,6 +53,7 @@ export class GroupEffect extends DynamicPropertyContainer {
       data, element, layer
     )
   }
+
   init(
     data: Effect, element: ElementInterfaceIntersect, layer: LottieLayer
   ) {
@@ -121,6 +122,7 @@ export class GroupEffect extends DynamicPropertyContainer {
       this.effectElements.push(eff as EFXElement)
     }
   }
+
   renderFrame(_frame?: number | null) {
     throw new Error(`${this.constructor.name}: Method renderFrame is not implemented yet`)
   }

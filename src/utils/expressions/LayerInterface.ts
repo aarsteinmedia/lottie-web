@@ -99,6 +99,7 @@ export default class LayerExpressionInterface {
       arr[0], arr[1], arr[2] || 0
     )
   }
+
   public fromComp(arr: number[]) {
     const toWorldMat = new Matrix()
 
@@ -116,11 +117,13 @@ export default class LayerExpressionInterface {
 
     return toWorldMat.inversePoint(arr)
   }
+
   public fromWorld(arr: number[], time?: number) {
     const toWorldMat = this.getMatrix(time)
 
     return this.invertPoint(toWorldMat, arr)
   }
+
   public fromWorldVec(arr: number[], time?: number) {
     const toWorldMat = this.getMatrix(time)
 
@@ -130,6 +133,7 @@ export default class LayerExpressionInterface {
 
     return this.invertPoint(toWorldMat, arr)
   }
+
   public getMatrix(time?: number) {
     const toWorldMat = new Matrix()
 
@@ -145,6 +149,7 @@ export default class LayerExpressionInterface {
 
     return toWorldMat
   }
+
   public invertPoint(matrix: Matrix, arr: number[]) {
     if (this._elem.hierarchy?.length) {
       let i
@@ -157,12 +162,15 @@ export default class LayerExpressionInterface {
 
     return matrix.inversePoint(arr)
   }
+
   registerEffectsInterface(effects: any) {
     this.effect = effects
   }
+
   registerMaskInterface(maskManager: MaskElement) {
     this.mask = new MaskManager(maskManager)
   }
+
   public sampleImage(): Vector4 {
     return [1,
       1,
@@ -173,14 +181,17 @@ export default class LayerExpressionInterface {
   sourceRectAtTime() {
     throw new Error(`${this.constructor.name}: Method sourceRectAtTime is not implemented`)
   }
+
   public toComp(_arr: number[], _time?: number) {
     throw new Error(`${this.constructor.name}: Method toComp is not implemented`)
   }
+
   public toWorld(arr: number[], time?: number) {
     const toWorldMat = this.getMatrix(time)
 
     return this.applyPoint(toWorldMat, arr)
   }
+
   public toWorldVec(arr: number[], time?: number) {
     const toWorldMat = this.getMatrix(time)
 

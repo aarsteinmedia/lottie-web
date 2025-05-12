@@ -37,6 +37,7 @@ export default class SVGStyleData {
     this.pElem = createNS<SVGPathElement>('path')
     this.msElem = null
   }
+
   reset() {
     this.d = ''
     this._mdf = false

@@ -3,7 +3,6 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
-  VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
@@ -89,7 +88,7 @@ export default class HCompElement extends CompElement {
       data.tm
         ? PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
-          data.tm as VectorProperty,
+          data.tm,
           0,
           globalData.frameRate,
           this as unknown as ElementInterfaceIntersect
@@ -103,9 +102,11 @@ export default class HCompElement extends CompElement {
   _createBaseContainerElements() {
     throw new Error(`${this.constructor.name}: Method _createBaseContainerElements is not implemented`)
   }
+
   addEffects() {
     throw new Error(`${this.constructor.name}: Method addEffects is not implemented`)
   }
+
   addTo3dContainer(elem: ElementInterfaceIntersect, pos: number) {
     let j = 0,
       nextElement
@@ -136,18 +137,23 @@ export default class HCompElement extends CompElement {
   ) {
     throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
   }
+
   checkBlendMode() {
     throw new Error(`${this.constructor.name}: Method checkBlendMode is not implemented`)
   }
+
   checkPendingElements() {
     throw new Error(`${this.constructor.name}: Method checkPendingElements is not implemented`)
   }
+
   configAnimation(_data: AnimationData) {
     throw new Error(`${this.constructor.name}: Method configAnimation is not implemented`)
   }
+
   createCamera(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createCamera is not implemented`)
   }
+
   createComp(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
@@ -166,6 +172,7 @@ export default class HCompElement extends CompElement {
       this as unknown as ElementInterfaceIntersect
     )
   }
+
   override createContainerElements() {
     this._createBaseContainerElements()
     // divElement.style.clip = 'rect(0px, '+this.data.w+'px, '+this.data.h+'px, 0px)';
@@ -181,21 +188,27 @@ export default class HCompElement extends CompElement {
   createImage(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
   }
+
   createShape(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createShape is not implemented`)
   }
+
   createSolid(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createSolid is not implemented`)
   }
+
   createText(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createText is not implemented`)
   }
+
   createThreeDContainer(_pos: number, _type: string) {
     throw new Error(`${this.constructor.name}: Method createThreeDContainer is not implemented`)
   }
+
   getThreeDContainerByPos(_pos: number) {
     throw new Error(`${this.constructor.name}: Method getThreeDContainerByPos is not implemented`)
   }
+
   initItems() {
     throw new Error(`${this.constructor.name}: Method initItems is not implemented`)
   }

@@ -99,7 +99,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       if (
         !elements[elementIndex] ||
         elements[elementIndex] ===
-          (true as unknown as ElementInterfaceIntersect)
+        (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
         this.addPendingElement(element as ElementInterfaceIntersect)

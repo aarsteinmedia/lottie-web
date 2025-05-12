@@ -105,6 +105,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
     throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)
   }
+
   initiateExpression(
     _elem: ElementInterfaceIntersect,
     _data: TextSelectorProperty,
@@ -112,6 +113,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   ) {
     throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }
+
   interpolateShape(
     frameNum: number,
     previousValue: ShapePath,
@@ -192,9 +194,9 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
           }
           perc =
             fnc?.((frameNum - (keyData.t - this.offsetTime)) /
-                (nextKeyData.t -
-                  this.offsetTime -
-                  (keyData.t - this.offsetTime))) || 0
+              (nextKeyData.t -
+                this.offsetTime -
+                (keyData.t - this.offsetTime))) || 0
         }
         keyPropE = nextKeyData.s ? nextKeyData.s[0] : keyData.e[0]
       }
@@ -230,6 +232,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       }
     }
   }
+
   interpolateShapeCurrentTime() {
     if (!this.pv) {
       throw new Error(`${this.constructor.name}: Cannot parse ShapePath v value`)
@@ -259,6 +262,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     return this.pv
   }
+
   processEffectsSequence() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
@@ -298,9 +302,11 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     this.lock = false
     this.frameId = this.elem?.globalData?.frameId || 0
   }
+
   reset() {
     this.paths = this.localShapeCollection
   }
+
   setVValue(newPath?: ShapePath) {
     if (!this.v || !newPath) {
       throw new Error(`${this.constructor.name}: ShapePath is not set`)
@@ -316,6 +322,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       this.paths = this.localShapeCollection
     }
   }
+
   shapesEqual(shape1: ShapePath, shape2: ShapePath) {
     if (shape1._length !== shape2._length || shape1.c !== shape2.c) {
       return false
@@ -390,6 +397,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
       this.convertRectToPath()
     }
   }
+
   convertRectToPath() {
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
@@ -623,6 +631,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
       }
     }
   }
+
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
       return
@@ -764,6 +773,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
     ;(this.paths as unknown as { length: number }).length = 0 // TODO: Check if values are different in star shapes
     ;(this.paths as unknown as any[])[0] = this.v
   }
+
   convertStarToPath() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
@@ -824,9 +834,11 @@ export class StarShapeProperty extends ShapeBaseProperty {
       currentAng += angle * dir
     }
   }
+
   convertToPath() {
     throw new Error(`${this.constructor.name}: Method convertToPath is not implemented`)
   }
+
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
       return
@@ -878,6 +890,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
       this.convertEllToPath()
     }
   }
+
   convertEllToPath() {
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
@@ -915,6 +928,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
     _v.o[3][0] = _cw ? p0 - s0 : p0 + s0
     _v.o[3][1] = p1 - s1 * this._cPoint
   }
+
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
       return
@@ -966,6 +980,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.effectsSequence = []
     this.getValue = this.processEffectsSequence
   }
+
   setGroupProperty(_propertyInterface: PropertyInterface) {
     throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }

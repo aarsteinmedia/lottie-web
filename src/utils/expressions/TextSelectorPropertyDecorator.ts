@@ -55,15 +55,19 @@ export default class TextExpressionSelectorPropFactory {
     }
     this.setGroupProperty = setGroupProperty
   }
+
   getMult(_index: number, _total: number) {
     throw new Error(`${this.constructor.name}: Method getMult is not implemented`)
   }
+
   getValue(_val?: number): number {
     throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
   }
+
   getValueAtTime(_frameNum: number) {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }
+
   getValueProxy(index: number, total: number) {
     this.textIndex = index + 1
     this.textTotal = total
@@ -71,9 +75,11 @@ export default class TextExpressionSelectorPropFactory {
 
     return this.v
   }
+
   getVelocityAtTime(_frameNum: number) {
     throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
   }
+
   setGroupProperty(_propertyGroup: any) {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }

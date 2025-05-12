@@ -53,6 +53,7 @@ export default class DashProperty extends DynamicPropertyContainer {
     }
     this._isAnimated = this.k
   }
+
   override getValue(forceRender?: boolean) {
     if (this.elem.globalData.frameId === this.frameId && !forceRender) {
       return

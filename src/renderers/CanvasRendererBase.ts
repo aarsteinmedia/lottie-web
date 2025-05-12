@@ -297,8 +297,8 @@ export default class CanvasRendererBase extends BaseRenderer {
 
     if (
       this.renderedFrame === num &&
-        this.renderConfig?.clearCanvas === true &&
-        !forceRender ||
+      this.renderConfig?.clearCanvas === true &&
+      !forceRender ||
       this.destroyed ||
       num === -1
     ) {
@@ -450,7 +450,7 @@ export default class CanvasRendererBase extends BaseRenderer {
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
             2 *
-          this.renderConfig.dpr
+            this.renderConfig.dpr
       } else if (
         xPos === 'xMax' &&
         (animationRel < elementRel && fillType === 'meet' ||
@@ -459,7 +459,7 @@ export default class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.tx =
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) *
-          this.renderConfig.dpr
+            this.renderConfig.dpr
       } else {
         this.transformCanvas.tx = 0
       }
@@ -472,7 +472,7 @@ export default class CanvasRendererBase extends BaseRenderer {
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
             2 *
-          this.renderConfig.dpr
+            this.renderConfig.dpr
       } else if (
         yPos === 'YMax' &&
         (animationRel > elementRel && fillType === 'meet' ||
@@ -481,7 +481,7 @@ export default class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.ty =
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) *
-          this.renderConfig.dpr
+            this.renderConfig.dpr
       } else {
         this.transformCanvas.ty = 0
       }

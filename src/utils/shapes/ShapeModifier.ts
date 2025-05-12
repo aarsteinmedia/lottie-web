@@ -49,9 +49,11 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       data.setAsAnimated()
     }
   }
+
   addShapeToModifier(_shapeData: SVGShapeData) {
     throw new Error(`${this.constructor.name}: Method addShapeToModifier is not implemented`)
   }
+
   init(
     elem: ElementInterfaceIntersect,
     data: Shape | Shape[],
@@ -71,9 +73,11 @@ export default class ShapeModifier extends DynamicPropertyContainer {
       this.getValue(true)
     }
   }
+
   initModifierProperties(_elem: ElementInterfaceUnion, _data: Shape | Shape[]) {
     throw new Error(`${this.constructor.name}: Method initModifierProperties is not implemented`)
   }
+
   isAnimatedWithShape(_data: Shape): boolean {
     throw new Error(`${this.constructor.name}: Method isAnimatedWithShape is not implemented`)
   }

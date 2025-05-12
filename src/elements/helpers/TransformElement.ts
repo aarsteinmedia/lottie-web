@@ -52,6 +52,7 @@ export default abstract class TransformElement extends BaseElement {
 
     return pt
   }
+
   initTransform() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: LottiePlayer is not initialized`)
@@ -83,6 +84,7 @@ export default abstract class TransformElement extends BaseElement {
     //   // this.createElements();
     // }
   }
+
   renderLocalTransform() {
     if (!this.localTransforms) {
       return
@@ -128,6 +130,7 @@ export default abstract class TransformElement extends BaseElement {
       this.finalTransform.localOpacity = localOp
     }
   }
+
   renderTransform() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not initialized`)
@@ -174,6 +177,7 @@ export default abstract class TransformElement extends BaseElement {
       this.finalTransform.localOpacity = Number(this.finalTransform.mProp.o?.v)
     }
   }
+
   searchEffectTransforms() {
     if (!this.renderableEffectsManager) {
       return

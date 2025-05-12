@@ -33,6 +33,7 @@ export default class TrimModifier extends ShapeModifier {
       localShapeCollection.addShape(newPaths[i])
     }
   }
+
   addSegment(
     pt1: Vector2,
     pt2: Vector2,
@@ -57,6 +58,7 @@ export default class TrimModifier extends ShapeModifier {
       pt4[0], pt4[1], 'v', pos + 1
     )
   }
+
   addSegmentFromArray(
     points: number[],
     shapePath: ShapePath,
@@ -78,6 +80,7 @@ export default class TrimModifier extends ShapeModifier {
       points[3], points[7], 'v', pos + 1
     )
   }
+
   addShapes(
     shapeData: SVGShapeData,
     shapeSegment: {
@@ -235,9 +238,11 @@ export default class TrimModifier extends ShapeModifier {
 
     return shapes
   }
+
   override addShapeToModifier(shapeData: SVGShapeData) {
     shapeData.pathsData = []
   }
+
   calculateShapeEdges(
     s: number,
     e: number,

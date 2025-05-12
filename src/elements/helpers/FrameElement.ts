@@ -26,6 +26,7 @@ export default abstract class FrameElement extends HierarchyElement {
     // If layer has been modified in current tick this will be true
     this._mdf = false
   }
+
   prepareProperties(_number: number, isVisible?: boolean) {
     const { length } = this.dynamicProperties
 

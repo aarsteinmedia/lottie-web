@@ -69,6 +69,7 @@ export default class PolynomialBezier {
       width: bounds.x.max - bounds.x.min,
     }
   }
+
   bounds() {
     return {
       x: this._extrema(this, 0),
@@ -81,6 +82,7 @@ export default class PolynomialBezier {
       (3 * t * this.a[0] + 2 * this.b[0]) * t + this.c[0], (3 * t * this.a[1] + 2 * this.b[1]) * t + this.c[1],
     ]
   }
+
   inflectionPoints() {
     const denom = this.a[1] * this.b[0] - this.a[0] * this.b[1]
 
@@ -136,6 +138,7 @@ export default class PolynomialBezier {
 
     return intersections
   }
+
   normalAngle(t: number) {
     const p = this.derivative(t)
 

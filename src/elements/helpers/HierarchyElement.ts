@@ -7,7 +7,7 @@ import type { ElementInterfaceIntersect } from '@/types'
 
 import TransformElement from '@/elements/helpers/TransformElement'
 
-export default class HierarchyElement extends TransformElement {
+export default abstract class HierarchyElement extends TransformElement {
   _isParent?: boolean
 
   checkParenting() {
@@ -27,6 +27,7 @@ export default class HierarchyElement extends TransformElement {
       []
     )
   }
+
   initHierarchy() {
     // element's parent list
     this.hierarchy = []
@@ -34,9 +35,11 @@ export default class HierarchyElement extends TransformElement {
     this._isParent = false
     this.checkParenting()
   }
+
   setAsParent() {
     this._isParent = true
   }
+
   setHierarchy(hierarchy: ElementInterfaceIntersect[]) {
     this.hierarchy = hierarchy
   }

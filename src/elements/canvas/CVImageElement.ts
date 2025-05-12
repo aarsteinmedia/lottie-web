@@ -65,9 +65,11 @@ export default class CVImageElement extends RenderableElement {
   clearCanvas() {
     throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
+
   createContainerElements() {
     throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
   }
+
   createContent() {
     if (!this.assetData) {
       throw new Error(`${this.constructor.name}: assetData is not implemented`)
@@ -121,21 +123,27 @@ export default class CVImageElement extends RenderableElement {
     )
     this.img = canvas
   }
+
   createElements() {
     throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
+
   createRenderableComponents() {
     throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
   }
+
   destroy() {
     this.img = null as unknown as HTMLCanvasElement
   }
+
   exitLayer() {
     throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
   }
+
   hideElement() {
     throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
   }
+
   initElement(
     _data: LottieLayer,
     _globalData: GlobalData,
@@ -143,6 +151,7 @@ export default class CVImageElement extends RenderableElement {
   ) {
     throw new Error(`${this.constructor.name}: Method initElement is not implemented`)
   }
+
   initRendererElement() {
     throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
   }

@@ -127,6 +127,7 @@ export default class SVGCompElement extends SVGBaseElement {
   addPendingElement(_el: ElementInterfaceIntersect) {
     throw new Error(`${this.constructor.name}: Method addPendingElement not implemented yet`)
   }
+
   appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
     throw new Error(`${this.constructor.name}: Method appendElementInPos not implemented yet`)
   }
@@ -134,6 +135,7 @@ export default class SVGCompElement extends SVGBaseElement {
   buildElementParenting(_el: ElementInterfaceIntersect) {
     throw new Error(`${this.constructor.name}: Method buildElementParenting not implemented yet`)
   }
+
   buildItem(_pos: number) {
     throw new Error(`${this.constructor.name}: Method buildItem not implemented yet`)
   }
@@ -141,12 +143,15 @@ export default class SVGCompElement extends SVGBaseElement {
   checkPendingElements() {
     throw new Error(`${this.constructor.name}: Method checkPendingElements not implemented yet`)
   }
+
   configAnimation(_data: AnimationData) {
     throw new Error(`${this.constructor.name}: Method configAnimation not implemented yet`)
   }
+
   createAudio(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createAudio not implemented yet`)
   }
+
   createCamera(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createCamera not implemented yet`)
   }
@@ -166,51 +171,67 @@ export default class SVGCompElement extends SVGBaseElement {
   createFootage(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createFootage not implemented yet`)
   }
+
   createImage(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createImage not implemented yet`)
   }
+
   createItem(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createItem not implemented yet`)
   }
+
   createNull(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createNull not implemented yet`)
   }
+
   createShape(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createShape not implemented yet`)
   }
+
   createSolid(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createSolid not implemented yet`)
   }
+
   createText(_data: LottieLayer) {
     throw new Error(`${this.constructor.name}: Method createText not implemented yet`)
   }
+
   destroyElements() {
     throw new Error(`${this.constructor.name}: Method destroyElements not implemented yet`)
   }
+
   findIndexByInd() {
     throw new Error(`${this.constructor.name}: Method findIndexByInd not implemented yet`)
   }
+
   getElementById(_ind: number): ElementInterfaceIntersect | null {
     throw new Error(`${this.constructor.name}: Method getElementById not implemented yet`)
   }
+
   getElementByPath(_path: unknown[]): ElementInterfaceIntersect | undefined {
     throw new Error(`${this.constructor.name}: Method getElementByPath not implemented yet`)
   }
+
   getElements() {
     throw new Error(`${this.constructor.name}: Method getElements not implemented yet`)
   }
+
   includeLayers(_data: LottieLayer[]) {
     throw new Error(`${this.constructor.name}: Method includeLayers not implemented yet`)
   }
+
   initItems() {
     throw new Error(`${this.constructor.name}: Method initItems not implemented yet`)
   }
+
   searchExtraCompositions(_assets: LottieLayer[]) {
     throw new Error(`${this.constructor.name}: Method searchExtraCompositions not implemented yet`)
   }
+
   setElements(_elems: ElementInterfaceIntersect[]) {
     throw new Error(`${this.constructor.name}: Method setElements not implemented yet`)
   }
+
   setProjectInterface(_interface: null | ProjectInterface) {
     throw new Error(`${this.constructor.name}: Method setProjectInterface not implemented yet`)
   }

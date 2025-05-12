@@ -24,6 +24,7 @@ export default class PoolFactory {
     this.newElement = this.newElement.bind(this)
     this.release = this.release.bind(this)
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   newElement<T = unknown>() {
     let element
@@ -38,6 +39,7 @@ export default class PoolFactory {
 
     return element as T
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   release<T = unknown>(element?: T) {
     if (this._length === this._maxLength) {

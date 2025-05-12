@@ -47,6 +47,7 @@ export default class HybridRenderer extends HybridRendererBase {
     this.supports3d = true
     this.rendererType = RendererType.HTML
   }
+
   override createComp(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)

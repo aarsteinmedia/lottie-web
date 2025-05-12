@@ -41,6 +41,7 @@ export default class LetterProps {
       sw: Boolean(sw),
     }
   }
+
   update(
     o: number,
     sw: number,

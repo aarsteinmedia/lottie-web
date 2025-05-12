@@ -5,7 +5,7 @@ import type Matrix from '@/utils/Matrix'
 
 import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import { ShapeType } from '@/utils/enums'
-import ShapePropertyFactory, { type ShapeProperty, } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default class CVShapeData {
   _isAnimated?: boolean
@@ -69,6 +69,7 @@ export default class CVShapeData {
 
     this.setAsAnimated = setAsAnimated
   }
+
   setAsAnimated() {
     throw new Error(`${this.constructor.name}: Method setAsAnimated is not implemented`)
   }

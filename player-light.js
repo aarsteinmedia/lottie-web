@@ -1,8 +1,10 @@
+import { strFromU8, unzip as unzip$1 } from 'fflate'
 import Lottie from '@aarsteinmedia/lottie-web/light'
 import { createElementID } from '@aarsteinmedia/lottie-web/utils'
-import { strFromU8, unzip as unzip$1 } from 'fflate'
-;(function (l, r) {
-  if (!l || l.getElementById('livereloadscript')) {
+;
+
+(function (l, r) {
+  if (!l || l.querySelector('#livereloadscript')) {
     return
   }
   r = l.createElement('script')
@@ -11,18 +13,23 @@ import { strFromU8, unzip as unzip$1 } from 'fflate'
     (self.location.host || 'localhost').split(':')[0]
   }:35729/livereload.js?snipver=1`
   r.id = 'livereloadscript'
-  l.getElementsByTagName('head')[0].appendChild(r)
+  l.querySelectorAll('head')[0].appendChild(r)
 })(self.document)
 
-const ObjectFit = /* #__PURE__ */ (function (ObjectFit) {
+const ObjectFit = /**
+ * #__PURE__
+ */ (function (ObjectFit) {
   ObjectFit.Contain = 'contain'
   ObjectFit.Cover = 'cover'
   ObjectFit.Fill = 'fill'
   ObjectFit.ScaleDown = 'scale-down'
   ObjectFit.None = 'none'
+
   return ObjectFit
 })({})
-const PlayerState = /* #__PURE__ */ (function (PlayerState) {
+const PlayerState = /**
+ * #__PURE__
+ */ (function (PlayerState) {
   PlayerState.Completed = 'completed'
   PlayerState.Destroyed = 'destroyed'
   PlayerState.Error = 'error'
@@ -31,14 +38,20 @@ const PlayerState = /* #__PURE__ */ (function (PlayerState) {
   PlayerState.Paused = 'paused'
   PlayerState.Playing = 'playing'
   PlayerState.Stopped = 'stopped'
+
   return PlayerState
 })({})
-const PlayMode = /* #__PURE__ */ (function (PlayMode) {
+const PlayMode = /**
+ * #__PURE__
+ */ (function (PlayMode) {
   PlayMode.Bounce = 'bounce'
   PlayMode.Normal = 'normal'
+
   return PlayMode
 })({})
-const PlayerEvents = /* #__PURE__ */ (function (PlayerEvents) {
+const PlayerEvents = /**
+ * #__PURE__
+ */ (function (PlayerEvents) {
   PlayerEvents.Complete = 'complete'
   PlayerEvents.Destroyed = 'destroyed'
   PlayerEvents.Error = 'error'
@@ -53,19 +66,26 @@ const PlayerEvents = /* #__PURE__ */ (function (PlayerEvents) {
   PlayerEvents.Ready = 'ready'
   PlayerEvents.Rendered = 'rendered'
   PlayerEvents.Stop = 'stop'
+
   return PlayerEvents
 })({})
-const PreserveAspectRatio = /* #__PURE__ */ (function (PreserveAspectRatio) {
+const PreserveAspectRatio = /**
+ * #__PURE__
+ */ (function (PreserveAspectRatio) {
   PreserveAspectRatio.Contain = 'xMidYMid meet'
   PreserveAspectRatio.Cover = 'xMidYMid slice'
   PreserveAspectRatio.None = 'xMinYMin slice'
   PreserveAspectRatio.Initial = 'none'
+
   return PreserveAspectRatio
 })({})
-const RendererType = /* #__PURE__ */ (function (RendererType) {
+const RendererType = /**
+ * #__PURE__
+ */ (function (RendererType) {
   RendererType.SVG = 'svg'
   RendererType.HTML = 'html'
   RendererType.Canvas = 'canvas'
+
   return RendererType
 })({})
 
@@ -73,16 +93,21 @@ class CustomError extends Error {}
 const aspectRatio = (objectFit) => {
     switch (objectFit) {
       case ObjectFit.Contain:
-      case ObjectFit.ScaleDown:
+      case ObjectFit.ScaleDown: {
         return 'xMidYMid meet'
-      case ObjectFit.Cover:
+      }
+      case ObjectFit.Cover: {
         return 'xMidYMid slice'
-      case ObjectFit.Fill:
+      }
+      case ObjectFit.Fill: {
         return 'none'
-      case ObjectFit.None:
+      }
+      case ObjectFit.None: {
         return 'xMinYMin slice'
-      default:
+      }
+      default: {
         return 'xMidYMid meet'
+      }
     }
   },
   download = (data, options) => {
@@ -92,6 +117,7 @@ const aspectRatio = (objectFit) => {
       fileName = options?.name || createElementID(),
       dataURL = URL.createObjectURL(blob),
       link = document.createElement('a')
+
     link.href = dataURL
     link.download = fileName
     link.hidden = true
@@ -102,7 +128,7 @@ const aspectRatio = (objectFit) => {
       URL.revokeObjectURL(dataURL)
     }, 1000)
   },
-  frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0'),
+  frameOutput = (frame) => { return ((frame ?? 0) + 1).toString().padStart(3, '0') },
   getAnimationData = async (input) => {
     try {
       if (!input || (typeof input !== 'string' && typeof input !== 'object')) {
@@ -110,6 +136,7 @@ const aspectRatio = (objectFit) => {
       }
       if (typeof input !== 'string') {
         const animations = Array.isArray(input) ? input : [input]
+
         return {
           animations,
           isDotLottie: false,
@@ -117,8 +144,10 @@ const aspectRatio = (objectFit) => {
         }
       }
       const result = await fetch(input)
+
       if (!result.ok) {
         const error = new CustomError(result.statusText)
+
         error.status = result.status
         throw error
       }
@@ -127,9 +156,11 @@ const aspectRatio = (objectFit) => {
        * then – if filename has no extension – by cloning the response
        * and parsing it for content.
        */ const ext = getExt(input)
+
       if (ext === 'json' || !ext) {
         if (ext) {
           const lottie = await result.json()
+
           return {
             animations: [lottie],
             isDotLottie: false,
@@ -137,25 +168,29 @@ const aspectRatio = (objectFit) => {
           }
         }
         const text = await result.clone().text()
+
         try {
           const lottie = JSON.parse(text)
+
           return {
             animations: [lottie],
             isDotLottie: false,
             manifest: null,
           }
-        } catch (_e) {
+        } catch (error) {
           /* empty */
         }
       }
       const { data, manifest } = await getLottieJSON(result)
+
       return {
         animations: data,
         isDotLottie: true,
         manifest,
       }
-    } catch (err) {
-      console.error(`❌ ${handleErrors(err).message}`)
+    } catch (error) {
+      console.error(`❌ ${handleErrors(error).message}`)
+
       return {
         animations: null,
         isDotLottie: false,
@@ -164,23 +199,27 @@ const aspectRatio = (objectFit) => {
     }
   },
   /**
-   * Parse URL to get filename
-   * @param { string } src The url string
-   * @param { boolean } keepExt Whether to include file extension
-   * @returns { string } Filename, in lowercase
+   * Parse URL to get filename.
+   *
+   * @param { string } src - The url string.
+   * @param { boolean } keepExt - Whether to include file extension.
+   * @returns { string } Filename, in lowercase.
    */ /**
-   * Get extension from filename, URL or path
-   * @param { string } str Filename, URL or path
+   * Get extension from filename, URL or path.
+   *
+   * @param str - Filename, URL or path.
    */ getExt = (str) => {
     if (typeof str !== 'string' || !str || !hasExt(str)) {
       return
     }
+
     return str.split('.').pop()?.toLowerCase()
   },
   getFilename = (src, keepExt) => {
     // Because the regex strips all special characters, we need to extract the file extension, so we can add it later if we need it
     getExt(src)
-    return `${src.replace(/\.[^.]*$/, '').replace(/\W+/g, '')}${''}`.toLowerCase()
+
+    return `${src.replace(/\.[^.]*$/, '').replaceAll(/\W+/g, '')}${''}`.toLowerCase()
   },
   getLottieJSON = async (resp) => {
     const unzipped = await unzip(resp),
@@ -188,15 +227,18 @@ const aspectRatio = (objectFit) => {
       data = [],
       toResolve = [],
       { length } = manifest.animations
+
     for (let i = 0; i < length; i++) {
       const str = strFromU8(
           unzipped[`animations/${manifest.animations[i].id}.json`]
         ),
         lottie = JSON.parse(prepareString(str))
+
       toResolve.push(resolveAssets(unzipped, lottie.assets))
       data.push(lottie)
     }
     await Promise.all(toResolve)
+
     return {
       data,
       manifest,
@@ -205,33 +247,40 @@ const aspectRatio = (objectFit) => {
   getManifest = (unzipped) => {
     const file = strFromU8(unzipped['manifest.json'], false),
       manifest = JSON.parse(file)
+
     if (!('animations' in manifest)) {
       throw new Error('Manifest not found')
     }
-    if (!manifest.animations.length) {
+    if (manifest.animations.length === 0) {
       throw new Error('No animations listed in manifest')
     }
+
     return manifest
   },
   getMimeFromExt = (ext) => {
     switch (ext) {
       case 'svg':
-      case 'svg+xml':
+      case 'svg+xml': {
         return 'image/svg+xml'
+      }
       case 'jpg':
-      case 'jpeg':
+      case 'jpeg': {
         return 'image/jpeg'
+      }
       case 'png':
       case 'gif':
       case 'webp':
-      case 'avif':
+      case 'avif': {
         return `image/${ext}`
+      }
       case 'mp3':
       case 'mpeg':
-      case 'wav':
+      case 'wav': {
         return `audio/${ext}`
-      default:
+      }
+      default: {
         return ''
+      }
     }
   },
   handleErrors = (err) => {
@@ -239,6 +288,7 @@ const aspectRatio = (objectFit) => {
       message: 'Unknown error',
       status: isServer() ? 500 : 400,
     }
+
     if (err && typeof err === 'object') {
       if ('message' in err && typeof err.message === 'string') {
         res.message = err.message
@@ -247,50 +297,56 @@ const aspectRatio = (objectFit) => {
         res.status = Number(err.status)
       }
     }
+
     return res
   },
   hasExt = (path) => {
     const lastDotIndex = path.split('/').pop()?.lastIndexOf('.')
+
     return (lastDotIndex ?? 0) > 1 && path.length - 1 > (lastDotIndex ?? 0)
   },
   isAudio = (asset) =>
-    !('h' in asset) &&
+    { return !('h' in asset) &&
     !('w' in asset) &&
     'p' in asset &&
     'e' in asset &&
     'u' in asset &&
-    'id' in asset,
+    'id' in asset },
   isBase64 = (str) => {
     if (!str) {
       return false
     }
     const regex =
-      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
+      /^([0-9a-z+/]{4})*(([0-9a-z+/]{2}==)|([0-9a-z+/]{3}=))?$/i
+
     return regex.test(parseBase64(str))
   },
   isImage = (asset) =>
-    'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset,
-  isServer = () => !(typeof window !== 'undefined' && window.document),
-  parseBase64 = (str) => str.substring(str.indexOf(',') + 1),
+    { return 'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset },
+  isServer = () => { return !(typeof window !== 'undefined' && window.document) },
+  parseBase64 = (str) => { return str.slice(Math.max(0, str.indexOf(',') + 1)) },
   prepareString = (str) =>
-    str
-      .replace(new RegExp(/"""/, 'g'), '""')
-      .replace(/(["'])(.*?)\1/g, (_match, quote, content) => {
-        const replacedContent = content.replace(/[^\w\s\d.#]/g, '')
+    { return str
+      .replaceAll(new RegExp(/"""/, 'g'), '""')
+      .replaceAll(/(["'])(.*?)\1/g, (_match, quote, content) => {
+        const replacedContent = content.replaceAll(/[^\w\s.#]/g, '')
+
         return `${quote}${replacedContent}${quote}`
-      }),
+      }) },
   resolveAssets = async (unzipped, assets) => {
     if (!Array.isArray(assets)) {
       return
     }
     const toResolve = [],
       { length } = assets
+
     for (let i = 0; i < length; i++) {
       if (!isAudio(assets[i]) && !isImage(assets[i])) {
         continue
       }
       const type = isImage(assets[i]) ? 'images' : 'audio',
         u8 = unzipped?.[`${type}/${assets[i].p}`]
+
       if (!u8) {
         continue
       }
@@ -304,6 +360,7 @@ const aspectRatio = (objectFit) => {
                   ''
                 )
               )
+
           assets[i].p =
             assets[i].p?.startsWith('data:') || isBase64(assets[i].p)
               ? assets[i].p
@@ -321,7 +378,9 @@ const aspectRatio = (objectFit) => {
       unzipped = await new Promise((resolve, reject) => {
         unzip$1(
           buffer,
-          /* { filter }, */ (err, file) => {
+          /**
+           * { filter },.
+           */ (err, file) => {
             if (err) {
               reject(err)
             }
@@ -329,6 +388,7 @@ const aspectRatio = (objectFit) => {
           }
         )
       })
+
     return unzipped
   }
 
@@ -336,16 +396,18 @@ const aspectRatio = (objectFit) => {
  * Credit to:
  * @author Leonardo Favre <https://github.com/leofavre/observed-properties>
  */ const UPDATE_ON_CONNECTED = Symbol('UPDATE_ON_CONNECTED')
+
 if (isServer()) {
   // Mock HTMLElement for server-side rendering
   global.HTMLElement = class EmptyHTMLElement {}
 }
 /**
- * HTMLElement enhanced to track property changes
+ * HTMLElement enhanced to track property changes.
  */ class PropertyCallbackElement extends HTMLElement {
   constructor() {
     super()
     const { observedProperties = [] } = this.constructor
+
     if (UPDATE_ON_CONNECTED in this) {
       this[UPDATE_ON_CONNECTED] = []
     }
@@ -354,9 +416,11 @@ if (isServer()) {
       typeof this.propertyChangedCallback === 'function'
     ) {
       const { length } = observedProperties
+
       for (let i = 0; i < length; i++) {
         const initialValue = this[observedProperties[i]],
           CACHED_VALUE = Symbol(observedProperties[i])
+
         // @ts-expect-error: ingore
         this[CACHED_VALUE] = initialValue
         Object.defineProperty(this, observedProperties[i], {
@@ -365,6 +429,7 @@ if (isServer()) {
           },
           set(value) {
             const oldValue = this[CACHED_VALUE]
+
             this[CACHED_VALUE] = value
             this.propertyChangedCallback(observedProperties[i], oldValue, value)
           },
@@ -382,6 +447,7 @@ if (isServer()) {
   }
   connectedCallback() {
     let arr = []
+
     if (
       UPDATE_ON_CONNECTED in this &&
       Array.isArray(this[UPDATE_ON_CONNECTED])
@@ -389,6 +455,7 @@ if (isServer()) {
       arr = this[UPDATE_ON_CONNECTED]
     }
     const { length } = arr
+
     for (let i = 0; i < length; i++) {
       if (
         !('propertyChangedCallback' in this) ||
@@ -407,14 +474,16 @@ const css_248z =
   "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n"
 
 /**
- * Render Controls
+ * Render Controls.
  */ function renderControls() {
   const slot = this.shadow.querySelector('slot[name=controls]')
+
   if (!slot) {
     return
   }
   if (!this.controls) {
     slot.innerHTML = ''
+
     return
   }
   slot.innerHTML = /* HTML */ `<div
@@ -494,7 +563,7 @@ const css_248z =
             class="toggleSettings"
             aria-label="Settings"
             aria-haspopup="true"
-            aria-expanded="${!!this._isSettingsOpen}"
+            aria-expanded="${Boolean(this._isSettingsOpen)}"
             aria-controls="${this._identifier}-settings"
           >
             <svg width="24" height="24" aria-hidden="true" focusable="false">
@@ -519,40 +588,49 @@ const css_248z =
           </div>`}
   </div>`
   const togglePlay = this.shadow.querySelector('.togglePlay')
+
   if (togglePlay instanceof HTMLButtonElement) {
     togglePlay.onclick = this.togglePlay
   }
   const stop = this.shadow.querySelector('.stop')
+
   if (stop instanceof HTMLButtonElement) {
     stop.onclick = this.stop
   }
   const prev = this.shadow.querySelector('.prev')
+
   if (prev instanceof HTMLButtonElement) {
     prev.onclick = this.prev
   }
   const next = this.shadow.querySelector('.next')
+
   if (next instanceof HTMLButtonElement) {
     next.onclick = this.next
   }
   const seeker = this.shadow.querySelector('.seeker')
+
   if (seeker instanceof HTMLInputElement) {
     seeker.onchange = this._handleSeekChange
     seeker.onmousedown = this._freeze
   }
   if (!this.simple) {
     const toggleLoop = this.shadow.querySelector('.toggleLoop')
+
     if (toggleLoop instanceof HTMLButtonElement) {
       toggleLoop.onclick = this.toggleLoop
     }
     const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang')
+
     if (toggleBoomerang instanceof HTMLButtonElement) {
       toggleBoomerang.onclick = this.toggleBoomerang
     }
     const snapshot = this.shadow.querySelector('.snapshot')
+
     if (snapshot instanceof HTMLButtonElement) {
       snapshot.onclick = () => this.snapshot(true)
     }
     const toggleSettings = this.shadow.querySelector('.toggleSettings')
+
     if (toggleSettings instanceof HTMLButtonElement) {
       toggleSettings.onclick = this._handleSettingsClick
       toggleSettings.onblur = this._handleBlur
@@ -561,7 +639,7 @@ const css_248z =
 }
 
 /**
- * Render Player
+ * Render Player.
  */ function renderPlayer() {
   this.template.innerHTML = /* HTML */ `<div
     class="animation-container main"
@@ -608,14 +686,15 @@ const css_248z =
 
 // import type AnimationItem from '@/animation/AnimationItem'
 /**
- * dotLottie Player Web Component
+ * DotLottie Player Web Component.
+ *
  * @exports
  * @class DotLottiePlayer
- * @extends { PropertyCallbackElement }
  * @description Web Component for playing Lottie animations in your web app.
+ * @augments { PropertyCallbackElement }
  */ class DotLottiePlayer extends PropertyCallbackElement {
   /**
-   * Attributes to observe
+   * Attributes to observe.
    */ static get observedAttributes() {
     return [
       'animateOnScroll',
@@ -640,38 +719,44 @@ const css_248z =
     ]
   }
   /**
-   * Return the styles for the component
+   * Return the styles for the component.
    */ static get styles() {
     const styleSheet = new CSSStyleSheet()
+
     styleSheet.replace(css_248z)
+
     return styleSheet
   }
   /**
-   * Whether to trigger next frame with scroll
+   * Whether to trigger next frame with scroll.
    */ set animateOnScroll(value) {
-    this.setAttribute('animateOnScroll', (!!value).toString())
+    this.setAttribute('animateOnScroll', (Boolean(value)).toString())
   }
   get animateOnScroll() {
     const val = this.getAttribute('animateOnScroll')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Autoplay
+   * Autoplay.
    */ set autoplay(value) {
-    this.setAttribute('autoplay', (!!value).toString())
+    this.setAttribute('autoplay', (Boolean(value)).toString())
   }
   get autoplay() {
     const val = this.getAttribute('autoplay')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Background color
+   * Background color.
    */ set background(value) {
     this.setAttribute('background', value)
   }
@@ -679,31 +764,35 @@ const css_248z =
     return this.getAttribute('background') || 'transparent'
   }
   /**
-   * Show controls
+   * Show controls.
    */ set controls(value) {
-    this.setAttribute('controls', (!!value).toString())
+    this.setAttribute('controls', (Boolean(value)).toString())
   }
   get controls() {
     const val = this.getAttribute('controls')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Number of times to loop
+   * Number of times to loop.
    */ set count(value) {
     this.setAttribute('count', value.toString())
   }
   get count() {
     const val = this.getAttribute('count')
+
     if (val) {
       return Number(val)
     }
+
     return 0
   }
   /**
-   * Description for screen readers
+   * Description for screen readers.
    */ set description(value) {
     if (value) {
       this.setAttribute('description', value)
@@ -713,79 +802,91 @@ const css_248z =
     return this.getAttribute('description')
   }
   /**
-   * Direction of animation
+   * Direction of animation.
    */ set direction(value) {
     this.setAttribute('direction', value.toString())
   }
   get direction() {
     const val = Number(this.getAttribute('direction'))
+
     if (val === -1) {
       return val
     }
+
     return 1
   }
   /**
-   * Whether to play on mouseover
+   * Whether to play on mouseover.
    */ set hover(value) {
     this.setAttribute('hover', value.toString())
   }
   get hover() {
     const val = this.getAttribute('hover')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Pause between loop intrations, in miliseconds
+   * Pause between loop intrations, in miliseconds.
    */ set intermission(value) {
     this.setAttribute('intermission', value.toString())
   }
   get intermission() {
     const val = Number(this.getAttribute('intermission'))
+
     if (!isNaN(val)) {
       return val
     }
+
     return 0
   }
   /**
-   * Loop animation
+   * Loop animation.
    */ set loop(value) {
-    this.setAttribute('loop', (!!value).toString())
+    this.setAttribute('loop', (Boolean(value)).toString())
   }
   get loop() {
     const val = this.getAttribute('loop')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Play mode
+   * Play mode.
    */ set mode(value) {
     this.setAttribute('mode', value.toString())
   }
   get mode() {
     const val = this.getAttribute('mode')
+
     if (val === PlayMode.Bounce) {
       return val
     }
+
     return PlayMode.Normal
   }
   /**
-   * Resizing to container
+   * Resizing to container.
    */ set objectfit(value) {
     this.setAttribute('objectfit', value)
   }
   get objectfit() {
     const val = this.getAttribute('objectfit')
+
     if (val && Object.values(ObjectFit).includes(val)) {
       return val
     }
+
     return ObjectFit.Contain
   }
   /**
-   * Resizing to container (Deprecated)
+   * Resizing to container (Deprecated).
    */ set preserveAspectRatio(value) {
     this.setAttribute(
       'preserveAspectRatio',
@@ -794,37 +895,43 @@ const css_248z =
   }
   get preserveAspectRatio() {
     const val = this.getAttribute('preserveAspectRatio')
+
     if (val && Object.values(PreserveAspectRatio).includes(val)) {
       return val
     }
+
     return null
   }
   /**
-   * Hide advanced controls
+   * Hide advanced controls.
    */ set simple(value) {
     this.setAttribute('simple', value.toString())
   }
   get simple() {
     const val = this.getAttribute('simple')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   /**
-   * Speed
+   * Speed.
    */ set speed(value) {
     this.setAttribute('speed', value?.toString())
   }
   get speed() {
     const val = this.getAttribute('speed')
+
     if (val !== null && !isNaN(Number(val))) {
       return Number(val)
     }
+
     return 1
   }
   /**
-   * Source, either path or JSON string
+   * Source, either path or JSON string.
    */ set src(value) {
     this.setAttribute('src', value || '')
   }
@@ -832,15 +939,17 @@ const css_248z =
     return this.getAttribute('src')
   }
   /**
-   * Subframe
+   * Subframe.
    */ set subframe(value) {
-    this.setAttribute('subframe', (!!value).toString())
+    this.setAttribute('subframe', (Boolean(value)).toString())
   }
   get subframe() {
     const val = this.getAttribute('subframe')
+
     if (val === 'true' || val === '' || val === '1') {
       return true
     }
+
     return false
   }
   constructor() {
@@ -850,7 +959,7 @@ const css_248z =
        * Player state
        */ (this.playerState = PlayerState.Loading),
       /**
-       * Animation Container
+       * Animation Container.
        */ (this._container = null),
       (this._errorMessage = 'Something went wrong'),
       (this._identifier = this.id || createElementID()),
@@ -885,10 +994,10 @@ const css_248z =
       (this._isBounce = false),
       (this._lottieInstance = null), // AnimationItem | null = null
       /**
-       * Multi-animation settings
+       * Multi-animation settings.
        */ (this._multiAnimationSettings = []),
       /**
-       * Handle settings click event
+       * Handle settings click event.
        */ (this._handleSettingsClick = ({ target }) => {
         this._toggleSettings()
         // Because Safari does not add focus on click, we need to add it manually, so the onblur event will fire
@@ -925,12 +1034,12 @@ const css_248z =
     })
   }
   /**
-   * Runs when the value of an attribute is changed on the component
+   * Runs when the value of an attribute is changed on the component.
    */ _addEventListeners() {
     this._toggleEventListeners('add')
   }
   /**
-   * Initialize everything on component first render
+   * Initialize everything on component first render.
    */ _addIntersectionObserver() {
     if (
       !this._container ||
@@ -941,6 +1050,7 @@ const css_248z =
     }
     this._intersectionObserver = new IntersectionObserver((entries) => {
       const { length } = entries
+
       for (let i = 0; i < length; i++) {
         if (!entries[i].isIntersecting || document.hidden) {
           if (this.playerState === PlayerState.Playing) {
@@ -961,7 +1071,7 @@ const css_248z =
     this._intersectionObserver.observe(this._container)
   }
   /**
-   * Destroy animation and element
+   * Destroy animation and element.
    */ _complete() {
     if (!this._lottieInstance) {
       return
@@ -974,10 +1084,12 @@ const css_248z =
       }
       if (this.loop && this._currentAnimation === this._animations.length - 1) {
         this._currentAnimation = 0
+
         return this._switchInstance()
       }
     }
     const { currentFrame, totalFrames } = this._lottieInstance
+
     this._seeker = Math.round((currentFrame / totalFrames) * 100)
     this.playerState = PlayerState.Completed
     this.dispatchEvent(
@@ -990,30 +1102,32 @@ const css_248z =
     )
   }
   /**
-   * Cleanup on component destroy
+   * Cleanup on component destroy.
    */ _dataFailed() {
     this.playerState = PlayerState.Error
     this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
   }
   /**
-   * Returns the Lottie instance used in the component
+   * Returns the Lottie instance used in the component.
    */ _dataReady() {
     this.dispatchEvent(new CustomEvent(PlayerEvents.Load))
   }
   /**
-   * Get Lottie Manifest
+   * Get Lottie Manifest.
    */ _DOMLoaded() {
     this._playerState.loaded = true
     this.dispatchEvent(new CustomEvent(PlayerEvents.Ready))
   }
   /**
-   * Get Multi-animation settings
-   * @returns { AnimationSettings[] }
+   * Get Multi-animation settings.
+   *
+   * @returns
    */ _enterFrame() {
     if (!this._lottieInstance) {
       return
     }
     const { currentFrame, totalFrames } = this._lottieInstance
+
     this._seeker = Math.round((currentFrame / totalFrames) * 100)
     this.dispatchEvent(
       new CustomEvent(PlayerEvents.Frame, {
@@ -1025,8 +1139,9 @@ const css_248z =
     )
   }
   /**
-   * Get playback segment
-   * @returns { AnimationSegment }
+   * Get playback segment.
+   *
+   * @returns
    */ _freeze() {
     if (!this._lottieInstance) {
       return
@@ -1042,7 +1157,7 @@ const css_248z =
     }
   }
   /**
-   * Initialize Lottie Web player
+   * Initialize Lottie Web player.
    */ _getOptions() {
     if (!this._container) {
       throw new Error('Container not rendered')
@@ -1056,32 +1171,35 @@ const css_248z =
       currentAnimationManifest =
         this._manifest?.animations?.[this._currentAnimation]
     // Loop
-    let loop = !!this.loop
+    let loop = Boolean(this.loop)
+
     if (
       currentAnimationManifest?.loop !== undefined &&
       this.loop === undefined
     ) {
-      loop = !!currentAnimationManifest.loop
+      loop = Boolean(currentAnimationManifest.loop)
     }
     if (currentAnimationSettings?.loop !== undefined) {
-      loop = !!currentAnimationSettings.loop
+      loop = Boolean(currentAnimationSettings.loop)
     }
     // Autoplay
-    let autoplay = !!this.autoplay
+    let autoplay = Boolean(this.autoplay)
+
     if (
       currentAnimationManifest?.autoplay !== undefined &&
       this.autoplay === undefined
     ) {
-      autoplay = !!currentAnimationManifest.autoplay
+      autoplay = Boolean(currentAnimationManifest.autoplay)
     }
     if (currentAnimationSettings?.autoplay !== undefined) {
-      autoplay = !!currentAnimationSettings.autoplay
+      autoplay = Boolean(currentAnimationSettings.autoplay)
     }
     if (this.animateOnScroll) {
       autoplay = false
     }
     // Segment
     let initialSegment = this._segment
+
     if (this._segment?.every((val) => val > 0)) {
       initialSegment = [this._segment[0] - 1, this._segment[1] - 1]
     }
@@ -1101,15 +1219,16 @@ const css_248z =
         progressiveLoad: true,
       },
     }
+
     return options
   }
   /**
-   * Skip to next animation
+   * Skip to next animation.
    */ _handleBlur() {
     setTimeout(() => this._toggleSettings(false), 200)
   }
   /**
-   * Pause
+   * Pause.
    */ _handleScroll() {
     if (!this.animateOnScroll || !this._lottieInstance) {
       return
@@ -1118,6 +1237,7 @@ const css_248z =
       console.warn(
         'DotLottie: Scroll animations might not work properly in a Server Side Rendering context. Try to wrap this in a client component.'
       )
+
       return
     }
     if (this._playerState.visible) {
@@ -1136,6 +1256,7 @@ const css_248z =
           this._lottieInstance.totalFrames * 3
         ),
         roundedScroll = clampedScroll / 3
+
       window.requestAnimationFrame(() => {
         if (roundedScroll < (this._lottieInstance?.totalFrames ?? 0)) {
           this.playerState = PlayerState.Playing
@@ -1147,7 +1268,7 @@ const css_248z =
     }
   }
   /**
-   * Play
+   * Play.
    */ _handleSeekChange({ target }) {
     if (
       !(target instanceof HTMLInputElement) ||
@@ -1163,7 +1284,7 @@ const css_248z =
     )
   }
   /**
-   * Skip to previous animation
+   * Skip to previous animation.
    */ _handleWindowBlur({ type }) {
     if (this.playerState === PlayerState.Playing && type === 'blur') {
       this._freeze()
@@ -1174,12 +1295,13 @@ const css_248z =
   }
   _isLottie(json) {
     const mandatory = ['v', 'ip', 'op', 'layers', 'fr', 'w', 'h']
+
     return mandatory.every((field) =>
-      Object.prototype.hasOwnProperty.call(json, field)
+      Object.hasOwn(json, field)
     )
   }
   /**
-   * Reload animation
+   * Reload animation.
    */ _loopComplete() {
     if (!this._lottieInstance) {
       return
@@ -1190,6 +1312,7 @@ const css_248z =
       } = this._lottieInstance,
       inPoint = this._segment ? this._segment[0] : 0,
       outPoint = this._segment ? this._segment[0] : totalFrames
+
     if (this.count) {
       if (this._isBounce) {
         this._playerState.count += 0.5
@@ -1200,6 +1323,7 @@ const css_248z =
         this.setLoop(false)
         this.playerState = PlayerState.Completed
         this.dispatchEvent(new CustomEvent(PlayerEvents.Complete))
+
         return
       }
     }
@@ -1210,6 +1334,7 @@ const css_248z =
         true
       )
       this._lottieInstance.setDirection(playDirection * -1)
+
       return setTimeout(() => {
         if (!this.animateOnScroll) {
           this._lottieInstance?.play()
@@ -1220,6 +1345,7 @@ const css_248z =
       playDirection === -1 ? outPoint * 0.99 : inPoint,
       true
     )
+
     return setTimeout(() => {
       if (!this.animateOnScroll) {
         this._lottieInstance?.play()
@@ -1227,26 +1353,29 @@ const css_248z =
     }, this.intermission)
   }
   /**
-   * Seek to a given frame
-   * @param { number | string } value Frame to seek to
+   * Seek to a given frame.
+   *
+   * @param value - Frame to seek to.
    */ _mouseEnter() {
     if (this.hover && this.playerState !== PlayerState.Playing) {
       this.play()
     }
   }
   /**
-   * Dynamically set count for loops
+   * Dynamically set count for loops.
    */ _mouseLeave() {
     if (this.hover && this.playerState === PlayerState.Playing) {
       this.stop()
     }
   }
   /**
-   * Animation play direction
-   * @param { AnimationDirection } value Animation direction
+   * Animation play direction.
+   *
+   * @param value - Animation direction.
    */ _onVisibilityChange() {
     if (document.hidden && this.playerState === PlayerState.Playing) {
       this._freeze()
+
       return
     }
     if (this.playerState === PlayerState.Frozen) {
@@ -1254,14 +1383,16 @@ const css_248z =
     }
   }
   /**
-   * Set loop
-   * @param { boolean } value
+   * Set loop.
+   *
+   * @param value
    */ _removeEventListeners() {
     this._toggleEventListeners('remove')
   }
   /**
-   * Set Multi-animation settings
-   * @param { AnimationSettings[] } settings
+   * Set Multi-animation settings.
+   *
+   * @param settings
    */ _switchInstance(isPrevious = false) {
     // Bail early if there is not animation to play
     if (!this._animations[this._currentAnimation]) {
@@ -1296,25 +1427,29 @@ const css_248z =
         if (this.animateOnScroll) {
           this._lottieInstance?.goToAndStop(0, true)
           this.playerState = PlayerState.Paused
+
           return
         }
         this._lottieInstance?.goToAndPlay(0, true)
         this.playerState = PlayerState.Playing
+
         return
       }
       this._lottieInstance?.goToAndStop(0, true)
       this.playerState = PlayerState.Stopped
-    } catch (err) {
-      this._errorMessage = handleErrors(err).message
+    } catch (error) {
+      this._errorMessage = handleErrors(error).message
       this.playerState = PlayerState.Error
       this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
     }
   }
   /**
-   * Set playback segment
-   * @param { AnimationSegment } settings
+   * Set playback segment.
+   *
+   * @param settings
    */ _toggleEventListeners(action) {
     const method = action === 'add' ? 'addEventListener' : 'removeEventListener'
+
     if (this._lottieInstance) {
       this._lottieInstance[method]('enterFrame', this._enterFrame)
       this._lottieInstance[method]('complete', this._complete)
@@ -1343,18 +1478,21 @@ const css_248z =
     }
   }
   /**
-   * Set animation playback speed
-   * @param { number } value Playback speed
+   * Set animation playback speed.
+   *
+   * @param value - Playback speed.
    */ _toggleSettings(flag) {
     if (flag === undefined) {
       this._isSettingsOpen = !this._isSettingsOpen
+
       return
     }
     this._isSettingsOpen = flag
   }
   /**
-   * Toggles subframe, for more smooth animations
-   * @param { boolean } value Whether animation uses subframe
+   * Toggles subframe, for more smooth animations.
+   *
+   * @param value - Whether animation uses subframe.
    */ async attributeChangedCallback(name, _oldValue, value) {
     if (!this._lottieInstance) {
       return
@@ -1366,6 +1504,7 @@ const css_248z =
           capture: true,
           passive: true,
         })
+
         return
       }
       removeEventListener('scroll', this._handleScroll, true)
@@ -1376,6 +1515,7 @@ const css_248z =
       }
       if (value === '' || Boolean(value)) {
         this.play()
+
         return
       }
       this.stop()
@@ -1393,6 +1533,7 @@ const css_248z =
       if (value === '' || Boolean(value)) {
         this._container.addEventListener('mouseenter', this._mouseEnter)
         this._container.addEventListener('mouseleave', this._mouseLeave)
+
         return
       }
       this._container.removeEventListener('mouseenter', this._mouseEnter)
@@ -1400,6 +1541,7 @@ const css_248z =
     }
     if (name === 'loop') {
       const toggleLoop = this.shadow.querySelector('.toggleLoop')
+
       if (toggleLoop instanceof HTMLButtonElement) {
         toggleLoop.dataset.active = value
       }
@@ -1407,6 +1549,7 @@ const css_248z =
     }
     if (name === 'mode') {
       const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang')
+
       if (toggleBoomerang instanceof HTMLButtonElement) {
         toggleBoomerang.dataset.active = (value === PlayMode.Bounce).toString()
       }
@@ -1414,6 +1557,7 @@ const css_248z =
     }
     if (name === 'speed') {
       const val = Number(value)
+
       if (val && !isNaN(val)) {
         this.setSpeed(val)
       }
@@ -1426,7 +1570,7 @@ const css_248z =
     }
   }
   /**
-   * Snapshot and download the current frame as SVG
+   * Snapshot and download the current frame as SVG.
    */ async connectedCallback() {
     super.connectedCallback()
     this._render()
@@ -1443,7 +1587,7 @@ const css_248z =
     this.dispatchEvent(new CustomEvent(PlayerEvents.Rendered))
   }
   /**
-   * Stop
+   * Stop.
    */ destroy() {
     if (!this._lottieInstance) {
       return
@@ -1456,7 +1600,7 @@ const css_248z =
     document.removeEventListener('visibilitychange', this._onVisibilityChange)
   }
   /**
-   * Toggle Boomerang
+   * Toggle Boomerang.
    */ disconnectedCallback() {
     // Remove intersection observer for detecting component being out-of-view
     if (this._intersectionObserver) {
@@ -1471,12 +1615,12 @@ const css_248z =
     document.removeEventListener('visibilitychange', this._onVisibilityChange)
   }
   /**
-   * Toggle loop
+   * Toggle loop.
    */ getLottie() {
     return this._lottieInstance
   }
   /**
-   * Toggle playing state
+   * Toggle playing state.
    */ getManifest() {
     return this._manifest
   }
@@ -1488,13 +1632,14 @@ const css_248z =
     return this._multiAnimationSettings
   }
   /**
-   * Handle blur
+   * Handle blur.
    */ getSegment() {
     return this._segment
   }
   /**
-   * Handles click and drag actions on the progress track
-   * @param { Event & { HTMLInputElement } } event
+   * Handles click and drag actions on the progress track.
+   *
+   * @param event
    */ async load(src) {
     if (!this.shadowRoot || !src) {
       return
@@ -1502,6 +1647,7 @@ const css_248z =
     // Load the resource
     try {
       const { animations, manifest } = await getAnimationData(src)
+
       if (
         !animations ||
         animations.some((animation) => !this._isLottie(animation))
@@ -1548,10 +1694,11 @@ const css_248z =
           animationData: animations[this._currentAnimation],
         })
       }
-    } catch (err) {
-      this._errorMessage = handleErrors(err).message
+    } catch (error) {
+      this._errorMessage = handleErrors(error).message
       this.playerState = PlayerState.Error
       this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
+
       return
     }
     this._addEventListeners()
@@ -1564,10 +1711,11 @@ const css_248z =
         this.direction ??
         this._manifest.animations[this._currentAnimation].direction ??
         1
+
     // Set initial playback speed and direction
     this._lottieInstance?.setSpeed(speed)
     this._lottieInstance?.setDirection(direction)
-    this._lottieInstance?.setSubframe(!!this.subframe)
+    this._lottieInstance?.setSubframe(Boolean(this.subframe))
     // Start playing if autoplay is enabled
     if (this.autoplay || this.animateOnScroll) {
       if (this.direction === -1) {
@@ -1583,13 +1731,13 @@ const css_248z =
     }
   }
   /**
-   * Add event listeners
+   * Add event listeners.
    */ next() {
     this._currentAnimation++
     this._switchInstance()
   }
   /**
-   * Add IntersectionObserver
+   * Add IntersectionObserver.
    */ pause() {
     if (!this._lottieInstance) {
       return
@@ -1622,7 +1770,9 @@ const css_248z =
     this._currentAnimation--
     this._switchInstance(true)
   }
-  // name: string, oldValue: string, newValue: string
+  /**
+   * Name: string, oldValue: string, newValue: string.
+   */
   propertyChangedCallback(name, _oldValue, value) {
     if (!this.shadow) {
       return
@@ -1634,6 +1784,7 @@ const css_248z =
       seeker = this.shadow.querySelector('.seeker'),
       progress = this.shadow.querySelector('progress'),
       popover = this.shadow.querySelector('.popover')
+
     if (
       !(togglePlay instanceof HTMLButtonElement) ||
       !(stop instanceof HTMLButtonElement) ||
@@ -1713,7 +1864,8 @@ const css_248z =
       return
     }
     // Extract frame number from either number or percentage value
-    const matches = value.toString().match(/^([0-9]+)(%?)$/)
+    const matches = value.toString().match(/^(\d+)(%?)$/)
+
     if (!matches) {
       return
     }
@@ -1723,6 +1875,7 @@ const css_248z =
         ? (this._lottieInstance.totalFrames * Number(matches[1])) / 100
         : Number(matches[1])
     )
+
     // Set seeker to new frame number
     this._seeker = frame
     // Send lottie player to the new frame
@@ -1733,19 +1886,21 @@ const css_248z =
     ) {
       this._lottieInstance.goToAndPlay(frame, true)
       this.playerState = PlayerState.Playing
+
       return
     }
     this._lottieInstance.goToAndStop(frame, true)
     this._lottieInstance.pause()
   }
   /**
-   * Get options from props
-   * @returns { AnimationConfig<'svg'> }
+   * Get options from props.
+   *
+   * @returns
    */ setCount(value) {
     this.count = value
   }
   /**
-   * Handle scroll
+   * Handle scroll.
    */ setDirection(value) {
     if (!this._lottieInstance) {
       return
@@ -1765,7 +1920,7 @@ const css_248z =
     this._segment = segment
   }
   /**
-   * Handle MouseEnter
+   * Handle MouseEnter.
    */ setSpeed(value = 1) {
     if (!this._lottieInstance) {
       return
@@ -1773,7 +1928,7 @@ const css_248z =
     this._lottieInstance.setSpeed(value)
   }
   /**
-   * Handle MouseLeave
+   * Handle MouseLeave.
    */ setSubframe(value) {
     if (!this._lottieInstance) {
       return
@@ -1781,7 +1936,7 @@ const css_248z =
     this._lottieInstance.setSubframe(value)
   }
   /**
-   * Handle visibility change events
+   * Handle visibility change events.
    */ snapshot(shouldDownload = true, name = 'AM Lottie') {
     try {
       if (!this.shadowRoot) {
@@ -1789,6 +1944,7 @@ const css_248z =
       }
       // Get SVG element and serialize markup
       const svgElement = this.shadowRoot.querySelector('.animation svg')
+
       if (!svgElement) {
         throw new Error('Could not retrieve animation from DOM')
       }
@@ -1796,6 +1952,7 @@ const css_248z =
         svgElement instanceof Node
           ? new XMLSerializer().serializeToString(svgElement)
           : null
+
       if (!data) {
         throw new Error('Could not serialize SVG element')
       }
@@ -1805,14 +1962,16 @@ const css_248z =
           name: `${getFilename(this.src || name)}-${frameOutput(this._seeker)}.svg`,
         })
       }
+
       return data
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
+
       return null
     }
   }
   /**
-   * Remove event listeners
+   * Remove event listeners.
    */ stop() {
     if (!this._lottieInstance) {
       return
@@ -1830,38 +1989,44 @@ const css_248z =
   }
   toggleBoomerang() {
     const curr = this._multiAnimationSettings?.[this._currentAnimation]
+
     if (curr?.mode !== undefined) {
       if (curr.mode === PlayMode.Normal) {
         curr.mode = PlayMode.Bounce
         this._isBounce = true
+
         return
       }
       curr.mode = PlayMode.Normal
       this._isBounce = false
+
       return
     }
     if (this.mode === PlayMode.Normal) {
       this.mode = PlayMode.Bounce
       this._isBounce = true
+
       return
     }
     this.mode = PlayMode.Normal
     this._isBounce = false
   }
   /**
-   * Toggle event listeners
+   * Toggle event listeners.
    */ toggleLoop() {
     const val = !this.loop
+
     this.loop = val
     this.setLoop(val)
   }
   /**
-   * Toggle show Settings
+   * Toggle show Settings.
    */ togglePlay() {
     if (!this._lottieInstance) {
       return
     }
     const { currentFrame, playDirection, totalFrames } = this._lottieInstance
+
     if (this.playerState === PlayerState.Playing) {
       return this.pause()
     }
@@ -1871,20 +2036,24 @@ const css_248z =
     this.playerState = PlayerState.Playing
     if (this._isBounce) {
       this.setDirection(playDirection * -1)
+
       return this._lottieInstance.goToAndPlay(currentFrame, true)
     }
     if (playDirection === -1) {
       return this._lottieInstance.goToAndPlay(totalFrames, true)
     }
+
     return this._lottieInstance.goToAndPlay(0, true)
   }
 }
 
 const tagName = 'dotlottie-player'
+
 if (!isServer()) {
   /**
-   * Expose DotLottiePlayer class as global variable
-   * @returns { DotLottiePlayer }
+   * Expose DotLottiePlayer class as global variable.
+   *
+   * @returns
    */ globalThis.dotLottiePlayer = () => new DotLottiePlayer()
   /**
    * Add a definition for the custom element to the custom element registry,
@@ -1893,9 +2062,9 @@ if (!isServer()) {
 }
 
 export {
-  PlayMode,
+  DotLottiePlayer as default,
   PlayerEvents,
   PlayerState,
-  DotLottiePlayer as default,
+  PlayMode,
   tagName,
 }

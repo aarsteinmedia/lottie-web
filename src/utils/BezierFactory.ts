@@ -124,6 +124,7 @@ class BezierEasing {
       mX2
     )
   }
+
   _precompute() {
     const mX1 = this._p[0],
       mY1 = this._p[1],
@@ -135,6 +136,7 @@ class BezierEasing {
       this._calcSampleValues()
     }
   }
+
   get(x: number) {
     const mX1 = this._p[0],
       mY1 = this._p[1],
@@ -159,12 +161,15 @@ class BezierEasing {
       this._getTForX(x), mY1, mY2
     )
   }
+
   private A(aA1: number, aA2: number) {
     return 1.0 - 3.0 * aA2 + 3.0 * aA1
   }
+
   private B(aA1: number, aA2: number) {
     return 3.0 * aA2 - 6.0 * aA1
   }
+
   private binarySubdivide(
     aX: number,
     aAFromProps: number,

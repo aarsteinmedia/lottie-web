@@ -17,6 +17,7 @@ export default abstract class RenderableElement extends FrameElement {
       this.renderableComponents.push(component)
     }
   }
+
   checkLayerLimits(num: number) {
     if (!this.data || !this.globalData) {
       return
@@ -37,6 +38,7 @@ export default abstract class RenderableElement extends FrameElement {
       this.hide()
     }
   }
+
   checkTransparency() {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not implemented`)
@@ -58,6 +60,7 @@ export default abstract class RenderableElement extends FrameElement {
       this.show()
     }
   }
+
   getLayerSize() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -74,9 +77,11 @@ export default abstract class RenderableElement extends FrameElement {
       w: Number(this.data.width)
     }
   }
+
   hide() {
     throw new Error(`${this.constructor.name}: Method hide is not implemented`)
   }
+
   initRenderable() {
     // layer's visibility related to inpoint and outpoint. Rename isVisible to isInRange
     this.isInRange = false
@@ -87,15 +92,18 @@ export default abstract class RenderableElement extends FrameElement {
     // list of animated components
     this.renderableComponents = []
   }
+
   prepareRenderableFrame(num: number, _?: boolean) {
     this.checkLayerLimits(num)
   }
+
   removeRenderableComponent(component: RenderableComponent) {
     if (this.renderableComponents.includes(component)) {
       this.renderableComponents.splice(this.renderableComponents.indexOf(component),
         1)
     }
   }
+
   renderRenderable() {
     const { length } = this.renderableComponents
 
@@ -105,9 +113,11 @@ export default abstract class RenderableElement extends FrameElement {
     /* this.maskManager.renderFrame(this.finalTransform.mat);
         this.renderableEffectsManager.renderFrame(this._isFirstFrame); */
   }
+
   show() {
     throw new Error(`${this.constructor.name}: Method show is not implemented`)
   }
+
   override sourceRectAtTime(): SourceRect | null {
     return {
       height: 100,

@@ -75,9 +75,9 @@ export default class CVBaseElement {
 }
 
 CVBaseElement.prototype.clearCanvas = function (canvasContext?:
-    | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D
-    | null) {
+  | CanvasRenderingContext2D
+  | OffscreenCanvasRenderingContext2D
+  | null) {
   canvasContext.clearRect(
     this.transformCanvas.tx,
     this.transformCanvas.ty,

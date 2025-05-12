@@ -214,6 +214,7 @@ abstract class CheckProperties {
       this.iterateLayers(layers)
     }
   }
+
   iterateLayers(layers: LottieLayer[]) {
     const { length } = layers
 
@@ -301,7 +302,7 @@ class CheckChars {
       if (t) {
         continue
       }
-      data.shapes.push({ ty: ShapeType.NoStyle, } as Shape)
+      data.shapes.push({ ty: ShapeType.NoStyle } as Shape)
       data.shapes[0].it?.push({
         a: {
           a: 0,
