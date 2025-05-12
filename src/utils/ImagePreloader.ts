@@ -271,7 +271,7 @@ export default class ImagePreloader {
       return
     }
     let _count = 0
-    const intervalId = setInterval(function (this: ImagePreloader) {
+    const intervalId = setInterval(() => {
       const box = img.getBBox()
 
       if (box.width || _count > 500) {
