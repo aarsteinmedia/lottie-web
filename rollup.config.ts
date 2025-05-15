@@ -7,15 +7,15 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dts } from 'rollup-plugin-dts'
 import livereload from 'rollup-plugin-livereload'
-import serve from 'rollup-plugin-serve'
 import pluginSummary from 'rollup-plugin-summary'
 import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
 
 const isProd = process.env.NODE_ENV !== 'development',
-  __dirname = path.dirname(fileURLToPath(import.meta.url)),
+  { url } = import.meta,
+  __dirname = path.dirname(fileURLToPath(url)),
 
-  pkgBuffer = await readFile(new URL(path.resolve(__dirname, 'package.json'), import.meta.url)),
+  pkgBuffer = await readFile(new URL(path.resolve(__dirname, 'package.json'), url)),
   pkg: typeof import('./package.json') = JSON.parse(pkgBuffer.toString()),
   toPascalCase = (str: string) => {
     // Use regex to match words regardless of delimiter
@@ -35,7 +35,6 @@ const isProd = process.env.NODE_ENV !== 'development',
     name: 'inject-version',
     renderChunk: (code: string) => code.replace('[[BM_VERSION]]', pkg.version),
   }),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   plugins = (): Plugin[] => isProd ? [
     typescriptPaths(),
     nodeResolve({
@@ -55,8 +54,6 @@ const isProd = process.env.NODE_ENV !== 'development',
     commonjs(),
     injectVersion(),
     swc(),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    serve(),
     livereload()
   ],
   inputs = [

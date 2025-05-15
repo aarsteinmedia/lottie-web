@@ -25,6 +25,7 @@ const files = [
   'optimized_m2acyje2.lottie',
   'hp-section-2.lottie',
   'dev.lottie',
+  'shapes-test.json',
 ]
 
 export default files
