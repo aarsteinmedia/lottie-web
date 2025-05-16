@@ -43,7 +43,7 @@ export default class Matrix {
     to2dCSS(): string;
     toCSS(): string;
     transform(a2: number, b2: number, c2: number, d2: number, e2: number, f2: number, g2: number, h2: number, i2: number, j2: number, k2: number, l2: number, m2: number, n2: number, o2: number, p2: number): this;
-    translate(tx: number, ty: number, tz?: number): this;
+    translate(tx: number, ty: number, tzFromProps?: number): this;
     private _t;
     private roundMatrixProperty;
 }

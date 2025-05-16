@@ -1,3 +1,6 @@
+import { ArrayType } from '@/utils/enums'
+import { createTypedArray } from '@/utils/helpers/arrays'
+
 /* !
  Transformation Matrix v2.0
  (c) Epistemex 2014-2015
@@ -6,9 +9,6 @@
  Contributions by leeoniya.
  License: MIT, header required.
  */
-
-import { ArrayType } from '@/utils/enums'
-import { createTypedArray } from '@/utils/helpers/arrays'
 
 /**
  * 2D transformation matrix object initialized with identity matrix.
@@ -491,8 +491,12 @@ export default class Matrix {
   }
 
   translate(
-    tx: number, ty: number, tz = 0
-  ): this {
+    tx: number, ty: number, tzFromProps?: number
+  ) {
+    // Reassign instead of default parameter, to normalize negative and catch NaN values
+    // eslint-disable-next-line unicorn/prefer-default-parameters
+    const tz = tzFromProps || 0
+
     if (tx !== 0 || ty !== 0 || tz !== 0) {
       return this._t(
         1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1
