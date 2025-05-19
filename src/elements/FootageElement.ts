@@ -31,10 +31,6 @@ export default class FootageElement extends RenderableElement {
     )
   }
 
-  destroy() {
-    /* Pass Through*/
-  }
-
   override getBaseElement() {
     return null
   }

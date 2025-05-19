@@ -70,10 +70,6 @@ export default class AudioElement extends RenderableElement {
     ) as MultiDimensionalProperty
   }
 
-  destroy() {
-    // Pass through
-  }
-
   override getBaseElement() {
     return null
   }

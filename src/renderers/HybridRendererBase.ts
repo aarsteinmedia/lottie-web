@@ -352,7 +352,7 @@ export default class HybridRendererBase extends BaseRenderer {
     return threeDContainerData
   }
 
-  destroy() {
+  override destroy() {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }

@@ -23,7 +23,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
   }
 
-  destroy() {
+  override destroy() {
     this.innerElem = null
     this.destroyBaseElement()
   }

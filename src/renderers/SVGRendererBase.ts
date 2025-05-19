@@ -287,7 +287,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     )
   }
 
-  destroy() {
+  override destroy() {
     if (!this.animationItem) {
       throw new Error(`${this.constructor.name}: Can't access animationItem`)
     }

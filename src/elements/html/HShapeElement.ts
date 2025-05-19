@@ -101,10 +101,8 @@ export default class HShapeElement extends RenderableElement {
     const { length } = itemsData
 
     for (let i = 0; i < length; i++) {
-      if (itemsData[i]?.sh) {
-        this.calculateShapeBoundingBox(itemsData[i], boundingBox)
-        continue
-      }
+      this.calculateShapeBoundingBox(itemsData[i], boundingBox)
+      continue
       if (itemsData[i]?.it) {
         this.calculateBoundingBox(itemsData[i].it, boundingBox)
         continue
@@ -336,14 +334,16 @@ export default class HShapeElement extends RenderableElement {
         throw new Error(`${this.constructor.name}: shapeCont is not implemented`)
       }
 
-      const { tempBoundingBox } = this
-      const max = 999999
+      const {
+          currentBBox, itemsData, shapeCont, tempBoundingBox
+        } = this,
+        max = 999999
 
       tempBoundingBox.x = max
       tempBoundingBox.xMax = -max
       tempBoundingBox.y = max
       tempBoundingBox.yMax = -max
-      this.calculateBoundingBox(this.itemsData, tempBoundingBox as BoundingBox)
+      this.calculateBoundingBox(itemsData, tempBoundingBox as BoundingBox)
       tempBoundingBox.width =
         tempBoundingBox.xMax < tempBoundingBox.x
           ? 0
@@ -356,39 +356,39 @@ export default class HShapeElement extends RenderableElement {
       if (this.currentBoxContains(tempBoundingBox as any)) {
         return
       }
-      let changed = false
+      let hasChanged = false
 
-      if (this.currentBBox.w !== tempBoundingBox.width) {
-        this.currentBBox.w = tempBoundingBox.width
-        this.shapeCont.setAttribute('width', `${tempBoundingBox.width}`)
-        changed = true
+      if (currentBBox.w !== tempBoundingBox.width) {
+        currentBBox.w = tempBoundingBox.width
+        shapeCont.setAttribute('width', `${tempBoundingBox.width}`)
+        hasChanged = true
       }
-      if (this.currentBBox.h !== tempBoundingBox.height) {
-        this.currentBBox.h = tempBoundingBox.height
-        this.shapeCont.setAttribute('height', `${tempBoundingBox.height}`)
-        changed = true
+      if (currentBBox.h !== tempBoundingBox.height) {
+        currentBBox.h = tempBoundingBox.height
+        shapeCont.setAttribute('height', `${tempBoundingBox.height}`)
+        hasChanged = true
       }
       if (
-        changed ||
-        this.currentBBox.x !== tempBoundingBox.x ||
-        this.currentBBox.y !== tempBoundingBox.y
+        hasChanged ||
+        currentBBox.x !== tempBoundingBox.x ||
+        currentBBox.y !== tempBoundingBox.y
       ) {
-        this.currentBBox.w = tempBoundingBox.width
-        this.currentBBox.h = tempBoundingBox.height
-        this.currentBBox.x = tempBoundingBox.x
-        this.currentBBox.y = tempBoundingBox.y
+        currentBBox.w = tempBoundingBox.width
+        currentBBox.h = tempBoundingBox.height
+        currentBBox.x = tempBoundingBox.x
+        currentBBox.y = tempBoundingBox.y
 
-        this.shapeCont?.setAttribute('viewBox',
-          `${this.currentBBox.x} ${this.currentBBox.y} ${this.currentBBox.w} ${
-            this.currentBBox.h
+        shapeCont.setAttribute('viewBox',
+          `${currentBBox.x} ${currentBBox.y} ${currentBBox.w} ${
+            currentBBox.h
           }`)
-        const shapeStyle = this.shapeCont.style,
-          shapeTransform = `translate(${this.currentBBox.x}px,${
-            this.currentBBox.y
+        const shapeStyle = shapeCont.style,
+          shapeTransform = `translate(${currentBBox.x}px,${
+            currentBBox.y
           }px)`
 
         shapeStyle.transform = shapeTransform
-        shapeStyle.webkitTransform = shapeTransform
+        // shapeStyle.webkitTransform = shapeTransform
       }
     }
   }

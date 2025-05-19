@@ -23,6 +23,7 @@ export default abstract class BaseElement {
     buildAllItems(): void;
     checkLayers(_frame?: number): void;
     checkMasks(): boolean;
+    destroy(): void;
     destroyBaseElement(): void;
     getBaseElement(): SVGElement | HTMLElement | null;
     getType(): unknown;

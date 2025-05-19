@@ -13,7 +13,6 @@ export default class AudioElement extends RenderableElement {
     lv: MultiDimensionalProperty;
     tm: ValueProperty;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
-    destroy(): void;
     getBaseElement(): null;
     hide(): void;
     initExpressions(): void;

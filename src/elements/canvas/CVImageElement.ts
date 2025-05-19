@@ -132,7 +132,7 @@ export default class CVImageElement extends RenderableElement {
     throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
   }
 
-  destroy() {
+  override destroy() {
     this.img = null as unknown as HTMLCanvasElement
   }
 

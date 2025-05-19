@@ -19,7 +19,6 @@ export default class HCameraElement extends FrameElement {
     rz?: ValueProperty;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     createElements(): void;
-    destroy(): void;
     getBaseElement(): null;
     hide(): void;
     prepareFrame(num: number): void;

@@ -67,6 +67,13 @@ export default abstract class BaseElement {
     return false
   }
 
+  destroy() {
+    /**
+     * If method is not implemented, it probably shouldn't throw an error
+     * Pass through.
+     */
+  }
+
   destroyBaseElement() {
     throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
   }

@@ -258,7 +258,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     )
   }
 
-  destroy() {
+  override destroy() {
     if (!this.animationItem) {
       throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
