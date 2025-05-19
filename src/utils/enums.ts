@@ -1,3 +1,21 @@
+export enum ArrayType {
+  Float32 = 'float32',
+  Int16 = 'int16',
+  Int32 = 'int32',
+  Uint8 = 'uint8',
+  Uint8c = 'uint8c',
+}
+
+export enum Modifier {
+  MouseModifier = 'ms',
+  OffsetPathModifier = 'op',
+  PuckerAndBloatModifier = 'pb',
+  RepeaterModifier = 'rp',
+  RoundCornersModifier = 'rd',
+  TrimModifier = 'tm',
+  ZigZagModifier = 'zz',
+}
+
 export enum PlayMode {
   Bounce = 'bounce',
   Normal = 'normal',
@@ -27,6 +45,12 @@ export enum PreserveAspectRatio {
   None = 'xMinYMin slice',
 }
 
+export enum RendererType {
+  Canvas = 'canvas',
+  HTML = 'html',
+  SVG = 'svg',
+}
+
 export enum ShapeType {
   Ellipse = 'el',
   Fill = 'fl',
@@ -48,30 +72,6 @@ export enum ShapeType {
   Twist = 'tw',
   Unknown = 'ms',
   ZigZag = 'zz',
-}
-
-export enum RendererType {
-  Canvas = 'canvas',
-  HTML = 'html',
-  SVG = 'svg',
-}
-
-export enum Modifier {
-  MouseModifier = 'ms',
-  OffsetPathModifier = 'op',
-  PuckerAndBloatModifier = 'pb',
-  RepeaterModifier = 'rp',
-  RoundCornersModifier = 'rd',
-  TrimModifier = 'tm',
-  ZigZagModifier = 'zz',
-}
-
-export enum ArrayType {
-  Float32 = 'float32',
-  Int16 = 'int16',
-  Int32 = 'int32',
-  Uint8 = 'uint8',
-  Uint8c = 'uint8c',
 }
 
 export const lineCapEnum: { [key: number]: CanvasLineCap } = {
