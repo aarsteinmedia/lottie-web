@@ -104,10 +104,6 @@ export default abstract class TextElement extends RenderableDOMElement {
     return shapeStr
   }
 
-  override destroy() {
-    throw new Error(`${this.constructor.name}: Method destroy is not implemented`)
-  }
-
   override initElement(
     data: LottieLayer,
     globalData: GlobalData,
