@@ -1,8 +1,8 @@
-import type { AnimationItem } from '../../Lottie';
+import type Animationitem from '../../animation/AnimationItem';
 export default class Expressions {
     private registers;
     private stackCount;
-    constructor(animation: AnimationItem);
+    constructor(animation: Animationitem);
     resetFrame(): void;
     private popExpression;
     private pushExpression;

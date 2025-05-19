@@ -1,4 +1,4 @@
-import type { AnimationItem } from '../Lottie';
+import type AnimationItem from '../animation/AnimationItem';
 import type { HTMLRendererConfig, LottieLayer } from '../types';
 import HCompElement from '../elements/html/HCompElement';
 import SVGCompElement from '../elements/svg/SVGCompElement';

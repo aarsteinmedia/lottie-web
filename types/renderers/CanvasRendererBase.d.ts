@@ -1,6 +1,5 @@
 import type CVContextData from '../elements/canvas/CVContextData';
-import type { AnimationData } from '../Lottie';
-import type { CanvasRendererConfig, LottieLayer, TransformCanvas } from '../types';
+import type { AnimationData, CanvasRendererConfig, LottieLayer, TransformCanvas } from '../types';
 import CVImageElement from '../elements/canvas/CVImageElement';
 import CVShapeElement from '../elements/canvas/CVShapeElement';
 import CVSolidElement from '../elements/canvas/CVSolidElement';
