@@ -113,8 +113,8 @@ packages:
   '@emnapi/wasi-threads@1.0.2':
     resolution: {integrity: sha512-5n3nTJblwRi8LlXkJ9eBzu+kZR8Yxcc7ubakyQTFzPMtIhFpUBRbsnc2Dv88IZDIbCDlBiWrknhB4Lsz7mg6BA==}
 
-  '@es-joy/jsdoccomment@0.50.1':
-    resolution: {integrity: sha512-fas3qe1hw38JJgU/0m5sDpcrbZGysBeZcMwW5Ws9brYxY64MJyWLXRZCj18keTycT1LFTrFXdSNMS+GRVaU6Hw==}
+  '@es-joy/jsdoccomment@0.50.2':
+    resolution: {integrity: sha512-YAdE/IJSpwbOTiaURNCKECdAwqrJuFiZhylmesBcIRawtYKnBR2wxPhoIewMg+Yu+QuYvHfJNReWpoxGBKOChA==}
     engines: {node: '>=18'}
 
   '@eslint-community/eslint-utils@4.7.0':
@@ -519,9 +519,6 @@ packages:
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
-
-  '@types/eslint@9.6.1':
-    resolution: {integrity: sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==}
 
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -2596,9 +2593,8 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@es-joy/jsdoccomment@0.50.1':
+  '@es-joy/jsdoccomment@0.50.2':
     dependencies:
-      '@types/eslint': 9.6.1
       '@types/estree': 1.0.7
       '@typescript-eslint/types': 8.32.1
       comment-parser: 1.4.1
@@ -3008,11 +3004,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
-
-  '@types/eslint@9.6.1':
-    dependencies:
-      '@types/estree': 1.0.7
-      '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.7': {}
 
@@ -3873,7 +3864,7 @@ snapshots:
 
   eslint-plugin-jsdoc@50.6.17(eslint@9.27.0(jiti@2.4.2)):
     dependencies:
-      '@es-joy/jsdoccomment': 0.50.1
+      '@es-joy/jsdoccomment': 0.50.2
       are-docs-informative: 0.0.2
       comment-parser: 1.4.1
       debug: 4.4.1
