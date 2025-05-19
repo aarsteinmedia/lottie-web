@@ -1,5 +1,5 @@
+import type AnimationItem from '@/animation/AnimationItem'
 import type HCameraElement from '@/elements/html/HCameraElement'
-import type { AnimationItem } from '@/Lottie'
 import type {
   ElementInterfaceIntersect,
   GlobalData,

@@ -1,5 +1,4 @@
-import type { AnimationData } from '@/Lottie'
-import type { LottieLayer } from '@/types'
+import type { AnimationData, LottieLayer } from '@/types'
 
 import CanvasRendererOriginal from '@/renderers/CanvasRenderer'
 import { createTag } from '@/utils'

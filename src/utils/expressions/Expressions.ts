@@ -1,4 +1,4 @@
-import type { AnimationItem } from '@/Lottie'
+import type Animationitem from '@/animation/AnimationItem'
 import type PoolFactory from '@/utils/pooling/PoolFactory'
 
 import CompExpressionInterface from '@/utils/expressions/CompInterface'
@@ -9,7 +9,7 @@ export default class Expressions {
 
   private stackCount: number
 
-  constructor(animation: AnimationItem) {
+  constructor(animation: Animationitem) {
     this.stackCount = 0
     this.registers = []
 
@@ -17,7 +17,7 @@ export default class Expressions {
 
     this.resetFrame = resetFrame
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     if (!animation.renderer) {
       // TODO: This does not work for now
       return

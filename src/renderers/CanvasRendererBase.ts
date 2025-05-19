@@ -1,7 +1,7 @@
 import type CVContextData from '@/elements/canvas/CVContextData'
-import type { AnimationData } from '@/Lottie'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
+  AnimationData,
   CanvasRendererConfig,
   ElementInterfaceIntersect,
   LottieLayer,

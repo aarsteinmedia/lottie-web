@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { Vector2 } from '@/Lottie'
+import type { Vector2 } from '@/types'
 import type {
   BaseProperty,
   MultiDimensionalProperty,
