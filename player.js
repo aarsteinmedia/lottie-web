@@ -1901,9 +1901,7 @@ const css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-playe
         }
         try {
             // Clear previous animation
-            if (this._lottieInstance) {
-                this._lottieInstance.destroy();
-            }
+            this._lottieInstance?.destroy();
             // Re-initialize lottie player
             this._lottieInstance = Lottie.loadAnimation({
                 ...this._getOptions(),
