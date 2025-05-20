@@ -25,9 +25,7 @@ export default abstract class CompElement extends RenderableDOMElement {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
-      if (this.elements[i]) {
-        this.elements[i].destroy()
-      }
+      this.elements[i]?.destroy()
     }
   }
 
@@ -94,7 +92,7 @@ export default abstract class CompElement extends RenderableDOMElement {
     for (let i = length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st)
-        if (this.elements[i]._mdf) {
+        if (this.elements[i]?._mdf) {
           this._mdf = true
         }
       }

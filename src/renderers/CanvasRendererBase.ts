@@ -272,7 +272,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     const { length } = this.layers
 
     for (let i = length - 1; i >= 0; i -= 1) {
-      this.elements[i]?.destroy?.()
+      this.elements[i]?.destroy()
     }
     this.elements.length = 0
     this.globalData.canvasContext = null

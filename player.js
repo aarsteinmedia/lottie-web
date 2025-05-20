@@ -1316,6 +1316,8 @@ const css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-playe
             this.playerState = PlayerState.Error;
             this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
 
+            console.error(error)
+
             return;
         }
         this._addEventListeners();
@@ -1933,6 +1935,7 @@ const css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-playe
             this._errorMessage = handleErrors(error).message;
             this.playerState = PlayerState.Error;
             this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+            console.error(error)
         }
     }
     /**

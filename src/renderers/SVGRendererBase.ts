@@ -303,7 +303,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
-      this.elements[i].destroy()
+      this.elements[i]?.destroy()
     }
     this.elements.length = 0
     this.destroyed = true

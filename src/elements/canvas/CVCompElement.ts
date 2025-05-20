@@ -230,9 +230,7 @@ export default class CVCompElement extends CompElement {
     const { length } = this.layers
 
     for (let i = length - 1; i >= 0; i--) {
-      if (this.elements[i]) {
-        this.elements[i].destroy()
-      }
+      this.elements[i]?.destroy()
     }
     this.layers = null as unknown as LottieLayer[]
     this.elements = null as unknown as ElementInterfaceIntersect[]

@@ -118,7 +118,7 @@ export default class HybridRendererBase extends BaseRenderer {
           if (
             this.elements[i] !==
             (true as unknown as ElementInterfaceIntersect) &&
-            Boolean(this.elements[i]?.getBaseElement)
+            Boolean(this.elements[i].getBaseElement)
           ) {
             nextLayer = this.elements[i]
             tmpDOMElement = this.layers[i].ddd
@@ -368,7 +368,7 @@ export default class HybridRendererBase extends BaseRenderer {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
-      this.elements[i].destroy()
+      this.elements[i]?.destroy()
     }
     this.elements.length = 0
     this.destroyed = true
