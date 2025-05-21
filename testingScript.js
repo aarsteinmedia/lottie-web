@@ -21,44 +21,49 @@ for (let i = 0; i < length; i++) {
 handleRefresh()
 
 function handleRefresh() {
-  const selection = localStorage.getItem('selection')
+  try {
 
-  if (selection) {
-    pathSelect.value = selection
-    viewFile(selection)
+    const selection = localStorage.getItem('selection')
 
-    return
-  }
-  if (previewForm?.path?.value) {
-    const { value } = previewForm.path
+    if (selection) {
+      pathSelect.value = selection
+      viewFile(selection)
 
-    path = value.includes('/')
-      ? value
-      : `assets/${value}${regex.test(value) ? '' : '.json'}`
+      return
+    }
+    if (previewForm?.path?.value) {
+      const { value } = previewForm.path
 
-    viewFile(path)
+      path = value.includes('/')
+        ? value
+        : `assets/${value}${regex.test(value) ? '' : '.json'}`
 
-    return
-  }
+      viewFile(path)
 
-  const { search } = window.location
+      return
+    }
 
-  if (!search) {
-    viewFile(fallbackSVG)
+    const { search } = window.location
 
-    return
-  }
-  const searchParams = new URLSearchParams(search)
+    if (!search) {
+      viewFile(fallbackSVG)
 
-  if (searchParams.has('path') && previewForm.path) {
-    previewForm.path.value = searchParams.get('path')
+      return
+    }
+    const searchParams = new URLSearchParams(search)
 
-    const path = searchParams.get('path'),
-      query = path.includes('/')
-        ? path
-        : `sandbox/svg-original/${path}${path.endsWith('.svg') ? '' : '.svg'}`
+    if (searchParams.has('path') && previewForm.path) {
+      previewForm.path.value = searchParams.get('path')
 
-    viewFile(query)
+      const path = searchParams.get('path'),
+        query = path.includes('/')
+          ? path
+          : `sandbox/svg-original/${path}${path.endsWith('.svg') ? '' : '.svg'}`
+
+      viewFile(query)
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -68,22 +73,23 @@ function handleRefresh() {
 async function viewFile(e) {
   let path
 
-  if (e instanceof SubmitEvent) {
-    e.preventDefault()
-    const { value } = e.target.path
-
-    path = value.includes('/')
-      ? value
-      : `assets/${value}${regex.test(value) ? '' : '.json'}`
-  } else if (e instanceof Event) {
-    path = e.target.value
-    localStorage.setItem('selection', e.target.value)
-  } else {
-    path = e
-  }
-  const dotLottie = document.querySelector('.preview')
-
   try {
+
+    if (e instanceof SubmitEvent) {
+      e.preventDefault()
+      const { value } = e.target.path
+
+      path = value.includes('/')
+        ? value
+        : `assets/${value}${regex.test(value) ? '' : '.json'}`
+    } else if (e instanceof Event) {
+      path = e.target.value
+      localStorage.setItem('selection', e.target.value)
+    } else {
+      path = e
+    }
+    const dotLottie = document.querySelector('.preview')
+
     if (!dotLottie) {
       throw new Error('No placeholder')
     }

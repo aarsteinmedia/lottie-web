@@ -234,6 +234,7 @@ const addExt = (ext, str)=>{
             };
             reader.readAsDataURL(blob);
         } catch (error) {
+            console.error(error)
             reject(error);
         }
     });
@@ -1615,6 +1616,7 @@ const css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-playe
                 success: true
             };
         } catch (error) {
+            console.error(error)
             return {
                 error: handleErrors(error).message,
                 success: false
