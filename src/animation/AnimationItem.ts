@@ -973,8 +973,8 @@ export default class AnimationItem extends BaseEvent {
       element?.updateDocumentData(
         [], documentData, index
       )
-    } catch (_error) {
-      console.warn(_error)
+    } catch (error) {
+      console.error(error)
     }
   }
 
