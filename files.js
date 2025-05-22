@@ -28,6 +28,9 @@ const files = [
   'shapes-test.json',
   'b2b.lottie',
   'gameAnimation.lottie',
+  'BuildGarden.lottie',
+  'BuildOwnGarden.lottie',
+  'BuildYourOwnGarden.lottie'
 ]
 
 export default files
