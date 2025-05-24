@@ -26,6 +26,10 @@ import {
   BMSegmentStartEvent,
   type LottieEvent,
 } from '@/events'
+import {
+  getRegisteredRenderer,
+  getRenderer,
+} from '@/renderers'
 import { createElementID, markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
 import {
@@ -34,8 +38,6 @@ import {
 import { RendererType } from '@/utils/enums'
 import {
   getExpressionsPlugin,
-  getRegisteredRenderer,
-  getRenderer,
   getSubframeEnabled,
 } from '@/utils/getterSetter'
 import ProjectInterface from '@/utils/helpers/ProjectInterface'

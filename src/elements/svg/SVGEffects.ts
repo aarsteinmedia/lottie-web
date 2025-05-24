@@ -1,15 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import type { GroupEffect } from '@/effects/EffectsManager'
-import type { ElementInterfaceIntersect } from '@/types'
+import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
 import { createElementID } from '@/utils'
 import { createFilter } from '@/utils/FiltersFactory'
-import {
-  getLocationHref,
-  registeredEffects,
-} from '@/utils/getterSetter'
+import { getLocationHref } from '@/utils/getterSetter'
 
-const idPrefix = 'filter_result_'
+const idPrefix = 'filter_result_',
+  registeredEffects: {
+    [id: string]: {
+      countsAsEffect?: boolean
+      effect: EffectElement
+    } | undefined
+  } = {}
 
 export default class SVGEffects {
   filters: GroupEffect[]
@@ -29,13 +32,13 @@ export default class SVGEffects {
       filterManager = null
 
       const { ty } = elem.data.ef?.[i] ?? { ty: null },
-        Effect = ty !== null && registeredEffects[ty]?.effect
+        Effect = ty === null || !registeredEffects[ty] ? null : registeredEffects[ty].effect
 
-      if (Effect && ty) {
+      if (Effect && ty && elem.effectsManager) {
         filterManager = new Effect(
-          fil as any,
-          elem.effectsManager?.effectElements[i] as any,
-          elem as any,
+          fil,
+          elem.effectsManager.effectElements[i],
+          elem,
           `${idPrefix}${count}`,
           source
         ) as GroupEffect
@@ -77,5 +80,16 @@ export default class SVGEffects {
     for (let i = 0; i < length; i++) {
       this.filters[i].renderFrame(frame)
     }
+  }
+}
+
+export const registerEffect = (
+  id: number,
+  effect: EffectElement,
+  countsAsEffect?: boolean,
+) => {
+  registeredEffects[id] = {
+    countsAsEffect,
+    effect,
   }
 }

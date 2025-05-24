@@ -1,7 +1,12 @@
 import type { GroupEffect } from '@/effects/EffectsManager'
-import type { ElementInterfaceIntersect } from '@/types'
+import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
-import { registeredEffects } from '@/utils/getterSetter'
+const registeredEffects: {
+  [id: string]: {
+    countsAsEffect?: boolean
+    effect: EffectElement
+  } | undefined
+} = { }
 
 export default class CVEffects {
   filters: GroupEffect[]
@@ -53,5 +58,16 @@ export default class CVEffects {
     for (let i = 0; i < length; i++) {
       this.filters[i].renderFrame(_isFirstFrame)
     }
+  }
+}
+
+export const registerEffect = (
+  id: number,
+  effect: EffectElement,
+  countsAsEffect?: boolean,
+) => {
+  registeredEffects[id] = {
+    countsAsEffect,
+    effect,
   }
 }

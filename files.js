@@ -30,7 +30,8 @@ const files = [
   'gameAnimation.lottie',
   'BuildGarden.lottie',
   'BuildOwnGarden.lottie',
-  'BuildYourOwnGarden.lottie'
+  'BuildYourOwnGarden.lottie',
+  'BuildGarden copy.lottie'
 ]
 
 export default files

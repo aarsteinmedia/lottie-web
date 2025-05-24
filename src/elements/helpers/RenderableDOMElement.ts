@@ -95,6 +95,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
   }
 
   renderInnerContent() {
+    // TODO: Pass through?
     throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
   }
 

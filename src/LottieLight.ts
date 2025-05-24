@@ -18,11 +18,11 @@ import {
   searchAnimations,
   loadAnimation,
 } from '@/animation/AnimationManager'
+import { registerRenderer } from '@/renderers'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { inBrowser, isServer } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
 import {
-  registerRenderer,
   setIDPrefix as setPrefix,
   setLocationHref,
   setQuality,

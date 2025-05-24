@@ -1,5 +1,3 @@
-
-
 // import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import type Expressions from '@/utils/expressions/Expressions'
 
@@ -33,6 +31,9 @@ import SVGStrokeEffect from '@/effects/svg/SVGStrokeEffect'
 import SVGTintFilter from '@/effects/svg/SVGTintFilter'
 import SVGTransformEffect from '@/effects/svg/SVGTransformEffect'
 import SVGTritoneFilter from '@/effects/svg/SVGTritoneFilter'
+import { registerEffect as registerCanvasEffect } from '@/elements/canvas/CVEffects'
+import { registerEffect } from '@/elements/svg/SVGEffects'
+import { registerRenderer } from '@/renderers'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
@@ -41,8 +42,6 @@ import { Modifier, RendererType } from '@/utils/enums'
 // import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 // import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
-  registerEffect,
-  registerRenderer,
   // setExpressionInterfaces,
   setExpressionsPlugin,
   setIDPrefix as setPrefix,
@@ -158,7 +157,7 @@ registerEffect(
 registerEffect(
   35, SVGTransformEffect, false
 )
-registerEffect(35, CVTransformEffect)
+registerCanvasEffect(35, CVTransformEffect)
 
 export default Lottie
 

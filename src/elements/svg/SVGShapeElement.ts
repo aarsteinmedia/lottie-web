@@ -36,7 +36,16 @@ import TransformPropertyFactory from '@/utils/TransformProperty'
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   animatedContents: AnimatedContent[]
+  override createContainerElements = SVGBaseElement.prototype.createContainerElements
+  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
+
+  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
+  override getBaseElement = SVGBaseElement.prototype.getBaseElement
+  getMatte = SVGBaseElement.prototype.getMatte
+  override initRendererElement = SVGBaseElement.prototype.initRendererElement
   prevViewData: SVGElementInterface[]
+  override renderElement = SVGBaseElement.prototype.renderElement
+  setMatte = SVGBaseElement.prototype.setMatte
   stylesList: SVGStyleData[]
 
   constructor(
@@ -59,26 +68,6 @@ export default class SVGShapeElement extends ShapeElement {
     this.processedElements = []
     // List of animated components
     this.animatedContents = []
-
-    const {
-      createContainerElements,
-      createRenderableComponents,
-      destroyBaseElement,
-      getBaseElement,
-      getMatte,
-      initRendererElement,
-      renderElement,
-      setMatte,
-    } = SVGBaseElement.prototype
-
-    this.createContainerElements = createContainerElements
-    this.createRenderableComponents = createRenderableComponents
-    this.destroyBaseElement = destroyBaseElement
-    this.getBaseElement = getBaseElement
-    this.initRendererElement = initRendererElement
-    this.renderElement = renderElement
-    this.getMatte = getMatte
-    this.setMatte = setMatte
 
     this.initElement(
       data, globalData, comp
@@ -315,10 +304,6 @@ export default class SVGShapeElement extends ShapeElement {
         this.setShapesAsAnimated(tempShapes as unknown as ShapeDataInterface[])
       }
     }
-  }
-
-  getMatte(_type?: number) {
-    throw new Error(`${this.constructor.name}: Method getMatte not yet implemented`)
   }
 
   initSecondaryElement() {
@@ -587,10 +572,6 @@ export default class SVGShapeElement extends ShapeElement {
         elementData.styles.push(this.stylesList[i])
       }
     }
-  }
-
-  setMatte(_id: string) {
-    throw new Error(`${this.constructor.name}: Method setMatte not yet implemented`)
   }
 
   setShapesAsAnimated(shapes: ShapeDataInterface[]) {

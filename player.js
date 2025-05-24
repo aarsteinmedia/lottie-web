@@ -361,22 +361,39 @@ const addExt = (ext, str)=>{
 
     return `${src.split('/').pop()?.replace(/\.[^.]*$/, '').replaceAll(/\W+/g, '-')}${''}` // .toLowerCase()
     ;
-}, getLottieJSON = async (resp)=>{
-    const unzipped = await unzip(resp), manifest = getManifest(unzipped), data = [], toResolve = [], { length } = manifest.animations;
+    }, getLottieJSON = async (resp) => {
+        const unzipped = await unzip(resp),
+            manifest = getManifest(unzipped),
+            data = [],
+            toResolve = [],
+            { length } = manifest.animations
 
-    for(let i = 0; i < length; i++){
-        const str = strFromU8(unzipped[`animations/${manifest.animations[i].id}.json`]), lottie = JSON.parse(prepareString(str));
+        /**
+         * Check whether Lottie animations folder is abbreviated.
+         */
+        let animationsFolder = 'animations'
 
-        toResolve.push(resolveAssets(unzipped, lottie.assets));
-        data.push(lottie);
-    }
-    await Promise.all(toResolve);
+        if (unzipped[`a/${manifest.animations[0].id}.json`]) {
+            animationsFolder = 'a'
+        }
 
-    return {
-        data,
-        manifest
-    };
-}, getManifest = (unzipped)=>{
+        for (let i = 0; i < length; i++) {
+            const str = strFromU8(
+                unzipped[`${animationsFolder}/${manifest.animations[i].id}.json`]
+            ),
+                lottie = JSON.parse(prepareString(str))
+
+            toResolve.push(resolveAssets(unzipped, lottie.assets))
+            data.push(lottie)
+        }
+
+        await Promise.all(toResolve)
+
+        return {
+            data,
+            manifest,
+        }
+    }, getManifest = (unzipped)=>{
     const file = strFromU8(unzipped['manifest.json'], false), manifest = JSON.parse(file);
 
     if (!('animations' in manifest)) {
@@ -1617,6 +1634,7 @@ const css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-playe
             };
         } catch (error) {
             console.error(error)
+
             return {
                 error: handleErrors(error).message,
                 success: false

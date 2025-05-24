@@ -1,11 +1,9 @@
 import type {
-  AnimationData,
   CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import CompElement from '@/elements/CompElement'
@@ -16,14 +14,54 @@ import PropertyFactory from '@/utils/PropertyFactory'
 
 export default class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
+  addPendingElement = SVGRendererBase.prototype.addPendingElement
+  appendElementInPos = SVGRendererBase.prototype.appendElementInPos
+  override buildAllItems = SVGRendererBase.prototype.buildAllItems
+  buildElementParenting = SVGRendererBase.prototype.buildElementParenting
+  buildItem = SVGRendererBase.prototype.buildItem
+  override checkLayers = SVGRendererBase.prototype.checkLayers
+  checkPendingElements = SVGRendererBase.prototype.checkPendingElements
   completeLayers: boolean
+
+  configAnimation = SVGRendererBase.prototype.configAnimation
+  createAudio = SVGRendererBase.prototype.createAudio
+  createCamera = SVGRendererBase.prototype.createCamera
+  createFootage = SVGRendererBase.prototype.createFootage
+  createImage = SVGRendererBase.prototype.createImage
+  createItem = SVGRendererBase.prototype.createItem
+  createNull = SVGRendererBase.prototype.createNull
+  createShape = SVGRendererBase.prototype.createShape
+  createSolid = SVGRendererBase.prototype.createSolid
+  createText = SVGRendererBase.prototype.createText
+
+
   currentFrame = 0
+  override destroy = CompElement.prototype.destroy
+  destroyElements = CompElement.prototype.destroyElements
   elements: ElementInterfaceIntersect[]
+  findIndexByInd = SVGRendererBase.prototype.findIndexByInd
+  getElementById = SVGRendererBase.prototype.getElementById
+  getElementByPath = SVGRendererBase.prototype.getElementByPath
+  getElements = CompElement.prototype.getElements
+  override hide = CompElement.prototype.hide
+  includeLayers = SVGRendererBase.prototype.includeLayers
+  override initElement = CompElement.prototype.initElement
+  initItems = SVGRendererBase.prototype.initItems
   layers?: LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
+  override prepareFrame = CompElement.prototype.prepareFrame
   renderedFrame = -1
+  override renderFrame = CompElement.prototype.renderFrame
+  override renderInnerContent = CompElement.prototype.renderInnerContent
+  searchExtraCompositions = SVGRendererBase.prototype.searchExtraCompositions
+  setElements = CompElement.prototype.setElements
+  setProjectInterface = SVGRendererBase.prototype.setProjectInterface
+  setupGlobalData = SVGRendererBase.prototype.setupGlobalData
+  override show = CompElement.prototype.show
   supports3d: boolean
   tm?: KeyframedValueProperty
+  updateContainerSize = SVGRendererBase.prototype.updateContainerSize
+
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -36,124 +74,12 @@ export default class SVGCompElement extends SVGBaseElement {
     this.pendingElements = []
     this.elements = this.layers ? createSizedArray(this.layers.length) : []
 
-    const {
-      destroy,
-      destroyElements,
-      getElements,
-      hide,
-      initElement,
-      prepareFrame,
-      renderFrame,
-      renderInnerContent,
-      setElements,
-      show
-    } = CompElement.prototype
-
-    this.destroyElements = destroyElements
-    this.getElements = getElements
-    this.setElements = setElements
-    this.destroy = destroy
-    this.hide = hide
-    this.initElement = initElement
-    this.prepareFrame = prepareFrame
-    this.renderFrame = renderFrame
-    this.show = show
-    this.renderInnerContent = renderInnerContent
-
-    const {
-      addPendingElement,
-      appendElementInPos,
-      buildAllItems,
-      buildElementParenting,
-      buildItem,
-      checkLayers,
-      checkPendingElements,
-      configAnimation,
-      createAudio,
-      createCamera,
-      createFootage,
-      createImage,
-      createItem,
-      createNull,
-      createShape,
-      createSolid,
-      createText,
-      findIndexByInd,
-      getElementById,
-      getElementByPath,
-      includeLayers,
-      initItems,
-      searchExtraCompositions,
-      setProjectInterface,
-      setupGlobalData,
-      updateContainerSize,
-    } = SVGRendererBase.prototype
-
-    this.checkLayers = checkLayers
-    this.createItem = createItem
-    this.createCamera = createCamera
-    this.createAudio = createAudio
-    this.createFootage = createFootage
-    this.buildAllItems = buildAllItems
-    this.includeLayers = includeLayers
-    this.setProjectInterface = setProjectInterface
-    this.initItems = initItems
-    this.buildElementParenting = buildElementParenting
-    this.addPendingElement = addPendingElement
-    this.searchExtraCompositions = searchExtraCompositions
-    this.getElementById = getElementById
-    this.getElementByPath = getElementByPath
-    this.setupGlobalData = setupGlobalData
-    this.createNull = createNull
-    this.createShape = createShape
-    this.createText = createText
-    this.createImage = createImage
-    this.createSolid = createSolid
-    this.configAnimation = configAnimation
-    this.updateContainerSize = updateContainerSize
-    this.findIndexByInd = findIndexByInd
-    this.buildItem = buildItem
-    this.checkPendingElements = checkPendingElements
-    this.appendElementInPos = appendElementInPos
-
     this.initElement(
       data, globalData, comp
     )
     this.tm = (data.tm ? PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect, data.tm, 0, globalData.frameRate, this as unknown as ElementInterfaceIntersect
     ) : { _placeholder: true }) as KeyframedValueProperty
-  }
-
-  addPendingElement(_el: ElementInterfaceIntersect) {
-    throw new Error(`${this.constructor.name}: Method addPendingElement not implemented yet`)
-  }
-
-  appendElementInPos(_element: ElementInterfaceIntersect, _pos: number) {
-    throw new Error(`${this.constructor.name}: Method appendElementInPos not implemented yet`)
-  }
-
-  buildElementParenting(_el: ElementInterfaceIntersect) {
-    throw new Error(`${this.constructor.name}: Method buildElementParenting not implemented yet`)
-  }
-
-  buildItem(_pos: number) {
-    throw new Error(`${this.constructor.name}: Method buildItem not implemented yet`)
-  }
-
-  checkPendingElements() {
-    throw new Error(`${this.constructor.name}: Method checkPendingElements not implemented yet`)
-  }
-
-  configAnimation(_data: AnimationData) {
-    throw new Error(`${this.constructor.name}: Method configAnimation not implemented yet`)
-  }
-
-  createAudio(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createAudio not implemented yet`)
-  }
-
-  createCamera(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createCamera not implemented yet`)
   }
 
   createComp(data: LottieLayer) {
@@ -166,81 +92,5 @@ export default class SVGCompElement extends SVGBaseElement {
       this.globalData,
       this as unknown as ElementInterfaceIntersect
     )
-  }
-
-  createFootage(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createFootage not implemented yet`)
-  }
-
-  createImage(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createImage not implemented yet`)
-  }
-
-  createItem(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createItem not implemented yet`)
-  }
-
-  createNull(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createNull not implemented yet`)
-  }
-
-  createShape(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createShape not implemented yet`)
-  }
-
-  createSolid(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createSolid not implemented yet`)
-  }
-
-  createText(_data: LottieLayer) {
-    throw new Error(`${this.constructor.name}: Method createText not implemented yet`)
-  }
-
-  destroyElements() {
-    throw new Error(`${this.constructor.name}: Method destroyElements not implemented yet`)
-  }
-
-  findIndexByInd() {
-    throw new Error(`${this.constructor.name}: Method findIndexByInd not implemented yet`)
-  }
-
-  getElementById(_ind: number): ElementInterfaceIntersect | null {
-    throw new Error(`${this.constructor.name}: Method getElementById not implemented yet`)
-  }
-
-  getElementByPath(_path: unknown[]): ElementInterfaceIntersect | undefined {
-    throw new Error(`${this.constructor.name}: Method getElementByPath not implemented yet`)
-  }
-
-  getElements() {
-    throw new Error(`${this.constructor.name}: Method getElements not implemented yet`)
-  }
-
-  includeLayers(_data: LottieLayer[]) {
-    throw new Error(`${this.constructor.name}: Method includeLayers not implemented yet`)
-  }
-
-  initItems() {
-    throw new Error(`${this.constructor.name}: Method initItems not implemented yet`)
-  }
-
-  searchExtraCompositions(_assets: LottieLayer[]) {
-    throw new Error(`${this.constructor.name}: Method searchExtraCompositions not implemented yet`)
-  }
-
-  setElements(_elems: ElementInterfaceIntersect[]) {
-    throw new Error(`${this.constructor.name}: Method setElements not implemented yet`)
-  }
-
-  setProjectInterface(_interface: null | ProjectInterface) {
-    throw new Error(`${this.constructor.name}: Method setProjectInterface not implemented yet`)
-  }
-
-  setupGlobalData(_animData: AnimationData, _fontsContainer: HTMLElement | SVGDefsElement) {
-    throw new Error(`${this.constructor.name}: Method setupGlobalData not implemented yet`)
-  }
-
-  updateContainerSize(_width?: number, _height?: number) {
-    throw new Error(`${this.constructor.name}: Method updateContainerSize not implemented yet`)
   }
 }

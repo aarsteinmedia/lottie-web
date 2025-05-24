@@ -14,7 +14,7 @@ for (let i = 0; i < length; i++) {
   const opt = document.createElement('option')
 
   opt.innerText = files[i]
-  opt.value = `/assets/${files[i].split(' ')[0]}`
+  opt.value = `/assets/${files[i].trim()}`
   pathSelect.appendChild(opt)
 }
 
@@ -22,7 +22,6 @@ handleRefresh()
 
 function handleRefresh() {
   try {
-
     const selection = localStorage.getItem('selection')
 
     if (selection) {
@@ -32,11 +31,10 @@ function handleRefresh() {
       return
     }
     if (previewForm?.path?.value) {
-      const { value } = previewForm.path
-
-      path = value.includes('/')
-        ? value
-        : `assets/${value}${regex.test(value) ? '' : '.json'}`
+      const { value } = previewForm.path,
+        path = value.includes('/')
+          ? value
+          : `assets/${value}${regex.test(value) ? '' : '.json'}`
 
       viewFile(path)
 
@@ -69,11 +67,12 @@ function handleRefresh() {
 
 /**
  * View converted SVG.
+ *
+ * @param e - Either the submit event, the change event or the string value.
  */
 async function viewFile(e) {
-  let path
-
   try {
+    let path
 
     if (e instanceof SubmitEvent) {
       e.preventDefault()
@@ -84,31 +83,23 @@ async function viewFile(e) {
         : `assets/${value}${regex.test(value) ? '' : '.json'}`
     } else if (e instanceof Event) {
       path = e.target.value
-      localStorage.setItem('selection', e.target.value)
+      localStorage.setItem('selection', path)
     } else {
       path = e
     }
+
+    /**
+     * @type {import('./src/elements/DotLottiePlayer').default}
+     */
     const dotLottie = document.querySelector('.preview')
 
-    if (!dotLottie) {
+    if (!dotLottie || !path || !path === '') {
       throw new Error('No placeholder')
     }
 
-    // const res = await fetch(path)
+    await dotLottie.load(path)
 
-    // if (!res.ok) {
-    //   throw new Error('Could not find file')
-    // }
-
-    dotLottie.load(path)
-
-    // const { height, width } = svg.viewBox.baseVal
-
-    // if (width - 150 > height) {
-    //   container.style.flexDirection = 'column'
-    // } else {
-    //   container.style.flexDirection = 'row'
-    // }
+    // dotLottie.addEventListener('complete', () => console.debug('complete'))
   } catch (error) {
     console.error(error)
   }

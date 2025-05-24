@@ -25,6 +25,8 @@ import { newElement } from '@/utils/pooling/ShapePool'
 // import seedrandom from '@/utils/SeedRandom'
 // import propTypes from '../helpers/propTypes'
 
+const propTypes = { SHAPE: 'shape' }
+
 export default class ExpressionManager {
   _lottieGlobal = {}
   _needsRandom?: boolean
@@ -108,7 +110,6 @@ export default class ExpressionManager {
   window = null
 
   XMLHttpRequest = null
-  private propTypes = { SHAPE: 'shape' }
 
   $bm_isInstanceOfArray(arr: unknown): arr is number[] {
     return arr?.constructor === Array || arr?.constructor === Float32Array
@@ -388,7 +389,7 @@ export default class ExpressionManager {
     // TODO: Check if it's possible to return on ShapeInterface the .v value
     // Changed this to a ternary operation because Rollup failed compiling it correctly
     this.scoped_bm_rt =
-      this.scoped_bm_rt?.propType === this.propTypes.SHAPE
+      this.scoped_bm_rt?.propType === propTypes.SHAPE
         ? (this.scoped_bm_rt.v as unknown as ValueProperty)
         : this.scoped_bm_rt
 

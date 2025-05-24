@@ -18,19 +18,12 @@ import { createTag } from '@/utils'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
-export default class CanvasRendererBase extends BaseRenderer {
+export default abstract class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
   contextData?: CVContextData
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
   transformCanvas?: TransformCanvas
-
-  constructor() {
-    super()
-    const { createNull } = SVGRenderer.prototype
-
-    this.createNull = createNull
-  }
 
   override buildItem(pos: number) {
     const { elements, layers } = this
@@ -213,7 +206,7 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.canvasContext.miterLimit = value
   }
 
-  ctxOpacity(op = 0) {
+  ctxOpacity(op = 1) {
     if (!this.canvasContext) {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
@@ -531,3 +524,5 @@ export default class CanvasRendererBase extends BaseRenderer {
     this.renderFrame(this.renderedFrame, true)
   }
 }
+
+CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull

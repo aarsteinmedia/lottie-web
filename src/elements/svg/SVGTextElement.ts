@@ -27,9 +27,16 @@ export default class SVGTextLottieElement extends TextElement {
     top: number
     width: number
   }
+  override createContainerElements = SVGBaseElement.prototype.createContainerElements
+  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
+  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
+  override getBaseElement = SVGBaseElement.prototype.getBaseElement
+  getMatte = SVGBaseElement.prototype.getMatte
+  override initRendererElement = SVGBaseElement.prototype.initRendererElement
   renderedFrame?: number
-
   renderedLetters: string[] = []
+  override renderElement = SVGBaseElement.prototype.renderElement
+  setMatte = SVGBaseElement.prototype.setMatte
   textContainer?: SVGTextElement
   textSpans: TextSpan[]
 
@@ -41,26 +48,6 @@ export default class SVGTextLottieElement extends TextElement {
     super()
     this.textSpans = []
     this.renderType = RendererType.SVG
-
-    const {
-      createContainerElements,
-      createRenderableComponents,
-      destroyBaseElement,
-      getBaseElement,
-      getMatte,
-      initRendererElement,
-      renderElement,
-      setMatte,
-    } = SVGBaseElement.prototype
-
-    this.createContainerElements = createContainerElements
-    this.createRenderableComponents = createRenderableComponents
-    this.getBaseElement = getBaseElement
-    this.getMatte = getMatte
-    this.destroyBaseElement = destroyBaseElement
-    this.initRendererElement = initRendererElement
-    this.renderElement = renderElement
-    this.setMatte = setMatte
 
     this.initElement(
       data, globalData, comp
@@ -398,10 +385,6 @@ export default class SVGTextLottieElement extends TextElement {
     }
   }
 
-  getMatte(_type?: number): string {
-    throw new Error(`${this.constructor.name}: Method getMatte is not implemented`)
-  }
-
   getValue() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -468,10 +451,6 @@ export default class SVGTextLottieElement extends TextElement {
         }
       }
     }
-  }
-
-  setMatte(_id: string) {
-    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 
   override sourceRectAtTime(): SourceRect | null {

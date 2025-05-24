@@ -1,15 +1,9 @@
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
-import type SVGRenderer from '@/renderers/SVGRenderer'
 import type {
-  EffectElement,
   ExpressionInterface,
   ExpressionInterfaces,
   GetInterface,
 } from '@/types'
 import type Expressions from '@/utils/expressions/Expressions'
-
-import { RendererType } from '@/utils/enums'
 
 export const initialDefaultFrame = -999999,
   roundCorner = 0.5519
@@ -64,46 +58,7 @@ export const setSubframeEnabled = (flag: boolean) => {
     isSubframeEnabled.current = flag
   },
   getSubframeEnabled = () => isSubframeEnabled.current
-/**
- *
- * Renderer.
- */
-type Renderer =
-  | typeof SVGRenderer
-  | typeof CanvasRenderer
-  | typeof HybridRenderer
-const renderers: {
-  [key in RendererType]?: Renderer
-} = {}
 
-export const registerRenderer = (key: RendererType, value: Renderer) => {
-    renderers[key] = value
-  },
-  getRenderer = (key: RendererType) => {
-    if (!renderers[key]) {
-      throw new Error('Could not get renderer')
-    }
-
-    return renderers[key]
-  },
-  getRegisteredRenderer = () => {
-    // Returns canvas by default for compatibility
-    if (renderers.canvas) {
-      return RendererType.Canvas
-    }
-    // Returns any renderer that is registered
-
-    const keys = Object.keys(renderers),
-      { length } = keys
-
-    for (let i = 0; i < length; i++) {
-      if (renderers[keys[i] as RendererType]) {
-        return keys[i] as RendererType
-      }
-    }
-
-    return RendererType.SVG
-  }
 /**
  *
  * Location HREF.
@@ -114,26 +69,6 @@ export const setLocationHref = (value: string) => {
     locationHref.current = value
   },
   getLocationHref = () => locationHref.current
-/**
- *
- * Effects.
- */
-export const registeredEffects: {
-    [id: string]: {
-      countsAsEffect?: boolean
-      effect: EffectElement
-    } | undefined
-  } = {},
-  registerEffect = (
-    id: number,
-    effect: EffectElement,
-    countsAsEffect?: boolean
-  ) => {
-    registeredEffects[id] = {
-      countsAsEffect,
-      effect,
-    }
-  }
 
 const idPrefix = { current: '' }
 
