@@ -1,26 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-// @ts-nocheck
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
-  CompElementInterface,
-  CVElement,
-  CVStyleElement,
-  ElementInterfaceIntersect,
-  GlobalData,
-  LottieLayer,
+  CompElementInterface, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
   Shape,
-  Transformer,
-  Vector3,
-  VectorProperty,
+  Transformer
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
@@ -28,30 +13,43 @@ import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManag
 import ShapeElement from '@/elements/ShapeElement'
 import { degToRads } from '@/utils'
 import {
-  lineCapEnum, lineJoinEnum, RendererType, ShapeType
+  lineCapEnum,
+  lineJoinEnum,
+  RendererType,
+  ShapeType,
 } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
 import DashProperty from '@/utils/shapes/DashProperty'
 import GradientProperty from '@/utils/shapes/GradientProperty'
-import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import TransformPropertyFactory, { type TransformProperty  } from '@/utils/TransformProperty'
+import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
-  dashResetter = []
-  prevViewData: ShapeGroupData[]
+  clearCanvas = CVBaseElement.prototype.clearCanvas
+  override createContainerElements = CVBaseElement.prototype.createContainerElements
 
+  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
+  dashResetter = []
+
+  exitLayer = CVBaseElement.prototype.exitLayer
+  override hide = CVBaseElement.prototype.hide
+  override initRendererElement = CVBaseElement.prototype.initRendererElement
+  prepareLayer = CVBaseElement.prototype.prepareLayer
+  prevViewData: ShapeGroupData[]
+  override renderFrame = CVBaseElement.prototype.renderFrame
+  override setBlendMode = CVBaseElement.prototype.setBlendMode
+  override show = CVBaseElement.prototype.show
   stylesList: CVStyleElement[]
   transformHelper = {
     _opMdf: false,
     opacity: 1,
   } as TransformProperty
+
   transformsManager: ShapeTransformManager
 
   constructor(
-    data: LottieLayer,
-    globalData: GlobalData,
-    comp: CompElementInterface
+    data: LottieLayer, globalData: GlobalData, comp: CompElementInterface
   ) {
     super()
     this.shapes = []
@@ -62,33 +60,6 @@ export default class CVShapeElement extends ShapeElement {
     this.shapeModifiers = []
     this.processedElements = []
     this.transformsManager = new ShapeTransformManager()
-
-    const {
-      clearCanvas,
-      createContainerElements,
-      createElements,
-      createRenderableComponents,
-      exitLayer,
-      hideElement,
-      initRendererElement,
-      prepareLayer,
-      renderFrame,
-      setBlendMode,
-      showElement,
-    } = CVBaseElement.prototype
-
-    this.clearCanvas = clearCanvas
-    this.createContainerElements = createContainerElements
-    this.createElements = createElements
-    this.createRenderableComponents = createRenderableComponents
-    this.exitLayer = exitLayer
-    this.hideElement = hideElement
-    this.initRendererElement = initRendererElement
-    this.prepareLayer = prepareLayer
-    this.renderFrame = renderFrame
-    this.setBlendMode = setBlendMode
-    this.showElement = showElement
-
     this.initElement(
       data, globalData, comp
     )
@@ -102,13 +73,6 @@ export default class CVShapeElement extends ShapeElement {
         this.stylesList[i].transforms.push(transform)
       }
     }
-  }
-
-  clearCanvas(_canvasContext?:
-    | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D
-    | null) {
-    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
   }
 
   closeStyles(styles: CVStyleElement[]) {
@@ -127,10 +91,6 @@ export default class CVShapeElement extends ShapeElement {
       true,
       []
     )
-  }
-
-  createElements() {
-    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
   }
 
   createGroupElement(_data?: Shape) {
@@ -158,14 +118,14 @@ export default class CVShapeElement extends ShapeElement {
 
   createStyleElement(data: Shape, transforms: Transformer[]) {
     const styleElem: CVStyleElement = {
-      closed: data.hd === true,
-      data,
-      elements: [],
-      preTransforms: this.transformsManager.addTransformSequence(transforms),
-      transforms: [],
-      type: data.ty,
-    }
-    const elementData = {} as unknown as CVElement
+        closed: data.hd === true,
+        data,
+        elements: [],
+        preTransforms: this.transformsManager.addTransformSequence(transforms),
+        transforms: [],
+        type: data.ty,
+      },
+      elementData = {} as unknown as CVElement
 
     switch (data.ty) {
       case ShapeType.Fill:
@@ -403,22 +363,10 @@ export default class CVShapeElement extends ShapeElement {
       }
       if (!isStroke) {
         // ctx.fill(currentStyle.r);
-        ;(this.globalData.renderer as CanvasRenderer | undefined)?.ctxFill(currentStyle.r)
+        ; this.globalData.renderer?.ctxFill(currentStyle.r)
       }
       renderer.restore()
     }
-  }
-
-  exitLayer() {
-    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
-  }
-
-  hideElement() {
-    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
-  }
-
-  prepareLayer() {
-    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
   }
 
   reloadShapes() {
@@ -445,9 +393,9 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   removeTransformFromStyleList() {
-    const len = this.stylesList.length
+    const { length } = this.stylesList
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.pop()
       }
@@ -522,8 +470,7 @@ export default class CVShapeElement extends ShapeElement {
           opacity = itemData.g.o[i * 2 + 1]
         }
         grd?.addColorStop(cValues[i * 4] / 100,
-          `rgba(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${
-            cValues[i * 4 + 3]
+          `rgba(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${cValues[i * 4 + 3]
           },${opacity})`)
       }
       styleElem.grd = grd
@@ -562,14 +509,15 @@ export default class CVShapeElement extends ShapeElement {
     isMain?: boolean
   ) {
     const len = items.length - 1
-    let groupTransform = parentTransform
+    let groupTransform
 
-    for (let i = len; i >= 0; i -= 1) {
+    groupTransform = parentTransform
+    for (let i = len; i >= 0; i--) {
       switch (items[i].ty) {
         case ShapeType.Transform: {
           groupTransform = data[i].transform as any
           this.renderShapeTransform(parentTransform as any,
-            groupTransform as any)
+            groupTransform)
           break
         }
         case ShapeType.Path:
@@ -581,21 +529,22 @@ export default class CVShapeElement extends ShapeElement {
         }
         case ShapeType.Fill: {
           this.renderFill(
-            items[i], data[i], groupTransform as any
+            items[i], data[i], groupTransform
           )
           break
         }
         case ShapeType.Stroke: {
           this.renderStroke(
-            items[i], data[i], groupTransform as any
+            items[i], data[i], groupTransform
           )
           break
         }
-        case ShapeType.GradientFill: {
+        case ShapeType.GradientFill:
+        case ShapeType.GradientStroke: {
           this.renderGradientFill(
             items[i] as any,
             data[i],
-            groupTransform as any
+            groupTransform
           )
           break
         }
@@ -607,6 +556,7 @@ export default class CVShapeElement extends ShapeElement {
         }
         case ShapeType.Trim:
         default:
+        // Do nothing
       }
     }
     if (isMain) {
@@ -727,12 +677,12 @@ export default class CVShapeElement extends ShapeElement {
   ) {
     let shouldRender = shouldRenderFromProps
     const len = arr.length - 1,
-      ownStyles = [],
-      ownModifiers = []
+      ownStyles: CVStyleElement[] = [],
+      ownModifiers: ShapeModifierInterface[] = []
     let modifier, currentTransform
     const ownTransforms = [...transforms]
 
-    for (let i = len; i >= 0; i -= 1) {
+    for (let i = len; i >= 0; i--) {
       const processedPos = this.searchProcessedElement(arr[i])
 
       if (processedPos) {
@@ -840,9 +790,5 @@ export default class CVShapeElement extends ShapeElement {
     for (let i = 0; i < length; i++) {
       ownModifiers[i].closed = true
     }
-  }
-
-  showElement() {
-    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 }

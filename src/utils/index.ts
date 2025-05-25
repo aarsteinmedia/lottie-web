@@ -484,10 +484,13 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     for (let i = 0; i < length; i++) {
       sourcePrototype = sources[i].prototype
-      const properties = Object.keys(sourcePrototype),
+      const properties = Object.getOwnPropertyNames(sourcePrototype),
         { length: jLen } = properties
 
       for (let j = 0; j < jLen; j++) {
+        if (properties[j] === 'constructor') {
+          continue
+        }
         if (Object.hasOwn(sourcePrototype, properties[j])) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           destination.prototype[properties[j]] = sourcePrototype[properties[j]]
@@ -730,17 +733,18 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     let sourcePrototype: Record<string, unknown>
 
-    const destinationProperties = Object.keys(destination?.prototype as Record<string, unknown> | undefined ?? {})
+    const destinationProperties = Object.getOwnPropertyNames(destination?.prototype as Record<string, unknown> | undefined ?? {})
 
     for (let i = length - 1; i >= 0; i--) {
       sourcePrototype = sources[i].prototype
 
       const { name } = sources[i],
-        properties = Object.keys(sourcePrototype),
+        properties = Object.getOwnPropertyNames(sourcePrototype),
         { length: jLen } = properties
 
       for (let j = 0; j < jLen; j++) {
         if (
+          properties[j] === 'constructor' ||
           combinedPrototypes.some(({ prop }) => prop === properties[j]) ||
           destinationProperties.includes(properties[j])
         ) {
