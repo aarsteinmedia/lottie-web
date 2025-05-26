@@ -3,6 +3,7 @@ import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
+  CanvasItem,
   CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
   Shape,
   Transformer,
@@ -10,6 +11,7 @@ import type {
   VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
@@ -405,7 +407,7 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   renderFill(
-    _styleData: any, itemData: any, groupTransform: TransformEffect
+    _styleData: any, itemData: CanvasItem, groupTransform: TransformEffect
   ) {
     const styleElem = itemData.style
 
@@ -419,7 +421,7 @@ export default class CVShapeElement extends ShapeElement {
 
   renderGradientFill(
     styleData: any,
-    itemData: any,
+    itemData: CVShapeData,
     groupTransform: TransformEffect
   ) {
     if (!this.globalData) {
@@ -581,8 +583,8 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   renderStroke(
-    _styleData: any,
-    itemData: any,
+    _styleData: Shape,
+    itemData: CanvasItem,
     groupTransform: TransformEffect
   ) {
     const styleElem = itemData.style,
@@ -672,7 +674,7 @@ export default class CVShapeElement extends ShapeElement {
 
   searchShapes(
     arr: Shape[],
-    itemsData: any[],
+    itemsData: CanvasItem[],
     prevViewData: CVShapeElement[],
     shouldRenderFromProps: boolean,
     transforms: Transformer[]

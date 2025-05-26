@@ -41,7 +41,7 @@ export default class SVGCompElement extends SVGBaseElement {
     renderInnerContent: () => void;
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setElements: (elems: ElementInterfaceIntersect[]) => void;
-    setProjectInterface: (pInterface: import("../../utils/helpers/ProjectInterface").default | null) => void;
+    setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
     setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     supports3d: boolean;

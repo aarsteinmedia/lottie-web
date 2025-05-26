@@ -50,7 +50,7 @@ export default class CVCompElement extends CompElement {
     save: (_flag?: boolean) => void;
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setBlendMode: () => void;
-    setProjectInterface: (pInterface: import("../../utils/helpers/ProjectInterface").default | null) => void;
+    setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
     setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     showElement: () => void;

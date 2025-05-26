@@ -1,6 +1,7 @@
 import type TransformEffect from '../../effects/TransformEffect';
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type { CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
+import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
+import type { ShapeProperty } from '../../utils/shapes/ShapeProperty';
 import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
 import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
 import ShapeElement from '../../elements/ShapeElement';
@@ -41,13 +42,13 @@ export default class CVShapeElement extends ShapeElement {
     drawLayer(): void;
     reloadShapes(): void;
     removeTransformFromStyleList(): void;
-    renderFill(_styleData: any, itemData: any, groupTransform: TransformEffect): void;
-    renderGradientFill(styleData: any, itemData: any, groupTransform: TransformEffect): void;
+    renderFill(_styleData: any, itemData: CanvasItem, groupTransform: TransformEffect): void;
+    renderGradientFill(styleData: any, itemData: CVShapeData, groupTransform: TransformEffect): void;
     renderInnerContent(): void;
     renderPath(pathData: Shape, itemData: CVShapeData): void;
     renderShape(parentTransform: TransformProperty, items: Shape[], data: ShapeGroupData[], isMain?: boolean): void;
     renderShapeTransform(parentTransform: TransformEffect, groupTransform: TransformEffect): void;
-    renderStroke(_styleData: any, itemData: any, groupTransform: TransformEffect): void;
+    renderStroke(_styleData: Shape, itemData: CanvasItem, groupTransform: TransformEffect): void;
     renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty): void;
-    searchShapes(arr: Shape[], itemsData: any[], prevViewData: CVShapeElement[], shouldRenderFromProps: boolean, transforms: Transformer[]): void;
+    searchShapes(arr: Shape[], itemsData: CanvasItem[], prevViewData: CVShapeElement[], shouldRenderFromProps: boolean, transforms: Transformer[]): void;
 }

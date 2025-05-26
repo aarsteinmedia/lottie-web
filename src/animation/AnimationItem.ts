@@ -39,7 +39,7 @@ import {
   getExpressionsPlugin,
   getSubframeEnabled,
 } from '@/utils/getterSetter'
-import ProjectInterface from '@/utils/helpers/ProjectInterface'
+import ProjectInterface from '@/utils/expressions/ProjectInterface'
 import ImagePreloader from '@/utils/ImagePreloader'
 
 export default class AnimationItem extends BaseEvent {

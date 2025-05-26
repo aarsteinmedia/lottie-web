@@ -16,7 +16,7 @@ import type SVGCompElement from '../elements/svg/SVGCompElement';
 import type SVGShapeElement from '../elements/svg/SVGShapeElement';
 import type SVGTextLottieElement from '../elements/svg/SVGTextElement';
 import type { AnimationData, CompElementInterface, ElementInterfaceIntersect, LottieLayer } from '../types';
-import type ProjectInterface from '../utils/helpers/ProjectInterface';
+import type ProjectInterface from '../utils/expressions/ProjectInterface';
 import AudioElement from '../elements/AudioElement';
 import FootageElement from '../elements/FootageElement';
 import FrameElement from '../elements/helpers/FrameElement';

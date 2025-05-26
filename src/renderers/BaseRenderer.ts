@@ -22,7 +22,7 @@ import type {
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
-import type ProjectInterface from '@/utils/helpers/ProjectInterface'
+import type ProjectInterface from '@/utils/expressions/ProjectInterface'
 
 import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'

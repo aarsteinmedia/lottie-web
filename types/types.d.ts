@@ -44,11 +44,11 @@ import type { PlayMode, ShapeType, RendererType, PreserveAspectRatio } from './u
 import type CompExpressionInterface from './utils/expressions/CompInterface';
 import type FootageInterface from './utils/expressions/FootageInterface';
 import type LayerExpressionInterface from './utils/expressions/LayerInterface';
+import type ProjectInterface from './utils/expressions/ProjectInterface';
 import type ShapeExpressionInterface from './utils/expressions/ShapeInterface';
 import type TextExpressionInterface from './utils/expressions/TextInterface';
 import type FontManager from './utils/FontManager';
 import type DynamicPropertyContainer from './utils/helpers/DynamicPropertyContainer';
-import type ProjectInterface from './utils/helpers/ProjectInterface';
 import type ImagePreloader from './utils/ImagePreloader';
 import type Matrix from './utils/Matrix';
 import type PolynomialBezier from './utils/PolynomialBezier';
@@ -954,6 +954,34 @@ export interface Svalue {
     c: number;
     i: number[];
     s: number[][];
+}
+export interface CanvasItem {
+    c: MultiDimensionalProperty<Vector3>;
+    d?: {
+        dashoffset: string;
+        _mdf?: boolean;
+    };
+    it?: CanvasItem;
+    o: ValueProperty;
+    prevViewData?: CanvasItem;
+    style: {
+        closed?: boolean;
+        co: string;
+        coOp: number;
+        data: LottieLayer;
+        elements: Transformer[];
+        lc: string;
+        lj: string;
+        ml: number;
+        preTransforms: any;
+        transforms: any[];
+        type: string;
+        wi: number;
+    };
+    w?: {
+        _mdf?: boolean;
+        v: number;
+    };
 }
 export interface Keyframe {
     e: Vector3;
