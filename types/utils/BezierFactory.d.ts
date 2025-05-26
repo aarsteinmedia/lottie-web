@@ -23,4 +23,7 @@ declare class BezierEasing {
     private getSlope;
     private newtonRaphsonIterate;
 }
-export {};
+declare const BezierFactory: {
+    getBezierEasing: typeof getBezierEasing;
+};
+export default BezierFactory;

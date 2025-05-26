@@ -15,4 +15,12 @@ export declare class BezierData {
     segmentLength: number;
     constructor(length: number);
 }
-export {};
+declare const Bezier: {
+    buildBezierData: typeof buildBezierData;
+    getNewSegment: typeof getNewSegment;
+    getPointInSegment: typeof getPointInSegment;
+    getSegmentsLength: typeof getSegmentsLength;
+    pointOnLine2D: typeof pointOnLine2D;
+    pointOnLine3D: typeof pointOnLine3D;
+};
+export default Bezier;

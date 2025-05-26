@@ -17,7 +17,8 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 
 const transparent = 'rgba(0,0,0,0)'
 
-export default class CVTextElement extends TextElement {
+export default class CVTextElement extends TextElement{
+
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas
   override createContainerElements = CVBaseElement.prototype.createContainerElements
@@ -29,13 +30,18 @@ export default class CVTextElement extends TextElement {
   exitLayer = CVBaseElement.prototype.exitLayer
   fill?: boolean
   fillColorAnim: boolean
+  override hide = CVBaseElement.prototype.hide
   hideElement = CVBaseElement.prototype.hideElement
   override initRendererElement = CVBaseElement.prototype.initRendererElement
   justifyOffset: number
   prepareLayer = CVBaseElement.prototype.prepareLayer
   renderedLetters: LetterProps[] = []
   override renderFrame = CVBaseElement.prototype.renderFrame
+  override renderLocalTransform = CVBaseElement.prototype.renderLocalTransform
+  override renderRenderable = CVBaseElement.prototype.renderRenderable
+  override searchEffectTransforms = CVBaseElement.prototype.searchEffectTransforms
   override setBlendMode = CVBaseElement.prototype.setBlendMode
+  override show = CVBaseElement.prototype.show
   showElement = CVBaseElement.prototype.showElement
   stroke?: boolean
   strokeColorAnim: boolean
@@ -166,7 +172,7 @@ export default class CVTextElement extends TextElement {
         if (shapes[j].ty !== ShapeType.Path) {
           continue
         }
-        const { length: kLen } = (shapes[j].ks?.k as ShapePath | undefined)?.i ?? [],
+        const { length: kLen } = (shapes[j].ks?.k as ShapePath).i,
           pathNodes = shapes[j].ks?.k as ShapePath,
           pathArr = []
 
@@ -277,20 +283,20 @@ export default class CVTextElement extends TextElement {
         this.lettersChangedFlag)
     }
 
-    let j
-    let jLen: number
-    let k
-    let kLen
+    let j,
+      jLen: number,
+      k,
+      kLen
     const { renderedLetters } = this.textAnimator
 
     const letters = this.textProperty.currentData.l
 
-    let renderedLetter
-    let lastFill = null
-    let lastStroke = null
-    let lastStrokeW = null
-    let commands: number[][]
-    let pathArr
+    let renderedLetter,
+      lastFill = null,
+      lastStroke = null,
+      lastStrokeW = null,
+      commands: number[][],
+      pathArr
     const renderer = this.globalData.renderer as CanvasRenderer,
       { length } = letters
 

@@ -384,3 +384,14 @@ class PointData {
     this.point = point
   }
 }
+
+const Bezier = {
+  buildBezierData,
+  getNewSegment,
+  getPointInSegment,
+  getSegmentsLength,
+  pointOnLine2D,
+  pointOnLine3D,
+}
+
+export default Bezier

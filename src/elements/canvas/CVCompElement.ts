@@ -13,16 +13,24 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export default class CVCompElement extends CompElement {
+  addPendingElement = CanvasRendererBase.prototype.addPendingElement
+  override buildAllItems = CanvasRendererBase.prototype.buildAllItems
   buildElementParenting = CanvasRendererBase.prototype.buildElementParenting
   buildItem = CanvasRendererBase.prototype.buildItem
   canvasContext?: CanvasRenderingContext2D
+  override checkLayers = CanvasRendererBase.prototype.checkLayers
   checkPendingElements = CanvasRendererBase.prototype.checkPendingElements
   clearCanvas = CVBaseElement.prototype.clearCanvas
   configAnimation = CanvasRendererBase.prototype.configAnimation
+  createAudio = CanvasRendererBase.prototype.createAudio
+  createCamera = CanvasRendererBase.prototype.createCamera
   override createContainerElements = CVBaseElement.prototype.createContainerElements
   override createContent = CVBaseElement.prototype.createContent
   createElements = CVBaseElement.prototype.createElements
+  createFootage = CanvasRendererBase.prototype.createFootage
   createImage = CanvasRendererBase.prototype.createImage
+  createItem = CanvasRendererBase.prototype.createItem
+  createNull = CanvasRendererBase.prototype.createNull
   override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
   createShape = CanvasRendererBase.prototype.createShape
   createSolid = CanvasRendererBase.prototype.createSolid
@@ -39,8 +47,12 @@ export default class CVCompElement extends CompElement {
   ctxStrokeStyle = CanvasRendererBase.prototype.ctxStrokeStyle
   ctxTransform = CanvasRendererBase.prototype.ctxTransform
   exitLayer = CVBaseElement.prototype.exitLayer
+  getElementById = CanvasRendererBase.prototype.getElementById
+  getElementByPath = CanvasRendererBase.prototype.getElementByPath
   override hide = CVBaseElement.prototype.hide
   hideElement = CVBaseElement.prototype.hideElement
+  includeLayers = CanvasRendererBase.prototype.includeLayers
+  initItems = CanvasRendererBase.prototype.initItems
   override initRendererElement = CVBaseElement.prototype.initRendererElement
   pendingElements: ElementInterfaceIntersect[]
   prepareLayer = CVBaseElement.prototype.prepareLayer
@@ -48,10 +60,12 @@ export default class CVCompElement extends CompElement {
   reset = CanvasRendererBase.prototype.reset
   restore = CanvasRendererBase.prototype.restore
   save = CanvasRendererBase.prototype.save
+  searchExtraCompositions = CanvasRendererBase.prototype.searchExtraCompositions
   override setBlendMode = CVBaseElement.prototype.setBlendMode
+  setProjectInterface = CanvasRendererBase.prototype.setProjectInterface
+  setupGlobalData = CanvasRendererBase.prototype.setupGlobalData
   override show = CVBaseElement.prototype.show
   showElement = CVBaseElement.prototype.showElement
-
   updateContainerSize = CanvasRendererBase.prototype.updateContainerSize
 
   constructor(
@@ -106,7 +120,7 @@ export default class CVCompElement extends CompElement {
     }
 
     const {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       canvasContext: ctx, completeLayers, data, elements, layers
     } = this
 

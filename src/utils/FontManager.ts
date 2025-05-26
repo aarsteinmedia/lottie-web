@@ -95,8 +95,8 @@ export function isRegionalCode(string: string): boolean {
 }
 
 export function isRegionalFlag(text: string, indexFromProps: number): boolean {
-  let index = indexFromProps
-  let codePoint = getCodePoint(text.slice(index, 2))
+  let index = indexFromProps,
+    codePoint = getCodePoint(text.slice(index, 2))
 
   if (codePoint !== BLACK_FLAG_CODE_POINT) {
     return false
@@ -178,11 +178,11 @@ function setUpNode(font: string,
 }
 
 function trimFontOptions(font: string): string {
-  const familyArray = font.split(',')
-  const len = familyArray.length
-  const enabledFamilies = []
+  const familyArray = font.split(','),
+    { length } = familyArray,
+    enabledFamilies = []
 
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < length; i++) {
     if (familyArray[i] !== 'sans-serif' && familyArray[i] !== 'monospace') {
       enabledFamilies.push(familyArray[i])
     }
@@ -211,12 +211,12 @@ export default class FontManager {
       return
     }
     this.chars = this.chars ?? []
-    const len = chars.length
-    let j
-    let jLen = this.chars.length
-    let found
+    const { length } = chars
+    let j,
+      { length: jLen } = this.chars,
+      found: boolean
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < length; i++) {
       j = 0
       found = false
       while (j < jLen) {
@@ -249,9 +249,10 @@ export default class FontManager {
 
       return
     }
+    const { length } = fontData.list
+
     if (!isServer()) {
       this.isLoaded = true
-      const { length } = fontData.list
 
       for (let i = 0; i < length; i++) {
         fontData.list[i].helper = this.createHelper(fontData.list[i])
@@ -262,11 +263,11 @@ export default class FontManager {
       return
     }
 
-    let _pendingFonts = fontData.list.length
+    let _pendingFonts = length
 
     for (let i = 0; i < _pendingFonts; i++) {
-      let shouldLoadFont = true
-      let loadedSelector
+      let shouldLoadFont = true,
+        loadedSelector
 
       fontData.list[i].loaded = false
       fontData.list[i].monoCase = setUpNode(fontData.list[i].fFamily,
@@ -287,7 +288,7 @@ export default class FontManager {
         }
 
         if (shouldLoadFont) {
-          const s: HTMLStyleElement = createTag('style')
+          const s: HTMLStyleElement = createTag<HTMLStyleElement>('style')
 
           s.setAttribute('f-forigin', fontData.list[i].fOrigin)
           s.setAttribute('f-origin', `${fontData.list[i].origin}`)
@@ -301,9 +302,9 @@ export default class FontManager {
       ) {
         loadedSelector = document.querySelectorAll<HTMLLinkElement>('link[f-forigin="g"], link[f-origin="1"]')
 
-        const { length } = loadedSelector
+        const { length: len } = loadedSelector
 
-        for (i = 0; i < length; i++) {
+        for (i = 0; i < len; i++) {
           if (loadedSelector[i].href.includes(fontData.list[i].fPath)) {
             shouldLoadFont = false
           }
@@ -325,21 +326,21 @@ export default class FontManager {
       ) {
         loadedSelector = document.querySelectorAll<HTMLScriptElement>('script[f-forigin="t"], script[f-origin="2"]')
 
-        const { length } = loadedSelector
+        const { length: len } = loadedSelector
 
-        for (i = 0; i < length; i++) {
+        for (i = 0; i < len; i++) {
           if (fontData.list[i].fPath === loadedSelector[i].src) {
             shouldLoadFont = false
           }
         }
 
         if (shouldLoadFont) {
-          const sc = createTag('link')
+          const sc = createTag<HTMLLinkElement>('link')
 
           sc.setAttribute('f-forigin', fontData.list[i].fOrigin)
           sc.setAttribute('f-origin', `${fontData.list[i].origin}`)
-          sc.setAttribute('rel', 'stylesheet')
-          sc.setAttribute('href', fontData.list[i].fPath)
+          sc.rel = 'stylesheet'
+          sc.href = fontData.list[i].fPath
           defs?.appendChild(sc)
         }
       }
@@ -495,7 +496,7 @@ export default class FontManager {
       tHelper.textContent = '1'
       if (fontData.fClass) {
         tHelper.style.fontFamily = 'inherit'
-        tHelper.setAttribute('class', fontData.fClass)
+        tHelper.classList.add(fontData.fClass)
       } else {
         tHelper.style.fontFamily = fontData.fFamily
       }
@@ -531,8 +532,8 @@ export default class FontManager {
 export function getFontProperties(fontData: FontList) {
   const styles = fontData.fStyle ? fontData.fStyle.split(' ') : []
 
-  let fWeight = 'normal'
-  let fStyle = 'normal'
+  let fWeight = 'normal',
+    fStyle = 'normal'
   const { length } = styles
 
   for (let i = 0; i < length; i++) {

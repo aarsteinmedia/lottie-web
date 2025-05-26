@@ -288,3 +288,11 @@ function setupWorker() {
     }
   }
 }
+
+const DataManager = {
+  completeAnimation,
+  loadAnimation,
+  loadData,
+}
+
+export default DataManager

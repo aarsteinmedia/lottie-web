@@ -48,4 +48,3 @@ export default class CVSolidElement extends RenderableElement {
     //
   }
 }
-// extendPrototype([BaseElement, TransformElement, CVBaseElement, HierarchyElement, FrameElement, RenderableElement], CVSolidElement);

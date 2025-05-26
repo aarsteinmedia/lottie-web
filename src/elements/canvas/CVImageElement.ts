@@ -11,7 +11,7 @@ import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import { createTag } from '@/utils'
 
-export default class CVImageElement extends RenderableElement{
+export default class CVImageElement extends RenderableElement {
   assetData: LottieAsset | null
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas

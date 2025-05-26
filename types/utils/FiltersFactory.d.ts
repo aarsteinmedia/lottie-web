@@ -6,3 +6,8 @@ export declare class FeatureSupport {
     svgLumaHidden: boolean;
     constructor();
 }
+declare const FiltersFactory: {
+    createAlphaToLuminanceFilter: typeof createAlphaToLuminanceFilter;
+    createFilter: typeof createFilter;
+};
+export default FiltersFactory;

@@ -13,13 +13,18 @@ export default class CVTextElement extends TextElement {
     exitLayer: () => void;
     fill?: boolean;
     fillColorAnim: boolean;
+    hide: () => void;
     hideElement: () => void;
     initRendererElement: () => void;
     justifyOffset: number;
     prepareLayer: () => void;
     renderedLetters: LetterProps[];
     renderFrame: (forceRender?: boolean) => void;
+    renderLocalTransform: () => void;
+    renderRenderable: () => void;
+    searchEffectTransforms: () => void;
     setBlendMode: () => void;
+    show: () => void;
     showElement: () => void;
     stroke?: boolean;
     strokeColorAnim: boolean;

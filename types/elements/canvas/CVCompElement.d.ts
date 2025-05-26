@@ -1,16 +1,24 @@
 import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
 import CompElement from '../../elements/CompElement';
 export default class CVCompElement extends CompElement {
+    addPendingElement: (element: ElementInterfaceIntersect) => void;
+    buildAllItems: () => void;
     buildElementParenting: (element: ElementInterfaceIntersect, parentName?: number, hierarchy?: ElementInterfaceIntersect[]) => void;
     buildItem: (pos: number) => void;
     canvasContext?: CanvasRenderingContext2D;
+    checkLayers: (val?: number) => void;
     checkPendingElements: () => void;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
     configAnimation: (animData: import("../../types").AnimationData) => void;
+    createAudio: (data: LottieLayer) => import("../AudioElement").default;
+    createCamera: (_data: LottieLayer) => import("../html/HCameraElement").default;
     createContainerElements: () => void;
     createContent: () => void;
     createElements: () => void;
+    createFootage: (data: LottieLayer) => import("../FootageElement").default;
     createImage: (data: LottieLayer) => import("./CVImageElement").default;
+    createItem: (layer: LottieLayer) => CVCompElement | import("../AudioElement").default | import("../svg/SVGCompElement").default | import("../svg/SVGShapeElement").default | import("../html/HCompElement").default | import("./CVShapeElement").default | import("../html/HShapeElement").default | import("./CVImageElement").default | import("../ImageElement").default | import("../html/HImageElement").default | import("./CVSolidElement").default | import("../NullElement").default | import("../svg/SVGTextElement").default | import("./CVTextElement").default | import("../html/HTextElement").default | import("../html/HCameraElement").default | import("../FootageElement").default;
+    createNull: (data: LottieLayer) => import("../NullElement").default;
     createRenderableComponents: () => void;
     createShape: (data: LottieLayer) => import("./CVShapeElement").default;
     createSolid: (data: LottieLayer) => import("./CVSolidElement").default;
@@ -27,8 +35,12 @@ export default class CVCompElement extends CompElement {
     ctxStrokeStyle: (value?: string) => void;
     ctxTransform: (props: Float32Array) => void;
     exitLayer: () => void;
+    getElementById: (ind: number) => ElementInterfaceIntersect | null;
+    getElementByPath: (path: unknown[]) => ElementInterfaceIntersect | undefined;
     hide: () => void;
     hideElement: () => void;
+    includeLayers: (newLayers: LottieLayer[]) => void;
+    initItems: () => void;
     initRendererElement: () => void;
     pendingElements: ElementInterfaceIntersect[];
     prepareLayer: () => void;
@@ -36,7 +48,10 @@ export default class CVCompElement extends CompElement {
     reset: () => void;
     restore: (actionFlag?: boolean) => void;
     save: (_flag?: boolean) => void;
+    searchExtraCompositions: (assets: LottieLayer[]) => void;
     setBlendMode: () => void;
+    setProjectInterface: (pInterface: import("../../utils/helpers/ProjectInterface").default | null) => void;
+    setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     showElement: () => void;
     updateContainerSize: (width?: number, height?: number) => void;

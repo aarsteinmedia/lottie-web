@@ -39,3 +39,10 @@ export function getModifier<T extends ShapeModifierInterface>(
 export function registerModifier(nm: string, factory: Modifier) {
   Modifiers[nm] = Modifiers[nm] ?? factory
 }
+
+const ShapeModifiers = {
+  getModifier,
+  registerModifier
+}
+
+export default ShapeModifiers

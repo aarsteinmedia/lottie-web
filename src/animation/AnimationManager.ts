@@ -264,3 +264,26 @@ function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
 function subtractPlayingCount() {
   playingAnimationsNum--
 }
+
+const AnimationManager = {
+  destroy,
+  freeze,
+  getRegisteredAnimations,
+  goToAndStop,
+  loadAnimation,
+  mute,
+  pause,
+  play,
+  registerAnimation,
+  resize,
+  searchAnimations,
+  setDirection,
+  setSpeed,
+  setVolume,
+  stop,
+  togglePause,
+  unfreeze,
+  unmute,
+}
+
+export default AnimationManager

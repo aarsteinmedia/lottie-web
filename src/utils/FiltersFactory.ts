@@ -42,3 +42,10 @@ export class FeatureSupport {
     this.svgLumaHidden = !/firefox/i.test(navigator.userAgent)
   }
 }
+
+const FiltersFactory = {
+  createAlphaToLuminanceFilter,
+  createFilter
+}
+
+export default FiltersFactory

@@ -60,7 +60,7 @@ export default abstract class CVBaseElement {
     )
   }
 
-  createContainerElements() {
+  createContainerElements () {
     // If the layer is masked we will use two buffers to store each different states of the drawing
     // This solution is not ideal for several reason. But unfortunately, because of the recursive
     // nature of the render tree, it's the only simple way to make sure one inner mask doesn't override an outer mask.
@@ -76,20 +76,16 @@ export default abstract class CVBaseElement {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented in globalData`)
     }
 
-    const matteMode = this.data.tt || 0
-
-    if (matteMode >= 1) {
+    if (this.data.tt && this.data.tt >= 1) {
       this.buffers = []
       const { canvasContext } = this.globalData,
-        bufferCanvas = createCanvas(canvasContext.canvas.width,
-          canvasContext.canvas.height)
+        bufferCanvas = createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas)
-      const bufferCanvas2 = createCanvas(canvasContext.canvas.width,
-        canvasContext.canvas.height)
+      const bufferCanvas2 = createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas2)
-      if (matteMode >= 3 && !document._isProxy) {
+      if (this.data.tt >= 3 && !document._isProxy) {
         loadLumaCanvas()
       }
     }
@@ -100,12 +96,10 @@ export default abstract class CVBaseElement {
   }
 
   createContent() {
-    // TODO: Pass through?
-    throw new Error(`${this.constructor.name}: createContent is not implemented`)
+    // Pass through?
   }
 
   createElements() {
-    // TODO: Pass through?
     throw new Error(`${this.constructor.name}: createElements is not implemented`)
   }
 
@@ -216,8 +210,7 @@ export default abstract class CVBaseElement {
   }
 
   initRendererElement() {
-    // TODO: Pass through?
-    // throw new Error(`${this.constructor.name}: initRendererElement is not implemented`)
+    // Pass through?
   }
 
   prepareLayer() {
@@ -294,11 +287,11 @@ export default abstract class CVBaseElement {
   }
 
   renderLocalTransform() {
-    throw new Error(notImplemented)
+    // Pass through
   }
 
   renderRenderable() {
-    throw new Error(notImplemented)
+    // Pass through
   }
 
   renderTransform() {
@@ -306,7 +299,7 @@ export default abstract class CVBaseElement {
   }
 
   searchEffectTransforms() {
-    throw new Error(notImplemented)
+    // Pass through
   }
 
   setBlendMode() {
@@ -345,6 +338,5 @@ export default abstract class CVBaseElement {
     this.maskManager._isFirstFrame = true
   }
 }
-
 CVBaseElement.prototype.hide = CVBaseElement.prototype.hideElement
 CVBaseElement.prototype.show = CVBaseElement.prototype.showElement

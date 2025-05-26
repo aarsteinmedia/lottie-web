@@ -255,3 +255,7 @@ class BezierEasing {
     return aGuessT
   }
 }
+
+const BezierFactory = { getBezierEasing }
+
+export default BezierFactory

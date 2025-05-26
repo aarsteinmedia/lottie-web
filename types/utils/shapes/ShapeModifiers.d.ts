@@ -9,4 +9,8 @@ export type ShapeModifierInterface = TrimModifier | PuckerAndBloatModifier | Rep
 type Modifier = typeof TrimModifier | typeof PuckerAndBloatModifier | typeof RepeaterModifier | typeof ZigZagModifier | typeof OffsetPathModifier | typeof MouseModifier;
 export declare function getModifier<T extends ShapeModifierInterface>(nm: string, _elem?: ElementInterfaceIntersect, _data?: unknown): T;
 export declare function registerModifier(nm: string, factory: Modifier): void;
-export {};
+declare const ShapeModifiers: {
+    getModifier: typeof getModifier;
+    registerModifier: typeof registerModifier;
+};
+export default ShapeModifiers;
