@@ -10,32 +10,18 @@ import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 
 export default class CVSolidElement extends RenderableElement {
+  initElement = SVGShapeElement.prototype.initElement
+  prepareFrame = ImageElement.prototype.prepareFrame
+
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
     super()
-    const { initElement } = SVGShapeElement.prototype,
-      { prepareFrame } = ImageElement.prototype
-
-    this.prepareFrame = prepareFrame
-    this.initElement = initElement
     this.initElement(
       data, globalData, comp
     )
-  }
-
-  initElement(
-    _data: LottieLayer,
-    _globalData: GlobalData,
-    _comp: ElementInterfaceIntersect
-  ) {
-    throw new Error(`${this.constructor.name}: Method initElement it not implemented`)
-  }
-
-  prepareFrame(_num: number) {
-    throw new Error(`${this.constructor.name}: Method prepareFrame it not implemented`)
   }
 
   renderInnerContent() {
@@ -50,9 +36,9 @@ export default class CVSolidElement extends RenderableElement {
     }
 
     // var ctx = this.canvasContext;
-    ;(this.globalData.renderer as CanvasRenderer).ctxFillStyle(this.data.sc)
+    ; (this.globalData.renderer as CanvasRenderer).ctxFillStyle(this.data.sc)
     // ctx.fillStyle = this.data.sc;
-    ;(this.globalData.renderer as CanvasRenderer).ctxFillRect(
+    ; (this.globalData.renderer as CanvasRenderer).ctxFillRect(
       0,
       0,
       this.data.sw || 0,

@@ -5,13 +5,13 @@ import CVShapeElement from '../elements/canvas/CVShapeElement';
 import CVSolidElement from '../elements/canvas/CVSolidElement';
 import CVTextElement from '../elements/canvas/CVTextElement';
 import BaseRenderer from '../renderers/BaseRenderer';
-export default class CanvasRendererBase extends BaseRenderer {
+export default abstract class CanvasRendererBase extends BaseRenderer {
     canvasContext?: null | CanvasRenderingContext2D;
     contextData?: CVContextData;
+    createNull: (data: LottieLayer) => import("../elements/NullElement").default;
     destroyed?: boolean;
     renderConfig?: CanvasRendererConfig;
     transformCanvas?: TransformCanvas;
-    constructor();
     buildItem(pos: number): void;
     checkPendingElements(): void;
     configAnimation(animData: AnimationData): void;

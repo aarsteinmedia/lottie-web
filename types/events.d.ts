@@ -61,7 +61,7 @@ export declare class BMAnimationConfigErrorEvent {
     type: AnimationEventName;
     constructor(type: AnimationEventName, nativeError: unknown);
 }
-export declare abstract class BaseEvent {
+export default abstract class BaseEvent {
     _cbs: Partial<Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>>;
     addEventListener(eventName: AnimationEventName, callback: (ev?: LottieEvent) => unknown): () => void;
     removeEventListener(eventName: AnimationEventName, callback?: (ev: LottieEvent) => unknown): void;

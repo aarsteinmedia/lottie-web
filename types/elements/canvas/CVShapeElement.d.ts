@@ -1,38 +1,44 @@
 import type TransformEffect from '../../effects/TransformEffect';
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import type { CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
-import type { ShapeProperty } from '../../utils/shapes/ShapeProperty';
 import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
 import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
 import ShapeElement from '../../elements/ShapeElement';
 import { type TransformProperty } from '../../utils/TransformProperty';
 export default class CVShapeElement extends ShapeElement {
     canvasContext?: CanvasRenderingContext2D;
-    dashResetter: never[];
+    clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
+    createContainerElements: () => void;
+    createRenderableComponents: () => void;
+    dashResetter: number[];
+    exitLayer: () => void;
+    hide: () => void;
+    initRendererElement: () => void;
+    prepareLayer: () => void;
     prevViewData: ShapeGroupData[];
+    renderFrame: (forceRender?: boolean) => void;
+    setBlendMode: () => void;
+    show: () => void;
     stylesList: CVStyleElement[];
     transformHelper: TransformProperty;
     transformsManager: ShapeTransformManager;
     constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
     addTransformToStyleList(transform: Transformer): void;
-    clearCanvas(_canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null): void;
     closeStyles(styles: CVStyleElement[]): void;
     createContent(): void;
-    createElements(): void;
     createGroupElement(_data?: Shape): {
         it: never[];
         prevViewData: never[];
     };
     createShapeElement(data: Shape): CVShapeData;
-    createStyleElement(data: Shape, transforms: Transformer[]): CVElement;
+    createStyleElement(data: Shape, transforms: {
+        transform: Transformer;
+    }[]): CVElement;
     createTransformElement(data: Shape): {
         transform: Transformer;
     };
     destroy(): void;
     drawLayer(): void;
-    exitLayer(): void;
-    hideElement(): void;
-    prepareLayer(): void;
     reloadShapes(): void;
     removeTransformFromStyleList(): void;
     renderFill(_styleData: any, itemData: any, groupTransform: TransformEffect): void;
@@ -44,5 +50,4 @@ export default class CVShapeElement extends ShapeElement {
     renderStroke(_styleData: any, itemData: any, groupTransform: TransformEffect): void;
     renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty): void;
     searchShapes(arr: Shape[], itemsData: any[], prevViewData: CVShapeElement[], shouldRenderFromProps: boolean, transforms: Transformer[]): void;
-    showElement(): void;
 }

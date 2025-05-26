@@ -35,7 +35,7 @@ export default class CVMaskElement {
     }
     this.hasMasks = hasMasks
     if (hasMasks) {
-      ;(this.element as CVShapeElement).addRenderableComponent(this)
+      ; (this.element as CVShapeElement).addRenderableComponent(this)
     }
     this.getMaskProperty = MaskElement.prototype.getMaskProperty
   }
@@ -106,7 +106,7 @@ export default class CVMaskElement {
         )
       }
     }
-    ;(this.element.globalData.renderer as CanvasRenderer).save(true)
+    ; (this.element.globalData.renderer as CanvasRenderer).save(true)
     ctx?.clip()
   }
 }

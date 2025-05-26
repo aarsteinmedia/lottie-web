@@ -4,7 +4,7 @@ export default abstract class RenderableElement extends FrameElement {
     hidden?: boolean;
     isInRange?: boolean;
     isTransparent?: boolean;
-    private renderableComponents;
+    renderableComponents: RenderableComponent[];
     addRenderableComponent(component: RenderableComponent): void;
     checkLayerLimits(num: number): void;
     checkTransparency(): void;

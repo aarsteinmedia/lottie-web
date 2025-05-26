@@ -8,8 +8,16 @@ export default class SVGTextLottieElement extends TextElement {
         top: number;
         width: number;
     };
+    createContainerElements: () => void;
+    createRenderableComponents: () => void;
+    destroyBaseElement: () => void;
+    getBaseElement: () => HTMLElement | SVGGElement | null;
+    getMatte: (matteType?: number) => string;
+    initRendererElement: () => void;
     renderedFrame?: number;
     renderedLetters: string[];
+    renderElement: () => void;
+    setMatte: (id: string) => void;
     textContainer?: SVGTextElement;
     textSpans: TextSpan[];
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
@@ -17,9 +25,7 @@ export default class SVGTextLottieElement extends TextElement {
     buildShapeData(data: LottieLayer, scale: number): LottieLayer;
     buildTextContents(textArray: string[]): string[];
     createContent(): void;
-    getMatte(_type?: number): string;
     getValue(): void;
     renderInnerContent(): void;
-    setMatte(_id: string): void;
     sourceRectAtTime(): SourceRect | null;
 }

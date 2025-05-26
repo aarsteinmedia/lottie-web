@@ -21,8 +21,10 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 export default abstract class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
   contextData?: CVContextData
+  override createNull = SVGRenderer.prototype.createNull
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
+
   transformCanvas?: TransformCanvas
 
   override buildItem(pos: number) {
@@ -524,5 +526,3 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     this.renderFrame(this.renderedFrame, true)
   }
 }
-
-CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull

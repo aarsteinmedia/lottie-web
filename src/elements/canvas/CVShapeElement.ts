@@ -1,9 +1,13 @@
+// @ts-nocheck
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
-  CompElementInterface, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
+  CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
   Shape,
-  Transformer
+  Transformer,
+  Vector3,
+  VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
 
@@ -28,10 +32,8 @@ export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas
   override createContainerElements = CVBaseElement.prototype.createContainerElements
-
   override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
-  dashResetter = []
-
+  dashResetter: number[] = []
   exitLayer = CVBaseElement.prototype.exitLayer
   override hide = CVBaseElement.prototype.hide
   override initRendererElement = CVBaseElement.prototype.initRendererElement
@@ -116,7 +118,7 @@ export default class CVShapeElement extends ShapeElement {
     return elementData
   }
 
-  createStyleElement(data: Shape, transforms: Transformer[]) {
+  createStyleElement(data: Shape, transforms: { transform: Transformer }[]) {
     const styleElem: CVStyleElement = {
         closed: data.hd === true,
         data,
@@ -323,7 +325,7 @@ export default class CVShapeElement extends ShapeElement {
         ctx?.beginPath()
       }
 
-      renderer.ctxTransform(preTransforms.finalTransform.props)
+      renderer.ctxTransform(preTransforms.finalTransform.props as Float32Array)
       const { length: jLen } = elems
 
       for (let j = 0; j < jLen; j++) {

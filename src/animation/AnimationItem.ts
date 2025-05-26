@@ -14,8 +14,7 @@ import type {
 } from '@/types'
 import type Expressions from '@/utils/expressions/Expressions'
 
-import {
-  BaseEvent,
+import BaseEvent, {
   BMCompleteEvent,
   BMCompleteLoopEvent,
   BMConfigErrorEvent,
@@ -739,10 +738,9 @@ export default class AnimationItem extends BaseEvent {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.renderer = new RendererClass(this, params.rendererSettings as any)
-      if (this.renderer.globalData?.defs) {
-        this.imagePreloader?.setCacheType(animType,
-          this.renderer.globalData.defs)
-      }
+
+      this.imagePreloader?.setCacheType(animType,
+        this.renderer.globalData?.defs)
 
       this.renderer.setProjectInterface(this.projectInterface)
       this.animType = animType

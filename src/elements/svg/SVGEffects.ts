@@ -1,4 +1,5 @@
 
+// @ts-nocheck
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 

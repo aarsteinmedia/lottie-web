@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
@@ -21,13 +20,14 @@ import {
 import Matrix from '@/utils/Matrix'
 
 const operationsMap = {
-  1: 'source-in',
-  2: 'source-out',
-  3: 'source-in',
-  4: 'source-out',
-}
+    1: 'source-in',
+    2: 'source-out',
+    3: 'source-in',
+    4: 'source-out',
+  },
+  notImplemented = 'Method is not implemented'
 
-export default class CVBaseElement {
+export default abstract class CVBaseElement {
   _isFirstFrame?: boolean
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
   canvasContext?: CanvasRenderingContext2D
@@ -44,6 +44,7 @@ export default class CVBaseElement {
   renderableEffectsManager?: CVEffects
   transformCanvas?: TransformCanvas
   transformEffects: GroupEffect[] = []
+
   clearCanvas(canvasContext?:
     | CanvasRenderingContext2D
     | OffscreenCanvasRenderingContext2D
@@ -204,6 +205,10 @@ export default class CVBaseElement {
     this.canvasContext.globalCompositeOperation = 'source-over'
   }
 
+  hide() {
+    throw new Error(notImplemented)
+  }
+
   hideElement() {
     if (!this.hidden && (!this.isInRange || this.isTransparent)) {
       this.hidden = true
@@ -212,7 +217,7 @@ export default class CVBaseElement {
 
   initRendererElement() {
     // TODO: Pass through?
-    throw new Error(`${this.constructor.name}: initRendererElement is not implemented`)
+    // throw new Error(`${this.constructor.name}: initRendererElement is not implemented`)
   }
 
   prepareLayer() {
@@ -246,7 +251,7 @@ export default class CVBaseElement {
     this.canvasContext.setTransform(this.currentTransform)
   }
 
-  renderFrame(forceRender?: number) {
+  renderFrame(forceRender?: boolean) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
@@ -285,23 +290,23 @@ export default class CVBaseElement {
   }
 
   renderInnerContent() {
-    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
+    throw new Error(notImplemented)
   }
 
   renderLocalTransform() {
-    throw new Error(`${this.constructor.name}: Method renderLocalTransform is not implemented`)
+    throw new Error(notImplemented)
   }
 
   renderRenderable() {
-    throw new Error(`${this.constructor.name}: Method renderRenderable is not implemented`)
+    throw new Error(notImplemented)
   }
 
   renderTransform() {
-    throw new Error(`${this.constructor.name}: Method renderTransform is not implemented`)
+    throw new Error(notImplemented)
   }
 
   searchEffectTransforms() {
-    throw new Error(`${this.constructor.name}: Method searchEffectTransforms is not implemented`)
+    throw new Error(notImplemented)
   }
 
   setBlendMode() {
@@ -324,6 +329,10 @@ export default class CVBaseElement {
     }
   }
 
+  show() {
+    throw new Error(notImplemented)
+  }
+
   showElement() {
     if (!this.maskManager) {
       throw new Error(`${this.constructor.name}: Method maskManager is not implemented`)
@@ -336,3 +345,6 @@ export default class CVBaseElement {
     this.maskManager._isFirstFrame = true
   }
 }
+
+CVBaseElement.prototype.hide = CVBaseElement.prototype.hideElement
+CVBaseElement.prototype.show = CVBaseElement.prototype.showElement

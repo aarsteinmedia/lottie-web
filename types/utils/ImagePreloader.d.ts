@@ -25,7 +25,7 @@ export default class ImagePreloader {
     loadedFootages(): boolean;
     loadedImages(): boolean;
     setAssetsPath(path?: string): void;
-    setCacheType(type: RendererType, elementHelper: SVGElement): void;
+    setCacheType(type: RendererType, elementHelper?: SVGElement): void;
     setPath(path?: string): void;
     private _createProxyImage;
     private createImgData;

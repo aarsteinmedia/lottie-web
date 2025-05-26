@@ -520,6 +520,9 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return blendModeEnums[mode] || ''
   },
+  getDescriptor = (object: unknown, prop: PropertyKey) => {
+    return Object.getOwnPropertyDescriptor(object, prop)
+  },
   getProjectingAngle = (path: ShapePath, cur: number) => {
     const prevIndex = cur === 0 ? path.length() - 1 : cur - 1,
       nextIndex = (cur + 1) % path.length(),

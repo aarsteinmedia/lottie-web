@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "0.2.21",
+  "version": "0.2.23",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -44,7 +44,7 @@
     "eslint-config-sheriff": "^27.1.0",
     "eslint-plugin-perfectionist": "^4.13.0",
     "fflate": "^0.8.2",
-    "globals": "^16.1.0",
+    "globals": "^16.2.0",
     "jiti": "^2.4.2",
     "lodash-es": "^4.17.21",
     "prettier": "^3.5.3",

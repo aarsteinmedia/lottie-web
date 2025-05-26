@@ -14,6 +14,8 @@ import type AudioElement from './elements/AudioElement';
 import type CVCompElement from './elements/canvas/CVCompElement';
 import type CVEffects from './elements/canvas/CVEffects';
 import type CVMaskElement from './elements/canvas/CVMaskElement';
+import type CVShapeElement from './elements/canvas/CVShapeElement';
+import type CVTextElement from './elements/canvas/CVTextElement';
 import type CompElement from './elements/CompElement';
 import type CVShapeData from './elements/helpers/shapes/CVShapeData';
 import type ShapeTransformManager from './elements/helpers/shapes/ShapeTransformManager';
@@ -118,6 +120,7 @@ export interface SegmentLength {
     lengths: BezierLength[];
     totalLength: number;
 }
+export type CVElementIntersect = CVTextElement | CVShapeElement | CVCompElement;
 export interface CompInterface extends AnimationItem {
     _mdf?: boolean;
     addDynamicProperty: (prop: TextProperty | DynamicPropertyContainer) => void;

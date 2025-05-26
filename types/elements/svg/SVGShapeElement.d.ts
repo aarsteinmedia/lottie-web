@@ -11,7 +11,15 @@ import ShapeElement from '../../elements/ShapeElement';
 export default class SVGShapeElement extends ShapeElement {
     _debug?: boolean;
     animatedContents: AnimatedContent[];
+    createContainerElements: () => void;
+    createRenderableComponents: () => void;
+    destroyBaseElement: () => void;
+    getBaseElement: () => HTMLElement | SVGGElement | null;
+    getMatte: (matteType?: number) => string;
+    initRendererElement: () => void;
     prevViewData: SVGElementInterface[];
+    renderElement: () => void;
+    setMatte: (id: string) => void;
     stylesList: SVGStyleData[];
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     addToAnimatedContents(data: Shape, element: SVGElementInterface): void;
@@ -23,13 +31,11 @@ export default class SVGShapeElement extends ShapeElement {
     createTransformElement(data: Shape, container: SVGGElement): SVGTransformData;
     destroy(): void;
     filterUniqueShapes(): void;
-    getMatte(_type?: number): void;
     initSecondaryElement(): void;
     reloadShapes(): void;
     renderInnerContent(): void;
     renderShape(): void;
     searchShapes(arr: Shape[], itemsData: SVGElementInterface[], prevViewData: SVGElementInterface[], container: SVGGElement, level: number, transformers: Transformer[], renderFromProps: boolean): void;
     setElementStyles(elementData: SVGShapeData): void;
-    setMatte(_id: string): void;
     setShapesAsAnimated(shapes: ShapeDataInterface[]): void;
 }

@@ -184,7 +184,7 @@ export default class ImagePreloader {
     this.assetsPath = path || ''
   }
 
-  public setCacheType(type: RendererType, elementHelper: SVGElement) {
+  public setCacheType(type: RendererType, elementHelper?: SVGElement) {
     if (type === RendererType.SVG) {
       this._elementHelper = elementHelper
       this._createImageData = this.createImageData.bind(this)

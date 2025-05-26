@@ -63,7 +63,6 @@ export default class ExpressionManager {
     width: number;
     window: null;
     XMLHttpRequest: null;
-    private propTypes;
     $bm_isInstanceOfArray(arr: unknown): arr is number[];
     $bm_neg(a: number | boolean | BaseProperty): string | number | number[] | import("../Matrix").default | import("../../types").DocumentData | undefined;
     add(_a: number | number[], _b: number | number[]): void;

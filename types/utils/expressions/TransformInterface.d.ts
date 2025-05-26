@@ -4,67 +4,67 @@ import type { MultiDimensionalProperty, ValueProperty } from '../Properties';
 export default class TransformExpressionInterface {
     transform: TransformProperty;
     get anchorPoint(): Vector2;
-    get opacity(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    get opacity(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get orientation(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get orientation(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
+    }) | MultiDimensionalProperty<Vector2>;
     get position(): ValueProperty<number> | MultiDimensionalProperty<number[]> | void[];
-    get rotation(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    get rotation(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get scale(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get scale(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get skew(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get skew(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get skewAxis(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get skewAxis(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get xPosition(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get xPosition(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get xRotation(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get xRotation(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get yPosition(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get yPosition(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get yRotation(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get yRotation(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get zPosition(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get zPosition(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
-    get zRotation(): ValueProperty<number> | MultiDimensionalProperty<Vector2> | (() => {
+    }) | MultiDimensionalProperty<Vector2>;
+    get zRotation(): ValueProperty<number> | (() => {
         mult: number;
         pv: number;
         v: number;
-    });
+    }) | MultiDimensionalProperty<Vector2>;
     constructor(transform: TransformProperty);
     _px(): void;
     _py(): void;

@@ -3,11 +3,24 @@ import type LetterProps from '../../utils/text/LetterProps';
 import TextElement from '../../elements/TextElement';
 export default class CVTextElement extends TextElement {
     canvasContext?: CanvasRenderingContext2D;
+    clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
+    createContainerElements: () => void;
+    createContent: () => void;
+    createElements: () => void;
+    createRenderableComponents: () => void;
     currentRender: unknown;
+    destroy: () => void;
+    exitLayer: () => void;
     fill?: boolean;
     fillColorAnim: boolean;
+    hideElement: () => void;
+    initRendererElement: () => void;
     justifyOffset: number;
+    prepareLayer: () => void;
     renderedLetters: LetterProps[];
+    renderFrame: (forceRender?: boolean) => void;
+    setBlendMode: () => void;
+    showElement: () => void;
     stroke?: boolean;
     strokeColorAnim: boolean;
     strokeWidthAnim: boolean;
@@ -22,11 +35,5 @@ export default class CVTextElement extends TextElement {
     yOffset: number;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     buildNewText(): void;
-    clearCanvas(_canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null): void;
-    createElements(): void;
-    exitLayer(): void;
-    hideElement(): void;
-    prepareLayer(): void;
     renderInnerContent(): void;
-    showElement(): void;
 }

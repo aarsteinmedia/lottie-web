@@ -6,7 +6,7 @@ const registeredEffects: {
     countsAsEffect?: boolean
     effect: EffectElement
   } | undefined
-} = { }
+} = {}
 
 export default class CVEffects {
   filters: GroupEffect[]

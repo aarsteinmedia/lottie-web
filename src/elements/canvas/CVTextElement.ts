@@ -19,11 +19,24 @@ const transparent = 'rgba(0,0,0,0)'
 
 export default class CVTextElement extends TextElement {
   canvasContext?: CanvasRenderingContext2D
+  clearCanvas = CVBaseElement.prototype.clearCanvas
+  override createContainerElements = CVBaseElement.prototype.createContainerElements
+  override createContent = CVBaseElement.prototype.createContent
+  createElements = CVBaseElement.prototype.createElements
+  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
   currentRender: unknown
+  override destroy = CVBaseElement.prototype.destroy
+  exitLayer = CVBaseElement.prototype.exitLayer
   fill?: boolean
   fillColorAnim: boolean
+  hideElement = CVBaseElement.prototype.hideElement
+  override initRendererElement = CVBaseElement.prototype.initRendererElement
   justifyOffset: number
+  prepareLayer = CVBaseElement.prototype.prepareLayer
   renderedLetters: LetterProps[] = []
+  override renderFrame = CVBaseElement.prototype.renderFrame
+  override setBlendMode = CVBaseElement.prototype.setBlendMode
+  showElement = CVBaseElement.prototype.showElement
   stroke?: boolean
   strokeColorAnim: boolean
   strokeWidthAnim: boolean
@@ -36,6 +49,7 @@ export default class CVTextElement extends TextElement {
     sWidth: number
   }
   yOffset: number
+
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -58,35 +72,6 @@ export default class CVTextElement extends TextElement {
       stroke: transparent,
       sWidth: 0,
     }
-    const {
-      clearCanvas,
-      createContainerElements,
-      createContent,
-      createElements,
-      createRenderableComponents,
-      destroy,
-      exitLayer,
-      hideElement,
-      initRendererElement,
-      prepareLayer,
-      renderFrame,
-      setBlendMode,
-      showElement,
-    } = CVBaseElement.prototype
-
-    this.clearCanvas = clearCanvas
-    this.createContainerElements = createContainerElements
-    this.createContent = createContent
-    this.createElements = createElements
-    this.createRenderableComponents = createRenderableComponents
-    this.destroy = destroy
-    this.exitLayer = exitLayer
-    this.hideElement = hideElement
-    this.initRendererElement = initRendererElement
-    this.prepareLayer = prepareLayer
-    this.renderFrame = renderFrame
-    this.setBlendMode = setBlendMode
-    this.showElement = showElement
 
     this.initElement(
       data, globalData, comp
@@ -132,8 +117,7 @@ export default class CVTextElement extends TextElement {
       matrixHelper = this.mHelper
 
     this.stroke = hasStroke
-    this.values.fValue = `${documentData.finalSize}px ${
-      this.globalData.fontManager.getFontByName(documentData.f).fFamily
+    this.values.fValue = `${documentData.finalSize}px ${this.globalData.fontManager.getFontByName(documentData.f).fFamily
     }`
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -260,29 +244,6 @@ export default class CVTextElement extends TextElement {
     }
   }
 
-  clearCanvas(_canvasContext?:
-    | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D
-    | null) {
-    throw new Error(`${this.constructor.name}: Method clearCanvas is not implemented`)
-  }
-
-  createElements() {
-    throw new Error(`${this.constructor.name}: Method createElements is not implemented`)
-  }
-
-  exitLayer() {
-    throw new Error(`${this.constructor.name}: Method exitLayer is not implemented`)
-  }
-
-  hideElement() {
-    throw new Error(`${this.constructor.name}: Method hideElement is not implemented`)
-  }
-
-  prepareLayer() {
-    throw new Error(`${this.constructor.name}: Method prepareLayer is not implemented`)
-  }
-
   override renderInnerContent() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -304,7 +265,7 @@ export default class CVTextElement extends TextElement {
     const ctx = this.canvasContext
 
     ctx.font = this.values.fValue
-    ;(this.globalData.renderer as CanvasRenderer | undefined)?.ctxLineCap('butt')
+    ; (this.globalData.renderer as CanvasRenderer | undefined)?.ctxLineCap('butt')
     // ctx.lineCap = 'butt';
     ; (this.globalData.renderer as CanvasRenderer | undefined)?.ctxLineJoin('miter')
     // ctx.lineJoin = 'miter';
@@ -424,11 +385,7 @@ export default class CVTextElement extends TextElement {
         // this.globalData.canvasContext.stroke();
         // / ctx.strokeText(letters[i].val,0,0);
       }
-      ;(this.globalData.renderer as CanvasRenderer | undefined)?.restore()
+      ; (this.globalData.renderer as CanvasRenderer | undefined)?.restore()
     }
-  }
-
-  showElement() {
-    throw new Error(`${this.constructor.name}: Method showElement is not implemented`)
   }
 }

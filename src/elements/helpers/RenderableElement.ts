@@ -10,7 +10,7 @@ export default abstract class RenderableElement extends FrameElement {
   hidden?: boolean
   isInRange?: boolean
   isTransparent?: boolean
-  private renderableComponents: RenderableComponent[] = []
+  renderableComponents: RenderableComponent[] = []
 
   addRenderableComponent(component: RenderableComponent) {
     if (!this.renderableComponents.includes(component)) {
@@ -79,7 +79,8 @@ export default abstract class RenderableElement extends FrameElement {
   }
 
   hide() {
-    throw new Error(`${this.constructor.name}: Method hide is not implemented`)
+    // Pass through? TODO:
+    // throw new Error(`${this.constructor.name}: Method hide is not implemented`)
   }
 
   initRenderable() {

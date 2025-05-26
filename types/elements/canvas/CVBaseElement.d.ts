@@ -3,7 +3,7 @@ import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TransformCanva
 import CVEffects from '../../elements/canvas/CVEffects';
 import CVMaskElement from '../../elements/canvas/CVMaskElement';
 import Matrix from '../../utils/Matrix';
-export default class CVBaseElement {
+export default abstract class CVBaseElement {
     _isFirstFrame?: boolean;
     buffers: (HTMLCanvasElement | OffscreenCanvas)[];
     canvasContext?: CanvasRenderingContext2D;
@@ -27,15 +27,17 @@ export default class CVBaseElement {
     createRenderableComponents(): void;
     destroy(): void;
     exitLayer(): void;
+    hide(): void;
     hideElement(): void;
     initRendererElement(): void;
     prepareLayer(): void;
-    renderFrame(forceRender?: number): void;
+    renderFrame(forceRender?: boolean): void;
     renderInnerContent(): void;
     renderLocalTransform(): void;
     renderRenderable(): void;
     renderTransform(): void;
     searchEffectTransforms(): void;
     setBlendMode(): void;
+    show(): void;
     showElement(): void;
 }
