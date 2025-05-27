@@ -30,6 +30,7 @@ const files = [
   'gameAnimation.lottie',
   'BuildGarden copy.lottie',
   'hero-web.lottie',
+  'hero-web.json',
 ]
 
 export default files

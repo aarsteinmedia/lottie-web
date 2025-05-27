@@ -30,6 +30,8 @@ import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 
+import { PropType } from '../enums'
+
 function getConstructorFunction() {
   return ShapeProperty
 }
@@ -959,7 +961,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {
     super()
-    this.propType = 'shape'
+    this.propType = PropType.Shape
     this.comp = elem.comp
     this.container = elem as ElementInterfaceIntersect
     this.elem = elem
@@ -981,7 +983,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.getValue = this.processEffectsSequence
   }
 
-  setGroupProperty(_propertyInterface: PropertyInterface) {
+  setGroupProperty(_propertyInterface: ReturnType<typeof PropertyInterface>) {
     throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }
 }
@@ -993,7 +995,7 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
   ) {
     super()
     this.data = data
-    this.propType = 'shape'
+    this.propType = PropType.Shape
     this.comp = elem.comp
     this.elem = elem
     this.container = elem as ElementInterfaceIntersect

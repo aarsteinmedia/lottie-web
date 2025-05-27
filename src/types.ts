@@ -59,11 +59,11 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 // import type { EffectInterface } from '@/effects/EffectsManager'
 import type FootageInterface from '@/utils/expressions/FootageInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type ProjectInterface from '@/utils/expressions/ProjectInterface'
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-import type ProjectInterface from '@/utils/helpers/ProjectInterface'
 import type ImagePreloader from '@/utils/ImagePreloader'
 import type Matrix from '@/utils/Matrix'
 import type PolynomialBezier from '@/utils/PolynomialBezier'
@@ -452,7 +452,6 @@ export interface GradientColor {
 }
 
 type BoolInt = 0 | 1
-
 interface ShapeDataProperty {
   _mdf?: boolean
   a: 1 | 0
@@ -1272,13 +1271,20 @@ export interface GlobalData {
   nm?: string
   popExpression: () => void
   progressiveLoad?: boolean
-  projectInterface: ProjectInterface
+  projectInterface: ReturnType<typeof ProjectInterface>
   pushExpression: () => void
-  registerExpressionProperty: (expression: any) => void
+  registerExpressionProperty: (expression: ExpressionProperty) => void
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
   renderer?: CanvasRenderer | SVGRenderer
   slotManager?: SlotManager
   transformCanvas?: TransformCanvas
+}
+
+export interface ExpressionProperty {
+  a: 0 | 1
+  ix: number
+  k: ValueProperty[]
+  x: string
 }
 
 export interface SourceRect {

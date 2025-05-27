@@ -74,6 +74,14 @@ export enum ShapeType {
   ZigZag = 'zz',
 }
 
+export enum PropType {
+  MultiDimensional = 'multidimensiional',
+  Shape = 'shape',
+  TextSelector = 'textSelector',
+  Transform = 'transform',
+  UniDimensional = 'unidimensional'
+}
+
 export const lineCapEnum: { [key: number]: CanvasLineCap } = {
     1: 'butt',
     2: 'round',

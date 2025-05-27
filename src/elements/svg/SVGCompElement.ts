@@ -22,7 +22,6 @@ export default class SVGCompElement extends SVGBaseElement {
   override checkLayers = SVGRendererBase.prototype.checkLayers
   checkPendingElements = SVGRendererBase.prototype.checkPendingElements
   completeLayers: boolean
-
   configAnimation = SVGRendererBase.prototype.configAnimation
   createAudio = SVGRendererBase.prototype.createAudio
   createCamera = SVGRendererBase.prototype.createCamera
@@ -33,8 +32,6 @@ export default class SVGCompElement extends SVGBaseElement {
   createShape = SVGRendererBase.prototype.createShape
   createSolid = SVGRendererBase.prototype.createSolid
   createText = SVGRendererBase.prototype.createText
-
-
   currentFrame = 0
   override destroy = CompElement.prototype.destroy
   destroyElements = CompElement.prototype.destroyElements

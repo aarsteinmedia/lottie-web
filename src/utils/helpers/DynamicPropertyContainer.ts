@@ -1,11 +1,12 @@
 import type { ElementInterfaceIntersect } from '@/types'
+import type { PropType } from '@/utils/enums'
 
 export default abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
   _mdf?: boolean
   container?: ElementInterfaceIntersect | null
   dynamicProperties: DynamicPropertyContainer[] = []
-  propType?: string | false
+  propType?: PropType | false
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (this.dynamicProperties.includes(prop)) {

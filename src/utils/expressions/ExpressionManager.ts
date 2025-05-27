@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 
-import type { ElementInterfaceIntersect } from '@/types'
+import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
+import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import seedrandom from '@/3rd_party/seedrandom'
 import { degToRads } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import { BMMath } from '@/utils/common'
+import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { newElement } from '@/utils/pooling/ShapePool'
 
-const propTypes = { SHAPE: 'shape' }
+function noOp(_value?: unknown) {
+  return _value
+}
 
 const ExpressionManager = (function () {
 
@@ -460,17 +465,16 @@ const ExpressionManager = (function () {
   function createPath(
     points, inTangents, outTangents, closed
   ) {
-    let i
 
-    const len = points.length
-    const path = newElement()
+    const { length } = points,
+      path = newElement()
 
-    path.setPathData(Boolean(closed), len)
+    path.setPathData(Boolean(closed), length)
     const arrPlaceholder = [0, 0]
     let inVertexPoint
     let outVertexPoint
 
-    for (i = 0; i < len; i += 1) {
+    for (let i = 0; i < length; i += 1) {
       inVertexPoint = inTangents?.[i] ? inTangents[i] : arrPlaceholder
       outVertexPoint = outTangents?.[i] ? outTangents[i] : arrPlaceholder
       path.setTripleAt(
@@ -482,22 +486,28 @@ const ExpressionManager = (function () {
   }
 
   function initiateExpression(
-    elem: ElementInterfaceIntersect, data, property
+    this: KeyframedValueProperty,
+    elem: ElementInterfaceIntersect,
+    data: ExpressionProperty,
+    property: KeyframedValueProperty
   ) {
     /**
      * Bail out if we don't want expressions.
      */
-    function noOp(_value) {
-      return _value
-    }
-    if (!elem.globalData.renderConfig.runExpressions) {
+    if (!elem.globalData.renderConfig?.runExpressions) {
       return noOp
     }
 
-    const val = data.x
-    const needsVelocity = /velocity\b/.test(val)
-    const _needsRandom = val.includes('random')
-    const elemType = elem.data.ty
+    if (!elem.comp?.globalData) {
+      throw new Error(`${elem.constructor.name}: Comp and GlobalData is not implemented`)
+    }
+
+    const { k, x: val } = data,
+      shouldHaveVelocity = /velocity\b/.test(val),
+      shouldHaveRandom = val.includes('random'),
+      {
+        ip, nm, op, sh, sw, ty: elemType
+      } = elem.data
 
     let transform
     let $bm_transform
@@ -505,7 +515,7 @@ const ExpressionManager = (function () {
     let effect
     const thisProperty = property
 
-    thisProperty._name = elem.data.nm
+    thisProperty._name = nm
     thisProperty.valueAtTime = thisProperty.getValueAtTime
     Object.defineProperty(
       thisProperty, 'value', {
@@ -514,13 +524,14 @@ const ExpressionManager = (function () {
         },
       }
     )
+
     elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
     elem.comp.displayStartTime = 0
-    const inPoint = elem.data.ip / elem.comp.globalData.frameRate
-    const outPoint = elem.data.op / elem.comp.globalData.frameRate
-    const width = elem.data.sw ? elem.data.sw : 0
-    const height = elem.data.sh ? elem.data.sh : 0
-    const name = elem.data.nm
+    const inPoint = ip / elem.comp.globalData.frameRate,
+      outPoint = op / elem.comp.globalData.frameRate,
+      width = sw ?? 0,
+      height = sh ?? 0,
+      name = nm
     let loopIn
     let loop_in
     let loopOut
@@ -542,18 +553,19 @@ const ExpressionManager = (function () {
     let velocityAtTime
 
     let scoped_bm_rt
-    // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-    const expression_function = eval(`[function _expression_function(){${  val  };scoped_bm_rt=$bm_rt}]`)[0] // eslint-disable-line no-eval
-    const numKeys = property.kf ? data.k.length : 0
 
-    const active = !this.data || this.data.hd !== true
+    // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
+    const expression_function = eval(`[function _expression_function(){${val};scoped_bm_rt=$bm_rt}]`)[0]
+
+    const numKeys = property.kf ? k.length : 0,
+      active = !this.data || this.data.hd !== true
 
     const wiggle = function wiggle(freq, amp) {
       let iWiggle
 
       let j
       const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
-      const addedAmps = createTypedArray('float32', lenWiggle)
+      const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
 
       freq = 5
       const iterations = Math.floor(time * freq)
@@ -836,10 +848,10 @@ const ExpressionManager = (function () {
     function executeExpression(_value) {
       // globalData.pushExpression();
       value = _value
-      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== 'textSelector') {
+      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
         return value
       }
-      if (this.propType === 'textSelector') {
+      if (this.propType === PropType.TextSelector) {
         textIndex = this.textIndex
         textTotal = this.textTotal
         selectorValue = this.selectorValue
@@ -877,10 +889,10 @@ const ExpressionManager = (function () {
         parent = elem.hierarchy[0].layerInterface
       }
       time = this.comp.renderedFrame / this.comp.globalData.frameRate
-      if (_needsRandom) {
+      if (shouldHaveRandom) {
         seedRandom(randSeed + time)
       }
-      if (needsVelocity) {
+      if (shouldHaveVelocity) {
         velocity = velocityAtTime(time)
       }
       expression_function()
@@ -888,7 +900,7 @@ const ExpressionManager = (function () {
 
       // TODO: Check if it's possible to return on ShapeInterface the .v value
       // Changed this to a ternary operation because Rollup failed compiling it correctly
-      scoped_bm_rt = scoped_bm_rt.propType === propTypes.SHAPE
+      scoped_bm_rt = scoped_bm_rt.propType === PropType.Shape
         ? scoped_bm_rt.v
         : scoped_bm_rt
 

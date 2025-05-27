@@ -11,6 +11,7 @@ import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import { degToRads } from '@/utils'
+import { PropType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import {
   BaseProperty,
@@ -57,7 +58,7 @@ export class TransformProperty extends BaseProperty {
     super()
     this.elem = elem
     this.frameId = -1
-    this.propType = 'transform'
+    this.propType = PropType.Transform
     this.data = data
     this.v = new Matrix()
     // Precalculated matrix with non animated properties

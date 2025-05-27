@@ -1,3 +1,4 @@
+import { PropType } from '../enums'
 import { createTypedArray } from '../helpers/arrays'
 
 function ExpressionValue(
@@ -26,7 +27,7 @@ function ExpressionValue(
       }
       expressionValue.value = arrValue
     }
-  } else if (elementProp.propType === 'unidimensional') {
+  } else if (elementProp.propType === PropType.UniDimensional) {
     val = elementProp.v * mult
     expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
     expressionValue.value = val

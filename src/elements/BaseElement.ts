@@ -27,6 +27,7 @@ export default abstract class BaseElement {
   data?: LottieLayer
   dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
+  frameDuration = 1
   globalData?: GlobalData
   itemsData: ShapeGroupData[] = []
   layerElement?: SVGGElement | HTMLElement

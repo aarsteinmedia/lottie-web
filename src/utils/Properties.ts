@@ -28,7 +28,7 @@ import {
   type BezierData,
 } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
-import { ArrayType } from '@/utils/enums'
+import { ArrayType, PropType } from '@/utils/enums'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -37,6 +37,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
   _isFirstFrame?: boolean
+  _name?: string
   _placeholder?: boolean
   comp?: CompElementInterface
   data?:
@@ -67,6 +68,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   v?: string | number | number[] | Matrix | DocumentData
   value?: number | number[]
   vel?: number | number[]
+  x?: boolean
 
   addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
@@ -123,7 +125,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       0,
       0]
 
-    if (this.propType === 'multidimensional' && this.pv) {
+    if (this.propType === PropType.MultiDimensional && this.pv) {
       newValue = createTypedArray(ArrayType.Float32,
         (this.pv as any[]).length) as Vector3
     }
@@ -334,7 +336,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               : Number(keyData.s?.[i]) + ((endValue as number[])[i] - Number(keyData.s?.[i])) * Number(perc)
 
           if (keyValue !== undefined) {
-            if (this.propType === 'multidimensional') {
+            if (this.propType === PropType.MultiDimensional) {
               newValue[i] = keyValue as number
             } else {
               newValue = keyValue as unknown as Vector3
@@ -386,7 +388,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   setVValue(val?: number | number[] | Keyframe[]) {
     let multipliedValue
 
-    if (typeof val === 'number' && this.propType === 'unidimensional') {
+    if (typeof val === 'number' && this.propType === PropType.UniDimensional) {
       multipliedValue = val * Number(this.mult)
       if (Math.abs((this.v as number) - multipliedValue) > 0.00001) {
         this.v = multipliedValue
@@ -424,7 +426,7 @@ export class ValueProperty<
     container: ElementInterfaceIntersect | null = null
   ) {
     super()
-    this.propType = 'unidimensional'
+    this.propType = PropType.UniDimensional
     this.mult = mult || 1
     this.data = data
     this.v = (data.k * (mult || 1)) as T
@@ -453,7 +455,7 @@ export class MultiDimensionalProperty<
     container: ElementInterfaceIntersect | null = null
   ) {
     super()
-    this.propType = 'multidimensional'
+    this.propType = PropType.MultiDimensional
     this.mult = mult || 1
     this.data = data
     this._mdf = false
@@ -487,7 +489,7 @@ export class KeyframedValueProperty extends BaseProperty {
     container: ElementInterfaceIntersect | null = null
   ) {
     super()
-    this.propType = 'unidimensional'
+    this.propType = PropType.UniDimensional
     this.keyframes = data.k
     this.keyframesMetadata = []
     this.offsetTime = elem.data.st
@@ -525,7 +527,7 @@ export class KeyframedMultidimensionalProperty<
     container: ElementInterfaceIntersect | null = null
   ) {
     super()
-    this.propType = 'multidimensional'
+    this.propType = PropType.MultiDimensional
     const { length } = data.k
     let s
     let e

@@ -1,3 +1,4 @@
+import { PropType } from '../enums'
 import TextSelectorProp from '../text/TextSelectorProperty'
 import expressionHelpers from './expressionHelpers'
 import ExpressionManager from './ExpressionManager'
@@ -16,7 +17,7 @@ const TextExpressionSelectorPropFactory = (function () {
     this.comp = elem.comp
     this.elem = elem
     this.mult = 0.01
-    this.propType = 'textSelector'
+    this.propType = PropType.TextSelector
     this.textTotal = data.totalChars
     this.selectorValue = 100
     this.lastValue = [1,
