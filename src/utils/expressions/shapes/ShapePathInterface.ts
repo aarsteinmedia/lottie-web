@@ -1,57 +1,54 @@
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import type { Shape } from '@/types'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import propertyGroupFactory from '../PropertyGroupFactory'
+import PropertyInterface from '../PropertyInterface'
 
-import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import PropertyInterface from '@/utils/expressions/PropertyInterface'
+const ShapePathInterface = (
 
-export default class ShapePathInterface {
-  _name?: string
-  _propertyGroup
-  ind?: number
-  ix?: number
-  mn?: string
-  path: ShapeProperty
-  prop: ShapeProperty
-  propertyGroup?: unknown
-  propertyIndex?: number
-  shape: ShapeProperty
-  constructor(
-    shape: Shape, view: SVGShapeData, propertyGroup: unknown
-  ) {
-    this.prop = view.sh
-
-    this._propertyGroup = propertyGroupFactory(this.interfaceFunction,
-      propertyGroup)
-    this.prop.setGroupProperty(new PropertyInterface('Path', this._propertyGroup))
-
-    if (this.prop.k) {
-      this.prop.getValue()
-    }
-    this.path = this.prop
-    if (this.prop.k) {
-      this.prop.getValue()
-    }
-    this.shape = this.prop
-    this._name = shape.nm
-    this.ix = shape.ix
-    this.propertyIndex = shape.ix
-    this.mn = shape.mn
-    this.propertyGroup = propertyGroup
-  }
-
-  interfaceFunction(val: string | number) {
-    if (
-      val === 'Shape' ||
-      val === 'shape' ||
-      val === 'Path' ||
-      val === 'path' ||
-      val === 'ADBE Vector Shape' ||
-      val === 2
+  function () {
+    return function pathInterfaceFactory(
+      shape, view, propertyGroup
     ) {
-      return this.path
-    }
+      const prop = view.sh
 
-    return null
-  }
-}
+      function interfaceFunction(val) {
+        if (val === 'Shape' || val === 'shape' || val === 'Path' || val === 'path' || val === 'ADBE Vector Shape' || val === 2) {
+          return interfaceFunction.path
+        }
+
+        return null
+      }
+
+      const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
+
+      prop.setGroupProperty(PropertyInterface('Path', _propertyGroup))
+      Object.defineProperties(interfaceFunction, {
+        _name: { value: shape.nm },
+        ix: { value: shape.ix },
+        mn: { value: shape.mn },
+        path: {
+          get () {
+            if (prop.k) {
+              prop.getValue()
+            }
+
+            return prop
+          },
+        },
+        propertyGroup: { value: propertyGroup },
+        propertyIndex: { value: shape.ix },
+        shape: {
+          get () {
+            if (prop.k) {
+              prop.getValue()
+            }
+
+            return prop
+          },
+        },
+      })
+
+      return interfaceFunction
+    }
+  }()
+)
+
+export default ShapePathInterface

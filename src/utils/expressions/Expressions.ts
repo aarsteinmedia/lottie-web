@@ -1,68 +1,53 @@
-import type Animationitem from '@/animation/AnimationItem'
-import type PoolFactory from '@/utils/pooling/PoolFactory'
+import CompExpressionInterface from './CompInterface'
+import ExpressionManager from './ExpressionManager'
 
-import CompExpressionInterface from '@/utils/expressions/CompInterface'
-import ExpressionManager from '@/utils/expressions/ExpressionManager'
+const Expressions = (function () {
+  const ob = {}
 
-export default class Expressions {
-  private registers: PoolFactory[]
+  ob.initExpressions = initExpressions
+  ob.resetFrame = ExpressionManager.resetFrame
 
-  private stackCount: number
+  function initExpressions(animation) {
+    let stackCount = 0
 
-  constructor(animation: Animationitem) {
-    this.stackCount = 0
-    this.registers = []
+    const registers = []
 
-    const { resetFrame } = ExpressionManager.prototype
-
-    this.resetFrame = resetFrame
-
-
-    if (!animation.renderer) {
-      // TODO: This does not work for now
-      return
-      throw new Error(`${this.constructor.name}: renderer is not implemented`)
+    function pushExpression() {
+      stackCount += 1
     }
 
-    if (!animation.renderer.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented in renderer`)
+    function popExpression() {
+      stackCount -= 1
+      if (stackCount === 0) {
+        releaseInstances()
+      }
     }
 
-    animation.renderer.compInterface = new CompExpressionInterface(animation.renderer)
+    function registerExpressionProperty(expression) {
+      if (!registers.includes(expression)) {
+        registers.push(expression)
+      }
+    }
+
+    function releaseInstances() {
+      let i
+
+      const len = registers.length
+
+      for (i = 0; i < len; i += 1) {
+        registers[i].release()
+      }
+      registers.length = 0
+    }
+
+    animation.renderer.compInterface = CompExpressionInterface(animation.renderer)
     animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
-    animation.renderer.globalData.pushExpression = this.pushExpression
-    animation.renderer.globalData.popExpression = this.popExpression
-    animation.renderer.globalData.registerExpressionProperty =
-      this.registerExpressionProperty
+    animation.renderer.globalData.pushExpression = pushExpression
+    animation.renderer.globalData.popExpression = popExpression
+    animation.renderer.globalData.registerExpressionProperty = registerExpressionProperty
   }
 
-  public resetFrame() {
-    throw new Error(`${this.constructor.name}: Method resetFrame is not implemented`)
-  }
+  return ob
+}())
 
-  private popExpression() {
-    this.stackCount -= 1
-    if (this.stackCount === 0) {
-      this.releaseInstances()
-    }
-  }
-
-  private pushExpression() {
-    this.stackCount += 1
-  }
-
-  private registerExpressionProperty(expression: PoolFactory) {
-    if (!this.registers.includes(expression)) {
-      this.registers.push(expression)
-    }
-  }
-
-  private releaseInstances() {
-    const { length } = this.registers
-
-    for (let i = 0; i < length; i++) {
-      this.registers[i].release()
-    }
-    this.registers.length = 0
-  }
-}
+export default Expressions

@@ -368,7 +368,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         }
       }
     } catch (error) {
-      console.error(error)
+      console.error(this.constructor.name, error)
     }
   }
 

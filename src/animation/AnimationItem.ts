@@ -35,11 +35,11 @@ import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
+import ProjectInterface from '@/utils/expressions/ProjectInterface'
 import {
   getExpressionsPlugin,
   getSubframeEnabled,
 } from '@/utils/getterSetter'
-import ProjectInterface from '@/utils/helpers/ProjectInterface'
 import ImagePreloader from '@/utils/ImagePreloader'
 
 export default class AnimationItem extends BaseEvent {
@@ -73,7 +73,7 @@ export default class AnimationItem extends BaseEvent {
   public playCount: number
   public playDirection: AnimationDirection
   public playSpeed: number
-  public projectInterface: ProjectInterface
+  public projectInterface: ReturnType<typeof ProjectInterface>
 
   public renderer: SVGRenderer | CanvasRenderer | HybridRenderer
   public segmentPos: number
@@ -123,7 +123,7 @@ export default class AnimationItem extends BaseEvent {
     this.segments = []
     this._idle = true
     this._completedLoop = false
-    this.projectInterface = new ProjectInterface()
+    this.projectInterface = ProjectInterface()
     this.imagePreloader = new ImagePreloader()
     this.audioController = new AudioController()
     this.markers = []
@@ -307,7 +307,7 @@ export default class AnimationItem extends BaseEvent {
     this.renderer = null as unknown as SVGRenderer
     this.expressionsPlugin = null // as unknown as typeof Expressions
     this.imagePreloader = null
-    this.projectInterface = null as unknown as ProjectInterface
+    this.projectInterface = null as unknown as ReturnType<typeof ProjectInterface>
   }
 
   public getAssetData(id?: string) {
@@ -974,7 +974,7 @@ export default class AnimationItem extends BaseEvent {
         [], documentData, index
       )
     } catch (error) {
-      console.error(error)
+      console.error(this.constructor.name, error)
     }
   }
 

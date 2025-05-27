@@ -1,17 +1,18 @@
-export default class PropertyInterface {
-  _name: string
+const PropertyInterface = (function () {
+  return function (propertyName, propertyGroup) {
+    const interfaceFunction = { _name: propertyName }
 
-  constructor(propertyName: string,
-    private propertyGroup: (val: number) => unknown) {
-    this._name = propertyName
-  }
+    function _propertyGroup(val) {
+      val = val === undefined ? 1 : val
+      if (val <= 0) {
+        return interfaceFunction
+      }
 
-  public _propertyGroup(val = 1): unknown {
-
-    if (val <= 0) {
-      return { _name: this._name }
+      return propertyGroup(val - 1)
     }
 
-    return this.propertyGroup(val - 1)
+    return _propertyGroup
   }
-}
+}())
+
+export default PropertyInterface

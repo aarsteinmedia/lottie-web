@@ -134,7 +134,7 @@ export function searchAnimations(
 
   for (let i = 0; i < length; i++) {
     if (renderer) {
-      animElements[i].setAttribute('data-bm-type', renderer)
+      animElements[i].dataset.bmType = renderer
     }
     registerAnimation(animElements[i], animationData)
   }
@@ -152,7 +152,7 @@ export function searchAnimations(
     // }
     div.style.width = '100%'
     div.style.height = '100%'
-    div.setAttribute('data-bm-type', renderer)
+    div.dataset.bmType = renderer
     body.appendChild(div)
     registerAnimation(div, animationData)
   }

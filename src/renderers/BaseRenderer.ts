@@ -22,7 +22,7 @@ import type {
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
-import type ProjectInterface from '@/utils/helpers/ProjectInterface'
+import type ProjectInterface from '@/utils/expressions/ProjectInterface'
 
 import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'
@@ -271,7 +271,8 @@ export default abstract class BaseRenderer extends FrameElement {
   }
 
   prepareFrame(_num: number) {
-    throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
+    // Pass through
+    // throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
   }
 
   searchExtraCompositions(assets: LottieLayer[]) {
@@ -287,7 +288,7 @@ export default abstract class BaseRenderer extends FrameElement {
     }
   }
 
-  setProjectInterface(pInterface: ProjectInterface | null) {
+  setProjectInterface(pInterface: ReturnType<typeof ProjectInterface> | null) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }

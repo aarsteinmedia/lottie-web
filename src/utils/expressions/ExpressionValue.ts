@@ -1,78 +1,67 @@
-// @ts-nocheck
-import type { Vector3 } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type { ValueProperty } from '@/utils/Properties'
+import { createTypedArray } from '../helpers/arrays'
 
-import { ArrayType } from '@/utils/enums'
-import { createTypedArray } from '@/utils/helpers/arrays'
+function ExpressionValue(
+  elementProp, mult, type
+) {
+  mult = mult || 1
+  let expressionValue
 
-export default class ExpressionValue {
-  key?: (pos: number) => number
-  numKeys = 0
-  propertyGroup?: LayerExpressionInterface
-  value
-  velocity: number
-  constructor(
-    elementProp: ValueProperty<number[] | number>,
-    mult = 1,
-    type = ''
-  ) {
-    if (elementProp.k) {
-      elementProp.getValue()
-    }
-    if (type) {
-      if (type === 'color') {
-        const len = 4
-        const arrValue = createTypedArray(ArrayType.Float32, len)
+  if (elementProp.k) {
+    elementProp.getValue()
+  }
+  let i
 
-        for (let i = 0; i < len; i++) {
-          arrValue[i] = i < 3 ? (elementProp.v as Vector3)[i] * mult : 1
-        }
-        this.value = arrValue
+  let len
+  let arrValue
+  let val
+
+  if (type) {
+    if (type === 'color') {
+      len = 4
+      expressionValue = createTypedArray('float32', len)
+      arrValue = createTypedArray('float32', len)
+      for (i = 0; i < len; i += 1) {
+        arrValue[i] = i < 3 ? elementProp.v[i] * mult : 1
+        expressionValue[i] = arrValue[i]
       }
-    } else if (elementProp.propType === 'unidimensional') {
-      this.value = Number(elementProp.v) * mult
-    } else {
-      const { length } = elementProp.pv as number[]
-      const arrValue = createTypedArray(ArrayType.Float32, length)
+      expressionValue.value = arrValue
+    }
+  } else if (elementProp.propType === 'unidimensional') {
+    val = elementProp.v * mult
+    expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+    expressionValue.value = val
+  } else {
+    len = elementProp.pv.length
+    expressionValue = createTypedArray('float32', len)
+    arrValue = createTypedArray('float32', len)
+    for (i = 0; i < len; i += 1) {
+      arrValue[i] = elementProp.v[i] * mult
+      expressionValue[i] = arrValue[i]
+    }
+    expressionValue.value = arrValue
+  }
 
-      for (let i = 0; i < length; i++) {
-        arrValue[i] = (elementProp.v as number[])[i] * mult
-      }
-      this.value = arrValue
+  expressionValue.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0
+  expressionValue.key = function (pos) {
+    if (!expressionValue.numKeys) {
+      return 0
     }
 
-    this.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0
-    this.key = (pos: number) => {
-      if (!this.numKeys) {
-        return 0
-      }
-
-      return elementProp.keyframes[pos - 1].t
+    return elementProp.keyframes[pos - 1].t
+  }
+  expressionValue.valueAtTime = elementProp.getValueAtTime
+  expressionValue.speedAtTime = elementProp.getSpeedAtTime
+  expressionValue.velocityAtTime = elementProp.getVelocityAtTime
+  expressionValue.propertyGroup = elementProp.propertyGroup
+  Object.defineProperty(
+    expressionValue, 'velocity', {
+      get () {
+        return elementProp.getVelocityAtTime(elementProp.comp.currentFrame)
+      },
     }
-    const {
-      getSpeedAtTime, getValueAtTime, getVelocityAtTime, propertyGroup
-    } =
-      elementProp
+  )
 
-    this.valueAtTime = getValueAtTime
-    this.speedAtTime = getSpeedAtTime
-    this.velocityAtTime = getVelocityAtTime
-    this.propertyGroup = propertyGroup
-
-    this.velocity = getVelocityAtTime(elementProp.comp?.currentFrame || 0)
-  }
-
-  speedAtTime(_frameNum: number) {
-    throw new Error(`${this.constructor.name}: Method speedAtTime is not implemented`)
-  }
-
-  valueAtTime<T extends number | number[] = number>(_a: number,
-    _b?: number): T {
-    throw new Error(`${this.constructor.name}: Method valueAtTime is not implemented`)
-  }
-
-  velocityAtTime(_frameNum: number): number {
-    throw new Error(`${this.constructor.name}: Method velocityAtTime is not implemented`)
-  }
+  return expressionValue
 }
+
+export default ExpressionValue

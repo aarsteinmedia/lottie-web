@@ -1,37 +1,34 @@
-import type { CompElementInterface, GlobalData } from '@/types'
+const CompExpressionInterface = (function () {
+  return function (comp) {
+    function _thisLayerFunction(name) {
+      let i = 0
 
-export default class CompExpressionInterface {
-  public _name?: string
-  public comp: CompElementInterface
-  public displayStartTime: number
-  public frameDuration: number
-  public globalData?: GlobalData
-  public height: number
-  public numLayers: number
-  public pixelAspect: number
-  public width: number
-  constructor(comp: CompElementInterface) {
-    this.comp = comp
-    this._name = comp.data?.nm
-    this.pixelAspect = 1
-    this.height = comp.data?.h || comp.globalData?.compSize?.h || 0
-    this.width = comp.data?.w || comp.globalData?.compSize?.w || 0
-    this.frameDuration = 1 / (comp.globalData?.frameRate || 60)
-    this.displayStartTime = 0
-    this.numLayers = comp.layers?.length ?? 0
-  }
+      const len = comp.layers.length
 
-  public layer(name: string | number) {
-    let i = 0
-    const { length } = this.comp.layers ?? []
-
-    while (i < length) {
-      if (this.comp.layers?.[i].nm === name || this.comp.layers?.[i].ind === name) {
-        return this.comp.elements[i].layerInterface
+      while (i < len) {
+        if (comp.layers[i].nm === name || comp.layers[i].ind === name) {
+          return comp.elements[i].layerInterface
+        }
+        i += 1
       }
-      i++
-    }
 
-    return null
+      return null
+      // return {active:false};
+    }
+    Object.defineProperty(
+      _thisLayerFunction, '_name', { value: comp.data.nm }
+    )
+    _thisLayerFunction.layer = _thisLayerFunction
+    _thisLayerFunction.pixelAspect = 1
+    _thisLayerFunction.height = comp.data.h || comp.globalData.compSize.h
+    _thisLayerFunction.width = comp.data.w || comp.globalData.compSize.w
+    _thisLayerFunction.pixelAspect = 1
+    _thisLayerFunction.frameDuration = 1 / comp.globalData.frameRate
+    _thisLayerFunction.displayStartTime = 0
+    _thisLayerFunction.numLayers = comp.layers.length
+
+    return _thisLayerFunction
   }
-}
+}())
+
+export default CompExpressionInterface
