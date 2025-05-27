@@ -271,8 +271,7 @@ export default abstract class BaseRenderer extends FrameElement {
   }
 
   prepareFrame(_num: number) {
-    // Pass through
-    // throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
+    throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
   }
 
   searchExtraCompositions(assets: LottieLayer[]) {

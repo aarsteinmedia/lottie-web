@@ -355,6 +355,10 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         this.checkLayers(num)
       }
       for (let i = length - 1; i >= 0; i--) {
+        if (typeof this.elements[i] === 'boolean') {
+          continue
+        }
+
         if (this.completeLayers || this.elements[i]) {
           this.elements[i].prepareFrame(Number(num) - this.layers[i].st)
         }
@@ -362,6 +366,10 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (this.globalData._mdf) {
         for (let i = 0; i < length; i++) {
+          if (typeof this.elements[i] === 'boolean') {
+            continue
+          }
+
           if (this.completeLayers || this.elements[i]) {
             this.elements[i].renderFrame()
           }
