@@ -23,12 +23,12 @@ import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import ShapeElement from '@/elements/ShapeElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { getBlendMode } from '@/utils'
+import { getBlendMode, logPrototype } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
 import { getLocationHref } from '@/utils/getterSetter'
-// import Matrix from '@/utils/Matrix'
+import Matrix from '@/utils/Matrix'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory from '@/utils/TransformProperty'
@@ -38,10 +38,10 @@ export default class SVGShapeElement extends ShapeElement {
   animatedContents: AnimatedContent[]
   override createContainerElements = SVGBaseElement.prototype.createContainerElements
   override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
-
   override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
   override getBaseElement = SVGBaseElement.prototype.getBaseElement
   getMatte = SVGBaseElement.prototype.getMatte
+  identityMatrix = new Matrix()
   override initRendererElement = SVGBaseElement.prototype.initRendererElement
   prevViewData: SVGElementInterface[]
   override renderElement = SVGBaseElement.prototype.renderElement

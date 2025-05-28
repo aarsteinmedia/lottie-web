@@ -314,3 +314,7 @@ function renderStroke(
 }
 
 export type CreateRenderFunction = ReturnType<typeof createRenderFunction>
+
+const SVGElementsRenderer = { createRenderFunction }
+
+export default SVGElementsRenderer
