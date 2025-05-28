@@ -18,12 +18,12 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 
 import EffectsManager from '@/effects/EffectsManager'
 import { createElementID, getBlendMode } from '@/utils'
-import { getExpressionInterfaces } from '@/utils/getterSetter'
+import { getExpressionInterfaces } from '@/utils/common'
 
 export default abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement
   comp?: CompElementInterface
-  compInterface?: CompExpressionInterface
+  compInterface?: ReturnType<typeof CompExpressionInterface>
   data?: LottieLayer
   dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
@@ -32,7 +32,7 @@ export default abstract class BaseElement {
   itemsData: ShapeGroupData[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
-  layerInterface?: LayerExpressionInterface
+  layerInterface?: null | ReturnType<typeof LayerExpressionInterface> = null
   maskManager?: MaskElement
   shapesData: Shape[] = []
   type?: unknown
@@ -123,7 +123,7 @@ export default abstract class BaseElement {
       textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
       compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
 
-    this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
+    this.layerInterface = layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
     // if (!this.layerInterface) {
     //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
@@ -133,17 +133,17 @@ export default abstract class BaseElement {
       this.layerInterface.registerMaskInterface(this.maskManager)
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const effectsInterface = (effectsExpressionInterface as any).createEffectsInterface(this, this.layerInterface)
+    const effectsInterface = effectsExpressionInterface.createEffectsInterface(this, this.layerInterface)
 
     this.layerInterface.registerEffectsInterface(effectsInterface)
 
     if (this.data.ty === 0 || this.data.xt) {
-      this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
+      this.compInterface = compExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
       return
     }
     if (this.data.ty === 4) {
-      this.layerInterface.shapeInterface = new shapeExpressionInterface(
+      this.layerInterface.shapeInterface = shapeExpressionInterface(
         this.shapesData,
         this.itemsData,
         this.layerInterface
@@ -153,7 +153,7 @@ export default abstract class BaseElement {
       return
     }
     if (this.data.ty === 5) {
-      this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
+      this.layerInterface.textInterface = textExpressionInterface(this as unknown as ElementInterfaceIntersect)
       this.layerInterface.text = this.layerInterface.textInterface
     }
   }

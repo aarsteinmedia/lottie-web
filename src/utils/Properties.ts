@@ -41,13 +41,15 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _placeholder?: boolean
   comp?: CompElementInterface
   data?:
-    | VectorProperty<number | number[] | Keyframe[]>
-    | Shape
-    | TextRangeValue
-    | TextData
+    { hd?: boolean } &
+    (VectorProperty<number | number[] | Keyframe[]>
+      | Shape
+      | TextRangeValue
+      | TextData)
   e?: ValueProperty | { v: number }
   effectsSequence: EffectFunction[] = []
   elem?: ElementInterfaceIntersect
+  frameExpressionId?: number
   frameId?: number
   g?: unknown
   initFrame = initialDefaultFrame

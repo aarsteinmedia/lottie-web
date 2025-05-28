@@ -1,9 +1,9 @@
-import type {
-  ExpressionInterface,
-  ExpressionInterfaces,
-  GetInterface,
-} from '@/types'
-import type Expressions from '@/utils/expressions/Expressions'
+// import type {
+//   ExpressionInterface,
+//   ExpressionInterfaces,
+//   GetInterface,
+// } from '@/types'
+// import type Expressions from '@/utils/expressions/Expressions'
 
 export const initialDefaultFrame = -999999,
   roundCorner = 0.5519
@@ -12,22 +12,22 @@ export const initialDefaultFrame = -999999,
  *
  * Expressions plugin/interface.
  */
-const expressions: {
-  interface: null | GetInterface
-  plugin: null | typeof Expressions
-} = {
-  interface: null,
-  plugin: null,
-}
+// const expressions: {
+//   interface: null | GetInterface
+//   plugin: null | typeof Expressions
+// } = {
+//   interface: null,
+//   plugin: null,
+// }
 
-export const setExpressionsPlugin = (value: typeof Expressions) => {
-    expressions.plugin = value
-  },
-  getExpressionsPlugin = () => expressions.plugin,
-  setExpressionInterfaces = (getInterface: (type: keyof ExpressionInterfaces) => ExpressionInterface) => {
-    expressions.interface = getInterface
-  },
-  getExpressionInterfaces = () => expressions.interface
+// export const setExpressionsPlugin = (value: typeof Expressions) => {
+//     expressions.plugin = value
+//   },
+//   getExpressionsPlugin = () => expressions.plugin,
+//   setExpressionInterfaces = (getInterface: (type: keyof ExpressionInterfaces) => ExpressionInterface) => {
+//     expressions.interface = getInterface
+//   },
+//   getExpressionInterfaces = () => expressions.interface
 /**
  *
  * Curve segments.

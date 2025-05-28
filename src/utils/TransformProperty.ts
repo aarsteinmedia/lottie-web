@@ -37,7 +37,6 @@ export class TransformProperty extends BaseProperty {
   or?: MultiDimensionalProperty<Vector3>
   p?: MultiDimensionalProperty<Vector3>
   pre: Matrix
-  override propType: 'transform'
   px?: ValueProperty
   py?: ValueProperty
   pz?: ValueProperty

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 
-import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
+import type {
+  ElementInterfaceIntersect, ExpressionProperty, Shape
+} from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import seedrandom from '@/3rd_party/seedrandom'
@@ -502,6 +504,10 @@ const ExpressionManager = (function () {
       throw new Error(`${elem.constructor.name}: Comp and GlobalData is not implemented`)
     }
 
+    if (!elem.layerInterface) {
+      throw new Error(`${elem.constructor.name}: LayerInterface is not initialized`)
+    }
+
     const { k, x: val } = data,
       shouldHaveVelocity = /velocity\b/.test(val),
       shouldHaveRandom = val.includes('random'),
@@ -555,15 +561,24 @@ const ExpressionManager = (function () {
     let scoped_bm_rt
 
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-    const expression_function = eval(`[function _expression_function(){${val};scoped_bm_rt=$bm_rt}]`)[0]
+    // const expression_function = eval(`[function _expression_function(){${val};scoped_bm_rt=$bm_rt}]`)[0]
+
+
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
+    const expression_function = new Function(`
+      function _expression_function() {
+        ${val}
+        scoped_bm_rt = $bm_rt;
+      }
+      return _expression_function;
+      `)()
 
     const numKeys = property.kf ? k.length : 0,
       active = !this.data || this.data.hd !== true
 
     const wiggle = function wiggle(freq, amp) {
-      let iWiggle
-
-      let j
+      let iWiggle,
+        j
       const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
       const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
 
@@ -571,7 +586,6 @@ const ExpressionManager = (function () {
       const iterations = Math.floor(time * freq)
 
       iWiggle = 0
-      j = 0
       while (iWiggle < iterations) {
         // var rnd = BMMath.random();
         for (j = 0; j < lenWiggle; j += 1) {
@@ -612,13 +626,14 @@ const ExpressionManager = (function () {
       smooth = thisProperty.smooth.bind(thisProperty)
     }
 
-    function loopInDuration(type, duration) {
+    function loopInDuration(type: string, duration: number) {
       return loopIn(
         type, duration, true
       )
     }
 
-    function loopOutDuration(type, duration) {
+    function loopOutDuration(type: string, duration: number) {
+
       return loopOut(
         type, duration, true
       )
@@ -819,21 +834,22 @@ const ExpressionManager = (function () {
           return value.slice(init)
         }
 
-        return value.substr(init, end)
+        return value.slice(init, end)
       }
 
       return ''
     }
+
+    let time = 0,
+      value
 
     function posterizeTime(framesPerSecond) {
       time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
       value = valueAtTime(time)
     }
 
-    let time
 
     let velocity
-    let value
     let text
     let textIndex
     let textTotal
@@ -845,8 +861,9 @@ const ExpressionManager = (function () {
     var randSeed = Math.floor(Math.random() * 1000000)
     const { globalData } = elem
 
-    function executeExpression(_value) {
+    function executeExpression(this: KeyframedValueProperty, _value: number) {
       // globalData.pushExpression();
+
       value = _value
       if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
         return value
@@ -856,10 +873,11 @@ const ExpressionManager = (function () {
         textTotal = this.textTotal
         selectorValue = this.selectorValue
       }
-      if (!thisLayer) {
+      //TODO: Here it goes wrong
+      if (elem.layerInterface && !thisLayer) {
         text = elem.layerInterface.text
         thisLayer = elem.layerInterface
-        thisComp = elem.comp.compInterface
+        thisComp = elem.comp?.compInterface
         toWorld = thisLayer.toWorld.bind(thisLayer)
         fromWorld = thisLayer.fromWorld.bind(thisLayer)
         fromComp = thisLayer.fromComp.bind(thisLayer)
@@ -868,7 +886,7 @@ const ExpressionManager = (function () {
         fromCompToSurface = fromComp
       }
       if (!transform) {
-        transform = elem.layerInterface('ADBE Transform Group')
+        transform = elem.layerInterface?.('ADBE Transform Group')
         $bm_transform = transform
         if (transform) {
           anchorPoint = transform.anchorPoint
@@ -879,10 +897,10 @@ const ExpressionManager = (function () {
       }
 
       if (elemType === 4 && !content) {
-        content = thisLayer('ADBE Root Vectors Group')
+        content = thisLayer?.('ADBE Root Vectors Group')
       }
       if (!effect) {
-        effect = thisLayer(4)
+        effect = thisLayer?.(4)
       }
       hasParent = Boolean(elem.hierarchy?.length)
       if (hasParent && !parent) {

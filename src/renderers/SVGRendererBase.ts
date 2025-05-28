@@ -14,10 +14,8 @@ import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import { createElementID, createNS } from '@/utils'
-import {
-  getExpressionsPlugin,
-  getLocationHref,
-} from '@/utils/getterSetter'
+import { getExpressionsPlugin } from '@/utils/common'
+import { getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 export default abstract class SVGRendererBase extends BaseRenderer {
@@ -74,10 +72,6 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
     const element = this.createItem(layers[pos])
-
-    // if (!element) {
-    //   throw new Error(`${this.constructor.name}: Could not create element`)
-    // }
 
     elements[pos] = element as ElementInterfaceIntersect
     if (getExpressionsPlugin()) {
@@ -360,7 +354,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         }
 
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i].prepareFrame(Number(num) - this.layers[i].st)
+          this.elements[i]?.prepareFrame(Number(num) - this.layers[i].st)
         }
       }
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -371,7 +365,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
           }
 
           if (this.completeLayers || this.elements[i]) {
-            this.elements[i].renderFrame()
+            this.elements[i]?.renderFrame()
           }
         }
       }

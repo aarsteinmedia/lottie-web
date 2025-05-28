@@ -628,6 +628,9 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       (input as unknown[]).length > 0 &&
       typeof (input as unknown[])[0] !== 'number')
   },
+  isDeclaration = (str: string) => {
+    return str === 'var' || str === 'let' || str === 'const'
+  },
   isSafari = (): boolean => {
     const isTrue = inBrowser()
       ? /^(?:(?!chrome|android).)*safari/i.test(navigator.userAgent)

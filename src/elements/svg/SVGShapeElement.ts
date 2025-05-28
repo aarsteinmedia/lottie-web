@@ -72,6 +72,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.initElement(
       data, globalData, comp
     )
+
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
     // List of elements that have been created
     this.prevViewData = []
@@ -582,3 +583,5 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
 }
+
+// console.log(Object.getOwnPropertyNames(SVGShapeElement.prototype))

@@ -13,25 +13,6 @@ const expressionHelpers = (function () {
     if (!data.x) {
       return
     }
-    // Parse expression string to avoid invalid script identifier
-    // const valArr = data.x.split(/ {2,}/),
-    //   { length } = valArr
-
-    // let newVal = ''
-
-    // for (let i = 0; i < length; i++) {
-    //   const str = valArr[i].trim()
-
-    //   if (!str.endsWith(';') && i < length - 1) {
-    //     newVal += `${str};`
-    //     continue
-    //   }
-
-    //   newVal += str
-    // }
-
-    // data.x = newVal
-
 
     prop.k = true
     prop.x = true
