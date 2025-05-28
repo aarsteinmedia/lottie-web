@@ -1,18 +1,19 @@
 const PropertyInterface = (function () {
   return function (propertyName, propertyGroup) {
-    const interfaceFunction = { _name: propertyName }
+    var interfaceFunction = {
+      _name: propertyName,
+    };
 
     function _propertyGroup(val) {
-      val = val === undefined ? 1 : val
+      val = val === undefined ? 1 : val;
       if (val <= 0) {
-        return interfaceFunction
+        return interfaceFunction;
       }
-
-      return propertyGroup(val - 1)
+      return propertyGroup(val - 1);
     }
 
-    return _propertyGroup
-  }
-}())
+    return _propertyGroup;
+  };
+}());
 
-export default PropertyInterface
+export default PropertyInterface;

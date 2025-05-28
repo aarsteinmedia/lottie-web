@@ -1,6 +1,6 @@
 import { getDescriptor } from '@/utils'
-import Matrix from '@/utils/Matrix'
 
+import Matrix from '../Matrix'
 import MaskManagerInterface from './MaskInterface'
 import TransformExpressionInterface from './TransformInterface'
 

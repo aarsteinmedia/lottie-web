@@ -1,102 +1,86 @@
-import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/Properties'
-
-import ExpressionManager from '@/utils/expressions/ExpressionManager'
-import { createTypedArray } from '@/utils/helpers/arrays'
+import {
+  createTypedArray,
+} from '../helpers/arrays';
+import ExpressionManager from './ExpressionManager';
 
 const expressionHelpers = (function () {
-  function searchExpressions(
-    elem: ElementInterfaceIntersect,
-    data: ExpressionProperty,
-    prop: KeyframedValueProperty
-  ) {
-    if (!data.x) {
-      return
+  function searchExpressions(elem, data, prop) {
+    if (data.x) {
+      prop.k = true;
+      prop.x = true;
+      prop.initiateExpression = ExpressionManager.initiateExpression;
+      prop.effectsSequence.push(prop.initiateExpression(elem, data, prop).bind(prop));
     }
-
-    prop.k = true
-    prop.x = true
-    prop.initiateExpression = ExpressionManager.initiateExpression
-    prop.effectsSequence.push(prop.initiateExpression(
-      elem, data, prop
-    ).bind(prop))
   }
 
   function getValueAtTime(frameNum) {
-    frameNum *= this.elem.globalData.frameRate
-    frameNum -= this.offsetTime
+    frameNum *= this.elem.globalData.frameRate;
+    frameNum -= this.offsetTime;
     if (frameNum !== this._cachingAtTime.lastFrame) {
-      this._cachingAtTime.lastIndex = this._cachingAtTime.lastFrame < frameNum ? this._cachingAtTime.lastIndex : 0
-      this._cachingAtTime.value = this.interpolateValue(frameNum, this._cachingAtTime)
-      this._cachingAtTime.lastFrame = frameNum
+      this._cachingAtTime.lastIndex = this._cachingAtTime.lastFrame < frameNum ? this._cachingAtTime.lastIndex : 0;
+      this._cachingAtTime.value = this.interpolateValue(frameNum, this._cachingAtTime);
+      this._cachingAtTime.lastFrame = frameNum;
     }
-
-    return this._cachingAtTime.value
+    return this._cachingAtTime.value;
   }
 
   function getSpeedAtTime(frameNum) {
-    const delta = -0.01
-    const v1 = this.getValueAtTime(frameNum)
-    const v2 = this.getValueAtTime(frameNum + delta)
-    let speed = 0
-
-    if (v1.length > 0) {
-      let i
-
+    var delta = -0.01;
+    var v1 = this.getValueAtTime(frameNum);
+    var v2 = this.getValueAtTime(frameNum + delta);
+    var speed = 0;
+    if (v1.length) {
+      var i;
       for (i = 0; i < v1.length; i += 1) {
-        speed += Math.pow(v2[i] - v1[i], 2)
+        speed += Math.pow(v2[i] - v1[i], 2);
       }
-      speed = Math.sqrt(speed) * 100
+      speed = Math.sqrt(speed) * 100;
     } else {
-      speed = 0
+      speed = 0;
     }
-
-    return speed
+    return speed;
   }
 
   function getVelocityAtTime(frameNum) {
     if (this.vel !== undefined) {
-      return this.vel
+      return this.vel;
     }
-    const delta = -0.001
+    var delta = -0.001;
     // frameNum += this.elem.data.st;
-    const v1 = this.getValueAtTime(frameNum)
-    const v2 = this.getValueAtTime(frameNum + delta)
-    let velocity
-
-    if (v1.length > 0) {
-      velocity = createTypedArray('float32', v1.length)
-      let i
-
+    var v1 = this.getValueAtTime(frameNum);
+    var v2 = this.getValueAtTime(frameNum + delta);
+    var velocity;
+    if (v1.length) {
+      velocity = createTypedArray('float32', v1.length);
+      var i;
       for (i = 0; i < v1.length; i += 1) {
         // removing frameRate
         // if needed, don't add it here
         // velocity[i] = this.elem.globalData.frameRate*((v2[i] - v1[i])/delta);
-        velocity[i] = (v2[i] - v1[i]) / delta
+        velocity[i] = (v2[i] - v1[i]) / delta;
       }
     } else {
-      velocity = (v2 - v1) / delta
+      velocity = (v2 - v1) / delta;
     }
-
-    return velocity
+    return velocity;
   }
 
   function getStaticValueAtTime() {
-    return this.pv
+    return this.pv;
   }
 
   function setGroupProperty(propertyGroup) {
-    this.propertyGroup = propertyGroup
+    this.propertyGroup = propertyGroup;
   }
 
   return {
-    getSpeedAtTime,
-    getStaticValueAtTime,
-    getValueAtTime,
-    getVelocityAtTime,
-    searchExpressions,
-    setGroupProperty,
-  }
-}())
+    searchExpressions: searchExpressions,
+    getSpeedAtTime: getSpeedAtTime,
+    getVelocityAtTime: getVelocityAtTime,
+    getValueAtTime: getValueAtTime,
+    getStaticValueAtTime: getStaticValueAtTime,
+    setGroupProperty: setGroupProperty,
+  };
+}());
 
-export default expressionHelpers
+export default expressionHelpers;

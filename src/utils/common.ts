@@ -1,5 +1,10 @@
 import { createSizedArray } from './helpers/arrays'
 
+let subframeEnabled = true
+let expressionsPlugin = null
+let expressionsInterfaces = null
+let idPrefix = ''
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 let _shouldRoundValues = false
 const bmPow = Math.pow
 const bmSqrt = Math.sqrt
@@ -10,8 +15,7 @@ const bmMin = Math.min
 const BMMath = {};
 
 (function () {
-  const propertyNames = [
-    'abs',
+  const propertyNames = ['abs',
     'acos',
     'acosh',
     'asin',
@@ -54,22 +58,23 @@ const BMMath = {};
     'PI',
     'SQRT1_2',
     'SQRT2']
-  const { length } = propertyNames
+  let i
+  const len = propertyNames.length
 
-  for (let i = 0; i < length; i++) {
+  for (i = 0; i < len; i += 1) {
     BMMath[propertyNames[i]] = Math[propertyNames[i]]
   }
 }())
 
 function ProjectInterface() { return {} }
 BMMath.random = Math.random
-BMMath.abs = function (val: number | number[]) {
+BMMath.abs = function (val) {
   const tOfVal = typeof val
 
   if (tOfVal === 'object' && val.length > 0) {
     const absArr = createSizedArray(val.length)
     let i
-    const { length: len } = val
+    const len = val.length
 
     for (i = 0; i < len; i += 1) {
       absArr[i] = Math.abs(val[i])
@@ -78,14 +83,17 @@ BMMath.abs = function (val: number | number[]) {
     return absArr
   }
 
-  return Math.abs(val as number)
+  return Math.abs(val)
 }
+let defaultCurveSegments = 150
+const degToRads = Math.PI / 180
+const roundCorner = 0.5519
 
-function roundValues(flag?: boolean ) {
+function roundValues(flag) {
   _shouldRoundValues = Boolean(flag)
 }
 
-function bmRnd(value: number) {
+function bmRnd(value) {
   if (_shouldRoundValues) {
     return Math.round(value)
   }
@@ -93,26 +101,280 @@ function bmRnd(value: number) {
   return value
 }
 
-let expressionsPlugin = null
-let expressionsInterfaces = null
+function styleDiv(element) {
+  element.style.position = 'absolute'
+  element.style.top = 0
+  element.style.left = 0
+  element.style.display = 'block'
+  element.style.transformOrigin = '0 0'
+  element.style.webkitTransformOrigin = '0 0'
+  element.style.backfaceVisibility = 'visible'
+  element.style.webkitBackfaceVisibility = 'visible'
+  element.style.transformStyle = 'preserve-3d'
+  element.style.webkitTransformStyle = 'preserve-3d'
+  element.style.mozTransformStyle = 'preserve-3d'
+}
 
+function BMEnterFrameEvent(
+  type, currentTime, totalTime, frameMultiplier
+) {
+  this.type = type
+  this.currentTime = currentTime
+  this.totalTime = totalTime
+  this.direction = frameMultiplier < 0 ? -1 : 1
+}
+
+function BMCompleteEvent(type, frameMultiplier) {
+  this.type = type
+  this.direction = frameMultiplier < 0 ? -1 : 1
+}
+
+function BMCompleteLoopEvent(
+  type, totalLoops, currentLoop, frameMultiplier
+) {
+  this.type = type
+  this.currentLoop = currentLoop
+  this.totalLoops = totalLoops
+  this.direction = frameMultiplier < 0 ? -1 : 1
+}
+
+function BMSegmentStartEvent(
+  type, firstFrame, totalFrames
+) {
+  this.type = type
+  this.firstFrame = firstFrame
+  this.totalFrames = totalFrames
+}
+
+function BMDestroyEvent(type, target) {
+  this.type = type
+  this.target = target
+}
+
+function BMRenderFrameErrorEvent(nativeError, currentTime) {
+  this.type = 'renderFrameError'
+  this.nativeError = nativeError
+  this.currentTime = currentTime
+}
+
+function BMConfigErrorEvent(nativeError) {
+  this.type = 'configError'
+  this.nativeError = nativeError
+}
+
+function BMAnimationConfigErrorEvent(type, nativeError) {
+  this.type = type
+  this.nativeError = nativeError
+}
+
+const createElementID = (function () {
+  let _count = 0
+
+  return function createID() {
+    _count += 1
+
+    return `${idPrefix  }__lottie_element_${  _count}`
+  }
+}())
+
+function HSVtoRGB(
+  h, s, v
+) {
+  let r
+
+  let g
+  let b
+  let i
+  let f
+  let p
+  let q
+  let t
+
+  i = Math.floor(h * 6)
+  f = h * 6 - i
+  p = v * (1 - s)
+  q = v * (1 - f * s)
+  t = v * (1 - (1 - f) * s)
+  switch (i % 6) {
+    case 0: { r = v; g = t; b = p; break
+    }
+    case 1: { r = q; g = v; b = p; break
+    }
+    case 2: { r = p; g = v; b = t; break
+    }
+    case 3: { r = p; g = q; b = v; break
+    }
+    case 4: { r = t; g = p; b = v; break
+    }
+    case 5: { r = v; g = p; b = q; break
+    }
+    default: { break
+    }
+  }
+
+  return [r,
+    g,
+    b]
+}
+
+function RGBtoHSV(
+  r, g, b
+) {
+  const max = Math.max(
+    r, g, b
+  )
+  const min = Math.min(
+    r, g, b
+  )
+  const d = max - min
+  let h
+  const s = max === 0 ? 0 : d / max
+  const v = max / 255
+
+  switch (max) {
+    case min: { h = 0; break
+    }
+    case r: { h = g - b + d * (g < b ? 6 : 0); h /= 6 * d; break
+    }
+    case g: { h = b - r + d * 2; h /= 6 * d; break
+    }
+    case b: { h = r - g + d * 4; h /= 6 * d; break
+    }
+    default: { break
+    }
+  }
+
+  return [
+    h,
+    s,
+    v,
+  ]
+}
+
+function addSaturationToRGB(color, offset) {
+  const hsv = RGBtoHSV(
+    color[0] * 255, color[1] * 255, color[2] * 255
+  )
+
+  hsv[1] += offset
+  if (hsv[1] > 1) {
+    hsv[1] = 1
+  } else if (hsv[1] <= 0) {
+    hsv[1] = 0
+  }
+
+  return HSVtoRGB(
+    hsv[0], hsv[1], hsv[2]
+  )
+}
+
+function addBrightnessToRGB(color, offset) {
+  const hsv = RGBtoHSV(
+    color[0] * 255, color[1] * 255, color[2] * 255
+  )
+
+  hsv[2] += offset
+  if (hsv[2] > 1) {
+    hsv[2] = 1
+  } else if (hsv[2] < 0) {
+    hsv[2] = 0
+  }
+
+  return HSVtoRGB(
+    hsv[0], hsv[1], hsv[2]
+  )
+}
+
+function addHueToRGB(color, offset) {
+  const hsv = RGBtoHSV(
+    color[0] * 255, color[1] * 255, color[2] * 255
+  )
+
+  hsv[0] += offset / 360
+  if (hsv[0] > 1) {
+    hsv[0] -= 1
+  } else if (hsv[0] < 0) {
+    hsv[0] += 1
+  }
+
+  return HSVtoRGB(
+    hsv[0], hsv[1], hsv[2]
+  )
+}
+
+const rgbToHex = (function () {
+  const colorMap = []
+  let i
+  let hex
+
+  for (i = 0; i < 256; i += 1) {
+    hex = i.toString(16)
+    colorMap[i] = hex.length === 1 ? `0${  hex}` : hex
+  }
+
+  return function (
+    r, g, b
+  ) {
+    if (r < 0) {
+      r = 0
+    }
+    if (g < 0) {
+      g = 0
+    }
+    if (b < 0) {
+      b = 0
+    }
+
+    return `#${  colorMap[r]  }${colorMap[g]  }${colorMap[b]}`
+  }
+}())
+
+const setSubframeEnabled = (flag) => { subframeEnabled = Boolean(flag) }
+const getSubframeEnabled = () => subframeEnabled
 const setExpressionsPlugin = (value) => { expressionsPlugin = value }
 const getExpressionsPlugin = () => expressionsPlugin
 const setExpressionInterfaces = (value) => { expressionsInterfaces = value }
 const getExpressionInterfaces = () => expressionsInterfaces
+const setDefaultCurveSegments = (value) => { defaultCurveSegments = value }
+const getDefaultCurveSegments = () => defaultCurveSegments
+const setIdPrefix = (value) => { idPrefix = value }
+const getIdPrefix = () => idPrefix
 
 export {
+  addBrightnessToRGB,
+  addHueToRGB,
+  addSaturationToRGB,
+  BMAnimationConfigErrorEvent,
+  BMCompleteEvent,
+  BMCompleteLoopEvent,
+  BMConfigErrorEvent,
+  BMDestroyEvent,
+  BMEnterFrameEvent,
   bmFloor,
   BMMath,
   bmMax,
   bmMin,
   bmPow,
+  BMRenderFrameErrorEvent,
   bmRnd,
+  BMSegmentStartEvent,
   bmSqrt,
+  createElementID,
+  degToRads,
+  getDefaultCurveSegments,
   getExpressionInterfaces,
   getExpressionsPlugin,
+  getIdPrefix,
+  getSubframeEnabled,
+  isSafari,
   ProjectInterface,
+  rgbToHex,
+  roundCorner,
   roundValues,
+  setDefaultCurveSegments,
   setExpressionInterfaces,
   setExpressionsPlugin,
+  setIdPrefix,
+  setSubframeEnabled,
+  styleDiv,
 }

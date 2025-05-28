@@ -1,68 +1,61 @@
-import { PropType } from '../enums'
-import { createTypedArray } from '../helpers/arrays'
+import {
+  createTypedArray,
+} from '../helpers/arrays';
 
-function ExpressionValue(
-  elementProp, mult, type
-) {
-  mult = mult || 1
-  let expressionValue
+function ExpressionValue(elementProp, mult, type) {
+  mult = mult || 1;
+  var expressionValue;
 
   if (elementProp.k) {
-    elementProp.getValue()
+    elementProp.getValue();
   }
-  let i
-
-  let len
-  let arrValue
-  let val
-
+  var i;
+  var len;
+  var arrValue;
+  var val;
   if (type) {
     if (type === 'color') {
-      len = 4
-      expressionValue = createTypedArray('float32', len)
-      arrValue = createTypedArray('float32', len)
+      len = 4;
+      expressionValue = createTypedArray('float32', len);
+      arrValue = createTypedArray('float32', len);
       for (i = 0; i < len; i += 1) {
-        arrValue[i] = i < 3 ? elementProp.v[i] * mult : 1
-        expressionValue[i] = arrValue[i]
+        arrValue[i] = (i < 3) ? elementProp.v[i] * mult : 1;
+        expressionValue[i] = arrValue[i];
       }
-      expressionValue.value = arrValue
+      expressionValue.value = arrValue;
     }
-  } else if (elementProp.propType === PropType.UniDimensional) {
-    val = elementProp.v * mult
-    expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
-    expressionValue.value = val
+  } else if (elementProp.propType === 'unidimensional') {
+    val = elementProp.v * mult;
+    expressionValue = new Number(val); // eslint-disable-line no-new-wrappers
+    expressionValue.value = val;
   } else {
-    len = elementProp.pv.length
-    expressionValue = createTypedArray('float32', len)
-    arrValue = createTypedArray('float32', len)
+    len = elementProp.pv.length;
+    expressionValue = createTypedArray('float32', len);
+    arrValue = createTypedArray('float32', len);
     for (i = 0; i < len; i += 1) {
-      arrValue[i] = elementProp.v[i] * mult
-      expressionValue[i] = arrValue[i]
+      arrValue[i] = elementProp.v[i] * mult;
+      expressionValue[i] = arrValue[i];
     }
-    expressionValue.value = arrValue
+    expressionValue.value = arrValue;
   }
 
-  expressionValue.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0
+  expressionValue.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0;
   expressionValue.key = function (pos) {
     if (!expressionValue.numKeys) {
-      return 0
+      return 0;
     }
-
-    return elementProp.keyframes[pos - 1].t
-  }
-  expressionValue.valueAtTime = elementProp.getValueAtTime
-  expressionValue.speedAtTime = elementProp.getSpeedAtTime
-  expressionValue.velocityAtTime = elementProp.getVelocityAtTime
-  expressionValue.propertyGroup = elementProp.propertyGroup
-  Object.defineProperty(
-    expressionValue, 'velocity', {
-      get () {
-        return elementProp.getVelocityAtTime(elementProp.comp.currentFrame)
-      },
-    }
-  )
-
-  return expressionValue
+    return elementProp.keyframes[pos - 1].t;
+  };
+  expressionValue.valueAtTime = elementProp.getValueAtTime;
+  expressionValue.speedAtTime = elementProp.getSpeedAtTime;
+  expressionValue.velocityAtTime = elementProp.getVelocityAtTime;
+  expressionValue.propertyGroup = elementProp.propertyGroup;
+  Object.defineProperty(expressionValue, 'velocity', {
+    get: function () {
+      return elementProp.getVelocityAtTime(elementProp.comp.currentFrame);
+    },
+  });
+  return expressionValue;
 }
 
-export default ExpressionValue
+export default ExpressionValue;

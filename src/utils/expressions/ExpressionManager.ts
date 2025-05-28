@@ -1,22 +1,16 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 
 
-import type {
-  ElementInterfaceIntersect, ExpressionProperty, Shape
-} from '@/types'
-import type { KeyframedValueProperty } from '@/utils/Properties'
+import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
 
 import seedrandom from '@/3rd_party/seedrandom'
 import { degToRads } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import { BMMath } from '@/utils/common'
-import { ArrayType, PropType } from '@/utils/enums'
+import { PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import { newElement } from '@/utils/pooling/ShapePool'
+import shapePool from '@/utils/pooling/ShapePool'
 
-function noOp(_value?: unknown) {
-  return _value
-}
+import type { KeyframedValueProperty } from '../Properties'
 
 const ExpressionManager = (function () {
 
@@ -36,7 +30,7 @@ const ExpressionManager = (function () {
     _lottieGlobal = {}
   }
 
-  function $bm_isInstanceOfArray(arr: unknown) {
+  function $bm_isInstanceOfArray(arr) {
     return arr.constructor === Array || arr.constructor === Float32Array
   }
 
@@ -467,16 +461,17 @@ const ExpressionManager = (function () {
   function createPath(
     points, inTangents, outTangents, closed
   ) {
+    let i
 
-    const { length } = points,
-      path = newElement()
+    const len = points.length
+    const path = shapePool.newElement()
 
-    path.setPathData(Boolean(closed), length)
+    path.setPathData(Boolean(closed), len)
     const arrPlaceholder = [0, 0]
     let inVertexPoint
     let outVertexPoint
 
-    for (let i = 0; i < length; i += 1) {
+    for (i = 0; i < len; i += 1) {
       inVertexPoint = inTangents?.[i] ? inTangents[i] : arrPlaceholder
       outVertexPoint = outTangents?.[i] ? outTangents[i] : arrPlaceholder
       path.setTripleAt(
@@ -485,6 +480,10 @@ const ExpressionManager = (function () {
     }
 
     return path
+  }
+
+  function noOp(_value?: unknown) {
+    return _value
   }
 
   function initiateExpression(
@@ -501,24 +500,20 @@ const ExpressionManager = (function () {
     }
 
     if (!elem.comp?.globalData) {
-      throw new Error(`${elem.constructor.name}: Comp and GlobalData is not implemented`)
+      throw new Error('CompElement is not implemented')
     }
 
-    if (!elem.layerInterface) {
-      throw new Error(`${elem.constructor.name}: LayerInterface is not initialized`)
-    }
-
-    const { k, x: val } = data,
-      shouldHaveVelocity = /velocity\b/.test(val),
-      shouldHaveRandom = val.includes('random'),
+    const { x: val } = data,
+      needsVelocity = /velocity\b/.test(val),
+      _needsRandom = val.includes('random'),
       {
         ip, nm, op, sh, sw, ty: elemType
       } = elem.data
 
-    let transform
-    let $bm_transform
-    let content
-    let effect
+    let transform,
+      $bm_transform,
+      content,
+      effect
     const thisProperty = property
 
     thisProperty._name = nm
@@ -530,7 +525,6 @@ const ExpressionManager = (function () {
         },
       }
     )
-
     elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
     elem.comp.displayStartTime = 0
     const inPoint = ip / elem.comp.globalData.frameRate,
@@ -538,54 +532,45 @@ const ExpressionManager = (function () {
       width = sw ?? 0,
       height = sh ?? 0,
       name = nm
-    let loopIn
-    let loop_in
-    let loopOut
-    let loop_out
-    let smooth
-    let toWorld
-    let fromWorld
-    let fromComp
-    let toComp
-    let fromCompToSurface
-    let position
-    let rotation
-    let anchorPoint
-    let scale
-    let thisLayer
-    let thisComp
-    let mask
-    let valueAtTime
-    let velocityAtTime
+    let loopIn,
+      loop_in,
+      loopOut,
+      loop_out,
+      smooth,
+      toWorld,
+      fromWorld,
+      fromComp,
+      toComp,
+      fromCompToSurface,
+      position,
+      rotation,
+      anchorPoint,
+      scale,
+      thisLayer,
+      thisComp,
+      mask,
+      valueAtTime,
+      velocityAtTime,
 
-    let scoped_bm_rt
-
+      scoped_bm_rt
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-    // const expression_function = eval(`[function _expression_function(){${val};scoped_bm_rt=$bm_rt}]`)[0]
+    const expression_function = eval(`[function _expression_function(){${  val  };scoped_bm_rt=$bm_rt}]`)[0] // eslint-disable-line no-eval
+    const numKeys = property.kf ? data.k.length : 0
 
-
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
-    const expression_function = new Function(`
-      function _expression_function() {
-        ${val}
-        scoped_bm_rt = $bm_rt;
-      }
-      return _expression_function;
-      `)()
-
-    const numKeys = property.kf ? k.length : 0,
-      active = !this.data || this.data.hd !== true
+    const active = !this.data || this.data.hd !== true
 
     const wiggle = function wiggle(freq, amp) {
-      let iWiggle,
-        j
+      let iWiggle
+
+      let j
       const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
-      const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
+      const addedAmps = createTypedArray('float32', lenWiggle)
 
       freq = 5
       const iterations = Math.floor(time * freq)
 
       iWiggle = 0
+      j = 0
       while (iWiggle < iterations) {
         // var rnd = BMMath.random();
         for (j = 0; j < lenWiggle; j += 1) {
@@ -626,14 +611,13 @@ const ExpressionManager = (function () {
       smooth = thisProperty.smooth.bind(thisProperty)
     }
 
-    function loopInDuration(type: string, duration: number) {
+    function loopInDuration(type, duration) {
       return loopIn(
         type, duration, true
       )
     }
 
-    function loopOutDuration(type: string, duration: number) {
-
+    function loopOutDuration(type, duration) {
       return loopOut(
         type, duration, true
       )
@@ -834,22 +818,21 @@ const ExpressionManager = (function () {
           return value.slice(init)
         }
 
-        return value.slice(init, end)
+        return value.substr(init, end)
       }
 
       return ''
     }
-
-    let time = 0,
-      value
 
     function posterizeTime(framesPerSecond) {
       time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
       value = valueAtTime(time)
     }
 
+    let time
 
     let velocity
+    let value
     let text
     let textIndex
     let textTotal
@@ -861,23 +844,21 @@ const ExpressionManager = (function () {
     var randSeed = Math.floor(Math.random() * 1000000)
     const { globalData } = elem
 
-    function executeExpression(this: KeyframedValueProperty, _value: number) {
+    function executeExpression(_value) {
       // globalData.pushExpression();
-
       value = _value
-      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
+      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== 'textSelector') {
         return value
       }
-      if (this.propType === PropType.TextSelector) {
+      if (this.propType === 'textSelector') {
         textIndex = this.textIndex
         textTotal = this.textTotal
         selectorValue = this.selectorValue
       }
-      //TODO: Here it goes wrong
-      if (elem.layerInterface && !thisLayer) {
+      if (!thisLayer) {
         text = elem.layerInterface.text
         thisLayer = elem.layerInterface
-        thisComp = elem.comp?.compInterface
+        thisComp = elem.comp.compInterface
         toWorld = thisLayer.toWorld.bind(thisLayer)
         fromWorld = thisLayer.fromWorld.bind(thisLayer)
         fromComp = thisLayer.fromComp.bind(thisLayer)
@@ -886,7 +867,7 @@ const ExpressionManager = (function () {
         fromCompToSurface = fromComp
       }
       if (!transform) {
-        transform = elem.layerInterface?.('ADBE Transform Group')
+        transform = elem.layerInterface('ADBE Transform Group')
         $bm_transform = transform
         if (transform) {
           anchorPoint = transform.anchorPoint
@@ -897,20 +878,20 @@ const ExpressionManager = (function () {
       }
 
       if (elemType === 4 && !content) {
-        content = thisLayer?.('ADBE Root Vectors Group')
+        content = thisLayer('ADBE Root Vectors Group')
       }
       if (!effect) {
-        effect = thisLayer?.(4)
+        effect = thisLayer(4)
       }
       hasParent = Boolean(elem.hierarchy?.length)
       if (hasParent && !parent) {
         parent = elem.hierarchy[0].layerInterface
       }
       time = this.comp.renderedFrame / this.comp.globalData.frameRate
-      if (shouldHaveRandom) {
+      if (_needsRandom) {
         seedRandom(randSeed + time)
       }
-      if (shouldHaveVelocity) {
+      if (needsVelocity) {
         velocity = velocityAtTime(time)
       }
       expression_function()

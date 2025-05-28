@@ -342,9 +342,9 @@ export interface ThreeDElements {
   type: string
 }
 
-export interface EFXElement {p: BaseProperty}
+export interface EFXElement { p: BaseProperty }
 
-export interface KeyframesMetadata {__fnct?: (val: number) => number}
+export interface KeyframesMetadata { __fnct?: (val: number) => number }
 
 interface BaseRendererConfig {
   className?: string
@@ -441,7 +441,7 @@ export interface AnimationConfiguration<
   wrapper?: HTMLElement
 }
 
-export interface Stop {s: number[]}
+export interface Stop { s: number[] }
 export interface GradientColor {
   k: {
     a: 1 | 0
@@ -657,11 +657,11 @@ export interface AnimationSettings {
   speed?: number
 }
 
-interface Animation extends AnimationSettings {id: string}
+interface Animation extends AnimationSettings { id: string }
 
 export type ValueOf<T> = T[keyof T]
 
-export interface AnimationConfig extends Animation {url: string}
+export interface AnimationConfig extends Animation { url: string }
 
 export interface LottieManifest {
   animations: Animation[]
@@ -1305,5 +1305,5 @@ export interface IntersectData {
 }
 
 declare global {
-  interface Document {_isProxy?: boolean}
+  interface Document { _isProxy?: boolean }
 }

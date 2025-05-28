@@ -89,11 +89,14 @@ const config: ConfigArray = tseslint.config(
         {
           format: ['PascalCase'],
           leadingUnderscore: 'allowSingleOrDouble',
-          prefix: ['is',
+          prefix: [
+            'is',
             'are',
             'has',
             'should',
-            'can'],
+            'can',
+            'needs'
+          ],
           selector: 'variable',
           trailingUnderscore: 'forbid',
           types: ['boolean'],

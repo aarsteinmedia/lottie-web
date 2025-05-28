@@ -404,24 +404,24 @@ class CheckColors extends CheckProperties {
 
         for (let j = 0; j < jLen; j++) {
           if ((shapes[i].c?.k as ShapeColorValue[] | undefined)?.[j].s) {
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].s[0] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].s[1] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].s[2] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].s[3] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].s[0] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].s[1] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].s[2] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].s[3] /= 255
           }
           if ((shapes[i].c?.k as ShapeColorValue[] | undefined)?.[j].e) {
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].e[0] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].e[1] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].e[2] /= 255
-            ;(shapes[i].c?.k as ShapeColorValue[])[j].e[3] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].e[0] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].e[1] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].e[2] /= 255
+            ; (shapes[i].c?.k as ShapeColorValue[])[j].e[3] /= 255
           }
         }
         continue
       }
-      ;(shapes[i].c?.k as number[])[0] /= 255
-      ;(shapes[i].c?.k as number[])[1] /= 255
-      ;(shapes[i].c?.k as number[])[2] /= 255
-      ;(shapes[i].c?.k as number[])[3] /= 255
+      ; (shapes[i].c?.k as number[])[0] /= 255
+      ; (shapes[i].c?.k as number[])[1] /= 255
+      ; (shapes[i].c?.k as number[])[2] /= 255
+      ; (shapes[i].c?.k as number[])[3] /= 255
     }
   }
 }
@@ -491,7 +491,7 @@ class CheckShapes extends CheckProperties {
         continue
       }
       if ((arr[i].ks?.k as ShapePath | undefined)?.i) {
-        ;(arr[i].ks?.k as ShapePath).c = Boolean(arr[i].closed)
+        ; (arr[i].ks?.k as ShapePath).c = Boolean(arr[i].closed)
         continue
       }
       const { length: jLen } = (arr[i].ks?.k as ShapePath[] | undefined) ?? []
@@ -499,11 +499,11 @@ class CheckShapes extends CheckProperties {
       for (let j = 0; j < jLen; j++) {
         if ((arr[i].ks?.k as ShapePath[])[j]?.s) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          ;(arr[i].ks?.k as ShapePath[])[j].s![0].c = Boolean(arr[i].closed)
+          ; (arr[i].ks?.k as ShapePath[])[j].s![0].c = Boolean(arr[i].closed)
         }
         if ((arr[i].ks?.k as ShapePath[])[j]?.e) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          ;(arr[i].ks?.k as ShapePath[])[j].e![0].c = Boolean(arr[i].closed)
+          ; (arr[i].ks?.k as ShapePath[])[j].e![0].c = Boolean(arr[i].closed)
         }
       }
     }

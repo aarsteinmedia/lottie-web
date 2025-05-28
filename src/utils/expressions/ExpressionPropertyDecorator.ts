@@ -1,13 +1,13 @@
 import { extendPrototype } from '@/utils'
 import { initialDefaultFrame } from '@/utils/getterSetter'
-import Matrix from '@/utils/Matrix'
 
 import bez from '../Bezier'
 import {
   createSizedArray,
   createTypedArray,
 } from '../helpers/arrays'
-import { clone } from '../pooling/ShapePool'
+import Matrix from '../Matrix'
+import shapePool from '../pooling/ShapePool'
 import PropertyFactory from '../PropertyFactory'
 import ShapePropertyFactory from '../shapes/ShapeProperty'
 import TransformPropertyFactory from '../TransformProperty'
@@ -395,7 +395,7 @@ function addPropertyDecorator() {
       this._cachingAtTime = {
         lastIndex: 0,
         lastTime: initialDefaultFrame,
-        shapeValue: clone(this.pv),
+        shapeValue: shapePool.clone(this.pv),
       }
     }
 

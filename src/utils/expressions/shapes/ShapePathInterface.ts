@@ -1,54 +1,47 @@
-import propertyGroupFactory from '../PropertyGroupFactory'
-import PropertyInterface from '../PropertyInterface'
+import propertyGroupFactory from '../PropertyGroupFactory';
+import PropertyInterface from '../PropertyInterface';
 
 const ShapePathInterface = (
 
   function () {
-    return function pathInterfaceFactory(
-      shape, view, propertyGroup
-    ) {
-      const prop = view.sh
+    return function pathInterfaceFactory(shape, view, propertyGroup) {
+      var prop = view.sh;
 
       function interfaceFunction(val) {
         if (val === 'Shape' || val === 'shape' || val === 'Path' || val === 'path' || val === 'ADBE Vector Shape' || val === 2) {
-          return interfaceFunction.path
+          return interfaceFunction.path;
         }
-
-        return null
+        return null;
       }
 
-      const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
-
-      prop.setGroupProperty(PropertyInterface('Path', _propertyGroup))
+      var _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup);
+      prop.setGroupProperty(PropertyInterface('Path', _propertyGroup));
       Object.defineProperties(interfaceFunction, {
+        path: {
+          get: function () {
+            if (prop.k) {
+              prop.getValue();
+            }
+            return prop;
+          },
+        },
+        shape: {
+          get: function () {
+            if (prop.k) {
+              prop.getValue();
+            }
+            return prop;
+          },
+        },
         _name: { value: shape.nm },
         ix: { value: shape.ix },
-        mn: { value: shape.mn },
-        path: {
-          get () {
-            if (prop.k) {
-              prop.getValue()
-            }
-
-            return prop
-          },
-        },
-        propertyGroup: { value: propertyGroup },
         propertyIndex: { value: shape.ix },
-        shape: {
-          get () {
-            if (prop.k) {
-              prop.getValue()
-            }
-
-            return prop
-          },
-        },
-      })
-
-      return interfaceFunction
-    }
+        mn: { value: shape.mn },
+        propertyGroup: { value: propertyGroup },
+      });
+      return interfaceFunction;
+    };
   }()
-)
+);
 
-export default ShapePathInterface
+export default ShapePathInterface;
