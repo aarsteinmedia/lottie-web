@@ -53,3 +53,10 @@ function _release(shapePath: ShapePath) {
   shapePath._length = 0
   shapePath.c = false
 }
+
+const ShapePool = {
+  clone,
+  newElement
+}
+
+export default ShapePool
