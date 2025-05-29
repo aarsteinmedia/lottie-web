@@ -63,10 +63,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   lock?: boolean
   mult?: number
   offsetTime = 0
-  propertyGroup?: LayerExpressionInterface
+  propertyGroup?: ReturnType<typeof LayerExpressionInterface>
   pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape
+  textIndex?: number
+  textTotal?: number
   v?: string | number | number[] | Matrix | DocumentData
   value?: number | number[]
   vel?: number | number[]

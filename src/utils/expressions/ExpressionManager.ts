@@ -1,27 +1,28 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 
 import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
 
 import seedrandom from '@/3rd_party/seedrandom'
 import { degToRads } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import { BMMath } from '@/utils/common'
-import { PropType } from '@/utils/enums'
+import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
-
-import type { KeyframedValueProperty } from '../Properties'
 
 const ExpressionManager = (function () {
 
 
-  const ob = {}
-  const Math = BMMath
-  const window = null
-  const document = null
-  const XMLHttpRequest = null
-  const fetch = null
-  const frames = null
+  const ob = {},
+    Math = BMMath,
+    window = null,
+    document = null,
+    XMLHttpRequest = null,
+    fetch = null,
+    frames = null
   let _lottieGlobal = {}
 
   seedrandom(BMMath)
@@ -30,37 +31,36 @@ const ExpressionManager = (function () {
     _lottieGlobal = {}
   }
 
-  function $bm_isInstanceOfArray(arr) {
+  function $bm_isInstanceOfArray(arr: unknown[]) {
     return arr.constructor === Array || arr.constructor === Float32Array
   }
 
-  function isNumerable(tOfV, v) {
+  function isNumerable(tOfV: string, v: unknown) {
     return tOfV === 'number' || v instanceof Number || tOfV === 'boolean' || tOfV === 'string'
   }
 
-  function $bm_neg(a) {
+  function $bm_neg(a: unknown) {
     const tOfA = typeof a
 
     if (tOfA === 'number' || a instanceof Number || tOfA === 'boolean') {
-      return -a
+      return -(a as number)
     }
-    if ($bm_isInstanceOfArray(a)) {
-      let i
+    if ($bm_isInstanceOfArray(a as number[])) {
 
-      const lenA = a.length
-      const retArr = []
+      const { length: lenA } = a as number[],
+        retArr: number[] = []
 
-      for (i = 0; i < lenA; i += 1) {
-        retArr[i] = -a[i]
+      for (let i = 0; i < lenA; i++) {
+        retArr[i] = -(a as number[])[i]
       }
 
       return retArr
     }
-    if (a.propType) {
-      return a.v
+    if ((a as ValueProperty).propType) {
+      return (a as ValueProperty).v
     }
 
-    return -a
+    return -(a as number)
   }
 
   const easeInBez = BezierFactory.getBezierEasing(
@@ -73,7 +73,7 @@ const ExpressionManager = (function () {
     0.33, 0, 0.667, 1, 'easeInOut'
   ).get
 
-  function sum(a, b) {
+  function sum(a: number, b: number) {
     const tOfA = typeof a
     const tOfB = typeof b
 
@@ -95,9 +95,9 @@ const ExpressionManager = (function () {
     if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
       let i = 0
 
-      const lenA = a.length
-      const lenB = b.length
-      const retArr = []
+      const { length: lenA } = a,
+        { length: lenB } = b,
+        retArr = []
 
       while (i < lenA || i < lenB) {
         if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
@@ -510,6 +510,8 @@ const ExpressionManager = (function () {
         ip, nm, op, sh, sw, ty: elemType
       } = elem.data
 
+    console.log(val)
+
     let transform,
       $bm_transform,
       content,
@@ -532,34 +534,57 @@ const ExpressionManager = (function () {
       width = sw ?? 0,
       height = sh ?? 0,
       name = nm
-    let loopIn,
-      loop_in,
-      loopOut,
-      loop_out,
-      smooth,
-      toWorld,
-      fromWorld,
-      fromComp,
-      toComp,
-      fromCompToSurface,
-      position,
-      rotation,
-      anchorPoint,
-      scale,
-      thisLayer,
-      thisComp,
-      mask,
-      valueAtTime,
-      velocityAtTime,
+    let loopIn: (type: string, duration: number, flag?: boolean) => void,
+      loop_in: (type: string, duration: number, flag?: boolean) => void,
+      loopOut: (type: string, duration: number, flag?: boolean) => void,
+      loop_out: (type: string, duration: number, flag?: boolean) => void,
+      smooth: (type: string, duration: number, flag?: boolean) => void,
+      toWorld: (type: string, duration: number, flag?: boolean) => void,
+      fromWorld: (type: string, duration: number, flag?: boolean) => void,
+      fromComp: (type: string, duration: number, flag?: boolean) => void,
+      toComp: (type: string, duration: number, flag?: boolean) => void,
+      fromCompToSurface: (type: string, duration: number, flag?: boolean) => void,
+      position: (type: string, duration: number, flag?: boolean) => void,
+      rotation: (type: string, duration: number, flag?: boolean) => void,
+      anchorPoint: (type: string, duration: number, flag?: boolean) => void,
+      scale: (type: string, duration: number, flag?: boolean) => void,
+      thisLayer: (type: string, duration: number, flag?: boolean) => void,
+      thisComp: (type: string, duration: number, flag?: boolean) => void,
+      mask: (type: string, duration: number, flag?: boolean) => void,
+      valueAtTime: (type: string, duration: number, flag?: boolean) => void,
+      velocityAtTime: number,
 
-      scoped_bm_rt
+      scoped_bm_rt = noOp
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-    const expression_function = eval(`[function _expression_function(){${  val  };scoped_bm_rt=$bm_rt}]`)[0] // eslint-disable-line no-eval
+
+
+    // eslint-disable-next-line no-eval
+    const expression_function = eval(/* Javascript */ `[
+      function _expression_function() {
+        ${val};
+        scoped_bm_rt = $bm_rt
+      // @ts-expect-error
+      }]`)[0]
+
+
+    // const expression_function = new Function(
+    //   'scoped_bm_rt',
+    //   'transform',
+    //   'loopOut',
+    //   /* Javascript */ `
+    //   (() => {
+    //     ${val};
+    //     scoped_bm_rt = $bm_rt;
+    //   })()
+    //   `
+    // )
+
     const numKeys = property.kf ? data.k.length : 0
 
     const active = !this.data || this.data.hd !== true
 
-    const wiggle = function wiggle(freq, amp) {
+    const wiggle = function wiggle(freqFromProps: number, amp) {
+      let freq = freqFromProps
       let iWiggle
 
       let j
@@ -570,7 +595,6 @@ const ExpressionManager = (function () {
       const iterations = Math.floor(time * freq)
 
       iWiggle = 0
-      j = 0
       while (iWiggle < iterations) {
         // var rnd = BMMath.random();
         for (j = 0; j < lenWiggle; j += 1) {
@@ -582,7 +606,7 @@ const ExpressionManager = (function () {
       // var rnd2 = BMMath.random();
       const periods = time * freq
       const perc = periods - Math.floor(periods)
-      const arr = createTypedArray('float32', lenWiggle)
+      const arr = createTypedArray(ArrayType.Float32, lenWiggle)
 
       if (lenWiggle > 1) {
         for (j = 0; j < lenWiggle; j += 1) {
@@ -611,14 +635,14 @@ const ExpressionManager = (function () {
       smooth = thisProperty.smooth.bind(thisProperty)
     }
 
-    function loopInDuration(type, duration) {
-      return loopIn(
+    function loopInDuration(type: string, duration: number) {
+      loopIn(
         type, duration, true
       )
     }
 
-    function loopOutDuration(type, duration) {
-      return loopOut(
+    function loopOutDuration(type: string, duration: number) {
+      loopOut(
         type, duration, true
       )
     }
@@ -829,28 +853,28 @@ const ExpressionManager = (function () {
       value = valueAtTime(time)
     }
 
-    let time
+    let time: number
 
     let velocity
-    let value
+    let value: unknown
     let text
     let textIndex
     let textTotal
     let selectorValue
     const index = elem.data.ind
     let hasParent = Boolean(elem.hierarchy?.length)
-    let parent
+    let parent: undefined | ReturnType<typeof LayerExpressionInterface>
 
     var randSeed = Math.floor(Math.random() * 1000000)
     const { globalData } = elem
 
-    function executeExpression(_value) {
+    function executeExpression(this: KeyframedValueProperty, _value: number) {
       // globalData.pushExpression();
       value = _value
-      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== 'textSelector') {
+      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
         return value
       }
-      if (this.propType === 'textSelector') {
+      if (this.propType === PropType.TextSelector) {
         textIndex = this.textIndex
         textTotal = this.textTotal
         selectorValue = this.selectorValue
@@ -894,7 +918,11 @@ const ExpressionManager = (function () {
       if (needsVelocity) {
         velocity = velocityAtTime(time)
       }
-      expression_function()
+      expression_function(
+        // scoped_bm_rt,
+        // transform,
+        // loopOut,
+      )
       this.frameExpressionId = elem.globalData.frameId
 
       // TODO: Check if it's possible to return on ShapeInterface the .v value
@@ -906,7 +934,8 @@ const ExpressionManager = (function () {
       return scoped_bm_rt
     }
     // Bundlers will see these as dead code and unless we reference them
-    executeExpression.__preventDeadCodeRemoval = [$bm_transform,
+    executeExpression.__preventDeadCodeRemoval = [
+      $bm_transform,
       anchorPoint,
       time,
       velocity,
