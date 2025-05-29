@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 
-import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
+import type {
+  ElementInterfaceIntersect, ExpressionProperty, Vector2, Vector3
+} from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import seedrandom from '@/3rd_party/seedrandom'
 import { degToRads } from '@/utils'
@@ -13,553 +16,215 @@ import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
 
-const ExpressionManager = (function () {
+const Math = BMMath as Math,
+  window = null,
+  document = null,
+  XMLHttpRequest = null,
+  fetch = null,
+  frames = null
+let _lottieGlobal = {}
+
+seedrandom(BMMath)
 
 
-  const ob = {},
-    Math = BMMath,
-    window = null,
-    document = null,
-    XMLHttpRequest = null,
-    fetch = null,
-    frames = null
-  let _lottieGlobal = {}
+const $bm_div = div,
 
-  seedrandom(BMMath)
+  $bm_mod = mod,
 
-  function resetFrame() {
-    _lottieGlobal = {}
-  }
+  $bm_mul = mul,
 
-  function $bm_isInstanceOfArray(arr: unknown[]) {
-    return arr.constructor === Array || arr.constructor === Float32Array
-  }
+  $bm_sub = sub,
 
-  function isNumerable(tOfV: string, v: unknown) {
-    return tOfV === 'number' || v instanceof Number || tOfV === 'boolean' || tOfV === 'string'
-  }
+  $bm_sum = sum,
+  degrees_to_radians = radiansToDegrees,
+  radians_to_degrees = radiansToDegrees,
 
-  function $bm_neg(a: unknown) {
-    const tOfA = typeof a
+  helperLengthArray = [0,
+    0,
+    0,
+    0,
+    0,
+    0],
+  add = sum,
 
-    if (tOfA === 'number' || a instanceof Number || tOfA === 'boolean') {
-      return -(a as number)
-    }
-    if ($bm_isInstanceOfArray(a as number[])) {
-
-      const { length: lenA } = a as number[],
-        retArr: number[] = []
-
-      for (let i = 0; i < lenA; i++) {
-        retArr[i] = -(a as number[])[i]
-      }
-
-      return retArr
-    }
-    if ((a as ValueProperty).propType) {
-      return (a as ValueProperty).v
-    }
-
-    return -(a as number)
-  }
-
-  const easeInBez = BezierFactory.getBezierEasing(
+  easeInBez = BezierFactory.getBezierEasing(
     0.333, 0, 0.833, 0.833, 'easeIn'
-  ).get
-  const easeOutBez = BezierFactory.getBezierEasing(
+  ).get,
+
+  easeInOutBez = BezierFactory.getBezierEasing(
+    0.33, 0, 0.667, 1, 'easeInOut'
+  ).get,
+
+  easeOutBez = BezierFactory.getBezierEasing(
     0.167, 0.167, 0.667, 1, 'easeOut'
   ).get
-  const easeInOutBez = BezierFactory.getBezierEasing(
-    0.33, 0, 0.667, 1, 'easeInOut'
-  ).get
 
-  function sum(a: number, b: number) {
-    const tOfA = typeof a
-    const tOfB = typeof b
+function $bm_neg(a: unknown) {
+  const tOfA = typeof a
 
-    if (isNumerable(tOfA, a) && isNumerable(tOfB, b) || tOfA === 'string' || tOfB === 'string') {
-      return a + b
-    }
-    if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
-      a = [...a]
-      a[0] += b
-
-      return a
-    }
-    if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
-      b = [...b]
-      b[0] = a + b[0]
-
-      return b
-    }
-    if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
-      let i = 0
-
-      const { length: lenA } = a,
-        { length: lenB } = b,
-        retArr = []
-
-      while (i < lenA || i < lenB) {
-        if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
-          retArr[i] = a[i] + b[i]
-        } else {
-          retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
-        }
-        i += 1
-      }
-
-      return retArr
-    }
-
-    return 0
+  if (tOfA === 'number' || a instanceof Number || tOfA === 'boolean') {
+    return -(a as number)
   }
-  const add = sum
+  if ($bm_isInstanceOfArray(a as number[])) {
 
-  function sub(a, b) {
-    const tOfA = typeof a
-    const tOfB = typeof b
+    const { length: lenA } = a as number[],
+      retArr: number[] = []
 
-    if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
-      if (tOfA === 'string') {
-        a = parseInt(a, 10)
-      }
-      if (tOfB === 'string') {
-        b = parseInt(b, 10)
-      }
-
-      return a - b
-    }
-    if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
-      a = [...a]
-      a[0] -= b
-
-      return a
-    }
-    if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
-      b = [...b]
-      b[0] = a - b[0]
-
-      return b
-    }
-    if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
-      let i = 0
-
-      const lenA = a.length
-      const lenB = b.length
-      const retArr = []
-
-      while (i < lenA || i < lenB) {
-        if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
-          retArr[i] = a[i] - b[i]
-        } else {
-          retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
-        }
-        i += 1
-      }
-
-      return retArr
+    for (let i = 0; i < lenA; i++) {
+      retArr[i] = -(a as number[])[i]
     }
 
-    return 0
+    return retArr
+  }
+  if ((a as ValueProperty).propType) {
+    return (a as ValueProperty).v
   }
 
-  function mul(a, b) {
-    const tOfA = typeof a
-    const tOfB = typeof b
-    let arr
+  return -(a as number)
+}
 
-    if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
-      return a * b
-    }
+function clamp(
+  num: number, min: number, max: number
+) {
+  if (min > max) {
+    const mm = max
 
-    let i
-
-    let len
-
-    if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
-      len = a.length
-      arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
-        arr[i] = a[i] * b
-      }
-
-      return arr
-    }
-    if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
-      len = b.length
-      arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
-        arr[i] = a * b[i]
-      }
-
-      return arr
-    }
-
-    return 0
+    max = min
+    min = mm
   }
 
-  function div(a, b) {
-    const tOfA = typeof a
-    const tOfB = typeof b
-    let arr
+  return Math.min(Math.max(num, min), max)
+}
 
-    if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
-      return a / b
-    }
-    let i
+function createPath(
+  points: number[], inTangents: Vector2, outTangents: Vector2, closed?: boolean
+) {
 
-    let len
+  const { length } = points
+  const path = shapePool.newElement<ShapePath>()
 
-    if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
-      len = a.length
-      arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
-        arr[i] = a[i] / b
-      }
+  path.setPathData(Boolean(closed), length)
+  const arrPlaceholder = [0, 0]
+  let inVertexPoint
+  let outVertexPoint
 
-      return arr
-    }
-    if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
-      len = b.length
-      arr = createTypedArray('float32', len)
-      for (i = 0; i < len; i += 1) {
-        arr[i] = a / b[i]
-      }
-
-      return arr
-    }
-
-    return 0
-  }
-  function mod(a, b) {
-    if (typeof a === 'string') {
-      a = parseInt(a, 10)
-    }
-    if (typeof b === 'string') {
-      b = parseInt(b, 10)
-    }
-
-    return a % b
-  }
-  const $bm_sum = sum
-  const $bm_sub = sub
-  const $bm_mul = mul
-  const $bm_div = div
-  const $bm_mod = mod
-
-  function clamp(
-    num, min, max
-  ) {
-    if (min > max) {
-      const mm = max
-
-      max = min
-      min = mm
-    }
-
-    return Math.min(Math.max(num, min), max)
-  }
-
-  function radiansToDegrees(val) {
-    return val / degToRads
-  }
-  const radians_to_degrees = radiansToDegrees
-
-  function degreesToRadians(val) {
-    return val * degToRads
-  }
-  const degrees_to_radians = radiansToDegrees
-
-  const helperLengthArray = [0,
-    0,
-    0,
-    0,
-    0,
-    0]
-
-  function length(arr1, arr2) {
-    if (typeof arr1 === 'number' || arr1 instanceof Number) {
-      arr2 = arr2 || 0
-
-      return Math.abs(arr1 - arr2)
-    }
-    if (!arr2) {
-      arr2 = helperLengthArray
-    }
-    let i
-
-    const len = Math.min(arr1.length, arr2.length)
-    let addedLength = 0
-
-    for (i = 0; i < len; i += 1) {
-      addedLength += Math.pow(arr2[i] - arr1[i], 2)
-    }
-
-    return Math.sqrt(addedLength)
-  }
-
-  function normalize(vec) {
-    return div(vec, length(vec))
-  }
-
-  function rgbToHsl(val) {
-    const r = val[0]; const g = val[1]; const b = val[2]
-    const max = Math.max(
-      r, g, b
+  for (let i = 0; i < length; i++) {
+    inVertexPoint = inTangents?.[i] ? inTangents[i] : arrPlaceholder
+    outVertexPoint = outTangents?.[i] ? outTangents[i] : arrPlaceholder
+    path.setTripleAt(
+      points[i][0], points[i][1], outVertexPoint[0] + points[i][0], outVertexPoint[1] + points[i][1], inVertexPoint[0] + points[i][0], inVertexPoint[1] + points[i][1], i, true
     )
-    const min = Math.min(
-      r, g, b
+  }
+
+  return path
+}
+
+function hslToRgb(val: number[]) {
+  const h = val[0]
+  const s = val[1]
+  const l = val[2]
+
+  let r
+  let g
+  let b
+
+  if (s === 0) {
+    r = l // achromatic
+    b = l // achromatic
+    g = l // achromatic
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+    const p = 2 * l - q
+
+    r = hue2rgb(
+      p, q, h + 1 / 3
     )
-    let h
-
-    let s
-    const l = (max + min) / 2
-
-    if (max === min) {
-      h = 0 // achromatic
-      s = 0 // achromatic
-    } else {
-      const d = max - min
-
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-      switch (max) {
-        case r: { h = (g - b) / d + (g < b ? 6 : 0); break
-        }
-        case g: { h = (b - r) / d + 2; break
-        }
-        case b: { h = (r - g) / d + 4; break
-        }
-        default: { break
-        }
-      }
-      h /= 6
-    }
-
-    return [h,
-      s,
-      l,
-      val[3]]
+    g = hue2rgb(
+      p, q, h
+    )
+    b = hue2rgb(
+      p, q, h - 1 / 3
+    )
   }
 
-  function hue2rgb(
-    p, q, t
-  ) {
-    if (t < 0) {t += 1}
-    if (t > 1) {t -= 1}
-    if (t < 1 / 6) {return p + (q - p) * 6 * t}
-    if (t < 1 / 2) {return q}
-    if (t < 2 / 3) {return p + (q - p) * (2 / 3 - t) * 6}
+  return [r,
+    g,
+    b,
+    val[3]]
+}
 
-    return p
-  }
-
-  function hslToRgb(val) {
-    const h = val[0]
-    const s = val[1]
-    const l = val[2]
-
-    let r
-    let g
-    let b
-
-    if (s === 0) {
-      r = l // achromatic
-      b = l // achromatic
-      g = l // achromatic
-    } else {
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s
-      const p = 2 * l - q
-
-      r = hue2rgb(
-        p, q, h + 1 / 3
-      )
-      g = hue2rgb(
-        p, q, h
-      )
-      b = hue2rgb(
-        p, q, h - 1 / 3
-      )
-    }
-
-    return [r,
-      g,
-      b,
-      val[3]]
-  }
-
-  function linear(
-    t, tMin, tMax, value1, value2
-  ) {
-    if (value1 === undefined || value2 === undefined) {
-      value1 = tMin
-      value2 = tMax
-      tMin = 0
-      tMax = 1
-    }
-    if (tMax < tMin) {
-      const _tMin = tMax
-
-      tMax = tMin
-      tMin = _tMin
-    }
-    if (t <= tMin) {
-      return value1
-    } if (t >= tMax) {
-      return value2
-    }
-    const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
-
-    if (value1.length === 0) {
-      return value1 + (value2 - value1) * perc
-    }
-    let i
-
-    const len = value1.length
-    const arr = createTypedArray('float32', len)
-
-    for (i = 0; i < len; i += 1) {
-      arr[i] = value1[i] + (value2[i] - value1[i]) * perc
-    }
-
-    return arr
-  }
-  function random(min, max) {
-    if (max === undefined) {
-      if (min === undefined) {
-        min = 0
-        max = 1
-      } else {
-        max = min
-        min = undefined
-      }
-    }
-    if (max.length > 0) {
-      let i
-
-      const len = max.length
-
-      if (!min) {
-        min = createTypedArray('float32', len)
-      }
-      const arr = createTypedArray('float32', len)
-      const rnd = BMMath.random()
-
-      for (i = 0; i < len; i += 1) {
-        arr[i] = min[i] + rnd * (max[i] - min[i])
-      }
-
-      return arr
-    }
-    if (min === undefined) {
-      min = 0
-    }
-    const rndm = BMMath.random()
-
-    return min + rndm * (max - min)
-  }
-
-  function createPath(
-    points, inTangents, outTangents, closed
-  ) {
-    let i
-
-    const len = points.length
-    const path = shapePool.newElement()
-
-    path.setPathData(Boolean(closed), len)
-    const arrPlaceholder = [0, 0]
-    let inVertexPoint
-    let outVertexPoint
-
-    for (i = 0; i < len; i += 1) {
-      inVertexPoint = inTangents?.[i] ? inTangents[i] : arrPlaceholder
-      outVertexPoint = outTangents?.[i] ? outTangents[i] : arrPlaceholder
-      path.setTripleAt(
-        points[i][0], points[i][1], outVertexPoint[0] + points[i][0], outVertexPoint[1] + points[i][1], inVertexPoint[0] + points[i][0], inVertexPoint[1] + points[i][1], i, true
-      )
-    }
-
-    return path
-  }
-
-  function noOp(_value?: unknown) {
-    return _value
-  }
-
-  function initiateExpression(
-    this: KeyframedValueProperty,
-    elem: ElementInterfaceIntersect,
-    data: ExpressionProperty,
-    property: KeyframedValueProperty
-  ) {
-    /**
+function initiateExpression(
+  this: KeyframedValueProperty,
+  elem: ElementInterfaceIntersect,
+  data: ExpressionProperty,
+  property: KeyframedValueProperty
+) {
+  /**
      * Bail out if we don't want expressions.
      */
-    if (!elem.globalData.renderConfig?.runExpressions) {
-      return noOp
+  if (!elem.globalData.renderConfig?.runExpressions) {
+    return noOp
+  }
+
+  if (!elem.comp?.globalData) {
+    throw new Error('CompElement is not implemented')
+  }
+
+  const { x: val } = data,
+    needsVelocity = /velocity\b/.test(val),
+    _needsRandom = val.includes('random'),
+    {
+      ip, nm, op, sh, sw, ty: elemType
+    } = elem.data
+
+  let transform,
+    $bm_transform,
+    content,
+    effect
+  const thisProperty = property
+
+  thisProperty._name = nm
+  thisProperty.valueAtTime = thisProperty.getValueAtTime
+  Object.defineProperty(
+    thisProperty, 'value', {
+      get () {
+        return thisProperty.v
+      },
     }
+  )
+  elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
+  elem.comp.displayStartTime = 0
+  const inPoint = ip / elem.comp.globalData.frameRate,
+    outPoint = op / elem.comp.globalData.frameRate,
+    width = sw ?? 0,
+    height = sh ?? 0,
+    name = nm
+  let loopIn: (type: string, duration: number, flag?: boolean) => void,
+    loop_in: (type: string, duration: number, flag?: boolean) => void,
+    loopOut: (type: string, duration: number, flag?: boolean) => void,
+    loop_out: (type: string, duration: number, flag?: boolean) => void,
+    smooth: (type: string, duration: number, flag?: boolean) => void,
+    toWorld: (type: string, duration: number, flag?: boolean) => void,
+    fromWorld: (type: string, duration: number, flag?: boolean) => void,
+    fromComp: (type: string, duration: number, flag?: boolean) => void,
+    toComp: (type: string, duration: number, flag?: boolean) => void,
+    fromCompToSurface: (type: string, duration: number, flag?: boolean) => void,
+    position: (type: string, duration: number, flag?: boolean) => void,
+    rotation: (type: string, duration: number, flag?: boolean) => void,
+    anchorPoint: (type: string, duration: number, flag?: boolean) => void,
+    scale: (type: string, duration: number, flag?: boolean) => void,
+    thisLayer: (type: string, duration: number, flag?: boolean) => void,
+    thisComp: (type: string, duration: number, flag?: boolean) => void,
+    mask: (type: string, duration: number, flag?: boolean) => void,
+    valueAtTime: (type: string, duration: number, flag?: boolean) => void,
+    velocityAtTime: number,
 
-    if (!elem.comp?.globalData) {
-      throw new Error('CompElement is not implemented')
-    }
-
-    const { x: val } = data,
-      needsVelocity = /velocity\b/.test(val),
-      _needsRandom = val.includes('random'),
-      {
-        ip, nm, op, sh, sw, ty: elemType
-      } = elem.data
-
-    console.log(val)
-
-    let transform,
-      $bm_transform,
-      content,
-      effect
-    const thisProperty = property
-
-    thisProperty._name = nm
-    thisProperty.valueAtTime = thisProperty.getValueAtTime
-    Object.defineProperty(
-      thisProperty, 'value', {
-        get () {
-          return thisProperty.v
-        },
-      }
-    )
-    elem.comp.frameDuration = 1 / elem.comp.globalData.frameRate
-    elem.comp.displayStartTime = 0
-    const inPoint = ip / elem.comp.globalData.frameRate,
-      outPoint = op / elem.comp.globalData.frameRate,
-      width = sw ?? 0,
-      height = sh ?? 0,
-      name = nm
-    let loopIn: (type: string, duration: number, flag?: boolean) => void,
-      loop_in: (type: string, duration: number, flag?: boolean) => void,
-      loopOut: (type: string, duration: number, flag?: boolean) => void,
-      loop_out: (type: string, duration: number, flag?: boolean) => void,
-      smooth: (type: string, duration: number, flag?: boolean) => void,
-      toWorld: (type: string, duration: number, flag?: boolean) => void,
-      fromWorld: (type: string, duration: number, flag?: boolean) => void,
-      fromComp: (type: string, duration: number, flag?: boolean) => void,
-      toComp: (type: string, duration: number, flag?: boolean) => void,
-      fromCompToSurface: (type: string, duration: number, flag?: boolean) => void,
-      position: (type: string, duration: number, flag?: boolean) => void,
-      rotation: (type: string, duration: number, flag?: boolean) => void,
-      anchorPoint: (type: string, duration: number, flag?: boolean) => void,
-      scale: (type: string, duration: number, flag?: boolean) => void,
-      thisLayer: (type: string, duration: number, flag?: boolean) => void,
-      thisComp: (type: string, duration: number, flag?: boolean) => void,
-      mask: (type: string, duration: number, flag?: boolean) => void,
-      valueAtTime: (type: string, duration: number, flag?: boolean) => void,
-      velocityAtTime: number,
-
-      scoped_bm_rt = noOp
+    scoped_bm_rt = noOp
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
 
 
-    // eslint-disable-next-line no-eval
-    const expression_function = eval(/* Javascript */ `[
+  // eslint-disable-next-line no-eval
+  const expression_function = eval(/* Javascript */ `[
       function _expression_function() {
         ${val};
         scoped_bm_rt = $bm_rt
@@ -567,425 +232,767 @@ const ExpressionManager = (function () {
       }]`)[0]
 
 
-    // const expression_function = new Function(
-    //   'scoped_bm_rt',
-    //   'transform',
-    //   'loopOut',
-    //   /* Javascript */ `
-    //   (() => {
-    //     ${val};
-    //     scoped_bm_rt = $bm_rt;
-    //   })()
-    //   `
-    // )
+  // const expression_function = new Function(
+  //   'scoped_bm_rt',
+  //   'transform',
+  //   'loopOut',
+  //   /* Javascript */ `
+  //   (() => {
+  //     ${val};
+  //     scoped_bm_rt = $bm_rt;
+  //   })()
+  //   `
+  // )
 
-    const numKeys = property.kf ? data.k.length : 0
+  const numKeys = property.kf ? data.k.length : 0
 
-    const active = !this.data || this.data.hd !== true
+  const active = !this.data || this.data.hd !== true
 
-    const wiggle = function wiggle(freqFromProps: number, amp) {
-      let freq = freqFromProps
-      let iWiggle
+  const wiggle = function wiggle(freqFromProps: number, amp) {
+    let freq = freqFromProps
+    let iWiggle
 
-      let j
-      const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
-      const addedAmps = createTypedArray('float32', lenWiggle)
+    let j
+    const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
+    const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
 
-      freq = 5
-      const iterations = Math.floor(time * freq)
+    freq = 5
+    const iterations = Math.floor(time * freq)
 
-      iWiggle = 0
-      while (iWiggle < iterations) {
-        // var rnd = BMMath.random();
-        for (j = 0; j < lenWiggle; j += 1) {
-          addedAmps[j] += -amp + amp * 2 * BMMath.random()
-          // addedAmps[j] += -amp + amp*2*rnd;
-        }
-        iWiggle += 1
+    iWiggle = 0
+    while (iWiggle < iterations) {
+      // var rnd = BMMath.random();
+      for (j = 0; j < lenWiggle; j += 1) {
+        addedAmps[j] += -amp + amp * 2 * BMMath.random()
+        // addedAmps[j] += -amp + amp*2*rnd;
       }
-      // var rnd2 = BMMath.random();
-      const periods = time * freq
-      const perc = periods - Math.floor(periods)
-      const arr = createTypedArray(ArrayType.Float32, lenWiggle)
+      iWiggle += 1
+    }
+    // var rnd2 = BMMath.random();
+    const periods = time * freq
+    const perc = periods - Math.floor(periods)
+    const arr = createTypedArray(ArrayType.Float32, lenWiggle)
 
-      if (lenWiggle > 1) {
-        for (j = 0; j < lenWiggle; j += 1) {
-          arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
-          // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
-          // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
-        }
-
-        return arr
+    if (lenWiggle > 1) {
+      for (j = 0; j < lenWiggle; j += 1) {
+        arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
+        // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
+        // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
       }
 
-      return this.pv + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
-    }.bind(this)
-
-    if (thisProperty.loopIn) {
-      loopIn = thisProperty.loopIn.bind(thisProperty)
-      loop_in = loopIn
+      return arr
     }
 
-    if (thisProperty.loopOut) {
-      loopOut = thisProperty.loopOut.bind(thisProperty)
-      loop_out = loopOut
-    }
+    return this.pv + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
+  }.bind(this)
 
-    if (thisProperty.smooth) {
-      smooth = thisProperty.smooth.bind(thisProperty)
-    }
-
-    function loopInDuration(type: string, duration: number) {
-      loopIn(
-        type, duration, true
-      )
-    }
-
-    function loopOutDuration(type: string, duration: number) {
-      loopOut(
-        type, duration, true
-      )
-    }
-
-    if (this.getValueAtTime) {
-      valueAtTime = this.getValueAtTime.bind(this)
-    }
-
-    if (this.getVelocityAtTime) {
-      velocityAtTime = this.getVelocityAtTime.bind(this)
-    }
-
-    const comp = elem.comp.globalData.projectInterface.bind(elem.comp.globalData.projectInterface)
-
-    function lookAt(elem1, elem2) {
-      const fVec = [elem2[0] - elem1[0],
-        elem2[1] - elem1[1],
-        elem2[2] - elem1[2]]
-      const pitch = Math.atan2(fVec[0], Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])) / degToRads
-      const yaw = -Math.atan2(fVec[1], fVec[2]) / degToRads
-
-      return [yaw,
-        pitch,
-        0]
-    }
-
-    function easeOut(
-      t, tMin, tMax, val1, val2
-    ) {
-      return applyEase(
-        easeOutBez, t, tMin, tMax, val1, val2
-      )
-    }
-
-    function easeIn(
-      t, tMin, tMax, val1, val2
-    ) {
-      return applyEase(
-        easeInBez, t, tMin, tMax, val1, val2
-      )
-    }
-
-    function ease(
-      t, tMin, tMax, val1, val2
-    ) {
-      return applyEase(
-        easeInOutBez, t, tMin, tMax, val1, val2
-      )
-    }
-
-    function applyEase(
-      fn, t, tMin, tMax, val1, val2
-    ) {
-      if (val1 === undefined) {
-        val1 = tMin
-        val2 = tMax
-      } else {
-        t = (t - tMin) / (tMax - tMin)
-      }
-      if (t > 1) {
-        t = 1
-      } else if (t < 0) {
-        t = 0
-      }
-      const mult = fn(t)
-
-      if ($bm_isInstanceOfArray(val1)) {
-        let iKey
-
-        const lenKey = val1.length
-        const arr = createTypedArray('float32', lenKey)
-
-        for (iKey = 0; iKey < lenKey; iKey += 1) {
-          arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
-        }
-
-        return arr
-      }
-
-      return (val2 - val1) * mult + val1
-    }
-
-    function nearestKey(time) {
-      let iKey
-
-      const lenKey = data.k.length
-      let index
-      let keyTime
-
-      if (data.k.length === 0 || typeof data.k[0] === 'number') {
-        index = 0
-        keyTime = 0
-      } else {
-        index = -1
-        time *= elem.comp.globalData.frameRate
-        if (time < data.k[0].t) {
-          index = 1
-          keyTime = data.k[0].t
-        } else {
-          for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
-            if (time === data.k[iKey].t) {
-              index = iKey + 1
-              keyTime = data.k[iKey].t
-              break
-            } else if (time > data.k[iKey].t && time < data.k[iKey + 1].t) {
-              if (time - data.k[iKey].t > data.k[iKey + 1].t - time) {
-                index = iKey + 2
-                keyTime = data.k[iKey + 1].t
-              } else {
-                index = iKey + 1
-                keyTime = data.k[iKey].t
-              }
-              break
-            }
-          }
-          if (index === -1) {
-            index = iKey + 1
-            keyTime = data.k[iKey].t
-          }
-        }
-      }
-      const obKey = {}
-
-      obKey.index = index
-      obKey.time = keyTime / elem.comp.globalData.frameRate
-
-      return obKey
-    }
-
-    function key(ind) {
-      let obKey
-
-      let iKey
-      let lenKey
-
-      if (data.k.length === 0 || typeof data.k[0] === 'number') {
-        throw new Error(`The property has no keyframe at index ${  ind}`)
-      }
-      ind -= 1
-      obKey = {
-        time: data.k[ind].t / elem.comp.globalData.frameRate,
-        value: [],
-      }
-      const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e
-
-      lenKey = arr.length
-      for (iKey = 0; iKey < lenKey; iKey += 1) {
-        obKey[iKey] = arr[iKey]
-        obKey.value[iKey] = arr[iKey]
-      }
-
-      return obKey
-    }
-
-    function framesToTime(fr, fps) {
-      if (!fps) {
-        fps = elem.comp.globalData.frameRate
-      }
-
-      return fr / fps
-    }
-
-    function timeToFrames(t, fps) {
-      if (!t && t !== 0) {
-        t = time
-      }
-      if (!fps) {
-        fps = elem.comp.globalData.frameRate
-      }
-
-      return t * fps
-    }
-
-    function seedRandom(seed) {
-      BMMath.seedrandom(randSeed + seed)
-    }
-
-    function sourceRectAtTime() {
-      return elem.sourceRectAtTime()
-    }
-
-    function substring(init, end) {
-      if (typeof value === 'string') {
-        if (end === undefined) {
-          return value.slice(Math.max(0, init))
-        }
-
-        return value.substring(init, end)
-      }
-
-      return ''
-    }
-
-    function substr(init, end) {
-      if (typeof value === 'string') {
-        if (end === undefined) {
-          return value.slice(init)
-        }
-
-        return value.substr(init, end)
-      }
-
-      return ''
-    }
-
-    function posterizeTime(framesPerSecond) {
-      time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
-      value = valueAtTime(time)
-    }
-
-    let time: number
-
-    let velocity
-    let value: unknown
-    let text
-    let textIndex
-    let textTotal
-    let selectorValue
-    const index = elem.data.ind
-    let hasParent = Boolean(elem.hierarchy?.length)
-    let parent: undefined | ReturnType<typeof LayerExpressionInterface>
-
-    var randSeed = Math.floor(Math.random() * 1000000)
-    const { globalData } = elem
-
-    function executeExpression(this: KeyframedValueProperty, _value: number) {
-      // globalData.pushExpression();
-      value = _value
-      if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
-        return value
-      }
-      if (this.propType === PropType.TextSelector) {
-        textIndex = this.textIndex
-        textTotal = this.textTotal
-        selectorValue = this.selectorValue
-      }
-      if (!thisLayer) {
-        text = elem.layerInterface.text
-        thisLayer = elem.layerInterface
-        thisComp = elem.comp.compInterface
-        toWorld = thisLayer.toWorld.bind(thisLayer)
-        fromWorld = thisLayer.fromWorld.bind(thisLayer)
-        fromComp = thisLayer.fromComp.bind(thisLayer)
-        toComp = thisLayer.toComp.bind(thisLayer)
-        mask = thisLayer.mask ? thisLayer.mask.bind(thisLayer) : null
-        fromCompToSurface = fromComp
-      }
-      if (!transform) {
-        transform = elem.layerInterface('ADBE Transform Group')
-        $bm_transform = transform
-        if (transform) {
-          anchorPoint = transform.anchorPoint
-          /* position = transform.position;
-                    rotation = transform.rotation;
-                    scale = transform.scale; */
-        }
-      }
-
-      if (elemType === 4 && !content) {
-        content = thisLayer('ADBE Root Vectors Group')
-      }
-      if (!effect) {
-        effect = thisLayer(4)
-      }
-      hasParent = Boolean(elem.hierarchy?.length)
-      if (hasParent && !parent) {
-        parent = elem.hierarchy[0].layerInterface
-      }
-      time = this.comp.renderedFrame / this.comp.globalData.frameRate
-      if (_needsRandom) {
-        seedRandom(randSeed + time)
-      }
-      if (needsVelocity) {
-        velocity = velocityAtTime(time)
-      }
-      expression_function(
-        // scoped_bm_rt,
-        // transform,
-        // loopOut,
-      )
-      this.frameExpressionId = elem.globalData.frameId
-
-      // TODO: Check if it's possible to return on ShapeInterface the .v value
-      // Changed this to a ternary operation because Rollup failed compiling it correctly
-      scoped_bm_rt = scoped_bm_rt.propType === PropType.Shape
-        ? scoped_bm_rt.v
-        : scoped_bm_rt
-
-      return scoped_bm_rt
-    }
-    // Bundlers will see these as dead code and unless we reference them
-    executeExpression.__preventDeadCodeRemoval = [
-      $bm_transform,
-      anchorPoint,
-      time,
-      velocity,
-      inPoint,
-      outPoint,
-      width,
-      height,
-      name,
-      loop_in,
-      loop_out,
-      smooth,
-      toComp,
-      fromCompToSurface,
-      toWorld,
-      fromWorld,
-      mask,
-      position,
-      rotation,
-      scale,
-      thisComp,
-      numKeys,
-      active,
-      wiggle,
-      loopInDuration,
-      loopOutDuration,
-      comp,
-      lookAt,
-      easeOut,
-      easeIn,
-      ease,
-      nearestKey,
-      key,
-      text,
-      textIndex,
-      textTotal,
-      selectorValue,
-      framesToTime,
-      timeToFrames,
-      sourceRectAtTime,
-      substring,
-      substr,
-      posterizeTime,
-      index,
-      globalData]
-
-    return executeExpression
+  if (thisProperty.loopIn) {
+    loopIn = thisProperty.loopIn.bind(thisProperty)
+    loop_in = loopIn
   }
 
-  ob.initiateExpression = initiateExpression
-  ob.__preventDeadCodeRemoval = [window,
+  if (thisProperty.loopOut) {
+    loopOut = thisProperty.loopOut.bind(thisProperty)
+    loop_out = loopOut
+  }
+
+  if (thisProperty.smooth) {
+    smooth = thisProperty.smooth.bind(thisProperty)
+  }
+
+  function loopInDuration(type: string, duration: number) {
+    loopIn(
+      type, duration, true
+    )
+  }
+
+  function loopOutDuration(type: string, duration: number) {
+    loopOut(
+      type, duration, true
+    )
+  }
+
+  if (this.getValueAtTime) {
+    valueAtTime = this.getValueAtTime.bind(this)
+  }
+
+  if (this.getVelocityAtTime) {
+    velocityAtTime = this.getVelocityAtTime.bind(this)
+  }
+
+  const comp = elem.comp.globalData.projectInterface.bind(elem.comp.globalData.projectInterface)
+
+  function lookAt(elem1, elem2) {
+    const fVec = [elem2[0] - elem1[0],
+      elem2[1] - elem1[1],
+      elem2[2] - elem1[2]]
+    const pitch = Math.atan2(fVec[0], Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])) / degToRads
+    const yaw = -Math.atan2(fVec[1], fVec[2]) / degToRads
+
+    return [yaw,
+      pitch,
+      0]
+  }
+
+  function easeOut(
+    t, tMin, tMax, val1, val2
+  ) {
+    return applyEase(
+      easeOutBez, t, tMin, tMax, val1, val2
+    )
+  }
+
+  function easeIn(
+    t, tMin, tMax, val1, val2
+  ) {
+    return applyEase(
+      easeInBez, t, tMin, tMax, val1, val2
+    )
+  }
+
+  function ease(
+    t, tMin, tMax, val1, val2
+  ) {
+    return applyEase(
+      easeInOutBez, t, tMin, tMax, val1, val2
+    )
+  }
+
+  function applyEase(
+    fn, t, tMin, tMax, val1, val2
+  ) {
+    if (val1 === undefined) {
+      val1 = tMin
+      val2 = tMax
+    } else {
+      t = (t - tMin) / (tMax - tMin)
+    }
+    if (t > 1) {
+      t = 1
+    } else if (t < 0) {
+      t = 0
+    }
+    const mult = fn(t)
+
+    if ($bm_isInstanceOfArray(val1)) {
+      let iKey
+
+      const lenKey = val1.length
+      const arr = createTypedArray(ArrayType.Float32, lenKey)
+
+      for (iKey = 0; iKey < lenKey; iKey += 1) {
+        arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
+      }
+
+      return arr
+    }
+
+    return (val2 - val1) * mult + val1
+  }
+
+  function nearestKey(time) {
+    let iKey
+
+    const lenKey = data.k.length
+    let index
+    let keyTime
+
+    if (data.k.length === 0 || typeof data.k[0] === 'number') {
+      index = 0
+      keyTime = 0
+    } else {
+      index = -1
+      time *= elem.comp.globalData.frameRate
+      if (time < data.k[0].t) {
+        index = 1
+        keyTime = data.k[0].t
+      } else {
+        for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
+          if (time === data.k[iKey].t) {
+            index = iKey + 1
+            keyTime = data.k[iKey].t
+            break
+          } else if (time > data.k[iKey].t && time < data.k[iKey + 1].t) {
+            if (time - data.k[iKey].t > data.k[iKey + 1].t - time) {
+              index = iKey + 2
+              keyTime = data.k[iKey + 1].t
+            } else {
+              index = iKey + 1
+              keyTime = data.k[iKey].t
+            }
+            break
+          }
+        }
+        if (index === -1) {
+          index = iKey + 1
+          keyTime = data.k[iKey].t
+        }
+      }
+    }
+    const obKey = {}
+
+    obKey.index = index
+    obKey.time = keyTime / elem.comp.globalData.frameRate
+
+    return obKey
+  }
+
+  function key(ind) {
+    let obKey
+
+    let iKey
+    let lenKey
+
+    if (data.k.length === 0 || typeof data.k[0] === 'number') {
+      throw new Error(`The property has no keyframe at index ${  ind}`)
+    }
+    ind -= 1
+    obKey = {
+      time: data.k[ind].t / elem.comp.globalData.frameRate,
+      value: [],
+    }
+    const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e
+
+    lenKey = arr.length
+    for (iKey = 0; iKey < lenKey; iKey += 1) {
+      obKey[iKey] = arr[iKey]
+      obKey.value[iKey] = arr[iKey]
+    }
+
+    return obKey
+  }
+
+  function framesToTime(fr, fps) {
+    if (!fps) {
+      fps = elem.comp.globalData.frameRate
+    }
+
+    return fr / fps
+  }
+
+  function timeToFrames(t, fps) {
+    if (!t && t !== 0) {
+      t = time
+    }
+    if (!fps) {
+      fps = elem.comp.globalData.frameRate
+    }
+
+    return t * fps
+  }
+
+  function seedRandom(seed) {
+    BMMath.seedrandom(randSeed + seed)
+  }
+
+  function sourceRectAtTime() {
+    return elem.sourceRectAtTime()
+  }
+
+  function substring(init, end) {
+    if (typeof value === 'string') {
+      if (end === undefined) {
+        return value.slice(Math.max(0, init))
+      }
+
+      return value.substring(init, end)
+    }
+
+    return ''
+  }
+
+  function substr(init, end) {
+    if (typeof value === 'string') {
+      if (end === undefined) {
+        return value.slice(init)
+      }
+
+      return value.substr(init, end)
+    }
+
+    return ''
+  }
+
+  function posterizeTime(framesPerSecond) {
+    time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
+    value = valueAtTime(time)
+  }
+
+  let time: number
+
+  let velocity
+  let value: unknown
+  let text
+  let textIndex
+  let textTotal
+  let selectorValue
+  const index = elem.data.ind
+  let hasParent = Boolean(elem.hierarchy?.length)
+  let parent: undefined | ReturnType<typeof LayerExpressionInterface>
+
+  const randSeed = Math.floor(Math.random() * 1000000)
+  const { globalData } = elem
+
+  function executeExpression(this: KeyframedValueProperty, _value: number) {
+    // globalData.pushExpression();
+    value = _value
+    if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
+      return value
+    }
+    if (this.propType === PropType.TextSelector) {
+      textIndex = this.textIndex
+      textTotal = this.textTotal
+      selectorValue = this.selectorValue
+    }
+    if (!thisLayer) {
+      text = elem.layerInterface.text
+      thisLayer = elem.layerInterface
+      thisComp = elem.comp.compInterface
+      toWorld = thisLayer.toWorld.bind(thisLayer)
+      fromWorld = thisLayer.fromWorld.bind(thisLayer)
+      fromComp = thisLayer.fromComp.bind(thisLayer)
+      toComp = thisLayer.toComp.bind(thisLayer)
+      mask = thisLayer.mask ? thisLayer.mask.bind(thisLayer) : null
+      fromCompToSurface = fromComp
+    }
+    if (!transform) {
+      transform = elem.layerInterface('ADBE Transform Group')
+      $bm_transform = transform
+      if (transform) {
+        anchorPoint = transform.anchorPoint
+        /* position = transform.position;
+                    rotation = transform.rotation;
+                    scale = transform.scale; */
+      }
+    }
+
+    if (elemType === 4 && !content) {
+      content = thisLayer('ADBE Root Vectors Group')
+    }
+    if (!effect) {
+      effect = thisLayer(4)
+    }
+    hasParent = Boolean(elem.hierarchy?.length)
+    if (hasParent && !parent) {
+      parent = elem.hierarchy[0].layerInterface
+    }
+    time = this.comp.renderedFrame / this.comp.globalData.frameRate
+    if (_needsRandom) {
+      seedRandom(randSeed + time)
+    }
+    if (needsVelocity) {
+      velocity = velocityAtTime(time)
+    }
+    expression_function(
+      // scoped_bm_rt,
+      // transform,
+      // loopOut,
+    )
+    this.frameExpressionId = elem.globalData.frameId
+
+    // TODO: Check if it's possible to return on ShapeInterface the .v value
+    // Changed this to a ternary operation because Rollup failed compiling it correctly
+    scoped_bm_rt = scoped_bm_rt.propType === PropType.Shape
+      ? scoped_bm_rt.v
+      : scoped_bm_rt
+
+    return scoped_bm_rt
+  }
+  // Bundlers will see these as dead code and unless we reference them
+  executeExpression.__preventDeadCodeRemoval = [
+    $bm_transform,
+    anchorPoint,
+    time,
+    velocity,
+    inPoint,
+    outPoint,
+    width,
+    height,
+    name,
+    loop_in,
+    loop_out,
+    smooth,
+    toComp,
+    fromCompToSurface,
+    toWorld,
+    fromWorld,
+    mask,
+    position,
+    rotation,
+    scale,
+    thisComp,
+    numKeys,
+    active,
+    wiggle,
+    loopInDuration,
+    loopOutDuration,
+    comp,
+    lookAt,
+    easeOut,
+    easeIn,
+    ease,
+    nearestKey,
+    key,
+    text,
+    textIndex,
+    textTotal,
+    selectorValue,
+    framesToTime,
+    timeToFrames,
+    sourceRectAtTime,
+    substring,
+    substr,
+    posterizeTime,
+    index,
+    globalData]
+
+  return executeExpression
+}
+
+function linear(
+  t: number, tMin: number, tMax: number, value1?: number, value2?: number
+) {
+  if (value1 === undefined || value2 === undefined) {
+    value1 = tMin
+    value2 = tMax
+    tMin = 0
+    tMax = 1
+  }
+  if (tMax < tMin) {
+    const _tMin = tMax
+
+    tMax = tMin
+    tMin = _tMin
+  }
+  if (t <= tMin) {
+    return value1
+  } if (t >= tMax) {
+    return value2
+  }
+  const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
+
+  if (value1.length === 0) {
+    return value1 + (value2 - value1) * perc
+  }
+  let i
+
+  const len = value1.length
+  const arr = createTypedArray(ArrayType.Float32, len)
+
+  for (i = 0; i < len; i += 1) {
+    arr[i] = value1[i] + (value2[i] - value1[i]) * perc
+  }
+
+  return arr
+}
+
+function normalize(vec: number[]) {
+  return div(vec, length(vec))
+}
+
+function random(min: number, max?: number) {
+  if (max === undefined) {
+    if (min === undefined) {
+      min = 0
+      max = 1
+    } else {
+      max = min
+      min = undefined
+    }
+  }
+  if (max.length > 0) {
+    let i
+
+    const len = max.length
+
+    if (!min) {
+      min = createTypedArray(ArrayType.Float32, len)
+    }
+    const arr = createTypedArray(ArrayType.Float32, len)
+    const rnd = BMMath.random()
+
+    for (i = 0; i < len; i += 1) {
+      arr[i] = min[i] + rnd * (max[i] - min[i])
+    }
+
+    return arr
+  }
+  if (min === undefined) {
+    min = 0
+  }
+  const rndm = BMMath.random()
+
+  return min + rndm * (max - min)
+}
+
+function resetFrame() {
+  _lottieGlobal = {}
+}
+
+function rgbToHsl(val: number[]) {
+  const r = val[0]; const g = val[1]; const b = val[2]
+  const max = Math.max(
+    r, g, b
+  )
+  const min = Math.min(
+    r, g, b
+  )
+  let h
+
+  let s
+  const l = (max + min) / 2
+
+  if (max === min) {
+    h = 0 // achromatic
+    s = 0 // achromatic
+  } else {
+    const d = max - min
+
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    switch (max) {
+      case r: { h = (g - b) / d + (g < b ? 6 : 0); break
+      }
+      case g: { h = (b - r) / d + 2; break
+      }
+      case b: { h = (r - g) / d + 4; break
+      }
+      default: { break
+      }
+    }
+    h /= 6
+  }
+
+  return [h,
+    s,
+    l,
+    val[3]]
+}
+
+function $bm_isInstanceOfArray(arr: unknown[]) {
+  return arr.constructor === Array || arr.constructor === Float32Array
+}
+
+function degreesToRadians(val: number) {
+  return val * degToRads
+}
+
+function div(a, b) {
+  const tOfA = typeof a
+  const tOfB = typeof b
+  let arr
+
+  if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
+    return a / b
+  }
+  let i
+
+  let len
+
+  if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
+    len = a.length
+    arr = createTypedArray(ArrayType.Float32, len)
+    for (i = 0; i < len; i += 1) {
+      arr[i] = a[i] / b
+    }
+
+    return arr
+  }
+  if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
+    len = b.length
+    arr = createTypedArray(ArrayType.Float32, len)
+    for (i = 0; i < len; i += 1) {
+      arr[i] = a / b[i]
+    }
+
+    return arr
+  }
+
+  return 0
+}
+
+function hue2rgb(
+  p: number, q: number, t: number
+) {
+  if (t < 0) {t += 1}
+  if (t > 1) {t -= 1}
+  if (t < 1 / 6) {return p + (q - p) * 6 * t}
+  if (t < 1 / 2) {return q}
+  if (t < 2 / 3) {return p + (q - p) * (2 / 3 - t) * 6}
+
+  return p
+}
+
+function isNumerable(tOfV: string, v: unknown) {
+  return tOfV === 'number' || v instanceof Number || tOfV === 'boolean' || tOfV === 'string'
+}
+
+function length(arr1: number | number[], arr2?: number | number[]) {
+  if (typeof arr1 === 'number' || arr1 instanceof Number) {
+    arr2 = arr2 || 0
+
+    return Math.abs(arr1 - arr2)
+  }
+  if (!arr2) {
+    arr2 = helperLengthArray
+  }
+  let i
+
+  const len = Math.min(arr1.length, arr2.length)
+  let addedLength = 0
+
+  for (i = 0; i < len; i += 1) {
+    addedLength += Math.pow(arr2[i] - arr1[i], 2)
+  }
+
+  return Math.sqrt(addedLength)
+}
+
+function mod(a: number | string, b: number | string) {
+  if (typeof a === 'string') {
+    a = parseInt(a, 10)
+  }
+  if (typeof b === 'string') {
+    b = parseInt(b, 10)
+  }
+
+  return a % b
+}
+
+function mul(a, b) {
+  const tOfA = typeof a
+  const tOfB = typeof b
+  let arr
+
+  if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
+    return a * b
+  }
+
+  let i
+
+  let len
+
+  if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
+    len = a.length
+    arr = createTypedArray(ArrayType.Float32, len)
+    for (i = 0; i < len; i += 1) {
+      arr[i] = a[i] * b
+    }
+
+    return arr
+  }
+  if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
+    len = b.length
+    arr = createTypedArray(ArrayType.Float32, len)
+    for (i = 0; i < len; i += 1) {
+      arr[i] = a * b[i]
+    }
+
+    return arr
+  }
+
+  return 0
+}
+
+function noOp(_value?: unknown) {
+  return _value
+}
+
+function radiansToDegrees(val: number) {
+  return val / degToRads
+}
+
+function sub(a, b) {
+  const tOfA = typeof a
+  const tOfB = typeof b
+
+  if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
+    if (tOfA === 'string') {
+      a = parseInt(a, 10)
+    }
+    if (tOfB === 'string') {
+      b = parseInt(b, 10)
+    }
+
+    return a - b
+  }
+  if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
+    a = [...a]
+    a[0] -= b
+
+    return a
+  }
+  if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
+    b = [...b]
+    b[0] = a - b[0]
+
+    return b
+  }
+  if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
+    let i = 0
+
+    const lenA = a.length
+    const lenB = b.length
+    const retArr = []
+
+    while (i < lenA || i < lenB) {
+      if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
+        retArr[i] = a[i] - b[i]
+      } else {
+        retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
+      }
+      i += 1
+    }
+
+    return retArr
+  }
+
+  return 0
+}
+
+function sum(a: number, b: number) {
+  const tOfA = typeof a
+  const tOfB = typeof b
+
+  if (isNumerable(tOfA, a) && isNumerable(tOfB, b) || tOfA === 'string' || tOfB === 'string') {
+    return a + b
+  }
+  if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
+    a = [...a]
+    a[0] += b
+
+    return a
+  }
+  if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
+    b = [...b]
+    b[0] = a + b[0]
+
+    return b
+  }
+  if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
+    let i = 0
+
+    const { length: lenA } = a,
+      { length: lenB } = b,
+      retArr = []
+
+    while (i < lenA || i < lenB) {
+      if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
+        retArr[i] = a[i] + b[i]
+      } else {
+        retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
+      }
+      i += 1
+    }
+
+    return retArr
+  }
+
+  return 0
+}
+
+const ExpressionManager = {
+  __preventDeadCodeRemoval: [
+    window,
     document,
     XMLHttpRequest,
     fetch,
@@ -1007,10 +1014,10 @@ const ExpressionManager = (function () {
     linear,
     random,
     createPath,
-    _lottieGlobal]
-  ob.resetFrame = resetFrame
-
-  return ob
-}())
+    _lottieGlobal
+  ],
+  initiateExpression,
+  resetFrame
+}
 
 export default ExpressionManager

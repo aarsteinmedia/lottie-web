@@ -1,25 +1,19 @@
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CVStyleElement, Shape } from '@/types'
-import type Matrix from '@/utils/Matrix'
 
-import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import ShapeData from '@/elements/helpers/shapes/ShapeData'
 import { ShapeType } from '@/utils/enums'
 import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-export default class CVShapeData {
-  _isAnimated?: boolean
-  sh: ShapeProperty | null
-  styledShapes: CVShapeData[]
-  tr: number[]
-  transforms?: { finalTransform: Matrix }
-  trNodes: any[] = []
+export default class CVShapeData extends ShapeData {
   constructor(
     element: CVShapeElement,
     data: Shape,
     styles: CVStyleElement[],
     transformsManager: ShapeTransformManager
   ) {
+    super()
     this.styledShapes = []
     this.tr = [0,
       0,
@@ -65,12 +59,5 @@ export default class CVShapeData {
         styles[i].elements.push(styledShape)
       }
     }
-    const { setAsAnimated } = SVGShapeData.prototype
-
-    this.setAsAnimated = setAsAnimated
-  }
-
-  setAsAnimated() {
-    throw new Error(`${this.constructor.name}: Method setAsAnimated is not implemented`)
   }
 }

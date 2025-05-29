@@ -1,47 +1,58 @@
-import propertyGroupFactory from '../PropertyGroupFactory';
-import PropertyInterface from '../PropertyInterface';
+import type ShapeData from '@/elements/helpers/shapes/ShapeData'
+import type { Shape } from '@/types'
+
+import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
+import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 const ShapePathInterface = (
 
   function () {
-    return function pathInterfaceFactory(shape, view, propertyGroup) {
-      var prop = view.sh;
+    return function pathInterfaceFactory(
+      shape: Shape, view: ShapeData, propertyGroup
+    ) {
 
-      function interfaceFunction(val) {
+      const { sh: prop } = view
+
+      function interfaceFunction(val: string | number) {
         if (val === 'Shape' || val === 'shape' || val === 'Path' || val === 'path' || val === 'ADBE Vector Shape' || val === 2) {
-          return interfaceFunction.path;
+          return interfaceFunction.path
         }
-        return null;
+
+        return null
       }
 
-      var _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup);
-      prop.setGroupProperty(PropertyInterface('Path', _propertyGroup));
+      const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
+
+      prop?.setGroupProperty(PropertyInterface('Path', _propertyGroup))
       Object.defineProperties(interfaceFunction, {
-        path: {
-          get: function () {
-            if (prop.k) {
-              prop.getValue();
-            }
-            return prop;
-          },
-        },
-        shape: {
-          get: function () {
-            if (prop.k) {
-              prop.getValue();
-            }
-            return prop;
-          },
-        },
         _name: { value: shape.nm },
         ix: { value: shape.ix },
-        propertyIndex: { value: shape.ix },
         mn: { value: shape.mn },
-        propertyGroup: { value: propertyGroup },
-      });
-      return interfaceFunction;
-    };
-  }()
-);
+        path: {
+          get () {
+            if (prop?.k) {
+              prop.getValue()
+            }
 
-export default ShapePathInterface;
+            return prop
+          },
+        },
+        propertyGroup: { value: propertyGroup },
+        propertyIndex: { value: shape.ix },
+        shape: {
+          get () {
+            if (prop?.k) {
+              prop.getValue()
+            }
+
+            return prop
+          },
+        },
+      })
+
+      return interfaceFunction
+    }
+  }()
+)
+
+export default ShapePathInterface

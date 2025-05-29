@@ -1284,6 +1284,7 @@ export interface ExpressionProperty {
   a: 0 | 1
   ix: number
   k: ValueProperty[]
+  release?: () => void
   x: string
 }
 

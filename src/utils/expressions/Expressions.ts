@@ -1,48 +1,56 @@
-import CompExpressionInterface from './CompInterface';
-import ExpressionManager from './ExpressionManager';
+import type { AnimationItem } from '@/Lottie'
+import type { ExpressionProperty } from '@/types'
 
-const Expressions = (function () {
-  var ob = {};
-  ob.initExpressions = initExpressions;
-  ob.resetFrame = ExpressionManager.resetFrame;
+import CompExpressionInterface from '@/utils/expressions/CompInterface'
+import ExpressionManager from '@/utils/expressions/ExpressionManager'
 
-  function initExpressions(animation) {
-    var stackCount = 0;
-    var registers = [];
+const { resetFrame } = ExpressionManager
 
-    function pushExpression() {
-      stackCount += 1;
-    }
+function initExpressions(animation: AnimationItem) {
+  let stackCount = 0
 
-    function popExpression() {
-      stackCount -= 1;
-      if (stackCount === 0) {
-        releaseInstances();
-      }
-    }
+  const registers: ExpressionProperty[] = []
 
-    function registerExpressionProperty(expression) {
-      if (registers.indexOf(expression) === -1) {
-        registers.push(expression);
-      }
-    }
-
-    function releaseInstances() {
-      var i;
-      var len = registers.length;
-      for (i = 0; i < len; i += 1) {
-        registers[i].release();
-      }
-      registers.length = 0;
-    }
-
-    animation.renderer.compInterface = CompExpressionInterface(animation.renderer);
-    animation.renderer.globalData.projectInterface.registerComposition(animation.renderer);
-    animation.renderer.globalData.pushExpression = pushExpression;
-    animation.renderer.globalData.popExpression = popExpression;
-    animation.renderer.globalData.registerExpressionProperty = registerExpressionProperty;
+  function pushExpression() {
+    stackCount++
   }
-  return ob;
-}());
 
-export default Expressions;
+  function popExpression() {
+    stackCount--
+    if (stackCount === 0) {
+      releaseInstances()
+    }
+  }
+
+  function registerExpressionProperty(expression: ExpressionProperty) {
+    if (!registers.includes(expression)) {
+      registers.push(expression)
+    }
+  }
+
+  function releaseInstances() {
+    const { length } = registers
+
+    for (let i = 0; i < length; i++) {
+      registers[i].release?.()
+    }
+    registers.length = 0
+  }
+
+  if (!animation.renderer.globalData) {
+    throw new Error('Renderer -> GlobalData is not set')
+  }
+
+  animation.renderer.compInterface = CompExpressionInterface(animation.renderer)
+  animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
+  animation.renderer.globalData.pushExpression = pushExpression
+  animation.renderer.globalData.popExpression = popExpression
+  animation.renderer.globalData.registerExpressionProperty = registerExpressionProperty
+}
+
+const Expressions = {
+  initExpressions,
+  resetFrame
+}
+
+export default Expressions
