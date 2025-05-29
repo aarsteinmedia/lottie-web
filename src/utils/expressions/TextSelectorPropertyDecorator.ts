@@ -1,15 +1,16 @@
 import type {
   CompElementInterface,
-  ElementInterfaceIntersect, ExpressionProperty, LottieLayer, TextRangeValue,
+  ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
 } from '@/types'
+import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import { PropType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import TextSelectorProp from '@/utils/text/TextSelectorProperty'
 
-import type { KeyframedValueProperty } from '../Properties'
+const notImplemented = 'Method not implemented'
 
 export default class TextExpressionSelectorPropFactory {
   comp?: CompElementInterface
@@ -56,16 +57,24 @@ export default class TextExpressionSelectorPropFactory {
     this.setGroupProperty = expressionHelpers.setGroupProperty
   }
 
+  getMult(_index: number, _total: number) {
+    throw new Error(notImplemented)
+  }
+
   getTextSelectorProp(
     _elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]
   ): KeyframedValueProperty {
-    throw new Error('Method not implemented')
+    throw new Error(notImplemented)
   }
 
   getValue(
     _elem?: ElementInterfaceIntersect, _data?: TextRangeValue & ExpressionProperty, _prop?: KeyframedValueProperty
   ): number {
-    throw new Error('Method not implemented')
+    throw new Error(notImplemented)
+  }
+
+  getValueAtTime(_num: number) {
+    throw new Error(notImplemented)
   }
 
   getValueProxy(index: number, total: number) {
@@ -74,6 +83,14 @@ export default class TextExpressionSelectorPropFactory {
     this.v = this.getValue() * this.mult
 
     return this.v
+  }
+
+  getVelocityAtTime(_num: number) {
+    throw new Error(notImplemented)
+  }
+
+  setGroupProperty(_prop?: KeyframedValueProperty) {
+    throw new Error(notImplemented)
   }
 }
 

@@ -1,8 +1,10 @@
-import ExpressionPropertyInterface from './ExpressionValueFactory'
+import type { TransformProperty } from '@/utils/TransformProperty'
 
-const TransformExpressionInterface = (function () {
-  return function (transform) {
-    function _thisFunction(name) {
+import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
+
+const TransformExpressionInterface = (() => {
+  return function (transform: TransformProperty) {
+    function _thisFunction(name: string | number) {
       switch (name) {
         case 'scale':
         case 'Scale':
@@ -56,11 +58,11 @@ const TransformExpressionInterface = (function () {
       }
     }
     Object.defineProperty(
-      _thisFunction, 'rotation', { get: ExpressionPropertyInterface(transform.r || transform.rz) }
+      _thisFunction, 'rotation', { get: ExpressionPropertyInterface(transform.r ?? transform.rz) }
     )
 
     Object.defineProperty(
-      _thisFunction, 'zRotation', { get: ExpressionPropertyInterface(transform.rz || transform.r) }
+      _thisFunction, 'zRotation', { get: ExpressionPropertyInterface(transform.rz ?? transform.r) }
     )
 
     Object.defineProperty(
@@ -137,6 +139,6 @@ const TransformExpressionInterface = (function () {
 
     return _thisFunction
   }
-}())
+})()
 
 export default TransformExpressionInterface

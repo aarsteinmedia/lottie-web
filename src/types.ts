@@ -1273,7 +1273,7 @@ export interface GlobalData {
   nm?: string
   popExpression: () => void
   progressiveLoad?: boolean
-  projectInterface: ReturnType<typeof ProjectInterface>
+  projectInterface: ProjectInterface
   pushExpression: () => void
   registerExpressionProperty: (expression: ExpressionProperty) => void
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig

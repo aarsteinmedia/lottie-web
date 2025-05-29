@@ -1,59 +1,55 @@
+import type { ElementInterfaceIntersect } from '@/types'
+
 import { getDescriptor } from '@/utils'
+import MaskManagerInterface from '@/utils/expressions/MaskInterface'
+import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
+import Matrix from '@/utils/Matrix'
 
-import Matrix from '../Matrix'
-import MaskManagerInterface from './MaskInterface'
-import TransformExpressionInterface from './TransformInterface'
+export default class LayerExpressionInterface {
+  _elem: ElementInterfaceIntersect
 
-const LayerExpressionInterface = (function () {
-  function getMatrix(time) {
-    const toWorldMat = new Matrix()
-
-    if (time !== undefined) {
-      const propMatrix = this._elem.finalTransform.mProp.getValueAtTime(time)
-
-      propMatrix.clone(toWorldMat)
-    } else {
-      const transformMat = this._elem.finalTransform.mProp
-
-      transformMat.applyToMatrix(toWorldMat)
-    }
-
-    return toWorldMat
+  get active() {
+    return this._elem.isInRange
   }
 
-  function toWorldVec(arr, time) {
-    const toWorldMat = this.getMatrix(time)
-
-    toWorldMat.props[12] = 0
-    toWorldMat.props[13] = 0
-    toWorldMat.props[14] = 0
-
-    return this.applyPoint(toWorldMat, arr)
+  get hasParent() {
+    return Boolean(this._elem.hierarchy?.length)
   }
 
-  function toWorld(arr, time) {
-    const toWorldMat = this.getMatrix(time)
-
-    return this.applyPoint(toWorldMat, arr)
+  get parent() {
+    return this._elem.hierarchy?.[0].layerInterface
   }
 
-  function fromWorldVec(arr, time) {
-    const toWorldMat = this.getMatrix(time)
-
-    toWorldMat.props[12] = 0
-    toWorldMat.props[13] = 0
-    toWorldMat.props[14] = 0
-
-    return this.invertPoint(toWorldMat, arr)
+  get transform() {
+    return this.transformInterface
   }
 
-  function fromWorld(arr, time) {
-    const toWorldMat = this.getMatrix(time)
+  constructor (elem: ElementInterfaceIntersect) {
+    this.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
+    this._elem = elem
+    this.transformInterface = TransformExpressionInterface(elem.finalTransform.mProp)
+    const anchorPointDescriptor = getDescriptor(this.transformInterface, 'anchorPoint')
 
-    return this.invertPoint(toWorldMat, arr)
+    this.anchor_point = anchorPointDescriptor
+    this.anchorPoint = anchorPointDescriptor
+    this.opacity = getDescriptor(this.transformInterface, 'opacity')
+    this.position = getDescriptor(this.transformInterface, 'position')
+    this.rotation = getDescriptor(this.transformInterface, 'rotation')
+    this.scale = getDescriptor(this.transformInterface, 'scale')
+
+    this.toComp = this.toWorld
+
+    this.startTime = elem.data.st
+    this.index = elem.data.ind
+    this.source = elem.data.refId
+    this.height = elem.data.ty === 0 ? elem.data.h : 100
+    this.width = elem.data.ty === 0 ? elem.data.w : 100
+    this.inPoint = elem.data.ip / elem.comp.globalData.frameRate
+    this.outPoint = elem.data.op / elem.comp.globalData.frameRate
+    this._name = elem.data.nm
   }
 
-  function applyPoint(matrix, arr) {
+  applyPoint(matrix, arr) {
     if (this._elem.hierarchy?.length) {
       let i
 
@@ -69,21 +65,7 @@ const LayerExpressionInterface = (function () {
     )
   }
 
-  function invertPoint(matrix, arr) {
-    if (this._elem.hierarchy?.length) {
-      let i
-
-      const len = this._elem.hierarchy.length
-
-      for (i = 0; i < len; i += 1) {
-        this._elem.hierarchy[i].finalTransform.mProp.applyToMatrix(matrix)
-      }
-    }
-
-    return matrix.inversePoint(arr)
-  }
-
-  function fromComp(arr) {
+  fromComp(arr) {
     const toWorldMat = new Matrix()
 
     toWorldMat.reset()
@@ -103,109 +85,114 @@ const LayerExpressionInterface = (function () {
     return toWorldMat.inversePoint(arr)
   }
 
-  function sampleImage() {
+  fromWorld(arr, time) {
+    const toWorldMat = this.getMatrix(time)
+
+    return this.invertPoint(toWorldMat, arr)
+  }
+
+  fromWorldVec(arr, time) {
+    const toWorldMat = this.getMatrix(time)
+
+    toWorldMat.props[12] = 0
+    toWorldMat.props[13] = 0
+    toWorldMat.props[14] = 0
+
+    return this.invertPoint(toWorldMat, arr)
+  }
+
+  getInterface(name: string | number) {
+    switch (name) {
+      case 'ADBE Root Vectors Group':
+      case 'Contents':
+      case 2: {
+        return this.shapeInterface
+      }
+      case 1:
+      case 6:
+      case 'Transform':
+      case 'transform':
+      case 'ADBE Transform Group': {
+        return this.transformInterface
+      }
+      case 4:
+      case 'ADBE Effect Parade':
+      case 'effects':
+      case 'Effects': {
+        return this.effect
+      }
+      case 'ADBE Text Properties': {
+        return this.textInterface
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
+  getMatrix(time?: number) {
+    const toWorldMat = new Matrix()
+
+    if (time === undefined) {
+      const transformMat = this._elem.finalTransform.mProp
+
+      transformMat.applyToMatrix(toWorldMat)
+
+    } else {
+      const propMatrix = this._elem.finalTransform.mProp.getValueAtTime(time)
+
+      propMatrix.clone(toWorldMat)
+    }
+
+    return toWorldMat
+  }
+
+  invertPoint(matrix, arr) {
+    if (this._elem.hierarchy?.length) {
+      let i
+
+      const len = this._elem.hierarchy.length
+
+      for (i = 0; i < len; i += 1) {
+        this._elem.hierarchy[i].finalTransform.mProp.applyToMatrix(matrix)
+      }
+    }
+
+    return matrix.inversePoint(arr)
+  }
+
+  registerEffectsInterface(effects) {
+    this.effect = effects
+  }
+
+  registerMaskInterface(maskManager) {
+    this.mask = new MaskManagerInterface(maskManager, elem)
+  }
+
+  sampleImage() {
     return [1,
       1,
       1,
       1]
   }
 
-  return function (elem) {
-    let transformInterface
-
-    function _registerMaskInterface(maskManager) {
-      _thisLayerFunction.mask = new MaskManagerInterface(maskManager, elem)
-    }
-    function _registerEffectsInterface(effects) {
-      _thisLayerFunction.effect = effects
-    }
-
-    function _thisLayerFunction(name) {
-      switch (name) {
-        case 'ADBE Root Vectors Group':
-        case 'Contents':
-        case 2: {
-          return _thisLayerFunction.shapeInterface
-        }
-        case 1:
-        case 6:
-        case 'Transform':
-        case 'transform':
-        case 'ADBE Transform Group': {
-          return transformInterface
-        }
-        case 4:
-        case 'ADBE Effect Parade':
-        case 'effects':
-        case 'Effects': {
-          return _thisLayerFunction.effect
-        }
-        case 'ADBE Text Properties': {
-          return _thisLayerFunction.textInterface
-        }
-        default: {
-          return null
-        }
-      }
-    }
-    _thisLayerFunction.getMatrix = getMatrix
-    _thisLayerFunction.invertPoint = invertPoint
-    _thisLayerFunction.applyPoint = applyPoint
-    _thisLayerFunction.toWorld = toWorld
-    _thisLayerFunction.toWorldVec = toWorldVec
-    _thisLayerFunction.fromWorld = fromWorld
-    _thisLayerFunction.fromWorldVec = fromWorldVec
-    _thisLayerFunction.toComp = toWorld
-    _thisLayerFunction.fromComp = fromComp
-    _thisLayerFunction.sampleImage = sampleImage
-    _thisLayerFunction.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
-    _thisLayerFunction._elem = elem
-    transformInterface = TransformExpressionInterface(elem.finalTransform.mProp)
-    const anchorPointDescriptor = getDescriptor(transformInterface, 'anchorPoint')
-
-    Object.defineProperties(_thisLayerFunction, {
-      active: {
-        get () {
-          return elem.isInRange
-        },
-      },
-      anchor_point: anchorPointDescriptor,
-      anchorPoint: anchorPointDescriptor,
-      hasParent: {
-        get () {
-          return elem.hierarchy.length
-        },
-      },
-      opacity: getDescriptor(transformInterface, 'opacity'),
-      parent: {
-        get () {
-          return elem.hierarchy[0].layerInterface
-        },
-      },
-      position: getDescriptor(transformInterface, 'position'),
-      rotation: getDescriptor(transformInterface, 'rotation'),
-      scale: getDescriptor(transformInterface, 'scale'),
-      transform: {
-        get () {
-          return transformInterface
-        },
-      },
-    })
-
-    _thisLayerFunction.startTime = elem.data.st
-    _thisLayerFunction.index = elem.data.ind
-    _thisLayerFunction.source = elem.data.refId
-    _thisLayerFunction.height = elem.data.ty === 0 ? elem.data.h : 100
-    _thisLayerFunction.width = elem.data.ty === 0 ? elem.data.w : 100
-    _thisLayerFunction.inPoint = elem.data.ip / elem.comp.globalData.frameRate
-    _thisLayerFunction.outPoint = elem.data.op / elem.comp.globalData.frameRate
-    _thisLayerFunction._name = elem.data.nm
-
-    _thisLayerFunction.registerMaskInterface = _registerMaskInterface
-    _thisLayerFunction.registerEffectsInterface = _registerEffectsInterface
-
-    return _thisLayerFunction
+  toComp(_arr, _time) {
+    throw new Error('Method is not implemented')
   }
-}())
 
-export default LayerExpressionInterface
+  toWorld(arr, time) {
+    const toWorldMat = this.getMatrix(time)
+
+    return this.applyPoint(toWorldMat, arr)
+  }
+
+  toWorldVec(arr: number[], time?: number) {
+    const toWorldMat = this.getMatrix(time)
+
+    toWorldMat.props[12] = 0
+    toWorldMat.props[13] = 0
+    toWorldMat.props[14] = 0
+
+    return this.applyPoint(toWorldMat, arr)
+  }
+}

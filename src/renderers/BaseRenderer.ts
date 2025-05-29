@@ -287,7 +287,7 @@ export default abstract class BaseRenderer extends FrameElement {
     }
   }
 
-  setProjectInterface(pInterface: ReturnType<typeof ProjectInterface> | null) {
+  setProjectInterface(pInterface: ProjectInterface | null) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }

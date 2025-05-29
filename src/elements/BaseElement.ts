@@ -32,7 +32,7 @@ export default abstract class BaseElement {
   itemsData: ShapeGroupData[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
-  layerInterface?: null | ReturnType<typeof LayerExpressionInterface> = null
+  layerInterface?: null | LayerExpressionInterface = null
   maskManager?: MaskElement
   shapesData: Shape[] = []
   type?: unknown
@@ -124,7 +124,7 @@ export default abstract class BaseElement {
         textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
         compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
 
-      this.layerInterface = layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
+      this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
       // if (!this.layerInterface) {
       //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
@@ -133,7 +133,7 @@ export default abstract class BaseElement {
       if (this.data.hasMask && this.maskManager) {
         this.layerInterface.registerMaskInterface(this.maskManager)
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const effectsInterface = effectsExpressionInterface.createEffectsInterface(this, this.layerInterface)
 
       this.layerInterface.registerEffectsInterface(effectsInterface)

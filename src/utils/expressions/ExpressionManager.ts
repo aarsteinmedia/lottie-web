@@ -169,7 +169,7 @@ function initiateExpression(
     anchorPoint: (type: string, duration: number, flag?: boolean) => void,
     // eslint-disable-next-line no-unassigned-vars
     scale: (type: string, duration: number, flag?: boolean) => void,
-    thisLayer: undefined | ((type: string, duration: number, flag?: boolean) => void),
+    thisLayer: undefined | LayerExpressionInterface,
     thisComp: (type: string, duration: number, flag?: boolean) => void,
     mask: (type: string, duration: number, flag?: boolean) => void,
     valueAtTime: (type: string, duration: number, flag?: boolean) => void,
@@ -283,7 +283,10 @@ function initiateExpression(
     velocityAtTime = this.getVelocityAtTime.bind(this)
   }
 
-  const comp = elem.comp.globalData.projectInterface.bind(elem.comp.globalData.projectInterface)
+  /**
+   *.bind(elem.comp.globalData.projectInterface).
+   */
+  const { projectInterface: comp } = elem.comp.globalData
 
   function lookAt(elem1, elem2) {
     const fVec = [elem2[0] - elem1[0],
@@ -512,7 +515,7 @@ function initiateExpression(
       fromCompToSurface = fromComp
     }
     if (!transform) {
-      transform = elem.layerInterface?.('ADBE Transform Group')
+      transform = elem.layerInterface?.getInterface('ADBE Transform Group')
       $bm_transform = transform
       if (transform) {
         anchorPoint = transform.anchorPoint
@@ -523,10 +526,10 @@ function initiateExpression(
     }
 
     if (elemType === 4 && !content) {
-      content = thisLayer('ADBE Root Vectors Group')
+      content = thisLayer?.getInterface('ADBE Root Vectors Group')
     }
     if (!effect) {
-      effect = thisLayer(4)
+      effect = thisLayer?.getInterface(4)
     }
     hasParent = Boolean(elem.hierarchy?.length)
     if (hasParent && !parent) {

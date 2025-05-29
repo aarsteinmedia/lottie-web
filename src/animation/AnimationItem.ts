@@ -71,7 +71,7 @@ export default class AnimationItem extends BaseEvent {
   public playCount: number
   public playDirection: AnimationDirection
   public playSpeed: number
-  public projectInterface: ReturnType<typeof ProjectInterface>
+  public projectInterface: ProjectInterface
 
   public renderer: SVGRenderer | CanvasRenderer | HybridRenderer
   public segmentPos: number
@@ -121,7 +121,7 @@ export default class AnimationItem extends BaseEvent {
     this.segments = []
     this._idle = true
     this._completedLoop = false
-    this.projectInterface = ProjectInterface()
+    this.projectInterface = new ProjectInterface()
     this.imagePreloader = new ImagePreloader()
     this.audioController = new AudioController()
     this.markers = []
@@ -304,7 +304,7 @@ export default class AnimationItem extends BaseEvent {
     this.renderer = null as unknown as SVGRenderer
     this.expressionsPlugin = null // as unknown as typeof Expressions
     this.imagePreloader = null
-    this.projectInterface = null as unknown as ReturnType<typeof ProjectInterface>
+    this.projectInterface = null as unknown as ProjectInterface
   }
 
   public getAssetData(id?: string) {

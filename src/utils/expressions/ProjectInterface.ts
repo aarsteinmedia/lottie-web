@@ -1,31 +1,29 @@
-const ProjectInterface = (function () {
-  function registerComposition(comp) {
-    this.compositions.push(comp);
-  }
+import type { CompElementInterface } from '@/types'
 
-  return function () {
-    function _thisProjectFunction(name) {
-      var i = 0;
-      var len = this.compositions.length;
-      while (i < len) {
-        if (this.compositions[i].data && this.compositions[i].data.nm === name) {
-          if (this.compositions[i].prepareFrame && this.compositions[i].data.xt) {
-            this.compositions[i].prepareFrame(this.currentFrame);
-          }
-          return this.compositions[i].compInterface;
+export default class ProjectInterface {
+  compositions: CompElementInterface[] = []
+  currentFrame = 0
+  getComposition(name?: string) {
+    let i = 0
+
+    const { length } = this.compositions
+
+    while (i < length) {
+      if (this.compositions[i].data && this.compositions[i].data?.nm === name) {
+        if (this.compositions[i].data?.xt) {
+          this.compositions[i].prepareFrame(this.currentFrame)
         }
-        i += 1;
+
+        return this.compositions[i].compInterface
       }
-      return null;
+      i += 1
     }
 
-    _thisProjectFunction.compositions = [];
-    _thisProjectFunction.currentFrame = 0;
+    return null
 
-    _thisProjectFunction.registerComposition = registerComposition;
+  }
 
-    return _thisProjectFunction;
-  };
-}());
-
-export default ProjectInterface;
+  registerComposition(comp: CompElementInterface) {
+    this.compositions.push(comp)
+  }
+}
