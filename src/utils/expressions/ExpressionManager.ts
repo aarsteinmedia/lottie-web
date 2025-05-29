@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
-
 import type {
-  ElementInterfaceIntersect, ExpressionProperty, Vector2, Vector3
+  ElementInterfaceIntersect, ExpressionProperty, Vector2,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import seedrandom from '@/3rd_party/seedrandom'
-import { degToRads } from '@/utils'
+import {
+  clamp,
+  degToRads, hslToRgb, rgbToHsl
+} from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import { BMMath } from '@/utils/common'
 import { ArrayType, PropType } from '@/utils/enums'
@@ -83,74 +84,27 @@ function $bm_neg(a: unknown) {
   return -(a as number)
 }
 
-function clamp(
-  num: number, min: number, max: number
-) {
-  if (min > max) {
-    const mm = max
-
-    max = min
-    min = mm
-  }
-
-  return Math.min(Math.max(num, min), max)
-}
-
 function createPath(
-  points: number[], inTangents: Vector2, outTangents: Vector2, closed?: boolean
+  points: Vector2[], inTangents: Vector2[], outTangents: Vector2[], closed?: boolean
 ) {
 
-  const { length } = points
+  const { length: len } = points
   const path = shapePool.newElement<ShapePath>()
 
-  path.setPathData(Boolean(closed), length)
+  path.setPathData(Boolean(closed), len)
   const arrPlaceholder = [0, 0]
-  let inVertexPoint
-  let outVertexPoint
+  let inVertexPoint,
+    outVertexPoint
 
-  for (let i = 0; i < length; i++) {
-    inVertexPoint = inTangents?.[i] ? inTangents[i] : arrPlaceholder
-    outVertexPoint = outTangents?.[i] ? outTangents[i] : arrPlaceholder
+  for (let i = 0; i < len; i++) {
+    inVertexPoint = inTangents[i] ?? arrPlaceholder
+    outVertexPoint = outTangents[i] ?? arrPlaceholder
     path.setTripleAt(
       points[i][0], points[i][1], outVertexPoint[0] + points[i][0], outVertexPoint[1] + points[i][1], inVertexPoint[0] + points[i][0], inVertexPoint[1] + points[i][1], i, true
     )
   }
 
   return path
-}
-
-function hslToRgb(val: number[]) {
-  const h = val[0]
-  const s = val[1]
-  const l = val[2]
-
-  let r
-  let g
-  let b
-
-  if (s === 0) {
-    r = l // achromatic
-    b = l // achromatic
-    g = l // achromatic
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
-    const p = 2 * l - q
-
-    r = hue2rgb(
-      p, q, h + 1 / 3
-    )
-    g = hue2rgb(
-      p, q, h
-    )
-    b = hue2rgb(
-      p, q, h - 1 / 3
-    )
-  }
-
-  return [r,
-    g,
-    b,
-    val[3]]
 }
 
 function initiateExpression(
@@ -174,7 +128,7 @@ function initiateExpression(
     needsVelocity = /velocity\b/.test(val),
     _needsRandom = val.includes('random'),
     {
-      ip, nm, op, sh, sw, ty: elemType
+      ip, nm, op, sh = 0, sw = 0, ty: elemType
     } = elem.data
 
   let transform,
@@ -196,8 +150,8 @@ function initiateExpression(
   elem.comp.displayStartTime = 0
   const inPoint = ip / elem.comp.globalData.frameRate,
     outPoint = op / elem.comp.globalData.frameRate,
-    width = sw ?? 0,
-    height = sh ?? 0,
+    width = sw,
+    height = sh,
     name = nm
   let loopIn: (type: string, duration: number, flag?: boolean) => void,
     loop_in: (type: string, duration: number, flag?: boolean) => void,
@@ -209,9 +163,12 @@ function initiateExpression(
     fromComp: (type: string, duration: number, flag?: boolean) => void,
     toComp: (type: string, duration: number, flag?: boolean) => void,
     fromCompToSurface: (type: string, duration: number, flag?: boolean) => void,
+    // eslint-disable-next-line no-unassigned-vars
     position: (type: string, duration: number, flag?: boolean) => void,
+    // eslint-disable-next-line no-unassigned-vars
     rotation: (type: string, duration: number, flag?: boolean) => void,
     anchorPoint: (type: string, duration: number, flag?: boolean) => void,
+    // eslint-disable-next-line no-unassigned-vars
     scale: (type: string, duration: number, flag?: boolean) => void,
     thisLayer: (type: string, duration: number, flag?: boolean) => void,
     thisComp: (type: string, duration: number, flag?: boolean) => void,
@@ -248,7 +205,7 @@ function initiateExpression(
 
   const active = !this.data || this.data.hd !== true
 
-  const wiggle = function wiggle(freqFromProps: number, amp) {
+  const wiggle = (freqFromProps: number, amp: number) => {
     let freq = freqFromProps
     let iWiggle
 
@@ -284,7 +241,7 @@ function initiateExpression(
     }
 
     return this.pv + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
-  }.bind(this)
+  }
 
   if (thisProperty.loopIn) {
     loopIn = thisProperty.loopIn.bind(thisProperty)
@@ -501,27 +458,22 @@ function initiateExpression(
     return ''
   }
 
-  function substr(init, end) {
+  function substr(init: number, end: number) {
     if (typeof value === 'string') {
       if (end === undefined) {
         return value.slice(init)
       }
 
-      return value.substr(init, end)
+      return value.slice(init, end)
     }
 
     return ''
   }
 
-  function posterizeTime(framesPerSecond) {
-    time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
-    value = valueAtTime(time)
-  }
-
-  let time: number
+  let time = 0
 
   let velocity
-  let value: unknown
+  let value: unknown = null
   let text
   let textIndex
   let textTotal
@@ -533,10 +485,16 @@ function initiateExpression(
   const randSeed = Math.floor(Math.random() * 1000000)
   const { globalData } = elem
 
+  function posterizeTime(framesPerSecond) {
+    time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
+    value = valueAtTime(time)
+  }
+
   function executeExpression(this: KeyframedValueProperty, _value: number) {
     // globalData.pushExpression();
     value = _value
-    if (this.frameExpressionId === elem.globalData.frameId && this.propType !== PropType.TextSelector) {
+
+    if (this.frameExpressionId === globalData.frameId && this.propType !== PropType.TextSelector) {
       return value
     }
     if (this.propType === PropType.TextSelector) {
@@ -556,7 +514,7 @@ function initiateExpression(
       fromCompToSurface = fromComp
     }
     if (!transform) {
-      transform = elem.layerInterface('ADBE Transform Group')
+      transform = elem.layerInterface?.('ADBE Transform Group')
       $bm_transform = transform
       if (transform) {
         anchorPoint = transform.anchorPoint
@@ -588,7 +546,7 @@ function initiateExpression(
       // transform,
       // loopOut,
     )
-    this.frameExpressionId = elem.globalData.frameId
+    this.frameExpressionId = elem.globalData?.frameId
 
     // TODO: Check if it's possible to return on ShapeInterface the .v value
     // Changed this to a ternary operation because Rollup failed compiling it correctly
@@ -727,45 +685,6 @@ function random(min: number, max?: number) {
 
 function resetFrame() {
   _lottieGlobal = {}
-}
-
-function rgbToHsl(val: number[]) {
-  const r = val[0]; const g = val[1]; const b = val[2]
-  const max = Math.max(
-    r, g, b
-  )
-  const min = Math.min(
-    r, g, b
-  )
-  let h
-
-  let s
-  const l = (max + min) / 2
-
-  if (max === min) {
-    h = 0 // achromatic
-    s = 0 // achromatic
-  } else {
-    const d = max - min
-
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-    switch (max) {
-      case r: { h = (g - b) / d + (g < b ? 6 : 0); break
-      }
-      case g: { h = (b - r) / d + 2; break
-      }
-      case b: { h = (r - g) / d + 4; break
-      }
-      default: { break
-      }
-    }
-    h /= 6
-  }
-
-  return [h,
-    s,
-    l,
-    val[3]]
 }
 
 function $bm_isInstanceOfArray(arr: unknown[]) {

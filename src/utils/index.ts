@@ -434,6 +434,21 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       return `${getIDPrefix()}__lottie_element_${_count}`
     }
   }()),
+  clamp = (
+    n: number, minFromProps = 0, maxFromProps = 100
+  ) => {
+    let min = minFromProps,
+      max = maxFromProps
+
+    if (min > max) {
+      const mm = max
+
+      max = min
+      min = mm
+    }
+
+    return Math.min(Math.max(n, min), max)
+  },
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   createNS = <T extends SVGElement>(type: string) => {
     if (isServer()) {
@@ -532,7 +547,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return Math.atan2(0, 1) - Math.atan2(pVector[1], pVector[0])
   },
-  hslToRGB = (val: number[]): Vector4 => {
+  hslToRgb = (val: number[]): Vector4 => {
     const h = val[0],
       s = val[1],
       l = val[2]
@@ -925,7 +940,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return `#${colorMap[r]}${colorMap[g]}${colorMap[b]}`
   },
-  rgbToHSL = (val: Vector4) => {
+  rgbToHsl = (val: Vector4) => {
     const r = val[0],
       g = val[1],
       b = val[2],

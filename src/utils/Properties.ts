@@ -5,6 +5,7 @@ import type {
   DocumentData,
   EffectFunction,
   ElementInterfaceIntersect,
+  ExpressionProperty,
   Keyframe,
   Shape,
   Svalue,
@@ -121,6 +122,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   getVelocityAtTime(_frameNum: number): number {
     throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
+  }
+
+  initiateExpression(
+    _elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty
+  ) {
+    throw new Error('Method not implemented')
   }
 
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {

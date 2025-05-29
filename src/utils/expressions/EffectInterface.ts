@@ -109,13 +109,13 @@ function createGroupInterface(
 }
 
 function createValueInterface(
-  element, type, elem: ElementInterfaceIntersect, propertyGroup
+  element, type: number, elem: ElementInterfaceIntersect, propertyGroup
 ) {
   const expressionProperty = ExpressionPropertyInterface(element.p)
 
   function interfaceFunction() {
     if (type === 10) {
-      return elem.comp.compInterface(element.p.v)
+      return elem.comp?.compInterface?.(element.p.v)
     }
 
     return expressionProperty()

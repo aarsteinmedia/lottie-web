@@ -1,44 +1,95 @@
-import ExpressionManager from './ExpressionManager';
-import expressionHelpers from './expressionHelpers';
-import TextSelectorProp from '../text/TextSelectorProperty';
+import type {
+  CompElementInterface,
+  ElementInterfaceIntersect, ExpressionProperty, LottieLayer, TextRangeValue,
+  Vector3
+} from '@/types'
 
-const TextExpressionSelectorPropFactory = (function () { // eslint-disable-line no-unused-vars
-  function getValueProxy(index, total) {
-    this.textIndex = index + 1;
-    this.textTotal = total;
-    this.v = this.getValue() * this.mult;
-    return this.v;
-  }
+import { PropType } from '@/utils/enums'
+import expressionHelpers from '@/utils/expressions/expressionHelpers'
+import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import TextSelectorProp from '@/utils/text/TextSelectorProperty'
 
-  return function (elem, data) {
-    this.pv = 1;
-    this.comp = elem.comp;
-    this.elem = elem;
-    this.mult = 0.01;
-    this.propType = 'textSelector';
-    this.textTotal = data.totalChars;
-    this.selectorValue = 100;
-    this.lastValue = [1, 1, 1];
-    this.k = true;
-    this.x = true;
-    this.getValue = ExpressionManager.initiateExpression.bind(this)(elem, data, this);
-    this.getMult = getValueProxy;
-    this.getVelocityAtTime = expressionHelpers.getVelocityAtTime;
+import type { KeyframedValueProperty } from '../Properties'
+
+export default class TextExpressionSelectorPropFactory {
+  comp?: CompElementInterface
+  elem: ElementInterfaceIntersect
+  k: boolean
+  lastValue: Vector3
+  mult: number
+  propType: PropType
+  pv: number
+  selectorValue: number
+  textIndex?: number
+  textTotal: number
+
+
+  v?: number
+
+  x: boolean
+
+  constructor (
+    elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, _arr?: unknown[]
+  ) {
+    this.pv = 1
+    this.comp = elem.comp
+    this.elem = elem
+    this.mult = 0.01
+    this.propType = PropType.TextSelector
+    this.textTotal = data.totalChars
+    this.selectorValue = 100
+    this.lastValue = [1,
+      1,
+      1]
+    this.k = true
+    this.x = true
+    this.getValue = ExpressionManager.initiateExpression.bind(this)(
+      elem, data, this as unknown as KeyframedValueProperty
+    )
+    this.getMult = this.getValueProxy
+    this.getVelocityAtTime = expressionHelpers.getVelocityAtTime
     if (this.kf) {
-      this.getValueAtTime = expressionHelpers.getValueAtTime.bind(this);
+      this.getValueAtTime = expressionHelpers.getValueAtTime.bind(this)
     } else {
-      this.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(this);
+      this.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(this)
     }
-    this.setGroupProperty = expressionHelpers.setGroupProperty;
-  };
-}());
-
-var propertyGetTextProp = TextSelectorProp.getTextSelectorProp;
-TextSelectorProp.getTextSelectorProp = function (elem, data, arr) {
-  if (data.t === 1) {
-    return new TextExpressionSelectorPropFactory(elem, data, arr); // eslint-disable-line no-undef
+    this.setGroupProperty = expressionHelpers.setGroupProperty
   }
-  return propertyGetTextProp(elem, data, arr);
-};
 
-export default TextExpressionSelectorPropFactory;
+  getTextSelectorProp(
+    _elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]
+  ): KeyframedValueProperty {
+    throw new Error('Method not implemented')
+  }
+
+  getValue(
+    _elem?: ElementInterfaceIntersect, _data?: TextRangeValue & ExpressionProperty, _prop?: KeyframedValueProperty
+  ): number {
+    throw new Error('Method not implemented')
+  }
+
+  getValueProxy(index: number, total: number) {
+    this.textIndex = index + 1
+    this.textTotal = total
+    this.v = this.getValue() * this.mult
+
+    return this.v
+  }
+}
+
+const propertyGetTextProp = TextSelectorProp.prototype.getTextSelectorProp
+
+TextSelectorProp.prototype.getTextSelectorProp = function (
+  elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, arr: unknown[]
+) {
+  if (data.t === 1) {
+    return new TextExpressionSelectorPropFactory(
+      elem, data, arr
+    )
+  }
+
+  propertyGetTextProp(
+    elem, data, arr
+  )
+}
+
