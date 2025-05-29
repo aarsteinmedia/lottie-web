@@ -1,43 +1,45 @@
-const TextExpressionInterface = (() => {
-  return function (elem) {
-    let _sourceText
+import type { ElementInterfaceIntersect } from '@/types'
 
-    function _thisLayerFunction(name) {
-      switch (name) {
-        case 'ADBE Text Document': {
-          return _thisLayerFunction.sourceText
+export default class TextExpressionInterface {
+
+  _sourceText?: { value: string }
+
+  elem: ElementInterfaceIntersect
+
+  get sourceText() {
+    this.elem.textProperty?.getValue()
+    const stringValue = this.elem.textProperty?.currentData.t
+
+    if (!this._sourceText || stringValue !== this._sourceText.value) {
+      this._sourceText = new String(stringValue) // eslint-disable-line no-new-wrappers
+      // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
+      this._sourceText.value = stringValue || new String(stringValue) // eslint-disable-line no-new-wrappers
+      Object.defineProperty(
+        this._sourceText, 'style', {
+          get() {
+            return { fillColor: this.elem.textProperty.currentData.fc }
+          },
         }
-        default: {
-          return null
-        }
+      )
+    }
+
+    return this._sourceText
+  }
+
+  constructor(elem: ElementInterfaceIntersect) {
+
+    this.elem = elem
+  }
+
+  getInterface (name: string) {
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (name) {
+      case 'ADBE Text Document': {
+        return this.sourceText
+      }
+      default: {
+        return null
       }
     }
-    Object.defineProperty(
-      _thisLayerFunction, 'sourceText', {
-        get () {
-          elem.textProperty.getValue()
-          const stringValue = elem.textProperty.currentData.t
-
-          if (!_sourceText || stringValue !== _sourceText.value) {
-            _sourceText = new String(stringValue) // eslint-disable-line no-new-wrappers
-            // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
-            _sourceText.value = stringValue || new String(stringValue) // eslint-disable-line no-new-wrappers
-            Object.defineProperty(
-              _sourceText, 'style', {
-                get () {
-                  return { fillColor: elem.textProperty.currentData.fc }
-                },
-              }
-            )
-          }
-
-          return _sourceText
-        },
-      }
-    )
-
-    return _thisLayerFunction
   }
-})()
-
-export default TextExpressionInterface
+}

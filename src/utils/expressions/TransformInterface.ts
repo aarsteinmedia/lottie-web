@@ -2,143 +2,148 @@ import type { TransformProperty } from '@/utils/TransformProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 
-const TransformExpressionInterface = (() => {
-  return function (transform: TransformProperty) {
-    function _thisFunction(name: string | number) {
-      switch (name) {
-        case 'scale':
-        case 'Scale':
-        case 'ADBE Scale':
-        case 6: {
-          return _thisFunction.scale
-        }
-        case 'rotation':
-        case 'Rotation':
-        case 'ADBE Rotation':
-        case 'ADBE Rotate Z':
-        case 10: {
-          return _thisFunction.rotation
-        }
-        case 'ADBE Rotate X': {
-          return _thisFunction.xRotation
-        }
-        case 'ADBE Rotate Y': {
-          return _thisFunction.yRotation
-        }
-        case 'position':
-        case 'Position':
-        case 'ADBE Position':
-        case 2: {
-          return _thisFunction.position
-        }
-        case 'ADBE Position_0': {
-          return _thisFunction.xPosition
-        }
-        case 'ADBE Position_1': {
-          return _thisFunction.yPosition
-        }
-        case 'ADBE Position_2': {
-          return _thisFunction.zPosition
-        }
-        case 'anchorPoint':
-        case 'AnchorPoint':
-        case 'Anchor Point':
-        case 'ADBE AnchorPoint':
-        case 1: {
-          return _thisFunction.anchorPoint
-        }
-        case 'opacity':
-        case 'Opacity':
-        case 11: {
-          return _thisFunction.opacity
-        }
-        default: {
-          return null
-        }
-      }
+export default class TransformExpressionInterface {
+  transform: TransformProperty
+
+  get anchorPoint() {
+    return ExpressionPropertyInterface(this.transform.a)
+  }
+
+
+  get opacity() {
+    return ExpressionPropertyInterface(this.transform.o)
+  }
+
+  get orientation() {
+    return ExpressionPropertyInterface(this.transform.or)
+  }
+
+  get position() {
+    if (this.transform.p) {
+      return this._transformFactory?.()
     }
-    Object.defineProperty(
-      _thisFunction, 'rotation', { get: ExpressionPropertyInterface(transform.r ?? transform.rz) }
-    )
 
-    Object.defineProperty(
-      _thisFunction, 'zRotation', { get: ExpressionPropertyInterface(transform.rz ?? transform.r) }
-    )
+    return [
+      this._px?.(),
+      this._py?.(),
+      this._pz?.() ?? 0]
+  }
 
-    Object.defineProperty(
-      _thisFunction, 'xRotation', { get: ExpressionPropertyInterface(transform.rx) }
-    )
+  get rotation() {
+    return ExpressionPropertyInterface(this.transform.r ?? this.transform.rz)
+  }
 
-    Object.defineProperty(
-      _thisFunction, 'yRotation', { get: ExpressionPropertyInterface(transform.ry) }
-    )
-    Object.defineProperty(
-      _thisFunction, 'scale', { get: ExpressionPropertyInterface(transform.s) }
-    )
-    let _px
+  get scale() {
+    return ExpressionPropertyInterface(this.transform.s)
+  }
 
-    let _py
-    let _pz
-    let _transformFactory
+  get skew() {
+    return ExpressionPropertyInterface(this.transform.sk)
+  }
+
+  get skewAxis() {
+    return ExpressionPropertyInterface(this.transform.sa)
+  }
+
+  get xPosition() {
+    return ExpressionPropertyInterface(this.transform.px)
+  }
+
+  get xRotation() {
+    return ExpressionPropertyInterface(this.transform.rx)
+  }
+
+  get yPosition() {
+    return ExpressionPropertyInterface(this.transform.py)
+  }
+
+
+  get yRotation() {
+    return ExpressionPropertyInterface(this.transform.ry)
+  }
+
+  get zPosition() {
+    return ExpressionPropertyInterface(this.transform.pz)
+  }
+
+  get zRotation() {
+    return ExpressionPropertyInterface(this.transform.rz ?? this.transform.r)
+  }
+
+  private _px
+
+  private _py
+
+  private _pz
+
+  private _transformFactory
+
+  constructor (transform: TransformProperty) {
+    this.transform = transform
 
     if (transform.p) {
-      _transformFactory = ExpressionPropertyInterface(transform.p)
+      this._transformFactory = ExpressionPropertyInterface(transform.p)
     } else {
-      _px = ExpressionPropertyInterface(transform.px)
-      _py = ExpressionPropertyInterface(transform.py)
+      this._px = ExpressionPropertyInterface(transform.px)
+      this._py = ExpressionPropertyInterface(transform.py)
       if (transform.pz) {
-        _pz = ExpressionPropertyInterface(transform.pz)
+        this._pz = ExpressionPropertyInterface(transform.pz)
       }
     }
-    Object.defineProperty(
-      _thisFunction, 'position', {
-        get () {
-          if (transform.p) {
-            return _transformFactory()
-          }
 
-          return [
-            _px(),
-            _py(),
-            _pz ? _pz() : 0]
-        },
-      }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'xPosition', { get: ExpressionPropertyInterface(transform.px) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'yPosition', { get: ExpressionPropertyInterface(transform.py) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'zPosition', { get: ExpressionPropertyInterface(transform.pz) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'anchorPoint', { get: ExpressionPropertyInterface(transform.a) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'opacity', { get: ExpressionPropertyInterface(transform.o) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'skew', { get: ExpressionPropertyInterface(transform.sk) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'skewAxis', { get: ExpressionPropertyInterface(transform.sa) }
-    )
-
-    Object.defineProperty(
-      _thisFunction, 'orientation', { get: ExpressionPropertyInterface(transform.or) }
-    )
-
-    return _thisFunction
   }
-})()
 
-export default TransformExpressionInterface
+  getInterface (name: string | number) {
+    switch (name) {
+      case 'scale':
+      case 'Scale':
+      case 'ADBE Scale':
+      case 6: {
+        return this.scale
+      }
+      case 'rotation':
+      case 'Rotation':
+      case 'ADBE Rotation':
+      case 'ADBE Rotate Z':
+      case 10: {
+        return this.rotation
+      }
+      case 'ADBE Rotate X': {
+        return this.xRotation
+      }
+      case 'ADBE Rotate Y': {
+        return this.yRotation
+      }
+      case 'position':
+      case 'Position':
+      case 'ADBE Position':
+      case 2: {
+        return this.position
+      }
+      case 'ADBE Position_0': {
+        return this.xPosition
+      }
+      case 'ADBE Position_1': {
+        return this.yPosition
+      }
+      case 'ADBE Position_2': {
+        return this.zPosition
+      }
+      case 'anchorPoint':
+      case 'AnchorPoint':
+      case 'Anchor Point':
+      case 'ADBE AnchorPoint':
+      case 1: {
+        return this.anchorPoint
+      }
+      case 'opacity':
+      case 'Opacity':
+      case 11: {
+        return this.opacity
+      }
+      default: {
+        return null
+      }
+    }
+  }
+}

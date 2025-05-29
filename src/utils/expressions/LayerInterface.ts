@@ -1,4 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
+import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 
 import { getDescriptor } from '@/utils'
 import MaskManagerInterface from '@/utils/expressions/MaskInterface'
@@ -7,6 +9,11 @@ import Matrix from '@/utils/Matrix'
 
 export default class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
+  content?: ShapeExpressionInterface
+  shapeInterface?: ShapeExpressionInterface
+  text?: TextExpressionInterface
+  textInterface?: TextExpressionInterface
+  transformInterface: TransformExpressionInterface
 
   get active() {
     return this._elem.isInRange
@@ -27,7 +34,7 @@ export default class LayerExpressionInterface {
   constructor (elem: ElementInterfaceIntersect) {
     this.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
     this._elem = elem
-    this.transformInterface = TransformExpressionInterface(elem.finalTransform.mProp)
+    this.transformInterface = new TransformExpressionInterface(elem.finalTransform.mProp)
     const anchorPointDescriptor = getDescriptor(this.transformInterface, 'anchorPoint')
 
     this.anchor_point = anchorPointDescriptor

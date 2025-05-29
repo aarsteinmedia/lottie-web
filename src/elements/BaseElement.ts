@@ -144,7 +144,7 @@ export default abstract class BaseElement {
         return
       }
       if (this.data.ty === 4) {
-        this.layerInterface.shapeInterface = shapeExpressionInterface(
+        this.layerInterface.shapeInterface = new shapeExpressionInterface(
           this.shapesData,
           this.itemsData,
           this.layerInterface
@@ -154,7 +154,7 @@ export default abstract class BaseElement {
         return
       }
       if (this.data.ty === 5) {
-        this.layerInterface.textInterface = textExpressionInterface(this as unknown as ElementInterfaceIntersect)
+        this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
         this.layerInterface.text = this.layerInterface.textInterface
       }
     } catch (error) {
