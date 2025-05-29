@@ -35,12 +35,11 @@ import CanvasRenderer from '@/renderers/CanvasRenderer'
 import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
-// TODO:
+import { Modifier, RendererType } from '@/utils/enums'
 import {
   setExpressionInterfaces,
   setExpressionsPlugin,
-} from '@/utils/BMMath'
-import { Modifier, RendererType } from '@/utils/enums'
+} from '@/utils/expressions'
 import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import Expressions from '@/utils/expressions/Expressions'
 import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'

@@ -23,7 +23,7 @@ import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import ShapeElement from '@/elements/ShapeElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { getBlendMode, logPrototype } from '@/utils'
+import { getBlendMode } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'

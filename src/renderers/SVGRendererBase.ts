@@ -14,7 +14,7 @@ import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import { createElementID, createNS } from '@/utils'
-import { getExpressionsPlugin } from '@/utils/BMMath'
+import { getExpressionsPlugin } from '@/utils/expressions'
 import { getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 

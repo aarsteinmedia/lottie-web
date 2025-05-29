@@ -2,8 +2,6 @@ import { isArrayOfNum } from '@/utils'
 import { getShouldRoundValues } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 
-let expressionsPlugin = null
-let expressionsInterfaces = null
 const bmPow = Math.pow,
   bmSqrt = Math.sqrt,
   bmFloor = Math.floor,
@@ -80,7 +78,6 @@ BMMath.abs = (val: number | number[]) => {
   return Math.abs(val)
 }
 
-
 function bmRnd(value: number) {
   if (getShouldRoundValues()) {
     return Math.round(value)
@@ -88,12 +85,6 @@ function bmRnd(value: number) {
 
   return value
 }
-
-
-const setExpressionsPlugin = (value) => { expressionsPlugin = value }
-const getExpressionsPlugin = () => expressionsPlugin
-const setExpressionInterfaces = (value) => { expressionsInterfaces = value }
-const getExpressionInterfaces = () => expressionsInterfaces
 
 export {
   bmFloor,
@@ -103,8 +94,4 @@ export {
   bmPow,
   bmRnd,
   bmSqrt,
-  getExpressionInterfaces,
-  getExpressionsPlugin,
-  setExpressionInterfaces,
-  setExpressionsPlugin,
 }

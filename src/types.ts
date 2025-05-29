@@ -88,6 +88,8 @@ import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty
 import type TextProperty from '@/utils/text/TextProperty'
 import type { TransformProperty } from '@/utils/TransformProperty'
 
+import type SVGTextLottieElement from './elements/svg/SVGTextElement'
+
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
   | 'drawnFrame'
@@ -168,8 +170,8 @@ export type ElementInterfaceIntersect = CVCompElement &
   MaskElement &
   SVGBaseElement &
   SVGShapeElement &
-  SVGTextElement &
-  SVGStopElement &
+  SVGTextLottieElement &
+  // SVGStopElement &
   SVGStrokeStyleData &
   TextElement &
   BaseRenderer &

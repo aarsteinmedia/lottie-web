@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
-import { getExpressionInterfaces } from '@/utils/BMMath'
+import { getExpressionInterfaces } from '@/utils/expressions'
 
 export default class FootageElement extends RenderableElement {
   assetData: null | LottieAsset = null

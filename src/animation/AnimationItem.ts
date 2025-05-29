@@ -31,11 +31,11 @@ import {
 } from '@/renderers'
 import { createElementID, markerParser } from '@/utils'
 import AudioController from '@/utils/audio/AudioController'
-import { getExpressionsPlugin } from '@/utils/BMMath'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
+import { getExpressionsPlugin } from '@/utils/expressions'
 import ProjectInterface from '@/utils/expressions/ProjectInterface'
 import { getSubframeEnabled } from '@/utils/getterSetter'
 import ImagePreloader from '@/utils/ImagePreloader'
