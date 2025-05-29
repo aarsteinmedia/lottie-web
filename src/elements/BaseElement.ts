@@ -18,7 +18,7 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 
 import EffectsManager from '@/effects/EffectsManager'
 import { createElementID, getBlendMode } from '@/utils'
-import { getExpressionInterfaces } from '@/utils/common'
+import { getExpressionInterfaces } from '@/utils/BMMath'
 
 export default abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement

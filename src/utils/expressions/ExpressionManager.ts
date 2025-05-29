@@ -12,7 +12,7 @@ import {
   degToRads, hslToRgb, rgbToHsl
 } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
-import { BMMath } from '@/utils/common'
+import { BMMath } from '@/utils/BMMath'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
@@ -26,7 +26,6 @@ const Math = BMMath as Math,
 let _lottieGlobal = {}
 
 seedrandom(BMMath)
-
 
 const $bm_div = div,
 
@@ -230,7 +229,7 @@ function initiateExpression(
         addedAmps[j] += -amp + amp * 2 * BMMath.random()
         // addedAmps[j] += -amp + amp*2*rnd;
       }
-      iWiggle += 1
+      iWiggle++
     }
     // var rnd2 = BMMath.random();
     const periods = time * freq

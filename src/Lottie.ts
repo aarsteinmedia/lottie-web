@@ -39,7 +39,7 @@ import { isServer } from '@/utils'
 import {
   setExpressionInterfaces,
   setExpressionsPlugin,
-} from '@/utils/common'
+} from '@/utils/BMMath'
 import { Modifier, RendererType } from '@/utils/enums'
 import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
 import Expressions from '@/utils/expressions/Expressions'
