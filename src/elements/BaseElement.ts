@@ -23,7 +23,7 @@ import { getExpressionInterfaces } from '@/utils/expressions'
 export default abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement
   comp?: CompElementInterface
-  compInterface?: ReturnType<typeof CompExpressionInterface>
+  compInterface?: CompExpressionInterface
   data?: LottieLayer
   dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
@@ -139,7 +139,7 @@ export default abstract class BaseElement {
       this.layerInterface.registerEffectsInterface(effectsInterface)
 
       if (this.data.ty === 0 || this.data.xt) {
-        this.compInterface = compExpressionInterface(this as unknown as ElementInterfaceIntersect)
+        this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
         return
       }

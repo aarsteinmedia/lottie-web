@@ -1,11 +1,13 @@
 import type { ElementInterfaceIntersect } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 
-function createEffectsInterface(elem: ElementInterfaceIntersect, propertyGroup) {
+function createEffectsInterface(elem: ElementInterfaceIntersect, propertyGroup: LayerExpressionInterface) {
   // console.log(propertyGroup)
   if (elem.effectsManager) {
     const effectElements = []
@@ -20,7 +22,7 @@ function createEffectsInterface(elem: ElementInterfaceIntersect, propertyGroup) 
     }
 
     const effects = elem.data.ef || []
-    const groupInterface = function (name) {
+    const groupInterface = function (name: string) {
       i = 0
       len = effects.length
       while (i < len) {
@@ -109,13 +111,13 @@ function createGroupInterface(
 }
 
 function createValueInterface(
-  element, type: number, elem: ElementInterfaceIntersect, propertyGroup
+  element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup
 ) {
   const expressionProperty = ExpressionPropertyInterface(element.p)
 
   function interfaceFunction() {
     if (type === 10) {
-      return elem.comp?.compInterface?.(element.p.v)
+      return elem.comp?.compInterface?.getInterface(element.p.v)
     }
 
     return expressionProperty()

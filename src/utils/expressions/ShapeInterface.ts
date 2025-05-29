@@ -65,7 +65,7 @@ const ShapeExpressionInterface = (function () {
           break
         }
         case ShapeType.Path: {
-          arr.push(ShapePathInterface(
+          arr.push(new ShapePathInterface(
             shapes[i], view[i], propertyGroup
           ))
 

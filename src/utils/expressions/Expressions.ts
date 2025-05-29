@@ -41,7 +41,7 @@ function initExpressions(animation: AnimationItem) {
     throw new Error('Renderer -> GlobalData is not set')
   }
 
-  animation.renderer.compInterface = CompExpressionInterface(animation.renderer)
+  animation.renderer.compInterface = new CompExpressionInterface(animation.renderer)
   animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
   animation.renderer.globalData.pushExpression = pushExpression
   animation.renderer.globalData.popExpression = popExpression

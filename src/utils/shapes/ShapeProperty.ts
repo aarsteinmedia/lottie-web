@@ -101,6 +101,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public localShapeCollection?: ShapeCollection
   lock?: boolean
   offsetTime = 0
+  p?: MultiDimensionalProperty
   public paths?: ShapePath[] | ShapeCollection
   public pv?: ShapePath
   public v?: ShapePath
@@ -354,7 +355,6 @@ export class RectShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or?: ValueProperty
   os?: ValueProperty
-  p: MultiDimensionalProperty
   pt?: ValueProperty
   r: ValueProperty
   s: MultiDimensionalProperty
@@ -401,6 +401,10 @@ export class RectShapeProperty extends ShapeBaseProperty {
   }
 
   convertRectToPath() {
+    if (!this.p) {
+      throw new Error(`${this.constructor.name}: p value is not implemented`)
+    }
+
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
       v0 = this.s.v[0] / 2,
@@ -655,7 +659,6 @@ export class StarShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or: ValueProperty
   os: ValueProperty
-  p: MultiDimensionalProperty
   pt: ValueProperty
   r: ValueProperty
   s?: ValueProperty
@@ -739,6 +742,11 @@ export class StarShapeProperty extends ShapeBaseProperty {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
+
+    if (!this.p) {
+      throw new Error(`${this.constructor.name}: p value is not implemented`)
+    }
+
     const numPts = Math.floor(this.pt.v),
       angle = Math.PI * 2 / numPts,
       rad = this.or.v,
@@ -815,8 +823,8 @@ export class StarShapeProperty extends ShapeBaseProperty {
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
         oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
 
-      x += Number(this.p.v[0])
-      y += Number(this.p.v[1])
+      x += Number(this.p?.v[0])
+      y += Number(this.p?.v[1])
       this.v.setTripleAt(
         x,
         y,
@@ -856,7 +864,6 @@ export class StarShapeProperty extends ShapeBaseProperty {
 export class EllShapeProperty extends ShapeBaseProperty {
   _cPoint = roundCorner
   d?: number
-  p: MultiDimensionalProperty
   s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
@@ -894,6 +901,10 @@ export class EllShapeProperty extends ShapeBaseProperty {
   }
 
   convertEllToPath() {
+    if (!this.p) {
+      return
+    }
+
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
       s0 = this.s.v[0] / 2,
