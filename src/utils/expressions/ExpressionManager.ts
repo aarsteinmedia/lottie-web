@@ -124,7 +124,7 @@ function initiateExpression(
     throw new Error('CompElement is not implemented')
   }
 
-  const { x: val } = data,
+  const { k, x: val } = data,
     needsVelocity = /velocity\b/.test(val),
     _needsRandom = val.includes('random'),
     {
@@ -170,7 +170,7 @@ function initiateExpression(
     anchorPoint: (type: string, duration: number, flag?: boolean) => void,
     // eslint-disable-next-line no-unassigned-vars
     scale: (type: string, duration: number, flag?: boolean) => void,
-    thisLayer: (type: string, duration: number, flag?: boolean) => void,
+    thisLayer: undefined | ((type: string, duration: number, flag?: boolean) => void),
     thisComp: (type: string, duration: number, flag?: boolean) => void,
     mask: (type: string, duration: number, flag?: boolean) => void,
     valueAtTime: (type: string, duration: number, flag?: boolean) => void,
@@ -201,9 +201,16 @@ function initiateExpression(
   //   `
   // )
 
-  const numKeys = property.kf ? data.k.length : 0
+  let time = 0,
+    velocity,
+    value: unknown = null,
+    text,
+    textIndex,
+    textTotal,
+    selectorValue
 
-  const active = !this.data || this.data.hd !== true
+  const numKeys = property.kf ? k.length : 0,
+    active = !this.data || this.data.hd !== true
 
   const wiggle = (freqFromProps: number, amp: number) => {
     let freq = freqFromProps
@@ -470,17 +477,9 @@ function initiateExpression(
     return ''
   }
 
-  let time = 0
-
-  let velocity
-  let value: unknown = null
-  let text
-  let textIndex
-  let textTotal
-  let selectorValue
   const index = elem.data.ind
-  let hasParent = Boolean(elem.hierarchy?.length)
-  let parent: undefined | ReturnType<typeof LayerExpressionInterface>
+  let hasParent = Boolean(elem.hierarchy?.length),
+    parent: undefined | ReturnType<typeof LayerExpressionInterface>
 
   const randSeed = Math.floor(Math.random() * 1000000)
   const { globalData } = elem
