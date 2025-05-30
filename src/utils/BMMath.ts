@@ -8,7 +8,10 @@ const bmPow = Math.pow,
   bmMax = Math.max,
   bmMin = Math.min
 
-const BMMath = {} as unknown as Omit<Math, 'abs'> & { abs: (val: number | number[]) => number | number[] }
+const BMMath = {} as unknown as Omit<Math, 'abs'> & {
+  abs: (val: number | number[]) => number | number[]
+  seedrandom: (val: number) => number
+}
 
 (function () {
   const propertyNames: (keyof Math)[] = ['abs',

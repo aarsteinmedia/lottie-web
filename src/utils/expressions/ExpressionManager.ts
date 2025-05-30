@@ -1,21 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
   ElementInterfaceIntersect, ExpressionProperty, Vector2,
+  Vector3,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import seedrandom from '@/3rd_party/seedrandom'
 import {
   clamp,
-  degToRads, hslToRgb, rgbToHsl
+  degToRads, hslToRgb, isArrayOfNum, rgbToHsl
 } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import { BMMath } from '@/utils/BMMath'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
+
+import type ShapeExpressionInterface from './ShapeInterface'
 
 const Math = BMMath as Math,
   window = null,
@@ -106,6 +110,66 @@ function createPath(
   return path
 }
 
+function applyEase(
+  fn: typeof easeInOutBez, tFromProps: number, tMin: number, tMax: number, val1FromProps?: number, val2FromProps?: number
+) {
+  let t = tFromProps,
+    val1 = val1FromProps,
+    val2 = val2FromProps
+
+  if (val1 === undefined) {
+    val1 = tMin
+    val2 = tMax
+  } else {
+    t = (t - tMin) / (tMax - tMin)
+  }
+  if (t > 1) {
+    t = 1
+  } else if (t < 0) {
+    t = 0
+  }
+  const mult = fn(t)
+
+  if ($bm_isInstanceOfArray(val1) && $bm_isInstanceOfArray(val2)) {
+    let iKey
+
+    const lenKey = val1.length
+    const arr = createTypedArray(ArrayType.Float32, lenKey)
+
+    for (iKey = 0; iKey < lenKey; iKey += 1) {
+      arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
+    }
+
+    return arr
+  }
+
+  return (val2 as number - val1) * mult + val1
+}
+
+function easeOut(
+  t: number, tMin: number, tMax: number, val1?: number, val2?: number
+) {
+  return applyEase(
+    easeOutBez, t, tMin, tMax, val1, val2
+  )
+}
+
+function easeIn(
+  t: number, tMin: number, tMax: number, val1?: number, val2?: number
+) {
+  return applyEase(
+    easeInBez, t, tMin, tMax, val1, val2
+  )
+}
+
+function ease(
+  t: number, tMin: number, tMax: number, val1?: number, val2?: number
+) {
+  return applyEase(
+    easeInOutBez, t, tMin, tMax, val1, val2
+  )
+}
+
 function initiateExpression(
   this: KeyframedValueProperty,
   elem: ElementInterfaceIntersect,
@@ -130,10 +194,11 @@ function initiateExpression(
       ip, nm, op, sh = 0, sw = 0, ty: elemType
     } = elem.data
 
-  let transform,
+  let transform: TransformExpressionInterface,
     $bm_transform,
-    content,
-    effect
+    content: undefined | ShapeExpressionInterface,
+    effect,
+    randSeed = 0
   const thisProperty = property
 
   thisProperty._name = nm
@@ -169,11 +234,9 @@ function initiateExpression(
     anchorPoint: (type: string, duration: number, flag?: boolean) => void,
     // eslint-disable-next-line no-unassigned-vars
     scale: (type: string, duration: number, flag?: boolean) => void,
-    thisLayer: undefined | LayerExpressionInterface,
+    thisLayer: null | undefined | LayerExpressionInterface,
     thisComp: (type: string, duration: number, flag?: boolean) => void,
     mask: (type: string, duration: number, flag?: boolean) => void,
-    valueAtTime: (type: string, duration: number, flag?: boolean) => void,
-    velocityAtTime: number,
 
     scoped_bm_rt = noOp
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
@@ -213,19 +276,18 @@ function initiateExpression(
 
   const wiggle = (_freqFromProps: number, amp: number) => {
     // let freq: number
-    let iWiggle
+    const { pv: prop } = this,
+      lenWiggle = isArrayOfNum(prop) ? prop.length : 1,
+      addedAmps = createTypedArray(ArrayType.Float32, lenWiggle),
 
-    let j
-    const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
-    const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
+      freq = 5,
+      iterations = Math.floor(time * freq)
 
-    const freq = 5
-    const iterations = Math.floor(time * freq)
+    let iWiggle = 0
 
-    iWiggle = 0
     while (iWiggle < iterations) {
       // var rnd = BMMath.random();
-      for (j = 0; j < lenWiggle; j += 1) {
+      for (let j = 0; j < lenWiggle; j++) {
         addedAmps[j] += -amp + amp * 2 * BMMath.random()
         // addedAmps[j] += -amp + amp*2*rnd;
       }
@@ -237,8 +299,8 @@ function initiateExpression(
     const arr = createTypedArray(ArrayType.Float32, lenWiggle)
 
     if (lenWiggle > 1) {
-      for (j = 0; j < lenWiggle; j += 1) {
-        arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
+      for (let j = 0; j < lenWiggle; j++) {
+        arr[j] = (prop as number[])[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
         // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
         // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
       }
@@ -246,7 +308,7 @@ function initiateExpression(
       return arr
     }
 
-    return this.pv + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
+    return prop as number + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
   }
 
   if (thisProperty.loopIn) {
@@ -275,21 +337,12 @@ function initiateExpression(
     )
   }
 
-  if (this.getValueAtTime) {
-    valueAtTime = this.getValueAtTime.bind(this)
-  }
+  const valueAtTime = this.getValueAtTime.bind(this),
+    velocityAtTime = this.getVelocityAtTime.bind(this),
+    { projectInterface: comp } = elem.comp.globalData
 
-  if (this.getVelocityAtTime) {
-    velocityAtTime = this.getVelocityAtTime.bind(this)
-  }
-
-  /**
-   *.bind(elem.comp.globalData.projectInterface).
-   */
-  const { projectInterface: comp } = elem.comp.globalData
-
-  function lookAt(elem1, elem2) {
-    const fVec = [elem2[0] - elem1[0],
+  function lookAt(elem1: Vector3, elem2: Vector3) {
+    const fVec: Vector3 = [elem2[0] - elem1[0],
       elem2[1] - elem1[1],
       elem2[2] - elem1[2]]
     const pitch = Math.atan2(fVec[0], Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])) / degToRads
@@ -300,129 +353,74 @@ function initiateExpression(
       0]
   }
 
-  function easeOut(
-    t: number, tMin: number, tMax: number, val1: number | number[], val2: number | number[]
-  ) {
-    return applyEase(
-      easeOutBez, t, tMin, tMax, val1, val2
-    )
-  }
-
-  function easeIn(
-    t: number, tMin: number, tMax: number, val1?: number, val2?: number
-  ) {
-    return applyEase(
-      easeInBez, t, tMin, tMax, val1, val2
-    )
-  }
-
-  function ease(
-    t: number, tMin: number, tMax: number, val1?: number, val2?: number
-  ) {
-    return applyEase(
-      easeInOutBez, t, tMin, tMax, val1, val2
-    )
-  }
-
-  function applyEase(
-    fn: typeof easeInOutBez, tFromProps: number, tMin: number, tMax: number, val1?: number, val2?: number
-  ) {
-    let t = tFromProps
-
-    if (val1 === undefined) {
-      val1 = tMin
-      val2 = tMax
-    } else {
-      t = (t - tMin) / (tMax - tMin)
-    }
-    if (t > 1) {
-      t = 1
-    } else if (t < 0) {
-      t = 0
-    }
-    const mult = fn(t)
-
-    if ($bm_isInstanceOfArray(val1)) {
-      let iKey
-
-      const lenKey = val1.length
-      const arr = createTypedArray(ArrayType.Float32, lenKey)
-
-      for (iKey = 0; iKey < lenKey; iKey += 1) {
-        arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
-      }
-
-      return arr
-    }
-
-    return (val2 - val1) * mult + val1
-  }
-
-  function nearestKey(time) {
-    let iKey
+  function nearestKey(timeFromProps: number) {
+    let timeKey = timeFromProps,
+      iKey
 
     const lenKey = data.k.length
-    let index
+    let timeIndex
     let keyTime
 
     if (data.k.length === 0 || typeof data.k[0] === 'number') {
-      index = 0
+      timeIndex = 0
       keyTime = 0
     } else {
-      index = -1
-      time *= elem.comp.globalData.frameRate
-      if (time < data.k[0].t) {
-        index = 1
+      timeIndex = -1
+      timeKey *= elem.comp.globalData.frameRate
+      if (timeKey < data.k[0].t) {
+        timeIndex = 1
         keyTime = data.k[0].t
       } else {
         for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
-          if (time === data.k[iKey].t) {
-            index = iKey + 1
+          if (timeKey === data.k[iKey].t) {
+            timeIndex = iKey + 1
             keyTime = data.k[iKey].t
             break
-          } else if (time > data.k[iKey].t && time < data.k[iKey + 1].t) {
-            if (time - data.k[iKey].t > data.k[iKey + 1].t - time) {
-              index = iKey + 2
+          } else if (timeKey > data.k[iKey].t && timeKey < data.k[iKey + 1].t) {
+            if (timeKey - data.k[iKey].t > data.k[iKey + 1].t - timeKey) {
+              timeIndex = iKey + 2
               keyTime = data.k[iKey + 1].t
             } else {
-              index = iKey + 1
+              timeIndex = iKey + 1
               keyTime = data.k[iKey].t
             }
             break
           }
         }
-        if (index === -1) {
-          index = iKey + 1
+        if (timeIndex === -1) {
+          timeIndex = iKey + 1
           keyTime = data.k[iKey].t
         }
       }
     }
-    const obKey = {}
 
-    obKey.index = index
-    obKey.time = keyTime / elem.comp.globalData.frameRate
-
-    return obKey
+    return {
+      index: timeIndex,
+      time: keyTime / (elem.comp.globalData?.frameRate ?? 60)
+    }
   }
 
-  function key(ind) {
-    let obKey
-
-    let iKey
-    let lenKey
+  function key(indFormProps: number) {
+    let ind = indFormProps
 
     if (data.k.length === 0 || typeof data.k[0] === 'number') {
       throw new Error(`The property has no keyframe at index ${  ind}`)
     }
     ind -= 1
-    obKey = {
-      time: data.k[ind].t / elem.comp.globalData.frameRate,
+    const obKey: {
+      time?: number
+      value: number[]
+      [val: number]: number
+    } = {
+      time: data.k[ind].t / (elem.comp.globalData?.frameRate ?? 60),
       value: [],
     }
-    const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e
+    const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e,
 
-    lenKey = arr.length
-    for (iKey = 0; iKey < lenKey; iKey += 1) {
+      { length: lenKey } = arr
+
+
+    for (let iKey = 0; iKey < lenKey; iKey += 1) {
       obKey[iKey] = arr[iKey]
       obKey.value[iKey] = arr[iKey]
     }
@@ -430,26 +428,31 @@ function initiateExpression(
     return obKey
   }
 
-  function framesToTime(fr, fps) {
+  function framesToTime(fr: number, fpsFromProps?: number) {
+    let fps = fpsFromProps
+
     if (!fps) {
-      fps = elem.comp.globalData.frameRate
+      fps = elem.comp.globalData?.frameRate ?? 60
     }
 
     return fr / fps
   }
 
-  function timeToFrames(t, fps) {
+  function timeToFrames(tFromProps: number, fpsFromProps?: number) {
+    let t = tFromProps,
+      fps = fpsFromProps
+
     if (!t && t !== 0) {
       t = time
     }
     if (!fps) {
-      fps = elem.comp.globalData.frameRate
+      fps = elem.comp.globalData?.frameRate ?? 60
     }
 
     return t * fps
   }
 
-  function seedRandom(seed) {
+  function seedRandom(seed: number) {
     BMMath.seedrandom(randSeed + seed)
   }
 
@@ -457,19 +460,19 @@ function initiateExpression(
     return elem.sourceRectAtTime()
   }
 
-  function substring(init, end) {
+  function substring(init: number, end?: number) {
     if (typeof value === 'string') {
       if (end === undefined) {
         return value.slice(Math.max(0, init))
       }
 
-      return value.substring(init, end)
+      return value.slice(init, end)
     }
 
     return ''
   }
 
-  function substr(init: number, end: number) {
+  function substr(init: number, end?: number) {
     if (typeof value === 'string') {
       if (end === undefined) {
         return value.slice(init)
@@ -483,12 +486,12 @@ function initiateExpression(
 
   const index = elem.data.ind
   let hasParent = Boolean(elem.hierarchy?.length),
-    parent: undefined | ReturnType<typeof LayerExpressionInterface>
+    parent: undefined | LayerExpressionInterface
 
-  const randSeed = Math.floor(Math.random() * 1000000)
+  randSeed = Math.floor(Math.random() * 1000000)
   const { globalData } = elem
 
-  function posterizeTime(framesPerSecond) {
+  function posterizeTime(framesPerSecond: number) {
     time = framesPerSecond === 0 ? 0 : Math.floor(time * framesPerSecond) / framesPerSecond
     value = valueAtTime(time)
   }
@@ -508,7 +511,7 @@ function initiateExpression(
     if (!thisLayer) {
       text = elem.layerInterface.text
       thisLayer = elem.layerInterface
-      thisComp = elem.comp.compInterface
+      thisComp = elem.comp?.compInterface
       toWorld = thisLayer.toWorld.bind(thisLayer)
       fromWorld = thisLayer.fromWorld.bind(thisLayer)
       fromComp = thisLayer.fromComp.bind(thisLayer)
@@ -611,8 +614,13 @@ function initiateExpression(
 }
 
 function linear(
-  t: number, tMin: number, tMax: number, value1?: number, value2?: number
+  t: number, tMinFromProps: number, tMaxFromProps: number, value1FromProps?: number | number[], value2FromProps?: number | number[]
 ) {
+  let tMin = tMinFromProps,
+    tMax = tMaxFromProps,
+    value1 = value1FromProps,
+    value2 = value2FromProps
+
   if (value1 === undefined || value2 === undefined) {
     value1 = tMin
     value2 = tMax
@@ -627,7 +635,9 @@ function linear(
   }
   if (t <= tMin) {
     return value1
-  } if (t >= tMax) {
+  }
+
+  if (t >= tMax) {
     return value2
   }
   const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
@@ -635,12 +645,11 @@ function linear(
   if (value1.length === 0) {
     return value1 + (value2 - value1) * perc
   }
-  let i
 
   const len = value1.length
   const arr = createTypedArray(ArrayType.Float32, len)
 
-  for (i = 0; i < len; i += 1) {
+  for (let i = 0; i < len; i += 1) {
     arr[i] = value1[i] + (value2[i] - value1[i]) * perc
   }
 
@@ -651,7 +660,10 @@ function normalize(vec: number[]) {
   return div(vec, length(vec))
 }
 
-function random(min: number, max?: number) {
+function random(minFromProps?: number | number[], maxFormProps?: number | number[]) {
+  let min = minFromProps,
+    max = maxFormProps
+
   if (max === undefined) {
     if (min === undefined) {
       min = 0
@@ -661,50 +673,48 @@ function random(min: number, max?: number) {
       min = undefined
     }
   }
-  if (max.length > 0) {
-    let i
+  if (isArrayOfNum(max)) {
 
-    const len = max.length
+    const { length: len } = max
 
     if (!min) {
-      min = createTypedArray(ArrayType.Float32, len)
+      min = createTypedArray(ArrayType.Float32, len) as number[]
     }
-    const arr = createTypedArray(ArrayType.Float32, len)
-    const rnd = BMMath.random()
+    const arr = createTypedArray(ArrayType.Float32, len) as number[],
+      rnd = BMMath.random()
 
-    for (i = 0; i < len; i += 1) {
-      arr[i] = min[i] + rnd * (max[i] - min[i])
+    for (let i = 0; i < len; i += 1) {
+      arr[i] = (min as number[])[i] + rnd * (max[i] - (min as number[])[i])
     }
 
     return arr
   }
-  if (min === undefined) {
-    min = 0
-  }
+
+  min = min ?? 0
   const rndm = BMMath.random()
 
-  return min + rndm * (max - min)
+  return min as number + rndm * (max - (min as number))
 }
 
 function resetFrame() {
   _lottieGlobal = {}
 }
 
-function $bm_isInstanceOfArray(arr: unknown[]) {
-  return arr.constructor === Array || arr.constructor === Float32Array
+function $bm_isInstanceOfArray(arr: unknown): arr is number[]  {
+  return typeof arr === 'object' && arr !== null && (arr.constructor === Array || arr.constructor === Float32Array)
 }
 
 function degreesToRadians(val: number) {
   return val * degToRads
 }
 
-function div(a, b) {
-  const tOfA = typeof a
-  const tOfB = typeof b
+function div(a: unknown, b: unknown) {
+  const tOfA = typeof a,
+    tOfB = typeof b
   let arr
 
   if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
-    return a / b
+    return Number(a) / Number(b)
   }
   let i
 
@@ -714,7 +724,7 @@ function div(a, b) {
     len = a.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = a[i] / b
+      arr[i] = a[i] / Number(b)
     }
 
     return arr
@@ -732,23 +742,14 @@ function div(a, b) {
   return 0
 }
 
-function hue2rgb(
-  p: number, q: number, t: number
-) {
-  if (t < 0) {t += 1}
-  if (t > 1) {t -= 1}
-  if (t < 1 / 6) {return p + (q - p) * 6 * t}
-  if (t < 1 / 2) {return q}
-  if (t < 2 / 3) {return p + (q - p) * (2 / 3 - t) * 6}
-
-  return p
-}
-
-function isNumerable(tOfV: string, v: unknown) {
+function isNumerable(tOfV: string, v: unknown): v is (number | string) {
   return tOfV === 'number' || v instanceof Number || tOfV === 'boolean' || tOfV === 'string'
 }
 
-function length(arr1: number | number[], arr2?: number | number[]) {
+function length(arr1: number | number[], arr2FromProps?: number | number[]) {
+  let arr2 = arr2FromProps
+
+
   if (typeof arr1 === 'number' || arr1 instanceof Number) {
     arr2 = arr2 || 0
 
@@ -769,7 +770,10 @@ function length(arr1: number | number[], arr2?: number | number[]) {
   return Math.sqrt(addedLength)
 }
 
-function mod(a: number | string, b: number | string) {
+function mod(aFromProps: number | string, bFromProps: number | string) {
+  let a = aFromProps,
+    b = bFromProps
+
   if (typeof a === 'string') {
     a = parseInt(a, 10)
   }
@@ -780,7 +784,7 @@ function mod(a: number | string, b: number | string) {
   return a % b
 }
 
-function mul(a, b) {
+function mul(a: unknown, b: unknown) {
   const tOfA = typeof a
   const tOfB = typeof b
   let arr
@@ -797,7 +801,7 @@ function mul(a, b) {
     len = a.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = a[i] * b
+      arr[i] = a[i] * Number(b)
     }
 
     return arr
@@ -805,8 +809,8 @@ function mul(a, b) {
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     len = b.length
     arr = createTypedArray(ArrayType.Float32, len)
-    for (i = 0; i < len; i += 1) {
-      arr[i] = a * b[i]
+    for (i = 0; i < len; i++) {
+      arr[i] = Number(a) * b[i]
     }
 
     return arr
@@ -823,19 +827,21 @@ function radiansToDegrees(val: number) {
   return val / degToRads
 }
 
-function sub(a, b) {
-  const tOfA = typeof a
-  const tOfB = typeof b
+function sub(aFromProps: unknown, bFromProps: unknown) {
+  let a = aFromProps,
+    b = bFromProps
+  const tOfA = typeof a,
+    tOfB = typeof b
 
   if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
     if (tOfA === 'string') {
-      a = parseInt(a, 10)
+      a = parseInt(a as string, 10)
     }
     if (tOfB === 'string') {
-      b = parseInt(b, 10)
+      b = parseInt(b as string, 10)
     }
 
-    return a - b
+    return a as number - (b as number)
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
@@ -871,22 +877,25 @@ function sub(a, b) {
   return 0
 }
 
-function sum(a: number, b: number) {
-  const tOfA = typeof a
-  const tOfB = typeof b
+function sum(aFromProps: unknown, bFromProps: unknown) {
+  let a = aFromProps,
+    b = bFromProps
+
+  const tOfA = typeof a,
+    tOfB = typeof b
 
   if (isNumerable(tOfA, a) && isNumerable(tOfB, b) || tOfA === 'string' || tOfB === 'string') {
-    return a + b
+    return Number(a) + Number(b)
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    a[0] += b
+    ;(a as number[])[0] += Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    b[0] = a + b[0]
+    ;(b as number[])[0] = a as number + (b as number[])[0]
 
     return b
   }

@@ -70,6 +70,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape
+  smooth?: (type: string, duration: number, durationFlag?: boolean) => void
   textIndex?: number
   textTotal?: number
   v?: string | number | number[] | Matrix | DocumentData
@@ -117,7 +118,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     return this.pv
   }
 
-  getValueAtTime(_a: number,
+  getValueAtTime(_a: string | number,
     _b?: number): number | number[] {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }
@@ -493,7 +494,7 @@ export class MultiDimensionalProperty<
   }
 }
 export class KeyframedValueProperty extends BaseProperty {
-  override pv: number
+  override pv: number | number[]
   override v: number
   constructor(
     elem: ElementInterfaceIntersect,
