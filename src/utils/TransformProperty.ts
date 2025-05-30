@@ -475,10 +475,6 @@ export class TransformProperty extends BaseProperty {
       this.appliedTransformations = 4
     }
   }
-
-  setGroupProperty(_propertyGroup: LayerExpressionInterface) {
-    throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
-  }
 }
 
 const TransformPropertyFactory = {

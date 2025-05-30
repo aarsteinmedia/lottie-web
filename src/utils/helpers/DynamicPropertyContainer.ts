@@ -1,5 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
 import type { PropType } from '@/utils/enums'
+import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 export default abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
@@ -38,6 +39,11 @@ export default abstract class DynamicPropertyContainer {
         this._mdf = true
       }
     }
+  }
+
+  setGroupProperty(_propertyInterface: PropertyInterface) {
+    // Pass through
+    // throw new Error('Method is not implemented')
   }
 }
 

@@ -20,7 +20,7 @@ export class ExpressionPropertyInterface {
   }
 
   completeProperty(
-    expressionValue, property, type
+    expressionValue: number | number[], property: BaseProperty, type: PropType
   ) {
     Object.defineProperty(
       expressionValue, 'velocity', {
@@ -102,7 +102,7 @@ export class ExpressionPropertyInterface {
     }
   }
 
-  UnidimensionalPropertyInterface(property) {
+  UnidimensionalPropertyInterface(property: BaseProperty) {
     if (!property || !('pv' in property)) {
       property = this.defaultUnidimensionalValue
     }
@@ -112,10 +112,10 @@ export class ExpressionPropertyInterface {
 
     expressionValue.value = val
     this.completeProperty(
-      expressionValue, property, 'unidimensional'
+      expressionValue, property, PropType.UniDimensional
     )
 
-    return function () {
+    return () => {
       if (property.k) {
         property.getValue()
       }
@@ -125,7 +125,7 @@ export class ExpressionPropertyInterface {
         expressionValue.value = val
         expressionValue[0] = val
         this.completeProperty(
-          expressionValue, property, 'unidimensional'
+          expressionValue, property, PropType.UniDimensional
         )
       }
 

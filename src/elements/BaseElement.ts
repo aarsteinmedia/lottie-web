@@ -13,7 +13,7 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 // import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 

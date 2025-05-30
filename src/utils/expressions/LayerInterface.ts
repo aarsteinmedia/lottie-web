@@ -2,7 +2,7 @@
 import type {
   ElementInterfaceIntersect, ExpressionInterface, SourceRect
 } from '@/types'
-import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 
 import MaskManagerInterface from '@/utils/expressions/MaskInterface'

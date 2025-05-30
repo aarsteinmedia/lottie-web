@@ -13,7 +13,6 @@ import type {
   Svalue,
   VectorProperty,
 } from '@/types'
-import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 import type {
   MultiDimensionalProperty,
   ValueProperty,
@@ -640,7 +639,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
 
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return
+      return 0 // For type compability
     }
     if (this.elem?.globalData?.frameId) {
       this.frameId = this.elem.globalData.frameId
@@ -650,6 +649,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
     if (this._mdf) {
       this.convertRectToPath()
     }
+
+    return 0 // For type compability
   }
 }
 
@@ -942,7 +943,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
     _v.o[3][1] = p1 - s1 * this._cPoint
   }
 
-  override getValue() {
+  override getValue(_flag?: boolean) {
     if (this.elem?.globalData?.frameId === this.frameId) {
       return
     }
@@ -992,10 +993,6 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.paths.addShape(this.v)
     this.effectsSequence = []
     this.getValue = this.processEffectsSequence
-  }
-
-  setGroupProperty(_propertyInterface: PropertyInterface) {
-    throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }
 }
 

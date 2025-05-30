@@ -4,7 +4,7 @@ import type {
   Vector3,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
