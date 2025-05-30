@@ -6,8 +6,8 @@ import type {
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 class MaskInterface {
-  _data
-  _mask
+  _data: Shape
+  _mask: ViewData
   get maskOpacity() {
     if (this._mask.op.k) {
       this._mask.op.getValue()
@@ -33,7 +33,7 @@ class MaskInterface {
 
 export default class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
-  maskManager
+  maskManager: MaskElement
 
   constructor (maskManager: MaskElement, _elem?: ElementInterfaceIntersect) {
     this.maskManager = maskManager

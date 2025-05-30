@@ -1098,7 +1098,7 @@ export interface LottieLayer {
   masksProperties?: Shape[]
   mn?: string
   nm: string
-  np?: any
+  np?: string
   /** Out point. */
   op: number
   parent?: number

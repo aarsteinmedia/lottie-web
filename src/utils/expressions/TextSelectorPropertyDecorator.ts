@@ -1,37 +1,24 @@
 import type {
-  CompElementInterface,
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import { PropType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import { BaseProperty, type KeyframedValueProperty } from '@/utils/Properties'
 import TextSelectorProp from '@/utils/text/TextSelectorProperty'
 
 const notImplemented = 'Method not implemented'
 
-export default class TextExpressionSelectorPropFactory {
-  comp?: CompElementInterface
-  elem: ElementInterfaceIntersect
-  k: boolean
+export default class TextExpressionSelectorPropFactory extends BaseProperty {
   lastValue: Vector3
-  mult: number
-  propType: PropType
-  pv: number
   selectorValue: number
-  textIndex?: number
-  textTotal: number
-
-
-  v?: number
-
-  x: boolean
 
   constructor (
     elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, _arr?: unknown[]
   ) {
+    super()
     this.pv = 1
     this.comp = elem.comp
     this.elem = elem
@@ -67,30 +54,12 @@ export default class TextExpressionSelectorPropFactory {
     throw new Error(notImplemented)
   }
 
-  getValue(
-    _elem?: ElementInterfaceIntersect, _data?: TextRangeValue & ExpressionProperty, _prop?: KeyframedValueProperty
-  ): number {
-    throw new Error(notImplemented)
-  }
-
-  getValueAtTime(_num: number) {
-    throw new Error(notImplemented)
-  }
-
   getValueProxy(index: number, total: number) {
     this.textIndex = index + 1
     this.textTotal = total
-    this.v = this.getValue() * this.mult
+    this.v = this.getValue() as number * (this.mult ?? 1)
 
     return this.v
-  }
-
-  getVelocityAtTime(_num: number) {
-    throw new Error(notImplemented)
-  }
-
-  setGroupProperty(_prop?: KeyframedValueProperty) {
-    throw new Error(notImplemented)
   }
 }
 

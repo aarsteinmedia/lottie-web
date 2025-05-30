@@ -1,12 +1,10 @@
+import type { BaseProperty } from '@/utils/Properties'
+
+import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
-const ExpressionPropertyInterface = (function () {
-  const defaultUnidimensionalValue = {
-    mult: 1,
-    pv: 0,
-    v: 0
-  }
-  const defaultMultidimensionalValue = {
+export class ExpressionPropertyInterface {
+  defaultMultidimensionalValue = {
     mult: 1,
     pv: [0,
       0,
@@ -15,8 +13,13 @@ const ExpressionPropertyInterface = (function () {
       0,
       0]
   }
+  defaultUnidimensionalValue = {
+    mult: 1,
+    pv: 0,
+    v: 0
+  }
 
-  function completeProperty(
+  completeProperty(
     expressionValue, property, type
   ) {
     Object.defineProperty(
@@ -53,48 +56,36 @@ const ExpressionPropertyInterface = (function () {
     expressionValue.propertyGroup = property.propertyGroup
   }
 
-  function UnidimensionalPropertyInterface(property) {
-    if (!property || !('pv' in property)) {
-      property = defaultUnidimensionalValue
-    }
-    const mult = 1 / property.mult
-    let val = property.pv * mult
-    let expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
-
-    expressionValue.value = val
-    completeProperty(
-      expressionValue, property, 'unidimensional'
-    )
-
-    return function () {
-      if (property.k) {
-        property.getValue()
-      }
-      val = property.v * mult
-      if (expressionValue.value !== val) {
-        expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
-        expressionValue.value = val
-        expressionValue[0] = val
-        completeProperty(
-          expressionValue, property, 'unidimensional'
-        )
-      }
-
-      return expressionValue
-    }
+  /**
+   * TODO: try to avoid using this getter.
+   */
+  defaultGetter() {
+    return this.defaultUnidimensionalValue
   }
 
-  function MultidimensionalPropertyInterface(property) {
+  getInterface (property?: BaseProperty) {
+    if (!property) {
+      return this.defaultGetter
+    }
+
+    if (property.propType === PropType.UniDimensional) {
+      return this.UnidimensionalPropertyInterface(property)
+    }
+
+    return this.MultidimensionalPropertyInterface(property)
+  }
+
+  MultidimensionalPropertyInterface(property) {
     if (!property || !('pv' in property)) {
-      property = defaultMultidimensionalValue
+      property = this.defaultMultidimensionalValue
     }
     const mult = 1 / property.mult
     const len = property.data?.l || property.pv.length
-    const expressionValue = createTypedArray('float32', len)
-    const arrValue = createTypedArray('float32', len)
+    const expressionValue = createTypedArray(ArrayType.Float32, len)
+    const arrValue = createTypedArray(ArrayType.Float32, len)
 
     expressionValue.value = arrValue
-    completeProperty(
+    this.completeProperty(
       expressionValue, property, 'multidimensional'
     )
 
@@ -111,22 +102,38 @@ const ExpressionPropertyInterface = (function () {
     }
   }
 
-  /**
-   * TODO: try to avoid using this getter.
-   */
-  function defaultGetter() {
-    return defaultUnidimensionalValue
-  }
-
-  return function (property) {
-    if (!property) {
-      return defaultGetter
-    } if (property.propType === 'unidimensional') {
-      return UnidimensionalPropertyInterface(property)
+  UnidimensionalPropertyInterface(property) {
+    if (!property || !('pv' in property)) {
+      property = this.defaultUnidimensionalValue
     }
+    const mult = 1 / property.mult
+    let val = property.pv * mult
+    let expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
 
-    return MultidimensionalPropertyInterface(property)
+    expressionValue.value = val
+    this.completeProperty(
+      expressionValue, property, 'unidimensional'
+    )
+
+    return function () {
+      if (property.k) {
+        property.getValue()
+      }
+      val = property.v * mult
+      if (expressionValue.value !== val) {
+        expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+        expressionValue.value = val
+        expressionValue[0] = val
+        this.completeProperty(
+          expressionValue, property, 'unidimensional'
+        )
+      }
+
+      return expressionValue
+    }
   }
-}())
+}
 
-export default ExpressionPropertyInterface
+export default function expressionPropertyFactory(property?: BaseProperty) {
+  return new ExpressionPropertyInterface().getInterface(property)
+}

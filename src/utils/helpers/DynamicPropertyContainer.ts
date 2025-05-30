@@ -17,7 +17,7 @@ export default abstract class DynamicPropertyContainer {
     this._isAnimated = true
   }
 
-  getValue(_flag?: boolean) {
+  getValue(_flag?: boolean): number | number[] {
     throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
   }
 

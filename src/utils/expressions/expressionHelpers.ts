@@ -88,7 +88,9 @@ function getVelocityAtTime(this: BaseProperty, frameNum: number) {
   return velocity
 }
 
-function getStaticValueAtTime(this: BaseProperty) {
+function getStaticValueAtTime(
+  this: BaseProperty, _time?: number, _num?: number
+) {
   return this.pv
 }
 

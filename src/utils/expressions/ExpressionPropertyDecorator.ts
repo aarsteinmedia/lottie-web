@@ -1,19 +1,18 @@
-import type { Vector3 } from '@/types'
+import type { Caching, Vector3 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { extendPrototype, isArrayOfNum } from '@/utils'
-import bez from '@/utils/Bezier'
+import { ArrayType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import ShapeExpressions from '@/utils/expressions/ShapeExpressions'
 import { initialDefaultFrame } from '@/utils/getterSetter'
-import {
-  createSizedArray,
-  createTypedArray,
-} from '@/utils/helpers/arrays'
+import { createTypedArray } from '@/utils/helpers/arrays'
 import Matrix from '@/utils/Matrix'
 import shapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 
@@ -205,9 +204,9 @@ function loopIn(
       return current as number - (endV as number - (initV as number)) * repeats
     }
     case 'continue': {
-      const firstValue = this.getValueAtTime(firstKeyFrame / this.comp.globalData.frameRate, 0)
+      const firstValue = this.getValueAtTime(firstKeyFrame / frameRate, 0)
 
-      const nextFirstValue = this.getValueAtTime((firstKeyFrame + 0.001) / this.comp.globalData.frameRate, 0)
+      const nextFirstValue = this.getValueAtTime((firstKeyFrame + 0.001) / frameRate, 0)
 
       if (isArrayOfNum(pv) && isArrayOfNum(firstValue) && isArrayOfNum(nextFirstValue)) {
         ret = Array.from({ length: firstValue.length })
@@ -229,25 +228,37 @@ function loopIn(
 
 }
 
-function smooth(width, samples) {
-  if (!this.k) {
-    return this.pv
+function smooth(
+  this: KeyframedValueProperty, widthFromProps: number, samplesFromProps: number
+) {
+
+  const {
+    comp, k: shouldProcess, pv
+  } = this
+
+  if (!shouldProcess) {
+    return pv
   }
-  width = (width || 0.4) * 0.5
-  samples = Math.floor(samples || 5)
+
+  const { renderedFrame = 0 } = comp ?? { renderedFrame: 0 },
+    { frameRate } = comp?.globalData ?? { frameRate: 60 }
+
+  const width = (widthFromProps || 0.4) * 0.5,
+    samples = Math.floor(samplesFromProps || 5)
+
   if (samples <= 1) {
-    return this.pv
+    return pv
   }
-  const currentTime = this.comp.renderedFrame / this.comp.globalData.frameRate
+  const currentTime = renderedFrame / frameRate
   const initFrame = currentTime - width
   const endFrame = currentTime + width
   const sampleFrequency = samples > 1 ? (endFrame - initFrame) / (samples - 1) : 1
-  let i = 0
-  let j = 0
-  let value
+  let i = 0,
+    j,
+    value
 
-  if (this.pv.length > 0) {
-    value = createTypedArray('float32', this.pv.length)
+  if (isArrayOfNum(pv)) {
+    value = createTypedArray(ArrayType.Float32, pv.length)
   } else {
     value = 0
   }
@@ -255,21 +266,21 @@ function smooth(width, samples) {
 
   while (i < samples) {
     sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
-    if (this.pv.length > 0) {
-      for (j = 0; j < this.pv.length; j += 1) {
+    if (isArrayOfNum(pv) && isArrayOfNum(value) && isArrayOfNum(sampleValue)) {
+      for (j = 0; j < pv.length; j++) {
         value[j] += sampleValue[j]
       }
     } else {
-      value += sampleValue
+      (value as number) += (sampleValue as number)
     }
-    i += 1
+    i++
   }
-  if (this.pv.length > 0) {
-    for (j = 0; j < this.pv.length; j += 1) {
+  if (isArrayOfNum(pv) && isArrayOfNum(value)) {
+    for (j = 0; j < pv.length; j += 1) {
       value[j] /= samples
     }
   } else {
-    value /= samples
+    (value as number) /= samples
   }
 
   return value
@@ -309,7 +320,7 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
     const skew = this.sk.getValueAtTime(time) as number,
       skewAxis = this.sa?.getValueAtTime(time) as number | undefined ?? 0
 
-    matrix.skewFromAxis(-skew * (this.sk.mult ?? 1), skewAxis * (this.sa.mult ?? 1))
+    matrix.skewFromAxis(-skew * (this.sk.mult ?? 1), skewAxis * (this.sa?.mult ?? 1))
   }
   if (this.r && this.appliedTransformations < 4) {
     const rotation = this.r.getValueAtTime(time) as number
@@ -363,6 +374,29 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
 
 function getTransformStaticValueAtTime(this: TransformProperty) {
   return this.v.clone(new Matrix())
+}
+
+function getShapeValueAtTime(this: ShapeProperty, frameNumFromProps: number) {
+  // For now this caching object is created only when needed instead of creating it when the shape is initialized.
+  this._cachingAtTime = this._cachingAtTime ?? {
+    lastIndex: 0,
+    lastTime: initialDefaultFrame,
+    shapeValue: shapePool.clone(this.pv as ShapePath),
+  } as Caching
+
+  let frameNum = frameNumFromProps
+
+  frameNum *= this.elem?.globalData?.frameRate ?? 60
+  frameNum -= this.offsetTime
+  if (frameNum !== this._cachingAtTime.lastTime) {
+    this._cachingAtTime.lastIndex = this._cachingAtTime.lastTime < frameNum ? this._caching?.lastIndex ?? 0 : 0
+    this._cachingAtTime.lastTime = frameNum
+    this.interpolateShape(
+      frameNum, this._cachingAtTime.shapeValue as ShapePath, this._cachingAtTime
+    )
+  }
+
+  return this._cachingAtTime.shapeValue
 }
 
 function addPropertyDecorator() {
@@ -431,147 +465,9 @@ function addPropertyDecorator() {
     return prop
   }
 
-  function getShapeValueAtTime(frameNum) {
-    // For now this caching object is created only when needed instead of creating it when the shape is initialized.
-    if (!this._cachingAtTime) {
-      this._cachingAtTime = {
-        lastIndex: 0,
-        lastTime: initialDefaultFrame,
-        shapeValue: shapePool.clone(this.pv),
-      }
-    }
-
-    frameNum *= this.elem.globalData.frameRate
-    frameNum -= this.offsetTime
-    if (frameNum !== this._cachingAtTime.lastTime) {
-      this._cachingAtTime.lastIndex = this._cachingAtTime.lastTime < frameNum ? this._caching.lastIndex : 0
-      this._cachingAtTime.lastTime = frameNum
-      this.interpolateShape(
-        frameNum, this._cachingAtTime.shapeValue, this._cachingAtTime
-      )
-    }
-
-    return this._cachingAtTime.shapeValue
-  }
-
   const ShapePropertyConstructorFunction = ShapePropertyFactory.getConstructorFunction()
   const KeyframedShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframedConstructorFunction()
 
-  function ShapeExpressions() {}
-  ShapeExpressions.prototype = {
-    getValueAtTime: expressionHelpers.getStaticValueAtTime,
-    inTangents (time) {
-      return this.vertices('i', time)
-    },
-    isClosed () {
-      return this.v.c
-    },
-    normalOnPath (perc, time) {
-      return this.vectorOnPath(
-        perc, time, 'normal'
-      )
-    },
-    outTangents (time) {
-      return this.vertices('o', time)
-    },
-    pointOnPath (perc, time) {
-      let shapePath = this.v
-
-      if (time !== undefined) {
-        shapePath = this.getValueAtTime(time, 0)
-      }
-      if (!this._segmentsLength) {
-        this._segmentsLength = bez.getSegmentsLength(shapePath)
-      }
-
-      const segmentsLength = this._segmentsLength
-      const { lengths } = segmentsLength
-      const lengthPos = segmentsLength.totalLength * perc
-
-      let i = 0
-      const len = lengths.length
-      let accumulatedLength = 0
-      let pt
-
-      while (i < len) {
-        if (accumulatedLength + lengths[i].addedLength > lengthPos) {
-          const initIndex = i
-          const endIndex = shapePath.c && i === len - 1 ? 0 : i + 1
-          const segmentPerc = (lengthPos - accumulatedLength) / lengths[i].addedLength
-
-          pt = bez.getPointInSegment(
-            shapePath.v[initIndex], shapePath.v[endIndex], shapePath.o[initIndex], shapePath.i[endIndex], segmentPerc, lengths[i]
-          )
-          break
-        } else {
-          accumulatedLength += lengths[i].addedLength
-        }
-        i += 1
-      }
-      if (!pt) {
-        pt = shapePath.c ? [shapePath.v[0][0], shapePath.v[0][1]] : [shapePath.v[shapePath._length - 1][0], shapePath.v[shapePath._length - 1][1]]
-      }
-
-      return pt
-    },
-    points (time) {
-      return this.vertices('v', time)
-    },
-    setGroupProperty: expressionHelpers.setGroupProperty,
-    tangentOnPath (perc, time) {
-      return this.vectorOnPath(
-        perc, time, 'tangent'
-      )
-    },
-    vectorOnPath (
-      perc, time, vectorType
-    ) {
-      // perc doesn't use triple equality because it can be a Number object as well as a primitive.
-      if (perc == 1) { // eslint-disable-line eqeqeq
-        perc = this.v.c
-      } else if (perc == 0) { // eslint-disable-line eqeqeq
-        perc = 0.999
-      }
-      const pt1 = this.pointOnPath(perc, time)
-      const pt2 = this.pointOnPath(perc + 0.001, time)
-      const xLength = pt2[0] - pt1[0]
-      const yLength = pt2[1] - pt1[1]
-      const magnitude = Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2))
-
-      if (magnitude === 0) {
-        return [0, 0]
-      }
-      const unitVector = vectorType === 'tangent' ? [xLength / magnitude, yLength / magnitude] : [-yLength / magnitude, xLength / magnitude]
-
-      return unitVector
-    },
-    vertices (prop, time) {
-      if (this.k) {
-        this.getValue()
-      }
-      let shapePath = this.v
-
-      if (time !== undefined) {
-        shapePath = this.getValueAtTime(time, 0)
-      }
-      let i
-
-      const len = shapePath._length
-      const vertices = shapePath[prop]
-      const points = shapePath.v
-      const arr = createSizedArray(len)
-
-      for (i = 0; i < len; i += 1) {
-        if (prop === 'i' || prop === 'o') {
-          arr[i] = [vertices[i][0] - points[i][0], vertices[i][1] - points[i][1]]
-        } else {
-          arr[i] = [vertices[i][0], vertices[i][1]]
-        }
-      }
-
-      return arr
-    },
-  }
   extendPrototype([ShapeExpressions], ShapePropertyConstructorFunction)
   extendPrototype([ShapeExpressions], KeyframedShapePropertyConstructorFunction)
   KeyframedShapePropertyConstructorFunction.prototype.getValueAtTime = getShapeValueAtTime

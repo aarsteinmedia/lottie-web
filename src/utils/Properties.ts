@@ -71,7 +71,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape
-  smooth?: (type: string, duration: number, durationFlag?: boolean) => void
+  smooth?: (width: number, samples: number) => void
   textIndex?: number
   textTotal?: number
   v?: string | number | number[] | Matrix | DocumentData

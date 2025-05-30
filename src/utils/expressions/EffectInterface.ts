@@ -6,7 +6,7 @@ import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { BaseProperty } from '@/utils/Properties'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
+import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
@@ -146,19 +146,17 @@ export default class EffectsExpressionInterface {
   private createValueInterface(
     element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup: (val: number) => BaseProperty
   ) {
-    const expressionProperty = ExpressionPropertyInterface(element.p)
+    const expressionProperty = expressionPropertyFactory(element.p)
 
     function interfaceFunction() {
       if (type === 10) {
-        return elem.comp?.compInterface?.getInterface(element.p.v)
+        return elem.comp?.compInterface?.getInterface(element.p?.v)
       }
 
       return expressionProperty()
     }
 
-    if (element.p.setGroupProperty) {
-      element.p.setGroupProperty(new PropertyInterface('', propertyGroup))
-    }
+    element.p?.setGroupProperty(new PropertyInterface('', propertyGroup))
 
     return interfaceFunction
   }
