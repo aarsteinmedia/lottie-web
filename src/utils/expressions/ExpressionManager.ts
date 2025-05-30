@@ -220,22 +220,22 @@ function initiateExpression(
     loop_in: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     loopOut: (type: string, duration: number, flag?: boolean) => void,
     loop_out: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    smooth: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    smooth: null | ((width: number, sample: number) => void) = null,
     toWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     fromComp: (type: string, duration: number, flag?: boolean) => void,
     toComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    // eslint-disable-next-line no-unassigned-vars
-    position: (type: string, duration: number, flag?: boolean) => void,
-    // eslint-disable-next-line no-unassigned-vars
-    rotation: (type: string, duration: number, flag?: boolean) => void,
+    // eslint-disable-next-line prefer-const
+    position: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    // eslint-disable-next-line prefer-const
+    rotation: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    // eslint-disable-next-line no-unassigned-vars
-    scale: (type: string, duration: number, flag?: boolean) => void,
+    // eslint-disable-next-line prefer-const
+    scale: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     thisLayer: null | undefined | LayerExpressionInterface,
     thisComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    mask: (type: string, duration: number, flag?: boolean) => void,
+    mask: null | ((type: string, duration: number, flag?: boolean) => void) = null,
 
     scoped_bm_rt = noOp
     // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
@@ -356,11 +356,11 @@ function initiateExpression(
     let timeKey = timeFromProps,
       iKey
 
-    const lenKey = data.k.length
+    const lenKey = k.length
     let timeIndex
     let keyTime
 
-    if (data.k.length === 0 || typeof data.k[0] === 'number') {
+    if (k.length === 0 || typeof k[0] === 'number') {
       timeIndex = 0
       keyTime = 0
     } else {

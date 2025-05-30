@@ -73,13 +73,15 @@ export default class LayerExpressionInterface {
 
     this.toComp = this.toWorld
 
+    const { frameRate } = elem.comp?.globalData ?? { frameRate: 60 }
+
     this.startTime = elem.data.st
     this.index = elem.data.ind
     this.source = elem.data.refId
     this.height = elem.data.ty === 0 ? elem.data.h : 100
     this.width = elem.data.ty === 0 ? elem.data.w : 100
-    this.inPoint = elem.data.ip / elem.comp.globalData.frameRate
-    this.outPoint = elem.data.op / elem.comp.globalData.frameRate
+    this.inPoint = elem.data.ip / frameRate
+    this.outPoint = elem.data.op / frameRate
     this._name = elem.data.nm
   }
 
