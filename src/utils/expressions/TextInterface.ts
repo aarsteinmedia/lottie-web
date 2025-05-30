@@ -2,7 +2,10 @@ import type { ElementInterfaceIntersect } from '@/types'
 
 export default class TextExpressionInterface {
 
-  _sourceText?: { value: string }
+  _sourceText?: {
+    value: string
+    style?: { fillColor: string }
+  }
 
   elem: ElementInterfaceIntersect
 
@@ -11,9 +14,9 @@ export default class TextExpressionInterface {
     const stringValue = this.elem.textProperty?.currentData.t
 
     if (!this._sourceText || stringValue !== this._sourceText.value) {
-      this._sourceText = new String(stringValue) // eslint-disable-line no-new-wrappers
+      this._sourceText = new String(stringValue) as unknown as { value: string } // eslint-disable-line no-new-wrappers
       // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
-      this._sourceText.value = stringValue || new String(stringValue) // eslint-disable-line no-new-wrappers
+      this._sourceText.value = (stringValue || new String(stringValue)) as string // eslint-disable-line no-new-wrappers
       Object.defineProperty(
         this._sourceText, 'style', {
           get() {

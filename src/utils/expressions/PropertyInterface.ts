@@ -1,11 +1,11 @@
-import type { BaseProperty } from '@/utils/Properties'
+import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 
 export default class PropertyInterface {
 
   _name: string
-  propertyGroup: (val: number) => BaseProperty
+  propertyGroup: PropertyGroupFactory
 
-  constructor(propertyName: string, propertyGroup: (val: number) => BaseProperty) {
+  constructor(propertyName: string, propertyGroup: PropertyGroupFactory) {
     this._name = propertyName
     this.propertyGroup = propertyGroup
   }

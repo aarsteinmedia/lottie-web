@@ -10,6 +10,7 @@ import type {
   // SVGElementInterface,
 } from '@/types'
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+import type EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 // import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
@@ -119,7 +120,7 @@ export default abstract class BaseElement {
         return
       }
       const layerExpressionInterface = expressionsInterfaces('layer') as typeof LayerExpressionInterface,
-        effectsExpressionInterface = expressionsInterfaces('effects'),
+        effectsExpressionInterface = expressionsInterfaces('effects') as typeof EffectsExpressionInterface,
         shapeExpressionInterface = expressionsInterfaces('shape') as typeof ShapeExpressionInterface,
         textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
         compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
@@ -133,8 +134,7 @@ export default abstract class BaseElement {
       if (this.data.hasMask && this.maskManager) {
         this.layerInterface.registerMaskInterface(this.maskManager)
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const effectsInterface = effectsExpressionInterface.createEffectsInterface(this, this.layerInterface)
+      const effectsInterface = new effectsExpressionInterface().createEffectsInterface(this, this.layerInterface)
 
       this.layerInterface.registerEffectsInterface(effectsInterface)
 

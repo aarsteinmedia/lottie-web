@@ -1,4 +1,7 @@
-import type { ElementInterfaceIntersect, LottieLayer } from '@/types'
+import type MaskElement from '@/elements/MaskElement'
+import type {
+  ElementInterfaceIntersect, Shape, ViewData
+} from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
 
@@ -14,14 +17,14 @@ class MaskInterface {
   }
 
   get maskPath() {
-    if (this._mask.prop.k) {
+    if (this._mask.prop?.k) {
       this._mask.prop.getValue()
     }
 
     return this._mask.prop
   }
 
-  constructor(mask: LottieLayer, data: LottieLayer) {
+  constructor(mask: ViewData, data: Shape) {
     this._mask = mask
     this._data = data
   }
@@ -32,7 +35,7 @@ export default class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
   maskManager
 
-  constructor (maskManager, _elem?: ElementInterfaceIntersect) {
+  constructor (maskManager: MaskElement, _elem?: ElementInterfaceIntersect) {
     this.maskManager = maskManager
     this._masksInterfaces = createSizedArray(maskManager.viewData.length)
     const { length } = maskManager.viewData

@@ -38,13 +38,3 @@ export default class CompExpressionInterface {
     return null
   }
 }
-
-
-// _thisLayerFunction.layer = _thisLayerFunction
-// _thisLayerFunction.pixelAspect = 1
-// _thisLayerFunction.height = comp.data?.h || comp.globalData?.compSize?.h
-// _thisLayerFunction.width = comp.data?.w || comp.globalData?.compSize?.w
-// _thisLayerFunction.pixelAspect = 1
-// _thisLayerFunction.frameDuration = 1 / (comp.globalData?.frameRate ?? 60)
-// _thisLayerFunction.displayStartTime = 0
-// _thisLayerFunction.numLayers = comp.layers?.length

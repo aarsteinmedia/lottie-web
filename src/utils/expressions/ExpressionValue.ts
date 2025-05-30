@@ -1,61 +1,80 @@
-import {
-  createTypedArray,
-} from '../helpers/arrays';
+import { ArrayType, PropType } from '@/utils/enums'
+import { createTypedArray } from '@/utils/helpers/arrays'
+import { BaseProperty } from '@/utils/Properties'
 
-function ExpressionValue(elementProp, mult, type) {
-  mult = mult || 1;
-  var expressionValue;
+export default class ExpressionValue extends BaseProperty {
+  numKeys: number
+  prop: BaseProperty
 
-  if (elementProp.k) {
-    elementProp.getValue();
+  get velocity() {
+    return this.prop.getVelocityAtTime(this.prop.comp?.currentFrame ?? 0)
   }
-  var i;
-  var len;
-  var arrValue;
-  var val;
-  if (type) {
-    if (type === 'color') {
-      len = 4;
-      expressionValue = createTypedArray('float32', len);
-      arrValue = createTypedArray('float32', len);
-      for (i = 0; i < len; i += 1) {
-        arrValue[i] = (i < 3) ? elementProp.v[i] * mult : 1;
-        expressionValue[i] = arrValue[i];
+
+  constructor(
+    elementProp: BaseProperty, multFromProps?: number, type?: string
+  ) {
+    super()
+    this.prop = elementProp
+    const mult = multFromProps || 1
+    let expressionValue
+
+    if (elementProp.k) {
+      elementProp.getValue()
+    }
+
+    let arrValue,
+      val
+
+    if (type) {
+      if (type === 'color') {
+        const len = 4
+
+        this.value = createTypedArray(ArrayType.Float32, len) as number[]
+        arrValue = createTypedArray(ArrayType.Float32, len) as number[]
+        for (let i = 0; i < len; i++) {
+          arrValue[i] = i < 3 ? Number((elementProp.v as number[] | undefined)?.[i]) * mult : 1
+          this.value[i] = arrValue[i]
+        }
+        this.value = arrValue
       }
-      expressionValue.value = arrValue;
+    } else if (elementProp.propType === PropType.UniDimensional) {
+      val = elementProp.v as number * mult
+      this.value = new Number(val) as number // eslint-disable-line no-new-wrappers
+      this.value = val
+    } else {
+      const { length } = elementProp.pv as number[]
+
+      expressionValue = createTypedArray(ArrayType.Float32, length)
+      arrValue = createTypedArray(ArrayType.Float32, length) as number[]
+      for (let i = 0; i < length; i++) {
+        arrValue[i] = Number((elementProp.v as number[])[i]) * mult
+        expressionValue[i] = arrValue[i]
+      }
+      this.value = arrValue
     }
-  } else if (elementProp.propType === 'unidimensional') {
-    val = elementProp.v * mult;
-    expressionValue = new Number(val); // eslint-disable-line no-new-wrappers
-    expressionValue.value = val;
-  } else {
-    len = elementProp.pv.length;
-    expressionValue = createTypedArray('float32', len);
-    arrValue = createTypedArray('float32', len);
-    for (i = 0; i < len; i += 1) {
-      arrValue[i] = elementProp.v[i] * mult;
-      expressionValue[i] = arrValue[i];
-    }
-    expressionValue.value = arrValue;
+
+    this.numKeys = elementProp.keyframes.length || 0
+
+    this.valueAtTime = elementProp.getValueAtTime
+    this.speedAtTime = elementProp.getSpeedAtTime
+    this.velocityAtTime = elementProp.getVelocityAtTime
+    this.propertyGroup = elementProp.propertyGroup
   }
 
-  expressionValue.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0;
-  expressionValue.key = function (pos) {
-    if (!expressionValue.numKeys) {
-      return 0;
+  key(pos: number) {
+    if (!this.numKeys) {
+      return 0
     }
-    return elementProp.keyframes[pos - 1].t;
-  };
-  expressionValue.valueAtTime = elementProp.getValueAtTime;
-  expressionValue.speedAtTime = elementProp.getSpeedAtTime;
-  expressionValue.velocityAtTime = elementProp.getVelocityAtTime;
-  expressionValue.propertyGroup = elementProp.propertyGroup;
-  Object.defineProperty(expressionValue, 'velocity', {
-    get: function () {
-      return elementProp.getVelocityAtTime(elementProp.comp.currentFrame);
-    },
-  });
-  return expressionValue;
-}
 
-export default ExpressionValue;
+    return this.keyframes[pos - 1].t
+  }
+
+  speedAtTime(_frameNum: number) {
+    throw new Error('Method is not implemented')
+  }
+
+
+  velocityAtTime(_frameNum: number) {
+    throw new Error('Method is not implemented')
+  }
+}

@@ -3,7 +3,7 @@ import type { Shape } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
+import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 export default class ShapePathInterface {
@@ -31,7 +31,7 @@ export default class ShapePathInterface {
   ) {
     this.prop = view.sh
 
-    const _propertyGroup = propertyGroupFactory(this, propertyGroup)
+    const _propertyGroup = new PropertyGroupFactory(this, propertyGroup)
 
     this.prop?.setGroupProperty(new PropertyInterface('Path', _propertyGroup))
 

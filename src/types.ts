@@ -806,6 +806,7 @@ export interface DocumentData extends FontList {
   sz?: Vector2
   t: string | number
   tr: number
+  x?: string
   yOffset?: number
 }
 

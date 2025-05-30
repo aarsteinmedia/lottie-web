@@ -1,40 +1,53 @@
-import TextProperty from '../text/TextProperty';
-import ExpressionManager from './ExpressionManager';
+import type { DocumentData } from '@/types'
 
-function addDecorator() {
-  function searchExpressions() {
-    if (this.data.d.x) {
-      this.calculateExpression = ExpressionManager.initiateExpression.bind(this)(this.elem, this.data.d, this);
-      this.addEffect(this.getExpressionValue.bind(this));
-      return true;
-    }
-    return null;
+import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import TextProperty from '@/utils/text/TextProperty'
+
+function searchExpressions(this: TextProperty) {
+  if (this.data.d?.x) {
+    this.calculateExpression = ExpressionManager.initiateExpression.bind(this)(
+      this.elem, this.data.d, this
+    )
+    this.addEffect(this.getExpressionValue.bind(this))
+
+    return true
   }
 
-  TextProperty.prototype.getExpressionValue = function (currentValue, text) {
-    var newValue = this.calculateExpression(text);
+  return null
+}
+
+function addDecorator() {
+
+  TextProperty.prototype.getExpressionValue = function (currentValue, text: string) {
+    const newValue = this.calculateExpression(text)
+
     if (currentValue.t !== newValue) {
-      var newData = {};
-      this.copyData(newData, currentValue);
-      newData.t = newValue.toString();
-      newData.__complete = false;
-      return newData;
+      const newData = {} as DocumentData
+
+      this.copyData(newData, currentValue)
+      newData.t = newValue.toString()
+      newData.__complete = false
+
+      return newData
     }
-    return currentValue;
-  };
+
+    return currentValue
+  }
 
   TextProperty.prototype.searchProperty = function () {
-    var isKeyframed = this.searchKeyframes();
-    var hasExpressions = this.searchExpressions();
-    this.kf = isKeyframed || hasExpressions;
-    return this.kf;
-  };
+    const isKeyframed = this.searchKeyframes()
+    const hasExpressions = this.searchExpressions()
 
-  TextProperty.prototype.searchExpressions = searchExpressions;
+    this.kf = Boolean(isKeyframed || hasExpressions)
+
+    return this.kf
+  }
+
+  TextProperty.prototype.searchExpressions = searchExpressions
 }
 
 function initialize() {
-  addDecorator();
+  addDecorator()
 }
 
-export default initialize;
+export default initialize

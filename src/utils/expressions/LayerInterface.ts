@@ -5,7 +5,6 @@ import type {
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 
-import { getDescriptor } from '@/utils'
 import MaskManagerInterface from '@/utils/expressions/MaskInterface'
 import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 import Matrix from '@/utils/Matrix'

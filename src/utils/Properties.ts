@@ -16,6 +16,7 @@ import type {
   VectorProperty,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -60,7 +61,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     bezierData?: BezierData
     __fnct?: ((val: number) => number) | ((val: number) => number)[]
   }[] = []
-  kf?: boolean
+  kf?: boolean | null
   lock?: boolean
   loopIn?: (type: string, duration: number, durationFlag?: boolean) => void
   loopOut?: (type: string, duration: number, durationFlag?: boolean) => void
@@ -77,7 +78,6 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   value?: number | number[]
   vel?: number | number[]
   x?: boolean
-
   addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
     this.container?.addDynamicProperty(this)
@@ -397,6 +397,10 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this._isFirstFrame = false
     this.lock = false
     this.frameId = this.elem.globalData.frameId
+  }
+
+  setGroupProperty(_propertyInterface: PropertyInterface) {
+    throw new Error('Method is not implemented')
   }
 
   setVValue(val?: number | number[] | Keyframe[]) {

@@ -16,7 +16,7 @@ export default class ProjectInterface {
 
         return this.compositions[i].compInterface
       }
-      i += 1
+      i++
     }
 
     return null

@@ -4,6 +4,7 @@ import type {
   Vector3,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
 import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -18,8 +19,6 @@ import { BMMath } from '@/utils/BMMath'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
-
-import type ShapeExpressionInterface from './ShapeInterface'
 
 const Math = BMMath as Math,
   window = null,
@@ -218,24 +217,24 @@ function initiateExpression(
     height = sh,
     name = nm
   let loopIn: (type: string, duration: number, flag?: boolean) => void,
-    loop_in: (type: string, duration: number, flag?: boolean) => void,
+    loop_in: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     loopOut: (type: string, duration: number, flag?: boolean) => void,
-    loop_out: (type: string, duration: number, flag?: boolean) => void,
-    smooth: (type: string, duration: number, flag?: boolean) => void,
-    toWorld: (type: string, duration: number, flag?: boolean) => void,
-    fromWorld: (type: string, duration: number, flag?: boolean) => void,
+    loop_out: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    smooth: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    toWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     fromComp: (type: string, duration: number, flag?: boolean) => void,
-    toComp: (type: string, duration: number, flag?: boolean) => void,
-    fromCompToSurface: (type: string, duration: number, flag?: boolean) => void,
+    toComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line no-unassigned-vars
     position: (type: string, duration: number, flag?: boolean) => void,
     // eslint-disable-next-line no-unassigned-vars
     rotation: (type: string, duration: number, flag?: boolean) => void,
-    anchorPoint: (type: string, duration: number, flag?: boolean) => void,
+    anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line no-unassigned-vars
     scale: (type: string, duration: number, flag?: boolean) => void,
     thisLayer: null | undefined | LayerExpressionInterface,
-    thisComp: (type: string, duration: number, flag?: boolean) => void,
+    thisComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     mask: (type: string, duration: number, flag?: boolean) => void,
 
     scoped_bm_rt = noOp
@@ -733,7 +732,7 @@ function div(a: unknown, b: unknown) {
     len = b.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = a / b[i]
+      arr[i] = Number(a) / b[i]
     }
 
     return arr
@@ -753,18 +752,18 @@ function length(arr1: number | number[], arr2FromProps?: number | number[]) {
   if (typeof arr1 === 'number' || arr1 instanceof Number) {
     arr2 = arr2 || 0
 
-    return Math.abs(arr1 - arr2)
+    return Math.abs(Number(arr1) - Number(arr2))
   }
   if (!arr2) {
     arr2 = helperLengthArray
   }
   let i
 
-  const len = Math.min(arr1.length, arr2.length)
+  const len = Math.min(arr1.length, (arr2 as number[]).length)
   let addedLength = 0
 
   for (i = 0; i < len; i += 1) {
-    addedLength += Math.pow(arr2[i] - arr1[i], 2)
+    addedLength += Math.pow((arr2 as number[])[i] - arr1[i], 2)
   }
 
   return Math.sqrt(addedLength)
@@ -790,7 +789,7 @@ function mul(a: unknown, b: unknown) {
   let arr
 
   if (isNumerable(tOfA, a) && isNumerable(tOfB, b)) {
-    return a * b
+    return Number(a) * Number(b)
   }
 
   let i
@@ -845,30 +844,30 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    a[0] -= b
+    ;(a as number[])[0] -= Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    b[0] = a - b[0]
+    ;(b as number[])[0] = Number(a) - (b as number[])[0]
 
     return b
   }
   if ($bm_isInstanceOfArray(a) && $bm_isInstanceOfArray(b)) {
     let i = 0
 
-    const lenA = a.length
-    const lenB = b.length
-    const retArr = []
+    const lenA = a.length,
+      lenB = b.length,
+      retArr: number[] = []
 
     while (i < lenA || i < lenB) {
-      if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
+      if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
         retArr[i] = a[i] - b[i]
       } else {
-        retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
+        retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       }
-      i += 1
+      i++
     }
 
     return retArr
@@ -907,10 +906,10 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
       retArr = []
 
     while (i < lenA || i < lenB) {
-      if ((typeof a[i] === 'number' || a[i] instanceof Number) && (typeof b[i] === 'number' || b[i] instanceof Number)) {
+      if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
         retArr[i] = a[i] + b[i]
       } else {
-        retArr[i] = b[i] === undefined ? a[i] : a[i] || b[i]
+        retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       }
       i += 1
     }

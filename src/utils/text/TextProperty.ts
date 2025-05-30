@@ -476,7 +476,7 @@ export default class TextProperty extends BaseProperty {
     return obj
   }
 
-  getExpressionValue(_currentValue: any, _text: any) {
+  getExpressionValue(_currentValue: DocumentData, _text: string) {
     throw new Error(`${this.constructor.name}: Method getExpressionValue is not implemented`)
   }
 

@@ -1,60 +1,82 @@
-const FootageInterface = (function () {
-  var outlineInterfaceFactory = (function (elem) {
-    var currentPropertyName = '';
-    var currentProperty = elem.getFootageData();
-    function init() {
-      currentPropertyName = '';
-      currentProperty = elem.getFootageData();
-      return searchProperty;
-    }
-    function searchProperty(value) {
-      if (currentProperty[value]) {
-        currentPropertyName = value;
-        currentProperty = currentProperty[value];
-        if (typeof currentProperty === 'object') {
-          return searchProperty;
-        }
-        return currentProperty;
-      }
-      var propertyNameIndex = value.indexOf(currentPropertyName);
-      if (propertyNameIndex !== -1) {
-        var index = parseInt(value.substr(propertyNameIndex + currentPropertyName.length), 10);
-        currentProperty = currentProperty[index];
-        if (typeof currentProperty === 'object') {
-          return searchProperty;
-        }
-        return currentProperty;
-      }
-      return '';
-    }
-    return init;
-  });
+import type FootageElement from '@/elements/FootageElement'
 
-  var dataInterfaceFactory = function (elem) {
-    function interfaceFunction(value) {
-      if (value === 'Outline') {
-        return interfaceFunction.outlineInterface();
-      }
-      return null;
+export default class FootageInterface {
+  _name: string
+  currentProperty?: SVGElement | null
+  currentPropertyName = ''
+  dataInterface: FootageInterface
+  elem: FootageElement
+
+  constructor (elem: FootageElement) {
+    this.elem = elem
+    this._name = 'Data'
+    this.dataInterface = this.dataInterfaceFactory(elem)
+  }
+
+  dataInterfaceFactory(elem: FootageElement) {
+    this._name = 'Outline'
+    this.outlineInterface = this.outlineInterfaceFactory(elem)
+
+    return this
+  }
+
+  getInterface(value: number | string) {
+    if (value === 'Data') {
+      return this.dataInterface
+    }
+    if (value === 'Outline') {
+      this.outlineInterface()
+
+      return
     }
 
-    interfaceFunction._name = 'Outline';
-    interfaceFunction.outlineInterface = outlineInterfaceFactory(elem);
-    return interfaceFunction;
-  };
+    return null
+  }
 
-  return function (elem) {
-    function _interfaceFunction(value) {
-      if (value === 'Data') {
-        return _interfaceFunction.dataInterface;
+  init() {
+    this.currentPropertyName = ''
+    this.currentProperty = this.elem.getFootageData()
+
+    return this.searchProperty
+  }
+
+  outlineInterface(_elem?: FootageElement) {
+    throw new Error('Method is not implemented')
+  }
+
+  outlineInterfaceFactory(elem: FootageElement) {
+    this.currentPropertyName = ''
+
+    this.currentProperty = elem.getFootageData()
+
+    this.elem = elem
+
+    return this.init
+  }
+
+  searchProperty(value: keyof SVGElement) {
+    if (this.currentProperty?.[value]) {
+      this.currentPropertyName = value
+      this.currentProperty = this.currentProperty[value]
+      if (typeof this.currentProperty === 'object') {
+        return this.searchProperty
       }
-      return null;
+
+      return this.currentProperty
+    }
+    const propertyNameIndex = value.indexOf(this.currentPropertyName)
+
+    if (propertyNameIndex !== -1) {
+      const index = parseInt(value.slice(propertyNameIndex + this.currentPropertyName.length), 10)
+
+      this.currentProperty = this.currentProperty?.[index as unknown as keyof SVGElement]
+      if (typeof this.currentProperty === 'object') {
+        return this.searchProperty
+      }
+
+      return this.currentProperty
     }
 
-    _interfaceFunction._name = 'Data';
-    _interfaceFunction.dataInterface = dataInterfaceFactory(elem);
-    return _interfaceFunction;
-  };
-}());
-
-export default FootageInterface;
+    return ''
+  }
+}
