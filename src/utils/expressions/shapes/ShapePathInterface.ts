@@ -8,6 +8,7 @@ import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 export default class ShapePathInterface {
   _name?: string
+  ind?: number
   ix?: number
   mn?: string
   prop: null | ShapeProperty
