@@ -211,15 +211,15 @@ function initiateExpression(
   const numKeys = property.kf ? k.length : 0,
     active = !this.data || this.data.hd !== true
 
-  const wiggle = (freqFromProps: number, amp: number) => {
-    let freq = freqFromProps
+  const wiggle = (_freqFromProps: number, amp: number) => {
+    // let freq: number
     let iWiggle
 
     let j
     const lenWiggle = this.pv.length > 0 ? this.pv.length : 1
     const addedAmps = createTypedArray(ArrayType.Float32, lenWiggle)
 
-    freq = 5
+    const freq = 5
     const iterations = Math.floor(time * freq)
 
     iWiggle = 0
@@ -301,7 +301,7 @@ function initiateExpression(
   }
 
   function easeOut(
-    t, tMin, tMax, val1, val2
+    t: number, tMin: number, tMax: number, val1: number | number[], val2: number | number[]
   ) {
     return applyEase(
       easeOutBez, t, tMin, tMax, val1, val2
@@ -309,7 +309,7 @@ function initiateExpression(
   }
 
   function easeIn(
-    t, tMin, tMax, val1, val2
+    t: number, tMin: number, tMax: number, val1?: number, val2?: number
   ) {
     return applyEase(
       easeInBez, t, tMin, tMax, val1, val2
@@ -317,7 +317,7 @@ function initiateExpression(
   }
 
   function ease(
-    t, tMin, tMax, val1, val2
+    t: number, tMin: number, tMax: number, val1?: number, val2?: number
   ) {
     return applyEase(
       easeInOutBez, t, tMin, tMax, val1, val2
@@ -325,8 +325,10 @@ function initiateExpression(
   }
 
   function applyEase(
-    fn, t, tMin, tMax, val1, val2
+    fn: typeof easeInOutBez, tFromProps: number, tMin: number, tMax: number, val1?: number, val2?: number
   ) {
+    let t = tFromProps
+
     if (val1 === undefined) {
       val1 = tMin
       val2 = tMax

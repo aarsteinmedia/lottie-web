@@ -1,4 +1,4 @@
-import type { LottieLayer } from '@/types'
+import type { ElementInterfaceIntersect, LottieLayer } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
 
@@ -28,32 +28,31 @@ class MaskInterface {
 }
 
 
-const MaskManagerInterface = (function () {
-  const MaskManager = function (maskManager) {
-    const _masksInterfaces = createSizedArray(maskManager.viewData.length)
-    let i
+export default class MaskManagerInterface {
+  _masksInterfaces: MaskInterface[]
+  maskManager
+
+  constructor (maskManager, _elem?: ElementInterfaceIntersect) {
+    this.maskManager = maskManager
+    this._masksInterfaces = createSizedArray(maskManager.viewData.length)
     const { length } = maskManager.viewData
 
-    for (i = 0; i < length; i++) {
-      _masksInterfaces[i] = new MaskInterface(maskManager.viewData[i], maskManager.masksProperties[i])
+    for (let i = 0; i < length; i++) {
+      this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i], maskManager.masksProperties[i])
     }
-
-    const maskFunction = function (name) {
-      i = 0
-      while (i < length) {
-        if (maskManager.masksProperties[i].nm === name) {
-          return _masksInterfaces[i]
-        }
-        i++
-      }
-
-      return null
-    }
-
-    return maskFunction
   }
 
-  return MaskManager
-}())
+  getInterface (name: string) {
+    let i = 0
 
-export default MaskManagerInterface
+    while (i < length) {
+      if (this.maskManager.masksProperties[i].nm === name) {
+        return this._masksInterfaces[i]
+      }
+      i++
+    }
+
+    return null
+  }
+
+}

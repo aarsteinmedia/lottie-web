@@ -1,18 +1,20 @@
-const PropertyInterface = (function () {
-  return function (propertyName: string, propertyGroup) {
-    const interfaceFunction = { _name: propertyName }
+import type { BaseProperty } from '@/utils/Properties'
 
-    function _propertyGroup(val = 1) {
+export default class PropertyInterface {
 
-      if (val <= 0) {
-        return interfaceFunction
-      }
+  _name: string
+  propertyGroup: (val: number) => BaseProperty
 
-      return propertyGroup(val - 1)
+  constructor(propertyName: string, propertyGroup: (val: number) => BaseProperty) {
+    this._name = propertyName
+    this.propertyGroup = propertyGroup
+  }
+
+  getInterface(val: number) {
+    if (val <= 0) {
+      return this
     }
 
-    return _propertyGroup
+    return this.propertyGroup(val - 1)
   }
-}())
-
-export default PropertyInterface
+}

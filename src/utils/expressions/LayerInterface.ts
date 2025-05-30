@@ -1,4 +1,7 @@
-import type { ElementInterfaceIntersect } from '@/types'
+/* eslint-disable @typescript-eslint/naming-convention */
+import type {
+  ElementInterfaceIntersect, ExpressionInterface, SourceRect
+} from '@/types'
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 
@@ -9,11 +12,29 @@ import Matrix from '@/utils/Matrix'
 
 export default class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
+  _name?: string
+  anchor_point: ExpressionInterface
+  anchorPoint: ExpressionInterface
   content?: ShapeExpressionInterface
+  effect: ExpressionInterface
+  height: number
+  index: number
+  inPoint: number
+  mask?: MaskManagerInterface
+  opacity: ExpressionInterface
+  outPoint: number
+  position: ExpressionInterface
+  rotation: ExpressionInterface
+  scale: ExpressionInterface
   shapeInterface?: ShapeExpressionInterface
+  source: number
+  sourceRectAtTime: () => SourceRect | null
+  startTime: number
   text?: TextExpressionInterface
   textInterface?: TextExpressionInterface
   transformInterface: TransformExpressionInterface
+
+  width: number
 
   get active() {
     return this._elem.isInRange
@@ -34,15 +55,22 @@ export default class LayerExpressionInterface {
   constructor (elem: ElementInterfaceIntersect) {
     this.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
     this._elem = elem
-    this.transformInterface = new TransformExpressionInterface(elem.finalTransform.mProp)
-    const anchorPointDescriptor = getDescriptor(this.transformInterface, 'anchorPoint')
 
-    this.anchor_point = anchorPointDescriptor
-    this.anchorPoint = anchorPointDescriptor
-    this.opacity = getDescriptor(this.transformInterface, 'opacity')
-    this.position = getDescriptor(this.transformInterface, 'position')
-    this.rotation = getDescriptor(this.transformInterface, 'rotation')
-    this.scale = getDescriptor(this.transformInterface, 'scale')
+    if (!elem.finalTransform) {
+      throw new Error(`FinalTransform is not iplemented in ${elem.constructor.name}`)
+    }
+
+    this.transformInterface = new TransformExpressionInterface(elem.finalTransform.mProp)
+    const {
+      anchorPoint, opacity, position, rotation, scale
+    } = this.transformInterface
+
+    this.anchor_point = anchorPoint
+    this.anchorPoint = anchorPoint
+    this.opacity = opacity
+    this.position = position
+    this.rotation = rotation
+    this.scale = scale
 
     this.toComp = this.toWorld
 
@@ -56,14 +84,13 @@ export default class LayerExpressionInterface {
     this._name = elem.data.nm
   }
 
-  applyPoint(matrix, arr) {
+  applyPoint(matrix: Matrix, arr: number[]) {
     if (this._elem.hierarchy?.length) {
-      let i
 
-      const len = this._elem.hierarchy.length
+      const { length } = this._elem.hierarchy
 
-      for (i = 0; i < len; i += 1) {
-        this._elem.hierarchy[i].finalTransform.mProp.applyToMatrix(matrix)
+      for (let i = 0; i < length; i++) {
+        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
       }
     }
 
@@ -72,18 +99,18 @@ export default class LayerExpressionInterface {
     )
   }
 
-  fromComp(arr) {
+  fromComp(arr: number[]) {
     const toWorldMat = new Matrix()
 
     toWorldMat.reset()
-    this._elem.finalTransform.mProp.applyToMatrix(toWorldMat)
+    this._elem.finalTransform?.mProp.applyToMatrix(toWorldMat)
     if (this._elem.hierarchy?.length) {
       let i
 
       const len = this._elem.hierarchy.length
 
       for (i = 0; i < len; i += 1) {
-        this._elem.hierarchy[i].finalTransform.mProp.applyToMatrix(toWorldMat)
+        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(toWorldMat)
       }
 
       return toWorldMat.inversePoint(arr)
@@ -92,13 +119,13 @@ export default class LayerExpressionInterface {
     return toWorldMat.inversePoint(arr)
   }
 
-  fromWorld(arr, time) {
+  fromWorld(arr: number[], time: number) {
     const toWorldMat = this.getMatrix(time)
 
     return this.invertPoint(toWorldMat, arr)
   }
 
-  fromWorldVec(arr, time) {
+  fromWorldVec(arr: number[], time: number) {
     const toWorldMat = this.getMatrix(time)
 
     toWorldMat.props[12] = 0
@@ -141,12 +168,12 @@ export default class LayerExpressionInterface {
     const toWorldMat = new Matrix()
 
     if (time === undefined) {
-      const transformMat = this._elem.finalTransform.mProp
+      const transformMat = this._elem.finalTransform?.mProp
 
-      transformMat.applyToMatrix(toWorldMat)
+      transformMat?.applyToMatrix(toWorldMat)
 
     } else {
-      const propMatrix = this._elem.finalTransform.mProp.getValueAtTime(time)
+      const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(time)
 
       propMatrix.clone(toWorldMat)
     }
@@ -154,14 +181,13 @@ export default class LayerExpressionInterface {
     return toWorldMat
   }
 
-  invertPoint(matrix, arr) {
+  invertPoint(matrix: Matrix, arr: number[]) {
     if (this._elem.hierarchy?.length) {
-      let i
 
-      const len = this._elem.hierarchy.length
+      const { length } = this._elem.hierarchy
 
-      for (i = 0; i < len; i += 1) {
-        this._elem.hierarchy[i].finalTransform.mProp.applyToMatrix(matrix)
+      for (let i = 0; i < length; i++) {
+        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
       }
     }
 
@@ -173,7 +199,7 @@ export default class LayerExpressionInterface {
   }
 
   registerMaskInterface(maskManager) {
-    this.mask = new MaskManagerInterface(maskManager, elem)
+    this.mask = new MaskManagerInterface(maskManager, this._elem)
   }
 
   sampleImage() {
@@ -183,11 +209,11 @@ export default class LayerExpressionInterface {
       1]
   }
 
-  toComp(_arr, _time) {
+  toComp(_arr: number[], _time: number) {
     throw new Error('Method is not implemented')
   }
 
-  toWorld(arr, time) {
+  toWorld(arr: number[], time: number) {
     const toWorldMat = this.getMatrix(time)
 
     return this.applyPoint(toWorldMat, arr)

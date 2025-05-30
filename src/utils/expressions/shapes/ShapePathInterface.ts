@@ -33,7 +33,7 @@ export default class ShapePathInterface {
 
     const _propertyGroup = propertyGroupFactory(this, propertyGroup)
 
-    this.prop?.setGroupProperty(PropertyInterface('Path', _propertyGroup))
+    this.prop?.setGroupProperty(new PropertyInterface('Path', _propertyGroup))
 
     this._name = shape.nm
     this.ix = shape.ix

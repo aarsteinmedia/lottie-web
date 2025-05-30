@@ -1,3 +1,4 @@
+import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type { Shape } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
@@ -76,7 +77,7 @@ export default class ShapeExpressionInterface {
   }
 
   ellipseInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(value) {
       if (shape.p.ix === value) {
@@ -93,8 +94,8 @@ export default class ShapeExpressionInterface {
     interfaceFunction.propertyIndex = shape.ix
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
 
-    prop.s.setGroupProperty(PropertyInterface('Size', _propertyGroup))
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
+    prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -107,7 +108,7 @@ export default class ShapeExpressionInterface {
   }
 
   fillInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(val) {
       if (val === 'Color' || val === 'color') {
@@ -125,8 +126,8 @@ export default class ShapeExpressionInterface {
       opacity: { get: ExpressionPropertyInterface(view.o) },
     })
 
-    view.c.setGroupProperty(PropertyInterface('Color', propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', propertyGroup))
+    view.c.setGroupProperty(new PropertyInterface('Color', propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', propertyGroup))
 
     return interfaceFunction
   }
@@ -155,7 +156,7 @@ export default class ShapeExpressionInterface {
   }
 
   gradientFillInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(val) {
       if (val === 'Start Point' || val === 'start point') {
@@ -183,15 +184,15 @@ export default class ShapeExpressionInterface {
       },
     })
 
-    view.s.setGroupProperty(PropertyInterface('Start Point', propertyGroup))
-    view.e.setGroupProperty(PropertyInterface('End Point', propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', propertyGroup))
+    view.s.setGroupProperty(new PropertyInterface('Start Point', propertyGroup))
+    view.e.setGroupProperty(new PropertyInterface('End Point', propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', propertyGroup))
 
     return interfaceFunction
   }
 
   groupInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     const interfaceFunction = function _interfaceFunction(value) {
       switch (value) {
@@ -337,7 +338,7 @@ export default class ShapeExpressionInterface {
   }
 
   rectInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(value) {
       if (shape.p.ix === value) {
@@ -357,9 +358,9 @@ export default class ShapeExpressionInterface {
     const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
 
     interfaceFunction.propertyIndex = shape.ix
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
-    prop.s.setGroupProperty(PropertyInterface('Size', _propertyGroup))
-    prop.r.setGroupProperty(PropertyInterface('Rotation', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
+    prop.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -373,10 +374,10 @@ export default class ShapeExpressionInterface {
   }
 
   repeaterInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup: LayerExpressionInterface
   ) {
-    function interfaceFunction(value) {
-      if (shape.c.ix === value || value === 'Copies') {
+    function interfaceFunction(value: number | string) {
+      if (shape.c?.ix === value || value === 'Copies') {
         return interfaceFunction.copies
       } if (shape.o.ix === value || value === 'Offset') {
         return interfaceFunction.offset
@@ -389,8 +390,8 @@ export default class ShapeExpressionInterface {
     const prop = view
 
     interfaceFunction.propertyIndex = shape.ix
-    prop.c.setGroupProperty(PropertyInterface('Copies', _propertyGroup))
-    prop.o.setGroupProperty(PropertyInterface('Offset', _propertyGroup))
+    prop.c.setGroupProperty(new PropertyInterface('Copies', _propertyGroup))
+    prop.o.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
       copies: { get: ExpressionPropertyInterface(prop.c) },
@@ -402,7 +403,7 @@ export default class ShapeExpressionInterface {
   }
 
   roundedInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(value) {
       if (shape.r.ix === value || value === 'Round Corners 1') {
@@ -416,7 +417,7 @@ export default class ShapeExpressionInterface {
     const prop = view
 
     interfaceFunction.propertyIndex = shape.ix
-    prop.rd.setGroupProperty(PropertyInterface('Radius', _propertyGroup))
+    prop.rd.setGroupProperty(new PropertyInterface('Radius', _propertyGroup))
 
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
@@ -428,28 +429,28 @@ export default class ShapeExpressionInterface {
   }
 
   starInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view: ShapeData, propertyGroup,
   ) {
-    function interfaceFunction(value) {
-      if (shape.p.ix === value) {
+    function interfaceFunction(value: string | number) {
+      if (shape.p?.ix === value) {
         return interfaceFunction.position
       }
-      if (shape.r.ix === value) {
+      if (shape.r?.ix === value) {
         return interfaceFunction.rotation
       }
-      if (shape.pt.ix === value) {
+      if (shape.pt?.ix === value) {
         return interfaceFunction.points
       }
-      if (shape.or.ix === value || value === 'ADBE Vector Star Outer Radius') {
+      if (shape.or?.ix === value || value === 'ADBE Vector Star Outer Radius') {
         return interfaceFunction.outerRadius
       }
-      if (shape.os.ix === value) {
+      if (shape.os?.ix === value) {
         return interfaceFunction.outerRoundness
       }
-      if (shape.ir && (shape.ir.ix === value || value === 'ADBE Vector Star Inner Radius')) {
+      if (shape.ir?.ix === value || value === 'ADBE Vector Star Inner Radius') {
         return interfaceFunction.innerRadius
       }
-      if (shape.is && shape.is.ix === value) {
+      if (shape.is?.ix === value) {
         return interfaceFunction.innerRoundness
       }
 
@@ -457,17 +458,17 @@ export default class ShapeExpressionInterface {
     }
 
     const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
-    const prop = view.sh.ty === 'tm' ? view.sh.prop : view.sh
+    const prop = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
 
     interfaceFunction.propertyIndex = shape.ix
-    prop.or.setGroupProperty(PropertyInterface('Outer Radius', _propertyGroup))
-    prop.os.setGroupProperty(PropertyInterface('Outer Roundness', _propertyGroup))
-    prop.pt.setGroupProperty(PropertyInterface('Points', _propertyGroup))
-    prop.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
-    prop.r.setGroupProperty(PropertyInterface('Rotation', _propertyGroup))
+    prop.or.setGroupProperty(new PropertyInterface('Outer Radius', _propertyGroup))
+    prop.os.setGroupProperty(new PropertyInterface('Outer Roundness', _propertyGroup))
+    prop.pt.setGroupProperty(new PropertyInterface('Points', _propertyGroup))
+    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
     if (shape.ir) {
-      prop.ir.setGroupProperty(PropertyInterface('Inner Radius', _propertyGroup))
-      prop.is.setGroupProperty(PropertyInterface('Inner Roundness', _propertyGroup))
+      prop.ir.setGroupProperty(new PropertyInterface('Inner Radius', _propertyGroup))
+      prop.is.setGroupProperty(new PropertyInterface('Inner Roundness', _propertyGroup))
     }
 
     Object.defineProperties(interfaceFunction, {
@@ -486,7 +487,7 @@ export default class ShapeExpressionInterface {
   }
 
   strokeInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
     const _dashPropertyGroup = propertyGroupFactory(dashOb, _propertyGroup)
@@ -530,15 +531,15 @@ export default class ShapeExpressionInterface {
       strokeWidth: { get: ExpressionPropertyInterface(view.w) },
     })
 
-    view.c.setGroupProperty(PropertyInterface('Color', _propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Opacity', _propertyGroup))
-    view.w.setGroupProperty(PropertyInterface('Stroke Width', _propertyGroup))
+    view.c.setGroupProperty(new PropertyInterface('Color', _propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
+    view.w.setGroupProperty(new PropertyInterface('Stroke Width', _propertyGroup))
 
     return interfaceFunction
   }
 
   transformInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
     function interfaceFunction(value) {
       if (shape.a.ix === value || value === 'Anchor Point') {
@@ -567,16 +568,16 @@ export default class ShapeExpressionInterface {
     }
     const _propertyGroup = propertyGroupFactory(interfaceFunction, propertyGroup)
 
-    view.transform.mProps.o.setGroupProperty(PropertyInterface('Opacity', _propertyGroup))
-    view.transform.mProps.p.setGroupProperty(PropertyInterface('Position', _propertyGroup))
-    view.transform.mProps.a.setGroupProperty(PropertyInterface('Anchor Point', _propertyGroup))
-    view.transform.mProps.s.setGroupProperty(PropertyInterface('Scale', _propertyGroup))
-    view.transform.mProps.r.setGroupProperty(PropertyInterface('Rotation', _propertyGroup))
+    view.transform.mProps.o.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
+    view.transform.mProps.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    view.transform.mProps.a.setGroupProperty(new PropertyInterface('Anchor Point', _propertyGroup))
+    view.transform.mProps.s.setGroupProperty(new PropertyInterface('Scale', _propertyGroup))
+    view.transform.mProps.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
     if (view.transform.mProps.sk) {
-      view.transform.mProps.sk.setGroupProperty(PropertyInterface('Skew', _propertyGroup))
-      view.transform.mProps.sa.setGroupProperty(PropertyInterface('Skew Angle', _propertyGroup))
+      view.transform.mProps.sk.setGroupProperty(new PropertyInterface('Skew', _propertyGroup))
+      view.transform.mProps.sa.setGroupProperty(new PropertyInterface('Skew Angle', _propertyGroup))
     }
-    view.transform.op.setGroupProperty(PropertyInterface('Opacity', _propertyGroup))
+    view.transform.op.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
     Object.defineProperties(interfaceFunction, {
       _name: { value: shape.nm },
       anchorPoint: { get: ExpressionPropertyInterface(view.transform.mProps.a) },
@@ -595,16 +596,16 @@ export default class ShapeExpressionInterface {
   }
 
   trimInterfaceFactory(
-    shape, view, propertyGroup
+    shape: Shape, view, propertyGroup
   ) {
-    function interfaceFunction(val) {
-      if (val === shape.e.ix || val === 'End' || val === 'end') {
+    function interfaceFunction(val: string | number) {
+      if (val === shape.e?.ix || val === 'End' || val === 'end') {
         return interfaceFunction.end
       }
-      if (val === shape.s.ix) {
+      if (val === shape.s?.ix) {
         return interfaceFunction.start
       }
-      if (val === shape.o.ix) {
+      if (val === shape.o?.ix) {
         return interfaceFunction.offset
       }
 
@@ -615,9 +616,9 @@ export default class ShapeExpressionInterface {
 
     interfaceFunction.propertyIndex = shape.ix
 
-    view.s.setGroupProperty(PropertyInterface('Start', _propertyGroup))
-    view.e.setGroupProperty(PropertyInterface('End', _propertyGroup))
-    view.o.setGroupProperty(PropertyInterface('Offset', _propertyGroup))
+    view.s.setGroupProperty(new PropertyInterface('Start', _propertyGroup))
+    view.e.setGroupProperty(new PropertyInterface('End', _propertyGroup))
+    view.o.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
     interfaceFunction.propertyIndex = shape.ix
     interfaceFunction.propertyGroup = propertyGroup
 

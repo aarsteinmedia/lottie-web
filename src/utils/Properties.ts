@@ -62,9 +62,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   }[] = []
   kf?: boolean
   lock?: boolean
+  loopIn?: (type: string, duration: number, durationFlag?: boolean) => void
+  loopOut?: (type: string, duration: number, durationFlag?: boolean) => void
   mult?: number
   offsetTime = 0
-  propertyGroup?: ReturnType<typeof LayerExpressionInterface>
+  propertyGroup?: LayerExpressionInterface
   pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape

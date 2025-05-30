@@ -24,13 +24,12 @@ import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
+import { type ShapeType, PropType } from '@/utils/enums'
 import { initialDefaultFrame, roundCorner } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-
-import { PropType } from '../enums'
 
 function getConstructorFunction() {
   return ShapeProperty
@@ -104,6 +103,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   p?: MultiDimensionalProperty
   public paths?: ShapePath[] | ShapeCollection
   public pv?: ShapePath
+  ty?: ShapeType
   public v?: ShapePath
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
     throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)
@@ -994,7 +994,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.getValue = this.processEffectsSequence
   }
 
-  setGroupProperty(_propertyInterface: ReturnType<typeof PropertyInterface>) {
+  setGroupProperty(_propertyInterface: PropertyInterface) {
     throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }
 }

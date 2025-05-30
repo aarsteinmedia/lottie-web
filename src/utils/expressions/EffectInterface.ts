@@ -1,5 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type { BaseProperty } from '@/utils/Properties'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
@@ -111,7 +112,7 @@ function createGroupInterface(
 }
 
 function createValueInterface(
-  element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup
+  element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup: (val: number) => BaseProperty
 ) {
   const expressionProperty = ExpressionPropertyInterface(element.p)
 
@@ -124,7 +125,7 @@ function createValueInterface(
   }
 
   if (element.p.setGroupProperty) {
-    element.p.setGroupProperty(PropertyInterface('', propertyGroup))
+    element.p.setGroupProperty(new PropertyInterface('', propertyGroup))
   }
 
   return interfaceFunction
