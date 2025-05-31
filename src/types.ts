@@ -60,11 +60,7 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type FootageInterface from '@/utils/expressions/FootageInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ProjectInterface from '@/utils/expressions/ProjectInterface'
-<<<<<<< HEAD
-import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
-=======
 import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
->>>>>>> expressions
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'

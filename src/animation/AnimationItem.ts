@@ -35,17 +35,9 @@ import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
-<<<<<<< HEAD
-import {
-  getExpressionsPlugin,
-  getSubframeEnabled,
-} from '@/utils/getterSetter'
-import ProjectInterface from '@/utils/expressions/ProjectInterface'
-=======
 import { getExpressionsPlugin } from '@/utils/expressions'
 import ProjectInterface from '@/utils/expressions/ProjectInterface'
 import { getSubframeEnabled } from '@/utils/getterSetter'
->>>>>>> expressions
 import ImagePreloader from '@/utils/ImagePreloader'
 
 export default class AnimationItem extends BaseEvent {
