@@ -1,3 +1,4 @@
+import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type { ShapeType } from '@/utils/enums'
 
@@ -6,34 +7,34 @@ import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class TransformInterface extends BaseInterface {
   ty?: ShapeType
-  view?: SVGTransformData
+  view?: SVGTransformData | SVGFillStyleData
 
   get anchorPoint() {
-    return expressionPropertyFactory(this.view?.transform.mProps.a)
+    return expressionPropertyFactory(this.view?.transform?.mProps.a)
   }
 
   get opacity() {
-    return expressionPropertyFactory(this.view?.transform.mProps.o)
+    return expressionPropertyFactory(this.view?.transform?.mProps.o)
   }
 
   get position() {
-    return expressionPropertyFactory(this.view?.transform.mProps.p)
+    return expressionPropertyFactory(this.view?.transform?.mProps.p)
   }
 
   get rotation() {
-    return expressionPropertyFactory(this.view?.transform.mProps.r)
+    return expressionPropertyFactory(this.view?.transform?.mProps.r)
   }
 
   get scale() {
-    return expressionPropertyFactory(this.view?.transform.mProps.s)
+    return expressionPropertyFactory(this.view?.transform?.mProps.s)
   }
 
   get skew() {
-    return expressionPropertyFactory(this.view?.transform.mProps.sk)
+    return expressionPropertyFactory(this.view?.transform?.mProps.sk)
   }
 
   get skewAxis() {
-    return expressionPropertyFactory(this.view?.transform.mProps.sa)
+    return expressionPropertyFactory(this.view?.transform?.mProps.sa)
   }
 
   override getInterface(value: string | number) {

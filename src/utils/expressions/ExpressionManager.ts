@@ -1,12 +1,16 @@
+/* eslint-disable unicorn/consistent-destructuring */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
-  ElementInterfaceIntersect, ExpressionProperty, Vector2,
+  ElementInterfaceIntersect, ExpressionProperty, ExpressionReturn, Vector2,
   Vector3,
 } from '@/types'
+import type { GroupEffectInterface } from '@/utils/expressions/EffectInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
-import type { KeyframedValueProperty, ValueProperty } from '@/utils/Properties'
+import type {
+  BaseProperty, KeyframedValueProperty, ValueProperty
+} from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import seedrandom from '@/3rd_party/seedrandom'
@@ -20,7 +24,7 @@ import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
 
-const Math = BMMath as Math,
+const Math = BMMath,
   window = null,
   document = null,
   XMLHttpRequest = null,
@@ -193,11 +197,11 @@ function initiateExpression(
       ip, nm, op, sh = 0, sw = 0, ty: elemType
     } = elem.data
 
-  let transform: TransformExpressionInterface,
-    $bm_transform,
+  let $bm_transform: undefined | TransformExpressionInterface,
     content: undefined | ShapeExpressionInterface,
-    effect,
-    randSeed = 0
+    effect: undefined | GroupEffectInterface,
+    randSeed = 0,
+    transform: undefined | TransformExpressionInterface
   const thisProperty = property
 
   thisProperty._name = nm
@@ -216,99 +220,171 @@ function initiateExpression(
     width = sw,
     height = sh,
     name = nm
-  let loopIn: (type: string, duration: number, flag?: boolean) => void,
+  let
+    anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    fromComp: (type: string, duration: number, flag?: boolean) => void,
+    fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    loopIn: (type: string, duration: number, flag?: boolean) => void,
     loop_in: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     loopOut: (type: string, duration: number, flag?: boolean) => void,
     loop_out: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    smooth: null | ((width: number, sample: number) => void) = null,
-    toWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromComp: (type: string, duration: number, flag?: boolean) => void,
-    toComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    mask: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line prefer-const
     position: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line prefer-const
     rotation: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line prefer-const
     scale: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    thisLayer: null | undefined | LayerExpressionInterface,
+    smooth: null | ((width: number, sample: number) => void) = null,
     thisComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    mask: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    toComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    toWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+
+    thisLayer: null | undefined | LayerExpressionInterface,
 
     scoped_bm_rt = noOp
-    // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
+  // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
 
 
-  // eslint-disable-next-line no-eval
-  const expression_function = eval(/* Javascript */ `[
-      function _expression_function() {
-        ${val};
-        scoped_bm_rt = $bm_rt
-      // @ts-expect-error
-      }]`)[0]
+  // const expression_function = eval(/* Javascript */ `[
+  //     function _expression_function() {
+  //       ${val}
+  //       scoped_bm_rt = $bm_rt
+  //     // @ts-expect-error
+  //     }]`)[0]
 
-
-  // const expression_function = new Function(
-  //   'scoped_bm_rt',
-  //   'transform',
-  //   'loopOut',
-  //   /* Javascript */ `
-  //   (() => {
-  //     ${val};
-  //     scoped_bm_rt = $bm_rt;
-  //   })()
-  //   `
-  // )
+  const obj: { scoped_bm_rt?: ExpressionReturn } = {},
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    expression_function = new Function(
+      '_lottieGlobal',
+      '$bm_div',
+      '$bm_mod',
+      '$bm_mul',
+      '$bm_neg',
+      '$bm_sub',
+      '$bm_sum',
+      '$bm_transform',
+      'active',
+      'add',
+      'anchorPoint',
+      'clamp',
+      'comp',
+      'content',
+      'createPath',
+      'degrees_to_radians',
+      'degreesToRadians',
+      'document',
+      'ease',
+      'easeIn',
+      'easeOut',
+      'effect',
+      'fetch',
+      'frames',
+      'framesToTime',
+      'fromComp',
+      'fromCompToSurface',
+      'fromWorld',
+      'globalData',
+      'height',
+      'hslToRgb',
+      'index',
+      'inPoint',
+      'key',
+      'linear',
+      'lookAt',
+      'loop_in',
+      'loop_out',
+      'loopIn',
+      'loopInDuration',
+      'loopOut',
+      'loopOutDuration',
+      'mask',
+      'name',
+      'nearestKey',
+      'normalize',
+      'numKeys',
+      'obj',
+      'outPoint',
+      'position',
+      'posterizeTime',
+      'radians_to_degrees',
+      'random',
+      'randSeed',
+      'rgbToHsl',
+      'rotation',
+      'scale',
+      'selectorValue',
+      'smooth',
+      'sourceRectAtTime',
+      'substr',
+      'substring',
+      'text',
+      'textIndex',
+      'textTotal',
+      'thisComp',
+      'time',
+      'timeToFrames',
+      'toComp',
+      'toWorld',
+      'transform',
+      'velocity',
+      'width',
+      'wiggle',
+      'window',
+      'XMLHttpRequest',
+      /* JavaScript */ `
+      ${val}
+      obj.scoped_bm_rt = $bm_rt;`
+    )
 
   let time = 0,
-    velocity,
+    velocity: number,
     value: unknown = null,
-    text,
-    textIndex,
-    textTotal,
-    selectorValue
+    text: string,
+    textIndex: number,
+    textTotal: number,
+    selectorValue: string
 
   const numKeys = property.kf ? k.length : 0,
-    active = !this.data || this.data.hd !== true
+    active = !this.data || this.data.hd !== true,
 
-  const wiggle = (_freqFromProps: number, amp: number) => {
+    wiggle = (_freqFromProps: number, amp: number) => {
     // let freq: number
-    const { pv: prop } = this,
-      lenWiggle = isArrayOfNum(prop) ? prop.length : 1,
-      addedAmps = createTypedArray(ArrayType.Float32, lenWiggle),
+      const { pv: prop } = this,
+        lenWiggle = isArrayOfNum(prop) ? prop.length : 1,
+        addedAmps = createTypedArray(ArrayType.Float32, lenWiggle),
 
-      freq = 5,
-      iterations = Math.floor(time * freq)
+        freq = 5,
+        iterations = Math.floor(time * freq)
 
-    let iWiggle = 0
+      let iWiggle = 0
 
-    while (iWiggle < iterations) {
+      while (iWiggle < iterations) {
       // var rnd = BMMath.random();
-      for (let j = 0; j < lenWiggle; j++) {
-        addedAmps[j] += -amp + amp * 2 * BMMath.random()
+        for (let j = 0; j < lenWiggle; j++) {
+          addedAmps[j] += -amp + amp * 2 * BMMath.random()
         // addedAmps[j] += -amp + amp*2*rnd;
+        }
+        iWiggle++
       }
-      iWiggle++
-    }
-    // var rnd2 = BMMath.random();
-    const periods = time * freq
-    const perc = periods - Math.floor(periods)
-    const arr = createTypedArray(ArrayType.Float32, lenWiggle)
+      // var rnd2 = BMMath.random();
+      const periods = time * freq,
+        perc = periods - Math.floor(periods),
+        arr = createTypedArray(ArrayType.Float32, lenWiggle)
 
-    if (lenWiggle > 1) {
-      for (let j = 0; j < lenWiggle; j++) {
-        arr[j] = (prop as number[])[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
+      if (lenWiggle > 1) {
+        for (let j = 0; j < lenWiggle; j++) {
+          arr[j] = (prop as number[])[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
         // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
         // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
+        }
+
+        return arr
       }
 
-      return arr
+      return prop as number + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
     }
-
-    return prop as number + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
-  }
 
   if (thisProperty.loopIn) {
     loopIn = thisProperty.loopIn.bind(thisProperty)
@@ -338,7 +414,7 @@ function initiateExpression(
 
   const valueAtTime = this.getValueAtTime.bind(this),
     velocityAtTime = this.getVelocityAtTime.bind(this),
-    { projectInterface: comp } = elem.comp.globalData
+    { frameRate, projectInterface: comp } = elem.comp.globalData
 
   function lookAt(elem1: Vector3, elem2: Vector3) {
     const fVec: Vector3 = [elem2[0] - elem1[0],
@@ -365,23 +441,23 @@ function initiateExpression(
       keyTime = 0
     } else {
       timeIndex = -1
-      timeKey *= elem.comp.globalData.frameRate
-      if (timeKey < data.k[0].t) {
+      timeKey *= frameRate
+      if (timeKey < k[0].t) {
         timeIndex = 1
-        keyTime = data.k[0].t
+        keyTime = k[0].t
       } else {
         for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
-          if (timeKey === data.k[iKey].t) {
+          if (timeKey === k[iKey].t) {
             timeIndex = iKey + 1
-            keyTime = data.k[iKey].t
+            keyTime = k[iKey].t
             break
-          } else if (timeKey > data.k[iKey].t && timeKey < data.k[iKey + 1].t) {
-            if (timeKey - data.k[iKey].t > data.k[iKey + 1].t - timeKey) {
+          } else if (timeKey > k[iKey].t && timeKey < k[iKey + 1].t) {
+            if (timeKey - k[iKey].t > k[iKey + 1].t - timeKey) {
               timeIndex = iKey + 2
-              keyTime = data.k[iKey + 1].t
+              keyTime = k[iKey + 1].t
             } else {
               timeIndex = iKey + 1
-              keyTime = data.k[iKey].t
+              keyTime = k[iKey].t
             }
             break
           }
@@ -395,7 +471,7 @@ function initiateExpression(
 
     return {
       index: timeIndex,
-      time: keyTime / (elem.comp.globalData?.frameRate ?? 60)
+      time: keyTime / frameRate
     }
   }
 
@@ -411,7 +487,7 @@ function initiateExpression(
       value: number[]
       [val: number]: number
     } = {
-      time: data.k[ind].t / (elem.comp.globalData?.frameRate ?? 60),
+      time: data.k[ind].t / frameRate,
       value: [],
     }
     const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e,
@@ -431,7 +507,7 @@ function initiateExpression(
     let fps = fpsFromProps
 
     if (!fps) {
-      fps = elem.comp.globalData?.frameRate ?? 60
+      fps = frameRate
     }
 
     return fr / fps
@@ -445,7 +521,7 @@ function initiateExpression(
       t = time
     }
     if (!fps) {
-      fps = elem.comp.globalData?.frameRate ?? 60
+      fps = frameRate
     }
 
     return t * fps
@@ -485,7 +561,7 @@ function initiateExpression(
 
   const index = elem.data.ind
   let hasParent = Boolean(elem.hierarchy?.length),
-    parent: undefined | LayerExpressionInterface
+    parent: null | LayerExpressionInterface = null
 
   randSeed = Math.floor(Math.random() * 1000000)
   const { globalData } = elem
@@ -508,18 +584,18 @@ function initiateExpression(
       selectorValue = this.selectorValue
     }
     if (!thisLayer) {
-      text = elem.layerInterface.text
+      text = elem.layerInterface?.text
       thisLayer = elem.layerInterface
       thisComp = elem.comp?.compInterface
-      toWorld = thisLayer.toWorld.bind(thisLayer)
-      fromWorld = thisLayer.fromWorld.bind(thisLayer)
-      fromComp = thisLayer.fromComp.bind(thisLayer)
-      toComp = thisLayer.toComp.bind(thisLayer)
-      mask = thisLayer.mask ? thisLayer.mask.bind(thisLayer) : null
+      toWorld = thisLayer?.toWorld.bind(thisLayer)
+      fromWorld = thisLayer?.fromWorld.bind(thisLayer)
+      fromComp = thisLayer?.fromComp.bind(thisLayer)
+      toComp = thisLayer?.toComp.bind(thisLayer)
+      mask = thisLayer?.mask ? thisLayer.mask.bind(thisLayer) : null
       fromCompToSurface = fromComp
     }
     if (!transform) {
-      transform = elem.layerInterface?.getInterface('ADBE Transform Group')
+      transform = elem.layerInterface?.getInterface('ADBE Transform Group') as TransformExpressionInterface | undefined
       $bm_transform = transform
       if (transform) {
         anchorPoint = transform.anchorPoint
@@ -530,84 +606,109 @@ function initiateExpression(
     }
 
     if (elemType === 4 && !content) {
-      content = thisLayer?.getInterface('ADBE Root Vectors Group')
+      content = thisLayer?.getInterface('ADBE Root Vectors Group') as ShapeExpressionInterface
     }
-    if (!effect) {
-      effect = thisLayer?.getInterface(4)
-    }
+    effect = effect ?? thisLayer?.getInterface(4) as GroupEffectInterface
     hasParent = Boolean(elem.hierarchy?.length)
     if (hasParent && !parent) {
-      parent = elem.hierarchy[0].layerInterface
+      parent = elem.hierarchy?.[0].layerInterface ?? null
     }
-    time = this.comp.renderedFrame / this.comp.globalData.frameRate
+    time = (this.comp?.renderedFrame ?? 0) / (this.comp?.globalData?.frameRate ?? 60)
     if (_needsRandom) {
       seedRandom(randSeed + time)
     }
     if (needsVelocity) {
       velocity = velocityAtTime(time)
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     expression_function(
-      // scoped_bm_rt,
-      // transform,
-      // loopOut,
+      _lottieGlobal,
+      $bm_div,
+      $bm_mod,
+      $bm_mul,
+      $bm_neg,
+      $bm_sub,
+      $bm_sum,
+      $bm_transform,
+      active,
+      add,
+      anchorPoint,
+      clamp,
+      comp,
+      content,
+      createPath,
+      degrees_to_radians,
+      degreesToRadians,
+      document,
+      ease,
+      easeIn,
+      easeOut,
+      effect,
+      fetch,
+      frames,
+      framesToTime,
+      fromComp,
+      fromCompToSurface,
+      fromWorld,
+      globalData,
+      height,
+      hslToRgb,
+      index,
+      inPoint,
+      key,
+      linear,
+      lookAt,
+      loop_in,
+      loop_out,
+      loopIn,
+      loopInDuration,
+      loopOut,
+      loopOutDuration,
+      mask,
+      name,
+      nearestKey,
+      normalize,
+      numKeys,
+      obj,
+      outPoint,
+      position,
+      posterizeTime,
+      radians_to_degrees,
+      random,
+      randSeed,
+      rgbToHsl,
+      rotation,
+      scale,
+      selectorValue,
+      smooth,
+      sourceRectAtTime,
+      substr,
+      substring,
+      text,
+      textIndex,
+      textTotal,
+      thisComp,
+      time,
+      timeToFrames,
+      toComp,
+      toWorld,
+      transform,
+      velocity,
+      width,
+      wiggle,
+      window,
+      XMLHttpRequest,
     )
-    this.frameExpressionId = elem.globalData?.frameId
+    this.frameExpressionId = globalData.frameId
 
     // TODO: Check if it's possible to return on ShapeInterface the .v value
-    // Changed this to a ternary operation because Rollup failed compiling it correctly
-    scoped_bm_rt = scoped_bm_rt.propType === PropType.Shape
-      ? scoped_bm_rt.v
-      : scoped_bm_rt
+    scoped_bm_rt = ((obj.scoped_bm_rt as BaseProperty | undefined)?.propType === PropType.Shape
+      ? (obj.scoped_bm_rt as BaseProperty).v
+      : obj.scoped_bm_rt) as (val: unknown) => void
 
     return scoped_bm_rt
   }
-  // Bundlers will see these as dead code and unless we reference them
-  executeExpression.__preventDeadCodeRemoval = [
-    $bm_transform,
-    anchorPoint,
-    time,
-    velocity,
-    inPoint,
-    outPoint,
-    width,
-    height,
-    name,
-    loop_in,
-    loop_out,
-    smooth,
-    toComp,
-    fromCompToSurface,
-    toWorld,
-    fromWorld,
-    mask,
-    position,
-    rotation,
-    scale,
-    thisComp,
-    numKeys,
-    active,
-    wiggle,
-    loopInDuration,
-    loopOutDuration,
-    comp,
-    lookAt,
-    easeOut,
-    easeIn,
-    ease,
-    nearestKey,
-    key,
-    text,
-    textIndex,
-    textTotal,
-    selectorValue,
-    framesToTime,
-    timeToFrames,
-    sourceRectAtTime,
-    substring,
-    substr,
-    posterizeTime,
-    index,
-    globalData]
 
   return executeExpression
 }
@@ -911,7 +1012,7 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
       } else {
         retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       }
-      i += 1
+      i++
     }
 
     return retArr
@@ -921,31 +1022,6 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
 }
 
 const ExpressionManager = {
-  __preventDeadCodeRemoval: [
-    window,
-    document,
-    XMLHttpRequest,
-    fetch,
-    frames,
-    $bm_neg,
-    add,
-    $bm_sum,
-    $bm_sub,
-    $bm_mul,
-    $bm_div,
-    $bm_mod,
-    clamp,
-    radians_to_degrees,
-    degreesToRadians,
-    degrees_to_radians,
-    normalize,
-    rgbToHsl,
-    hslToRgb,
-    linear,
-    random,
-    createPath,
-    _lottieGlobal
-  ],
   initiateExpression,
   resetFrame
 }

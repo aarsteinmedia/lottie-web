@@ -1286,10 +1286,12 @@ export interface GlobalData {
 export interface ExpressionProperty {
   a: 0 | 1
   ix: number
-  k: ValueProperty[]
+  k: (ValueProperty | MultiDimensionalProperty)[]
   release?: () => void
   x: string
 }
+
+export type ExpressionReturn = ((val?: unknown) => unknown) | BaseProperty
 
 export interface SourceRect {
   height: number

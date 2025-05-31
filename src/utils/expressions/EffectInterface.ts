@@ -10,7 +10,7 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
-class GroupEffectInterface {
+export class GroupEffectInterface {
   effectElements: Effect[]
   effects: Effect[]
   get numProperties() {

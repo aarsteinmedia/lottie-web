@@ -420,22 +420,22 @@ export default class ShapeExpressionInterface {
   }
 
   transformInterfaceFactory(
-    shape: Shape, view: SVGTransformData, propertyGroup: PropertyGroupFactory
+    shape: Shape, view: SVGTransformData | SVGFillStyleData, propertyGroup: PropertyGroupFactory
   ) {
 
     TransformInterface.prototype.shape = shape
     const _propertyGroup = new PropertyGroupFactory(TransformInterface, propertyGroup)
 
-    view.transform.mProps.o?.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
-    view.transform.mProps.p?.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
-    view.transform.mProps.a?.setGroupProperty(new PropertyInterface('Anchor Point', _propertyGroup))
-    view.transform.mProps.s?.setGroupProperty(new PropertyInterface('Scale', _propertyGroup))
-    view.transform.mProps.r?.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
-    if (view.transform.mProps.sk) {
+    view.transform?.mProps.o?.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
+    view.transform?.mProps.p?.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    view.transform?.mProps.a?.setGroupProperty(new PropertyInterface('Anchor Point', _propertyGroup))
+    view.transform?.mProps.s?.setGroupProperty(new PropertyInterface('Scale', _propertyGroup))
+    view.transform?.mProps.r?.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
+    if (view.transform?.mProps.sk) {
       view.transform.mProps.sk.setGroupProperty(new PropertyInterface('Skew', _propertyGroup))
       view.transform.mProps.sa?.setGroupProperty(new PropertyInterface('Skew Angle', _propertyGroup))
     }
-    view.transform.op.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
+    view.transform?.op.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
 
     TransformInterface.prototype._name = shape.nm
     TransformInterface.prototype.view = view
