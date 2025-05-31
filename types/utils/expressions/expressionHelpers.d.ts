@@ -1,11 +1,17 @@
-import type { ElementInterfaceIntersect } from '../../types';
-import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import type { BaseProperty } from '../../utils/Properties';
-import type { ShapeBaseProperty, ShapeProperty } from '../../utils/shapes/ShapeProperty';
-import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
-export declare function getSpeedAtTime(this: BaseProperty, frameNum: number): number;
-export declare function getValueAtTime(this: TextSelectorProperty, frameNumFromProps: number): number | number[] | undefined;
-export declare function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[];
-export declare function getStaticValueAtTime(this: ShapeBaseProperty): import("../shapes/ShapePath").default | undefined;
-export declare function searchExpressions(elem: ElementInterfaceIntersect, data: TextSelectorProperty, prop: TextSelectorProperty | ShapeProperty): void;
-export declare function setGroupProperty(this: BaseProperty, propertyGroup: LayerExpressionInterface): void;
+import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types';
+import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties';
+declare function searchExpressions(elem: ElementInterfaceIntersect, data: ExpressionProperty, prop: KeyframedValueProperty): void;
+declare function getValueAtTime(this: BaseProperty, frameNumFromProps: number): number | number[] | undefined;
+declare function getSpeedAtTime(this: BaseProperty, frameNum: number): number;
+declare function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>;
+declare function getStaticValueAtTime(this: BaseProperty, _time?: number, _num?: number): string | number | number[] | import("../shapes/ShapePath").default | import("@/types").DocumentData | undefined;
+declare function setGroupProperty(this: BaseProperty, propertyGroup: typeof BaseProperty.prototype.propertyGroup): void;
+declare const expressionHelpers: {
+    getSpeedAtTime: typeof getSpeedAtTime;
+    getStaticValueAtTime: typeof getStaticValueAtTime;
+    getValueAtTime: typeof getValueAtTime;
+    getVelocityAtTime: typeof getVelocityAtTime;
+    searchExpressions: typeof searchExpressions;
+    setGroupProperty: typeof setGroupProperty;
+};
+export default expressionHelpers;

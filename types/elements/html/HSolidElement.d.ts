@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import RenderableDOMElement from '../../elements/helpers/RenderableDOMElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement';
 export default class HSolidElement extends RenderableDOMElement {
     svgElement?: SVGSVGElement;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);

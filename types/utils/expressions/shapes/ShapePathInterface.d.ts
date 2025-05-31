@@ -1,17 +1,17 @@
-import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
-import type { Shape } from '../../../types';
-import type { ShapeProperty } from '../../../utils/shapes/ShapeProperty';
+import type ShapeData from '@/elements/helpers/shapes/ShapeData';
+import type { Shape } from '@/types';
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type { ShapeProperty } from '@/utils/shapes/ShapeProperty';
 export default class ShapePathInterface {
     _name?: string;
-    _propertyGroup: (val?: number) => any;
     ind?: number;
     ix?: number;
     mn?: string;
-    path: ShapeProperty;
-    prop: ShapeProperty;
-    propertyGroup?: unknown;
+    prop: null | ShapeProperty;
+    propertyGroup: LayerExpressionInterface;
     propertyIndex?: number;
-    shape: ShapeProperty;
-    constructor(shape: Shape, view: SVGShapeData, propertyGroup: unknown);
-    interfaceFunction(val: string | number): ShapeProperty | null;
+    get path(): ShapeProperty | null;
+    get shape(): ShapeProperty | null;
+    constructor(shape: Shape, view: ShapeData, propertyGroup: LayerExpressionInterface);
+    getInterface(val: string | number): ShapeProperty | null;
 }

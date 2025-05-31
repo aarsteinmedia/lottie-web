@@ -1,1 +1,2 @@
-export default function addTextDecorator(): void;
+declare function initialize(): void;
+export default initialize;

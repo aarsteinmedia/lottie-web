@@ -1,21 +1,25 @@
-import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, Keyframe, Shape, TextData, TextRangeValue, Vector2, Vector3, VectorProperty } from '../types';
-import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
-import type Matrix from '../utils/Matrix';
-import type ShapePath from '../utils/shapes/ShapePath';
-import { type BezierData } from '../utils/Bezier';
-import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
+import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, Shape, TextData, TextRangeValue, Vector2, Vector3, VectorProperty } from '@/types';
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type Matrix from '@/utils/Matrix';
+import type ShapePath from '@/utils/shapes/ShapePath';
+import { type BezierData } from '@/utils/Bezier';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
 export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
     _isFirstFrame?: boolean;
+    _name?: string;
     _placeholder?: boolean;
     comp?: CompElementInterface;
-    data?: VectorProperty<number | number[] | Keyframe[]> | Shape | TextRangeValue | TextData;
+    data?: {
+        hd?: boolean;
+    } & (VectorProperty<number | number[] | Keyframe[]> | Shape | TextRangeValue | TextData);
     e?: ValueProperty | {
         v: number;
     };
     effectsSequence: EffectFunction[];
     elem?: ElementInterfaceIntersect;
+    frameExpressionId?: number;
     frameId?: number;
     g?: unknown;
     initFrame: number;
@@ -25,22 +29,29 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
         bezierData?: BezierData;
         __fnct?: ((val: number) => number) | ((val: number) => number)[];
     }[];
-    kf?: boolean;
+    kf?: boolean | null;
     lock?: boolean;
+    loopIn?: (type: string, duration: number, durationFlag?: boolean) => void;
+    loopOut?: (type: string, duration: number, durationFlag?: boolean) => void;
     mult?: number;
     offsetTime: number;
     propertyGroup?: LayerExpressionInterface;
     pv?: string | number | number[] | DocumentData | ShapePath;
     s?: ValueProperty | MultiDimensionalProperty<Vector3>;
     sh?: Shape;
+    smooth?: (width: number, samples: number) => void;
+    textIndex?: number;
+    textTotal?: number;
     v?: string | number | number[] | Matrix | DocumentData;
     value?: number | number[];
     vel?: number | number[];
+    x?: boolean;
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
-    getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
-    getValueAtTime(_a: number, _b?: number): number | number[];
+    getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
+    getValueAtTime(_a: string | number, _b?: number): number | number[];
     getVelocityAtTime(_frameNum: number): number;
+    initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): void;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
     processEffectsSequence(): void;
     setVValue(val?: number | number[] | Keyframe[]): void;
@@ -56,7 +67,7 @@ export declare class MultiDimensionalProperty<T extends any[] = Vector2> extends
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty<T>, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }
 export declare class KeyframedValueProperty extends BaseProperty {
-    pv: number;
+    pv: number | number[];
     v: number;
     constructor(elem: ElementInterfaceIntersect, data: VectorProperty<Keyframe[]>, mult?: null | number, container?: ElementInterfaceIntersect | null);
 }

@@ -1,6 +1,7 @@
+import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory';
 export default class PropertyInterface {
-    private propertyGroup;
     _name: string;
-    constructor(propertyName: string, propertyGroup: (val: number) => unknown);
-    _propertyGroup(val?: number): unknown;
+    propertyGroup: PropertyGroupFactory;
+    constructor(propertyName: string, propertyGroup: PropertyGroupFactory);
+    getInterface(val: number): any;
 }

@@ -1,14 +1,14 @@
-import type CVShapeData from '../../elements/helpers/shapes/CVShapeData';
-import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type SVGShapeData from '../../elements/helpers/shapes/SVGShapeData';
-import type { ElementInterfaceIntersect, ElementInterfaceUnion, Shape } from '../../types';
-import type OffsetPathModifier from '../../utils/shapes/OffsetPathModifier';
-import type PuckerAndBloatModifier from '../../utils/shapes/PuckerAndBloatModifier';
-import type RepeaterModifier from '../../utils/shapes/RepeaterModifier';
-import type RoundCornersModifier from '../../utils/shapes/RoundCornersModifier';
-import type TrimModifier from '../../utils/shapes/TrimModifier';
-import type ZigZagModifier from '../../utils/shapes/ZigZagModifier';
-import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
+import type CVShapeData from '@/elements/helpers/shapes/CVShapeData';
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
+import type { ElementInterfaceIntersect, ElementInterfaceUnion, Shape } from '@/types';
+import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier';
+import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier';
+import type RepeaterModifier from '@/utils/shapes/RepeaterModifier';
+import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier';
+import type TrimModifier from '@/utils/shapes/TrimModifier';
+import type ZigZagModifier from '@/utils/shapes/ZigZagModifier';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
 export type ModifierInterface = OffsetPathModifier | PuckerAndBloatModifier | RepeaterModifier | RoundCornersModifier | TrimModifier | ZigZagModifier;
 export default class ShapeModifier extends DynamicPropertyContainer {
     closed?: boolean;

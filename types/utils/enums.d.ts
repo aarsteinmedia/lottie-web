@@ -67,6 +67,13 @@ export declare enum ShapeType {
     Unknown = "ms",
     ZigZag = "zz"
 }
+export declare enum PropType {
+    MultiDimensional = "multidimensiional",
+    Shape = "shape",
+    TextSelector = "textSelector",
+    Transform = "transform",
+    UniDimensional = "unidimensional"
+}
 export declare const lineCapEnum: {
     [key: number]: CanvasLineCap;
 }, lineJoinEnum: {

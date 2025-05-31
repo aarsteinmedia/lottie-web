@@ -1,2 +1,8 @@
-declare const propertyGroupFactory: (interfaceFunction: any, parentPropertyGroup: any) => (val?: number) => any;
-export default propertyGroupFactory;
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type { BaseProperty } from '@/utils/Properties';
+export default class PropertyGroupFactory {
+    interfaceFunction: (val: string | number) => BaseProperty;
+    parentPropertyGroup: LayerExpressionInterface;
+    constructor(interfaceFunction: (val: number | string) => BaseProperty, parentPropertyGroup: LayerExpressionInterface);
+    getInterface(val?: number): any;
+}

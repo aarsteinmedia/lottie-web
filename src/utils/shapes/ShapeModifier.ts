@@ -84,9 +84,11 @@ export default class ShapeModifier extends DynamicPropertyContainer {
 
   processKeys() {
     if (this.elem?.globalData.frameId === this.frameId) {
-      return
+      return 0
     }
     this.frameId = this.elem?.globalData.frameId
     this.iterateDynamicProperties()
+
+    return 0
   }
 }

@@ -1,6 +1,6 @@
-import type { GroupEffect } from '../effects/EffectsManager';
-import type { ValueProperty } from '../utils/Properties';
-import Matrix from '../utils/Matrix';
+import type { GroupEffect } from '@/effects/EffectsManager';
+import type { ValueProperty } from '@/utils/Properties';
+import Matrix from '@/utils/Matrix';
 export default abstract class TransformEffect {
     _mdf?: boolean;
     _opMdf?: boolean;

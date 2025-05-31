@@ -17,7 +17,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
   _hasOpacity: number
   _omdf: boolean
   c: Uint8ClampedArray
-  data: GradientColor
+  override data: GradientColor
   k?: boolean
   o: Float32Array
   prop: ReturnType<typeof PropertyFactory.getProp>
@@ -95,7 +95,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     this._cmdf = false
     this._omdf = false
     if (!this.prop._mdf && !forceRender || !isArrayOfNum(this.prop.v)) {
-      return
+      return 0
     }
     const len = this.data.p * 4
     let mult
@@ -122,5 +122,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
       }
     }
     this._mdf = !forceRender
+
+    return 0
   }
 }

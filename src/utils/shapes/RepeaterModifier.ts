@@ -17,7 +17,7 @@ import TransformPropertyFactory, { type TransformProperty } from '@/utils/Transf
 export default class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []
   c?: ValueProperty
-  data?: Shape
+  override data?: Shape
   elemsData: ShapeGroupData[] = []
   eo?: ValueProperty
   matrix?: Matrix

@@ -45,7 +45,7 @@ export default class FootageElement extends RenderableElement {
     if (!expressionsInterfaces) {
       return
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
     const FootageInterface = new expressionsInterfaces('footage')
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call

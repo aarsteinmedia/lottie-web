@@ -1,11 +1,24 @@
-import type { ElementInterfaceIntersect } from '@/types'
+import type {
+  ElementInterfaceIntersect, GradientColor, Shape, TextData, TextRangeValue, VectorProperty
+} from '@/types'
 import type { PropType } from '@/utils/enums'
 import type PropertyInterface from '@/utils/expressions/PropertyInterface'
+
+import type TextProperty from '../text/TextProperty'
 
 export default abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
   _mdf?: boolean
   container?: ElementInterfaceIntersect | null
+  data?:
+    { hd?: boolean } &
+    (VectorProperty<number | number[] | Keyframe[]>
+      | Shape
+      | TextProperty
+      | TextData
+      | TextRangeValue
+      | VectorProperty<Keyframe[]>
+      | GradientColor)
   dynamicProperties: DynamicPropertyContainer[] = []
   propType?: PropType | false
 
@@ -39,6 +52,8 @@ export default abstract class DynamicPropertyContainer {
         this._mdf = true
       }
     }
+
+    return 0 // For type compability
   }
 
   setGroupProperty(_propertyInterface: PropertyInterface) {

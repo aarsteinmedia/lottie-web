@@ -266,5 +266,7 @@ export default class TextSelectorProperty extends BaseProperty {
     }
     this.finalS = s
     this.finalE = e
+
+    return 0
   }
 }

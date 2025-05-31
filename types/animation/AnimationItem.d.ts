@@ -1,13 +1,13 @@
-import type CanvasRenderer from '../renderers/CanvasRenderer';
-import type HybridRenderer from '../renderers/HybridRenderer';
-import type SVGRenderer from '../renderers/SVGRenderer';
-import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
-import type Expressions from '../utils/expressions/Expressions';
-import BaseEvent, { type LottieEvent } from '../events';
-import AudioController from '../utils/audio/AudioController';
-import { RendererType } from '../utils/enums';
-import ProjectInterface from '../utils/expressions/ProjectInterface';
-import ImagePreloader from '../utils/ImagePreloader';
+import type CanvasRenderer from '@/renderers/CanvasRenderer';
+import type HybridRenderer from '@/renderers/HybridRenderer';
+import type SVGRenderer from '@/renderers/SVGRenderer';
+import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '@/types';
+import BaseEvent, { type LottieEvent } from '@/events';
+import AudioController from '@/utils/audio/AudioController';
+import { RendererType } from '@/utils/enums';
+import { getExpressionsPlugin } from '@/utils/expressions';
+import ProjectInterface from '@/utils/expressions/ProjectInterface';
+import ImagePreloader from '@/utils/ImagePreloader';
 export default class AnimationItem extends BaseEvent {
     __complete?: boolean;
     _isFirstFrame?: number;
@@ -21,7 +21,7 @@ export default class AnimationItem extends BaseEvent {
     currentFrame: number;
     currentRawFrame: number;
     drawnFrameEvent: LottieEvent;
-    expressionsPlugin: null | typeof Expressions;
+    expressionsPlugin: ReturnType<typeof getExpressionsPlugin>;
     firstFrame: number;
     frameModifier: AnimationDirection;
     frameMult: number;

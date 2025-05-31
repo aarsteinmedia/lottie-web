@@ -1,6 +1,6 @@
-import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import type { KeyframedValueProperty } from '../../utils/Properties';
-import SVGBaseElement from '../../elements/svg/SVGBaseElement';
+import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import type { KeyframedValueProperty } from '@/utils/Properties';
+import SVGBaseElement from '@/elements/svg/SVGBaseElement';
 export default class SVGCompElement extends SVGBaseElement {
     _debug?: boolean;
     addPendingElement: (element: ElementInterfaceIntersect) => void;
@@ -11,12 +11,12 @@ export default class SVGCompElement extends SVGBaseElement {
     checkLayers: (val?: number) => void;
     checkPendingElements: () => void;
     completeLayers: boolean;
-    configAnimation: (animData: import("../../types").AnimationData) => void;
+    configAnimation: (animData: import("@/types").AnimationData) => void;
     createAudio: (data: LottieLayer) => import("../AudioElement").default;
     createCamera: (_data: LottieLayer) => import("../html/HCameraElement").default;
     createFootage: (data: LottieLayer) => import("../FootageElement").default;
     createImage: (data: LottieLayer) => import("../ImageElement").default;
-    createItem: (layer: LottieLayer) => import("../canvas/CVCompElement").default | import("../AudioElement").default | SVGCompElement | import("./SVGShapeElement").default | import("../html/HCompElement").default | import("../canvas/CVShapeElement").default | import("../html/HShapeElement").default | import("../canvas/CVImageElement").default | import("../ImageElement").default | import("../html/HImageElement").default | import("../canvas/CVSolidElement").default | import("../NullElement").default | import("./SVGTextElement").default | import("../canvas/CVTextElement").default | import("../html/HTextElement").default | import("../html/HCameraElement").default | import("../FootageElement").default;
+    createItem: (layer: LottieLayer) => import("../canvas/CVCompElement").default | import("../html/HCompElement").default | SVGCompElement | import("../AudioElement").default | import("./SVGShapeElement").default | import("./SVGTextElement").default | import("../canvas/CVImageElement").default | import("../ImageElement").default | import("../html/HImageElement").default | import("../canvas/CVSolidElement").default | import("../NullElement").default | import("../canvas/CVShapeElement").default | import("../html/HShapeElement").default | import("../canvas/CVTextElement").default | import("../html/HTextElement").default | import("../html/HCameraElement").default | import("../FootageElement").default;
     createNull: (data: LottieLayer) => import("../NullElement").default;
     createShape: (data: LottieLayer) => import("./SVGShapeElement").default;
     createSolid: (data: LottieLayer) => import("../SolidElement").default;
@@ -42,7 +42,7 @@ export default class SVGCompElement extends SVGBaseElement {
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setElements: (elems: ElementInterfaceIntersect[]) => void;
     setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
-    setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
+    setupGlobalData: (animData: import("@/types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     supports3d: boolean;
     tm?: KeyframedValueProperty;

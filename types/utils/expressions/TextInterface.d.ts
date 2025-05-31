@@ -1,20 +1,23 @@
-import type { ElementInterfaceIntersect } from '../../types';
-import type ExpressionManager from '../../utils/expressions/ExpressionManager';
+import type { ElementInterfaceIntersect } from '@/types';
 export default class TextExpressionInterface {
-    elem: ElementInterfaceIntersect;
-    initiateExpression?: typeof ExpressionManager;
-    get sourceText(): {
-        value?: string;
+    _sourceText?: {
+        value: string;
         style?: {
-            fillColor: number[];
+            fillColor: string;
         };
     };
-    private _sourceText?;
-    constructor(elem: ElementInterfaceIntersect);
-    _thisLayerFunction(name: string): {
-        value?: string;
+    elem: ElementInterfaceIntersect;
+    get sourceText(): {
+        value: string;
         style?: {
-            fillColor: number[];
+            fillColor: string;
+        };
+    };
+    constructor(elem: ElementInterfaceIntersect);
+    getInterface(name: string): {
+        value: string;
+        style?: {
+            fillColor: string;
         };
     } | null;
 }

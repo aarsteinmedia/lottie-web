@@ -1,1 +1,2 @@
-export default function addPropertyDecorator(): void;
+declare function initialize(): void;
+export default initialize;

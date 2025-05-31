@@ -13,6 +13,8 @@ import {
   ValueProperty,
 } from '@/utils/Properties'
 
+import type DynamicPropertyContainer from './helpers/DynamicPropertyContainer'
+
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
   dataFromProps?: VectorProperty<T>,
@@ -69,7 +71,7 @@ function getProp<T = number | number[]>(
   }
   p = p ?? new NoProperty()
   if (p.effectsSequence.length > 0) {
-    container?.addDynamicProperty(p)
+    container?.addDynamicProperty(p as DynamicPropertyContainer)
   }
 
   return p

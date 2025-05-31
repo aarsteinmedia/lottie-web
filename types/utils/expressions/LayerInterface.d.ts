@@ -1,55 +1,55 @@
-import type MaskElement from '../../elements/MaskElement';
-import type { ElementInterfaceIntersect, Vector2, Vector4 } from '../../types';
-import type ShapeExpressionInterface from '../../utils/expressions/ShapeInterface';
-import type TextExpressionInterface from '../../utils/expressions/TextInterface';
-import MaskManager from '../../utils/expressions/MaskInterface';
-import TransformExpressionInterface from '../../utils/expressions/TransformInterface';
-import Matrix from '../../utils/Matrix';
+import type { ElementInterfaceIntersect, ExpressionInterface, SourceRect } from '@/types';
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface';
+import type TextExpressionInterface from '@/utils/expressions/TextInterface';
+import MaskManagerInterface from '@/utils/expressions/MaskInterface';
+import TransformExpressionInterface from '@/utils/expressions/TransformInterface';
+import Matrix from '@/utils/Matrix';
 export default class LayerExpressionInterface {
     _elem: ElementInterfaceIntersect;
-    _name: string;
-    active?: boolean;
-    anchor_point: any;
-    anchorPoint: any;
+    _name?: string;
+    anchor_point: ExpressionInterface;
+    anchorPoint: ExpressionInterface;
     content?: ShapeExpressionInterface;
-    effect: any;
-    hasParent: boolean;
-    height?: number;
-    index?: number;
+    effect: ExpressionInterface;
+    height: number;
+    index: number;
     inPoint: number;
-    mask?: MaskManager;
-    opacity: any;
+    mask?: MaskManagerInterface;
+    opacity: ExpressionInterface;
     outPoint: number;
-    parent?: LayerExpressionInterface;
-    position: Vector2;
-    rotation: number;
-    scale: number;
+    position: ExpressionInterface;
+    rotation: ExpressionInterface;
+    scale: ExpressionInterface;
     shapeInterface?: ShapeExpressionInterface;
-    source?: string;
+    source: number;
+    sourceRectAtTime: () => SourceRect | null;
     startTime: number;
     text?: TextExpressionInterface;
     textInterface?: TextExpressionInterface;
-    transform?: TransformExpressionInterface;
     transformInterface: TransformExpressionInterface;
-    width?: number;
+    width: number;
+    get active(): boolean | undefined;
+    get hasParent(): boolean;
+    get parent(): LayerExpressionInterface | null | undefined;
+    get transform(): TransformExpressionInterface;
     constructor(elem: ElementInterfaceIntersect);
-    anchorPointDescriptor(): Vector2;
     applyPoint(matrix: Matrix, arr: number[]): number[];
     fromComp(arr: number[]): {
         x: number;
         y: number;
         z: number;
     };
-    fromWorld(arr: number[], time?: number): {
+    fromWorld(arr: number[], time: number): {
         x: number;
         y: number;
         z: number;
     };
-    fromWorldVec(arr: number[], time?: number): {
+    fromWorldVec(arr: number[], time: number): {
         x: number;
         y: number;
         z: number;
     };
+    getInterface(name: string | number): unknown;
     getMatrix(time?: number): Matrix;
     invertPoint(matrix: Matrix, arr: number[]): {
         x: number;
@@ -57,10 +57,9 @@ export default class LayerExpressionInterface {
         z: number;
     };
     registerEffectsInterface(effects: any): void;
-    registerMaskInterface(maskManager: MaskElement): void;
-    sampleImage(): Vector4;
-    sourceRectAtTime(): void;
-    toComp(_arr: number[], _time?: number): void;
-    toWorld(arr: number[], time?: number): number[];
+    registerMaskInterface(maskManager: any): void;
+    sampleImage(): number[];
+    toComp(_arr: number[], _time: number): void;
+    toWorld(arr: number[], time: number): number[];
     toWorldVec(arr: number[], time?: number): number[];
 }

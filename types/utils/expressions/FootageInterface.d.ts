@@ -1,24 +1,15 @@
-import type FootageElement from '../../elements/FootageElement';
-declare class OutlineInterface {
-    private currentProperty;
-    private currentPropertyName;
-    private elem;
-    constructor(elem: FootageElement);
-    init: () => (value: keyof typeof this.currentProperty) => any;
-    searchProperty: (value: keyof typeof this.currentProperty) => any;
-}
-declare class DataInterface {
-    _name: string;
-    elem: FootageElement;
-    outlineInterface: OutlineInterface;
-    constructor(elem: FootageElement);
-    interfaceFunction: (value: string) => ((value: keyof typeof this.currentProperty) => any) | null;
-}
+import type FootageElement from '@/elements/FootageElement';
 export default class FootageInterface {
     _name: string;
-    dataInterface: DataInterface;
+    currentProperty?: SVGElement | null;
+    currentPropertyName: string;
+    dataInterface: FootageInterface;
     elem: FootageElement;
     constructor(elem: FootageElement);
-    interfaceFunction: (value: string) => DataInterface | null;
+    dataInterfaceFactory(elem: FootageElement): this;
+    getInterface(value: number | string): FootageInterface | null | undefined;
+    init(): (value: keyof SVGElement) => "" | any | undefined;
+    outlineInterface(_elem?: FootageElement): void;
+    outlineInterfaceFactory(elem: FootageElement): () => (value: keyof SVGElement) => "" | any | undefined;
+    searchProperty(value: keyof SVGElement): "" | ((value: keyof SVGElement) => "" | any | undefined) | undefined;
 }
-export {};

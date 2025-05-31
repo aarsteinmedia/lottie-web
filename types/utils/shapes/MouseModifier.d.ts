@@ -1,6 +1,6 @@
-import type SVGShapeData from '../../elements/helpers/shapes/SVGShapeData';
-import type { ElementInterfaceUnion, Shape, Vector2 } from '../../types';
-import ShapeModifier from '../../utils/shapes/ShapeModifier';
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
+import type { ElementInterfaceUnion, Shape, Vector2 } from '@/types';
+import ShapeModifier from '@/utils/shapes/ShapeModifier';
 export default class MouseModifier extends ShapeModifier {
     data?: Shape | Shape[];
     positions: unknown[];

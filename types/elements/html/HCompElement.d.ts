@@ -1,6 +1,6 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import CompElement from '../../elements/CompElement';
-import SVGCompElement from '../../elements/svg/SVGCompElement';
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import CompElement from '@/elements/CompElement';
+import SVGCompElement from '@/elements/svg/SVGCompElement';
 export default class HCompElement extends CompElement {
     pendingElements: ElementInterfaceIntersect[];
     supports3d?: boolean;
@@ -10,7 +10,7 @@ export default class HCompElement extends CompElement {
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     _createBaseContainerElements(): void;
     addEffects(): void;
-    addTo3dContainer(elem: ElementInterfaceIntersect, pos: number): void;
+    addTo3dContainer(elem: Node, pos: number): void;
     appendElementInPos(_element: ElementInterfaceIntersect, _pos: number): void;
     build3dContainers(): void;
     buildElementParenting(_element: ElementInterfaceIntersect, _parentName?: number, _hierarchy?: ElementInterfaceIntersect[]): void;
@@ -18,7 +18,7 @@ export default class HCompElement extends CompElement {
     checkPendingElements(): void;
     configAnimation(_data: AnimationData): void;
     createCamera(_data: LottieLayer): void;
-    createComp(data: LottieLayer): SVGCompElement | HCompElement;
+    createComp(data: LottieLayer): HCompElement | SVGCompElement;
     createContainerElements(): void;
     createImage(_data: LottieLayer): void;
     createShape(_data: LottieLayer): void;

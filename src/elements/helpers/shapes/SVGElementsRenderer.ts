@@ -234,7 +234,7 @@ function renderPath(
     k
 
   for (let i = 0; i < length; i++) {
-    shouldRedraw = sh._mdf || Boolean(isFirstFrame)
+    shouldRedraw = sh?._mdf || Boolean(isFirstFrame)
     if (styles[i].lvl < lvl) {
       mat = _matrixHelper.reset()
       iterations = lvl - styles[i].lvl
@@ -256,7 +256,7 @@ function renderPath(
     } else {
       mat = _identityMatrix
     }
-    paths = sh.paths as ShapeCollection | undefined
+    paths = sh?.paths as ShapeCollection | undefined
     const jLen = paths?._length || 0
 
     if (shouldRedraw) {

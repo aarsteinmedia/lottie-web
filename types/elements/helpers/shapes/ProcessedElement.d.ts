@@ -1,4 +1,4 @@
-import type { ElementInterfaceUnion } from '../../../types';
+import type { ElementInterfaceUnion } from '@/types';
 export default class ProcessedElement {
     elem: ElementInterfaceUnion;
     pos: number;

@@ -1,78 +1,96 @@
-import type { Vector2 } from '../../types';
-import type { TransformProperty } from '../../utils/TransformProperty';
-import type { MultiDimensionalProperty, ValueProperty } from '../Properties';
+import type { TransformProperty } from '@/utils/TransformProperty';
 export default class TransformExpressionInterface {
     transform: TransformProperty;
-    get anchorPoint(): Vector2;
-    get opacity(): ValueProperty<number> | (() => {
+    get anchorPoint(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get orientation(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get opacity(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get position(): ValueProperty<number> | MultiDimensionalProperty<number[]> | void[];
-    get rotation(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get orientation(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get scale(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get position(): Number | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer> | {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get skew(): ValueProperty<number> | (() => {
+    } | (number | Number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer> | {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get skewAxis(): ValueProperty<number> | (() => {
+    } | undefined)[] | undefined;
+    get rotation(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get xPosition(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get scale(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get xRotation(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get skew(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get yPosition(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get skewAxis(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get yRotation(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get xPosition(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get zPosition(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get xRotation(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
-    get zRotation(): ValueProperty<number> | (() => {
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get yPosition(): (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | MultiDimensionalProperty<Vector2>;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get yRotation(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get zPosition(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    get zRotation(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
+    private _px;
+    private _py;
+    private _pz;
+    private _transformFactory;
     constructor(transform: TransformProperty);
-    _px(): void;
-    _py(): void;
-    _pz(): void;
-    _transformFactory(): ValueProperty | MultiDimensionalProperty<number[]>;
-    getProperty(name: string | number): ValueProperty<number> | Vector2 | MultiDimensionalProperty<number[]> | (() => {
+    getInterface(name: string | number): Number | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer> | (() => {
         mult: number;
         pv: number;
         v: number;
-    }) | void[] | null;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | {
+        mult: number;
+        pv: number;
+        v: number;
+    } | (number | Number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer> | {
+        mult: number;
+        pv: number;
+        v: number;
+    } | undefined)[] | null | undefined;
 }

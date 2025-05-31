@@ -819,10 +819,12 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
   override getValue() {
     if (this._elem.globalData.frameId === this._frameId) {
-      return
+      return 0
     }
     this._frameId = this._elem.globalData.frameId
     this.iterateDynamicProperties()
+
+    return 0
   }
 
   searchProperties(_: DynamicPropertyContainer[]) {

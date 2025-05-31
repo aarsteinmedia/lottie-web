@@ -1,11 +1,7 @@
-import type Animationitem from '../../animation/AnimationItem';
-export default class Expressions {
-    private registers;
-    private stackCount;
-    constructor(animation: Animationitem);
-    resetFrame(): void;
-    private popExpression;
-    private pushExpression;
-    private registerExpressionProperty;
-    private releaseInstances;
-}
+import type { AnimationItem } from '@/Lottie';
+declare function initExpressions(animation: AnimationItem): void;
+declare const Expressions: {
+    initExpressions: typeof initExpressions;
+    resetFrame: () => void;
+};
+export default Expressions;

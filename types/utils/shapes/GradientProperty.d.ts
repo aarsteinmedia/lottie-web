@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, GradientColor } from '../../types';
-import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
-import PropertyFactory from '../../utils/PropertyFactory';
+import type { ElementInterfaceIntersect, GradientColor } from '@/types';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import PropertyFactory from '@/utils/PropertyFactory';
 export default class GradientProperty extends DynamicPropertyContainer {
     _cmdf: boolean;
     _collapsable: boolean;

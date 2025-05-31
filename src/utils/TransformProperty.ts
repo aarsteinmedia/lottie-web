@@ -7,7 +7,6 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import { degToRads } from '@/utils'
@@ -274,7 +273,7 @@ export class TransformProperty extends BaseProperty {
 
   override getValue(forceRender?: boolean) {
     if (this.elem.globalData.frameId === this.frameId) {
-      return
+      return 0
     }
     if (this._isDirty) {
       this.precalculateMatrix()
@@ -411,6 +410,8 @@ export class TransformProperty extends BaseProperty {
       }
     }
     this.frameId = this.elem.globalData.frameId
+
+    return 0
   }
 
   precalculateMatrix() {

@@ -1,13 +1,10 @@
-import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import type { ValueProperty } from '../../utils/Properties';
-export default class ExpressionValue {
-    key?: (pos: number) => number;
+import { BaseProperty } from '@/utils/Properties';
+export default class ExpressionValue extends BaseProperty {
     numKeys: number;
-    propertyGroup?: LayerExpressionInterface;
-    value: number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer> | undefined;
-    velocity: number;
-    constructor(elementProp: ValueProperty<number[] | number>, mult?: number, type?: string);
+    prop: BaseProperty;
+    get velocity(): number;
+    constructor(elementProp: BaseProperty, multFromProps?: number, type?: string);
+    key(pos: number): number;
     speedAtTime(_frameNum: number): void;
-    valueAtTime<T extends number | number[] = number>(_a: number, _b?: number): T;
-    velocityAtTime(_frameNum: number): number;
+    velocityAtTime(_frameNum: number): void;
 }

@@ -1,4 +1,4 @@
-import type { Transformer, TransformSequence } from '../../../types';
+import type { Transformer, TransformSequence } from '@/types';
 export default class ShapeTransformManager {
     sequenceList: TransformSequence[];
     sequences: TransformSequence;

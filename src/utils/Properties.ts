@@ -9,8 +9,6 @@ import type {
   Keyframe,
   Shape,
   Svalue,
-  TextData,
-  TextRangeValue,
   Vector2,
   Vector3,
   VectorProperty,
@@ -41,12 +39,6 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _name?: string
   _placeholder?: boolean
   comp?: CompElementInterface
-  data?:
-    { hd?: boolean } &
-    (VectorProperty<number | number[] | Keyframe[]>
-      | Shape
-      | TextRangeValue
-      | TextData)
   e?: ValueProperty | { v: number }
   effectsSequence: EffectFunction[] = []
   elem?: ElementInterfaceIntersect
@@ -79,7 +71,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   x?: boolean
   addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
-    this.container?.addDynamicProperty(this)
+    this.container?.addDynamicProperty(this as DynamicPropertyContainer)
   }
 
   getSpeedAtTime(_frameNum: number) {
@@ -375,12 +367,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       this.elem.globalData.frameId === this.frameId ||
       this.effectsSequence.length === 0
     ) {
-      return
+      return 0
     }
     if (this.lock) {
       this.setVValue(this.pv as number | number[])
 
-      return
+      return 0
     }
     this.lock = true
     this._mdf = Boolean(this._isFirstFrame)
@@ -396,6 +388,8 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this._isFirstFrame = false
     this.lock = false
     this.frameId = this.elem.globalData.frameId
+
+    return 0
   }
 
   setVValue(val?: number | number[] | Keyframe[]) {

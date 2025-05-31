@@ -1,5 +1,5 @@
-import type { ImageData, LottieAsset } from '../types';
-import { RendererType } from '../utils/enums';
+import type { ImageData, LottieAsset } from '@/types';
+import { RendererType } from '@/utils/enums';
 export default class ImagePreloader {
     assetsPath: string;
     images: ImageData[];

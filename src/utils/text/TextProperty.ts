@@ -20,6 +20,8 @@ import {
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { BaseProperty } from '@/utils/Properties'
 
+import type DynamicPropertyContainer from '../helpers/DynamicPropertyContainer'
+
 export default class TextProperty extends BaseProperty {
   _frameId: number
   canResize: boolean
@@ -161,7 +163,7 @@ export default class TextProperty extends BaseProperty {
   canResizeFont(_canResize: boolean) {
     this.canResize = _canResize
     this.recalculate(this.keysIndex)
-    this.elem.addDynamicProperty(this)
+    this.elem.addDynamicProperty(this as unknown as DynamicPropertyContainer)
   }
 
   completeTextData(documentData: DocumentData) {
