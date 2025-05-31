@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect, TextSpan } from '@/types';
-import TextElement from '@/elements/TextElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect, TextSpan } from '../../types';
+import TextElement from '../../elements/TextElement';
 export default class SVGTextLottieElement extends TextElement {
     _sizeChanged?: boolean;
     bbox?: {

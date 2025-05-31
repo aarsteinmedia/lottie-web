@@ -25,7 +25,7 @@ function getProp<T = number | number[]>(
   let data = dataFromProps
 
   if (data && 'sid' in data && data.sid) {
-    data = elem.globalData.slotManager?.getProp(data as unknown as LottieLayer)
+    data = elem.globalData?.slotManager?.getProp(data as unknown as LottieLayer)
   }
   let p
 

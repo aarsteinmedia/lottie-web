@@ -1,6 +1,6 @@
-import type BaseElement from '@/elements/BaseElement';
-import type { Effect } from '@/types';
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type BaseElement from '../../elements/BaseElement';
+import type { Effect } from '../../types';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
 export declare class GroupEffectInterface {
     effectElements: Effect[];
     effects: Effect[];

@@ -1,5 +1,5 @@
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
-import type { BaseProperty } from '@/utils/Properties';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import type { BaseProperty } from '../../utils/Properties';
 export default class PropertyGroupFactory {
     interfaceFunction: (val: string | number) => BaseProperty;
     parentPropertyGroup: LayerExpressionInterface;

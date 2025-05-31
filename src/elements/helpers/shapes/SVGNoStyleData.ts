@@ -2,7 +2,6 @@ import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
-  ElementInterfaceUnion,
   ShapeDataInterface,
   SVGElementInterface,
   Transformer,
@@ -17,12 +16,12 @@ export default class SVGNoStyleData extends DynamicPropertyContainer {
   style: SVGStyleData
   transform?: Transformer
   constructor(
-    elem: ElementInterfaceUnion,
+    elem: ElementInterfaceIntersect,
     _data: SVGShapeData,
     styleObj: SVGStyleData
   ) {
     super()
-    this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
+    this.initDynamicPropertyContainer(elem)
     this.getValue = this.iterateDynamicProperties
     this.style = styleObj
   }

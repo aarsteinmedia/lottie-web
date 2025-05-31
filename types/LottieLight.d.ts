@@ -1,4 +1,4 @@
-import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from '@/animation/AnimationManager';
+import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
 export declare const setSubframeRendering: (flag: boolean) => void;
 declare const Lottie: {
     destroy: typeof destroy;

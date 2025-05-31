@@ -2,7 +2,6 @@ import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
-  ElementInterfaceUnion,
   Shape,
   VectorProperty,
 } from '@/types'
@@ -93,7 +92,7 @@ export default class RepeaterModifier extends ShapeModifier {
   }
 
   override init(
-    elem: ElementInterfaceUnion,
+    elem: ElementInterfaceIntersect,
     arr: Shape | Shape[],
     posFromProps?: number,
     elemsData: ShapeGroupData[] = []
@@ -103,7 +102,7 @@ export default class RepeaterModifier extends ShapeModifier {
     }
     let pos = Number(posFromProps)
 
-    this.elem = elem as ElementInterfaceIntersect
+    this.elem = elem
     this.arr = arr
     this.pos = pos
     this.elemsData = elemsData
@@ -111,8 +110,8 @@ export default class RepeaterModifier extends ShapeModifier {
     this._elements = []
     this._groups = []
     this.frameId = -1
-    this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
-    this.initModifierProperties(elem as ElementInterfaceIntersect, arr[pos])
+    this.initDynamicPropertyContainer(elem)
+    this.initModifierProperties(elem, arr[pos])
     while (pos > 0) {
       pos--
       this._elements.unshift(arr[pos])

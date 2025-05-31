@@ -1,7 +1,7 @@
-import type { ElementInterfaceIntersect, Shape, Vector3 } from '@/types';
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
-import Matrix from '@/utils/Matrix';
-import { BaseProperty, type MultiDimensionalProperty, type ValueProperty } from '@/utils/Properties';
+import type { ElementInterfaceIntersect, Shape, Vector3 } from '../types';
+import type DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
+import Matrix from '../utils/Matrix';
+import { BaseProperty, type MultiDimensionalProperty, type ValueProperty } from '../utils/Properties';
 export declare class TransformProperty extends BaseProperty {
     _isDirty?: boolean;
     _opMdf?: boolean;
@@ -34,7 +34,7 @@ export declare class TransformProperty extends BaseProperty {
     addDynamicProperty(prop: DynamicPropertyContainer): void;
     applyToMatrix(mat: Matrix): void;
     autoOrient(): void;
-    getValue(forceRender?: boolean): void;
+    getValue(forceRender?: boolean): number;
     precalculateMatrix(): void;
 }
 declare const TransformPropertyFactory: {

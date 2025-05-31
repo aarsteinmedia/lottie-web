@@ -1,4 +1,4 @@
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class StarInterface extends BaseInterface {
     get innerRadius(): (() => {
         mult: number;

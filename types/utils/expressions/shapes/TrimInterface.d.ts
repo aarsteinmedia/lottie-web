@@ -1,5 +1,5 @@
-import type TrimModifier from '@/utils/shapes/TrimModifier';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type TrimModifier from '../../../utils/shapes/TrimModifier';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class TrimInterface extends BaseInterface {
     view?: TrimModifier;
     get end(): (() => {

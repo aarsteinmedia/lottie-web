@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
 import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties'
 
@@ -26,7 +27,7 @@ function searchExpressions(
 function getValueAtTime(this: BaseProperty, frameNumFromProps: number) {
   let frameNum = frameNumFromProps
 
-  frameNum *= this.elem?.globalData.frameRate ?? 60
+  frameNum *= this.elem?.globalData?.frameRate ?? 60
   frameNum -= this.offsetTime
   if (this._cachingAtTime && frameNum !== this._cachingAtTime.lastFrame) {
     this._cachingAtTime.lastIndex = this._cachingAtTime.lastFrame < frameNum ? this._cachingAtTime.lastIndex : 0

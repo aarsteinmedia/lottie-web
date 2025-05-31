@@ -182,13 +182,13 @@ export default class SVGShapeElement extends ShapeElement {
     switch (data.ty) {
       case ShapeType.Stroke: {
         elementData = new SVGStrokeStyleData(
-          this, data, styleOb
+          this as unknown as ElementInterfaceIntersect, data, styleOb
         )
         break
       }
       case ShapeType.Fill: {
         elementData = new SVGFillStyleData(
-          this, data, styleOb
+          this as unknown as ElementInterfaceIntersect, data, styleOb
         )
         break
       }
@@ -200,7 +200,7 @@ export default class SVGShapeElement extends ShapeElement {
             : SVGGradientStrokeStyleData
 
         elementData = new GradientConstructor(
-          this, data, styleOb
+          this as unknown as ElementInterfaceIntersect, data, styleOb
         )
         if (elementData.gf) {
           this.globalData?.defs.appendChild(elementData.gf)
@@ -216,7 +216,7 @@ export default class SVGShapeElement extends ShapeElement {
       }
       case ShapeType.NoStyle: {
         elementData = new SVGNoStyleData(
-          this,
+          this as unknown as ElementInterfaceIntersect,
           data as unknown as SVGShapeData,
           styleOb
         )

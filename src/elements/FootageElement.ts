@@ -46,10 +46,10 @@ export default class FootageElement extends RenderableElement {
       return
     }
 
-    const FootageInterface = new expressionsInterfaces('footage')
+    const footageInterface = expressionsInterfaces('footage')
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    this.layerInterface = new FootageInterface(this)
+    // @ts-expect-error TODO: see if typing can be stronger
+    this.layerInterface = new footageInterface(this)
   }
 
   prepareFrame() {

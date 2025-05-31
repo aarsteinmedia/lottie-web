@@ -1,6 +1,6 @@
-import type { Effect, EFXElement, ElementInterfaceIntersect, LottieLayer } from '@/types';
-import { AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect } from '@/effects';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import type { Effect, EFXElement, ElementInterfaceIntersect, LottieLayer } from '../types';
+import { AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect } from '../effects';
+import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 export default class EffectsManager {
     _mdf?: boolean;
     effectElements: EffectInterface[];
@@ -9,7 +9,7 @@ export default class EffectsManager {
 export declare class GroupEffect extends DynamicPropertyContainer {
     data?: Effect;
     effectElements: EFXElement[];
-    getValue: () => number;
+    getValue: () => unknown;
     type?: string;
     constructor(data: Effect, element: ElementInterfaceIntersect, layer: LottieLayer);
     init(data: Effect, element: ElementInterfaceIntersect, layer: LottieLayer): void;

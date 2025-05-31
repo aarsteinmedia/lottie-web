@@ -1,8 +1,8 @@
-import type { GroupEffect } from '@/effects/EffectsManager';
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TransformCanvas, Transformer } from '@/types';
-import CVEffects from '@/elements/canvas/CVEffects';
-import CVMaskElement from '@/elements/canvas/CVMaskElement';
-import Matrix from '@/utils/Matrix';
+import type { GroupEffect } from '../../effects/EffectsManager';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TransformCanvas, Transformer } from '../../types';
+import CVEffects from '../../elements/canvas/CVEffects';
+import CVMaskElement from '../../elements/canvas/CVMaskElement';
+import Matrix from '../../utils/Matrix';
 export default abstract class CVBaseElement {
     _isFirstFrame?: boolean;
     buffers: (HTMLCanvasElement | OffscreenCanvas)[];
@@ -31,7 +31,7 @@ export default abstract class CVBaseElement {
     hideElement(): void;
     initRendererElement(): void;
     prepareLayer(): void;
-    renderFrame(forceRender?: boolean): void;
+    renderFrame(forceRender?: number): void;
     renderInnerContent(): void;
     renderLocalTransform(): void;
     renderRenderable(): void;

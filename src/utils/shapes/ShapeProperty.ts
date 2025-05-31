@@ -88,7 +88,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
   public comp?: CompElementInterface
-  public data?: Shape
+  public override data?: Shape
   public effectsSequence: ((arg: unknown) => ShapePath)[] = []
   public elem?: SVGShapeElement | CVShapeElement | HShapeElement
   frameId?: number
@@ -265,23 +265,23 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     return this.pv
   }
 
-  processEffectsSequence() {
+  processEffectsSequence(_val?: unknown) {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
 
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return
+      return 0
     }
     if (this.effectsSequence.length === 0) {
       this._mdf = false
 
-      return
+      return 0
     }
     if (this.lock && this.pv) {
       this.setVValue(this.pv)
 
-      return
+      return 0
     }
     this.lock = true
     this._mdf = false
@@ -303,6 +303,8 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     this.setVValue(finalValue as ShapePath)
     this.lock = false
     this.frameId = this.elem?.globalData?.frameId || 0
+
+    return 0
   }
 
   reset() {
@@ -850,15 +852,17 @@ export class StarShapeProperty extends ShapeBaseProperty {
     throw new Error(`${this.constructor.name}: Method convertToPath is not implemented`)
   }
 
-  override getValue() {
+  override getValue(_val?: unknown) {
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return
+      return 0
     }
     this.frameId = this.elem?.globalData?.frameId || 0
     this.iterateDynamicProperties()
     if (this._mdf) {
       this.convertToPath()
     }
+
+    return 0
   }
 }
 
@@ -945,7 +949,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
 
   override getValue(_flag?: boolean) {
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return
+      return 0
     }
     this.frameId = this.elem?.globalData?.frameId || 0
     this.iterateDynamicProperties()
@@ -953,6 +957,8 @@ export class EllShapeProperty extends ShapeBaseProperty {
     if (this._mdf) {
       this.convertEllToPath()
     }
+
+    return 0
   }
 }
 

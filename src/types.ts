@@ -25,7 +25,6 @@ import type CVEffects from '@/elements/canvas/CVEffects'
 import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type CVTextElement from '@/elements/canvas/CVTextElement'
-import type CompElement from '@/elements/CompElement'
 import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
@@ -38,12 +37,13 @@ import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleDat
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type HCompElement from '@/elements/html/HCompElement'
+import type ImageElement from '@/elements/ImageElement'
 import type MaskElement from '@/elements/MaskElement'
 import type ShapeElement from '@/elements/ShapeElement'
-import type SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import type SVGCompElement from '@/elements/svg/SVGCompElement'
+import type SVGEffects from '@/elements/svg/SVGEffects'
 import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import type TextElement from '@/elements/TextElement'
+import type SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import type BaseRenderer from '@/renderers/BaseRenderer'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type HybridRenderer from '@/renderers/HybridRenderer'
@@ -87,8 +87,6 @@ import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 import type TextProperty from '@/utils/text/TextProperty'
 import type { TransformProperty } from '@/utils/TransformProperty'
-
-import type SVGTextLottieElement from './elements/svg/SVGTextElement'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -156,32 +154,42 @@ export interface Transformer {
   opacity: number
 }
 
-export type ElementInterfaceUnion = ReturnType<
-  typeof BaseRenderer.prototype.createItem
->
+// export type ElementInterfaceUnion = ReturnType<
+//   typeof BaseRenderer.prototype.createItem
+// >
 
 // type UnionToIntersection<U> =
 //   (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
 
-export type ElementInterfaceIntersect = CVCompElement &
-  AudioElement &
-  CompElement &
-  SVGCompElement &
-  MaskElement &
-  SVGBaseElement &
-  SVGShapeElement &
-  SVGTextLottieElement &
-  // SVGStopElement &
-  SVGStrokeStyleData &
-  TextElement &
-  BaseRenderer &
-  AnimationItem &
-  HCompElement &
-  CVEffects &
-  HybridRenderer &
-  CVShapeData
+// type Renderer = SVGRenderer | CanvasRenderer | HybridRenderer
+type RendererIntersect = SVGRenderer & CanvasRenderer & HybridRenderer
 
-export type RenderableComponent = MaskElement | CVMaskElement | CVEffects
+export type ElementInterfaceIntersect = CompElementInterface &
+  RenderableComponentIntersect &
+  RendererIntersect &
+  AnimationItem
+
+type RenderableComponentIntersect =
+  ImageElement
+  & AudioElement
+  & SVGShapeElement
+  & SVGMaskElement
+  & SVGEffects
+  & SVGTextLottieElement
+  & CVMaskElement
+  & CVEffects
+  & CVTextElement
+
+export type RenderableComponent =
+  | ImageElement
+  | AudioElement
+  | MaskElement
+  | SVGShapeElement
+  | SVGEffects
+  | SVGTextLottieElement
+  | CVMaskElement
+  | CVEffects
+  | CVTextElement
 
 export interface TransformCanvas {
   h: number
@@ -452,6 +460,9 @@ export interface GradientColor {
   /** Number of colors. */
   p: number
 }
+
+export type DynamicProperty = ({ hd?: boolean } &
+  VectorProperty<number | number[] | Keyframe[]>)
 
 type BoolInt = 0 | 1
 interface ShapeDataProperty {
@@ -828,6 +839,7 @@ export interface TextRangeValue {
     a: 0 | 1
     k: number
   }
+  hd?: boolean
   /** Min Ease. */
   ne?: {
     a: 0 | 1
@@ -909,6 +921,7 @@ export interface TextData {
   finalText: string[]
   fStyle: string
   fWeight: string
+  hd?: boolean
   justifyOffset: number
   l: Letter[]
   lh: number

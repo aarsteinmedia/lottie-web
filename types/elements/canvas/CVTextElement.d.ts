@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TextSpan } from '@/types';
-import type LetterProps from '@/utils/text/LetterProps';
-import TextElement from '@/elements/TextElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TextSpan } from '../../types';
+import type LetterProps from '../../utils/text/LetterProps';
+import TextElement from '../../elements/TextElement';
 export default class CVTextElement extends TextElement {
     canvasContext?: CanvasRenderingContext2D;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
@@ -19,7 +19,7 @@ export default class CVTextElement extends TextElement {
     justifyOffset: number;
     prepareLayer: () => void;
     renderedLetters: LetterProps[];
-    renderFrame: (forceRender?: boolean) => void;
+    renderFrame: (forceRender?: number) => void;
     renderLocalTransform: () => void;
     renderRenderable: () => void;
     searchEffectTransforms: () => void;

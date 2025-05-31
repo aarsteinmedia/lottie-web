@@ -1,14 +1,14 @@
-import type { AnimatedContent, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
-import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
-import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData';
-import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData';
-import SVGNoStyleData from '@/elements/helpers/shapes/SVGNoStyleData';
-import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
-import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData';
-import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData';
-import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData';
-import ShapeElement from '@/elements/ShapeElement';
-import Matrix from '@/utils/Matrix';
+import type { AnimatedContent, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../types';
+import ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
+import SVGFillStyleData from '../../elements/helpers/shapes/SVGFillStyleData';
+import SVGGradientFillStyleData from '../../elements/helpers/shapes/SVGGradientFillStyleData';
+import SVGNoStyleData from '../../elements/helpers/shapes/SVGNoStyleData';
+import SVGShapeData from '../../elements/helpers/shapes/SVGShapeData';
+import SVGStrokeStyleData from '../../elements/helpers/shapes/SVGStrokeStyleData';
+import SVGStyleData from '../../elements/helpers/shapes/SVGStyleData';
+import SVGTransformData from '../../elements/helpers/shapes/SVGTransformData';
+import ShapeElement from '../../elements/ShapeElement';
+import Matrix from '../../utils/Matrix';
 export default class SVGShapeElement extends ShapeElement {
     _debug?: boolean;
     animatedContents: AnimatedContent[];
@@ -29,7 +29,7 @@ export default class SVGShapeElement extends ShapeElement {
     createContent(): void;
     createGroupElement(data: Shape): ShapeGroupData;
     createShapeElement(data: Shape, ownTransformers: Transformer[], level: number): SVGShapeData;
-    createStyleElement(data: Shape, level: number): SVGStrokeStyleData | SVGFillStyleData | SVGNoStyleData | SVGGradientFillStyleData | null;
+    createStyleElement(data: Shape, level: number): SVGFillStyleData | SVGStrokeStyleData | SVGNoStyleData | SVGGradientFillStyleData | null;
     createTransformElement(data: Shape, container: SVGGElement): SVGTransformData;
     destroy(): void;
     filterUniqueShapes(): void;

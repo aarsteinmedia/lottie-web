@@ -272,7 +272,7 @@ export class TransformProperty extends BaseProperty {
   }
 
   override getValue(forceRender?: boolean) {
-    if (this.elem.globalData.frameId === this.frameId) {
+    if (this.elem.globalData?.frameId === this.frameId) {
       return 0
     }
     if (this._isDirty) {
@@ -283,7 +283,7 @@ export class TransformProperty extends BaseProperty {
     this.iterateDynamicProperties()
 
     if (this._mdf || forceRender) {
-      let frameRate
+      // let frameRate
 
       this.v.cloneFromProps(this.pre.props)
       if (this.appliedTransformations < 1 && this.a) {
@@ -313,7 +313,8 @@ export class TransformProperty extends BaseProperty {
       if (this.autoOriented) {
         let v1: Vector2, v2: Vector2
 
-        frameRate = this.elem.globalData.frameRate
+        const { frameRate } = this.elem.globalData ?? { frameRate: 60 }
+
         if (this.p?.keyframes) {
           if (
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) <=
@@ -409,7 +410,7 @@ export class TransformProperty extends BaseProperty {
         )
       }
     }
-    this.frameId = this.elem.globalData.frameId
+    this.frameId = this.elem.globalData?.frameId
 
     return 0
   }

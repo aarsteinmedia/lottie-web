@@ -1,3 +1,3 @@
 export default class HEffects {
-    renderFrame(): void;
+    renderFrame(_val?: number): void;
 }

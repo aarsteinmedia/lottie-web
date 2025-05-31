@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable unicorn/consistent-destructuring */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
@@ -178,7 +179,7 @@ function initiateExpression(
   /**
      * Bail out if we don't want expressions.
      */
-  if (!elem.globalData.renderConfig?.runExpressions) {
+  if (!elem.globalData?.renderConfig?.runExpressions) {
     return noOp
   }
 

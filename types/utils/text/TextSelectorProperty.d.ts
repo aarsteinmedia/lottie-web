@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, TextRangeValue } from '@/types';
-import { type ValueProperty, BaseProperty } from '@/utils/Properties';
+import type { ElementInterfaceIntersect, TextRangeValue } from '../../types';
+import { type ValueProperty, BaseProperty } from '../../utils/Properties';
 export default class TextSelectorProperty extends BaseProperty {
     _currentTextLength: number;
     a: ValueProperty;
@@ -20,5 +20,5 @@ export default class TextSelectorProperty extends BaseProperty {
     constructor(elem: ElementInterfaceIntersect, data: TextRangeValue);
     getMult(indFromProps: number, _val?: number): number | number[];
     getTextSelectorProp(_elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]): void;
-    getValue(newCharsFlag?: boolean): void;
+    getValue(newCharsFlag?: boolean): number;
 }

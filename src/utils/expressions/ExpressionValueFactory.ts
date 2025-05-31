@@ -1,3 +1,4 @@
+// @ts-nocheck: TODO:
 import type { BaseProperty } from '@/utils/Properties'
 
 import { ArrayType, PropType } from '@/utils/enums'

@@ -1,5 +1,5 @@
 export default class HEffects {
-  renderFrame() {
+  renderFrame(_val?: number) {
     // TODO: Pass Through
   }
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck: TODO:
 import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type { Shape } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'

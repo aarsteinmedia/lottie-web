@@ -159,7 +159,7 @@ export default abstract class CVBaseElement {
     // We draw the mask
     const mask = this.comp?.getElementById(maskId)
 
-    mask?.renderFrame(true)
+    mask?.renderFrame(1)
     // We draw the second buffer (that contains the content of this layer)
     this.canvasContext.setTransform(
       1, 0, 0, 1, 0, 0
@@ -244,7 +244,7 @@ export default abstract class CVBaseElement {
     this.canvasContext.setTransform(this.currentTransform)
   }
 
-  renderFrame(forceRender?: boolean) {
+  renderFrame(forceRender?: number) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }

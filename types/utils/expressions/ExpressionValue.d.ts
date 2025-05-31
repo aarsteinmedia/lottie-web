@@ -1,4 +1,4 @@
-import { BaseProperty } from '@/utils/Properties';
+import { BaseProperty } from '../../utils/Properties';
 export default class ExpressionValue extends BaseProperty {
     numKeys: number;
     prop: BaseProperty;

@@ -1,5 +1,5 @@
-import type { GroupEffect } from '@/effects/EffectsManager';
-import type { EffectElement, ElementInterfaceIntersect } from '@/types';
+import type { GroupEffect } from '../../effects/EffectsManager';
+import type { EffectElement, ElementInterfaceIntersect } from '../../types';
 export default class CVEffects {
     filters: GroupEffect[];
     constructor(elem: ElementInterfaceIntersect);

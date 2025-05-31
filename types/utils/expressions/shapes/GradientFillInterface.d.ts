@@ -1,4 +1,4 @@
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class GradientFillInterface extends BaseInterface {
     view?: unknown;
     get endPoint(): (() => {

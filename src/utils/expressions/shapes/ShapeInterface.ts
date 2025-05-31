@@ -1,3 +1,5 @@
+// @ts-nocheck: TODO:
+
 import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'

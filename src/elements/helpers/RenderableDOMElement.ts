@@ -1,7 +1,5 @@
 import type {
   CompElementInterface,
-  // ElementInterfaceIntersect,
-  // ElementInterfaceUnion,
   GlobalData,
   LottieLayer,
 } from '@/types'
@@ -75,7 +73,7 @@ export default abstract class RenderableDOMElement extends RenderableElement {
     throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
   }
 
-  renderFrame() {
+  renderFrame(_val?: number) {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

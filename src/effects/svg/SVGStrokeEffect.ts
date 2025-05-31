@@ -63,7 +63,7 @@ export default class SVGStrokeEffect {
       mask.setAttribute('id', id)
       mask.setAttribute('mask-type', 'alpha')
       mask.appendChild(groupPath)
-      this.elem.globalData.defs.appendChild(mask)
+      this.elem.globalData?.defs.appendChild(mask)
       const g = createNS<SVGGElement>('g')
 
       g.setAttribute('mask', `url(${getLocationHref()}#${id})`)

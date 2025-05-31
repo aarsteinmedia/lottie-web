@@ -1,7 +1,6 @@
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
-  ElementInterfaceUnion,
   Shape,
   StrokeData,
   Vector3,
@@ -21,24 +20,24 @@ export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData
   d: DashProperty
   w?: ValueProperty
   constructor(
-    elem: ElementInterfaceUnion,
+    elem: ElementInterfaceIntersect,
     data: Shape,
     styleData: SVGStyleData
   ) {
     super(
       elem, data, styleData
     )
-    this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
+    this.initDynamicPropertyContainer(elem)
     this.getValue = this.iterateDynamicProperties
     this.w = PropertyFactory.getProp(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.w,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.d = new DashProperty(
-      elem as ElementInterfaceIntersect,
+      elem,
       (data.d || []) as StrokeData[],
       RendererType.SVG,
       this as unknown as ElementInterfaceIntersect

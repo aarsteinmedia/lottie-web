@@ -1,6 +1,6 @@
-import type { Audio, ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '@/types';
-import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties';
-import RenderableElement from '@/elements/helpers/RenderableElement';
+import type { Audio, ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '../types';
+import type { MultiDimensionalProperty, ValueProperty } from '../utils/Properties';
+import RenderableElement from '../elements/helpers/RenderableElement';
 export default class AudioElement extends RenderableElement {
     _canPlay: boolean;
     _currentTime: number;
@@ -18,7 +18,7 @@ export default class AudioElement extends RenderableElement {
     initExpressions(): void;
     pause(): void;
     prepareFrame(num: number): void;
-    renderFrame(): void;
+    renderFrame(_val?: number): void;
     resume(): void;
     setRate(rateValue: number): void;
     show(): void;

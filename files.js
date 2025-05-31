@@ -31,6 +31,8 @@ const files = [
   'BuildGarden copy.lottie',
   'loopOut-star.lottie',
   'loopOut-star.json',
+  'models.lottie',
+  'portal.lottie'
 ]
 
 export default files

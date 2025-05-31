@@ -59,7 +59,7 @@ export default class SVGMatte3Effect {
     this.initialized = true
   }
 
-  renderFrame() {
+  renderFrame(_val?: number) {
     if (!this.initialized) {
       this.initialize()
     }
@@ -98,6 +98,7 @@ export default class SVGMatte3Effect {
 
   setElementAsMask(elem: ElementInterfaceIntersect,
     mask: ElementInterfaceIntersect) {
+
     if (!this.findSymbol(mask)) {
       const symbolId = createElementID(),
         masker = createNS<SVGMaskElement>('mask')
@@ -105,9 +106,9 @@ export default class SVGMatte3Effect {
       masker.setAttribute('id', mask.layerId || '')
       masker.setAttribute('mask-type', 'alpha')
       _svgMatteSymbols.push(mask)
-      const { defs } = elem.globalData
+      const { defs } = elem.globalData ?? { defs: null }
 
-      defs.appendChild(masker)
+      defs?.appendChild(masker)
       const symbol = createNS<SVGSymbolElement>('symbol')
 
       symbol.setAttribute('id', symbolId)
@@ -116,12 +117,13 @@ export default class SVGMatte3Effect {
         symbol.appendChild(mask.layerElement)
       }
 
-      defs.appendChild(symbol)
+      defs?.appendChild(symbol)
       const useElem = createNS<SVGUseElement>('use')
 
       useElem.setAttribute('href', `#${symbolId}`)
       masker.appendChild(useElem)
       mask.data.hd = false
+
       mask.show()
     }
     elem.setMatte(mask.layerId || '')

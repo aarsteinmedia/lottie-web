@@ -151,7 +151,7 @@ export default class HCameraElement extends FrameElement {
     this.prepareProperties(num, true)
   }
 
-  renderFrame() {
+  renderFrame(_val?: number) {
     if (!this.globalData?.compSize) {
       throw new Error(`${this.constructor.name}: globalData->compSize is not implemented`)
     }

@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, StrokeData } from '@/types';
-import { RendererType } from '@/utils/enums';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import type { ElementInterfaceIntersect, StrokeData } from '../../types';
+import { RendererType } from '../../utils/enums';
+import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
 export default class DashProperty extends DynamicPropertyContainer {
     dashArray: Float32Array;
     dashoffset: Float32Array;
@@ -11,5 +11,5 @@ export default class DashProperty extends DynamicPropertyContainer {
     k: boolean;
     renderer: RendererType;
     constructor(elem: ElementInterfaceIntersect, data: StrokeData[], renderer: RendererType, container: ElementInterfaceIntersect);
-    getValue(forceRender?: boolean): void;
+    getValue(forceRender?: boolean): number;
 }

@@ -1,9 +1,11 @@
-import type { ElementInterfaceIntersect, ExpressionInterface, SourceRect } from '@/types';
-import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface';
-import type TextExpressionInterface from '@/utils/expressions/TextInterface';
-import MaskManagerInterface from '@/utils/expressions/MaskInterface';
-import TransformExpressionInterface from '@/utils/expressions/TransformInterface';
-import Matrix from '@/utils/Matrix';
+import type MaskElement from '../../elements/MaskElement';
+import type { ElementInterfaceIntersect, ExpressionInterface, SourceRect } from '../../types';
+import type ShapeExpressionInterface from '../../utils/expressions/shapes/ShapeInterface';
+import type TextExpressionInterface from '../../utils/expressions/TextInterface';
+import MaskManagerInterface from '../../utils/expressions/MaskInterface';
+import TransformExpressionInterface from '../../utils/expressions/TransformInterface';
+import Matrix from '../../utils/Matrix';
+import type { GroupEffectInterface } from './EffectInterface';
 export default class LayerExpressionInterface {
     _elem: ElementInterfaceIntersect;
     _name?: string;
@@ -11,8 +13,8 @@ export default class LayerExpressionInterface {
     anchorPoint: ExpressionInterface;
     content?: ShapeExpressionInterface;
     effect: ExpressionInterface;
-    height: number;
-    index: number;
+    height?: number;
+    index?: number;
     inPoint: number;
     mask?: MaskManagerInterface;
     opacity: ExpressionInterface;
@@ -21,13 +23,13 @@ export default class LayerExpressionInterface {
     rotation: ExpressionInterface;
     scale: ExpressionInterface;
     shapeInterface?: ShapeExpressionInterface;
-    source: number;
+    source?: string;
     sourceRectAtTime: () => SourceRect | null;
     startTime: number;
     text?: TextExpressionInterface;
     textInterface?: TextExpressionInterface;
     transformInterface: TransformExpressionInterface;
-    width: number;
+    width?: number;
     get active(): boolean | undefined;
     get hasParent(): boolean;
     get parent(): LayerExpressionInterface | null | undefined;
@@ -56,8 +58,8 @@ export default class LayerExpressionInterface {
         y: number;
         z: number;
     };
-    registerEffectsInterface(effects: any): void;
-    registerMaskInterface(maskManager: any): void;
+    registerEffectsInterface(effects: null | GroupEffectInterface): void;
+    registerMaskInterface(maskManager: MaskElement): void;
     sampleImage(): number[];
     toComp(_arr: number[], _time: number): void;
     toWorld(arr: number[], time: number): number[];

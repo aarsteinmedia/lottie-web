@@ -1,4 +1,4 @@
-import type { CompElementInterface } from '@/types';
+import type { CompElementInterface } from '../../types';
 export default class CompExpressionInterface {
     _name?: string;
     comp: CompElementInterface;

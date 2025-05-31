@@ -211,7 +211,7 @@ export default abstract class BaseRenderer extends FrameElement {
     throw new Error(`${this.constructor.name}: Method createText not implemented`)
   }
 
-  getElementById(ind: number) {
+  getElementById(ind: number): null | ElementInterfaceIntersect {
     const { length } = this.elements
 
     for (let i = 0; i < length; i++) {

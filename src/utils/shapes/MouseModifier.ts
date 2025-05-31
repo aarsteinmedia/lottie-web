@@ -1,8 +1,6 @@
 // @ts-nocheck
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import type {
-  ElementInterfaceUnion, Shape, Vector2
-} from '@/types'
+import type { Shape, Vector2 } from '@/types'
 
 import { Modifier } from '@/utils/enums'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
@@ -19,7 +17,7 @@ export default class MouseModifier extends ShapeModifier {
   }
 
 
-  override initModifierProperties(_elem: ElementInterfaceUnion, data: Shape | Shape[]) {
+  override initModifierProperties(_elem: ElementInterfaceIntersect, data: Shape | Shape[]) {
     this.getValue = this.processKeys
     this.data = data
     this.positions = []
@@ -236,6 +234,7 @@ export default class MouseModifier extends ShapeModifier {
             }
           }
           newPaths.push(this.processPath(
+            // @ts-expect-error: TODO:
             shapePaths[j], localMouseCoords, this.positions[i][j]
           ))
         }

@@ -24,7 +24,7 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
   ) {
     super()
     const globalFilterSize = (
-      filterManager.container?.globalData.renderConfig as SVGRendererConfig
+      filterManager.container?.globalData?.renderConfig as SVGRendererConfig
     ).filterSize
     const filterSize = filterManager.data?.fs ??
       globalFilterSize ?? {

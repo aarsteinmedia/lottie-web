@@ -1,13 +1,13 @@
-import type CVShapeElement from '@/elements/canvas/CVShapeElement';
-import type HShapeElement from '@/elements/html/HShapeElement';
-import type SVGShapeElement from '@/elements/svg/SVGShapeElement';
-import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData } from '@/types';
-import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties';
-import type ShapeCollection from '@/utils/shapes/ShapeCollection';
-import type ShapePath from '@/utils/shapes/ShapePath';
-import type TextSelectorProperty from '@/utils/text/TextSelectorProperty';
-import { type ShapeType } from '@/utils/enums';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import type CVShapeElement from '../../elements/canvas/CVShapeElement';
+import type HShapeElement from '../../elements/html/HShapeElement';
+import type SVGShapeElement from '../../elements/svg/SVGShapeElement';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData } from '../../types';
+import type { MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
+import type ShapeCollection from '../../utils/shapes/ShapeCollection';
+import type ShapePath from '../../utils/shapes/ShapePath';
+import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
+import { type ShapeType } from '../../utils/enums';
+import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
 declare function getConstructorFunction(): typeof ShapeProperty;
 declare function getKeyframedConstructorFunction(): typeof KeyframedShapeProperty;
 declare function getShapeProp(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number, _arr?: any[], _trims?: any[]): ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | null;
@@ -35,7 +35,7 @@ export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer
     initiateExpression(_elem: ElementInterfaceIntersect, _data: TextSelectorProperty, _property: TextSelectorProperty): void;
     interpolateShape(frameNum: number, previousValue: ShapePath, caching?: Caching): void;
     interpolateShapeCurrentTime(): ShapePath;
-    processEffectsSequence(): void;
+    processEffectsSequence(_val?: unknown): number;
     reset(): void;
     setVValue(newPath?: ShapePath): void;
     shapesEqual(shape1: ShapePath, shape2: ShapePath): boolean;
@@ -66,7 +66,7 @@ export declare class StarShapeProperty extends ShapeBaseProperty {
     convertPolygonToPath(): void;
     convertStarToPath(): void;
     convertToPath(): void;
-    getValue(): void;
+    getValue(_val?: unknown): number;
 }
 export declare class EllShapeProperty extends ShapeBaseProperty {
     _cPoint: number;
@@ -74,7 +74,7 @@ export declare class EllShapeProperty extends ShapeBaseProperty {
     s: MultiDimensionalProperty;
     constructor(elem: ElementInterfaceIntersect, data: Shape);
     convertEllToPath(): void;
-    getValue(_flag?: boolean): void;
+    getValue(_flag?: boolean): number;
 }
 export declare class ShapeProperty extends ShapeBaseProperty {
     ix?: number;

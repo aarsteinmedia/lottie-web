@@ -15,6 +15,7 @@ export default class PropertyInterface {
       return this
     }
 
+    // @ts-expect-error: TODO:
     return this.propertyGroup(val - 1)
   }
 }

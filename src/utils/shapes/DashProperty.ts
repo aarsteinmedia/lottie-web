@@ -55,17 +55,17 @@ export default class DashProperty extends DynamicPropertyContainer {
   }
 
   override getValue(forceRender?: boolean) {
-    if (this.elem.globalData.frameId === this.frameId && !forceRender) {
-      return
+    if (this.elem.globalData?.frameId === this.frameId && !forceRender) {
+      return 0
     }
-    if (this.elem.globalData.frameId) {
+    if (this.elem.globalData?.frameId) {
       this.frameId = this.elem.globalData.frameId
     }
 
     this.iterateDynamicProperties()
     this._mdf = this._mdf || Boolean(forceRender)
     if (!this._mdf) {
-      return
+      return 0
     }
     const len = this.dataProps.length
 
@@ -86,5 +86,7 @@ export default class DashProperty extends DynamicPropertyContainer {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.dashArray[i] = this.dataProps[i].p.v as number
     }
+
+    return 0
   }
 }

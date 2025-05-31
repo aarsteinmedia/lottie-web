@@ -1,6 +1,6 @@
-import type { Vector3 } from '@/types';
-import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type { Vector3 } from '../../../types';
+import type { MultiDimensionalProperty, ValueProperty } from '../../../utils/Properties';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class FillInterface extends BaseInterface {
     c?: MultiDimensionalProperty<Vector3>;
     o?: ValueProperty;

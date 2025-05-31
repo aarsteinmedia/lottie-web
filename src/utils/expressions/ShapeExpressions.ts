@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { SegmentLength, Vector2 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -8,8 +9,8 @@ import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 export default abstract class ShapeExpressions extends ShapeProperty {
   _segmentsLength?: SegmentLength
-  getValueAtTime = expressionHelpers.getStaticValueAtTime
-  setGroupProperty = expressionHelpers.setGroupProperty
+  override getValueAtTime = expressionHelpers.getStaticValueAtTime
+  override setGroupProperty = expressionHelpers.setGroupProperty
 
   inTangents(time: number) {
     return this.vertices('i', time)

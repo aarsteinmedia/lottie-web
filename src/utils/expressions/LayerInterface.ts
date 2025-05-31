@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import type MaskElement from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect, ExpressionInterface, SourceRect
 } from '@/types'
@@ -9,6 +10,8 @@ import MaskManagerInterface from '@/utils/expressions/MaskInterface'
 import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
 import Matrix from '@/utils/Matrix'
 
+import type { GroupEffectInterface } from './EffectInterface'
+
 export default class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
   _name?: string
@@ -16,8 +19,8 @@ export default class LayerExpressionInterface {
   anchorPoint: ExpressionInterface
   content?: ShapeExpressionInterface
   effect: ExpressionInterface
-  height: number
-  index: number
+  height?: number
+  index?: number
   inPoint: number
   mask?: MaskManagerInterface
   opacity: ExpressionInterface
@@ -26,14 +29,13 @@ export default class LayerExpressionInterface {
   rotation: ExpressionInterface
   scale: ExpressionInterface
   shapeInterface?: ShapeExpressionInterface
-  source: number
+  source?: string
   sourceRectAtTime: () => SourceRect | null
   startTime: number
   text?: TextExpressionInterface
   textInterface?: TextExpressionInterface
   transformInterface: TransformExpressionInterface
-
-  width: number
+  width?: number
 
   get active() {
     return this._elem.isInRange
@@ -174,7 +176,7 @@ export default class LayerExpressionInterface {
       transformMat?.applyToMatrix(toWorldMat)
 
     } else {
-      const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(time)
+      const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(time) as Matrix
 
       propMatrix.clone(toWorldMat)
     }
@@ -195,11 +197,11 @@ export default class LayerExpressionInterface {
     return matrix.inversePoint(arr)
   }
 
-  registerEffectsInterface(effects) {
+  registerEffectsInterface(effects: null | GroupEffectInterface) {
     this.effect = effects
   }
 
-  registerMaskInterface(maskManager) {
+  registerMaskInterface(maskManager: MaskElement) {
     this.mask = new MaskManagerInterface(maskManager, this._elem)
   }
 

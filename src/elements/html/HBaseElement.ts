@@ -125,7 +125,7 @@ export default class HBaseElement {
     }
   }
 
-  renderFrame() {
+  renderFrame(_val?: number) {
     // If it is exported as hidden (data.hd === true) no need to render
     // If it is not visible no need to render
     if (this.data?.hd || this.hidden) {

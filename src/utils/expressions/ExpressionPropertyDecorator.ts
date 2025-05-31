@@ -1,3 +1,4 @@
+// @ts-nocheck: TODO:
 import type { Caching, Vector3 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -448,7 +449,7 @@ function addPropertyDecorator() {
     let value = 0
 
     if (type !== 0) {
-      value = createTypedArray('float32', data.a === 1 ? data.k[0].s.length : data.k.length)
+      value = createTypedArray(ArrayType.Float32, data.a === 1 ? data.k[0].s.length : data.k.length)
     }
     prop._cachingAtTime = {
       lastFrame: initialDefaultFrame,

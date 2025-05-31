@@ -1,4 +1,6 @@
 import type {
+  DynamicProperty,
+  Effect,
   ElementInterfaceIntersect, GradientColor, Shape, TextData, TextRangeValue, VectorProperty
 } from '@/types'
 import type { PropType } from '@/utils/enums'
@@ -11,15 +13,16 @@ export default abstract class DynamicPropertyContainer {
   _mdf?: boolean
   container?: ElementInterfaceIntersect | null
   data?:
-    { hd?: boolean } &
-    (VectorProperty<number | number[] | Keyframe[]>
-      | Shape
-      | TextProperty
-      | TextData
-      | TextRangeValue
-      | VectorProperty<Keyframe[]>
-      | GradientColor)
+    | DynamicProperty
+    | Shape
+    | TextProperty
+    | TextData
+    | TextRangeValue
+    | VectorProperty<Keyframe[]>
+    | GradientColor
+    | Effect
   dynamicProperties: DynamicPropertyContainer[] = []
+  hd?: boolean
   propType?: PropType | false
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
@@ -31,7 +34,7 @@ export default abstract class DynamicPropertyContainer {
     this._isAnimated = true
   }
 
-  getValue(_flag?: boolean): number | number[] {
+  getValue(_flag?: unknown): unknown {
     throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
   }
 
@@ -42,7 +45,7 @@ export default abstract class DynamicPropertyContainer {
     this._isAnimated = false
   }
 
-  iterateDynamicProperties() {
+  iterateDynamicProperties(): unknown {
     this._mdf = false
     const { length } = this.dynamicProperties
 

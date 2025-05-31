@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type {
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3

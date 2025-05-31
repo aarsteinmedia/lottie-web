@@ -1,11 +1,11 @@
-import type TransformEffect from '@/effects/TransformEffect';
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
-import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '@/types';
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty';
-import CVShapeData from '@/elements/helpers/shapes/CVShapeData';
-import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager';
-import ShapeElement from '@/elements/ShapeElement';
-import { type TransformProperty } from '@/utils/TransformProperty';
+import type TransformEffect from '../../effects/TransformEffect';
+import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
+import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
+import type { ShapeProperty } from '../../utils/shapes/ShapeProperty';
+import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
+import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
+import ShapeElement from '../../elements/ShapeElement';
+import { type TransformProperty } from '../../utils/TransformProperty';
 export default class CVShapeElement extends ShapeElement {
     canvasContext?: CanvasRenderingContext2D;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
@@ -17,7 +17,7 @@ export default class CVShapeElement extends ShapeElement {
     initRendererElement: () => void;
     prepareLayer: () => void;
     prevViewData: ShapeGroupData[];
-    renderFrame: (forceRender?: boolean) => void;
+    renderFrame: (forceRender?: number) => void;
     setBlendMode: () => void;
     show: () => void;
     stylesList: CVStyleElement[];

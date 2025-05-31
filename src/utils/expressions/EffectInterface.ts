@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type BaseElement from '@/elements/BaseElement'
 import type {
   Effect, ElementInterfaceIntersect, LottieLayer

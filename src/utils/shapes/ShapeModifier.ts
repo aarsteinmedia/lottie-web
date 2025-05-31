@@ -3,7 +3,6 @@ import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
-  ElementInterfaceUnion,
   Shape,
 } from '@/types'
 import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
@@ -74,7 +73,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
     }
   }
 
-  initModifierProperties(_elem: ElementInterfaceUnion, _data: Shape | Shape[]) {
+  initModifierProperties(_elem: ElementInterfaceIntersect, _data: Shape | Shape[]) {
     throw new Error(`${this.constructor.name}: Method initModifierProperties is not implemented`)
   }
 
@@ -83,10 +82,10 @@ export default class ShapeModifier extends DynamicPropertyContainer {
   }
 
   processKeys() {
-    if (this.elem?.globalData.frameId === this.frameId) {
+    if (this.elem?.globalData?.frameId === this.frameId) {
       return 0
     }
-    this.frameId = this.elem?.globalData.frameId
+    this.frameId = this.elem?.globalData?.frameId
     this.iterateDynamicProperties()
 
     return 0

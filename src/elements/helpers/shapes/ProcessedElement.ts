@@ -1,9 +1,9 @@
-import type { ElementInterfaceUnion } from '@/types'
+import type { ElementInterfaceIntersect } from '@/types'
 
 export default class ProcessedElement {
-  elem: ElementInterfaceUnion
+  elem: ElementInterfaceIntersect
   pos: number
-  constructor(element: ElementInterfaceUnion, position: number) {
+  constructor(element: ElementInterfaceIntersect, position: number) {
     this.elem = element
     this.pos = position
   }

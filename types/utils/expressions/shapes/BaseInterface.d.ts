@@ -1,5 +1,5 @@
-import type { Shape } from '@/types';
-import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory';
+import type { Shape } from '../../../types';
+import type PropertyGroupFactory from '../../../utils/expressions/PropertyGroupFactory';
 export default abstract class BaseInterface {
     _name?: string;
     mn?: string;

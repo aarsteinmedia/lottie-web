@@ -1,7 +1,6 @@
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
-  ElementInterfaceUnion,
   GradientColor,
   Shape,
   ShapeDataInterface,
@@ -50,12 +49,12 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
   style?: SVGStyleData
   transform?: Transformer
   constructor(
-    elem: ElementInterfaceUnion,
+    elem: ElementInterfaceIntersect,
     data: Shape,
     styleData: SVGStyleData
   ) {
     super()
-    this.initDynamicPropertyContainer(elem as ElementInterfaceIntersect)
+    this.initDynamicPropertyContainer(elem)
     this.getValue = this.iterateDynamicProperties
     this.initGradientData(
       elem, data, styleData
@@ -63,33 +62,33 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
   }
 
   initGradientData(
-    elem: ElementInterfaceUnion,
+    elem: ElementInterfaceIntersect,
     data: Shape,
     styleData: SVGStyleData
   ) {
     this.o = PropertyFactory.getProp(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.o,
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.s = PropertyFactory.getProp(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.s,
       1,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.e = PropertyFactory.getProp(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.e,
       1,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.h = PropertyFactory.getProp<KeyframedValueProperty>(
-      elem as ElementInterfaceIntersect,
+      elem,
       // @ts-expect-error: ignore
       data.h ?? ({ k: 0 } as unknown as VectorProperty<KeyframedValueProperty>),
       0,
@@ -97,14 +96,14 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
       this as unknown as ElementInterfaceIntersect
     ) as KeyframedValueProperty
     this.a = PropertyFactory.getProp(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.a ?? ({ k: 0 } as VectorProperty),
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
     this.g = new GradientProperty(
-      elem as ElementInterfaceIntersect,
+      elem,
       data.g as GradientColor,
       this as unknown as ElementInterfaceIntersect
     )

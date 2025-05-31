@@ -20,6 +20,7 @@ export default class TextExpressionInterface {
       Object.defineProperty(
         this._sourceText, 'style', {
           get() {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             return { fillColor: this.elem.textProperty.currentData.fc }
           },
         }

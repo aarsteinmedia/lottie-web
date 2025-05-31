@@ -109,7 +109,7 @@ export default class AudioElement extends RenderableElement {
     }
   }
 
-  renderFrame() {
+  renderFrame(_val?: number) {
     if (!this.isInRange || !this._canPlay) {
       return
     }

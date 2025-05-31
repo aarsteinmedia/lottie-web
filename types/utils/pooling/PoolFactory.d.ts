@@ -1,4 +1,4 @@
-import type ShapePath from '@/utils/shapes/ShapePath';
+import type ShapePath from '../../utils/shapes/ShapePath';
 export default class PoolFactory {
     private _create;
     private _length;

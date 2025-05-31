@@ -1,10 +1,10 @@
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
-import type { ElementInterfaceIntersect, ElementInterfaceUnion, Shape } from '@/types';
-import type { ValueProperty } from '@/utils/Properties';
-import Matrix from '@/utils/Matrix';
-import ShapeModifier from '@/utils/shapes/ShapeModifier';
-import { type TransformProperty } from '@/utils/TransformProperty';
+import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
+import type SVGShapeData from '../../elements/helpers/shapes/SVGShapeData';
+import type { ElementInterfaceIntersect, Shape } from '../../types';
+import type { ValueProperty } from '../../utils/Properties';
+import Matrix from '../../utils/Matrix';
+import ShapeModifier from '../../utils/shapes/ShapeModifier';
+import { type TransformProperty } from '../../utils/TransformProperty';
 export default class RepeaterModifier extends ShapeModifier {
     arr: Shape[];
     c?: ValueProperty;
@@ -27,7 +27,7 @@ export default class RepeaterModifier extends ShapeModifier {
     applyTransforms(pMatrix: Matrix, rMatrix: Matrix, sMatrix: Matrix, transform: TransformProperty, perc: number, inv?: boolean): void;
     changeGroupRender(elements: Shape[], renderFlag?: boolean): void;
     cloneElements(elements: Shape[]): Shape[];
-    init(elem: ElementInterfaceUnion, arr: Shape | Shape[], posFromProps?: number, elemsData?: ShapeGroupData[]): void;
+    init(elem: ElementInterfaceIntersect, arr: Shape | Shape[], posFromProps?: number, elemsData?: ShapeGroupData[]): void;
     initModifierProperties(elem: ElementInterfaceIntersect, data: Shape): void;
     processShapes(_isFirstFrame: boolean): boolean;
     resetElements(elements: Shape[]): void;

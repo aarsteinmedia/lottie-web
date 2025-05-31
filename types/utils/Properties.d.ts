@@ -1,9 +1,9 @@
-import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, Shape, TextData, TextRangeValue, Vector2, Vector3, VectorProperty } from '@/types';
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
-import type Matrix from '@/utils/Matrix';
-import type ShapePath from '@/utils/shapes/ShapePath';
-import { type BezierData } from '@/utils/Bezier';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, Shape, Vector2, Vector3, VectorProperty } from '../types';
+import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
+import type Matrix from '../utils/Matrix';
+import type ShapePath from '../utils/shapes/ShapePath';
+import { type BezierData } from '../utils/Bezier';
+import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
 export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
@@ -11,9 +11,6 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _name?: string;
     _placeholder?: boolean;
     comp?: CompElementInterface;
-    data?: {
-        hd?: boolean;
-    } & (VectorProperty<number | number[] | Keyframe[]> | Shape | TextRangeValue | TextData);
     e?: ValueProperty | {
         v: number;
     };
@@ -49,11 +46,11 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
     getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
-    getValueAtTime(_a: string | number, _b?: number): number | number[];
+    getValueAtTime(_val1?: unknown, _val2?: unknown): unknown;
     getVelocityAtTime(_frameNum: number): number;
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): void;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
-    processEffectsSequence(): void;
+    processEffectsSequence(): number;
     setVValue(val?: number | number[] | Keyframe[]): void;
     valueAtTime(_a: number, _b?: number): void;
 }

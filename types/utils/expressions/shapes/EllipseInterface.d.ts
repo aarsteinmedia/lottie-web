@@ -1,4 +1,4 @@
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class EllipseInterface extends BaseInterface {
     get position(): (() => {
         mult: number;

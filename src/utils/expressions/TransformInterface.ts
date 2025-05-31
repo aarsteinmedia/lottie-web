@@ -1,21 +1,21 @@
 import type { TransformProperty } from '@/utils/TransformProperty'
 
-import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
+import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 
 export default class TransformExpressionInterface {
   transform: TransformProperty
 
   get anchorPoint() {
-    return ExpressionPropertyInterface(this.transform.a)
+    return expressionPropertyFactory(this.transform.a)
   }
 
 
   get opacity() {
-    return ExpressionPropertyInterface(this.transform.o)
+    return expressionPropertyFactory(this.transform.o)
   }
 
   get orientation() {
-    return ExpressionPropertyInterface(this.transform.or)
+    return expressionPropertyFactory(this.transform.or)
   }
 
   get position() {
@@ -30,44 +30,44 @@ export default class TransformExpressionInterface {
   }
 
   get rotation() {
-    return ExpressionPropertyInterface(this.transform.r ?? this.transform.rz)
+    return expressionPropertyFactory(this.transform.r ?? this.transform.rz)
   }
 
   get scale() {
-    return ExpressionPropertyInterface(this.transform.s)
+    return expressionPropertyFactory(this.transform.s)
   }
 
   get skew() {
-    return ExpressionPropertyInterface(this.transform.sk)
+    return expressionPropertyFactory(this.transform.sk)
   }
 
   get skewAxis() {
-    return ExpressionPropertyInterface(this.transform.sa)
+    return expressionPropertyFactory(this.transform.sa)
   }
 
   get xPosition() {
-    return ExpressionPropertyInterface(this.transform.px)
+    return expressionPropertyFactory(this.transform.px)
   }
 
   get xRotation() {
-    return ExpressionPropertyInterface(this.transform.rx)
+    return expressionPropertyFactory(this.transform.rx)
   }
 
   get yPosition() {
-    return ExpressionPropertyInterface(this.transform.py)
+    return expressionPropertyFactory(this.transform.py)
   }
 
 
   get yRotation() {
-    return ExpressionPropertyInterface(this.transform.ry)
+    return expressionPropertyFactory(this.transform.ry)
   }
 
   get zPosition() {
-    return ExpressionPropertyInterface(this.transform.pz)
+    return expressionPropertyFactory(this.transform.pz)
   }
 
   get zRotation() {
-    return ExpressionPropertyInterface(this.transform.rz ?? this.transform.r)
+    return expressionPropertyFactory(this.transform.rz ?? this.transform.r)
   }
 
   private _px
@@ -82,12 +82,12 @@ export default class TransformExpressionInterface {
     this.transform = transform
 
     if (transform.p) {
-      this._transformFactory = ExpressionPropertyInterface(transform.p)
+      this._transformFactory = expressionPropertyFactory(transform.p)
     } else {
-      this._px = ExpressionPropertyInterface(transform.px)
-      this._py = ExpressionPropertyInterface(transform.py)
+      this._px = expressionPropertyFactory(transform.px)
+      this._py = expressionPropertyFactory(transform.py)
       if (transform.pz) {
-        this._pz = ExpressionPropertyInterface(transform.pz)
+        this._pz = expressionPropertyFactory(transform.pz)
       }
     }
 

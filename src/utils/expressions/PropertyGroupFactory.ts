@@ -15,6 +15,7 @@ export default class PropertyGroupFactory {
       return this.interfaceFunction
     }
 
+    // @ts-expect-error: TODO:
     return this.parentPropertyGroup(val - 1)
   }
 }

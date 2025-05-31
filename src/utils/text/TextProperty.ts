@@ -44,7 +44,7 @@ export default class TextProperty extends BaseProperty {
     this._isFirstFrame = true
     this._mdf = false
     if (data.d?.sid) {
-      data.d = elem.globalData.slotManager?.getProp(data.d)
+      data.d = elem.globalData?.slotManager?.getProp(data.d)
     }
     this.data = data
     this.elem = elem
@@ -96,7 +96,7 @@ export default class TextProperty extends BaseProperty {
 
   override addEffect(effectFunction: TextEffectFunction) {
     this.effectsSequence.push(effectFunction)
-    this.elem.addDynamicProperty(this)
+    this.elem.addDynamicProperty(this as unknown as DynamicPropertyContainer)
   }
 
   buildFinalText(text: string) {
@@ -168,7 +168,7 @@ export default class TextProperty extends BaseProperty {
 
   completeTextData(documentData: DocumentData) {
     documentData.__complete = true
-    const { fontManager } = this.elem.globalData
+    const { fontManager } = this.elem.globalData ??  {}
 
     if (!fontManager) {
       throw new Error(`${this.constructor.name}: FontManager not loaded to globalData`)
@@ -511,11 +511,11 @@ export default class TextProperty extends BaseProperty {
     // }
 
     if (
-      (this.elem.globalData.frameId === this.frameId ||
+      (this.elem.globalData?.frameId === this.frameId ||
         this.effectsSequence.length === 0) &&
         !_finalValue
     ) {
-      return
+      return 0
     }
     const tValue = this.data.d?.k[this.keysIndex].s.t
 
@@ -528,7 +528,7 @@ export default class TextProperty extends BaseProperty {
     if (this.lock) {
       this.setCurrentData(this.currentData)
 
-      return
+      return 0
     }
     this.lock = true
     this._mdf = false
@@ -552,7 +552,9 @@ export default class TextProperty extends BaseProperty {
     this.v = this.currentData
     this.pv = this.v
     this.lock = false
-    this.frameId = this.elem.globalData.frameId
+    this.frameId = this.elem.globalData?.frameId
+
+    return 0
   }
 
   recalculate(index: number) {

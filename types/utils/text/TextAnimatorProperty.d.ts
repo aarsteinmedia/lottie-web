@@ -1,7 +1,7 @@
-import type { DocumentData, ElementInterfaceIntersect, TextData } from '@/types';
-import { RendererType } from '@/utils/enums';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
-import LetterProps from '@/utils/text/LetterProps';
+import type { DocumentData, ElementInterfaceIntersect, TextData } from '../../types';
+import { RendererType } from '../../utils/enums';
+import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
+import LetterProps from '../../utils/text/LetterProps';
 export default class TextAnimatorProperty extends DynamicPropertyContainer {
     _frameId: number;
     _isFirstFrame: boolean;
@@ -18,6 +18,6 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     private mHelper;
     constructor(textData: TextData, renderType: RendererType, elem: ElementInterfaceIntersect);
     getMeasures(documentData: DocumentData, lettersChangedFlag?: boolean): void;
-    getValue(): void;
+    getValue(): number;
     searchProperties(_: DynamicPropertyContainer[]): void;
 }

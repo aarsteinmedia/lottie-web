@@ -1,5 +1,5 @@
-import type { GroupEffect } from '@/effects/EffectsManager';
-import type { ElementInterfaceIntersect } from '@/types';
+import type { GroupEffect } from '../../effects/EffectsManager';
+import type { ElementInterfaceIntersect } from '../../types';
 export default class SVGFillFilter {
     filterManager: GroupEffect;
     matrixFilter: SVGFEColorMatrixElement;

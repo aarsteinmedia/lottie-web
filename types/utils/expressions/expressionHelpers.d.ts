@@ -1,10 +1,10 @@
-import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types';
-import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties';
+import type { ElementInterfaceIntersect, ExpressionProperty } from '../../types';
+import type { BaseProperty, KeyframedValueProperty } from '../../utils/Properties';
 declare function searchExpressions(elem: ElementInterfaceIntersect, data: ExpressionProperty, prop: KeyframedValueProperty): void;
 declare function getValueAtTime(this: BaseProperty, frameNumFromProps: number): number | number[] | undefined;
 declare function getSpeedAtTime(this: BaseProperty, frameNum: number): number;
 declare function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>;
-declare function getStaticValueAtTime(this: BaseProperty, _time?: number, _num?: number): string | number | number[] | import("../shapes/ShapePath").default | import("@/types").DocumentData | undefined;
+declare function getStaticValueAtTime(this: BaseProperty, _time?: number, _num?: number): string | number | number[] | import("../shapes/ShapePath").default | import("../../types").DocumentData | undefined;
 declare function setGroupProperty(this: BaseProperty, propertyGroup: typeof BaseProperty.prototype.propertyGroup): void;
 declare const expressionHelpers: {
     getSpeedAtTime: typeof getSpeedAtTime;

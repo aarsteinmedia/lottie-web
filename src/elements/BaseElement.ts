@@ -146,7 +146,7 @@ export default abstract class BaseElement {
       if (this.data.ty === 4) {
         this.layerInterface.shapeInterface = new shapeExpressionInterface(
           this.shapesData,
-          this.itemsData,
+          this.itemsData as unknown as ShapeGroupData,
           this.layerInterface
         )
         this.layerInterface.content = this.layerInterface.shapeInterface

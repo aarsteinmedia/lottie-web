@@ -1,8 +1,8 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData';
-import type { ElementInterfaceUnion, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
-import type { KeyframedValueProperty, MultiDimensionalProperty, ValueProperty } from '@/utils/Properties';
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
-import GradientProperty from '@/utils/shapes/GradientProperty';
+import type SVGStyleData from '../../../elements/helpers/shapes/SVGStyleData';
+import type { ElementInterfaceIntersect, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
+import type { KeyframedValueProperty, MultiDimensionalProperty, ValueProperty } from '../../../utils/Properties';
+import DynamicPropertyContainer from '../../../utils/helpers/DynamicPropertyContainer';
+import GradientProperty from '../../../utils/shapes/GradientProperty';
 export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     a?: MultiDimensionalProperty;
     cst: SVGStopElement[];
@@ -22,8 +22,8 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     stops: SVGStopElement[];
     style?: SVGStyleData;
     transform?: Transformer;
-    constructor(elem: ElementInterfaceUnion, data: Shape, styleData: SVGStyleData);
-    initGradientData(elem: ElementInterfaceUnion, data: Shape, styleData: SVGStyleData): void;
+    constructor(elem: ElementInterfaceIntersect, data: Shape, styleData: SVGStyleData);
+    initGradientData(elem: ElementInterfaceIntersect, data: Shape, styleData: SVGStyleData): void;
     setGradientData(pathElement: SVGElement, data: Shape): void;
     setGradientOpacity(data: Shape, styleData: SVGStyleData): void;
 }

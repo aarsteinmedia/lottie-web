@@ -109,8 +109,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     return this.pv
   }
 
-  getValueAtTime(_a: string | number,
-    _b?: number): number | number[] {
+  getValueAtTime(_val1?: unknown, _val2?: unknown): unknown {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }
 
@@ -364,7 +363,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
       throw new Error(`${this.constructor.name}: elem (ElementInterface) is not implemented`)
     }
     if (
-      this.elem.globalData.frameId === this.frameId ||
+      this.elem.globalData?.frameId === this.frameId ||
       this.effectsSequence.length === 0
     ) {
       return 0
@@ -379,7 +378,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     const len = this.effectsSequence.length
     let finalValue = this.kf
       ? this.pv
-      : (this.data as VectorProperty<Keyframe[]>).k
+      : (this.data as unknown as VectorProperty<Keyframe[]>).k
 
     for (let i = 0; i < len; i++) {
       finalValue = this.effectsSequence[i](finalValue)
@@ -387,7 +386,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     this.setVValue(finalValue as number | number[])
     this._isFirstFrame = false
     this.lock = false
-    this.frameId = this.elem.globalData.frameId
+    this.frameId = this.elem.globalData?.frameId
 
     return 0
   }
