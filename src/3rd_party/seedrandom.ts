@@ -1,4 +1,5 @@
 //@ts-nocheck
+import type { BMMath as BMMathType } from '@/types'
 /*
  Copyright 2014 David Bau.
 
@@ -54,7 +55,7 @@ function seedRandom(pool, math: Math) {
   /**
      * Node.js crypto module, initialized at the bottom.
      */
-  const global = this,
+  let global = this,
     width = 256,
     chunks = 6,
     digits = 52,
@@ -241,7 +242,7 @@ function seedRandom(pool, math: Math) {
 // End anonymous scope, and pass initial values.
 };
 
-function initialize(BMMath: Math) {
+function initialize(BMMath: BMMathType) {
   seedRandom([], BMMath)
 }
 

@@ -775,6 +775,11 @@ export interface TransformSequence {
   transforms?: { transform: Transformer }[]
 }
 
+export type BMMath = Omit<Math, 'abs'> & {
+  abs: (val: number | number[]) => number | number[]
+  seedrandom: (val: number) => number
+}
+
 export interface DocumentData extends FontList {
   __complete?: boolean
   ascent?: number

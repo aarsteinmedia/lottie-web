@@ -35,13 +35,9 @@ let _lottieGlobal = {}
 seedrandom(BMMath)
 
 const $bm_div = div,
-
   $bm_mod = mod,
-
   $bm_mul = mul,
-
   $bm_sub = sub,
-
   $bm_sum = sum,
   degrees_to_radians = radiansToDegrees,
   radians_to_degrees = radiansToDegrees,
@@ -244,15 +240,6 @@ function initiateExpression(
     thisLayer: null | undefined | LayerExpressionInterface,
 
     scoped_bm_rt = noOp
-  // val = val.replace(/(\\?"|')((http)(s)?(:\/))?\/.*?(\\?"|')/g, "\"\""); // deter potential network calls
-
-
-  // const expression_function = eval(/* Javascript */ `[
-  //     function _expression_function() {
-  //       ${val}
-  //       scoped_bm_rt = $bm_rt
-  //     // @ts-expect-error
-  //     }]`)[0]
 
   const obj: { scoped_bm_rt?: ExpressionReturn } = {},
     // eslint-disable-next-line @typescript-eslint/no-implied-eval

@@ -1,3 +1,5 @@
+import type { BMMath as BMMathType } from '@/types'
+
 import { isArrayOfNum } from '@/utils'
 import { getShouldRoundValues } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -8,10 +10,7 @@ const bmPow = Math.pow,
   bmMax = Math.max,
   bmMin = Math.min
 
-const BMMath = {} as unknown as Omit<Math, 'abs'> & {
-  abs: (val: number | number[]) => number | number[]
-  seedrandom: (val: number) => number
-}
+const BMMath = {} as unknown as BMMathType
 
 (function () {
   const propertyNames: (keyof Math)[] = ['abs',
