@@ -1,78 +1,80 @@
-// @ts-nocheck
-import type { Vector3 } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type { ValueProperty } from '@/utils/Properties'
-
-import { ArrayType } from '@/utils/enums'
+import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
+import { BaseProperty } from '@/utils/Properties'
 
-export default class ExpressionValue {
-  key?: (pos: number) => number
-  numKeys = 0
-  propertyGroup?: LayerExpressionInterface
-  value
-  velocity: number
+export default class ExpressionValue extends BaseProperty {
+  numKeys: number
+  prop: BaseProperty
+
+  get velocity() {
+    return this.prop.getVelocityAtTime(this.prop.comp?.currentFrame ?? 0)
+  }
+
   constructor(
-    elementProp: ValueProperty<number[] | number>,
-    mult = 1,
-    type = ''
+    elementProp: BaseProperty, multFromProps?: number, type?: string
   ) {
+    super()
+    this.prop = elementProp
+    const mult = multFromProps || 1
+    let expressionValue
+
     if (elementProp.k) {
       elementProp.getValue()
     }
+
+    let arrValue,
+      val
+
     if (type) {
       if (type === 'color') {
         const len = 4
-        const arrValue = createTypedArray(ArrayType.Float32, len)
 
+        this.value = createTypedArray(ArrayType.Float32, len) as number[]
+        arrValue = createTypedArray(ArrayType.Float32, len) as number[]
         for (let i = 0; i < len; i++) {
-          arrValue[i] = i < 3 ? (elementProp.v as Vector3)[i] * mult : 1
+          arrValue[i] = i < 3 ? Number((elementProp.v as number[] | undefined)?.[i]) * mult : 1
+          this.value[i] = arrValue[i]
         }
         this.value = arrValue
       }
-    } else if (elementProp.propType === 'unidimensional') {
-      this.value = Number(elementProp.v) * mult
+    } else if (elementProp.propType === PropType.UniDimensional) {
+      val = elementProp.v as number * mult
+      this.value = new Number(val) as number // eslint-disable-line no-new-wrappers
+      this.value = val
     } else {
       const { length } = elementProp.pv as number[]
-      const arrValue = createTypedArray(ArrayType.Float32, length)
 
+      expressionValue = createTypedArray(ArrayType.Float32, length)
+      arrValue = createTypedArray(ArrayType.Float32, length) as number[]
       for (let i = 0; i < length; i++) {
-        arrValue[i] = (elementProp.v as number[])[i] * mult
+        arrValue[i] = Number((elementProp.v as number[])[i]) * mult
+        expressionValue[i] = arrValue[i]
       }
       this.value = arrValue
     }
 
-    this.numKeys = elementProp.keyframes ? elementProp.keyframes.length : 0
-    this.key = (pos: number) => {
-      if (!this.numKeys) {
-        return 0
-      }
+    this.numKeys = elementProp.keyframes.length || 0
 
-      return elementProp.keyframes[pos - 1].t
+    this.valueAtTime = elementProp.getValueAtTime
+    this.speedAtTime = elementProp.getSpeedAtTime
+    this.velocityAtTime = elementProp.getVelocityAtTime
+    this.propertyGroup = elementProp.propertyGroup
+  }
+
+  key(pos: number) {
+    if (!this.numKeys) {
+      return 0
     }
-    const {
-      getSpeedAtTime, getValueAtTime, getVelocityAtTime, propertyGroup
-    } =
-      elementProp
 
-    this.valueAtTime = getValueAtTime
-    this.speedAtTime = getSpeedAtTime
-    this.velocityAtTime = getVelocityAtTime
-    this.propertyGroup = propertyGroup
-
-    this.velocity = getVelocityAtTime(elementProp.comp?.currentFrame || 0)
+    return this.keyframes[pos - 1].t
   }
 
   speedAtTime(_frameNum: number) {
-    throw new Error(`${this.constructor.name}: Method speedAtTime is not implemented`)
+    throw new Error('Method is not implemented')
   }
 
-  valueAtTime<T extends number | number[] = number>(_a: number,
-    _b?: number): T {
-    throw new Error(`${this.constructor.name}: Method valueAtTime is not implemented`)
-  }
 
-  velocityAtTime(_frameNum: number): number {
-    throw new Error(`${this.constructor.name}: Method velocityAtTime is not implemented`)
+  velocityAtTime(_frameNum: number) {
+    throw new Error('Method is not implemented')
   }
 }

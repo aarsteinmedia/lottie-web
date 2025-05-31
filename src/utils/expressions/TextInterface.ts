@@ -1,47 +1,48 @@
 import type { ElementInterfaceIntersect } from '@/types'
-import type ExpressionManager from '@/utils/expressions/ExpressionManager'
 
 export default class TextExpressionInterface {
+
+  _sourceText?: {
+    value: string
+    style?: { fillColor: string }
+  }
+
   elem: ElementInterfaceIntersect
-  initiateExpression?: typeof ExpressionManager
 
   get sourceText() {
     this.elem.textProperty?.getValue()
     const stringValue = this.elem.textProperty?.currentData.t
 
     if (!this._sourceText || stringValue !== this._sourceText.value) {
-      this._sourceText = {
-        style: { fillColor: this.elem.textProperty?.currentData.fc as number[] },
-        value:
-          typeof stringValue === 'string'
-            ? stringValue
-            : stringValue?.toString(),
-      }
+      this._sourceText = new String(stringValue) as unknown as { value: string } // eslint-disable-line no-new-wrappers
+      // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
+      this._sourceText.value = (stringValue || new String(stringValue)) as string // eslint-disable-line no-new-wrappers
+      Object.defineProperty(
+        this._sourceText, 'style', {
+          get() {
+            return { fillColor: this.elem.textProperty.currentData.fc }
+          },
+        }
+      )
     }
 
     return this._sourceText
   }
 
-  private _sourceText?: {
-    value?: string
-    style?: { fillColor: number[] }
-  } = {}
-
   constructor(elem: ElementInterfaceIntersect) {
+
     this.elem = elem
   }
 
-  // // Static method to maintain similar interface to original
-  // static create(elem: ElementInterfaceIntersect) {
-  //   const instance = new TextExpressionInterface(elem)
-  //   return instance._thisLayerFunction.bind(instance)
-  // }
-
-  public _thisLayerFunction(name: string) {
-    if (name === 'ADBE Text Document') {
-      return this.sourceText
+  getInterface (name: string) {
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (name) {
+      case 'ADBE Text Document': {
+        return this.sourceText
+      }
+      default: {
+        return null
+      }
     }
-
-    return null
   }
 }

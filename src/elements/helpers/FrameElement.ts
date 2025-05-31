@@ -1,6 +1,7 @@
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import HierarchyElement from '@/elements/helpers/HierarchyElement'
+import { PropType } from '@/utils/enums'
 
 /**
  * Handles element's layer frame update.
@@ -33,7 +34,7 @@ export default abstract class FrameElement extends HierarchyElement {
     for (let i = 0; i < length; i++) {
       if (
         !isVisible &&
-        !(this._isParent && this.dynamicProperties[i].propType === 'transform')
+        !(this._isParent && this.dynamicProperties[i].propType === PropType.Transform)
       ) {
         continue
       }

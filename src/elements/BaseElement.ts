@@ -10,15 +10,16 @@ import type {
   // SVGElementInterface,
 } from '@/types'
 import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+import type EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 // import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import EffectsManager from '@/effects/EffectsManager'
 import { createElementID, getBlendMode } from '@/utils'
-import { getExpressionInterfaces } from '@/utils/getterSetter'
+import { getExpressionInterfaces } from '@/utils/expressions'
 
 export default abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement
@@ -27,11 +28,12 @@ export default abstract class BaseElement {
   data?: LottieLayer
   dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
+  frameDuration = 1
   globalData?: GlobalData
   itemsData: ShapeGroupData[] = []
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
-  layerInterface?: LayerExpressionInterface
+  layerInterface?: null | LayerExpressionInterface = null
   maskManager?: MaskElement
   shapesData: Shape[] = []
   type?: unknown
@@ -108,52 +110,55 @@ export default abstract class BaseElement {
   }
 
   initExpressions() {
-    if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
-    }
-    const expressionsInterfaces = getExpressionInterfaces()
+    try {
+      if (!this.data) {
+        throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      }
+      const expressionsInterfaces = getExpressionInterfaces()
 
-    if (!expressionsInterfaces) {
-      return
-    }
-    const layerExpressionInterface = expressionsInterfaces('layer') as typeof LayerExpressionInterface,
-      effectsExpressionInterface = expressionsInterfaces('effects'),
-      shapeExpressionInterface = expressionsInterfaces('shape') as typeof ShapeExpressionInterface,
-      textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
-      compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
+      if (!expressionsInterfaces) {
+        return
+      }
+      const layerExpressionInterface = expressionsInterfaces('layer') as typeof LayerExpressionInterface,
+        effectsExpressionInterface = expressionsInterfaces('effects') as typeof EffectsExpressionInterface,
+        shapeExpressionInterface = expressionsInterfaces('shape') as typeof ShapeExpressionInterface,
+        textExpressionInterface = expressionsInterfaces('text') as typeof TextExpressionInterface,
+        compExpressionInterface = expressionsInterfaces('comp') as typeof CompExpressionInterface
 
-    this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
+      this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
-    // if (!this.layerInterface) {
-    //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
-    // }
+      // if (!this.layerInterface) {
+      //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
+      // }
 
-    if (this.data.hasMask && this.maskManager) {
-      this.layerInterface.registerMaskInterface(this.maskManager)
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const effectsInterface = (effectsExpressionInterface as any).createEffectsInterface(this, this.layerInterface)
+      if (this.data.hasMask && this.maskManager) {
+        this.layerInterface.registerMaskInterface(this.maskManager)
+      }
+      const effectsInterface = new effectsExpressionInterface().createEffectsInterface(this, this.layerInterface)
 
-    this.layerInterface.registerEffectsInterface(effectsInterface)
+      this.layerInterface.registerEffectsInterface(effectsInterface)
 
-    if (this.data.ty === 0 || this.data.xt) {
-      this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
+      if (this.data.ty === 0 || this.data.xt) {
+        this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
-      return
-    }
-    if (this.data.ty === 4) {
-      this.layerInterface.shapeInterface = new shapeExpressionInterface(
-        this.shapesData,
-        this.itemsData,
-        this.layerInterface
-      )
-      this.layerInterface.content = this.layerInterface.shapeInterface
+        return
+      }
+      if (this.data.ty === 4) {
+        this.layerInterface.shapeInterface = new shapeExpressionInterface(
+          this.shapesData,
+          this.itemsData,
+          this.layerInterface
+        )
+        this.layerInterface.content = this.layerInterface.shapeInterface
 
-      return
-    }
-    if (this.data.ty === 5) {
-      this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
-      this.layerInterface.text = this.layerInterface.textInterface
+        return
+      }
+      if (this.data.ty === 5) {
+        this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
+        this.layerInterface.text = this.layerInterface.textInterface
+      }
+    } catch (error) {
+      console.error(this.constructor.name, error)
     }
   }
 

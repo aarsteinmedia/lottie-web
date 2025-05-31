@@ -69,3 +69,11 @@ export function createCanvas(width: number, height: number) {
 
   return canvas
 }
+
+const AssetManager = {
+  createCanvas,
+  getLumaCanvas,
+  loadLumaCanvas,
+}
+
+export default AssetManager

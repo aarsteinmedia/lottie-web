@@ -1,54 +1,51 @@
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type { Shape } from '@/types'
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import propertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
+import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 export default class ShapePathInterface {
   _name?: string
-  _propertyGroup
   ind?: number
   ix?: number
   mn?: string
-  path: ShapeProperty
-  prop: ShapeProperty
-  propertyGroup?: unknown
+  prop: null | ShapeProperty
+  propertyGroup: LayerExpressionInterface
   propertyIndex?: number
-  shape: ShapeProperty
+
+  get path() {
+    if (this.prop?.k) {
+      this.prop.getValue()
+    }
+
+    return this.prop
+  }
+
+  get shape() {
+    return this.path
+  }
+
   constructor(
-    shape: Shape, view: SVGShapeData, propertyGroup: unknown
+    shape: Shape, view: ShapeData, propertyGroup: LayerExpressionInterface
   ) {
     this.prop = view.sh
 
-    this._propertyGroup = propertyGroupFactory(this.interfaceFunction,
-      propertyGroup)
-    this.prop.setGroupProperty(new PropertyInterface('Path', this._propertyGroup))
+    const _propertyGroup = new PropertyGroupFactory(this, propertyGroup)
 
-    if (this.prop.k) {
-      this.prop.getValue()
-    }
-    this.path = this.prop
-    if (this.prop.k) {
-      this.prop.getValue()
-    }
-    this.shape = this.prop
+    this.prop?.setGroupProperty(new PropertyInterface('Path', _propertyGroup))
+
     this._name = shape.nm
     this.ix = shape.ix
-    this.propertyIndex = shape.ix
     this.mn = shape.mn
     this.propertyGroup = propertyGroup
+    this.propertyIndex = shape.ix
+
   }
 
-  interfaceFunction(val: string | number) {
-    if (
-      val === 'Shape' ||
-      val === 'shape' ||
-      val === 'Path' ||
-      val === 'path' ||
-      val === 'ADBE Vector Shape' ||
-      val === 2
-    ) {
+  getInterface(val: string | number) {
+    if (val === 'Shape' || val === 'shape' || val === 'Path' || val === 'path' || val === 'ADBE Vector Shape' || val === 2) {
       return this.path
     }
 

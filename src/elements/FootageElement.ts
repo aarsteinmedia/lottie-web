@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
-import { getExpressionInterfaces } from '@/utils/getterSetter'
+import { getExpressionInterfaces } from '@/utils/expressions'
 
 export default class FootageElement extends RenderableElement {
   assetData: null | LottieAsset = null
@@ -40,7 +40,7 @@ export default class FootageElement extends RenderableElement {
   }
 
   override initExpressions() {
-    const expressionsInterfaces = getExpressionInterfaces() as any
+    const expressionsInterfaces = getExpressionInterfaces()
 
     if (!expressionsInterfaces) {
       return

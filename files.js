@@ -29,7 +29,12 @@ const files = [
   'b2b.lottie',
   'gameAnimation.lottie',
   'BuildGarden copy.lottie',
+<<<<<<< HEAD
   'hero-web.lottie',
+=======
+  'loopOut-star.lottie',
+  'loopOut-star.json',
+>>>>>>> expressions
 ]
 
 export default files

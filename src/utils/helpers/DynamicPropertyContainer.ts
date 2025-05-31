@@ -1,11 +1,13 @@
 import type { ElementInterfaceIntersect } from '@/types'
+import type { PropType } from '@/utils/enums'
+import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 
 export default abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
   _mdf?: boolean
   container?: ElementInterfaceIntersect | null
   dynamicProperties: DynamicPropertyContainer[] = []
-  propType?: string | false
+  propType?: PropType | false
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (this.dynamicProperties.includes(prop)) {
@@ -16,7 +18,7 @@ export default abstract class DynamicPropertyContainer {
     this._isAnimated = true
   }
 
-  getValue(_flag?: boolean) {
+  getValue(_flag?: boolean): number | number[] {
     throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
   }
 
@@ -37,6 +39,11 @@ export default abstract class DynamicPropertyContainer {
         this._mdf = true
       }
     }
+  }
+
+  setGroupProperty(_propertyInterface: PropertyInterface) {
+    // Pass through
+    // throw new Error('Method is not implemented')
   }
 }
 

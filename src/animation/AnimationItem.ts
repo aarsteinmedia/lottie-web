@@ -12,7 +12,7 @@ import type {
   MarkerData,
   Vector2,
 } from '@/types'
-import type Expressions from '@/utils/expressions/Expressions'
+// import type Expressions from '@/utils/expressions/Expressions'
 
 import BaseEvent, {
   BMCompleteEvent,
@@ -35,11 +35,17 @@ import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
+<<<<<<< HEAD
 import {
   getExpressionsPlugin,
   getSubframeEnabled,
 } from '@/utils/getterSetter'
 import ProjectInterface from '@/utils/expressions/ProjectInterface'
+=======
+import { getExpressionsPlugin } from '@/utils/expressions'
+import ProjectInterface from '@/utils/expressions/ProjectInterface'
+import { getSubframeEnabled } from '@/utils/getterSetter'
+>>>>>>> expressions
 import ImagePreloader from '@/utils/ImagePreloader'
 
 export default class AnimationItem extends BaseEvent {
@@ -56,7 +62,7 @@ export default class AnimationItem extends BaseEvent {
   public currentFrame: number
   public currentRawFrame: number
   public drawnFrameEvent: LottieEvent
-  public expressionsPlugin: null | typeof Expressions
+  public expressionsPlugin: ReturnType<typeof getExpressionsPlugin>
   public firstFrame: number
   public frameModifier: AnimationDirection
   public frameMult: number
@@ -228,11 +234,10 @@ export default class AnimationItem extends BaseEvent {
       return
     }
     this.isLoaded = true
-    const ExpressionsPlugin = getExpressionsPlugin()
+    const expressionsPlugin = getExpressionsPlugin()
 
-    if (ExpressionsPlugin) {
-      new ExpressionsPlugin(this)
-    }
+    expressionsPlugin?.initExpressions(this)
+
     this.renderer.initItems()
     setTimeout(() => {
       this.trigger('DOMLoaded')
@@ -521,11 +526,10 @@ export default class AnimationItem extends BaseEvent {
 
   public onSegmentComplete(data: AnimationData) {
     this.animationData = data
-    const ExpressionsPlugin = getExpressionsPlugin()
+    const expressionsPlugin = getExpressionsPlugin()
 
-    if (ExpressionsPlugin) {
-      new ExpressionsPlugin(this)
-    }
+    expressionsPlugin?.initExpressions(this)
+
     this.loadNextSegment()
   }
 
@@ -598,9 +602,7 @@ export default class AnimationItem extends BaseEvent {
       return
     }
     try {
-      if (this.expressionsPlugin) {
-        new this.expressionsPlugin(this).resetFrame()
-      }
+      this.expressionsPlugin?.resetFrame()
       this.renderer.renderFrame(this.currentFrame + this.firstFrame)
     } catch (error) {
       this.triggerRenderFrameError(error)
@@ -974,7 +976,7 @@ export default class AnimationItem extends BaseEvent {
         [], documentData, index
       )
     } catch (error) {
-      console.error(error)
+      console.error(this.constructor.name, error)
     }
   }
 

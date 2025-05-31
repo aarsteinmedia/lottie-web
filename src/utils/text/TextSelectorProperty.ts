@@ -18,7 +18,6 @@ export default class TextSelectorProperty extends BaseProperty {
   rn?: number
   sm: ValueProperty
   totalChars?: number
-  x?: boolean
   xe: ValueProperty
   constructor(elem: ElementInterfaceIntersect, data: TextRangeValue) {
     super()
@@ -241,6 +240,12 @@ export default class TextSelectorProperty extends BaseProperty {
     return mult * Number(this.a.v)
   }
 
+  getTextSelectorProp(
+    _elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]
+  ) {
+    throw new Error('Method not implemented')
+  }
+
   override getValue(newCharsFlag?: boolean) {
     this.iterateDynamicProperties()
     this._mdf = newCharsFlag || this._mdf
@@ -261,9 +266,5 @@ export default class TextSelectorProperty extends BaseProperty {
     }
     this.finalS = s
     this.finalE = e
-  }
-
-  initiateExpression() {
-    throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }
 }

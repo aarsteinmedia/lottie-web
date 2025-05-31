@@ -1,40 +1,15 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
-import type {
-  ShapeDataInterface,
-  SVGElementInterface,
-  Transformer,
-} from '@/types'
-import type { ShapeType } from '@/utils/enums'
-import type ShapeCollection from '@/utils/shapes/ShapeCollection'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { Transformer } from '@/types'
 import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-export default class SVGShapeData {
-  _isAnimated: boolean
-  _length?: number
-  caches: string[]
-  data?: SVGShapeData
-  gr?: SVGGElement
-  hd?: boolean
-  it: ShapeDataInterface[] = []
-  last?: ShapeCollection
-  localShapeCollection?: ShapeCollection
-  lStr: string
-  lvl: number
-  pathsData: ShapePath[] = []
-  prevViewData: SVGElementInterface[] = []
-  sh: ShapeProperty
-  shape?: ShapeProperty
-  style?: SVGStyleData
-  styles: SVGStyleData[]
-  transform?: Transformer
-  transformers: Transformer[]
-  ty?: ShapeType
+import ShapeData from '@/elements/helpers/shapes/ShapeData'
+
+export default class SVGShapeData extends ShapeData {
   constructor(
     transformers: Transformer[],
     level: number,
     shape: ShapeProperty
   ) {
+    super()
     this.caches = []
     this.styles = []
     this.transformers = transformers
@@ -56,9 +31,5 @@ export default class SVGShapeData {
       }
       i++
     }
-  }
-
-  setAsAnimated() {
-    this._isAnimated = true
   }
 }

@@ -60,7 +60,11 @@ import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type FootageInterface from '@/utils/expressions/FootageInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ProjectInterface from '@/utils/expressions/ProjectInterface'
+<<<<<<< HEAD
 import type ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+=======
+import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
+>>>>>>> expressions
 import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type FontManager from '@/utils/FontManager'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -87,6 +91,8 @@ import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 import type TextProperty from '@/utils/text/TextProperty'
 import type { TransformProperty } from '@/utils/TransformProperty'
+
+import type SVGTextLottieElement from './elements/svg/SVGTextElement'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -168,8 +174,8 @@ export type ElementInterfaceIntersect = CVCompElement &
   MaskElement &
   SVGBaseElement &
   SVGShapeElement &
-  SVGTextElement &
-  SVGStopElement &
+  SVGTextLottieElement &
+  // SVGStopElement &
   SVGStrokeStyleData &
   TextElement &
   BaseRenderer &
@@ -342,9 +348,9 @@ export interface ThreeDElements {
   type: string
 }
 
-export interface EFXElement {p: BaseProperty}
+export interface EFXElement { p: BaseProperty }
 
-export interface KeyframesMetadata {__fnct?: (val: number) => number}
+export interface KeyframesMetadata { __fnct?: (val: number) => number }
 
 interface BaseRendererConfig {
   className?: string
@@ -441,7 +447,7 @@ export interface AnimationConfiguration<
   wrapper?: HTMLElement
 }
 
-export interface Stop {s: number[]}
+export interface Stop { s: number[] }
 export interface GradientColor {
   k: {
     a: 1 | 0
@@ -452,7 +458,6 @@ export interface GradientColor {
 }
 
 type BoolInt = 0 | 1
-
 interface ShapeDataProperty {
   _mdf?: boolean
   a: 1 | 0
@@ -658,11 +663,11 @@ export interface AnimationSettings {
   speed?: number
 }
 
-interface Animation extends AnimationSettings {id: string}
+interface Animation extends AnimationSettings { id: string }
 
 export type ValueOf<T> = T[keyof T]
 
-export interface AnimationConfig extends Animation {url: string}
+export interface AnimationConfig extends Animation { url: string }
 
 export interface LottieManifest {
   animations: Animation[]
@@ -805,6 +810,7 @@ export interface DocumentData extends FontList {
   sz?: Vector2
   t: string | number
   tr: number
+  x?: string
   yOffset?: number
 }
 
@@ -1096,7 +1102,7 @@ export interface LottieLayer {
   masksProperties?: Shape[]
   mn?: string
   nm: string
-  np?: any
+  np?: string
   /** Out point. */
   op: number
   parent?: number
@@ -1303,12 +1309,22 @@ export interface GlobalData {
   progressiveLoad?: boolean
   projectInterface: ProjectInterface
   pushExpression: () => void
-  registerExpressionProperty: (expression: any) => void
+  registerExpressionProperty: (expression: ExpressionProperty) => void
   renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
   renderer?: CanvasRenderer | SVGRenderer
   slotManager?: SlotManager
   transformCanvas?: TransformCanvas
 }
+
+export interface ExpressionProperty {
+  a: 0 | 1
+  ix: number
+  k: (ValueProperty | MultiDimensionalProperty)[]
+  release?: () => void
+  x: string
+}
+
+export type ExpressionReturn = ((val?: unknown) => unknown) | BaseProperty
 
 export interface SourceRect {
   height: number
@@ -1328,5 +1344,5 @@ export interface IntersectData {
 }
 
 declare global {
-  interface Document {_isProxy?: boolean}
+  interface Document { _isProxy?: boolean }
 }

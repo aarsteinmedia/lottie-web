@@ -1,15 +1,18 @@
-export default class PropertyInterface {
-  _name: string
+import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 
-  constructor(propertyName: string,
-    private propertyGroup: (val: number) => unknown) {
+export default class PropertyInterface {
+
+  _name: string
+  propertyGroup: PropertyGroupFactory
+
+  constructor(propertyName: string, propertyGroup: PropertyGroupFactory) {
     this._name = propertyName
+    this.propertyGroup = propertyGroup
   }
 
-  public _propertyGroup(val = 1): unknown {
-
+  getInterface(val: number) {
     if (val <= 0) {
-      return { _name: this._name }
+      return this
     }
 
     return this.propertyGroup(val - 1)

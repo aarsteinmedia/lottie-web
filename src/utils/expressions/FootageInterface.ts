@@ -1,26 +1,62 @@
 import type FootageElement from '@/elements/FootageElement'
 
-class OutlineInterface {
-  private currentProperty: any
-  private currentPropertyName: string
-  private elem: FootageElement
+export default class FootageInterface {
+  _name: string
+  currentProperty?: SVGElement | null
+  currentPropertyName = ''
+  dataInterface: FootageInterface
+  elem: FootageElement
 
-  constructor(elem: FootageElement) {
+  constructor (elem: FootageElement) {
     this.elem = elem
-    this.currentPropertyName = ''
-    this.currentProperty = elem.getFootageData()
+    this._name = 'Data'
+    this.dataInterface = this.dataInterfaceFactory(elem)
   }
 
-  init = () => {
+  dataInterfaceFactory(elem: FootageElement) {
+    this._name = 'Outline'
+    this.outlineInterface = this.outlineInterfaceFactory(elem)
+
+    return this
+  }
+
+  getInterface(value: number | string) {
+    if (value === 'Data') {
+      return this.dataInterface
+    }
+    if (value === 'Outline') {
+      this.outlineInterface()
+
+      return
+    }
+
+    return null
+  }
+
+  init() {
     this.currentPropertyName = ''
     this.currentProperty = this.elem.getFootageData()
 
     return this.searchProperty
   }
 
-  searchProperty = (value: keyof typeof this.currentProperty) => {
+  outlineInterface(_elem?: FootageElement) {
+    throw new Error('Method is not implemented')
+  }
+
+  outlineInterfaceFactory(elem: FootageElement) {
+    this.currentPropertyName = ''
+
+    this.currentProperty = elem.getFootageData()
+
+    this.elem = elem
+
+    return this.init
+  }
+
+  searchProperty(value: keyof SVGElement) {
     if (this.currentProperty?.[value]) {
-      this.currentPropertyName = value as string
+      this.currentPropertyName = value
       this.currentProperty = this.currentProperty[value]
       if (typeof this.currentProperty === 'object') {
         return this.searchProperty
@@ -28,16 +64,12 @@ class OutlineInterface {
 
       return this.currentProperty
     }
-
-    const propertyNameIndex = (value as string).indexOf(this.currentPropertyName)
+    const propertyNameIndex = value.indexOf(this.currentPropertyName)
 
     if (propertyNameIndex !== -1) {
-      const index = parseInt((value as string).slice(Math.max(0, propertyNameIndex + this.currentPropertyName.length)),
-        10)
+      const index = parseInt(value.slice(propertyNameIndex + this.currentPropertyName.length), 10)
 
-      this.currentProperty = (this.currentProperty as unknown as unknown[])?.[
-        index
-      ]
+      this.currentProperty = this.currentProperty?.[index as unknown as keyof SVGElement]
       if (typeof this.currentProperty === 'object') {
         return this.searchProperty
       }
@@ -46,45 +78,5 @@ class OutlineInterface {
     }
 
     return ''
-  }
-}
-
-class DataInterface {
-  public _name: string
-  public elem: FootageElement
-  public outlineInterface: OutlineInterface
-
-  constructor(elem: FootageElement) {
-    this.elem = elem
-    this._name = 'Outline'
-    this.outlineInterface = new OutlineInterface(elem)
-  }
-
-  interfaceFunction = (value: string) => {
-    if (value === 'Outline') {
-      return this.outlineInterface.init()
-    }
-
-    return null
-  }
-}
-
-export default class FootageInterface {
-  public _name: string
-  public dataInterface: DataInterface
-  public elem: FootageElement
-
-  constructor(elem: FootageElement) {
-    this.elem = elem
-    this._name = 'Data'
-    this.dataInterface = new DataInterface(elem)
-  }
-
-  interfaceFunction = (value: string) => {
-    if (value === 'Data') {
-      return this.dataInterface
-    }
-
-    return null
   }
 }

@@ -1,6 +1,3 @@
-// import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
-import type Expressions from '@/utils/expressions/Expressions'
-
 import {
   play,
   pause,
@@ -39,11 +36,15 @@ import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
-// import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
-// import getInterface from '@/utils/expressions/InterfacesProvider'
 import {
-  // setExpressionInterfaces,
+  setExpressionInterfaces,
   setExpressionsPlugin,
+} from '@/utils/expressions'
+import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorator'
+import Expressions from '@/utils/expressions/Expressions'
+import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
+import getInterface from '@/utils/expressions/InterfacesProvider'
+import {
   setIDPrefix as setPrefix,
   setLocationHref,
   setQuality,
@@ -124,10 +125,10 @@ registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
 registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
 // Registering expression plugin
-// setExpressionsPlugin(Expressions)
-// setExpressionInterfaces(getInterface)
-// addPropertyDecorator()
-// addTextDecorator()
+setExpressionsPlugin(Expressions)
+setExpressionInterfaces(getInterface)
+addPropertyDecorator()
+addTextDecorator()
 
 // Registering effects
 registerEffect(

@@ -13,7 +13,6 @@ import type {
   Svalue,
   VectorProperty,
 } from '@/types'
-import type PropertyInterface from '@/utils/expressions/PropertyInterface'
 import type {
   MultiDimensionalProperty,
   ValueProperty,
@@ -24,6 +23,7 @@ import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
+import { type ShapeType, PropType } from '@/utils/enums'
 import { initialDefaultFrame, roundCorner } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -99,8 +99,10 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public localShapeCollection?: ShapeCollection
   lock?: boolean
   offsetTime = 0
+  p?: MultiDimensionalProperty
   public paths?: ShapePath[] | ShapeCollection
   public pv?: ShapePath
+  ty?: ShapeType
   public v?: ShapePath
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
     throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)
@@ -352,7 +354,6 @@ export class RectShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or?: ValueProperty
   os?: ValueProperty
-  p: MultiDimensionalProperty
   pt?: ValueProperty
   r: ValueProperty
   s: MultiDimensionalProperty
@@ -399,6 +400,10 @@ export class RectShapeProperty extends ShapeBaseProperty {
   }
 
   convertRectToPath() {
+    if (!this.p) {
+      throw new Error(`${this.constructor.name}: p value is not implemented`)
+    }
+
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
       v0 = this.s.v[0] / 2,
@@ -634,7 +639,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
 
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return
+      return 0 // For type compability
     }
     if (this.elem?.globalData?.frameId) {
       this.frameId = this.elem.globalData.frameId
@@ -644,6 +649,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
     if (this._mdf) {
       this.convertRectToPath()
     }
+
+    return 0 // For type compability
   }
 }
 
@@ -653,7 +660,6 @@ export class StarShapeProperty extends ShapeBaseProperty {
   is?: ValueProperty
   or: ValueProperty
   os: ValueProperty
-  p: MultiDimensionalProperty
   pt: ValueProperty
   r: ValueProperty
   s?: ValueProperty
@@ -737,6 +743,11 @@ export class StarShapeProperty extends ShapeBaseProperty {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
     }
+
+    if (!this.p) {
+      throw new Error(`${this.constructor.name}: p value is not implemented`)
+    }
+
     const numPts = Math.floor(this.pt.v),
       angle = Math.PI * 2 / numPts,
       rad = this.or.v,
@@ -813,8 +824,8 @@ export class StarShapeProperty extends ShapeBaseProperty {
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
         oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
 
-      x += Number(this.p.v[0])
-      y += Number(this.p.v[1])
+      x += Number(this.p?.v[0])
+      y += Number(this.p?.v[1])
       this.v.setTripleAt(
         x,
         y,
@@ -854,7 +865,6 @@ export class StarShapeProperty extends ShapeBaseProperty {
 export class EllShapeProperty extends ShapeBaseProperty {
   _cPoint = roundCorner
   d?: number
-  p: MultiDimensionalProperty
   s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
@@ -892,6 +902,10 @@ export class EllShapeProperty extends ShapeBaseProperty {
   }
 
   convertEllToPath() {
+    if (!this.p) {
+      return
+    }
+
     const p0 = this.p.v[0],
       p1 = this.p.v[1],
       s0 = this.s.v[0] / 2,
@@ -929,7 +943,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
     _v.o[3][1] = p1 - s1 * this._cPoint
   }
 
-  override getValue() {
+  override getValue(_flag?: boolean) {
     if (this.elem?.globalData?.frameId === this.frameId) {
       return
     }
@@ -959,7 +973,7 @@ export class ShapeProperty extends ShapeBaseProperty {
     elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {
     super()
-    this.propType = 'shape'
+    this.propType = PropType.Shape
     this.comp = elem.comp
     this.container = elem as ElementInterfaceIntersect
     this.elem = elem
@@ -980,10 +994,6 @@ export class ShapeProperty extends ShapeBaseProperty {
     this.effectsSequence = []
     this.getValue = this.processEffectsSequence
   }
-
-  setGroupProperty(_propertyInterface: PropertyInterface) {
-    throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
-  }
 }
 
 export class KeyframedShapeProperty extends ShapeBaseProperty {
@@ -993,7 +1003,7 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
   ) {
     super()
     this.data = data
-    this.propType = 'shape'
+    this.propType = PropType.Shape
     this.comp = elem.comp
     this.elem = elem
     this.container = elem as ElementInterfaceIntersect

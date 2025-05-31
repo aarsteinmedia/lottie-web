@@ -57,7 +57,8 @@ const isProd = process.env.NODE_ENV !== 'development',
     swc(),
     serve({
       browser: 'firefox',
-      open: true
+      open: true,
+      port: 1002
     }),
     livereload()
   ],

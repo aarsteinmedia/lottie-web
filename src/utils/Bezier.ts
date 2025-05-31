@@ -19,8 +19,7 @@ export function buildBezierData(
   pt4: Vector2
 ) {
   const storedData: { [key: string]: BezierData | undefined } = {},
-    bezierName = `${pt1[0]}_${pt1[1]}_${pt2[0]}_${pt2[1]}_${pt3[0]}_${
-      pt3[1]
+    bezierName = `${pt1[0]}_${pt1[1]}_${pt2[0]}_${pt2[1]}_${pt3[0]}_${pt3[1]
     }_${pt4[0]}_${pt4[1]}`.replaceAll('.', 'p')
 
   if (!storedData[bezierName]) {

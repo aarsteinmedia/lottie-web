@@ -75,6 +75,7 @@ export default abstract class TransformElement extends BaseElement {
         )
         : ({ o: 0 } as unknown as TransformProperty),
     } as Transformer
+
     if (this.data.ao) {
       this.finalTransform.mProp.autoOriented = true
     }

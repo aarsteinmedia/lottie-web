@@ -67,9 +67,9 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
     const feComposite = createNS<SVGFECompositeElement>('feComposite')
 
     feComposite.setAttribute('in', `${id}_drop_shadow_3`)
-    feComposite.setAttribute('in2', `${id}_drop_shadow_2`)
+    feComposite.in2.baseVal = `${id}_drop_shadow_2`
     feComposite.setAttribute('operator', 'in')
-    feComposite.setAttribute('result', `${id}_drop_shadow_4`)
+    feComposite.result.baseVal = `${id}_drop_shadow_4`
     filter.appendChild(feComposite)
 
     const feMerge = this.createMergeNode(id, [`${id}_drop_shadow_4`, source])
@@ -84,8 +84,10 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
       return
     }
     if (forceRender || this.filterManager.effectElements[4].p._mdf) {
-      this.feGaussianBlur.setAttribute('stdDeviation',
-        `${(this.filterManager.effectElements[4].p.v as number) / 4}`)
+      const stdDeviation = (this.filterManager.effectElements[4].p.v as number) / 4
+
+      this.feGaussianBlur.setStdDeviation(stdDeviation, stdDeviation)
+
     }
     if (forceRender || this.filterManager.effectElements[0].p._mdf) {
       const col = this.filterManager.effectElements[0].p.v as Vector3
@@ -112,8 +114,8 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
       const x = distance * Math.cos(angle)
       const y = distance * Math.sin(angle)
 
-      this.feOffset.setAttribute('dx', `${x}`)
-      this.feOffset.setAttribute('dy', `${y}`)
+      this.feOffset.dx.baseVal = x
+      this.feOffset.dy.baseVal = y
     }
   }
 }

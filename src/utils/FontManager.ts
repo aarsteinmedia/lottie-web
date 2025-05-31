@@ -514,7 +514,7 @@ export default class FontManager {
     return {
       measureText: (text: string) => {
         if (engine === RendererType.SVG) {
-          ;(helper as SVGTextElement).textContent = text
+          ; (helper as SVGTextElement).textContent = text
 
           return (helper as SVGTextElement).getComputedTextLength()
         }

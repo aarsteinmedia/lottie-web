@@ -16,6 +16,6 @@ export default class ShapeGroupData {
   constructor() {
     this.it = []
     this.prevViewData = []
-    this.gr = createNS('g')
+    this.gr = createNS<SVGGElement>('g')
   }
 }

@@ -1,449 +1,431 @@
-// @ts-nocheck
-// import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-
-import type ShapeElement from '@/elements/ShapeElement'
-import type {
-  Caching,
-  ElementInterfaceIntersect,
-  SegmentLength,
-  Shape,
-  Vector2,
-} from '@/types'
-import type { BaseProperty } from '@/utils/Properties'
+import type { Caching, Vector3 } from '@/types'
+import type { KeyframedValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { extendPrototype, isArrayOfNum } from '@/utils'
-import { getPointInSegment, getSegmentsLength } from '@/utils/Bezier'
 import { ArrayType } from '@/utils/enums'
-import {
-  getSpeedAtTime,
-  getStaticValueAtTime,
-  getValueAtTime,
-  getVelocityAtTime,
-  searchExpressions,
-  setGroupProperty,
-} from '@/utils/expressions/expressionHelpers'
+import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import ShapeExpressions from '@/utils/expressions/ShapeExpressions'
 import { initialDefaultFrame } from '@/utils/getterSetter'
-import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
+import { createTypedArray } from '@/utils/helpers/arrays'
 import Matrix from '@/utils/Matrix'
-import { clone } from '@/utils/pooling/ShapePool'
+import shapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory, {
-  KeyframedShapeProperty,
-  ShapeBaseProperty,
-  ShapeProperty,
-} from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
-export default function addPropertyDecorator() {
-  function loopOut(
-    this: BaseProperty,
-    typeFromProps?: string,
-    durationFromProps?: number,
-    durationFlag?: boolean
-  ) {
-    if (!this.k || !this.keyframes) {
-      return this.pv
-    }
-    let duration = durationFromProps
-    const type = typeFromProps?.toLowerCase() || '',
-      currentFrame = this.comp?.renderedFrame || -1,
-      { keyframes } = this,
-      lastKeyFrame = keyframes[keyframes.length - 1].t,
-      frameRate = this.comp?.globalData?.frameRate ?? 60
 
-    if (currentFrame <= lastKeyFrame) {
-      return this.pv
-    }
-    let cycleDuration
-    let firstKeyFrame
+function loopOut(
+  this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
+) {
+  if (!this.k || this.keyframes.length === 0) {
+    return this.pv
+  }
 
-    if (durationFlag) {
-      if (duration) {
-        cycleDuration = Math.abs(lastKeyFrame - frameRate * duration)
-      } else {
-        cycleDuration = Math.max(0, lastKeyFrame - (this.elem?.data.ip || 0))
-      }
-      firstKeyFrame = lastKeyFrame - cycleDuration
+  let duration = durationFromProps
+
+  const {
+    comp, elem, keyframes, pv
+  } = this
+
+  if (!elem?.comp) {
+    throw new Error('Element is not implemented')
+  }
+
+  if (!comp) {
+    throw new Error('Comp is not implemented')
+  }
+
+  const type = typeFromProps ? typeFromProps.toLowerCase() : '',
+    currentFrame = comp.renderedFrame ?? 0,
+    lastKeyFrame = keyframes[keyframes.length - 1].t,
+    { frameRate } = elem.comp.globalData ?? { frameRate: 60 }
+
+  if (currentFrame <= lastKeyFrame) {
+    return pv
+  }
+  let cycleDuration,
+    firstKeyFrame = 0
+
+  if (durationFlag) {
+    if (duration) {
+      cycleDuration = Math.abs(lastKeyFrame - frameRate * duration)
+
     } else {
-      if (!duration || duration > keyframes.length - 1) {
-        duration = keyframes.length - 1
-      }
-      firstKeyFrame = keyframes[keyframes.length - 1 - duration].t
-      cycleDuration = lastKeyFrame - firstKeyFrame
+      cycleDuration = Math.max(0, lastKeyFrame - elem.data.ip)
     }
-    let i
-    let len
-    let ret
 
-    switch (type) {
-      case 'pingpong': {
-        const iterations = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
+  } else {
+    // firstKeyFrame = lastKeyFrame - cycleDuration
 
-        if (iterations % 2 !== 0) {
-          return this.getValueAtTime((cycleDuration -
-            (currentFrame - firstKeyFrame) % cycleDuration +
-            firstKeyFrame) /
-            frameRate,
-          0)
+    if (!duration || duration > keyframes.length - 1) {
+      duration = keyframes.length - 1
+    }
+    firstKeyFrame = keyframes[keyframes.length - 1 - duration].t
+    cycleDuration = lastKeyFrame - firstKeyFrame
+  }
+  let i
+
+  let len
+  let ret
+
+  switch (type) {
+    case 'pingpong': {
+      const iterations = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
+
+      if (iterations % 2 !== 0) {
+        return this.getValueAtTime((cycleDuration - (currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) / frameRate, 0)
+      }
+
+      break
+    }
+    case 'offset': {
+      const initV = this.getValueAtTime(firstKeyFrame / frameRate, 0),
+
+        endV = this.getValueAtTime(lastKeyFrame / frameRate, 0),
+        current = this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) / frameRate, 0),
+        repeats = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
+
+      if (isArrayOfNum(pv) && isArrayOfNum(initV) && isArrayOfNum(endV) && isArrayOfNum(current)) {
+        ret = Array.from({ length: initV.length })
+        len = ret.length
+        for (i = 0; i < len; i++) {
+          ret[i] = (endV[i] - initV[i]) * repeats + current[i]
         }
 
-        break
+        return ret as number[]
       }
-      case 'offset': {
-        const initV: number | number[] = this.getValueAtTime(firstKeyFrame / frameRate,
-          0)
-        const endV: number | number[] = this.getValueAtTime(lastKeyFrame / frameRate,
-          0),
-          current: number | number[] = this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) /
-            frameRate,
-          0)
-        const repeats = Math.floor((currentFrame - firstKeyFrame) / cycleDuration)
 
-        if (isArrayOfNum(this.pv) && isArrayOfNum(initV)) {
-          ret = Array.from({ length: initV.length })
-          len = ret.length
-          for (i = 0; i < len; i++) {
-            ret[i] =
-            ((endV as number[])[i] - initV[i]) * repeats +
-            (current as number[])[i]
-          }
+      return (endV as number - (initV as number)) * repeats + (current as number)
+    }
+    case 'continue': {
+      const lastValue = this.getValueAtTime(lastKeyFrame / frameRate, 0)
 
-          return ret
+      const nextLastValue = this.getValueAtTime((lastKeyFrame - 0.001) / frameRate, 0)
+
+      if (isArrayOfNum(pv) && isArrayOfNum(lastValue) && isArrayOfNum(nextLastValue)) {
+        ret = Array.from({ length: lastValue.length })
+        len = ret.length
+        for (i = 0; i < len; i += 1) {
+          ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / frameRate) / 0.0005
         }
 
-        return (
-          ((endV as number) - (initV as number)) * repeats + (current as number)
-        )
+        return ret as number[]
       }
-      case 'continue': {
-        const lastValue: number | number[] = this.getValueAtTime(lastKeyFrame / frameRate,
-          0),
-          nextLastValue: number | number[] = this.getValueAtTime((lastKeyFrame - 0.001) / frameRate,
-            0)
 
-        if (isArrayOfNum(this.pv)) {
-          ret = Array.from({ length: (lastValue as number[]).length })
-          len = ret.length
-          for (i = 0; i < len; i++) {
-            ret[i] =
-            (lastValue as number[])[i] +
-            ((lastValue as number[])[i] - (nextLastValue as number[])[i]) *
-            ((currentFrame - lastKeyFrame) / frameRate) /
-            0.0005
-          }
-
-          return ret
-        }
-
-        return (
-          (lastValue as number) +
-          ((lastValue as number) - (nextLastValue as number)) *
-          ((currentFrame - lastKeyFrame) / 0.001)
-        )
-      }
-      default:
+      return lastValue as number + (lastValue as number - (nextLastValue as number)) * ((currentFrame - lastKeyFrame) / 0.001)
+    }
+    default:
     // Do nothing
-    }
+  }
+  return this.getValueAtTime((((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame)) / frameRate, 0); // eslint-disable-line
 
-    return this.getValueAtTime(((currentFrame - firstKeyFrame) % cycleDuration + firstKeyFrame) /
-      frameRate,
-    0)
+}
+
+function loopIn(
+  this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
+) {
+  if (!this.k) {
+    return this.pv
   }
 
-  function loopIn(
-    this: BaseProperty,
-    typeFromProps?: string,
-    durationFromProps?: number,
-    durationFlag?: boolean
-  ) {
-    if (!this.k) {
-      return this.pv
-    }
-    let duration = durationFromProps
-    const type = typeFromProps?.toLowerCase() || '',
-      frameRate = this.comp?.globalData?.frameRate ?? 60,
-      currentFrame = this.comp?.renderedFrame || -1,
-      { keyframes } = this,
-      firstKeyFrame = keyframes[0].t
+  let duration = durationFromProps
 
-    if (currentFrame >= firstKeyFrame) {
-      return this.pv
-    }
-    let cycleDuration
-    let lastKeyFrame
+  const {
+    comp, elem, keyframes, pv
+  } = this
 
-    if (durationFlag) {
-      if (duration) {
-        cycleDuration = Math.abs(frameRate * duration)
-      } else {
-        cycleDuration = Math.max(0, (this.elem?.data.op || 0) - firstKeyFrame)
-      }
-      lastKeyFrame = firstKeyFrame + cycleDuration
+  if (!elem?.comp) {
+    throw new Error('Element is not implemented')
+  }
+
+  if (!comp) {
+    throw new Error('Comp is not implemented')
+  }
+
+  const { frameRate } = elem.comp.globalData ?? { frameRate: 60 },
+    type = typeFromProps ? typeFromProps.toLowerCase() : '',
+    currentFrame = comp.renderedFrame ?? 0,
+    firstKeyFrame = keyframes[0].t
+
+  if (currentFrame >= firstKeyFrame) {
+    return pv
+  }
+  let cycleDuration
+
+  let lastKeyFrame
+
+  if (durationFlag) {
+    if (duration) {
+      cycleDuration = Math.abs(frameRate * duration)
     } else {
-      if (!duration || duration > keyframes.length - 1) {
-        duration = keyframes.length - 1
-      }
-      lastKeyFrame = keyframes[duration].t
-      cycleDuration = lastKeyFrame - firstKeyFrame
+      cycleDuration = Math.max(0, elem.data.op - firstKeyFrame)
     }
-    let i
-    let len
-    let ret
+    lastKeyFrame = firstKeyFrame + cycleDuration
+  } else {
+    if (!duration || duration > keyframes.length - 1) {
+      duration = keyframes.length - 1
+    }
+    lastKeyFrame = keyframes[duration].t
+    cycleDuration = lastKeyFrame - firstKeyFrame
+  }
+  let i,
+    len,
+    ret
 
-    switch (type) {
-      case 'pingpong': {
-        const iterations = Math.floor((firstKeyFrame - currentFrame) / cycleDuration)
+  switch (type) {
+    case 'pingpong': {
+      const iterations = Math.floor((firstKeyFrame - currentFrame) / cycleDuration)
 
-        if (iterations % 2 === 0) {
-          return this.getValueAtTime(((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame) /
-            frameRate,
-          0)
+      if (iterations % 2 === 0) {
+        return this.getValueAtTime(((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame) / frameRate, 0)
+      }
+
+      break
+    }
+    case 'offset': {
+      const initV = this.getValueAtTime(firstKeyFrame / frameRate, 0),
+
+        endV = this.getValueAtTime(lastKeyFrame / frameRate, 0),
+        current = this.getValueAtTime((cycleDuration - (firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame) / frameRate, 0),
+        repeats = Math.floor((firstKeyFrame - currentFrame) / cycleDuration) + 1
+
+      if (isArrayOfNum(pv) && isArrayOfNum(initV) && isArrayOfNum(endV) && isArrayOfNum(current)) {
+        ret = Array.from({ length: initV.length })
+        len = ret.length
+        for (i = 0; i < len; i += 1) {
+          ret[i] = current[i] - (endV[i] - initV[i]) * repeats
         }
 
-        break
+        return ret as number[]
       }
-      case 'offset': {
-        const initV: number | number[] = this.getValueAtTime(firstKeyFrame / frameRate,
-          0),
-          endV: number | number[] = this.getValueAtTime(lastKeyFrame / frameRate,
-            0),
-          current: number | number[] = this.getValueAtTime((cycleDuration -
-            (firstKeyFrame - currentFrame) % cycleDuration +
-            firstKeyFrame) /
-            frameRate,
-          0)
-        const repeats =
-        Math.floor((firstKeyFrame - currentFrame) / cycleDuration) + 1
 
-        if (isArrayOfNum(this.pv)) {
-          ret = Array.from({ length: (initV as number[]).length })
-          len = ret.length
-          for (i = 0; i < len; i++) {
-            ret[i] =
-            (current as number[])[i] -
-            ((endV as number[])[i] - (initV as number[])[i]) * repeats
-          }
+      return current as number - (endV as number - (initV as number)) * repeats
+    }
+    case 'continue': {
+      const firstValue = this.getValueAtTime(firstKeyFrame / frameRate, 0)
 
-          return ret
+      const nextFirstValue = this.getValueAtTime((firstKeyFrame + 0.001) / frameRate, 0)
+
+      if (isArrayOfNum(pv) && isArrayOfNum(firstValue) && isArrayOfNum(nextFirstValue)) {
+        ret = Array.from({ length: firstValue.length })
+        len = ret.length
+        for (i = 0; i < len; i += 1) {
+          ret[i] = firstValue[i] + (firstValue[i] - nextFirstValue[i]) * (firstKeyFrame - currentFrame) / 0.001
         }
 
-        return (
-          (current as number) - ((endV as number) - (initV as number)) * repeats
-        )
+        return ret
       }
-      case 'continue': {
-        const firstValue: number | number[] = this.getValueAtTime(firstKeyFrame / frameRate,
-          0),
-          nextFirstValue: number | number[] = this.getValueAtTime((firstKeyFrame + 0.001) / frameRate,
-            0)
 
-        if (isArrayOfNum(this.pv)) {
-          ret = Array.from({ length: (firstValue as number[]).length })
-          len = ret.length
-          for (i = 0; i < len; i++) {
-            ret[i] =
-            (firstValue as number[])[i] +
-            ((firstValue as number[])[i] - (nextFirstValue as number[])[i]) *
-            (firstKeyFrame - currentFrame) /
-            0.001
-          }
-
-          return ret
-        }
-
-        return (
-          (firstValue as number) +
-          ((firstValue as number) - (nextFirstValue as number)) *
-          (firstKeyFrame - currentFrame) /
-          0.001
-        )
-      }
-      default:
+      return firstValue as number + (firstValue as number - (nextFirstValue as number)) * (firstKeyFrame - currentFrame) / 0.001
+    }
+    default:
     // Do nothing
-    }
-
-    return this.getValueAtTime((cycleDuration -
-      ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) /
-      frameRate,
-    0)
   }
 
-  function smooth(
-    this: BaseProperty,
-    widthFromProps?: number,
-    samplesFromProps?: number
-  ) {
-    if (!this.k) {
-      return this.pv
-    }
-    const width = (widthFromProps || 0.4) * 0.5,
-      samples = Math.floor(samplesFromProps || 5),
-      frameRate = this.comp?.globalData?.frameRate ?? 60
+  return this.getValueAtTime((cycleDuration - ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) / frameRate, 0)
 
-    if (samples <= 1) {
-      return this.pv
-    }
-    const currentTime = (this.comp?.renderedFrame || 0) / frameRate
-    const initFrame = currentTime - width
-    const endFrame = currentTime + width
-    const sampleFrequency =
-      samples > 1 ? (endFrame - initFrame) / (samples - 1) : 1
-    let i = 0
-    let j = 0
-    let value
+}
 
-    if (isArrayOfNum(this.pv)) {
-      value = createTypedArray(ArrayType.Float32, this.pv.length)
-    } else {
-      value = 0
-    }
-    let sampleValue: number | number[]
+function smooth(
+  this: KeyframedValueProperty, widthFromProps: number, samplesFromProps: number
+) {
 
-    while (i < samples) {
-      sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
-      if (isArrayOfNum(this.pv)) {
-        for (j = 0; j < this.pv.length; j++) {
-          ;(value as number[])[j] += (sampleValue as number[])[j]
-        }
-      } else {
-        ;(value as number) += sampleValue as number
-      }
-      i++
-    }
-    if (isArrayOfNum(this.pv)) {
-      for (j = 0; j < this.pv.length; j++) {
-        ;(value as number[])[j] /= samples
-      }
-    } else {
-      ;(value as number) /= samples
-    }
+  const {
+    comp, k: shouldProcess, pv
+  } = this
 
-    return value
+  if (!shouldProcess) {
+    return pv
   }
 
-  function getTransformValueAtTime(this: TransformProperty, time: number) {
-    if (!this._transformCachingAtTime) {
-      this._transformCachingAtTime = { v: new Matrix() }
-    }
-    // / /
-    const matrix = this._transformCachingAtTime.v
+  const { renderedFrame = 0 } = comp ?? { renderedFrame: 0 },
+    { frameRate } = comp?.globalData ?? { frameRate: 60 }
 
-    matrix.cloneFromProps(this.pre.props)
-    if (this.appliedTransformations < 1) {
-      const anchor: number[] = this.a?.getValueAtTime(time) || [],
-        mult = this.a?.mult ?? 1
+  const width = (widthFromProps || 0.4) * 0.5,
+    samples = Math.floor(samplesFromProps || 5)
+
+  if (samples <= 1) {
+    return pv
+  }
+  const currentTime = renderedFrame / frameRate
+  const initFrame = currentTime - width
+  const endFrame = currentTime + width
+  const sampleFrequency = samples > 1 ? (endFrame - initFrame) / (samples - 1) : 1
+  let i = 0,
+    j,
+    value
+
+  if (isArrayOfNum(pv)) {
+    value = createTypedArray(ArrayType.Float32, pv.length)
+  } else {
+    value = 0
+  }
+  let sampleValue
+
+  while (i < samples) {
+    sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
+    if (isArrayOfNum(pv) && isArrayOfNum(value) && isArrayOfNum(sampleValue)) {
+      for (j = 0; j < pv.length; j++) {
+        value[j] += sampleValue[j]
+      }
+    } else {
+      (value as number) += (sampleValue as number)
+    }
+    i++
+  }
+  if (isArrayOfNum(pv) && isArrayOfNum(value)) {
+    for (j = 0; j < pv.length; j += 1) {
+      value[j] /= samples
+    }
+  } else {
+    (value as number) /= samples
+  }
+
+  return value
+}
+
+function getTransformValueAtTime(this: TransformProperty, time: number) {
+  this._transformCachingAtTime = this._transformCachingAtTime ?? { v: new Matrix() }
+
+  const { v: matrix } = this._transformCachingAtTime,
+    { mult: aMult = 1 } = this.a ?? { mult: 1 },
+    { mult: sMult = 1 } = this.s ?? { mult: 1 }
+
+  matrix.cloneFromProps(this.pre.props)
+  if (this.appliedTransformations < 1) {
+    const anchor = this.a?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+      0,
+      0]
+
+    matrix.translate(
+      -anchor[0] * aMult,
+      -anchor[1] * aMult,
+      anchor[2] * aMult
+    )
+  }
+  if (this.appliedTransformations < 2) {
+    const scale = this.s?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+      0,
+      0]
+
+    matrix.scale(
+      scale[0] * sMult,
+      scale[1] * sMult,
+      scale[2] * sMult
+    )
+  }
+  if (this.sk && this.appliedTransformations < 3) {
+    const skew = this.sk.getValueAtTime(time) as number,
+      skewAxis = this.sa?.getValueAtTime(time) as number | undefined ?? 0
+
+    matrix.skewFromAxis(-skew * (this.sk.mult ?? 1), skewAxis * (this.sa?.mult ?? 1))
+  }
+  if (this.r && this.appliedTransformations < 4) {
+    const rotation = this.r.getValueAtTime(time) as number
+
+    matrix.rotate(-rotation * (this.r.mult ?? 1))
+  } else if (!this.r && this.appliedTransformations < 4) {
+    const rotationZ = Number(this.rz?.getValueAtTime(time)),
+      rotationY = Number(this.ry?.getValueAtTime(time)),
+      rotationX = Number(this.rx?.getValueAtTime(time)),
+      orientation = this.or?.getValueAtTime(time) as number[] | undefined ?? []
+
+    matrix.rotateZ(-rotationZ * (this.rz?.mult ?? 1))
+      .rotateY(rotationY * (this.ry?.mult ?? 1))
+      .rotateX(rotationX * (this.rx?.mult ?? 1))
+      .rotateZ(-orientation[2] * (this.or?.mult ?? 1))
+      .rotateY(orientation[1] * (this.or?.mult ?? 1))
+      .rotateX(orientation[0] * (this.or?.mult ?? 1))
+  }
+  if (this.data.p?.s) {
+    const positionX = this.px?.getValueAtTime(time) as number,
+      positionY = this.py?.getValueAtTime(time) as number
+
+    if (this.data.p.z) {
+      const positionZ = this.pz?.getValueAtTime(time) as number
 
       matrix.translate(
-        -anchor[0] * mult, -anchor[1] * mult, anchor[2] * mult
+        positionX * (this.px?.mult ?? 1),
+        positionY * (this.py?.mult ?? 1),
+        -positionZ * (this.pz?.mult ?? 1)
       )
-    }
-    if (this.appliedTransformations < 2) {
-      const scale: number[] = this.s?.getValueAtTime(time) || [],
-        mult = this.s?.mult ?? 1
-
-      matrix.scale(
-        scale[0] * mult, scale[1] * mult, scale[2] * mult
-      )
-    }
-    if (this.sk && this.appliedTransformations < 3) {
-      const skew = this.sk.getValueAtTime(time),
-        skewAxis = this.sa?.getValueAtTime(time) ?? 0,
-        skMult = this.sk.mult ?? 1,
-        saMult = this.sa?.mult ?? 1
-
-      matrix.skewFromAxis(-skew * skMult, skewAxis * saMult)
-    }
-    if (this.r && this.appliedTransformations < 4) {
-      const rotation = this.r.getValueAtTime(time),
-        mult = this.r.mult ?? 1
-
-      matrix.rotate(-rotation * mult)
-    } else if (!this.r && this.appliedTransformations < 4) {
-      const rotationZ = this.rz?.getValueAtTime(time) || 0,
-        rotationY = this.ry?.getValueAtTime(time) || 0,
-        rotationX = this.rx?.getValueAtTime(time) || 0,
-        orientation: number[] = this.or?.getValueAtTime(time) || [],
-        rzMult = this.rz?.mult ?? 1,
-        ryMult = this.ry?.mult ?? 1,
-        rxMult = this.rx?.mult ?? 1,
-        orMult = this.or?.mult ?? 1
-
-      matrix
-        .rotateZ(-rotationZ * rzMult)
-        .rotateY(rotationY * ryMult)
-        .rotateX(rotationX * rxMult)
-        .rotateZ(-orientation[2] * orMult)
-        .rotateY(orientation[1] * orMult)
-        .rotateX(orientation[0] * orMult)
-    }
-    if (this.data.p && 's' in this.data.p) {
-      const positionX = this.px?.getValueAtTime(time) || 0,
-        positionY = this.py?.getValueAtTime(time) || 0,
-        pxMult = this.px?.mult ?? 1,
-        pyMult = this.py?.mult ?? 1
-
-      if ('z' in this.data.p) {
-        const positionZ = this.pz?.getValueAtTime(time) || 0,
-          pzMult = this.pz?.mult ?? 1
-
-        matrix.translate(
-          positionX * pxMult,
-          positionY * pyMult,
-          -positionZ * pzMult
-        )
-      } else {
-        matrix.translate(
-          positionX * pxMult, positionY * pyMult, 0
-        )
-      }
     } else {
-      const position: number[] = this.p?.getValueAtTime(time) || [],
-        pMult = this.p?.mult ?? 1
-
       matrix.translate(
-        position[0] * pMult,
-        position[1] * pMult,
-        -position[2] * pMult
+        positionX * (this.px?.mult ?? 1), positionY * (this.py?.mult ?? 1), 0
       )
     }
+  } else {
+    const position = this.p?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+      0,
+      0]
 
-    return matrix
-    // / /
+    matrix.translate(
+      position[0] * (this.p?.mult ?? 1),
+      position[1] * (this.p?.mult ?? 1),
+      -position[2] * (this.p?.mult ?? 1)
+    )
   }
 
-  function getTransformStaticValueAtTime(this: TransformProperty) {
-    return this.v.clone(new Matrix())
+  return matrix
+  /// /
+}
+
+function getTransformStaticValueAtTime(this: TransformProperty) {
+  return this.v.clone(new Matrix())
+}
+
+function getShapeValueAtTime(this: ShapeProperty, frameNumFromProps: number) {
+  // For now this caching object is created only when needed instead of creating it when the shape is initialized.
+  this._cachingAtTime = this._cachingAtTime ?? {
+    lastIndex: 0,
+    lastTime: initialDefaultFrame,
+    shapeValue: shapePool.clone(this.pv as ShapePath),
+  } as Caching
+
+  let frameNum = frameNumFromProps
+
+  frameNum *= this.elem?.globalData?.frameRate ?? 60
+  frameNum -= this.offsetTime
+  if (frameNum !== this._cachingAtTime.lastTime) {
+    this._cachingAtTime.lastIndex = this._cachingAtTime.lastTime < frameNum ? this._caching?.lastIndex ?? 0 : 0
+    this._cachingAtTime.lastTime = frameNum
+    this.interpolateShape(
+      frameNum, this._cachingAtTime.shapeValue as ShapePath, this._cachingAtTime
+    )
   }
+
+  return this._cachingAtTime.shapeValue
+}
+
+function addPropertyDecorator() {
 
   const { getTransformProperty } = TransformPropertyFactory
 
-  TransformPropertyFactory.getTransformProperty = (
-    elem: ElementInterfaceIntersect,
-    data: Shape,
-    container: ElementInterfaceIntersect
-  ) => {
+  TransformPropertyFactory.getTransformProperty = function (
+    elem, data, container
+  ) {
     const prop = getTransformProperty(
       elem, data, container
     )
 
     if (prop.dynamicProperties.length > 0) {
-      prop.getValueAtTime = getTransformValueAtTime.bind(prop) as any
+      prop.getValueAtTime = getTransformValueAtTime.bind(prop)
     } else {
-      prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop) as any
+      prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop)
     }
-    prop.setGroupProperty = setGroupProperty
+    prop.setGroupProperty = expressionHelpers.setGroupProperty
 
     return prop
   }
 
   const propertyGetProp = PropertyFactory.getProp
 
-  PropertyFactory.getProp = (
+  PropertyFactory.getProp = function (
     elem, data, type, mult, container
-  ) => {
-    const prop: any = propertyGetProp(
+  ) {
+    const prop = propertyGetProp(
       elem, data, type, mult, container
     )
 
@@ -451,276 +433,76 @@ export default function addPropertyDecorator() {
     // prop.loopOut = loopOut;
     // prop.loopIn = loopIn;
     if (prop.kf) {
-      prop.getValueAtTime = getValueAtTime.bind(prop) as any
+      prop.getValueAtTime = expressionHelpers.getValueAtTime.bind(prop)
     } else {
-      prop.getValueAtTime = getStaticValueAtTime.bind(prop) as any
+      prop.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(prop)
     }
-    prop.setGroupProperty = setGroupProperty
+    prop.setGroupProperty = expressionHelpers.setGroupProperty
     prop.loopOut = loopOut
     prop.loopIn = loopIn
     prop.smooth = smooth
-    prop.getVelocityAtTime = getVelocityAtTime.bind(prop) as any
-    prop.getSpeedAtTime = getSpeedAtTime.bind(prop)
-    prop.numKeys = data?.a === 1 ? (data.k as number[]).length : 0
-    prop.propertyIndex = data?.ix || 0
-    let value: number | number[] = 0
+    prop.getVelocityAtTime = expressionHelpers.getVelocityAtTime.bind(prop)
+    prop.getSpeedAtTime = expressionHelpers.getSpeedAtTime.bind(prop)
+    prop.numKeys = data.a === 1 ? data.k.length : 0
+    prop.propertyIndex = data.ix
+    let value = 0
 
     if (type !== 0) {
-      value = createTypedArray(ArrayType.Float32,
-        data?.a === 1
-          ? (data?.k as any[])[0].s.length
-          : (data?.k as any[]).length) as number[]
+      value = createTypedArray('float32', data.a === 1 ? data.k[0].s.length : data.k.length)
     }
     prop._cachingAtTime = {
       lastFrame: initialDefaultFrame,
       lastIndex: 0,
       value,
-    } as Caching
-    searchExpressions(
-      elem, data as any, prop
+    }
+    expressionHelpers.searchExpressions(
+      elem, data, prop
     )
     if (prop.k) {
-      container?.addDynamicProperty(prop)
+      container.addDynamicProperty(prop)
     }
 
     return prop
   }
 
-  function getShapeValueAtTime(this: KeyframedShapeProperty,
-    frameNumFromProps: number): ShapePath {
-    if (!this.pv) {
-      throw new Error(`${this.constructor.name}: pv (ShapePath) is not set`)
-    }
+  const ShapePropertyConstructorFunction = ShapePropertyFactory.getConstructorFunction()
+  const KeyframedShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframedConstructorFunction()
 
-    let frameNum = frameNumFromProps
-
-    // For now this caching object is created only when needed instead of creating it when the shape is initialized.
-    if (!this._cachingAtTime) {
-      this._cachingAtTime = {
-        lastIndex: 0,
-        lastTime: initialDefaultFrame,
-        shapeValue: clone(this.pv),
-      } as Caching
-    }
-
-    frameNum *= this.elem?.globalData?.frameRate ?? 60
-    frameNum -= this.offsetTime
-    if (frameNum !== this._cachingAtTime?.lastTime) {
-      this._cachingAtTime.lastIndex =
-        this._cachingAtTime.lastTime < frameNum
-          ? this._caching?.lastIndex ?? 0
-          : 0
-      this._cachingAtTime.lastTime = frameNum
-      this.interpolateShape(
-        frameNum,
-        this._cachingAtTime.shapeValue,
-        this._cachingAtTime
-      )
-    }
-
-    return this._cachingAtTime.shapeValue
-  }
-
-  class ShapeExpressions extends ShapeBaseProperty {
-    _segmentsLength?: SegmentLength
-
-    get setGroupProperty() {
-      return setGroupProperty
-    }
-
-    override getValueAtTime(_time: number, _pos?: number) {
-      return getStaticValueAtTime as any
-    }
-
-    inTangents(time: number) {
-      return this.vertices('i', time)
-    }
-
-    isClosed() {
-      return this.v?.c
-    }
-
-    normalOnPath(perc: number, time: number) {
-      return this.vectorOnPath(
-        perc, time, 'normal'
-      )
-    }
-
-    outTangents(time: number) {
-      return this.vertices('o', time)
-    }
-
-    pointOnPath(perc: number, time: number) {
-      let shapePath = this.v
-
-      if (time !== undefined) {
-        shapePath = (this.getValueAtTime as any)(time, 0) as ShapePath
-      }
-      if (!this._segmentsLength && shapePath) {
-        this._segmentsLength = getSegmentsLength(shapePath)
-      }
-
-      const segmentsLength = this._segmentsLength,
-        lengths = segmentsLength?.lengths || [],
-        lengthPos = (segmentsLength?.totalLength || 0) * perc
-      let i = 0
-      const { length } = lengths
-      let accumulatedLength = 0
-      let pt
-
-      while (i < length) {
-        if (accumulatedLength + lengths[i].addedLength > lengthPos) {
-          if (!shapePath) {
-            break
-          }
-          const initIndex = i,
-            endIndex = shapePath.c && i === length - 1 ? 0 : i + 1,
-            segmentPerc =
-              (lengthPos - accumulatedLength) / lengths[i].addedLength
-
-          pt = getPointInSegment(
-            shapePath.v[initIndex],
-            shapePath.v[endIndex],
-            shapePath.o[initIndex],
-            shapePath.i[endIndex],
-            segmentPerc,
-            lengths[i]
-          )
-          break
-        } else {
-          accumulatedLength += lengths[i].addedLength
-        }
-        i++
-      }
-      if (!pt && shapePath) {
-        pt = shapePath.c
-          ? [shapePath.v[0][0], shapePath.v[0][1]]
-          : [
-            shapePath.v[shapePath._length - 1][0], shapePath.v[shapePath._length - 1][1],
-          ]
-      }
-
-      return pt
-    }
-
-    points(time: number) {
-      return this.vertices('v', time)
-    }
-
-    // setGroupProperty(_propertyGroup: LayerExpressionInterface) {
-    //   throw new Error(
-    //     `${this.constructor.name}: Method setGroupProperty is not inmplemented`
-    //   )
-    /**
-     * }.
-     */
-    tangentOnPath(perc: number, time: number) {
-      return this.vectorOnPath(
-        perc, time, 'tangent'
-      )
-    }
-
-    vectorOnPath(
-      percFromProps: number, time: number, vectorType: string
-    ) {
-      // perc doesn't use triple equality because it can be a Number object as well as a primitive.
-      let perc = percFromProps
-
-      if (Number(perc) === 1) {
-        // TODO: This might be boolint
-        perc = this.v?.c as unknown as number
-      } else if (Number(perc) === 0) {
-        perc = 0.999
-      }
-      const pt1 = this.pointOnPath(perc, time) || []
-      const pt2 = this.pointOnPath(perc + 0.001, time) || []
-      const xLength = pt2[0] - pt1[0]
-      const yLength = pt2[1] - pt1[1]
-      const magnitude = Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2))
-
-      if (magnitude === 0) {
-        return [0, 0]
-      }
-      const unitVector =
-        vectorType === 'tangent'
-          ? [xLength / magnitude, yLength / magnitude]
-          : [-yLength / magnitude, xLength / magnitude]
-
-      return unitVector
-    }
-
-    vertices(prop: string, time: number) {
-      if (this.k) {
-        this.getValue()
-      }
-      let shapePath = this.v
-
-      if (time !== undefined) {
-        shapePath = (this.getValueAtTime as any)(time,
-          0) as unknown as ShapePath
-      }
-      if (!shapePath) {
-        return
-      }
-      const len = shapePath._length,
-        vertices = shapePath[prop as keyof ShapePath] as Vector2[],
-        points = shapePath.v,
-        arr = createSizedArray(len)
-
-      for (let i = 0; i < len; i++) {
-        if (prop === 'i' || prop === 'o') {
-          arr[i] = [
-            vertices[i][0] - points[i][0], vertices[i][1] - points[i][1],
-          ]
-        } else {
-          arr[i] = [vertices[i][0], vertices[i][1]]
-        }
-      }
-
-      return arr
-    }
-  }
-  extendPrototype([ShapeExpressions], ShapeProperty)
-  extendPrototype([ShapeExpressions], KeyframedShapeProperty)
-  KeyframedShapeProperty.prototype.getValueAtTime = getShapeValueAtTime
-  KeyframedShapeProperty.prototype.initiateExpression = ExpressionManager
-    .prototype.initiateExpression as any
+  extendPrototype([ShapeExpressions], ShapePropertyConstructorFunction)
+  extendPrototype([ShapeExpressions], KeyframedShapePropertyConstructorFunction)
+  KeyframedShapePropertyConstructorFunction.prototype.getValueAtTime = getShapeValueAtTime
+  KeyframedShapePropertyConstructorFunction.prototype.initiateExpression = ExpressionManager.initiateExpression
 
   const propertyGetShapeProp = ShapePropertyFactory.getShapeProp
 
   ShapePropertyFactory.getShapeProp = function (
-    elem: ShapeElement,
-    data: Shape,
-    type: number,
-    arr: any[],
-    trims: any
+    elem, data, type, arr, trims
   ) {
     const prop = propertyGetShapeProp(
       elem, data, type, arr, trims
     )
 
-    if (prop) {
-      ;(prop as ShapeProperty).propertyIndex = data.ix
-      prop.lock = false
-    }
-
+    prop.propertyIndex = data.ix
+    prop.lock = false
     if (type === 3) {
-      searchExpressions(
-        elem as ElementInterfaceIntersect,
-        data.pt as any,
-        prop as ShapeProperty
+      expressionHelpers.searchExpressions(
+        elem, data.pt, prop
       )
     } else if (type === 4) {
-      searchExpressions(
-        elem as ElementInterfaceIntersect,
-        data.ks as any,
-        prop as ShapeProperty
+      expressionHelpers.searchExpressions(
+        elem, data.ks, prop
       )
     }
-    if (prop?.k) {
+    if (prop.k) {
       elem.addDynamicProperty(prop)
     }
 
     return prop
-  } as any
+  }
 }
+
+function initialize() {
+  addPropertyDecorator()
+}
+
+export default initialize

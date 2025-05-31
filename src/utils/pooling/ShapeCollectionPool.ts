@@ -33,3 +33,10 @@ export function releaseShape(shapeCollection: ShapeCollection) {
   pool[_length] = shapeCollection
   _length++
 }
+
+const ShapeCollectionPool = {
+  newShapeCollection,
+  releaseShape
+}
+
+export default ShapeCollectionPool

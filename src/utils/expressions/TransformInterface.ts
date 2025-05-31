@@ -1,15 +1,14 @@
-import type { Vector2 } from '@/types'
 import type { TransformProperty } from '@/utils/TransformProperty'
 
 import ExpressionPropertyInterface from '@/utils/expressions/ExpressionValueFactory'
 
-import type { MultiDimensionalProperty, ValueProperty } from '../Properties'
-
 export default class TransformExpressionInterface {
   transform: TransformProperty
+
   get anchorPoint() {
-    return ExpressionPropertyInterface(this.transform.a) as unknown as Vector2
+    return ExpressionPropertyInterface(this.transform.a)
   }
+
 
   get opacity() {
     return ExpressionPropertyInterface(this.transform.o)
@@ -21,15 +20,13 @@ export default class TransformExpressionInterface {
 
   get position() {
     if (this.transform.p) {
-      return this._transformFactory()
+      return this._transformFactory?.()
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    return [this._px(),
-      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-      this._py(),
-      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-      this._pz()]
+    return [
+      this._px?.(),
+      this._py?.(),
+      this._pz?.() ?? 0]
   }
 
   get rotation() {
@@ -60,6 +57,7 @@ export default class TransformExpressionInterface {
     return ExpressionPropertyInterface(this.transform.py)
   }
 
+
   get yRotation() {
     return ExpressionPropertyInterface(this.transform.ry)
   }
@@ -72,38 +70,30 @@ export default class TransformExpressionInterface {
     return ExpressionPropertyInterface(this.transform.rz ?? this.transform.r)
   }
 
-  constructor(transform: TransformProperty) {
+  private _px
+
+  private _py
+
+  private _pz
+
+  private _transformFactory
+
+  constructor (transform: TransformProperty) {
     this.transform = transform
 
-    // TODO:
-    if (this.transform.p) {
-      this._transformFactory = ExpressionPropertyInterface(this.transform.p) as any
+    if (transform.p) {
+      this._transformFactory = ExpressionPropertyInterface(transform.p)
     } else {
-      this._px = ExpressionPropertyInterface(this.transform.px) as any
-      this._py = ExpressionPropertyInterface(this.transform.py) as any
-      if (this.transform.pz) {
-        this._pz = ExpressionPropertyInterface(this.transform.pz) as any
+      this._px = ExpressionPropertyInterface(transform.px)
+      this._py = ExpressionPropertyInterface(transform.py)
+      if (transform.pz) {
+        this._pz = ExpressionPropertyInterface(transform.pz)
       }
     }
+
   }
 
-  _px() {
-    throw new Error(`${this.constructor.name}: Method _px is not implemented`)
-  }
-
-  _py() {
-    throw new Error(`${this.constructor.name}: Method _py is not implemented`)
-  }
-
-  _pz() {
-    throw new Error(`${this.constructor.name}: Method _pz is not implemented`)
-  }
-
-  _transformFactory(): ValueProperty | MultiDimensionalProperty<number[]> {
-    throw new Error(`${this.constructor.name}: Method _transformFactory is not implemented`)
-  }
-
-  getProperty(name: string | number) {
+  getInterface (name: string | number) {
     switch (name) {
       case 'scale':
       case 'Scale':

@@ -1,99 +1,81 @@
 import type {
-  CompElementInterface,
-  ElementInterfaceIntersect,
-  Vector3,
+  ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
+  Vector3
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
-import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
-import {
-  getStaticValueAtTime,
-  getValueAtTime,
-  getVelocityAtTime,
-  setGroupProperty,
-} from '@/utils/expressions/expressionHelpers'
+import { PropType } from '@/utils/enums'
+import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
+import { BaseProperty, type KeyframedValueProperty } from '@/utils/Properties'
+import TextSelectorProp from '@/utils/text/TextSelectorProperty'
 
-import type { ShapeBaseProperty } from '../shapes/ShapeProperty'
+const notImplemented = 'Method not implemented'
 
-export default class TextExpressionSelectorPropFactory {
-  comp?: CompElementInterface
-  elem: ElementInterfaceIntersect
-  initiateExpression?: typeof ExpressionManager
-  k: boolean
-  kf?: boolean
+export default class TextExpressionSelectorPropFactory extends BaseProperty {
   lastValue: Vector3
-  mult: number
-  propType: string
-  pv: ShapePath | number
   selectorValue: number
-  textIndex?: number
-  textTotal: number
-  v?: number
-  x: boolean
-  constructor(elem: ElementInterfaceIntersect, data: TextSelectorProperty) {
+
+  constructor (
+    elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, _arr?: unknown[]
+  ) {
+    super()
     this.pv = 1
     this.comp = elem.comp
     this.elem = elem
     this.mult = 0.01
-    this.propType = 'textSelector'
-    this.textTotal = data.totalChars || 0
+    this.propType = PropType.TextSelector
+    this.textTotal = data.totalChars
     this.selectorValue = 100
     this.lastValue = [1,
       1,
       1]
     this.k = true
     this.x = true
-    this.getValue = ExpressionManager.prototype.executeExpression
-
+    this.getValue = ExpressionManager.initiateExpression.bind(this)(
+      elem, data, this as unknown as KeyframedValueProperty
+    )
     this.getMult = this.getValueProxy
-    this.getVelocityAtTime = getVelocityAtTime
+    this.getVelocityAtTime = expressionHelpers.getVelocityAtTime
     if (this.kf) {
-      this.getValueAtTime = getValueAtTime.bind(this as unknown as TextSelectorProperty)
+      this.getValueAtTime = expressionHelpers.getValueAtTime.bind(this)
     } else {
-      this.getValueAtTime = getStaticValueAtTime.bind(this as unknown as ShapeBaseProperty)
+      this.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(this)
     }
-    this.setGroupProperty = setGroupProperty
+    this.setGroupProperty = expressionHelpers.setGroupProperty
   }
 
   getMult(_index: number, _total: number) {
-    throw new Error(`${this.constructor.name}: Method getMult is not implemented`)
+    throw new Error(notImplemented)
   }
 
-  getValue(_val?: number): number {
-    throw new Error(`${this.constructor.name}: Method getValue is not implemented`)
-  }
-
-  getValueAtTime(_frameNum: number) {
-    throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
+  getTextSelectorProp(
+    _elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]
+  ): KeyframedValueProperty {
+    throw new Error(notImplemented)
   }
 
   getValueProxy(index: number, total: number) {
     this.textIndex = index + 1
     this.textTotal = total
-    this.v = this.getValue() * this.mult
+    this.v = this.getValue() as number * (this.mult ?? 1)
 
     return this.v
   }
-
-  getVelocityAtTime(_frameNum: number) {
-    throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
-  }
-
-  setGroupProperty(_propertyGroup: any) {
-    throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
-  }
 }
 
-// TODO: Fix this
-// const propertyGetTextProp = TextSelectorProperty.prototype.getTextSelectorProp
-// TextSelectorProperty.prototype.getTextSelectorProp = function (
-//   elem,
-//   data,
-//   arr
-// ) {
-//   if (data.t === 1) {
-//     return new TextExpressionSelectorPropFactory(elem, data, arr)
-//   }
-//   return propertyGetTextProp(elem, data, arr)
-// }
+const propertyGetTextProp = TextSelectorProp.prototype.getTextSelectorProp
+
+TextSelectorProp.prototype.getTextSelectorProp = function (
+  elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, arr: unknown[]
+) {
+  if (data.t === 1) {
+    return new TextExpressionSelectorPropFactory(
+      elem, data, arr
+    )
+  }
+
+  propertyGetTextProp(
+    elem, data, arr
+  )
+}
+

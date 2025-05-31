@@ -107,7 +107,7 @@ export default class HCompElement extends CompElement {
     throw new Error(`${this.constructor.name}: Method addEffects is not implemented`)
   }
 
-  addTo3dContainer(elem: ElementInterfaceIntersect, pos: number) {
+  addTo3dContainer(elem: Node, pos: number) {
     let j = 0,
       nextElement
 

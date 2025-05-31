@@ -11,6 +11,7 @@ import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import { degToRads } from '@/utils'
+import { PropType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import {
   BaseProperty,
@@ -36,7 +37,6 @@ export class TransformProperty extends BaseProperty {
   or?: MultiDimensionalProperty<Vector3>
   p?: MultiDimensionalProperty<Vector3>
   pre: Matrix
-  override propType: 'transform'
   px?: ValueProperty
   py?: ValueProperty
   pz?: ValueProperty
@@ -57,7 +57,7 @@ export class TransformProperty extends BaseProperty {
     super()
     this.elem = elem
     this.frameId = -1
-    this.propType = 'transform'
+    this.propType = PropType.Transform
     this.data = data
     this.v = new Matrix()
     // Precalculated matrix with non animated properties
@@ -474,10 +474,6 @@ export class TransformProperty extends BaseProperty {
         .rotateX(this.or?.v[0])
       this.appliedTransformations = 4
     }
-  }
-
-  setGroupProperty(_propertyGroup: LayerExpressionInterface) {
-    throw new Error(`${this.constructor.name}: Method setGroupProperty is not implemented`)
   }
 }
 

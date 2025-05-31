@@ -28,7 +28,7 @@ import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
 import { getLocationHref } from '@/utils/getterSetter'
-// import Matrix from '@/utils/Matrix'
+import Matrix from '@/utils/Matrix'
 import { getModifier } from '@/utils/shapes/ShapeModifiers'
 import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory from '@/utils/TransformProperty'
@@ -38,10 +38,10 @@ export default class SVGShapeElement extends ShapeElement {
   animatedContents: AnimatedContent[]
   override createContainerElements = SVGBaseElement.prototype.createContainerElements
   override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
-
   override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
   override getBaseElement = SVGBaseElement.prototype.getBaseElement
   getMatte = SVGBaseElement.prototype.getMatte
+  identityMatrix = new Matrix()
   override initRendererElement = SVGBaseElement.prototype.initRendererElement
   prevViewData: SVGElementInterface[]
   override renderElement = SVGBaseElement.prototype.renderElement
@@ -72,6 +72,7 @@ export default class SVGShapeElement extends ShapeElement {
     this.initElement(
       data, globalData, comp
     )
+
     // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
     // List of elements that have been created
     this.prevViewData = []
@@ -582,3 +583,5 @@ export default class SVGShapeElement extends ShapeElement {
     }
   }
 }
+
+// console.log(Object.getOwnPropertyNames(SVGShapeElement.prototype))

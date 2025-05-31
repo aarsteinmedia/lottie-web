@@ -1,23 +1,23 @@
-import type { ExpressionInterfaces } from '@/types'
-
 import CompExpressionInterface from '@/utils/expressions/CompInterface'
-import EffectInterface from '@/utils/expressions/EffectInterface'
+import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import FootageInterface from '@/utils/expressions/FootageInterface'
 import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import ShapeExpressionInterface from '@/utils/expressions/ShapeInterface'
+import ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
 import TextExpressionInterface from '@/utils/expressions/TextInterface'
 
-const interfaces: ExpressionInterfaces = {
+const interfaces = {
   comp: CompExpressionInterface,
-  effects: EffectInterface,
+  effects: EffectsExpressionInterface,
   footage: FootageInterface,
   layer: LayerExpressionInterface,
   shape: ShapeExpressionInterface,
   text: TextExpressionInterface,
 }
 
-export default function getInterface(type: keyof ExpressionInterfaces) {
-  return interfaces[type] || null
+// type ExpressionInterface = typeof interfaces[keyof typeof interfaces]
+
+function getInterface(type: keyof typeof interfaces) {
+  return interfaces[type]
 }
 
-export { interfaces }
+export default getInterface

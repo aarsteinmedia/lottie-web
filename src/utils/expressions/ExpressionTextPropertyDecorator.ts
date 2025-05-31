@@ -3,23 +3,22 @@ import type { DocumentData } from '@/types'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import TextProperty from '@/utils/text/TextProperty'
 
-export default function addTextDecorator() {
-  function searchExpressions(this: TextProperty): boolean | null {
-    if (this.data.d && 'x' in this.data.d) {
-      this.calculateExpression = new ExpressionManager().initiateExpression(
-        this.elem,
-        this.data.d as any,
-        this as any
-      ) as any // .bind(this)(this.elem, this.data.d, this)
-      this.addEffect(this.getExpressionValue.bind(this) as any)
+function searchExpressions(this: TextProperty) {
+  if (this.data.d?.x) {
+    this.calculateExpression = ExpressionManager.initiateExpression.bind(this)(
+      this.elem, this.data.d, this
+    )
+    this.addEffect(this.getExpressionValue.bind(this))
 
-      return true
-    }
-
-    return null
+    return true
   }
 
-  TextProperty.prototype.getExpressionValue = function (currentValue, text) {
+  return null
+}
+
+function addDecorator() {
+
+  TextProperty.prototype.getExpressionValue = function (currentValue, text: string) {
     const newValue = this.calculateExpression(text)
 
     if (currentValue.t !== newValue) {
@@ -41,8 +40,14 @@ export default function addTextDecorator() {
 
     this.kf = Boolean(isKeyframed || hasExpressions)
 
-    return Boolean(this.kf)
+    return this.kf
   }
 
   TextProperty.prototype.searchExpressions = searchExpressions
 }
+
+function initialize() {
+  addDecorator()
+}
+
+export default initialize

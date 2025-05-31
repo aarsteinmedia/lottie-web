@@ -1,68 +1,56 @@
-import type Animationitem from '@/animation/AnimationItem'
-import type PoolFactory from '@/utils/pooling/PoolFactory'
+import type { AnimationItem } from '@/Lottie'
+import type { ExpressionProperty } from '@/types'
 
 import CompExpressionInterface from '@/utils/expressions/CompInterface'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 
-export default class Expressions {
-  private registers: PoolFactory[]
+const { resetFrame } = ExpressionManager
 
-  private stackCount: number
+function initExpressions(animation: AnimationItem) {
+  let stackCount = 0
 
-  constructor(animation: Animationitem) {
-    this.stackCount = 0
-    this.registers = []
+  const registers: ExpressionProperty[] = []
 
-    const { resetFrame } = ExpressionManager.prototype
-
-    this.resetFrame = resetFrame
-
-
-    if (!animation.renderer) {
-      // TODO: This does not work for now
-      return
-      throw new Error(`${this.constructor.name}: renderer is not implemented`)
-    }
-
-    if (!animation.renderer.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented in renderer`)
-    }
-
-    animation.renderer.compInterface = new CompExpressionInterface(animation.renderer)
-    animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
-    animation.renderer.globalData.pushExpression = this.pushExpression
-    animation.renderer.globalData.popExpression = this.popExpression
-    animation.renderer.globalData.registerExpressionProperty =
-      this.registerExpressionProperty
+  function pushExpression() {
+    stackCount++
   }
 
-  public resetFrame() {
-    throw new Error(`${this.constructor.name}: Method resetFrame is not implemented`)
-  }
-
-  private popExpression() {
-    this.stackCount -= 1
-    if (this.stackCount === 0) {
-      this.releaseInstances()
+  function popExpression() {
+    stackCount--
+    if (stackCount === 0) {
+      releaseInstances()
     }
   }
 
-  private pushExpression() {
-    this.stackCount += 1
-  }
-
-  private registerExpressionProperty(expression: PoolFactory) {
-    if (!this.registers.includes(expression)) {
-      this.registers.push(expression)
+  function registerExpressionProperty(expression: ExpressionProperty) {
+    if (!registers.includes(expression)) {
+      registers.push(expression)
     }
   }
 
-  private releaseInstances() {
-    const { length } = this.registers
+  function releaseInstances() {
+    const { length } = registers
 
     for (let i = 0; i < length; i++) {
-      this.registers[i].release()
+      registers[i].release?.()
     }
-    this.registers.length = 0
+    registers.length = 0
   }
+
+  if (!animation.renderer.globalData) {
+    throw new Error('Renderer -> GlobalData is not set')
+  }
+
+  animation.renderer.compInterface = new CompExpressionInterface(animation.renderer)
+  animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
+  animation.renderer.globalData.pushExpression = pushExpression
+  animation.renderer.globalData.popExpression = popExpression
+  animation.renderer.globalData.registerExpressionProperty = registerExpressionProperty
 }
+
+const Expressions = {
+  initExpressions,
+  resetFrame
+}
+
+export default Expressions

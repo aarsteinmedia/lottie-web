@@ -90,7 +90,7 @@ export default class PolynomialBezier {
       return []
     }
     const tcusp =
-        -0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1]) / denom,
+      -0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1]) / denom,
       square =
         tcusp * tcusp -
         1 / 3 * (this.b[1] * this.c[0] - this.b[0] * this.c[1]) / denom
