@@ -49,7 +49,6 @@ export default class CVShapeElement extends ShapeElement {
     _opMdf: false,
     opacity: 1,
   } as TransformProperty
-
   transformsManager: ShapeTransformManager
 
   constructor(

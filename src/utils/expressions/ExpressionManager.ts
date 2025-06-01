@@ -14,7 +14,6 @@ import type {
 } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import seedrandom from '@/3rd_party/seedrandom'
 import {
   clamp,
   degToRads, hslToRgb, isArrayOfNum, rgbToHsl
@@ -24,6 +23,7 @@ import { BMMath } from '@/utils/BMMath'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import shapePool from '@/utils/pooling/ShapePool'
+import seedrandom from '@/utils/seedrandom'
 
 const Math = BMMath,
   window = null,

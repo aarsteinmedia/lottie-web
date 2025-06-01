@@ -42,10 +42,10 @@ export default class HybridRendererBase extends BaseRenderer {
     this.renderConfig = {
       className: config && config.className || '',
       filterSize: {
-        height: config?.filterSize.height || '400%',
-        width: config?.filterSize.width || '400%',
-        x: config?.filterSize.x || '-100%',
-        y: config?.filterSize.y || '-100%',
+        height: config?.filterSize?.height || '400%',
+        width: config?.filterSize?.width || '400%',
+        x: config?.filterSize?.x || '-100%',
+        y: config?.filterSize?.y || '-100%',
       },
       hideOnTransparent: !(config && config.hideOnTransparent === false),
       imagePreserveAspectRatio:

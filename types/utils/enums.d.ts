@@ -67,6 +67,9 @@ export declare enum ShapeType {
     Unknown = "ms",
     ZigZag = "zz"
 }
+export declare enum EffectTypes {
+    TransformEffect = "transformEffect"
+}
 export declare enum PropType {
     MultiDimensional = "multidimensiional",
     Shape = "shape",

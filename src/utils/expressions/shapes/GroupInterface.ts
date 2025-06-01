@@ -1,6 +1,6 @@
+// @ts-nocheck: TODO:
 import type ShapePathInterface from '@/utils/expressions/shapes/ShapePathInterface'
 
-// @ts-nocheck: TODO:
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class GroupInterface extends BaseInterface {

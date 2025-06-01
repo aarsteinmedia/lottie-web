@@ -1,7 +1,7 @@
 import type { DynamicProperty, Effect, ElementInterfaceIntersect, GradientColor, Shape, TextData, TextRangeValue, VectorProperty } from '../../types';
 import type { PropType } from '../../utils/enums';
 import type PropertyInterface from '../../utils/expressions/PropertyInterface';
-import type TextProperty from '../text/TextProperty';
+import type TextProperty from '../../utils/text/TextProperty';
 export default abstract class DynamicPropertyContainer {
     _isAnimated?: boolean;
     _mdf?: boolean;

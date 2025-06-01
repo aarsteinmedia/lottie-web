@@ -8,7 +8,6 @@ import BaseRenderer from '../renderers/BaseRenderer';
 export default abstract class CanvasRendererBase extends BaseRenderer {
     canvasContext?: null | CanvasRenderingContext2D;
     contextData?: CVContextData;
-    createNull: (data: LottieLayer) => import("../elements/NullElement").default;
     destroyed?: boolean;
     renderConfig?: CanvasRendererConfig;
     transformCanvas?: TransformCanvas;

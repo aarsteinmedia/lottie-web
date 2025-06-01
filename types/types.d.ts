@@ -57,7 +57,7 @@ import type DashProperty from './utils/shapes/DashProperty';
 import type GradientProperty from './utils/shapes/GradientProperty';
 import type ShapePath from './utils/shapes/ShapePath';
 import type { EllShapeProperty, KeyframedShapeProperty, RectShapeProperty, ShapeProperty, StarShapeProperty } from './utils/shapes/ShapeProperty';
-import type SlotManager from './utils/SlotManager';
+import type { SlotManager } from './utils/SlotManager';
 import type LetterProps from './utils/text/LetterProps';
 import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
 import type TextProperty from './utils/text/TextProperty';
@@ -287,7 +287,7 @@ export type CanvasRendererConfig = BaseRendererConfig & {
 };
 export type HTMLRendererConfig = BaseRendererConfig & {
     hideOnTransparent?: boolean;
-    filterSize: {
+    filterSize?: {
         width: string;
         height: string;
         y: string;

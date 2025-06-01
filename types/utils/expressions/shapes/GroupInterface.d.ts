@@ -1,5 +1,5 @@
+import type ShapePathInterface from '../../../utils/expressions/shapes/ShapePathInterface';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-import type ShapePathInterface from './ShapePathInterface';
 export default class GroupInterface extends BaseInterface {
     content?: (value: string | number) => ShapePathInterface | null;
     get _name(): string | undefined;

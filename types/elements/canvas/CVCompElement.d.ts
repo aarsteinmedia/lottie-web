@@ -18,7 +18,7 @@ export default class CVCompElement extends CompElement {
     createFootage: (data: LottieLayer) => import("../FootageElement").default;
     createImage: (data: LottieLayer) => import("./CVImageElement").default;
     createItem: (layer: LottieLayer) => CVCompElement | import("../html/HCompElement").default | import("../svg/SVGCompElement").default | import("../ImageElement").default | import("../AudioElement").default | import("../svg/SVGShapeElement").default | import("../svg/SVGTextElement").default | import("./CVTextElement").default | import("./CVShapeElement").default | import("../html/HShapeElement").default | import("../FootageElement").default | import("./CVImageElement").default | import("../html/HImageElement").default | import("./CVSolidElement").default | import("../NullElement").default | import("../html/HTextElement").default | import("../html/HCameraElement").default;
-    createNull: (data: LottieLayer) => import("../NullElement").default;
+    createNull: (_layer: LottieLayer) => import("../NullElement").default;
     createRenderableComponents: () => void;
     createShape: (data: LottieLayer) => import("./CVShapeElement").default;
     createSolid: (data: LottieLayer) => import("./CVSolidElement").default;

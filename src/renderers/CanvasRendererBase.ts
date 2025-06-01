@@ -21,10 +21,8 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 export default abstract class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
   contextData?: CVContextData
-  override createNull = SVGRenderer.prototype.createNull
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
-
   transformCanvas?: TransformCanvas
 
   override buildItem(pos: number) {
@@ -33,12 +31,9 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     if (elements[pos] || layers[pos].ty === 99) {
       return
     }
-    /**
-     * This, this.globalData.
-     */
-    const element = this.createItem(layers[pos])
+    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
 
-    elements[pos] = element as ElementInterfaceIntersect
+    elements[pos] = element
     element.initExpressions()
     /* if(this.layers[pos].ty === 0){
         element.resize(this.globalData.transformCanvas);
@@ -526,3 +521,5 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     this.renderFrame(this.renderedFrame, true)
   }
 }
+
+CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull

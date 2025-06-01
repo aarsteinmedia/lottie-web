@@ -414,7 +414,7 @@ export type CanvasRendererConfig = BaseRendererConfig & {
 
 export type HTMLRendererConfig = BaseRendererConfig & {
   hideOnTransparent?: boolean
-  filterSize: {
+  filterSize?: {
     width: string
     height: string
     y: string
