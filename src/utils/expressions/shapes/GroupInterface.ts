@@ -1,7 +1,7 @@
+import type ShapePathInterface from '@/utils/expressions/shapes/ShapePathInterface'
+
 // @ts-nocheck: TODO:
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
-
-import type ShapePathInterface from './ShapePathInterface'
 
 export default class GroupInterface extends BaseInterface {
   content?: (value: string | number) => ShapePathInterface | null

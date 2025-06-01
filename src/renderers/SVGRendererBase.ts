@@ -1,7 +1,6 @@
 import type AnimationItem from '@/animation/AnimationItem'
 import type {
   AnimationData,
-  CompElementInterface,
   ElementInterfaceIntersect,
   LottieLayer,
   SVGRendererConfig,
@@ -71,16 +70,16 @@ export default abstract class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(layers[pos])
+    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
 
-    elements[pos] = element as ElementInterfaceIntersect
+    elements[pos] = element
     if (getExpressionsPlugin()) {
       if (layers[pos].ty === 0) {
-        globalData.projectInterface.registerComposition(element as CompElementInterface)
+        globalData.projectInterface.registerComposition(element)
       }
       element.initExpressions()
     }
-    this.appendElementInPos(element as ElementInterfaceIntersect, pos)
+    this.appendElementInPos(element, pos)
     if (layers[pos].tt) {
       const elementIndex =
         'tp' in layers[pos]
@@ -96,14 +95,14 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
-        this.addPendingElement(element as ElementInterfaceIntersect)
+        this.addPendingElement(element)
 
         return
       }
       const matteElement = elements[elementIndex],
         matteMask = matteElement.getMatte(layers[pos].tt)
 
-      ;(element as ElementInterfaceIntersect).setMatte(matteMask)
+      element.setMatte(matteMask)
     }
   }
 
@@ -112,24 +111,26 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       const element = this.pendingElements.pop()
 
       element?.checkParenting()
-      if (!element?.data.tt) {
-        return
-      }
-      let i = 0
-      const { length } = this.elements
 
-      while (i < length) {
-        if (this.elements[i] !== element) {
-          i++
-          continue
+      if (element?.data.tt) {
+
+        let i = 0
+
+        const { length } = this.elements
+
+        while (i < length) {
+          if (this.elements[i] !== element) {
+            i++
+            continue
+          }
+          const elementIndex = 'tp' in element.data
+              ? this.findIndexByInd(element.data.tp)
+              : i - 1,
+            matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
+
+          element.setMatte(matteMask)
+          break
         }
-        const elementIndex = 'tp' in element.data
-            ? this.findIndexByInd(element.data.tp)
-            : i - 1,
-          matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
-
-        element.setMatte(matteMask)
-        break
       }
     }
   }

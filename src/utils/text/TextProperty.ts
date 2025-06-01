@@ -6,6 +6,7 @@ import type {
   ElementInterfaceIntersect,
   TextEffectFunction,
 } from '@/types'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import type LetterProps from '@/utils/text/LetterProps'
 
 import {
@@ -19,8 +20,6 @@ import {
 } from '@/utils/FontManager'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { BaseProperty } from '@/utils/Properties'
-
-import type DynamicPropertyContainer from '../helpers/DynamicPropertyContainer'
 
 export default class TextProperty extends BaseProperty {
   _frameId: number
