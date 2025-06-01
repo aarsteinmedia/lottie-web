@@ -10,8 +10,8 @@ import type {
 
 import CVEffects from '@/elements/canvas/CVEffects'
 import CVMaskElement from '@/elements/canvas/CVMaskElement'
-import { effectTypes } from '@/elements/helpers/TransformElement'
 import { getBlendMode } from '@/utils'
+import { EffectTypes } from '@/utils/enums'
 import {
   createCanvas,
   getLumaCanvas,
@@ -110,7 +110,7 @@ export default abstract class CVBaseElement {
 
     this.maskManager = new CVMaskElement(this.data, this)
     if (this.renderableEffectsManager) {
-      this.transformEffects = this.renderableEffectsManager.getEffects(effectTypes.TRANSFORM_EFFECT)
+      this.transformEffects = this.renderableEffectsManager.getEffects(EffectTypes.TransformEffect)
     }
   }
 

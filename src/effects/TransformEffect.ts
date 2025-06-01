@@ -2,8 +2,8 @@ import type { GroupEffect } from '@/effects/EffectsManager'
 import type { Vector2, Vector3 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
 
-import { effectTypes } from '@/elements/helpers/TransformElement'
 import { degToRads } from '@/utils'
+import { EffectTypes } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 
 export default abstract class TransformEffect {
@@ -16,7 +16,7 @@ export default abstract class TransformEffect {
   type?: string
   init(effectsManager: GroupEffect) {
     this.effectsManager = effectsManager
-    this.type = effectTypes.TRANSFORM_EFFECT
+    this.type = EffectTypes.TransformEffect
     this.matrix = new Matrix()
     this.opacity = -1
     this._mdf = false

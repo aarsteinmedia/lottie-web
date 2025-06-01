@@ -1,13 +1,12 @@
 // @ts-nocheck
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type { Shape, Vector2 } from '@/types'
+import type ShapeCollection from '@/utils/shapes/ShapeCollection'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { Modifier } from '@/utils/enums'
 import ShapeModifier from '@/utils/shapes/ShapeModifier'
 import { registerModifier } from '@/utils/shapes/ShapeModifiers'
-
-import type ShapeCollection from './ShapeCollection'
-import type ShapePath from './ShapePath'
 
 export default class MouseModifier extends ShapeModifier {
   data?: Shape | Shape[]

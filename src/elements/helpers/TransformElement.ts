@@ -4,10 +4,9 @@ import type {
 } from '@/types'
 
 import BaseElement from '@/elements/BaseElement'
+import { EffectTypes } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
-
-export const effectTypes = { TRANSFORM_EFFECT: 'transformEffect' }
 
 export default abstract class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
@@ -183,7 +182,7 @@ export default abstract class TransformElement extends BaseElement {
     if (!this.renderableEffectsManager) {
       return
     }
-    const transformEffects = this.renderableEffectsManager.getEffects(effectTypes.TRANSFORM_EFFECT)
+    const transformEffects = this.renderableEffectsManager.getEffects(EffectTypes.TransformEffect)
 
     if (transformEffects.length === 0) {
       return

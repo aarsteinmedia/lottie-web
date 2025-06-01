@@ -4,6 +4,7 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
+import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 import {
   KeyframedMultidimensionalProperty,
@@ -12,8 +13,6 @@ import {
   NoProperty,
   ValueProperty,
 } from '@/utils/Properties'
-
-import type DynamicPropertyContainer from './helpers/DynamicPropertyContainer'
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
