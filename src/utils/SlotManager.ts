@@ -2,7 +2,7 @@ import type {
   DocumentData, LottieAsset, LottieLayer
 } from '@/types'
 
-export default class SlotManager {
+export class SlotManager {
   animationData: LottieLayer
   constructor(animationData: LottieLayer) {
     this.animationData = animationData
@@ -23,4 +23,8 @@ export default class SlotManager {
 
     return data
   }
+}
+
+export default function slotFactory(animationData: LottieLayer) {
+  return new SlotManager(animationData)
 }

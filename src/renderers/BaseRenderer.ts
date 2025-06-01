@@ -28,7 +28,7 @@ import AudioElement from '@/elements/AudioElement'
 import FootageElement from '@/elements/FootageElement'
 import FrameElement from '@/elements/helpers/FrameElement'
 import FontManager from '@/utils/FontManager'
-import SlotManager from '@/utils/SlotManager'
+import slotFactory from '@/utils/SlotManager'
 
 export default abstract class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
@@ -306,7 +306,7 @@ export default abstract class BaseRenderer extends FrameElement {
       throw new Error(`${this.constructor.name}: animationItem is not implemented`)
     }
     this.globalData.fontManager = new FontManager()
-    this.globalData.slotManager = new SlotManager(animData as unknown as LottieLayer)
+    this.globalData.slotManager = slotFactory(animData as unknown as LottieLayer)
     this.globalData.fontManager.addChars(animData.chars)
     this.globalData.fontManager.addFonts(animData.fonts, fontsContainer)
     this.globalData.getAssetData = this.animationItem.getAssetData.bind(this.animationItem)

@@ -82,7 +82,7 @@ import type {
   ShapeProperty,
   StarShapeProperty,
 } from '@/utils/shapes/ShapeProperty'
-import type SlotManager from '@/utils/SlotManager'
+import type { SlotManager } from '@/utils/SlotManager'
 import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 import type TextProperty from '@/utils/text/TextProperty'
