@@ -103,7 +103,10 @@ export default class SVGMatte3Effect {
       const symbolId = createElementID(),
         masker = createNS<SVGMaskElement>('mask')
 
-      masker.setAttribute('id', mask.layerId || '')
+      if (mask.layerId) {
+        masker.id = mask.layerId
+      }
+
       masker.setAttribute('mask-type', 'alpha')
       _svgMatteSymbols.push(mask)
       const { defs } = elem.globalData ?? { defs: null }
@@ -111,7 +114,7 @@ export default class SVGMatte3Effect {
       defs?.appendChild(masker)
       const symbol = createNS<SVGSymbolElement>('symbol')
 
-      symbol.setAttribute('id', symbolId)
+      symbol.id = symbolId
       this.replaceInParent(mask, symbolId)
       if (mask.layerElement) {
         symbol.appendChild(mask.layerElement)
@@ -120,7 +123,7 @@ export default class SVGMatte3Effect {
       defs?.appendChild(symbol)
       const useElem = createNS<SVGUseElement>('use')
 
-      useElem.setAttribute('href', `#${symbolId}`)
+      useElem.href.baseVal = `#${symbolId}`
       masker.appendChild(useElem)
       mask.data.hd = false
 

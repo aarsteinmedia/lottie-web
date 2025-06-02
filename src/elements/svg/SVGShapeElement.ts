@@ -230,6 +230,7 @@ export default class SVGShapeElement extends ShapeElement {
       if (data.lj === 1 && data.ml) {
         pathElement.setAttribute('stroke-miterlimit', `${data.ml}`)
       }
+
     }
 
     if (data.r === (2 as any)) {
@@ -237,10 +238,10 @@ export default class SVGShapeElement extends ShapeElement {
     }
 
     if (data.ln) {
-      pathElement.setAttribute('id', data.ln)
+      pathElement.id = data.ln
     }
     if (data.cl) {
-      pathElement.setAttribute('class', data.cl)
+      pathElement.classList.add(data.cl)
     }
     if (data.bm) {
       pathElement.style.mixBlendMode = getBlendMode(data.bm)

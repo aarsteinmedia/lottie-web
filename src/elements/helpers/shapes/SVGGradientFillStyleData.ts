@@ -118,7 +118,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     const gradientId = createElementID(),
       gfill = createNS<SVGGradientElement>(data.t === 1 ? 'linearGradient' : 'radialGradient')
 
-    gfill.setAttribute('id', gradientId)
+    gfill.id = gradientId
     gfill.setAttribute('spreadMethod', 'pad')
     gfill.setAttribute('gradientUnits', 'userSpaceOnUse')
     const stops: SVGStopElement[] = []
@@ -151,10 +151,10 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     const opacityId = createElementID(),
       maskId = createElementID()
 
-    mask.setAttribute('id', maskId)
+    mask.id = maskId
     const opFill = createNS(data.t === 1 ? 'linearGradient' : 'radialGradient')
 
-    opFill.setAttribute('id', opacityId)
+    opFill.id = opacityId
     opFill.setAttribute('spreadMethod', 'pad')
     opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
     const jLen =

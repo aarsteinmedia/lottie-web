@@ -121,7 +121,7 @@ export default class MaskElement {
         filterID = createElementID()
         const expansor = createNS<SVGFilterElement>('filter')
 
-        expansor.setAttribute('id', filterID)
+        expansor.id = filterID
         feMorph = createNS<SVGFEMorphologyElement>('feMorphology')
         feMorph.setAttribute('operator', 'erode')
         feMorph.setAttribute('in', 'SourceGraphic')
@@ -201,7 +201,7 @@ export default class MaskElement {
     }
 
     if (count > 0) {
-      this.maskElement.setAttribute('id', layerId)
+      this.maskElement.id = layerId
       this.element.maskedElement?.setAttribute(maskRef,
         `url(${getLocationHref()}#${layerId})`)
       defs.appendChild(this.maskElement)

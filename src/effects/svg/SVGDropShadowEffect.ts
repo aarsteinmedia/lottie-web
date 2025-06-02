@@ -50,8 +50,8 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
 
     const feOffset = createNS<SVGFEOffsetElement>('feOffset')
 
-    feOffset.setAttribute('dx', '25')
-    feOffset.setAttribute('dy', '0')
+    feOffset.dx.baseVal = 25
+    feOffset.dy.baseVal = 0
     feOffset.setAttribute('in', `${id}_drop_shadow_1`)
     feOffset.setAttribute('result', `${id}_drop_shadow_2`)
     this.feOffset = feOffset

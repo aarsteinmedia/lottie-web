@@ -50,7 +50,7 @@ export default class ShapeModifier extends DynamicPropertyContainer {
   }
 
   addShapeToModifier(_shapeData: SVGShapeData) {
-    throw new Error(`${this.constructor.name}: Method addShapeToModifier is not implemented`)
+    // Pass through
   }
 
   init(

@@ -60,7 +60,7 @@ export default class SVGStrokeEffect {
       const mask = createNS<SVGMaskElement>('mask'),
         id = createElementID()
 
-      mask.setAttribute('id', id)
+      mask.id = id
       mask.setAttribute('mask-type', 'alpha')
       mask.appendChild(groupPath)
       this.elem.globalData?.defs.appendChild(mask)

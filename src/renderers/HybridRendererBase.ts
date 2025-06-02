@@ -194,7 +194,7 @@ export default class HybridRendererBase extends BaseRenderer {
 
     const resizerElem = createTag<HTMLDivElement>('div'),
       { wrapper } = this.animationItem,
-      { style } = resizerElem
+      { classList, style } = resizerElem
 
     style.width = `${animData.w}px`
     style.height = `${animData.h}px`
@@ -202,7 +202,7 @@ export default class HybridRendererBase extends BaseRenderer {
     styleDiv(resizerElem)
     style.transformStyle = 'flat'
     if (this.renderConfig.className) {
-      resizerElem.setAttribute('class', this.renderConfig.className)
+      classList.add(this.renderConfig.className)
     }
     wrapper?.appendChild(resizerElem)
 

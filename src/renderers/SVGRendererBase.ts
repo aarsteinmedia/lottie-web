@@ -178,10 +178,10 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         this.svgElement.setAttribute('height', `${this.renderConfig.height}`)
       }
       if (this.renderConfig.className) {
-        this.svgElement.setAttribute('class', this.renderConfig.className)
+        this.svgElement.classList.add(this.renderConfig.className)
       }
       if (this.renderConfig.id) {
-        this.svgElement.setAttribute('id', this.renderConfig.id)
+        this.svgElement.id = this.renderConfig.id
       }
       if (this.renderConfig.focusable !== undefined) {
         this.svgElement.setAttribute('focusable',
@@ -209,7 +209,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       rect.setAttribute('y', '0')
       const maskId = createElementID()
 
-      maskElement.setAttribute('id', maskId)
+      maskElement.id = maskId
       maskElement.appendChild(rect)
       this.layerElement?.setAttribute('clip-path',
         `url(${getLocationHref()}#${maskId})`)

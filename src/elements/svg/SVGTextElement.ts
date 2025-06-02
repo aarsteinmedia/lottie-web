@@ -92,7 +92,7 @@ export default class SVGTextLottieElement extends TextElement {
     const fontData = this.globalData.fontManager?.getFontByName(documentData.f)
 
     if (fontData?.fClass) {
-      this.layerElement.setAttribute('class', fontData.fClass)
+      this.layerElement.classList.add(fontData.fClass)
     } else {
       if (fontData?.fFamily) {
         this.layerElement.setAttribute('font-family', fontData.fFamily)

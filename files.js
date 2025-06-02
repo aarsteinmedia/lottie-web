@@ -32,7 +32,9 @@ const files = [
   'loopOut-star.lottie',
   'loopOut-star.json',
   'models.lottie',
-  'portal.lottie'
+  'portal.lottie',
+  'round-corners-modifier.json',
+  'round-corners-modifier_.json'
 ]
 
 export default files

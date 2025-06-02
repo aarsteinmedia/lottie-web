@@ -126,6 +126,7 @@ export default class RepeaterModifier extends ShapeModifier {
 
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {
+
     this.getValue = this.processKeys
     this.c = PropertyFactory.getProp(
       elem,
@@ -162,6 +163,7 @@ export default class RepeaterModifier extends ShapeModifier {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
+
     this.data = data
     if (this.dynamicProperties.length === 0) {
       this.getValue(true)

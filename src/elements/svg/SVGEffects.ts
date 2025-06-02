@@ -2,6 +2,7 @@
 // @ts-nocheck
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
+import type { EffectTypes } from '@/utils/enums'
 
 import { createElementID } from '@/utils'
 import { createFilter } from '@/utils/FiltersFactory'
@@ -62,7 +63,7 @@ export default class SVGEffects {
     }
   }
 
-  getEffects(type: string) {
+  getEffects(type: EffectTypes) {
     const { length } = this.filters,
       effects = []
 

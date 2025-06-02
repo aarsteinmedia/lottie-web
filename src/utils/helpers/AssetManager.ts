@@ -12,14 +12,14 @@ function createLumaSvgFilter() {
     fil = createNS<SVGFilterElement>('filter'),
     matrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
 
-  fil.setAttribute('id', id)
+  fil.id = id
   matrix.setAttribute('type', 'matrix')
   matrix.setAttribute('color-interpolation-filters', 'sRGB')
   matrix.setAttribute('values',
     '0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0, 0.3, 0.3, 0.3, 0, 0')
   fil.appendChild(matrix)
   _svg.appendChild(fil)
-  _svg.setAttribute('id', `${id}_svg`)
+  _svg.id = `${id}_svg`
   if (featureSupport.svgLumaHidden) {
     _svg.style.display = 'none'
   }

@@ -43,7 +43,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
       const gg = createNS<SVGGElement>('g')
 
       if (this.layerId) {
-        gg.setAttribute('id', this.layerId)
+        gg.id = this.layerId
       }
       gg.appendChild(this.layerElement)
 
@@ -58,10 +58,10 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
       this.baseElement = this.layerElement
     }
     if (this.data.ln) {
-      this.layerElement.setAttribute('id', this.data.ln)
+      this.layerElement.id = this.data.ln
     }
     if (this.data.cl) {
-      this.layerElement.setAttribute('class', this.data.cl)
+      this.layerElement.classList.add(this.data.cl)
     }
     /**
      * Clipping compositions to hide content that exceeds boundaries.
@@ -76,7 +76,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
         }z`)
       const clipId = createElementID()
 
-      cp.setAttribute('id', clipId)
+      cp.id = clipId
       cp.appendChild(pt)
       this.globalData.defs.appendChild(cp)
 
@@ -153,7 +153,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
         {
           const masker = createNS('mask')
 
-          masker.setAttribute('id', id)
+          masker.id = id
           masker.setAttribute('mask-type',
             matteType === 3 ? 'luminance' : 'alpha')
           useElement = createNS<SVGUseElement>('use')
@@ -182,7 +182,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
       case 2: {
         const maskGroup = createNS<SVGMaskElement>('mask')
 
-        maskGroup.setAttribute('id', id)
+        maskGroup.id = id
         maskGroup.setAttribute('mask-type', 'alpha')
         const maskGrouper = createNS<SVGGElement>('g')
 
