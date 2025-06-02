@@ -1,11 +1,10 @@
 import type CVShapeElement from '../../elements/canvas/CVShapeElement';
 import type HShapeElement from '../../elements/html/HShapeElement';
 import type SVGShapeElement from '../../elements/svg/SVGShapeElement';
-import type { Caching, CompElementInterface, ElementInterfaceIntersect, Keyframe, KeyframesMetadata, Shape, StrokeData } from '../../types';
-import type { MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, StrokeData } from '../../types';
+import type { KeyframedValueProperty, MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
 import type ShapeCollection from '../../utils/shapes/ShapeCollection';
 import type ShapePath from '../../utils/shapes/ShapePath';
-import type TextSelectorProperty from '../../utils/text/TextSelectorProperty';
 import { type ShapeType } from '../../utils/enums';
 import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
 declare function getConstructorFunction(): typeof ShapeProperty;
@@ -31,8 +30,8 @@ export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer
     pv?: ShapePath;
     ty?: ShapeType;
     v?: ShapePath;
-    getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath;
-    initiateExpression(_elem: ElementInterfaceIntersect, _data: TextSelectorProperty, _property: TextSelectorProperty): void;
+    getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath | null;
+    initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): void;
     interpolateShape(frameNum: number, previousValue: ShapePath, caching?: Caching): void;
     interpolateShapeCurrentTime(): ShapePath;
     processEffectsSequence(_val?: unknown): number;
@@ -79,7 +78,6 @@ export declare class EllShapeProperty extends ShapeBaseProperty {
 export declare class ShapeProperty extends ShapeBaseProperty {
     ix?: number;
     pathsData?: ShapePath[] | ShapePath;
-    propertyIndex?: number;
     shape?: {
         _mdf?: boolean;
         paths?: {

@@ -4,7 +4,7 @@ import type {
   ElementInterfaceIntersect, GradientColor, Shape, TextData, TextRangeValue, VectorProperty
 } from '@/types'
 import type { PropType } from '@/utils/enums'
-import type PropertyInterface from '@/utils/expressions/PropertyInterface'
+import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import type TextProperty from '@/utils/text/TextProperty'
 
 export default abstract class DynamicPropertyContainer {
@@ -22,6 +22,7 @@ export default abstract class DynamicPropertyContainer {
     | Effect
   dynamicProperties: DynamicPropertyContainer[] = []
   hd?: boolean
+  propertyIndex?: number
   propType?: PropType | false
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
@@ -58,7 +59,7 @@ export default abstract class DynamicPropertyContainer {
     return 0 // For type compability
   }
 
-  setGroupProperty(_propertyInterface: PropertyInterface) {
+  setGroupProperty(_propertyInterface: PropertyGroupFactory) {
     // Pass through
     // throw new Error('Method is not implemented')
   }

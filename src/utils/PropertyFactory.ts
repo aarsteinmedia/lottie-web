@@ -1,5 +1,6 @@
 import type {
   ElementInterfaceIntersect,
+  ExpressionProperty,
   Keyframe,
   LottieLayer,
   VectorProperty,
@@ -16,7 +17,7 @@ import {
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
-  dataFromProps?: VectorProperty<T>,
+  dataFromProps?: VectorProperty<T> | ExpressionProperty,
   type?: number,
   mult?: null | number,
   container?: ElementInterfaceIntersect

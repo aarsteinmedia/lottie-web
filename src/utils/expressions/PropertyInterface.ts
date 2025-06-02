@@ -16,6 +16,7 @@ export default class PropertyInterface {
     }
 
     // @ts-expect-error: TODO:
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.propertyGroup(val - 1)
   }
 }

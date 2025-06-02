@@ -62,6 +62,7 @@ import type LetterProps from './utils/text/LetterProps';
 import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
 import type TextProperty from './utils/text/TextProperty';
 import type { TransformProperty } from './utils/TransformProperty';
+import type { BezierData } from './utils/Bezier';
 export type AnimationDirection = 1 | -1;
 export type AnimationEventName = 'drawnFrame' | 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images' | '_play' | '_pause' | '_idle' | '_active' | 'configError' | 'renderFrameError';
 export interface SVGGeometry {
@@ -232,7 +233,8 @@ export interface EFXElement {
     p: BaseProperty;
 }
 export interface KeyframesMetadata {
-    __fnct?: (val: number) => number;
+    __fnct?: (val: number) => number | number[];
+    bezierData?: BezierData;
 }
 interface BaseRendererConfig {
     className?: string;
@@ -500,8 +502,10 @@ export interface VectorProperty<T = Vector1> {
     a: 1 | 0;
     ix?: number;
     k: T;
+    s?: number;
     sid?: number;
     v?: T;
+    z?: number;
 }
 export interface Coordinates {
     c?: boolean;
@@ -1054,13 +1058,10 @@ export interface GlobalData {
     slotManager?: SlotManager;
     transformCanvas?: TransformCanvas;
 }
-export interface ExpressionProperty {
-    a: 0 | 1;
-    ix: number;
-    k: (ValueProperty | MultiDimensionalProperty)[];
+export type ExpressionProperty = VectorProperty<(ValueProperty | MultiDimensionalProperty)[]> & {
     release?: () => void;
     x: string;
-}
+};
 export type ExpressionReturn = ((val?: unknown) => unknown) | BaseProperty;
 export interface SourceRect {
     height: number;

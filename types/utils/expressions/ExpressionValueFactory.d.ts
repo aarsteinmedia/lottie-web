@@ -11,7 +11,9 @@ export declare class ExpressionPropertyInterface {
         pv: number;
         v: number;
     };
-    completeProperty(expressionValue: number | number[], property: BaseProperty, type: PropType): void;
+    completeProperty(expressionValue: BaseProperty & {
+        key: (pos: number) => unknown;
+    }, property: BaseProperty, type: PropType): void;
     defaultGetter(): {
         mult: number;
         pv: number;
@@ -22,8 +24,8 @@ export declare class ExpressionPropertyInterface {
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
-    MultidimensionalPropertyInterface(property: any): () => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>;
-    UnidimensionalPropertyInterface(property: BaseProperty): () => Number;
+    MultidimensionalPropertyInterface(propertyFromProps: null | BaseProperty): () => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>;
+    UnidimensionalPropertyInterface(propertyFromProps: null | BaseProperty): () => Number;
 }
 export default function expressionPropertyFactory(property?: BaseProperty): (() => {
     mult: number;

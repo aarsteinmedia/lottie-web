@@ -1,5 +1,6 @@
 // @ts-nocheck
 import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
+import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties'
 
 import { isArrayOfNum } from '@/utils'
@@ -8,7 +9,7 @@ import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
 function searchExpressions(
-  elem: ElementInterfaceIntersect, data: ExpressionProperty, prop: KeyframedValueProperty
+  elem: ElementInterfaceIntersect, data?: ExpressionProperty, prop?: KeyframedValueProperty
 ) {
   if (!data.x) {
     return
@@ -17,7 +18,6 @@ function searchExpressions(
   prop.x = true
   prop.initiateExpression = ExpressionManager.initiateExpression
 
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   prop.effectsSequence.push(prop.initiateExpression(
     elem, data, prop
   ).bind(prop))
@@ -58,7 +58,7 @@ function getSpeedAtTime(this: BaseProperty, frameNum: number) {
   return speed
 }
 
-function getVelocityAtTime(this: BaseProperty, frameNum: number) {
+function getVelocityAtTime(this: BaseProperty, frameNum: number): number {
   if (this.vel !== undefined) {
     return this.vel
   }
@@ -95,7 +95,7 @@ function getStaticValueAtTime(
   return this.pv
 }
 
-function setGroupProperty(this: BaseProperty, propertyGroup: typeof BaseProperty.prototype.propertyGroup) {
+function setGroupProperty(this: BaseProperty, propertyGroup: PropertyGroupFactory) {
   this.propertyGroup = propertyGroup
 }
 

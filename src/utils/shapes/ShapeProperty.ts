@@ -6,6 +6,7 @@ import type {
   Caching,
   CompElementInterface,
   ElementInterfaceIntersect,
+  ExpressionProperty,
   Keyframe,
   KeyframesMetadata,
   Shape,
@@ -14,12 +15,12 @@ import type {
   VectorProperty,
 } from '@/types'
 import type {
+  KeyframedValueProperty,
   MultiDimensionalProperty,
   ValueProperty,
 } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
-import type TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 
 import { degToRads } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
@@ -104,14 +105,14 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public pv?: ShapePath
   ty?: ShapeType
   public v?: ShapePath
-  getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath {
+  getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath | null {
     throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)
   }
 
   initiateExpression(
     _elem: ElementInterfaceIntersect,
-    _data: TextSelectorProperty,
-    _property: TextSelectorProperty
+    _data: ExpressionProperty,
+    _property: KeyframedValueProperty
   ) {
     throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }
@@ -195,10 +196,10 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
             keyframeMetadata.__fnct = fnc
           }
           perc =
-            fnc?.((frameNum - (keyData.t - this.offsetTime)) /
+            (fnc?.((frameNum - (keyData.t - this.offsetTime)) /
               (nextKeyData.t -
                 this.offsetTime -
-                (keyData.t - this.offsetTime))) || 0
+                (keyData.t - this.offsetTime))) || 0) as number
         }
         keyPropE = nextKeyData.s ? nextKeyData.s[0] : keyData.e[0]
       }
@@ -965,7 +966,6 @@ export class EllShapeProperty extends ShapeBaseProperty {
 export class ShapeProperty extends ShapeBaseProperty {
   ix?: number
   pathsData?: ShapePath[] | ShapePath
-  propertyIndex?: number
   shape?: {
     _mdf?: boolean
     paths?: {

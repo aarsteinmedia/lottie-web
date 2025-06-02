@@ -1,5 +1,6 @@
-// @ts-nocheck: TODO:
-import type { Caching, Vector3 } from '@/types'
+import type {
+  Caching, ElementInterfaceIntersect, ExpressionProperty, Vector3
+} from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -15,7 +16,6 @@ import shapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
-
 
 function loopOut(
   this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
@@ -377,7 +377,9 @@ function getTransformStaticValueAtTime(this: TransformProperty) {
   return this.v.clone(new Matrix())
 }
 
-function getShapeValueAtTime(this: ShapeProperty, frameNumFromProps: number) {
+function getShapeValueAtTime(
+  this: ShapeProperty, frameNumFromProps: number, _num?: number
+) {
   // For now this caching object is created only when needed instead of creating it when the shape is initialized.
   this._cachingAtTime = this._cachingAtTime ?? {
     lastIndex: 0,
@@ -444,23 +446,23 @@ function addPropertyDecorator() {
     prop.smooth = smooth
     prop.getVelocityAtTime = expressionHelpers.getVelocityAtTime.bind(prop)
     prop.getSpeedAtTime = expressionHelpers.getSpeedAtTime.bind(prop)
-    prop.numKeys = data.a === 1 ? data.k.length : 0
-    prop.propertyIndex = data.ix
-    let value = 0
+    prop.numKeys = data?.a === 1 ? (data.k as unknown[]).length : 0
+    prop.propertyIndex = data?.ix
+    let value: number | number[] = 0
 
     if (type !== 0) {
-      value = createTypedArray(ArrayType.Float32, data.a === 1 ? data.k[0].s.length : data.k.length)
+      value = (createTypedArray(ArrayType.Float32, data?.a === 1 ? (data.k as unknown as { s: number[] }[])[0].s.length : (data?.k as number[]).length) as number[])
     }
     prop._cachingAtTime = {
       lastFrame: initialDefaultFrame,
       lastIndex: 0,
       value,
-    }
+    } as Caching
     expressionHelpers.searchExpressions(
-      elem, data, prop
+      elem, data as ExpressionProperty, prop as KeyframedValueProperty
     )
     if (prop.k) {
-      container.addDynamicProperty(prop)
+      container?.addDynamicProperty(prop)
     }
 
     return prop
@@ -483,15 +485,19 @@ function addPropertyDecorator() {
       elem, data, type, arr, trims
     )
 
+    if (!prop) {
+      return prop
+    }
+
     prop.propertyIndex = data.ix
     prop.lock = false
     if (type === 3) {
       expressionHelpers.searchExpressions(
-        elem, data.pt, prop
+        elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     } else if (type === 4) {
       expressionHelpers.searchExpressions(
-        elem, data.ks, prop
+        elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     }
     if (prop.k) {

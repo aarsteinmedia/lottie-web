@@ -16,6 +16,7 @@ export default class PropertyGroupFactory {
     }
 
     // @ts-expect-error: TODO:
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.parentPropertyGroup(val - 1)
   }
 }

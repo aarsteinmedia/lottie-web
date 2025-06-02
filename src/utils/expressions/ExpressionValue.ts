@@ -3,7 +3,6 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import { BaseProperty } from '@/utils/Properties'
 
 export default class ExpressionValue extends BaseProperty {
-  numKeys: number
   prop: BaseProperty
 
   get velocity() {
@@ -67,14 +66,5 @@ export default class ExpressionValue extends BaseProperty {
     }
 
     return this.keyframes[pos - 1].t
-  }
-
-  speedAtTime(_frameNum: number) {
-    throw new Error('Method is not implemented')
-  }
-
-
-  velocityAtTime(_frameNum: number) {
-    throw new Error('Method is not implemented')
   }
 }

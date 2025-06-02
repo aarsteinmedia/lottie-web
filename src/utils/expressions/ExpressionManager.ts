@@ -222,9 +222,9 @@ function initiateExpression(
     fromComp: (type: string, duration: number, flag?: boolean) => void,
     fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    loopIn: (type: string, duration: number, flag?: boolean) => void,
-    loop_in: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    loopOut: (type: string, duration: number, flag?: boolean) => void,
+    loopIn: (type: string, duration: number, wrap?: boolean) => void,
+    loop_in: null | ((type: string, duration: number, wrap?: boolean) => void) = null,
+    loopOut: (type: string, duration: number, wrap?: boolean) => void,
     loop_out: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     mask: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     // eslint-disable-next-line prefer-const
@@ -262,6 +262,7 @@ function initiateExpression(
       'createPath',
       'degrees_to_radians',
       'degreesToRadians',
+      'div',
       'document',
       'ease',
       'easeIn',
@@ -279,6 +280,7 @@ function initiateExpression(
       'index',
       'inPoint',
       'key',
+      'length',
       'linear',
       'lookAt',
       'loop_in',
@@ -288,6 +290,8 @@ function initiateExpression(
       'loopOut',
       'loopOutDuration',
       'mask',
+      'mod',
+      'mul',
       'name',
       'nearestKey',
       'normalize',
@@ -296,26 +300,34 @@ function initiateExpression(
       'outPoint',
       'position',
       'posterizeTime',
+      'propertyIndex',
       'radians_to_degrees',
+      'radiansToDegrees',
       'random',
       'randSeed',
       'rgbToHsl',
       'rotation',
       'scale',
+      'seedRandom',
       'selectorValue',
       'smooth',
       'sourceRectAtTime',
+      'sub',
       'substr',
       'substring',
       'text',
       'textIndex',
       'textTotal',
       'thisComp',
+      'thisLayer',
+      'thisProperty',
       'time',
       'timeToFrames',
       'toComp',
       'toWorld',
       'transform',
+      'value',
+      'valueAtTime',
       'velocity',
       'width',
       'wiggle',
@@ -335,6 +347,7 @@ function initiateExpression(
     selectorValue: string
 
   const numKeys = property.kf ? k.length : 0,
+    propertyIndex = data.ix,
     active = !this.data || this.data.hd !== true,
 
     wiggle = (_freqFromProps: number, amp: number) => {
@@ -579,6 +592,7 @@ function initiateExpression(
       fromWorld = thisLayer?.fromWorld.bind(thisLayer)
       fromComp = thisLayer?.fromComp.bind(thisLayer)
       toComp = thisLayer?.toComp.bind(thisLayer)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       mask = thisLayer?.mask ? thisLayer.mask.bind(thisLayer) : null
       fromCompToSurface = fromComp
     }
@@ -628,6 +642,7 @@ function initiateExpression(
       createPath,
       degrees_to_radians,
       degreesToRadians,
+      div,
       document,
       ease,
       easeIn,
@@ -645,6 +660,7 @@ function initiateExpression(
       index,
       inPoint,
       key,
+      length,
       linear,
       lookAt,
       loop_in,
@@ -654,6 +670,8 @@ function initiateExpression(
       loopOut,
       loopOutDuration,
       mask,
+      mod,
+      mul,
       name,
       nearestKey,
       normalize,
@@ -662,26 +680,34 @@ function initiateExpression(
       outPoint,
       position,
       posterizeTime,
+      propertyIndex,
       radians_to_degrees,
+      radiansToDegrees,
       random,
       randSeed,
       rgbToHsl,
       rotation,
       scale,
+      seedRandom,
       selectorValue,
       smooth,
       sourceRectAtTime,
+      sub,
       substr,
       substring,
       text,
       textIndex,
       textTotal,
       thisComp,
+      thisLayer,
+      thisProperty,
       time,
       timeToFrames,
       toComp,
       toWorld,
       transform,
+      value,
+      valueAtTime,
       velocity,
       width,
       wiggle,
@@ -731,14 +757,14 @@ function linear(
   const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
 
   if (value1.length === 0) {
-    return value1 + (value2 - value1) * perc
+    return value1 as number + (value2 - value1) * perc
   }
 
-  const len = value1.length
-  const arr = createTypedArray(ArrayType.Float32, len)
+  const { length: len } = value1 as number[],
+    arr = createTypedArray(ArrayType.Float32, len)
 
   for (let i = 0; i < len; i += 1) {
-    arr[i] = value1[i] + (value2[i] - value1[i]) * perc
+    arr[i] = (value1 as number[])[i] + (value2[i] - value1[i]) * perc
   }
 
   return arr

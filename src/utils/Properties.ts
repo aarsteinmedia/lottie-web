@@ -7,6 +7,7 @@ import type {
   ElementInterfaceIntersect,
   ExpressionProperty,
   Keyframe,
+  KeyframesMetadata,
   Shape,
   Svalue,
   Vector2,
@@ -24,7 +25,6 @@ import {
   buildBezierData,
   pointOnLine2D,
   pointOnLine3D,
-  type BezierData,
 } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
@@ -48,15 +48,13 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   initFrame = initialDefaultFrame
   k?: boolean
   keyframes: Keyframe[] = []
-  keyframesMetadata: {
-    bezierData?: BezierData
-    __fnct?: ((val: number) => number) | ((val: number) => number)[]
-  }[] = []
+  keyframesMetadata: KeyframesMetadata[] = []
   kf?: boolean | null
   lock?: boolean
   loopIn?: (type: string, duration: number, durationFlag?: boolean) => void
   loopOut?: (type: string, duration: number, durationFlag?: boolean) => void
   mult?: number
+  numKeys?: number
   offsetTime = 0
   propertyGroup?: LayerExpressionInterface
   pv?: string | number | number[] | DocumentData | ShapePath
@@ -65,7 +63,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   smooth?: (width: number, samples: number) => void
   textIndex?: number
   textTotal?: number
-  v?: string | number | number[] | Matrix | DocumentData
+  v?: string | number | number[] | Matrix | DocumentData | ShapePath
   value?: number | number[]
   vel?: number | number[]
   x?: boolean
@@ -119,7 +117,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   initiateExpression(
     _elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty
-  ) {
+  ): EffectFunction {
     throw new Error('Method not implemented')
   }
 
@@ -296,7 +294,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               perc = 0
             } else {
               if (keyData.o.x.constructor === Array) {
-                keyframeMetadata.__fnct = keyframeMetadata.__fnct ?? []
+                keyframeMetadata.__fnct = keyframeMetadata.__fnct ?? [] as any
                 if ((keyframeMetadata.__fnct as any)[i]) {
                   fnc = (keyframeMetadata.__fnct as any)[i]
                 } else if (
@@ -362,14 +360,16 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     if (!this.elem) {
       throw new Error(`${this.constructor.name}: elem (ElementInterface) is not implemented`)
     }
-    if (
-      this.elem.globalData?.frameId === this.frameId ||
-      this.effectsSequence.length === 0
-    ) {
+    if (this.elem.globalData?.frameId === this.frameId) {
       return 0
     }
-    if (this.lock) {
-      this.setVValue(this.pv as number | number[])
+    if (this.effectsSequence.length === 0) {
+      this._mdf = false
+
+      return 0
+    }
+    if (this.lock && this.pv) {
+      this.setVValue(this.pv as number)
 
       return 0
     }
@@ -391,7 +391,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     return 0
   }
 
-  setVValue(val?: number | number[] | Keyframe[]) {
+  setVValue(val?: number | number[] | Keyframe[] | ShapePath) {
     let multipliedValue
 
     if (typeof val === 'number' && this.propType === PropType.UniDimensional) {
@@ -416,8 +416,16 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
   }
 
+  speedAtTime(_frameNum: number) {
+    throw new Error('Method is not implemented')
+  }
+
   valueAtTime(_a: number, _b?: number) {
     throw new Error(`${this.constructor.name}: Method valueAtTime is not implemented`)
+  }
+
+  velocityAtTime(_frameNum: number) {
+    throw new Error('Method is not implemented')
   }
 }
 export class ValueProperty<

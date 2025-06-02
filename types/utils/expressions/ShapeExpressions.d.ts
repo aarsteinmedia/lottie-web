@@ -4,7 +4,7 @@ import { ShapeProperty } from '../../utils/shapes/ShapeProperty';
 export default abstract class ShapeExpressions extends ShapeProperty {
     _segmentsLength?: SegmentLength;
     getValueAtTime: (this: import("../Properties").BaseProperty, _time?: number, _num?: number) => string | number | number[] | ShapePath | import("../../types").DocumentData | undefined;
-    setGroupProperty: (this: import("../Properties").BaseProperty, propertyGroup: import("./LayerInterface").default | undefined) => void;
+    setGroupProperty: (this: import("../Properties").BaseProperty, propertyGroup: import("./PropertyGroupFactory").default) => void;
     inTangents(time: number): unknown[];
     isClosed(): boolean;
     normalOnPath(perc: number, time: number): number[];

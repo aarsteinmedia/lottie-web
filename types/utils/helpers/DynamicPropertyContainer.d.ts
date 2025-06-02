@@ -1,6 +1,6 @@
 import type { DynamicProperty, Effect, ElementInterfaceIntersect, GradientColor, Shape, TextData, TextRangeValue, VectorProperty } from '../../types';
 import type { PropType } from '../../utils/enums';
-import type PropertyInterface from '../../utils/expressions/PropertyInterface';
+import type PropertyGroupFactory from '../../utils/expressions/PropertyGroupFactory';
 import type TextProperty from '../../utils/text/TextProperty';
 export default abstract class DynamicPropertyContainer {
     _isAnimated?: boolean;
@@ -9,10 +9,11 @@ export default abstract class DynamicPropertyContainer {
     data?: DynamicProperty | Shape | TextProperty | TextData | TextRangeValue | VectorProperty<Keyframe[]> | GradientColor | Effect;
     dynamicProperties: DynamicPropertyContainer[];
     hd?: boolean;
+    propertyIndex?: number;
     propType?: PropType | false;
     addDynamicProperty(prop: DynamicPropertyContainer): void;
     getValue(_flag?: unknown): unknown;
     initDynamicPropertyContainer(container: ElementInterfaceIntersect): void;
     iterateDynamicProperties(): unknown;
-    setGroupProperty(_propertyInterface: PropertyInterface): void;
+    setGroupProperty(_propertyInterface: PropertyGroupFactory): void;
 }

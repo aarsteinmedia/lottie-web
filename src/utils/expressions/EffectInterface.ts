@@ -1,4 +1,5 @@
 // @ts-nocheck
+import type EffectsManager from '@/effects/EffectsManager'
 import type BaseElement from '@/elements/BaseElement'
 import type {
   Effect, ElementInterfaceIntersect, LottieLayer
@@ -44,7 +45,6 @@ export default class EffectsExpressionInterface {
   effectsData: Effect[] = []
 
   public createEffectsInterface(elem: BaseElement, propertyGroup: LayerExpressionInterface) {
-  // console.log(propertyGroup)
     if (elem.effectsManager) {
       this.effectsData = elem.data?.ef ?? []
       const { length: len } = elem.effectsManager.effectElements
@@ -64,7 +64,7 @@ export default class EffectsExpressionInterface {
   }
 
   private createGroupInterface(
-    data: LottieLayer, elements: ElementInterfaceIntersect[], propertyGroup: (val: number | string) => BaseProperty, elem: ElementInterfaceIntersect
+    data: LottieLayer, elements: EffectsManager, propertyGroup: (val: number | string) => BaseProperty, elem: ElementInterfaceIntersect
   ) {
 
 
@@ -88,6 +88,7 @@ export default class EffectsExpressionInterface {
     //   }
     // }
 
+
     const groupInterface = (name: string | number) => {
       const effects = data.ef ?? []
       let i = 0
@@ -99,14 +100,15 @@ export default class EffectsExpressionInterface {
             return this.effectElements[i]
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return this.effectElements[i]()
         }
         i++
       }
       throw new Error()
     }
-    const _propertyGroup = new PropertyGroupFactory(groupInterface, propertyGroup)
-    const { length } = data.ef ?? []
+    const _propertyGroup = new PropertyGroupFactory(groupInterface, propertyGroup),
+      { length } = data.ef ?? []
 
     for (let i = 0; i < length; i += 1) {
       if (data.ef?.[i].ty === 5) {
@@ -145,7 +147,7 @@ export default class EffectsExpressionInterface {
   }
 
   private createValueInterface(
-    element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup: (val: number) => BaseProperty
+    element: ShapeProperty, type: number, elem: ElementInterfaceIntersect, propertyGroup: PropertyGroupFactory
   ) {
     const expressionProperty = expressionPropertyFactory(element.p)
 
