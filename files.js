@@ -34,7 +34,8 @@ const files = [
   'models.lottie',
   'portal.lottie',
   'round-corners-modifier.json',
-  'round-corners-modifier_.json'
+  'round-corners-modifier_.json',
+  'West Mini Hero.json'
 ]
 
 export default files
