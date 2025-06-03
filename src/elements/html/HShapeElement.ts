@@ -1,5 +1,4 @@
 
-// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type {
@@ -103,11 +102,17 @@ export default class HShapeElement extends RenderableElement {
     for (let i = 0; i < length; i++) {
       this.calculateShapeBoundingBox(itemsData[i], boundingBox)
       continue
+
+      // TODO:
+      // @ts-expect-error
       if (itemsData[i]?.it) {
+        // @ts-expect-error
         this.calculateBoundingBox(itemsData[i].it, boundingBox)
         continue
       }
+      // @ts-expect-error
       if (itemsData[i]?.style && itemsData[i].w) {
+        // @ts-expect-error
         this.expandStrokeBoundingBox(itemsData[i].w, boundingBox)
       }
     }
@@ -229,7 +234,6 @@ export default class HShapeElement extends RenderableElement {
   expandStrokeBoundingBox(widthProperty: ValueProperty, boundingBox: BoundingBox) {
     let width = 0
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (widthProperty.keyframes) {
       for (let i = 0; i < widthProperty.keyframes.length; i++) {
         const kfw = widthProperty.keyframes[i].s as unknown as number
@@ -343,7 +347,7 @@ export default class HShapeElement extends RenderableElement {
       tempBoundingBox.xMax = -max
       tempBoundingBox.y = max
       tempBoundingBox.yMax = -max
-      this.calculateBoundingBox(itemsData, tempBoundingBox as BoundingBox)
+      this.calculateBoundingBox(itemsData as unknown as ShapeDataInterface[], tempBoundingBox as BoundingBox)
       tempBoundingBox.width =
         tempBoundingBox.xMax < tempBoundingBox.x
           ? 0

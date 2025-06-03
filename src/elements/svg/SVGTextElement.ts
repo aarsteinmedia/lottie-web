@@ -352,11 +352,11 @@ export default class SVGTextLottieElement extends TextElement {
 
   buildTextContents(textArray: string[]) {
     let i = 0
-    const len = textArray.length
-    const textContents = []
+    const { length } = textArray,
+      textContents = []
     let currentTextContent = ''
 
-    while (i < len) {
+    while (i < length) {
       if (
         textArray[i] === String.fromCharCode(13) ||
         textArray[i] === String.fromCharCode(3)

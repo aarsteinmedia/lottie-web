@@ -20,14 +20,14 @@ import TransformPropertyFactory, { type TransformProperty } from '@/utils/Transf
 function loopOut(
   this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
 ) {
-  if (!this.k || this.keyframes.length === 0) {
+  if (!this.k || this.keyframes?.length === 0) {
     return this.pv
   }
 
   let duration = durationFromProps
 
   const {
-    comp, elem, keyframes, pv
+    comp, elem, keyframes = [], pv
   } = this
 
   if (!elem?.comp) {
@@ -134,7 +134,7 @@ function loopIn(
   let duration = durationFromProps
 
   const {
-    comp, elem, keyframes, pv
+    comp, elem, keyframes = [], pv
   } = this
 
   if (!elem?.comp) {
@@ -271,18 +271,21 @@ function smooth(
       for (j = 0; j < pv.length; j++) {
         value[j] += sampleValue[j]
       }
-    } else {
-      (value as number) += (sampleValue as number)
+      i++
+      continue
     }
+    (value as number) += (sampleValue as number)
     i++
   }
   if (isArrayOfNum(pv) && isArrayOfNum(value)) {
     for (j = 0; j < pv.length; j += 1) {
       value[j] /= samples
     }
-  } else {
-    (value as number) /= samples
+
+    return value
   }
+
+  (value as number) /= samples
 
   return value
 }

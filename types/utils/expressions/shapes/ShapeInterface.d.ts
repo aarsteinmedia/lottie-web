@@ -8,6 +8,7 @@ import type SVGTransformData from '../../../elements/helpers/shapes/SVGTransform
 import type { Shape } from '../../../types';
 import type LayerExpressionInterface from '../../../utils/expressions/LayerInterface';
 import type RepeaterModifier from '../../../utils/shapes/RepeaterModifier';
+import type RoundCornersModifier from '../../../utils/shapes/RoundCornersModifier';
 import type TrimModifier from '../../../utils/shapes/TrimModifier';
 import PropertyGroupFactory from '../../../utils/expressions/PropertyGroupFactory';
 import ShapePathInterface from '../../../utils/expressions/shapes/ShapePathInterface';
@@ -31,30 +32,30 @@ export default class ShapeExpressionInterface {
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | null;
-    getInterface(valueFromProps: string | number): any;
+    getInterface(valueFromProps?: string | number): PropertyGroupFactory;
     gradientFillInterfaceFactory(shape: Shape, view: SVGGradientFillStyleData, propertyGroup: PropertyGroupFactory): (val: string | number) => (() => {
         mult: number;
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | null;
-    groupInterfaceFactory(shape: Shape, view: ShapeGroupData, propertyGroup: PropertyGroupFactory): (value: string | number) => any;
-    iterateElements(shapes: null | Shape[], view: ShapeGroupData[], propertyGroup: PropertyGroupFactory): ShapePathInterface[];
+    groupInterfaceFactory(shape: Shape, view: ShapeGroupData, propertyGroup: PropertyGroupFactory): (value: string | number) => import("../../../types").Transformer | ((value: string | number) => ShapePathInterface | null) | undefined;
+    iterateElements(shapes: null | Shape[], view: ShapeGroupData | ShapeGroupData[], propertyGroup: PropertyGroupFactory): ShapePathInterface[];
     parentGroupWrapper(): LayerExpressionInterface;
     rectInterfaceFactory(shape: Shape, view: SVGShapeData, propertyGroup: PropertyGroupFactory): (value: string | number) => (() => {
         mult: number;
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | null;
-    repeaterInterfaceFactory(shape: Shape, view: RepeaterModifier, propertyGroup: LayerExpressionInterface): {
-        (value: number | string): any;
-        propertyIndex: number | undefined;
-        mn: string | undefined;
-    };
-    roundedInterfaceFactory(shape: Shape, view: any, propertyGroup: any): {
-        (value: any): any;
-        propertyIndex: number | undefined;
-        mn: string | undefined;
-    };
+    repeaterInterfaceFactory(shape: Shape, view: RepeaterModifier, propertyGroup: LayerExpressionInterface): (value: string | number) => (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | null;
+    roundedInterfaceFactory(shape: Shape, view: RoundCornersModifier, propertyGroup: PropertyGroupFactory): (value: string | number) => (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>) | null;
     starInterfaceFactory(shape: Shape, view: ShapeData, propertyGroup: PropertyGroupFactory): (value: string | number) => (() => {
         mult: number;
         pv: number;

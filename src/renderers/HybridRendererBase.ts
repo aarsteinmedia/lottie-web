@@ -75,9 +75,9 @@ export default class HybridRendererBase extends BaseRenderer {
 
   addTo3dContainer(elem: HTMLElement, pos: number) {
     let i = 0
-    const len = this.threeDElements.length
+    const { length } = this.threeDElements
 
-    while (i < len) {
+    while (i < length) {
       if (pos <= this.threeDElements[i].endPos) {
         let j = this.threeDElements[i].startPos,
           nextElement
@@ -109,10 +109,10 @@ export default class HybridRendererBase extends BaseRenderer {
       if (this.threeDElements.length > 0) {
         this.addTo3dContainer(newDOMElement, pos)
       } else {
-        let i = 0
-        let nextDOMElement
-        let nextLayer
-        let tmpDOMElement
+        let i = 0,
+          nextDOMElement,
+          nextLayer,
+          tmpDOMElement
 
         while (i < pos) {
           if (
@@ -377,9 +377,9 @@ export default class HybridRendererBase extends BaseRenderer {
 
   getThreeDContainerByPos(pos: number) {
     let i = 0
-    const len = this.threeDElements.length
+    const { length } = this.threeDElements
 
-    while (i < len) {
+    while (i < length) {
       if (
         this.threeDElements[i].startPos <= pos &&
         this.threeDElements[i].endPos >= pos

@@ -1,4 +1,3 @@
-// @ts-nocheck: TODO:
 import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type { Shape } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
@@ -33,9 +32,10 @@ export default class ShapePathInterface {
   ) {
     this.prop = view.sh
 
+    // @ts-expect-error
     const _propertyGroup = new PropertyGroupFactory(this, propertyGroup)
 
-    this.prop?.setGroupProperty(new PropertyInterface('Path', _propertyGroup))
+    this.prop?.setGroupProperty(new PropertyInterface('Path', _propertyGroup) as unknown as PropertyGroupFactory)
 
     this._name = shape.nm
     this.ix = shape.ix

@@ -1,17 +1,20 @@
+import type { RectShapeProperty } from '@/utils/shapes/ShapeProperty'
+
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class RectInterface extends BaseInterface {
+  override prop?: RectShapeProperty
   get position() {
-    return expressionPropertyFactory(this.prop.p)
+    return expressionPropertyFactory(this.prop?.p)
   }
 
   get roundness() {
-    return expressionPropertyFactory(this.prop.r)
+    return expressionPropertyFactory(this.prop?.r)
   }
 
   get size() {
-    return expressionPropertyFactory(this.prop.s)
+    return expressionPropertyFactory(this.prop?.s)
   }
 
   override getInterface(value: string | number) {

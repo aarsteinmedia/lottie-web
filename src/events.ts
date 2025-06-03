@@ -150,8 +150,8 @@ export default abstract class BaseEvent {
     }
 
     if (this._cbs[eventName]) {
-      let i = 0
-      let len = this._cbs[eventName].length
+      let i = 0,
+        { length: len } = this._cbs[eventName]
 
       while (i < len) {
         if (this._cbs[eventName][i] === callback) {

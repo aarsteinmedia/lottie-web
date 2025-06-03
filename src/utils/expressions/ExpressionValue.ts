@@ -52,7 +52,7 @@ export default class ExpressionValue extends BaseProperty {
       this.value = arrValue
     }
 
-    this.numKeys = elementProp.keyframes.length || 0
+    this.numKeys = elementProp.keyframes?.length ?? 0
 
     this.valueAtTime = elementProp.getValueAtTime
     this.speedAtTime = elementProp.getSpeedAtTime
@@ -65,6 +65,8 @@ export default class ExpressionValue extends BaseProperty {
       return 0
     }
 
-    return this.keyframes[pos - 1].t
+    const { keyframes = [] } = this
+
+    return keyframes[pos - 1].t
   }
 }

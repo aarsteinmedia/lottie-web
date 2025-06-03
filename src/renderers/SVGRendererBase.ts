@@ -31,8 +31,8 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     if (!newElement) {
       return
     }
-    let i = 0
-    let nextElement
+    let i = 0,
+      nextElement
 
     while (i < pos) {
       if (

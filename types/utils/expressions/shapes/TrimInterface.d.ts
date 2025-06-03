@@ -1,7 +1,7 @@
 import type TrimModifier from '../../../utils/shapes/TrimModifier';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class TrimInterface extends BaseInterface {
-    view?: TrimModifier;
+    prop?: TrimModifier;
     get end(): (() => {
         mult: number;
         pv: number;

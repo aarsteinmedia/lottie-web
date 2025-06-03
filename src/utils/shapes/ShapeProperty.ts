@@ -94,7 +94,6 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public elem?: SVGShapeElement | CVShapeElement | HShapeElement
   frameId?: number
   public k?: boolean
-  keyframes: Keyframe[] = []
   keyframesMetadata: KeyframesMetadata[] = []
   public kf?: boolean
   public localShapeCollection?: ShapeCollection
@@ -128,7 +127,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       isHold,
       perc = 0,
       vertexValue
-    const kf = this.keyframes
+    const kf = this.keyframes ?? []
 
     if (frameNum < kf[0].t - this.offsetTime) {
       keyPropS = kf[0].s?.[0] as unknown as Svalue[]
@@ -239,6 +238,10 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   interpolateShapeCurrentTime() {
     if (!this.pv) {
       throw new Error(`${this.constructor.name}: Cannot parse ShapePath v value`)
+    }
+
+    if (!this.keyframes) {
+      return
     }
 
     this._caching = this._caching ?? ({} as Caching)
@@ -1033,6 +1036,7 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
       lastFrame: initialDefaultFrame,
       lastIndex: 0
     } as Caching
+    // @ts-expect-error
     this.effectsSequence = [this.interpolateShapeCurrentTime.bind(this)]
     this.getValue = this.processEffectsSequence
   }

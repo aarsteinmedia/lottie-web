@@ -1,7 +1,7 @@
 import type CVShapeElement from '../../elements/canvas/CVShapeElement';
 import type HShapeElement from '../../elements/html/HShapeElement';
 import type SVGShapeElement from '../../elements/svg/SVGShapeElement';
-import type { Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, StrokeData } from '../../types';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata, Shape, StrokeData } from '../../types';
 import type { KeyframedValueProperty, MultiDimensionalProperty, ValueProperty } from '../../utils/Properties';
 import type ShapeCollection from '../../utils/shapes/ShapeCollection';
 import type ShapePath from '../../utils/shapes/ShapePath';
@@ -19,7 +19,6 @@ export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer
     elem?: SVGShapeElement | CVShapeElement | HShapeElement;
     frameId?: number;
     k?: boolean;
-    keyframes: Keyframe[];
     keyframesMetadata: KeyframesMetadata[];
     kf?: boolean;
     localShapeCollection?: ShapeCollection;
@@ -33,7 +32,7 @@ export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer
     getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath | null;
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): void;
     interpolateShape(frameNum: number, previousValue: ShapePath, caching?: Caching): void;
-    interpolateShapeCurrentTime(): ShapePath;
+    interpolateShapeCurrentTime(): ShapePath | undefined;
     processEffectsSequence(_val?: unknown): number;
     reset(): void;
     setVValue(newPath?: ShapePath): void;

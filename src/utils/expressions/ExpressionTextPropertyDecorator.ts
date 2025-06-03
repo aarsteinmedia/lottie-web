@@ -1,14 +1,16 @@
-// @ts-nocheck: TODO:
-import type { DocumentData } from '@/types'
+import type { DocumentData, ExpressionProperty } from '@/types'
+import type { KeyframedValueProperty } from '@/utils/Properties'
 
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import TextProperty from '@/utils/text/TextProperty'
 
 function searchExpressions(this: TextProperty) {
   if (this.data.d?.x) {
-    this.calculateExpression = ExpressionManager.initiateExpression.bind(this)(
-      this.elem, this.data.d, this
+    // @ts-expect-error
+    this.calculateExpression = ExpressionManager.initiateExpression.bind(this as unknown as KeyframedValueProperty)(
+      this.elem, this.data.d as unknown as ExpressionProperty, this as unknown as KeyframedValueProperty
     )
+    // @ts-expect-error
     this.addEffect(this.getExpressionValue.bind(this))
 
     return true

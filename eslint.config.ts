@@ -17,10 +17,13 @@ const sheriffOptions: SheriffSettings = {
   'vitest': false
 }
 
-const ignores = ['**/node_modules/*',
-    './types',
-    './player.js',
-    './player-light.js'],
+const ignores = [
+    '**/node_modules/*',
+    '**/types/*',
+    'tsconfig.json',
+    'player.js',
+    'player-light.js'
+  ],
   config: ConfigArray = tseslint.config(
     sheriff(sheriffOptions),
     {

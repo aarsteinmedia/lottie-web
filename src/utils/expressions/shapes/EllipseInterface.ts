@@ -1,14 +1,18 @@
+import type { EllShapeProperty } from '@/utils/shapes/ShapeProperty'
+
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 
 export default class EllipseInterface extends BaseInterface {
+  override prop?: EllShapeProperty
+
   get position() {
-    return expressionPropertyFactory(this.prop.p)
+    return expressionPropertyFactory(this.prop?.p)
   }
 
   get size() {
-    return expressionPropertyFactory(this.prop.s)
+    return expressionPropertyFactory(this.prop?.s)
   }
 
   override getInterface(value: string | number) {

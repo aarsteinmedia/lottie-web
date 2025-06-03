@@ -79,8 +79,7 @@ export default abstract class RenderableElement extends FrameElement {
   }
 
   hide() {
-    // Pass through? TODO:
-    // throw new Error(`${this.constructor.name}: Method hide is not implemented`)
+    // Pass through?
   }
 
   initRenderable() {

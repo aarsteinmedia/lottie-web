@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
 import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
 import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties'
@@ -8,10 +7,12 @@ import { ArrayType } from '@/utils/enums'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
+import type LayerExpressionInterface from './LayerInterface'
+
 function searchExpressions(
   elem: ElementInterfaceIntersect, data?: ExpressionProperty, prop?: KeyframedValueProperty
 ) {
-  if (!data.x) {
+  if (!data?.x || !prop) {
     return
   }
   prop.k = true
@@ -58,7 +59,7 @@ function getSpeedAtTime(this: BaseProperty, frameNum: number) {
   return speed
 }
 
-function getVelocityAtTime(this: BaseProperty, frameNum: number): number {
+function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[] {
   if (this.vel !== undefined) {
     return this.vel
   }
@@ -82,7 +83,7 @@ function getVelocityAtTime(this: BaseProperty, frameNum: number): number {
       velocity[i] = (v2[i] - v1[i]) / delta
     }
 
-    return velocity
+    return velocity as number[]
   }
   velocity = (v2 as number - (v1 as number)) / delta
 
@@ -96,7 +97,7 @@ function getStaticValueAtTime(
 }
 
 function setGroupProperty(this: BaseProperty, propertyGroup: PropertyGroupFactory) {
-  this.propertyGroup = propertyGroup
+  this.propertyGroup = propertyGroup as unknown as LayerExpressionInterface
 }
 
 

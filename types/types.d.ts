@@ -346,7 +346,7 @@ interface ShapeDataProperty {
 export interface StrokeData {
     n: 'o' | 'd' | 'g';
     nm?: 'offset' | 'dash' | 'gap';
-    p: any;
+    p: BaseProperty;
     v?: VectorProperty;
 }
 interface ShapeColor {

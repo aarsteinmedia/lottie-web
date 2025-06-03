@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/consistent-destructuring */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
@@ -342,38 +343,39 @@ export class TransformProperty extends BaseProperty {
             Number(this.p.offsetTime)) as Vector2
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
-          v1 = [0, 0] // TODO: Used to be []. Check if works
+          v1 = [0, 0]
           v2 = [0, 0]
-          const { px } = this,
-            { py } = this
+          const { px, py } = this,
+            { keyframes: pxKeyframes = [] } = px,
+            { keyframes: pyKeyframes = [] } = py
 
           if (
             Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
-            px.keyframes[0].t
+            pxKeyframes[0].t
           ) {
-            v1[0] = px.getValueAtTime((px.keyframes[0].t + 0.01) / frameRate,
+            v1[0] = px.getValueAtTime((pxKeyframes[0].t + 0.01) / frameRate,
               0) as number
-            v1[1] = py.getValueAtTime((py.keyframes[0].t + 0.01) / frameRate,
+            v1[1] = py.getValueAtTime((pyKeyframes[0].t + 0.01) / frameRate,
               0) as number
-            v2[0] = px.getValueAtTime(px.keyframes[0].t / frameRate,
+            v2[0] = px.getValueAtTime(pxKeyframes[0].t / frameRate,
               0) as number
-            v2[1] = py.getValueAtTime(Number(py.keyframes[0]?.t) / frameRate,
+            v2[1] = py.getValueAtTime(Number(pyKeyframes[0]?.t) / frameRate,
               0) as number
           } else if (
             Number(px._caching?.lastFrame) + px.offsetTime >=
-            px.keyframes[px.keyframes.length - 1].t
+            pxKeyframes[pxKeyframes.length - 1].t
           ) {
-            v1[0] = px.getValueAtTime(px.keyframes[px.keyframes.length - 1].t /
+            v1[0] = px.getValueAtTime(pxKeyframes[pxKeyframes.length - 1].t /
               frameRate,
             0) as number
-            v1[1] = py.getValueAtTime(py.keyframes[py.keyframes.length - 1].t /
+            v1[1] = py.getValueAtTime(pyKeyframes[pyKeyframes.length - 1].t /
               frameRate,
             0) as number
-            v2[0] = px.getValueAtTime((px.keyframes[px.keyframes.length - 1].t -
+            v2[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1].t -
               0.01) /
               frameRate,
             0) as number
-            v2[1] = py.getValueAtTime((py.keyframes[py.keyframes.length - 1].t -
+            v2[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1].t -
               0.01) /
               frameRate,
             0) as number

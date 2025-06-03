@@ -136,7 +136,7 @@ export default class HCameraElement extends FrameElement {
   }
 
   createElements() {
-    // TODO: Pass Through
+    // Pass Through
   }
 
   override getBaseElement() {
@@ -144,7 +144,7 @@ export default class HCameraElement extends FrameElement {
   }
 
   hide() {
-    // TODO: Pass Through
+    // Pass Through
   }
 
   prepareFrame(num: number) {

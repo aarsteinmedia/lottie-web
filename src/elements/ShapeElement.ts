@@ -78,9 +78,9 @@ export default abstract class ShapeElement extends RenderableDOMElement {
   }
 
   searchProcessedElement(elem: unknown) {
-    const { processedElements } = this
+    const { processedElements } = this,
+      { length } = processedElements
     let i = 0
-    const { length } = processedElements
 
     while (i < length) {
       if (processedElements[i].elem === elem) {

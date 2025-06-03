@@ -1,34 +1,38 @@
+import type { StarShapeProperty } from '@/utils/shapes/ShapeProperty'
+
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 
 export default class StarInterface extends BaseInterface {
+  override prop?: StarShapeProperty
+
   get innerRadius() {
-    return expressionPropertyFactory(this.prop.ir)
+    return expressionPropertyFactory(this.prop?.ir)
   }
 
   get innerRoundness() {
-    return expressionPropertyFactory(this.prop.is)
+    return expressionPropertyFactory(this.prop?.is)
   }
 
   get outerRadius() {
-    return expressionPropertyFactory(this.prop.or)
+    return expressionPropertyFactory(this.prop?.or)
   }
 
   get outerRoundness() {
-    return expressionPropertyFactory(this.prop.os)
+    return expressionPropertyFactory(this.prop?.os)
   }
 
   get points() {
-    return expressionPropertyFactory(this.prop.pt)
+    return expressionPropertyFactory(this.prop?.pt)
   }
 
   get position() {
-    return expressionPropertyFactory(this.prop.p)
+    return expressionPropertyFactory(this.prop?.p)
   }
 
   get rotation() {
-    return expressionPropertyFactory(this.prop.r)
+    return expressionPropertyFactory(this.prop?.r)
   }
 
   override getInterface(value: string | number) {

@@ -309,9 +309,9 @@ export default class AnimationItem extends BaseEvent {
 
   public getAssetData(id?: string) {
     let i = 0
-    const len = this.assets.length
+    const { length } = this.assets
 
-    while (i < len) {
+    while (i < length) {
       if (id === this.assets[i].id) {
         return this.assets[i]
       }
@@ -450,7 +450,7 @@ export default class AnimationItem extends BaseEvent {
     }
     const { assets, layers } = this.animationData
     let i,
-      len = layers.length
+      { length: len } = layers
     const newLayers = data.layers,
       { length: jLen } = newLayers
 

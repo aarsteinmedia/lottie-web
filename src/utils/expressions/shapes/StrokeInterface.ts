@@ -4,11 +4,11 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class StrokeInterface extends BaseInterface {
-  dashOb?: any
-  view?: SVGStrokeStyleData
+  dashOb?: Record<PropertyKey, unknown>
+  override prop?: SVGStrokeStyleData
 
   get color() {
-    return expressionPropertyFactory(this.view?.c)
+    return expressionPropertyFactory(this.prop?.c)
   }
 
   get dash() {
@@ -16,11 +16,11 @@ export default class StrokeInterface extends BaseInterface {
   }
 
   get opacity() {
-    return expressionPropertyFactory(this.view?.o)
+    return expressionPropertyFactory(this.prop?.o)
   }
 
   get strokeWidth() {
-    return expressionPropertyFactory(this.view?.w)
+    return expressionPropertyFactory(this.prop?.w)
   }
 
   override getInterface(val: string | number) {

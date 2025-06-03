@@ -979,9 +979,10 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
     while (i < lenA || i < lenB) {
       if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
         retArr[i] = a[i] - b[i]
-      } else {
-        retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
+        i++
+        continue
       }
+      retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       i++
     }
 
@@ -1023,9 +1024,10 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
     while (i < lenA || i < lenB) {
       if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
         retArr[i] = a[i] + b[i]
-      } else {
-        retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
+        i++
+        continue
       }
+      retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       i++
     }
 

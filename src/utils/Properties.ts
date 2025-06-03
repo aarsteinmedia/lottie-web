@@ -47,7 +47,6 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   g?: unknown
   initFrame = initialDefaultFrame
   k?: boolean
-  keyframes: Keyframe[] = []
   keyframesMetadata: KeyframesMetadata[] = []
   kf?: boolean | null
   lock?: boolean
@@ -78,6 +77,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   getValueAtCurrentTime() {
     this._caching = this._caching ?? {} as Caching
+
+    if (!this.keyframes) {
+      return
+    }
+
     const offsetTime = Number(this.offsetTime),
       frameNum = Number(this.comp?.renderedFrame) - offsetTime,
       initTime = this.keyframes[0].t - offsetTime,
@@ -111,7 +115,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     throw new Error(`${this.constructor.name}: Method getValueAtTime is not implemented`)
   }
 
-  getVelocityAtTime(_frameNum: number): number {
+  getVelocityAtTime(_frameNum: number): number | number[] {
     throw new Error(`${this.constructor.name}: Method getVelocityAtTime is not implemented`)
   }
 
@@ -129,18 +133,21 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     if (this.propType === PropType.MultiDimensional && this.pv) {
       newValue = createTypedArray(ArrayType.Float32,
-        (this.pv as any[]).length) as Vector3
+        (this.pv as number[]).length) as Vector3
     }
+    const {
+      keyframes = [], keyframesMetadata, propType
+    } = this
     let iterationIndex = caching.lastIndex || 0,
       i = iterationIndex,
-      len = this.keyframes.length - 1,
+      len = keyframes.length - 1,
       shouldInterpolate = true,
-      keyData = this.keyframes[0],
-      nextKeyData = this.keyframes[1]
+      keyData = keyframes[0],
+      nextKeyData = keyframes[1]
 
     while (shouldInterpolate) {
-      keyData = this.keyframes[i]
-      nextKeyData = this.keyframes[i + 1]
+      keyData = keyframes[i]
+      nextKeyData = keyframes[i + 1]
       if (i === len - 1 && frameNum >= nextKeyData.t - offsetTime) {
         if (keyData.h) {
           keyData = nextKeyData
@@ -159,7 +166,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         shouldInterpolate = false
       }
     }
-    const keyframeMetadata = this.keyframesMetadata[i] || {}
+    const keyframeMetadata = keyframesMetadata[i] ?? {}
 
     let kLen,
       perc,
@@ -229,7 +236,9 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               newValue[k] = bezierData.points[j].point[k]
             }
             break
-          } else if (
+          }
+
+          if (
             distanceInLine >= addedLength &&
             distanceInLine <
               addedLength + bezierData.points[j + 1].partialLength
@@ -267,6 +276,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
       len = keyData.s?.length || 0
       endValue = (nextKeyData.s ?? keyData.e) as Vector3
+      // eslint-disable-next-line unicorn/consistent-destructuring
       if (this.sh && keyData.h !== 1) {
         if (frameNum >= nextKeyTime) {
           newValue[0] = endValue[0]
@@ -338,7 +348,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
               : Number(keyData.s?.[i]) + ((endValue as number[])[i] - Number(keyData.s?.[i])) * Number(perc)
 
           if (keyValue !== undefined) {
-            if (this.propType === PropType.MultiDimensional) {
+            if (propType === PropType.MultiDimensional) {
               newValue[i] = keyValue as number
             } else {
               newValue = keyValue as unknown as Vector3

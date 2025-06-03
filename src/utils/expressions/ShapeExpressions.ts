@@ -62,9 +62,8 @@ export default abstract class ShapeExpressions extends ShapeProperty {
         }
 
         break
-      } else {
-        accumulatedLength += lengths[i].addedLength
       }
+      accumulatedLength += lengths[i].addedLength
       i++
     }
     if (shapePath) {

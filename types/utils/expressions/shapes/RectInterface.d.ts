@@ -1,5 +1,7 @@
+import type { RectShapeProperty } from '../../../utils/shapes/ShapeProperty';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class RectInterface extends BaseInterface {
+    prop?: RectShapeProperty;
     get position(): (() => {
         mult: number;
         pv: number;

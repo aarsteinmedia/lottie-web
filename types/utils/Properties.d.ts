@@ -20,7 +20,6 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     g?: unknown;
     initFrame: number;
     k?: boolean;
-    keyframes: Keyframe[];
     keyframesMetadata: KeyframesMetadata[];
     kf?: boolean | null;
     lock?: boolean;
@@ -44,7 +43,7 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     getSpeedAtTime(_frameNum: number): void;
     getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
     getValueAtTime(_val1?: unknown, _val2?: unknown): unknown;
-    getVelocityAtTime(_frameNum: number): number;
+    getVelocityAtTime(_frameNum: number): number | number[];
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): EffectFunction;
     interpolateValue(frameNum: number, caching?: Caching): Vector3;
     processEffectsSequence(): number;

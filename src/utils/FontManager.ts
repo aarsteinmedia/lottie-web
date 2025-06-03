@@ -361,9 +361,9 @@ export default class FontManager {
     font?: string
   ): Characacter {
     let i = 0
-    const len = this.chars?.length || 0
+    const { length } = this.chars ?? []
 
-    while (i < len) {
+    while (i < length) {
       if (
         this.chars?.[i].ch === char &&
         this.chars[i].style === style &&

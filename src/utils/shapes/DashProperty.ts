@@ -74,16 +74,16 @@ export default class DashProperty extends DynamicPropertyContainer {
     }
     for (let i = 0; i < len; i++) {
       if (this.dataProps[i].n === 'o') {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
         this.dashoffset[0] = this.dataProps[i].p.v as number
         continue
       }
       if (this.renderer === RendererType.SVG) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
         this.dashStr += ` ${this.dataProps[i].p.v}`
         continue
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       this.dashArray[i] = this.dataProps[i].p.v as number
     }
 

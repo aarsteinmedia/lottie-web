@@ -1,24 +1,18 @@
-import type SVGGradientFillStyleData from '../../../elements/helpers/shapes/SVGGradientFillStyleData';
+import type RepeaterModifier from '../../../utils/shapes/RepeaterModifier';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-export default class GradientFillInterface extends BaseInterface {
-    prop?: SVGGradientFillStyleData;
-    get endPoint(): (() => {
+export default class RepeaterInterface extends BaseInterface {
+    prop?: RepeaterModifier;
+    get copies(): (() => {
         mult: number;
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
-    get opacity(): (() => {
+    get offset(): (() => {
         mult: number;
         pv: number;
         v: number;
     }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
-    get startPoint(): (() => {
-        mult: number;
-        pv: number;
-        v: number;
-    }) | (() => Number) | (() => number[] | Uint8ClampedArray<ArrayBuffer> | Int16Array<ArrayBuffer> | Float32Array<ArrayBuffer>);
-    get type(): string;
-    getInterface(val: string | number): (() => {
+    getInterface(value: string | number): (() => {
         mult: number;
         pv: number;
         v: number;

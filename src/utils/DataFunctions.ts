@@ -134,9 +134,9 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
 
 function findComp(id: string, comps: (LottieLayer | LottieAsset)[]) {
   let i = 0
-  const len = comps.length
+  const { length } = comps
 
-  while (i < len) {
+  while (i < length) {
     if (comps[i].id === id) {
       return comps[i]
     }

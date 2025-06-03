@@ -1,5 +1,4 @@
-// @ts-nocheck: TODO:
-
+// @ts-nocheck TODO:
 import type ShapeData from '@/elements/helpers/shapes/ShapeData'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
@@ -7,9 +6,13 @@ import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradient
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
-import type { Shape } from '@/types'
+import type { Shape, StrokeData } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
+import type {
+  EllShapeProperty, RectShapeProperty, StarShapeProperty
+} from '@/utils/shapes/ShapeProperty'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 
 import { ShapeType } from '@/utils/enums'
@@ -27,6 +30,9 @@ import StarInterface from '@/utils/expressions/shapes/StarInterface'
 import StrokeInterface from '@/utils/expressions/shapes/StrokeInterface'
 import TransformInterface from '@/utils/expressions/shapes/TransformInterface'
 import TrimInterface from '@/utils/expressions/shapes/TrimInterface'
+
+import RepeaterInterface from './RepeaterInterface'
+import RoundCornersInterface from './RoundCornersInterface'
 
 
 export default class ShapeExpressionInterface {
@@ -55,7 +61,7 @@ export default class ShapeExpressionInterface {
     ContentInterface.prototype.propertyGroup = new PropertyGroupFactory(ContentInterface, propertyGroup)
 
     this.interfaces = this.iterateElements(
-      shape.it, view.it, ContentInterface.prototype.propertyGroup
+      shape.it ?? null, view.it, ContentInterface.prototype.propertyGroup
     )
     ContentInterface.prototype.numProperties = this.interfaces.length
     const transformInterface = this.transformInterfaceFactory(
@@ -81,11 +87,11 @@ export default class ShapeExpressionInterface {
 
     EllipseInterface.prototype.shape = shape
     EllipseInterface.prototype.propertyIndex = shape.ix
-    const prop = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
+    const prop: EllShapeProperty = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
 
 
     prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
-    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.p?.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
 
     EllipseInterface.prototype._name = shape.nm
     EllipseInterface.prototype.prop = prop
@@ -109,26 +115,26 @@ export default class ShapeExpressionInterface {
     return FillInterface.prototype.getInterface
   }
 
-  getInterface(valueFromProps: string | number) {
+  getInterface(valueFromProps?: string | number): PropertyGroupFactory {
     let value = valueFromProps
 
     if (typeof value === 'number') {
-      value = valueFromProps === undefined ? 1 : valueFromProps
+      value = valueFromProps ?? 1
       if (value === 0) {
-        return propertyGroup
+        return propertyGroup as PropertyGroupFactory
       }
 
       return this.interfaces[value - 1]
     }
     let i = 0
 
-    const len = this.interfaces.length
+    const { length } = this.interfaces
 
-    while (i < len) {
+    while (i < length) {
       if (this.interfaces[i]._name === value) {
         return this.interfaces[i]
       }
-      i += 1
+      i++
     }
 
     return null
@@ -139,7 +145,7 @@ export default class ShapeExpressionInterface {
   ) {
 
     GradientFillInterface.prototype._name = shape.nm
-    GradientFillInterface.prototype.view = view
+    GradientFillInterface.prototype.prop = view
     GradientFillInterface.prototype.mn = shape.mn
 
 
@@ -176,7 +182,7 @@ export default class ShapeExpressionInterface {
   }
 
   iterateElements(
-    shapes: null | Shape[], view: ShapeGroupData[], propertyGroup: PropertyGroupFactory
+    shapes: null | Shape[], view: ShapeGroupData | ShapeGroupData[], propertyGroup: PropertyGroupFactory
   ) {
     const arr: ShapePathInterface[] = [],
       { length } = shapes ?? []
@@ -188,28 +194,28 @@ export default class ShapeExpressionInterface {
       switch (shapes[i].ty) {
         case ShapeType.Group: {
           arr.push(this.groupInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Fill: {
           arr.push(this.fillInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Stroke: {
           arr.push(this.strokeInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Trim: {
           arr.push(this.trimInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
@@ -221,56 +227,56 @@ export default class ShapeExpressionInterface {
         }
         case ShapeType.Ellipse: {
           arr.push(this.ellipseInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.PolygonStar: {
           arr.push(this.starInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Path: {
           arr.push(new ShapePathInterface(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Rectangle: {
           arr.push(this.rectInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.RoundedCorners: {
           arr.push(this.roundedInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.Repeater: {
           arr.push(this.repeaterInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         case ShapeType.GradientFill: {
           arr.push(this.gradientFillInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
 
           break
         }
         default: {
           arr.push(this.defaultInterfaceFactory(
-            shapes[i], view[i], propertyGroup
+            shapes[i], (view as ShapeGroupData[])[i], propertyGroup
           ))
         }
       }
@@ -288,13 +294,12 @@ export default class ShapeExpressionInterface {
   ) {
 
     RectInterface.prototype.shape = shape
-    const _propertyGroup = new PropertyGroupFactory(RectInterface, propertyGroup)
-
-    const prop = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
+    const _propertyGroup = new PropertyGroupFactory(RectInterface, propertyGroup),
+      prop: RectShapeProperty = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
 
     RectInterface.prototype.propertyIndex = shape.ix
 
-    prop.p.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
+    prop.p?.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
     prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
     prop.r.setGroupProperty(new PropertyInterface('Rotation', _propertyGroup))
 
@@ -308,57 +313,38 @@ export default class ShapeExpressionInterface {
   repeaterInterfaceFactory(
     shape: Shape, view: RepeaterModifier, propertyGroup: LayerExpressionInterface
   ) {
-    function interfaceFunction(value: number | string) {
-      if (shape.c?.ix === value || value === 'Copies') {
-        return interfaceFunction.copies
-      } if (shape.o.ix === value || value === 'Offset') {
-        return interfaceFunction.offset
-      }
 
-      return null
-    }
+    RepeaterInterface.prototype.shape = shape
+    RepeaterInterface.prototype.propertyIndex = shape.ix
+    RepeaterInterface.prototype._name = shape.nm
+    RepeaterInterface.prototype.mn = shape.mn
 
-    const _propertyGroup = new PropertyGroupFactory(interfaceFunction, propertyGroup)
-    const prop = view
+    const _propertyGroup = new PropertyGroupFactory(RepeaterInterface, propertyGroup),
+      prop = view
 
-    interfaceFunction.propertyIndex = shape.ix
+    RepeaterInterface.prototype.prop = prop
 
     prop.c?.setGroupProperty(new PropertyInterface('Copies', _propertyGroup))
     prop.o?.setGroupProperty(new PropertyInterface('Offset', _propertyGroup))
-    Object.defineProperties(interfaceFunction, {
-      _name: { value: shape.nm },
-      copies: { get: expressionPropertyFactory(prop.c) },
-      offset: { get: expressionPropertyFactory(prop.o) },
-    })
-    interfaceFunction.mn = shape.mn
 
-    return interfaceFunction
+    return RepeaterInterface.prototype.getInterface
   }
 
   roundedInterfaceFactory(
-    shape: Shape, view, propertyGroup
+    shape: Shape, view: RoundCornersModifier, propertyGroup: PropertyGroupFactory
   ) {
-    function interfaceFunction(value) {
-      if (shape.r.ix === value || value === 'Round Corners 1') {
-        return interfaceFunction.radius
-      }
 
-      return null
-    }
+    RoundCornersInterface.prototype.shape = shape
+    RoundCornersInterface.prototype._name = shape.nm
+    RoundCornersInterface.prototype.propertyIndex = shape.ix
+    RoundCornersInterface.prototype.mn = shape.mn
 
-    const _propertyGroup = new PropertyGroupFactory(interfaceFunction, propertyGroup)
-    const prop = view
+    const _propertyGroup = new PropertyGroupFactory(RoundCornersInterface, propertyGroup as LayerExpressionInterface),
+      prop = view
 
-    interfaceFunction.propertyIndex = shape.ix
     prop.rd.setGroupProperty(new PropertyInterface('Radius', _propertyGroup))
 
-    Object.defineProperties(interfaceFunction, {
-      _name: { value: shape.nm },
-      radius: { get: expressionPropertyFactory(prop.rd) },
-    })
-    interfaceFunction.mn = shape.mn
-
-    return interfaceFunction
+    return RoundCornersInterface.prototype.getInterface
   }
 
   starInterfaceFactory(
@@ -367,8 +353,8 @@ export default class ShapeExpressionInterface {
 
     StarInterface.prototype.shape = shape
 
-    const _propertyGroup = new PropertyGroupFactory(StarInterface, propertyGroup)
-    const prop = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
+    const _propertyGroup = new PropertyGroupFactory(StarInterface, propertyGroup),
+      prop: StarShapeProperty = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
 
     StarInterface.prototype.propertyIndex = shape.ix
     prop.or.setGroupProperty(new PropertyInterface('Outer Radius', _propertyGroup))
@@ -391,20 +377,19 @@ export default class ShapeExpressionInterface {
   strokeInterfaceFactory(
     shape: Shape, view: SVGStrokeStyleData, propertyGroup: PropertyGroupFactory
   ) {
-    const dashOb = {}
-    const _propertyGroup = new PropertyGroupFactory(StrokeInterface, propertyGroup)
-    const _dashPropertyGroup = new PropertyGroupFactory(dashOb, _propertyGroup)
+    const dashOb: Record<PropertyKey, unknown> = {},
+      _propertyGroup = new PropertyGroupFactory(StrokeInterface, propertyGroup),
+      _dashPropertyGroup = new PropertyGroupFactory(dashOb, _propertyGroup)
 
     function addPropertyToDashOb(it: number) {
       Object.defineProperty(
-        dashOb, shape.d?.[it].nm, { get: expressionPropertyFactory(view.d.dataProps[it].p) }
+        dashOb, (shape.d as StrokeData[] | undefined)?.[it].nm, { get: expressionPropertyFactory(view.d.dataProps[it].p) }
       )
     }
-    let i
 
-    const len = shape.d ? shape.d.length : 0
+    const { length } = shape.d ?? []
 
-    for (i = 0; i < len; i += 1) {
+    for (let i = 0; i < length; i++) {
       addPropertyToDashOb(i)
       view.d.dataProps[i].p.setGroupProperty(_dashPropertyGroup)
     }
@@ -412,7 +397,7 @@ export default class ShapeExpressionInterface {
     StrokeInterface.prototype._name = shape.nm
     StrokeInterface.prototype.mn = shape.mn
     StrokeInterface.prototype.dashOb = dashOb
-    StrokeInterface.prototype.view = view
+    StrokeInterface.prototype.prop = view
 
     view.c?.setGroupProperty(new PropertyInterface('Color', _propertyGroup))
     view.o?.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
@@ -440,7 +425,7 @@ export default class ShapeExpressionInterface {
     view.transform?.op.setGroupProperty(new PropertyInterface('Opacity', _propertyGroup))
 
     TransformInterface.prototype._name = shape.nm
-    TransformInterface.prototype.view = view
+    TransformInterface.prototype.prop = view
 
     TransformInterface.prototype.ty = ShapeType.Transform
     TransformInterface.prototype.mn = shape.mn
@@ -465,7 +450,7 @@ export default class ShapeExpressionInterface {
     TrimInterface.prototype.propertyIndex = shape.ix
     TrimInterface.prototype.propertyGroup = propertyGroup
     TrimInterface.prototype._name = shape.nm
-    TrimInterface.prototype.view = view
+    TrimInterface.prototype.prop = view
     TrimInterface.prototype.mn = shape.mn
 
     return TrimInterface.prototype.getInterface

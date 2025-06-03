@@ -1,10 +1,10 @@
-// @ts-nocheck: TODO:
 import type ShapePathInterface from '@/utils/expressions/shapes/ShapePathInterface'
 
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class GroupInterface extends BaseInterface {
   content?: (value: string | number) => ShapePathInterface | null
+  // @ts-expect-error
   override get _name() {
     return this.shape?.nm
   }

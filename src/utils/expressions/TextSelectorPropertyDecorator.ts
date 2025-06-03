@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type {
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
@@ -32,7 +31,7 @@ export default class TextExpressionSelectorPropFactory extends BaseProperty {
       1]
     this.k = true
     this.x = true
-    this.getValue = ExpressionManager.initiateExpression.bind(this)(
+    this.getValue = ExpressionManager.initiateExpression.bind(this as KeyframedValueProperty)(
       elem, data, this as unknown as KeyframedValueProperty
     )
     this.getMult = this.getValueProxy
@@ -78,5 +77,7 @@ TextSelectorProp.prototype.getTextSelectorProp = function (
   propertyGetTextProp(
     elem, data, arr
   )
+
+  return null
 }
 

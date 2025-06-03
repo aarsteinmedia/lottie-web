@@ -5,17 +5,17 @@ import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 
 export default class TrimInterface extends BaseInterface {
-  view?: TrimModifier
+  override prop?: TrimModifier
   get end() {
-    return expressionPropertyFactory(this.view?.e)
+    return expressionPropertyFactory(this.prop?.e)
   }
 
   get offset() {
-    return expressionPropertyFactory(this.view?.o)
+    return expressionPropertyFactory(this.prop?.o)
   }
 
   get start() {
-    return expressionPropertyFactory(this.view?.s)
+    return expressionPropertyFactory(this.prop?.s)
   }
 
   override getInterface(val: string | number) {

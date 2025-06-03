@@ -1,20 +1,21 @@
-// @ts-nocheck: TODO:
+import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
 
 export default class GradientFillInterface extends BaseInterface {
-  view?: unknown
+  override prop?: SVGGradientFillStyleData
 
   get endPoint() {
-    return expressionPropertyFactory(this.view.e)
+    return expressionPropertyFactory(this.prop?.e)
   }
 
   get opacity() {
-    return expressionPropertyFactory(this.view.o)
+    return expressionPropertyFactory(this.prop?.o)
   }
 
   get startPoint() {
-    return expressionPropertyFactory(this.view.s)
+    return expressionPropertyFactory(this.prop?.s)
   }
 
   get type() {

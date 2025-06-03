@@ -3,8 +3,8 @@ import type SVGTransformData from '../../../elements/helpers/shapes/SVGTransform
 import type { ShapeType } from '../../../utils/enums';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class TransformInterface extends BaseInterface {
+    prop?: SVGTransformData | SVGFillStyleData;
     ty?: ShapeType;
-    view?: SVGTransformData | SVGFillStyleData;
     get anchorPoint(): (() => {
         mult: number;
         pv: number;

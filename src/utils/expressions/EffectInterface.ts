@@ -113,6 +113,7 @@ export default class EffectsExpressionInterface {
     for (let i = 0; i < length; i += 1) {
       if (data.ef?.[i].ty === 5) {
         this.effectElements.push(this.createGroupInterface(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           data.ef[i], elements.effectElements[i], elements.effectElements[i].propertyGroup, elem
         ))
       } else {
@@ -126,6 +127,7 @@ export default class EffectsExpressionInterface {
       Object.defineProperty(
         groupInterface, 'color', {
           get () {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
             return this.effectElements[0]()
           },
         }

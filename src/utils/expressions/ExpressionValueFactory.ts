@@ -1,4 +1,4 @@
-// @ts-nocheck TODO:
+// @ts-nocheck
 import type { BaseProperty } from '@/utils/Properties'
 
 import { ArrayType, PropType } from '@/utils/enums'
@@ -26,31 +26,35 @@ export class ExpressionPropertyInterface {
     Object.defineProperty(
       expressionValue, 'velocity', {
         get () {
-          return property.getVelocityAtTime(property.comp.currentFrame)
+          return property.getVelocityAtTime(property.comp?.currentFrame ?? 0)
         },
       }
     )
-    expressionValue.numKeys = property.keyframes.length
+    expressionValue.numKeys = property.keyframes?.length ?? 0
     expressionValue.key = function (pos: number) {
       if (!expressionValue.numKeys) {
         return 0
       }
       let value
 
-      if ('s' in property.keyframes[pos - 1]) {
-        value = property.keyframes[pos - 1].s
-      } else if ('e' in property.keyframes[pos - 2]) {
-        value = property.keyframes[pos - 2].e
-      } else {
-        value = property.keyframes[pos - 2].s
+      if (property.keyframes) {
+        if ('s' in property.keyframes[pos - 1]) {
+          value = property.keyframes[pos - 1].s
+        } else if ('e' in property.keyframes[pos - 2]) {
+          value = property.keyframes[pos - 2].e
+        } else {
+          value = property.keyframes[pos - 2].s
+        }
       }
+
+      // @ts-expect-error
       const valueProp: {
         time: number
         value: unknown
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       } = type === PropType.UniDimensional ? new Number(value) : { ...value } // eslint-disable-line no-new-wrappers
 
-      valueProp.time = property.keyframes[pos - 1].t / (property.elem?.comp?.globalData?.frameRate ?? 60)
+      valueProp.time = Number(property.keyframes?.[pos - 1].t) / (property.elem?.comp?.globalData?.frameRate ?? 60)
       valueProp.value = type === PropType.UniDimensional ? (value as number[])[0] : value
 
       return valueProp

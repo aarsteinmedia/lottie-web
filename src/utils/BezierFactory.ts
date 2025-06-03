@@ -177,9 +177,9 @@ class BezierEasing {
     mX1: number,
     mX2: number
   ) {
-    let aA = aAFromProps
-    let aB = aBFropProps
-    let currentX,
+    let aA = aAFromProps,
+      aB = aBFropProps,
+      currentX,
       currentT,
       i = 0
 
