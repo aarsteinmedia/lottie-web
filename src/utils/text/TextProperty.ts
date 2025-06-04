@@ -10,7 +10,6 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 import type LetterProps from '@/utils/text/LetterProps'
 
 import {
-  getFontProperties,
   isCombinedCharacter,
   isFlagEmoji,
   isModifier,
@@ -18,6 +17,7 @@ import {
   isVariationSelector,
   isZeroWidthJoiner,
 } from '@/utils/FontManager'
+import getFontProperties from '@/utils/getFontProperties'
 import { initialDefaultFrame } from '@/utils/getterSetter'
 import { BaseProperty } from '@/utils/Properties'
 

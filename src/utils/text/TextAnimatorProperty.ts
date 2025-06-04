@@ -34,9 +34,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   private _moreOptions: { alignment: MultiDimensionalProperty }
   private _pathData: Partial<TextPathData>
   private _renderType: RendererType
-
   private _textData: TextData
-
   private mHelper = new Matrix()
 
   constructor(
@@ -828,64 +826,41 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   }
 
   searchProperties(_: DynamicPropertyContainer[]) {
-    const len = this._textData.a?.length || 0
+    const { length } = this._textData.a ?? [],
+      { getProp } = PropertyFactory
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < length; i++) {
       this._animatorsData[i] = new TextAnimatorDataProperty(
         this._elem,
         this._textData.a?.[i],
         this as unknown as ElementInterfaceIntersect
       )
     }
-    if (this._textData.p?.m) {
+    if (this._textData.p && 'm' in this._textData.p) {
       this._pathData = {
-        a: PropertyFactory.getProp(
-          this._elem,
-          this._textData.p.a,
-          0,
-          0,
-          this as unknown as ElementInterfaceIntersect
+        a: getProp(
+          this._elem, this._textData.p.a, 0, 0, this as unknown as ElementInterfaceIntersect
         ),
-        f: PropertyFactory.getProp(
-          this._elem,
-          this._textData.p.f,
-          0,
-          0,
-          this as unknown as ElementInterfaceIntersect
+        f: getProp(
+          this._elem, this._textData.p.f, 0, 0, this as unknown as ElementInterfaceIntersect
         ),
-        l: PropertyFactory.getProp(
-          this._elem,
-          this._textData.p.l,
-          0,
-          0,
-          this as unknown as ElementInterfaceIntersect
+        l: getProp(
+          this._elem, this._textData.p.l, 0, 0, this as unknown as ElementInterfaceIntersect
         ),
         m: this._elem.maskManager?.getMaskProperty(this._textData.p.m),
-        p: PropertyFactory.getProp(
-          this._elem,
-          this._textData.p.p,
-          0,
-          0,
-          this as unknown as ElementInterfaceIntersect
+        p: getProp(
+          this._elem, this._textData.p.p, 0, 0, this as unknown as ElementInterfaceIntersect
         ),
-        r: PropertyFactory.getProp(
-          this._elem,
-          this._textData.p.r,
-          0,
-          0,
-          this as unknown as ElementInterfaceIntersect
+        r: getProp(
+          this._elem, this._textData.p.r, 0, 0, this as unknown as ElementInterfaceIntersect
         ),
       }
       this._hasMaskedPath = true
     } else {
       this._hasMaskedPath = false
     }
-    this._moreOptions.alignment = PropertyFactory.getProp(
-      this._elem,
-      this._textData.m?.a,
-      1,
-      0,
-      this as unknown as ElementInterfaceIntersect
+    this._moreOptions.alignment = getProp(
+      this._elem, this._textData.m?.a, 1, 0, this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
   }
 }
