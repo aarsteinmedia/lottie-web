@@ -1,8 +1,11 @@
-import type { AnimationData, WorkerEvent } from '@/types'
+import type {
+  AnimationData,
+  WorkerEvent
+} from '@/types'
 
 import { isServer } from '@/utils'
 import { loadAsset } from '@/utils/AssetLoader'
-import { completeData } from '@/utils/DataFunctions'
+import DataFunctions from '@/utils/DataFunctions'
 import { getWebWorker } from '@/utils/getterSetter'
 
 let _counterId = 1,
@@ -41,6 +44,7 @@ const funcitonNotImplemented = 'Function not implemented.',
     },
   },
   _workerSelf: {
+    dataManager?: typeof DataFunctions
     postMessage: (data: {
       id: string
       payload?: unknown
@@ -120,78 +124,6 @@ const funcitonNotImplemented = 'Function not implemented.',
   } = {}
 let workerInstance: Worker | undefined
 
-export function completeAnimation(
-  animation: AnimationData,
-  onComplete: (data: AnimationData) => void,
-  onError?: (error?: unknown) => void
-) {
-  setupWorker()
-  const processId = createProcess(onComplete, onError)
-
-  workerInstance?.postMessage({
-    animation,
-    id: processId,
-    type: 'complete',
-  })
-}
-
-export function loadAnimation(
-  path: string,
-  onComplete: (data: AnimationData) => void,
-  onError?: (error?: unknown) => void
-) {
-  if (isServer()) {
-    return
-  }
-  setupWorker()
-  const processId = createProcess(onComplete, onError)
-
-  workerInstance?.postMessage({
-    fullPath: isServer()
-      ? path
-      : window.location.origin + window.location.pathname,
-    id: processId,
-    path,
-    type: 'loadAnimation',
-  })
-}
-
-export function loadData(
-  path: string,
-  onComplete: (data: AnimationData) => void,
-  onError?: (error?: unknown) => void
-) {
-  setupWorker()
-  const processId = createProcess(onComplete, onError)
-
-  workerInstance?.postMessage({
-    fullPath: isServer()
-      ? path
-      : window.location.origin + window.location.pathname,
-    id: processId,
-    path,
-    type: 'loadData',
-  })
-}
-
-function createProcess(onComplete: (data: AnimationData) => void,
-  onError?: (error?: unknown) => void) {
-  _counterId++
-  const id = `processId_${_counterId}`
-
-  try {
-    processes[id] = {
-      onComplete,
-      onError,
-    }
-
-    return id
-  } catch (error) {
-    console.error('DataManager}:\n', error)
-    throw new Error('Could not create animation proccess')
-  }
-}
-
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
   if (!isServer() && getWebWorker()) {
     const blob = new Blob(['var _workerSelf = self; self.onmessage = ', fn.toString()],
@@ -204,18 +136,23 @@ function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
 
   return workerProxy
 }
+
 function setupWorker() {
   if (workerInstance) {
     return
   }
+
+  // _workerSelf.dataManager = _workerSelf.dataManager ?? DataFunctions
+
   workerInstance = createWorker((e) => {
+    _workerSelf.dataManager = _workerSelf.dataManager ?? DataFunctions
     if (e.data.type === 'loadAnimation') {
       loadAsset(
         e.data.path,
         e.data.fullPath,
         (data) => {
           if (data) {
-            completeData(data)
+            DataFunctions.completeData(data)
           }
 
           _workerSelf.postMessage({
@@ -237,7 +174,7 @@ function setupWorker() {
     if (e.data.type === 'complete') {
       const { animation, id } = e.data
 
-      completeData(animation)
+      DataFunctions.completeData(animation)
       _workerSelf.postMessage({
         id,
         payload: animation,
@@ -289,10 +226,80 @@ function setupWorker() {
   }
 }
 
+function createProcess(onComplete: (data: AnimationData) => void,
+  onError?: (error?: unknown) => void) {
+  _counterId++
+  const id = `processId_${_counterId}`
+
+  try {
+    processes[id] = {
+      onComplete,
+      onError,
+    }
+
+    return id
+  } catch (error) {
+    console.error('DataManager}:\n', error)
+    throw new Error('Could not create animation proccess')
+  }
+}
+
+export function loadAnimation(
+  path: string,
+  onComplete: (data: AnimationData) => void,
+  onError?: (error?: unknown) => void
+) {
+  setupWorker()
+  const processId = createProcess(onComplete, onError)
+
+  workerInstance?.postMessage({
+    fullPath: isServer()
+      ? path
+      : window.location.origin + window.location.pathname,
+    id: processId,
+    path,
+    type: 'loadAnimation',
+  })
+}
+
+export function loadData(
+  path: string,
+  onComplete: (data: AnimationData) => void,
+  onError?: (error?: unknown) => void
+) {
+  setupWorker()
+  const processId = createProcess(onComplete, onError)
+
+  workerInstance?.postMessage({
+    fullPath: isServer()
+      ? path
+      : window.location.origin + window.location.pathname,
+    id: processId,
+    path,
+    type: 'loadData',
+  })
+}
+
+export function completeAnimation(
+  animation: AnimationData,
+  onComplete: (data: AnimationData) => void,
+  onError?: (error?: unknown) => void
+) {
+  setupWorker()
+  const processId = createProcess(onComplete, onError)
+
+  workerInstance?.postMessage({
+    animation,
+    id: processId,
+    type: 'complete',
+  })
+}
+
 const DataManager = {
   completeAnimation,
   loadAnimation,
   loadData,
 }
+
 
 export default DataManager

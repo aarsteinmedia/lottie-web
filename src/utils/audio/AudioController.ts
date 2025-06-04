@@ -3,7 +3,7 @@ import type { AudioFactory } from '@/types'
 
 import { isServer } from '@/utils'
 
-export default class AudioController {
+export class AudioController {
   public audioFactory?: AudioFactory
 
   public audios: AudioElement[]
@@ -99,4 +99,9 @@ export default class AudioController {
       this.audios[i].volume(this._volume * (this._isMuted ? 0 : 1))
     }
   }
+}
+
+
+export default function audioControllerFactory(factory?: AudioFactory) {
+  return new AudioController(factory)
 }

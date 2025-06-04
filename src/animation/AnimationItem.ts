@@ -29,8 +29,8 @@ import {
   getRegisteredRenderer,
   getRenderer,
 } from '@/renderers'
-import { createElementID, markerParser } from '@/utils'
-import AudioController from '@/utils/audio/AudioController'
+import { createElementID } from '@/utils'
+import audioControllerFactory, { type AudioController } from '@/utils/audio/AudioController'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
@@ -39,6 +39,7 @@ import { getExpressionsPlugin } from '@/utils/expressions'
 import ProjectInterface from '@/utils/expressions/ProjectInterface'
 import { getSubframeEnabled } from '@/utils/getterSetter'
 import ImagePreloader from '@/utils/ImagePreloader'
+import markerParser from '@/utils/markerParser'
 
 export default class AnimationItem extends BaseEvent {
   public __complete?: boolean
@@ -123,7 +124,7 @@ export default class AnimationItem extends BaseEvent {
     this._completedLoop = false
     this.projectInterface = new ProjectInterface()
     this.imagePreloader = new ImagePreloader()
-    this.audioController = new AudioController()
+    this.audioController = audioControllerFactory()
     this.markers = []
     this.configAnimation = this.configAnimation.bind(this)
     this.onSetupError = this.onSetupError.bind(this)

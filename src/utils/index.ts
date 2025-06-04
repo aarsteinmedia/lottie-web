@@ -2,8 +2,6 @@ import type {
   AnimationDirection,
   Constructor,
   IntersectData,
-  Marker,
-  MarkerData,
   SVGGeometry,
   Vector2,
   Vector3,
@@ -637,11 +635,13 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
       maxRecursion
     )
   },
+  isArray = <T>(input: unknown): input is T[] => {
+    return Symbol.iterator in Object(input) && (input as unknown[]).length > 0
+  },
   /** Check if value is array. Made to work with typed arrays as well as regular. */
   isArrayOfNum = (input: unknown): input is number[] => {
-    return !(!(Symbol.iterator in Object(input)) ||
-      (input as unknown[]).length > 0 &&
-      typeof (input as unknown[])[0] !== 'number')
+    return isArray(input) &&
+      typeof input[0] === 'number'
   },
   isDeclaration = (str: string) => {
     return str === 'var' || str === 'let' || str === 'const'
@@ -779,35 +779,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     }
 
     console.debug(combinedPrototypes)
-  },
-  markerParser = (markersFromProps: (MarkerData | Marker)[]) => {
-    const markers = [],
-      { length } = markersFromProps
-
-    for (let i = 0; i < length; i++) {
-      if ('duration' in markersFromProps[i]) {
-        markers.push(markersFromProps[i])
-        continue
-      }
-
-      const markerData: MarkerData = {
-        duration: (markersFromProps[i] as Marker).dr,
-        time: (markersFromProps[i] as Marker).tm,
-      }
-
-      try {
-        markerData.payload = JSON.parse((markersFromProps[i] as Marker).cm)
-      } catch (_) {
-        try {
-          markerData.payload = parsePayloadLines((markersFromProps[i] as Marker).cm)
-        } catch (error) {
-          markerData.payload = { name: (markersFromProps[i] as Marker).cm }
-        }
-      }
-      markers.push(markerData)
-    }
-
-    return markers
   },
   offsetSegmentSplit = (segment: PolynomialBezier, amount: number) => {
     /*

@@ -98,8 +98,8 @@ export default class GradientProperty extends DynamicPropertyContainer {
       return 0
     }
     const len = this.data.p * 4
-    let mult
-    let val
+    let mult,
+      val
 
     for (let i = 0; i < len; i++) {
       mult = i % 4 === 0 ? 100 : 255
