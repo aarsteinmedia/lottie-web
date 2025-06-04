@@ -1,4 +1,4 @@
-import type { Characacter, DocumentData, FontList } from '../types';
+import type { Characacter, DocumentData } from '../types';
 export declare function isCombinedCharacter(char: number): boolean;
 export declare function isFlagEmoji(string: string): boolean;
 export declare function isModifier(firstCharCode: number, secondCharCode: number): boolean;
@@ -27,7 +27,3 @@ export default class FontManager {
     private createHelper;
     private setIsLoaded;
 }
-export declare function getFontProperties(fontData: FontList): {
-    style: string;
-    weight: string;
-};

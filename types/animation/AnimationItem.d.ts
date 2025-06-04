@@ -3,7 +3,7 @@ import type HybridRenderer from '../renderers/HybridRenderer';
 import type SVGRenderer from '../renderers/SVGRenderer';
 import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
 import BaseEvent, { type LottieEvent } from '../events';
-import AudioController from '../utils/audio/AudioController';
+import { type AudioController } from '../utils/audio/AudioController';
 import { RendererType } from '../utils/enums';
 import { getExpressionsPlugin } from '../utils/expressions';
 import ProjectInterface from '../utils/expressions/ProjectInterface';

@@ -206,47 +206,52 @@ function checkVersion(minimum: Vector3, animVersionString: string) {
   return null
 }
 
+const iterateLayers = (
+  layers: LottieLayer[], updateData: (layer: LottieLayer) => void, type: number
+) => {
+  const { length } = layers
+
+  for (let i = 0; i < length; i++) {
+    if (layers[i].ty === type) {
+      updateData(layers[i])
+    }
+  }
+}
+
 const checkText = (() => {
   const minimumVersion = [4,
     4,
     14] as Vector3
 
   const updateTextLayer = (textLayer: LottieLayer) => {
-      const documentData = textLayer.t?.d
+    const documentData = textLayer.t?.d
 
-      if (textLayer.t && documentData) {
-        textLayer.t.d = {
-          k: [
-            {
-              s: documentData,
-              t: 0,
-            },
-          ],
-        } as DocumentData
-      }
-    },
-
-
-    iterateLayers = (layers: LottieLayer[]) => {
-      const { length } = layers
-
-      for (let i = 0; i < length; i++) {
-        if (layers[i].ty === 5) {
-          updateTextLayer(layers[i])
-        }
-      }
+    if (textLayer.t && documentData) {
+      textLayer.t.d = {
+        k: [
+          {
+            s: documentData,
+            t: 0,
+          },
+        ],
+      } as DocumentData
     }
+  }
 
   return (animationData: AnimationData) => {
     if (!checkVersion(minimumVersion, animationData.v)) {
       return
     }
-    iterateLayers(animationData.layers)
+    iterateLayers(
+      animationData.layers, updateTextLayer, 5
+    )
     const { length } = animationData.assets
 
     for (let i = 0; i < length; i++) {
       if (animationData.assets[i].layers) {
-        iterateLayers(animationData.assets[i].layers as LottieLayer[])
+        iterateLayers(
+          animationData.assets[i].layers as LottieLayer[], updateTextLayer, 5
+        )
       }
     }
   }
@@ -342,54 +347,47 @@ const checkPathProperties = (() => {
     15] as Vector3
 
   const updateTextLayer = (textLayer: LottieLayer) => {
-      const pathData = textLayer.t?.p
+    const pathData = textLayer.t?.p
 
-      if (!pathData) {
-        return
-      }
+    if (!pathData) {
+      return
+    }
 
-      if (typeof pathData.a === 'number') {
-        pathData.a = {
-          a: 0,
-          k: pathData.a,
-        }
-      }
-      if (typeof pathData.p === 'number') {
-        pathData.p = {
-          a: 0,
-          k: pathData.p,
-        }
-      }
-      if (typeof pathData.r === 'number') {
-        pathData.r = {
-          a: 0,
-          k: pathData.r,
-        }
-      }
-    },
-
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    iterateLayers = (layers: LottieLayer[]) => {
-      const { length } = layers
-
-      for (let i = 0; i < length; i++) {
-        if (layers[i].ty === 5) {
-          updateTextLayer(layers[i])
-        }
+    if (typeof pathData.a === 'number') {
+      pathData.a = {
+        a: 0,
+        k: pathData.a,
       }
     }
+    if (typeof pathData.p === 'number') {
+      pathData.p = {
+        a: 0,
+        k: pathData.p,
+      }
+    }
+    if (typeof pathData.r === 'number') {
+      pathData.r = {
+        a: 0,
+        k: pathData.r,
+      }
+    }
+  }
 
   return (animationData: AnimationData) => {
     if (!checkVersion(minimumVersion, animationData.v)) {
       return
     }
-    iterateLayers(animationData.layers)
+    iterateLayers(
+      animationData.layers, updateTextLayer, 5
+    )
 
     const { length } = animationData.assets
 
     for (let i = 0; i < length; i++) {
       if (animationData.assets[i].layers) {
-        iterateLayers(animationData.assets[i].layers as LottieLayer[])
+        iterateLayers(
+          animationData.assets[i].layers as LottieLayer[], updateTextLayer, 5
+        )
       }
     }
   }
@@ -448,7 +446,7 @@ const checkColors = (() => {
       }
     },
 
-    iterateLayers = (layers: LottieLayer[]) => {
+    _iterateLayers = (layers: LottieLayer[]) => {
       const { length } = layers
 
       for (let i = 0; i < length; i++) {
@@ -462,13 +460,13 @@ const checkColors = (() => {
     if (!checkVersion(minimumVersion, animationData.v)) {
       return
     }
-    iterateLayers(animationData.layers)
+    _iterateLayers(animationData.layers)
 
     const { length } = animationData.assets
 
     for (let i = 0; i < length; i++) {
       if (animationData.assets[i].layers) {
-        iterateLayers(animationData.assets[i].layers as LottieLayer[])
+        _iterateLayers(animationData.assets[i].layers as LottieLayer[])
       }
     }
   }
@@ -523,7 +521,7 @@ const checkShapes = (() => {
       }
     },
 
-    iterateLayers = (layers: LottieLayer[]) => {
+    _iterateLayers = (layers: LottieLayer[]) => {
       let layerData
 
       const { length } = layers
@@ -575,13 +573,13 @@ const checkShapes = (() => {
     if (!checkVersion(minimumVersion, animationData.v)) {
       return
     }
-    iterateLayers(animationData.layers)
+    _iterateLayers(animationData.layers)
 
     const { length } = animationData.assets
 
     for (let i = 0; i < length; i++) {
       if (animationData.assets[i].layers) {
-        iterateLayers(animationData.assets[i].layers as LottieLayer[])
+        _iterateLayers(animationData.assets[i].layers as LottieLayer[])
       }
     }
   }

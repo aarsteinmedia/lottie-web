@@ -1,6 +1,6 @@
 import type AudioElement from '../../elements/AudioElement';
 import type { AudioFactory } from '../../types';
-export default class AudioController {
+export declare class AudioController {
     audioFactory?: AudioFactory;
     audios: AudioElement[];
     isPlaying?: boolean;
@@ -19,3 +19,4 @@ export default class AudioController {
     unmute(): void;
     private _updateVolume;
 }
+export default function audioControllerFactory(factory?: AudioFactory): AudioController;

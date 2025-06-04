@@ -39,7 +39,7 @@ import type BaseRenderer from './renderers/BaseRenderer';
 import type CanvasRenderer from './renderers/CanvasRenderer';
 import type HybridRenderer from './renderers/HybridRenderer';
 import type SVGRenderer from './renderers/SVGRenderer';
-import type AudioController from './utils/audio/AudioController';
+import type { AudioController } from './utils/audio/AudioController';
 import type { PlayMode, ShapeType, RendererType, PreserveAspectRatio } from './utils/enums';
 import type CompExpressionInterface from './utils/expressions/CompInterface';
 import type FootageInterface from './utils/expressions/FootageInterface';
