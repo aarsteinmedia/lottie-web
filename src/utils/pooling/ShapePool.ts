@@ -1,19 +1,19 @@
-import type { Vector2 } from '@/types'
+import type { PoolElement, Vector2 } from '@/types'
 
+import { isShapePath } from '@/utils'
 import pointPool from '@/utils/pooling/pointPool'
 import PoolFactory from '@/utils/pooling/PoolFactory'
 import ShapePath from '@/utils/shapes/ShapePath'
 
 const _factory = new PoolFactory(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  4, _create, _release as any
+  4, _create, _release
 )
 
 export const { newElement } = _factory,
   { release } = _factory
 
 export function clone(shape: ShapePath) {
-  const cloned = newElement<ShapePath>(),
+  const cloned = newElement() as ShapePath,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     len = shape._length ?? shape.v.length
 
@@ -39,7 +39,12 @@ function _create() {
   return new ShapePath()
 }
 
-function _release(shapePath: ShapePath) {
+function _release(shapePath: PoolElement) {
+
+  if (!isShapePath(shapePath)) {
+    return
+  }
+
   const len = shapePath._length
 
   for (let i = 0; i < len; i++) {

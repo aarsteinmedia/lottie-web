@@ -1,6 +1,6 @@
 
 // @ts-nocheck
-import type { GroupEffect } from '@/effects/EffectsManager'
+import type GroupEffect from '@/effects/GroupEffect'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 import type { EffectTypes } from '@/utils/enums'
 

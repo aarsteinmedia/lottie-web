@@ -1,3 +1,5 @@
+import type { PoolElement } from '@/types'
+
 import { createSizedArray } from '@/utils/helpers/arrays'
 import double from '@/utils/pooling/double'
 import { release } from '@/utils/pooling/ShapePool'
@@ -5,7 +7,7 @@ import ShapeCollection from '@/utils/shapes/ShapeCollection'
 
 let _length = 0,
   _maxLength = 4,
-  pool = createSizedArray(_maxLength)
+  pool: PoolElement[] = createSizedArray(_maxLength)
 
 export function newShapeCollection() {
   let shapeCollection
@@ -30,7 +32,9 @@ export function releaseShape(shapeCollection: ShapeCollection) {
     pool = double(pool)
     _maxLength *= 2
   }
+  // @ts-expect-error: TODO:
   pool[_length] = shapeCollection
+
   _length++
 }
 

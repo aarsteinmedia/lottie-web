@@ -2,6 +2,7 @@ import type {
   AnimationDirection,
   Constructor,
   IntersectData,
+  PoolElement,
   SVGGeometry,
   Vector2,
   Vector3,
@@ -600,6 +601,15 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   },
   isDeclaration = (str: string) => {
     return str === 'var' || str === 'let' || str === 'const'
+  },
+  isShapePath =(el?: PoolElement): el is ShapePath => {
+
+    if (!el || isArray(el)) {
+      return false
+    }
+
+    return el.constructor.name === 'ShapePath'
+
   },
   isSafari = (): boolean => {
     const isTrue = inBrowser()

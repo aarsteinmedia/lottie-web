@@ -91,18 +91,18 @@ function seedRandom(pool, math: Math) {
         d = startdenom,
         x = 0
 
-      while (n < significance) {          // Fill up all significant digits by
-        n = (n + x) * width              //   shifting numerator and
-        d *= width                       //   denominator and generating a
-        x = arc4.g(1)                    //   new least-significant-byte.
+      while (n < significance) { // Fill up all significant digits by
+        n = (n + x) * width //   shifting numerator and
+        d *= width //   denominator and generating a
+        x = arc4.g(1) //   new least-significant-byte.
       }
-      while (n >= overflow) {             // To avoid rounding up, before adding
-        n /= 2                           //   last byte, shift everything
-        d /= 2                           //   right using integer math until
-        x >>>= 1                         //   we have exactly the desired bits.
+      while (n >= overflow) { // To avoid rounding up, before adding
+        n /= 2 //   last byte, shift everything
+        d /= 2 //   right using integer math until
+        x >>>= 1 //   we have exactly the desired bits.
       }
 
-      return (n + x) / d                 // Form the number within [0, 1).
+      return (n + x) / d // Form the number within [0, 1).
     }
 
     prng.int32 = function() { return arc4.g(4) | 0 }
@@ -144,7 +144,7 @@ function seedRandom(pool, math: Math) {
       options.state
     )
   }
-  math[`seed${  rngname}`] = seedrandom
+  math[`seed${ rngname}`] = seedrandom
 
   //
   // ARC4
@@ -195,7 +195,7 @@ function seedRandom(pool, math: Math) {
 
 
   function mixkey(seed, key) {
-    let stringseed = `${seed  }`, smear, j = 0
+    let stringseed = `${seed }`, smear, j = 0
 
     while (j < stringseed.length) {
       key[mask & j] =

@@ -1,4 +1,4 @@
-import type { GroupEffect } from '../effects/EffectsManager';
+import type GroupEffect from '../effects/GroupEffect';
 import type { EffectValue, ElementInterfaceIntersect } from '../types';
 import type { ValueProperty } from '../utils/Properties';
 declare abstract class EffectZero {

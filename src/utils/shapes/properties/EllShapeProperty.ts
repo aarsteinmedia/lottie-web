@@ -1,5 +1,6 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -14,7 +15,7 @@ export default class EllShapeProperty extends ShapeBaseProperty {
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
-    this.v = newElement()
+    this.v = newElement() as ShapePath
     this.v.setPathData(true, 4)
     this.localShapeCollection = newShapeCollection()
     this.paths = this.localShapeCollection

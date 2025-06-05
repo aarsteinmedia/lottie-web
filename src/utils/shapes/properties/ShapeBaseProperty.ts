@@ -4,13 +4,13 @@ import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import type {
   Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata,
   Shape,
-  Svalue
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
 import type { KeyframedValueProperty, MultiDimensionalProperty } from '@/utils/Properties'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
+import { isArray } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
@@ -53,7 +53,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     caching: Caching = {} as Caching
   ) {
     let iterationIndex = caching.lastIndex || 0,
-      keyPropS: Svalue[],
+      keyPropS,
       keyPropE,
       isHold,
       perc = 0,
@@ -61,11 +61,10 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     const kf = this.keyframes ?? []
 
     if (frameNum < kf[0].t - this.offsetTime) {
-      keyPropS = kf[0].s?.[0] as unknown as Svalue[]
+      keyPropS = kf[0].s?.[0]
       isHold = true
       iterationIndex = 0
     } else if (frameNum >= kf[kf.length - 1].t - this.offsetTime) {
-      // @ts-expect-error: ignore
       keyPropS = kf[kf.length - 1].s
         ? kf[kf.length - 1].s?.[0]
         : kf[kf.length - 2].e[0]
@@ -133,34 +132,34 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
         }
         keyPropE = nextKeyData.s ? nextKeyData.s[0] : keyData.e[0]
       }
-      // @ts-expect-error: ignore
       keyPropS = keyData.s?.[0]
     }
-    const jLen = previousValue._length
-    // @ts-expect-error: ignore
-    const kLen = keyPropS.i[0].length
+
+    if (
+      !keyPropS || typeof keyPropS === 'number' || isArray(keyPropS)
+      || !keyPropE || typeof keyPropE === 'number'
+    ) {
+      return
+    }
+
+    const jLen = previousValue._length,
+      kLen = keyPropS.i[0].length
 
     caching.lastIndex = iterationIndex
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
         vertexValue = isHold
-          // @ts-expect-error: ignore
           ? keyPropS.i[j][k]
-          // @ts-expect-error: ignore
-          : Number(keyPropS.i[j][k]) + (keyPropE.i[j][k] - keyPropS.i[j][k]) * perc
+          : keyPropS.i[j][k] + (keyPropE.i[j][k] - keyPropS.i[j][k]) * perc
         previousValue.i[j][k] = vertexValue
         vertexValue = isHold
-          // @ts-expect-error: ignore
           ? keyPropS.o[j][k]
-          // @ts-expect-error: ignore
-          : Number(keyPropS.o[j][k]) + (keyPropE.o[j][k] - keyPropS.o[j][k]) * perc
+          : keyPropS.o[j][k] + (keyPropE.o[j][k] - keyPropS.o[j][k]) * perc
         previousValue.o[j][k] = vertexValue
         vertexValue = isHold
-          // @ts-expect-error: ignore
           ? keyPropS.v[j][k]
-          // @ts-expect-error: ignore
-          : Number(keyPropS.v[j][k]) + (keyPropE.v[j][k] - keyPropS.v[j][k]) * perc
+          : keyPropS.v[j][k] + (keyPropE.v[j][k] - keyPropS.v[j][k]) * perc
         previousValue.v[j][k] = vertexValue
       }
     }

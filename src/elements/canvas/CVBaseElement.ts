@@ -1,4 +1,4 @@
-import type { GroupEffect } from '@/effects/EffectsManager'
+import type GroupEffect from '@/effects/GroupEffect'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,

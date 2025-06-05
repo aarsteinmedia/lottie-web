@@ -88,9 +88,9 @@ export default class ShapePath {
     let i = 0
 
     while (i < len) {
-      this.v[i] = pointPool.newElement()
-      this.o[i] = pointPool.newElement()
-      this.i[i] = pointPool.newElement()
+      this.v[i] = pointPool.newElement() as Vector2
+      this.o[i] = pointPool.newElement() as Vector2
+      this.i[i] = pointPool.newElement() as Vector2
       i++
     }
   }
@@ -144,7 +144,7 @@ export default class ShapePath {
       }
     }
     if (!arr[pos] || arr[pos] && !replace) {
-      arr[pos] = pointPool.newElement()
+      arr[pos] = pointPool.newElement() as Vector2
     }
     arr[pos][0] = x
     arr[pos][1] = y

@@ -1,4 +1,4 @@
-import type { GroupEffect } from '@/effects/EffectsManager'
+import type GroupEffect from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect, Vector3 } from '@/types'
 
 import SVGComposableEffect from '@/effects/svg/SVGComposableEffect'

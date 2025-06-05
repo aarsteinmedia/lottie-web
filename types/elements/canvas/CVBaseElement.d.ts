@@ -1,4 +1,4 @@
-import type { GroupEffect } from '../../effects/EffectsManager';
+import type GroupEffect from '../../effects/GroupEffect';
 import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TransformCanvas, Transformer } from '../../types';
 import CVEffects from '../../elements/canvas/CVEffects';
 import CVMaskElement from '../../elements/canvas/CVMaskElement';

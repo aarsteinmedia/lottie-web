@@ -4,7 +4,7 @@ declare class MaskInterface {
     _data: Shape;
     _mask: ViewData;
     get maskOpacity(): number;
-    get maskPath(): import("../shapes/ShapeProperty").ShapeProperty | import("../shapes/ShapeProperty").KeyframedShapeProperty | import("../shapes/ShapeProperty").RectShapeProperty | import("../shapes/ShapeProperty").EllShapeProperty | import("../shapes/ShapeProperty").StarShapeProperty | null;
+    get maskPath(): import("../shapes/properties/ShapeProperty").ShapeProperty | import("../shapes/properties/ShapeProperty").KeyframedShapeProperty | import("../shapes/properties/RectShapeProperty").default | import("../shapes/properties/EllShapeProperty").default | import("../shapes/properties/StarShapeProperty").default | null;
     constructor(mask: ViewData, data: Shape);
 }
 export default class MaskManagerInterface {

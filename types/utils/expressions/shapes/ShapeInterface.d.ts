@@ -7,9 +7,9 @@ import type SVGStrokeStyleData from '../../../elements/helpers/shapes/SVGStrokeS
 import type SVGTransformData from '../../../elements/helpers/shapes/SVGTransformData';
 import type { Shape } from '../../../types';
 import type LayerExpressionInterface from '../../../utils/expressions/LayerInterface';
-import type RepeaterModifier from '../../../utils/shapes/RepeaterModifier';
-import type RoundCornersModifier from '../../../utils/shapes/RoundCornersModifier';
-import type TrimModifier from '../../../utils/shapes/TrimModifier';
+import type RepeaterModifier from '../../../utils/shapes/modifiers/RepeaterModifier';
+import type RoundCornersModifier from '../../../utils/shapes/modifiers/RoundCornersModifier';
+import type TrimModifier from '../../../utils/shapes/modifiers/TrimModifier';
 import PropertyGroupFactory from '../../../utils/expressions/PropertyGroupFactory';
 import ShapePathInterface from '../../../utils/expressions/shapes/ShapePathInterface';
 export default class ShapeExpressionInterface {

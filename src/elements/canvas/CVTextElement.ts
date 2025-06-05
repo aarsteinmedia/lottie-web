@@ -17,7 +17,7 @@ import createTag from '@/utils/helpers/htmlElements'
 
 const transparent = 'rgba(0,0,0,0)'
 
-export default class CVTextElement extends TextElement{
+export default class CVTextElement extends TextElement {
 
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas

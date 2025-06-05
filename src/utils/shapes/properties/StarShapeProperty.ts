@@ -2,6 +2,7 @@ import type {
   ElementInterfaceIntersect, Shape, StrokeData, VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { degToRads } from '@/utils'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -20,7 +21,7 @@ export default class StarShapeProperty extends ShapeBaseProperty {
   s?: ValueProperty
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
-    this.v = newElement()
+    this.v = newElement() as ShapePath
     this.v.setPathData(true, 0)
     this.elem = elem
     this.comp = elem.comp

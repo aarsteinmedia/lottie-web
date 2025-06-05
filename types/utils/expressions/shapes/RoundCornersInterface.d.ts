@@ -1,4 +1,4 @@
-import type RoundCornersModifier from '../../../utils/shapes/RoundCornersModifier';
+import type RoundCornersModifier from '../../../utils/shapes/modifiers/RoundCornersModifier';
 import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class RoundCornersInterface extends BaseInterface {
     prop?: RoundCornersModifier;

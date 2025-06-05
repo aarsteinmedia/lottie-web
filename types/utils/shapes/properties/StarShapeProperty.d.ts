@@ -1,0 +1,18 @@
+import type { ElementInterfaceIntersect, Shape, StrokeData } from '../../../types';
+import type { ValueProperty } from '../../../utils/Properties';
+import ShapeBaseProperty from '../../../utils/shapes/properties/ShapeBaseProperty';
+export default class StarShapeProperty extends ShapeBaseProperty {
+    d?: StrokeData[];
+    ir?: ValueProperty;
+    is?: ValueProperty;
+    or: ValueProperty;
+    os: ValueProperty;
+    pt: ValueProperty;
+    r: ValueProperty;
+    s?: ValueProperty;
+    constructor(elem: ElementInterfaceIntersect, data: Shape);
+    convertPolygonToPath(): void;
+    convertStarToPath(): void;
+    convertToPath(): void;
+    getValue(_val?: unknown): number;
+}

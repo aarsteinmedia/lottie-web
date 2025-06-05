@@ -127,7 +127,7 @@ export default class ZigZagModifier extends ShapeModifier {
     pointType: number
   ) {
     let count = path._length
-    const clonedPath = newElement<ShapePath>()
+    const clonedPath = newElement() as ShapePath
 
     clonedPath.c = path.c
 

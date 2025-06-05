@@ -1,8 +1,9 @@
+import type { PoolElement } from '../../types';
 import ShapePath from '../../utils/shapes/ShapePath';
-export declare const newElement: <T = unknown>() => T, release: <T = unknown>(element?: T | undefined) => void;
+export declare const newElement: () => PoolElement, release: (element: PoolElement) => void;
 export declare function clone(shape: ShapePath): ShapePath;
 declare const ShapePool: {
     clone: typeof clone;
-    newElement: <T = unknown>() => T;
+    newElement: () => PoolElement;
 };
 export default ShapePool;

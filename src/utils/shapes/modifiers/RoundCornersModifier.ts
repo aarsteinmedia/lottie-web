@@ -29,7 +29,7 @@ export default class RoundCornersModifier extends ShapeModifier {
   }
 
   processPath(path: ShapePath, round: number) {
-    const clonedPath = newElement<ShapePath>()
+    const clonedPath = newElement() as ShapePath
 
     clonedPath.c = path.c
     const len = path._length

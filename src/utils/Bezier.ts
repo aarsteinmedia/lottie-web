@@ -191,10 +191,7 @@ export function getPointInSegment(
 }
 
 export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
-  const segmentsLength: {
-      lengths: BezierLength[]
-      totalLength: number
-    } = segmentsLengthPool.newElement(),
+  const segmentsLength = segmentsLengthPool.newElement() as SegmentLength,
     isClosed = shapeData.c,
     pathV = shapeData.v,
     pathO = shapeData.o,
@@ -289,11 +286,7 @@ function getBezierLength(
     ptDistance
   const point = [],
     lastPoint: number[] = [],
-    lengthData: {
-      percents: number[]
-      lengths: number[]
-      addedLength: number
-    } = bezierLengthPool.newElement(),
+    lengthData = bezierLengthPool.newElement() as BezierLength,
     len = pt3.length
 
   for (let k = 0; k < curveSegments; k++) {

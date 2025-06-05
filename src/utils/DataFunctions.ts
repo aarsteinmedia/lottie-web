@@ -5,8 +5,8 @@ import type {
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { isArray, isArrayOfNum } from '.'
-import { ShapeType } from './enums'
+import { isArray, isArrayOfNum } from '@/utils'
+import { ShapeType } from '@/utils/enums'
 
 function completeLayers(layers: LottieLayer[],
   comps: LottieLayer[]) {

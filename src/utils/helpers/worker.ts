@@ -1,7 +1,3 @@
-/**
- *
- * Web worker.
- */
 const isWebWorkerActive = { current: false },
 
   setWebWorker = (flag: boolean) => {

@@ -23,7 +23,7 @@ type Modifier =
 
 const Modifiers: { [key: string]: Modifier | undefined } = {}
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+
 export function getModifier<T extends ShapeModifierInterface>(
   nm: string,
   _elem?: ElementInterfaceIntersect,

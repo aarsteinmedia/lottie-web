@@ -26,7 +26,7 @@ export default class SVGStrokeStyleData extends SVGFillStyleData {
     super(
       elem, data, styleObj
     )
-    this.initDynamicPropertyContainer(elem )
+    this.initDynamicPropertyContainer(elem)
     this.getValue = this.iterateDynamicProperties
     this.o = PropertyFactory.getProp(
       elem,

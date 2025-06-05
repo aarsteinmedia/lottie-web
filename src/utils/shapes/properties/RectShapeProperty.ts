@@ -2,6 +2,7 @@ import type {
   ElementInterfaceIntersect, Shape, VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
+import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
@@ -21,7 +22,7 @@ export default class RectShapeProperty extends ShapeBaseProperty {
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()
-    this.v = newElement()
+    this.v = newElement() as ShapePath
     this.v.c = true
     this.localShapeCollection = newShapeCollection()
     this.localShapeCollection.addShape(this.v)

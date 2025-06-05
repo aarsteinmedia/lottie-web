@@ -167,7 +167,7 @@ export default class TextProperty extends BaseProperty {
 
   completeTextData(documentData: DocumentData) {
     documentData.__complete = true
-    const { fontManager } = this.elem.globalData ??  {}
+    const { fontManager } = this.elem.globalData ?? {}
 
     if (!fontManager) {
       throw new Error(`${this.constructor.name}: FontManager not loaded to globalData`)

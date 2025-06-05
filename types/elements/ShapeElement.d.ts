@@ -1,7 +1,7 @@
 import type CVShapeData from '../elements/helpers/shapes/CVShapeData';
 import type SVGShapeData from '../elements/helpers/shapes/SVGShapeData';
 import type { ElementInterfaceIntersect, Shape } from '../types';
-import type { ShapeModifierInterface } from '../utils/shapes/ShapeModifiers';
+import type { ShapeModifierInterface } from '../utils/shapes/modifiers';
 import RenderableDOMElement from '../elements/helpers/RenderableDOMElement';
 import ProcessedElement from '../elements/helpers/shapes/ProcessedElement';
 export default abstract class ShapeElement extends RenderableDOMElement {

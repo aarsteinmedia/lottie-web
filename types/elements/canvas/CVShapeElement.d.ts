@@ -1,7 +1,7 @@
 import type TransformEffect from '../../effects/TransformEffect';
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
-import type { ShapeProperty } from '../../utils/shapes/ShapeProperty';
+import type { ShapeProperty } from '../../utils/shapes/properties/ShapeProperty';
 import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
 import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
 import ShapeElement from '../../elements/ShapeElement';

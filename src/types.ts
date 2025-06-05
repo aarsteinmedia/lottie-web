@@ -49,6 +49,7 @@ import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
 import type { AudioController } from '@/utils/audio/AudioController'
+import type { BezierData } from '@/utils/Bezier'
 import type {
   PlayMode,
   ShapeType,
@@ -87,8 +88,6 @@ import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
 import type TextProperty from '@/utils/text/TextProperty'
 import type { TransformProperty } from '@/utils/TransformProperty'
-
-import type { BezierData } from './utils/Bezier'
 
 export type AnimationDirection = 1 | -1
 export type AnimationEventName =
@@ -202,6 +201,8 @@ export interface TransformCanvas {
   ty: number
   w: number
 }
+
+export type PoolElement = ShapePath | number[] | BezierLength | SegmentLength
 
 export interface BezierLength {
   addedLength: number
@@ -1234,12 +1235,6 @@ export interface ImageData {
   img: null | SVGElement | HTMLCanvasElement | HTMLMediaElement
 }
 
-export interface Svalue {
-  c: number
-  i: number[]
-  s: number[][]
-}
-
 export interface CanvasItem {
   c: MultiDimensionalProperty<Vector3>
   d?: {
@@ -1279,7 +1274,7 @@ export interface Keyframe {
   }
   n: string
   o: Coordinates
-  s: Svalue[] | null
+  s: ShapePath[] | null
   t: number
   ti: Vector2
   to?: Vector2 | null

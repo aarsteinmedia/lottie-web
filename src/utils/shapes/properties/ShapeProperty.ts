@@ -75,7 +75,7 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
     this.kf = true
     const { length } = this.keyframes[0].s?.[0].i ?? []
 
-    this.v = newElement()
+    this.v = newElement() as ShapePath
     this.v.setPathData(Boolean(this.keyframes[0].s?.[0].c), length)
     this.pv = clone(this.v)
     this.localShapeCollection = newShapeCollection()

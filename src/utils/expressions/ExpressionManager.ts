@@ -480,7 +480,7 @@ function initiateExpression(
     let ind = indFormProps
 
     if (data.k.length === 0 || typeof data.k[0] === 'number') {
-      throw new Error(`The property has no keyframe at index ${  ind}`)
+      throw new Error(`The property has no keyframe at index ${ ind}`)
     }
     ind -= 1
     const obKey: {
@@ -814,7 +814,7 @@ function resetFrame() {
   _lottieGlobal = {}
 }
 
-function $bm_isInstanceOfArray(arr: unknown): arr is number[]  {
+function $bm_isInstanceOfArray(arr: unknown): arr is number[] {
   return typeof arr === 'object' && arr !== null && (arr.constructor === Array || arr.constructor === Float32Array)
 }
 

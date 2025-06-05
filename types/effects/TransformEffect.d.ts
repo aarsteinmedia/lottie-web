@@ -1,4 +1,4 @@
-import type { GroupEffect } from '../effects/EffectsManager';
+import type GroupEffect from '../effects/GroupEffect';
 import type { ValueProperty } from '../utils/Properties';
 import Matrix from '../utils/Matrix';
 export default abstract class TransformEffect {

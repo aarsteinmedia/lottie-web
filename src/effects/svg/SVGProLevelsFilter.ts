@@ -1,4 +1,4 @@
-import type { GroupEffect } from '@/effects/EffectsManager'
+import type GroupEffect from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -116,7 +116,7 @@ export default class SVGProLevelsFilter {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+
   createFeFunc<T extends SVGElement>(type: string,
     feComponentTransfer: SVGFEComponentTransferElement) {
     const feFunc = createNS<T>(type)

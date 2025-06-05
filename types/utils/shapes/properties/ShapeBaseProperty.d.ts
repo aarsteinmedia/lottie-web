@@ -1,0 +1,37 @@
+import type CVShapeElement from '../../../elements/canvas/CVShapeElement';
+import type HShapeElement from '../../../elements/html/HShapeElement';
+import type SVGShapeElement from '../../../elements/svg/SVGShapeElement';
+import type { Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata, Shape } from '../../../types';
+import type { ShapeType } from '../../../utils/enums';
+import type { KeyframedValueProperty, MultiDimensionalProperty } from '../../../utils/Properties';
+import type ShapeCollection from '../../../utils/shapes/ShapeCollection';
+import type ShapePath from '../../../utils/shapes/ShapePath';
+import DynamicPropertyContainer from '../../../utils/helpers/DynamicPropertyContainer';
+export default abstract class ShapeBaseProperty extends DynamicPropertyContainer {
+    _caching?: Caching;
+    _cachingAtTime?: Caching;
+    comp?: CompElementInterface;
+    data?: Shape;
+    effectsSequence: ((arg: unknown) => ShapePath)[];
+    elem?: SVGShapeElement | CVShapeElement | HShapeElement;
+    frameId?: number;
+    k?: boolean;
+    keyframesMetadata: KeyframesMetadata[];
+    kf?: boolean;
+    localShapeCollection?: ShapeCollection;
+    lock?: boolean;
+    offsetTime: number;
+    p?: MultiDimensionalProperty;
+    paths?: ShapePath[] | ShapeCollection;
+    pv?: ShapePath;
+    ty?: ShapeType;
+    v?: ShapePath;
+    getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath | null;
+    initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): void;
+    interpolateShape(frameNum: number, previousValue: ShapePath, caching?: Caching): void;
+    interpolateShapeCurrentTime(): ShapePath | undefined;
+    processEffectsSequence(_val?: unknown): number;
+    reset(): void;
+    setVValue(newPath?: ShapePath): void;
+    shapesEqual(shape1: ShapePath, shape2: ShapePath): boolean;
+}

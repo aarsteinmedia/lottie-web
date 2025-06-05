@@ -51,7 +51,7 @@ export default class OffsetPathModifier extends ShapeModifier {
     lineJoin: number,
     miterLimit: number
   ) {
-    const outputBezier = newElement<ShapePath>()
+    const outputBezier = newElement() as ShapePath
 
     outputBezier.c = inputBezier.c
     let count = inputBezier.length()

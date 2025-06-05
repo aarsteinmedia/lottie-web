@@ -24,9 +24,6 @@ export default abstract class SVGRendererBase extends BaseRenderer {
   svgElement?: SVGSVGElement
 
   appendElementInPos(element: ElementInterfaceIntersect, pos: number) {
-    // if (!element.getBaseElement) {
-    //   throw new Error(`${element.constructor.name}: Method getBaseElement is not implemented`)
-    // }
     const newElement = element.getBaseElement()
 
     if (!newElement) {
@@ -53,9 +50,6 @@ export default abstract class SVGRendererBase extends BaseRenderer {
   }
 
   override buildItem(pos: number) {
-    // if (!this.layers) {
-    //   throw new Error(`${this.constructor.name}: layers it not implemented`)
-    // }
 
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData it not implemented`)

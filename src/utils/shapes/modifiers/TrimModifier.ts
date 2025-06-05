@@ -106,18 +106,16 @@ export default class TrimModifier extends ShapeModifier {
       segmentCount = shapePath._length
       initPos = shapePath._length
     } else {
-      shapePath = newElement()
+      shapePath = newElement() as ShapePath
       segmentCount = 0
       initPos = 0
     }
-    if (shapePath) {
-      shapes.push(shapePath)
-    }
+    shapes.push(shapePath)
 
     for (let i = 0; i < len; i++) {
-      if (!shapePath) {
-        continue
-      }
+      // if (!shapePath) {
+      //   continue
+      // }
       const { lengths } = pathsData[i]
 
       shapePath.c = shapePaths[i].c
@@ -225,11 +223,11 @@ export default class TrimModifier extends ShapeModifier {
         break
       }
       if (i < len - 1) {
-        shapePath = newElement()
+        shapePath = newElement() as ShapePath
         isNewShape = true
-        if (shapePath) {
-          shapes.push(shapePath)
-        }
+
+        shapes.push(shapePath)
+
 
         segmentCount = 0
       }

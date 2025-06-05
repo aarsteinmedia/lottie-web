@@ -1,4 +1,4 @@
-import type { GroupEffect } from '@/effects/EffectsManager'
+import type GroupEffect from '@/effects/GroupEffect'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
 const registeredEffects: {
@@ -24,13 +24,12 @@ export default class CVEffects {
         /**
          * TODO:.
          */
-        const Effect = registeredEffects[type].effect as any
+        const Effect = registeredEffects[type].effect
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        filterManager = new Effect(elem.effectsManager?.effectElements[i], elem)
+        // @ts-expect-error: missing container
+        filterManager = new Effect(elem.effectsManager?.effectElements[i], elem) as GroupEffect
       }
       if (filterManager) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.filters.push(filterManager)
       }
     }

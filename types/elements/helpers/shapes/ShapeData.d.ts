@@ -4,9 +4,9 @@ import type SVGStyleData from '../../../elements/helpers/shapes/SVGStyleData';
 import type { ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
 import type { ShapeType } from '../../../utils/enums';
 import type Matrix from '../../../utils/Matrix';
+import type { ShapeProperty } from '../../../utils/shapes/properties/ShapeProperty';
 import type ShapeCollection from '../../../utils/shapes/ShapeCollection';
 import type ShapePath from '../../../utils/shapes/ShapePath';
-import type { ShapeProperty } from '../../../utils/shapes/ShapeProperty';
 export default abstract class ShapeData {
     _isAnimated?: boolean;
     _length?: number;

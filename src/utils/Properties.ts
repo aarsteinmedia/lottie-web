@@ -9,7 +9,6 @@ import type {
   Keyframe,
   KeyframesMetadata,
   Shape,
-  Svalue,
   Vector2,
   Vector3,
   VectorProperty,
@@ -127,7 +126,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
     const offsetTime = Number(this.offsetTime)
-    let newValue: Vector3 | Svalue = [0,
+    let newValue: Vector3 | ShapePath = [0,
       0,
       0]
 

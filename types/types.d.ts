@@ -40,6 +40,7 @@ import type CanvasRenderer from './renderers/CanvasRenderer';
 import type HybridRenderer from './renderers/HybridRenderer';
 import type SVGRenderer from './renderers/SVGRenderer';
 import type { AudioController } from './utils/audio/AudioController';
+import type { BezierData } from './utils/Bezier';
 import type { PlayMode, ShapeType, RendererType, PreserveAspectRatio } from './utils/enums';
 import type CompExpressionInterface from './utils/expressions/CompInterface';
 import type FootageInterface from './utils/expressions/FootageInterface';
@@ -53,16 +54,18 @@ import type ImagePreloader from './utils/ImagePreloader';
 import type Matrix from './utils/Matrix';
 import type PolynomialBezier from './utils/PolynomialBezier';
 import type { BaseProperty, MultiDimensionalProperty, ValueProperty } from './utils/Properties';
-import type DashProperty from './utils/shapes/DashProperty';
-import type GradientProperty from './utils/shapes/GradientProperty';
+import type DashProperty from './utils/shapes/properties/DashProperty';
+import type EllShapeProperty from './utils/shapes/properties/EllShapeProperty';
+import type GradientProperty from './utils/shapes/properties/GradientProperty';
+import type RectShapeProperty from './utils/shapes/properties/RectShapeProperty';
+import type { KeyframedShapeProperty, ShapeProperty } from './utils/shapes/properties/ShapeProperty';
+import type StarShapeProperty from './utils/shapes/properties/StarShapeProperty';
 import type ShapePath from './utils/shapes/ShapePath';
-import type { EllShapeProperty, KeyframedShapeProperty, RectShapeProperty, ShapeProperty, StarShapeProperty } from './utils/shapes/ShapeProperty';
 import type { SlotManager } from './utils/SlotManager';
 import type LetterProps from './utils/text/LetterProps';
 import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
 import type TextProperty from './utils/text/TextProperty';
 import type { TransformProperty } from './utils/TransformProperty';
-import type { BezierData } from './utils/Bezier';
 export type AnimationDirection = 1 | -1;
 export type AnimationEventName = 'drawnFrame' | 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images' | '_play' | '_pause' | '_idle' | '_active' | 'configError' | 'renderFrameError';
 export interface SVGGeometry {
@@ -113,6 +116,7 @@ export interface TransformCanvas {
     ty: number;
     w: number;
 }
+export type PoolElement = ShapePath | number[] | BezierLength | SegmentLength;
 export interface BezierLength {
     addedLength: number;
     lengths: number[];
@@ -965,11 +969,6 @@ export interface ImageData {
     assetData: LottieAsset;
     img: null | SVGElement | HTMLCanvasElement | HTMLMediaElement;
 }
-export interface Svalue {
-    c: number;
-    i: number[];
-    s: number[][];
-}
 export interface CanvasItem {
     c: MultiDimensionalProperty<Vector3>;
     d?: {
@@ -1008,7 +1007,7 @@ export interface Keyframe {
     };
     n: string;
     o: Coordinates;
-    s: Svalue[] | null;
+    s: ShapePath[] | null;
     t: number;
     ti: Vector2;
     to?: Vector2 | null;
