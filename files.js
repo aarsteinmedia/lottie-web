@@ -39,7 +39,8 @@ const files = [
   'rond-qui-tourne.lottie',
   'rond-qui-tourne.json',
   'wine.json',
-  'wine.lottie'
+  'wine.lottie',
+  'dinide.lottie'
 ]
 
 export default files
