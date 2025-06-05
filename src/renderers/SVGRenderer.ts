@@ -8,8 +8,9 @@ import type {
 
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGRendererBase from '@/renderers/SVGRendererBase'
-import { createElementID, createNS } from '@/utils'
+import { createElementID } from '@/utils'
 import { RendererType } from '@/utils/enums'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class SVGRenderer extends SVGRendererBase {
   rendererType: RendererType

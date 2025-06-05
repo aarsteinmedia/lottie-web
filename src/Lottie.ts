@@ -44,20 +44,18 @@ import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorato
 import Expressions from '@/utils/expressions/Expressions'
 import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 import getInterface from '@/utils/expressions/InterfacesProvider'
-import {
-  setIDPrefix as setPrefix,
-  setLocationHref,
-  setQuality,
-  setSubframeEnabled,
-  setWebWorker,
-} from '@/utils/getterSetter'
-import OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
-import PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
-import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
-import { registerModifier } from '@/utils/shapes/ShapeModifiers'
-import TrimModifier from '@/utils/shapes/TrimModifier'
-import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
+import { setLocationHref } from '@/utils/helpers/locationHref'
+import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
+import { setQuality } from '@/utils/helpers/resolution'
+import { setSubframeEnabled } from '@/utils/helpers/subframe'
+import { setWebWorker } from '@/utils/helpers/worker'
+import OffsetPathModifier from '@/utils/shapes/modifiers/OffsetPathModifier'
+import PuckerAndBloatModifier from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
+import RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
+import { registerModifier } from '@/utils/shapes/modifiers'
+import TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import ZigZagModifier from '@/utils/shapes/modifiers/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 

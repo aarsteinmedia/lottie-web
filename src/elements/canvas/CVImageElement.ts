@@ -9,7 +9,7 @@ import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import { createTag } from '@/utils'
+import createTag from '@/utils/helpers/htmlElements'
 
 export default class CVImageElement extends RenderableElement {
   assetData: LottieAsset | null

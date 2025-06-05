@@ -15,16 +15,15 @@ import type {
   ValueProperty,
 } from '@/utils/Properties'
 
-import {
-  createElementID, createNS, degToRads
-} from '@/utils'
+import { createElementID, degToRads } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
-import { getLocationHref } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { getLocationHref } from '@/utils/helpers/locationHref'
+import createNS from '@/utils/helpers/svgElements'
 import PropertyFactory from '@/utils/PropertyFactory'
-import GradientProperty from '@/utils/shapes/GradientProperty'
+import GradientProperty from '@/utils/shapes/properties/GradientProperty'
 
 export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: MultiDimensionalProperty

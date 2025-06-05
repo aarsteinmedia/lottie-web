@@ -1,10 +1,10 @@
 import type { ElementInterfaceIntersect } from '@/types'
-import type MouseModifier from '@/utils/shapes/MouseModifier'
-import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
-import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
-import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
+import type MouseModifier from '@/utils/shapes/modifiers/MouseModifier'
+import type OffsetPathModifier from '@/utils/shapes/modifiers/OffsetPathModifier'
+import type PuckerAndBloatModifier from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type ZigZagModifier from '@/utils/shapes/modifiers/ZigZagModifier'
 
 export type ShapeModifierInterface =
   | TrimModifier

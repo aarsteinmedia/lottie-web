@@ -1,4 +1,4 @@
-import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
+import type RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'

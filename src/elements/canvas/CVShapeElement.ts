@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck TODO:
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
@@ -11,7 +11,8 @@ import type {
   VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
@@ -25,9 +26,9 @@ import {
   ShapeType,
 } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/DashProperty'
-import GradientProperty from '@/utils/shapes/GradientProperty'
-import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
+import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
+import DashProperty from '@/utils/shapes/properties/DashProperty'
+import GradientProperty from '@/utils/shapes/properties/GradientProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {
@@ -366,7 +367,7 @@ export default class CVShapeElement extends ShapeElement {
       }
       if (!isStroke) {
         // ctx.fill(currentStyle.r);
-        ; this.globalData.renderer?.ctxFill(currentStyle.r)
+        ; (this.globalData.renderer as CanvasRenderer).ctxFill(currentStyle.r)
       }
       renderer.restore()
     }
@@ -512,14 +513,14 @@ export default class CVShapeElement extends ShapeElement {
     isMain?: boolean
   ) {
     const len = items.length - 1
-    let groupTransform
+    let groupTransform: TransformProperty
 
     groupTransform = parentTransform
     for (let i = len; i >= 0; i--) {
       switch (items[i].ty) {
         case ShapeType.Transform: {
-          groupTransform = data[i].transform as any
-          this.renderShapeTransform(parentTransform as any,
+          groupTransform = data[i].transform
+          this.renderShapeTransform(parentTransform,
             groupTransform)
           break
         }
@@ -527,7 +528,7 @@ export default class CVShapeElement extends ShapeElement {
         case ShapeType.Ellipse:
         case ShapeType.Rectangle:
         case ShapeType.PolygonStar: {
-          this.renderPath(items[i], data[i] as any)
+          this.renderPath(items[i], data[i])
           break
         }
         case ShapeType.Fill: {
@@ -545,7 +546,7 @@ export default class CVShapeElement extends ShapeElement {
         case ShapeType.GradientFill:
         case ShapeType.GradientStroke: {
           this.renderGradientFill(
-            items[i] as any,
+            items[i],
             data[i],
             groupTransform
           )
@@ -553,7 +554,7 @@ export default class CVShapeElement extends ShapeElement {
         }
         case ShapeType.Group: {
           this.renderShape(
-            groupTransform, items[i].it ?? [], data[i].it as any
+            groupTransform, items[i].it ?? [], data[i].it
           )
           break
         }
@@ -611,7 +612,7 @@ export default class CVShapeElement extends ShapeElement {
       return
     }
     const { transforms, trNodes: shapeNodes } = styledShape,
-      { paths } = shape
+      { paths } = shape as { paths?: ShapeCollection }
     let i,
       len,
       j

@@ -8,12 +8,12 @@ import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleDat
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type { Shape, StrokeData } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
-import type {
-  EllShapeProperty, RectShapeProperty, StarShapeProperty
-} from '@/utils/shapes/ShapeProperty'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
+import type RectShapeProperty from '@/utils/shapes/properties/RectShapeProperty'
+import type StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
 
 import { ShapeType } from '@/utils/enums'
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
@@ -25,14 +25,13 @@ import FillInterface from '@/utils/expressions/shapes/FillInterface'
 import GradientFillInterface from '@/utils/expressions/shapes/GradientFillInterface'
 import GroupInterface from '@/utils/expressions/shapes/GroupInterface'
 import RectInterface from '@/utils/expressions/shapes/RectInterface'
+import RepeaterInterface from '@/utils/expressions/shapes/RepeaterInterface'
+import RoundCornersInterface from '@/utils/expressions/shapes/RoundCornersInterface'
 import ShapePathInterface from '@/utils/expressions/shapes/ShapePathInterface'
 import StarInterface from '@/utils/expressions/shapes/StarInterface'
 import StrokeInterface from '@/utils/expressions/shapes/StrokeInterface'
 import TransformInterface from '@/utils/expressions/shapes/TransformInterface'
 import TrimInterface from '@/utils/expressions/shapes/TrimInterface'
-
-import RepeaterInterface from './RepeaterInterface'
-import RoundCornersInterface from './RoundCornersInterface'
 
 
 export default class ShapeExpressionInterface {

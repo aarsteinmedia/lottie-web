@@ -1,4 +1,4 @@
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default abstract class SVGComposableEffect {
   createMergeNode(resultId: string, ins: string[]) {

@@ -14,9 +14,9 @@ import CVSolidElement from '@/elements/canvas/CVSolidElement'
 import CVTextElement from '@/elements/canvas/CVTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { createTag } from '@/utils'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import createTag from '@/utils/helpers/htmlElements'
 
 export default abstract class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D

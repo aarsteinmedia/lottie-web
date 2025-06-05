@@ -9,9 +9,9 @@ import CVEffects from '@/elements/canvas/CVEffects'
 import MaskElement from '@/elements/MaskElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import {
-  createNS, createTag, styleDiv
-} from '@/utils'
+import { styleDiv } from '@/utils'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class HBaseElement {
   _isFirstFrame?: boolean

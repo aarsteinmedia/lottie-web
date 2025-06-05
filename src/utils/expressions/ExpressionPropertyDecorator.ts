@@ -2,6 +2,7 @@ import type {
   Caching, ElementInterfaceIntersect, ExpressionProperty, Vector3
 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/Properties'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { extendPrototype, isArrayOfNum } from '@/utils'
@@ -9,12 +10,12 @@ import { ArrayType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import ShapeExpressions from '@/utils/expressions/ShapeExpressions'
-import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
+import { initialDefaultFrame } from '@/utils/helpers/constants'
 import Matrix from '@/utils/Matrix'
 import shapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/properties'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 function loopOut(

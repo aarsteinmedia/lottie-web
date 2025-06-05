@@ -15,7 +15,7 @@ import type {
 import type { ValueProperty } from '@/utils/Properties'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class HShapeElement extends RenderableElement {
   animatedContents: any[]

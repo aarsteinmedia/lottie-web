@@ -1,4 +1,5 @@
-import { createNS, inBrowser } from '@/utils'
+import { inBrowser } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')

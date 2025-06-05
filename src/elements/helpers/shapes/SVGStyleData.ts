@@ -7,7 +7,7 @@ import type {
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
 
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class SVGStyleData {
   _mdf: boolean

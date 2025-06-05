@@ -1,8 +1,9 @@
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect, Vector3 } from '@/types'
 
-import { createElementID, createNS } from '@/utils'
-import { getLocationHref } from '@/utils/getterSetter'
+import { createElementID } from '@/utils'
+import { getLocationHref } from '@/utils/helpers/locationHref'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class SVGStrokeEffect {
   elem: ElementInterfaceIntersect

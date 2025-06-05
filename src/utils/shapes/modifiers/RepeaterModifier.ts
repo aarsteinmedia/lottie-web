@@ -10,7 +10,7 @@ import type { ValueProperty } from '@/utils/Properties'
 import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/ShapeModifier'
+import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {

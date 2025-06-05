@@ -14,7 +14,7 @@ import type {
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import { RendererType } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/DashProperty'
+import DashProperty from '@/utils/shapes/properties/DashProperty'
 
 export default class SVGStrokeStyleData extends SVGFillStyleData {
   d?: DashProperty

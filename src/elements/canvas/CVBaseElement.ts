@@ -10,13 +10,13 @@ import type {
 
 import CVEffects from '@/elements/canvas/CVEffects'
 import CVMaskElement from '@/elements/canvas/CVMaskElement'
-import { getBlendMode } from '@/utils'
 import { EffectTypes } from '@/utils/enums'
 import {
   createCanvas,
   getLumaCanvas,
   loadLumaCanvas,
 } from '@/utils/helpers/AssetManager'
+import getBlendMode from '@/utils/helpers/getBlendMode'
 import Matrix from '@/utils/Matrix'
 
 const operationsMap = {

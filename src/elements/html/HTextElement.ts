@@ -9,13 +9,13 @@ import type {
 } from '@/types'
 
 import TextElement from '@/elements/TextElement'
-import {
-  createNS, createTag, styleDiv
-} from '@/utils'
+import { styleDiv } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, RendererType
 } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class HTextElement extends TextElement {
   compH?: number

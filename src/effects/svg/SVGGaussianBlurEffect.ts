@@ -1,7 +1,7 @@
 import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect } from '@/types'
 
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class SVGGaussianBlurEffect {
   feGaussianBlur: SVGFEGaussianBlurElement

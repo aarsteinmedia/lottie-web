@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type { BaseProperty } from '@/utils/Properties'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'

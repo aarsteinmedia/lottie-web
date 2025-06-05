@@ -6,7 +6,8 @@ import type {
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import HBaseElement from '@/elements/html/HBaseElement'
-import { createNS, createTag } from '@/utils'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class HSolidElement extends RenderableDOMElement {
   svgElement?: SVGSVGElement

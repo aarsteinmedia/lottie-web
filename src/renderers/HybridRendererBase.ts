@@ -19,10 +19,10 @@ import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import {
-  createNS, createTag, styleDiv
-} from '@/utils'
+import { styleDiv } from '@/utils'
 import { RendererType } from '@/utils/enums'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement

@@ -12,10 +12,11 @@ import SolidElement from '@/elements/SolidElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
-import { createElementID, createNS } from '@/utils'
+import { createElementID } from '@/utils'
 import { getExpressionsPlugin } from '@/utils/expressions'
-import { getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import { getLocationHref } from '@/utils/helpers/locationHref'
+import createNS from '@/utils/helpers/svgElements'
 
 export default abstract class SVGRendererBase extends BaseRenderer {
   destroyed?: boolean

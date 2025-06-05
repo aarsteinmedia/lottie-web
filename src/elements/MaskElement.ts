@@ -9,11 +9,12 @@ import type {
 import type { ValueProperty } from '@/utils/Properties'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { createElementID, createNS } from '@/utils'
-import { getLocationHref } from '@/utils/getterSetter'
+import { createElementID } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import { getLocationHref } from '@/utils/helpers/locationHref'
+import createNS from '@/utils/helpers/svgElements'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/properties'
 
 export default class MaskElement {
   data: LottieLayer

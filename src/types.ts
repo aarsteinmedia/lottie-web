@@ -72,16 +72,16 @@ import type {
   MultiDimensionalProperty,
   ValueProperty,
 } from '@/utils/Properties'
-import type DashProperty from '@/utils/shapes/DashProperty'
-import type GradientProperty from '@/utils/shapes/GradientProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type DashProperty from '@/utils/shapes/properties/DashProperty'
+import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
+import type GradientProperty from '@/utils/shapes/properties/GradientProperty'
+import type RectShapeProperty from '@/utils/shapes/properties/RectShapeProperty'
 import type {
-  EllShapeProperty,
   KeyframedShapeProperty,
-  RectShapeProperty,
   ShapeProperty,
-  StarShapeProperty,
-} from '@/utils/shapes/ShapeProperty'
+} from '@/utils/shapes/properties/ShapeProperty'
+import type StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
+import type ShapePath from '@/utils/shapes/ShapePath'
 import type { SlotManager } from '@/utils/SlotManager'
 import type LetterProps from '@/utils/text/LetterProps'
 import type TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'

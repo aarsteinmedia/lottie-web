@@ -13,9 +13,9 @@ import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import SVGCompElement from '@/elements/svg/SVGCompElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import TextElement from '@/elements/TextElement'
-import { createNS } from '@/utils'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import createNS from '@/utils/helpers/svgElements'
 
 const emptyShapeData = { shapes: [] } as unknown as LottieLayer
 

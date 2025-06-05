@@ -6,7 +6,7 @@ import type {
 import { isServer } from '@/utils'
 import { loadAsset } from '@/utils/AssetLoader'
 import DataFunctions from '@/utils/DataFunctions'
-import { getWebWorker } from '@/utils/getterSetter'
+import { getWebWorker } from '@/utils/helpers/worker'
 
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void

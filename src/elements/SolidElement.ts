@@ -5,7 +5,7 @@ import type {
 } from '@/types'
 
 import ImageElement from '@/elements/ImageElement'
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class SolidElement extends ImageElement {
   constructor(

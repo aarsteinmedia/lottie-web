@@ -37,7 +37,7 @@ import {
 import { RendererType } from '@/utils/enums'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import ProjectInterface from '@/utils/expressions/ProjectInterface'
-import { getSubframeEnabled } from '@/utils/getterSetter'
+import { getSubframeEnabled } from '@/utils/helpers/subframe'
 import ImagePreloader from '@/utils/ImagePreloader'
 import markerParser from '@/utils/markerParser'
 

@@ -11,9 +11,9 @@ import type LetterProps from '@/utils/text/LetterProps'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import TextElement from '@/elements/TextElement'
-import { createTag } from '@/utils'
 import { RendererType, ShapeType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import createTag from '@/utils/helpers/htmlElements'
 
 const transparent = 'rgba(0,0,0,0)'
 

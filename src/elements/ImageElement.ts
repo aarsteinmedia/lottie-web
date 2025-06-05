@@ -7,7 +7,7 @@ import type {
 } from '@/types'
 
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null

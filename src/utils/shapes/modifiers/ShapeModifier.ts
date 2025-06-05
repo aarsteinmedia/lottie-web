@@ -5,14 +5,14 @@ import type {
   ElementInterfaceIntersect,
   Shape,
 } from '@/types'
-import type OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
-import type PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
-import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
+import type OffsetPathModifier from '@/utils/shapes/modifiers/OffsetPathModifier'
+import type PuckerAndBloatModifier from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type ZigZagModifier from '@/utils/shapes/modifiers/ZigZagModifier'
 
-import { initialDefaultFrame } from '@/utils/getterSetter'
+import { initialDefaultFrame } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 

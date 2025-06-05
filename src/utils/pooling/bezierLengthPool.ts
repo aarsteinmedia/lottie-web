@@ -1,6 +1,6 @@
 import { ArrayType } from '@/utils/enums'
-import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
+import { getDefaultCurveSegments } from '@/utils/helpers/resolution'
 import PoolFactory from '@/utils/pooling/PoolFactory'
 
 const bezierLengthPool = (() =>

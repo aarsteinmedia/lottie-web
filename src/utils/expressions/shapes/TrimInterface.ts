@@ -1,4 +1,4 @@
-import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'

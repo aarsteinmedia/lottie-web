@@ -2,10 +2,11 @@ import type CVBaseElement from '@/elements/canvas/CVBaseElement'
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type { LottieLayer, Shape } from '@/types'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/properties'
 
 export default class CVMaskElement {
   _isFirstFrame?: boolean

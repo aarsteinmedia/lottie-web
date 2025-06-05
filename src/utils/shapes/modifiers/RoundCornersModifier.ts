@@ -5,13 +5,13 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/Properties'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
-import { roundCorner } from '@/utils/getterSetter'
+import { roundCorner } from '@/utils/helpers/constants'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/ShapeModifier'
+import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
 
 export default class RoundCornersModifier extends ShapeModifier {
   rd?: ValueProperty

@@ -5,7 +5,7 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 import Bezier from '@/utils/Bezier'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 export default abstract class ShapeExpressions extends ShapeProperty {
   _segmentsLength?: SegmentLength

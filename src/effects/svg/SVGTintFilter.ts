@@ -2,7 +2,7 @@ import type { GroupEffect } from '@/effects/EffectsManager'
 import type { ElementInterfaceIntersect, Vector3 } from '@/types'
 
 import SVGComposableEffect from '@/effects/svg/SVGComposableEffect'
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 const linearFilterValue =
   '0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0'

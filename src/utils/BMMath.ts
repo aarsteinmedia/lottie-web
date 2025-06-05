@@ -1,8 +1,8 @@
 import type { BMMath as BMMathType } from '@/types'
 
 import { isArrayOfNum } from '@/utils'
-import { getShouldRoundValues } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import { getShouldRoundValues } from '@/utils/helpers/resolution'
 
 const bmPow = Math.pow,
   bmSqrt = Math.sqrt,
@@ -12,7 +12,7 @@ const bmPow = Math.pow,
 
 const BMMath = {} as unknown as BMMathType
 
-(function () {
+(() => {
   const propertyNames: (keyof Math)[] = ['abs',
     'acos',
     'acosh',
@@ -62,7 +62,7 @@ const BMMath = {} as unknown as BMMathType
     // @ts-expect-error assign to read only
     BMMath[propertyNames[i]] = Math[propertyNames[i]]
   }
-}())
+})()
 
 BMMath.random = Math.random
 BMMath.abs = (val: number | number[]) => {

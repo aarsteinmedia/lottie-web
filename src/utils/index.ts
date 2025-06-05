@@ -10,7 +10,8 @@ import type {
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { getIDPrefix, roundCorner } from '@/utils/getterSetter'
+import { roundCorner } from '@/utils/helpers/constants'
+import { getIDPrefix } from '@/utils/helpers/prefix'
 import PolynomialBezier from '@/utils/PolynomialBezier'
 
 /**
@@ -447,30 +448,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return Math.min(Math.max(n, min), max)
   },
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  createNS = <T extends SVGElement>(type: string) => {
-    if (isServer()) {
-      /**
-       * This lets the function run without errors in a server context,
-       * while still working with TypeScript.
-       */
-      return null as unknown as T
-    }
-
-    // return {appendChild:function(){},setAttribute:function(){},style:{}}
-    return document.createElementNS('http://www.w3.org/2000/svg', type) as T
-  },
-  /**
-   * Download file, either SVG or dotLottie.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  createTag = <T extends HTMLElement>(type: string) => {
-    if (isServer()) {
-      return null as unknown as T
-    }
-
-    return document.createElement(type) as T
-  },
   createQuaternion = (values: Vector3): Vector4 => {
     const heading = values[0] * degToRads,
       attitude = values[1] * degToRads,
@@ -510,28 +487,6 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
         }
       }
     }
-  },
-  getBlendMode = (mode = 16) => {
-    const blendModeEnums: { [key: number]: string } = {
-      0: 'source-over',
-      1: 'multiply',
-      10: 'difference',
-      11: 'exclusion',
-      12: 'hue',
-      13: 'saturation',
-      14: 'color',
-      15: 'luminosity',
-      2: 'screen',
-      3: 'overlay',
-      4: 'darken',
-      5: 'lighten',
-      6: 'color-dodge',
-      7: 'color-burn',
-      8: 'hard-light',
-      9: 'soft-light',
-    }
-
-    return blendModeEnums[mode] || ''
   },
   getDescriptor = (object: unknown, prop: PropertyKey) => {
     return Object.getOwnPropertyDescriptor(object, prop)

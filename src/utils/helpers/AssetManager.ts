@@ -1,5 +1,6 @@
-import { createNS, createTag } from '@/utils'
 import { FeatureSupport } from '@/utils/FiltersFactory'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
 const featureSupport = new FeatureSupport(),
   id = '__lottie_element_luma_buffer'

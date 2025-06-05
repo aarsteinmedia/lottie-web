@@ -6,7 +6,7 @@ import type { EffectTypes } from '@/utils/enums'
 
 import { createElementID } from '@/utils'
 import { createFilter } from '@/utils/FiltersFactory'
-import { getLocationHref } from '@/utils/getterSetter'
+import { getLocationHref } from '@/utils/helpers/locationHref'
 
 const idPrefix = 'filter_result_',
   registeredEffects: {

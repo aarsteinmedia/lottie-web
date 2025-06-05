@@ -4,7 +4,7 @@ import type {
   Transformer,
 } from '@/types'
 
-import { createNS } from '@/utils'
+import createNS from '@/utils/helpers/svgElements'
 
 export default class ShapeGroupData {
   _render?: boolean

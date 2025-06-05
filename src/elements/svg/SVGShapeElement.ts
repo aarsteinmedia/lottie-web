@@ -8,8 +8,9 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
@@ -23,14 +24,14 @@ import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import ShapeElement from '@/elements/ShapeElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import { getBlendMode } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
-import { getLocationHref } from '@/utils/getterSetter'
+import getBlendMode from '@/utils/helpers/getBlendMode'
+import { getLocationHref } from '@/utils/helpers/locationHref'
 import Matrix from '@/utils/Matrix'
-import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import { getModifier } from '@/utils/shapes/modifiers'
+import ShapePropertyFactory from '@/utils/shapes/properties'
 import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class SVGShapeElement extends ShapeElement {

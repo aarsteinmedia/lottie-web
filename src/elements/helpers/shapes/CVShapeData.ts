@@ -1,10 +1,11 @@
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CVStyleElement, Shape } from '@/types'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import ShapeData from '@/elements/helpers/shapes/ShapeData'
 import { ShapeType } from '@/utils/enums'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/properties'
 
 export default class CVShapeData extends ShapeData {
   constructor(

@@ -6,9 +6,9 @@ import type {
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
 import type Matrix from '@/utils/Matrix'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
 
 
 export default abstract class ShapeData {
