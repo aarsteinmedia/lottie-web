@@ -1,4 +1,7 @@
-# AM Lottie-Web
-WORK IN PROGRESS: This is a modified version of Airbnb's [lottie-web](https://github.com/airbnb/lottie-web), made to adress issues with Server Side Rendering in Node, tree shaking and other minor bugs.
+# AM Lottie Web
+This is a modified version of Airbnb's [lottie-web](https://github.com/airbnb/lottie-web), made to adress the following issues:
+- Server Side Rendering in Node environments. All calls to browser or Web API are wrapped in environment checks.
+- Safer and more efficient handling of After Effects expressions. This codebase does not rely on `eval` to execute expressions made with After Effects, making it safer and also slightly faster.
+- Better error handling. A big problem with the original codebase was that it would fail silently. This made development and user feedback difficult.
 
-This package is primarily made to work with `@aarsteinmedia/dotlottie-player` and `@aarsteinmedia/dotlottie-player-light`. Any use cases outside of that are incidental and due to inherited features of `airbnb/lottie-web`.
+This package is primarily made to work with [`@aarsteinmedia/dotlottie-player`](https://www.npmjs.com/package/@aarsteinmedia/dotlottie-player) and [`@aarsteinmedia/dotlottie-player-light`](https://www.npmjs.com/package/@aarsteinmedia/dotlottie-player-light). Any use cases outside of that are incidental and due to inherited features of `airbnb/lottie-web`.
