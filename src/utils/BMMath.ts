@@ -88,9 +88,10 @@ function bmRnd(value: number) {
   return value
 }
 
+export default BMMath
+
 export {
   bmFloor,
-  BMMath,
   bmMax,
   bmMin,
   bmPow,

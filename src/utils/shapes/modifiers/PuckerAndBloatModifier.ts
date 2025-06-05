@@ -1,5 +1,5 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 

@@ -19,7 +19,7 @@ import {
 } from '@/utils/FontManager'
 import getFontProperties from '@/utils/getFontProperties'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
-import { BaseProperty } from '@/utils/Properties'
+import BaseProperty from '@/utils/properties/BaseProperty'
 
 export default class TextProperty extends BaseProperty {
   _frameId: number

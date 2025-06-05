@@ -4,11 +4,8 @@ import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGEffects from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
-import {
-  createAlphaToLuminanceFilter,
-  createFilter,
-  FeatureSupport,
-} from '@/utils/FiltersFactory'
+import featureSupport from '@/utils/featureSupport'
+import FiltersFactory from '@/utils/FiltersFactory'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import createNS from '@/utils/helpers/svgElements'
 
@@ -144,8 +141,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
     if (this.matteMasks[matteType]) {
       return this.matteMasks[matteType]
     }
-    const featureSupport = new FeatureSupport(),
-      id = `${this.layerId}_${matteType}`
+    const id = `${this.layerId}_${matteType}`
     let filId, fil, useElement, gg
 
     switch (matteType) {
@@ -170,9 +166,9 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
           }
           masker.setAttribute('mask-type', 'luminance')
           filId = createElementID()
-          fil = createFilter(filId)
+          fil = FiltersFactory.createFilter(filId)
           this.globalData?.defs.appendChild(fil)
-          fil.appendChild(createAlphaToLuminanceFilter())
+          fil.appendChild(FiltersFactory.createAlphaToLuminanceFilter())
           gg = createNS<SVGGElement>('g')
           gg.appendChild(useElement)
           masker.appendChild(gg)
@@ -189,7 +185,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
 
         maskGroup.appendChild(maskGrouper)
         filId = createElementID()
-        fil = createFilter(filId)
+        fil = FiltersFactory.createFilter(filId)
         // / /
         const feCTr = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
 
@@ -224,7 +220,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
         maskGrouper.appendChild(useElement)
         if (!featureSupport.maskType) {
           maskGroup.setAttribute('mask-type', 'luminance')
-          fil.appendChild(createAlphaToLuminanceFilter())
+          fil.appendChild(FiltersFactory.createAlphaToLuminanceFilter())
           gg = createNS<SVGGElement>('g')
           maskGrouper.appendChild(alphaRect)
           if (this.layerElement) {

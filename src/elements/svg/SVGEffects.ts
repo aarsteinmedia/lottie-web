@@ -5,7 +5,7 @@ import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 import type { EffectTypes } from '@/utils/enums'
 
 import { createElementID } from '@/utils'
-import { createFilter } from '@/utils/FiltersFactory'
+import FiltersFactory from '@/utils/FiltersFactory'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 
 const idPrefix = 'filter_result_',
@@ -22,7 +22,7 @@ export default class SVGEffects {
     let source = 'SourceGraphic'
 
     const filId = createElementID(),
-      fil = createFilter(filId, true)
+      fil = FiltersFactory.createFilter(filId, true)
 
     let count = 0
 

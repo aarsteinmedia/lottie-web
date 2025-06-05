@@ -6,7 +6,8 @@ import type {
   Shape,
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
-import type { KeyframedValueProperty, MultiDimensionalProperty } from '@/utils/Properties'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 

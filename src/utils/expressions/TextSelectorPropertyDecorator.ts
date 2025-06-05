@@ -2,11 +2,12 @@ import type {
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
 } from '@/types'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
 
 import { PropType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
-import { BaseProperty, type KeyframedValueProperty } from '@/utils/Properties'
+import BaseProperty from '@/utils/properties/BaseProperty'
 import TextSelectorProp from '@/utils/text/TextSelectorProperty'
 
 const notImplemented = 'Method not implemented'
@@ -31,7 +32,7 @@ export default class TextExpressionSelectorPropFactory extends BaseProperty {
       1]
     this.k = true
     this.x = true
-    this.getValue = ExpressionManager.initiateExpression.bind(this as KeyframedValueProperty)(
+    this.getValue = ExpressionManager.initiateExpression.bind(this as unknown as KeyframedValueProperty)(
       elem, data, this as unknown as KeyframedValueProperty
     )
     this.getMult = this.getValueProxy

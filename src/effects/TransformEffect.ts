@@ -1,9 +1,9 @@
 import type GroupEffect from '@/effects/GroupEffect'
 import type { Vector2, Vector3 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
-import { degToRads } from '@/utils'
 import { EffectTypes } from '@/utils/enums'
+import { degToRads } from '@/utils/helpers/constants'
 import Matrix from '@/utils/Matrix'
 
 export default abstract class TransformEffect {

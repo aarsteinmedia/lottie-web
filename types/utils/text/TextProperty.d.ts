@@ -1,6 +1,6 @@
 import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect, TextEffectFunction } from '../../types';
 import type LetterProps from '../../utils/text/LetterProps';
-import { BaseProperty } from '../../utils/Properties';
+import BaseProperty from '../../utils/properties/BaseProperty';
 export default class TextProperty extends BaseProperty {
     _frameId: number;
     canResize: boolean;

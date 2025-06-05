@@ -5,7 +5,7 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type { TransformProperty } from '@/utils/TransformProperty'
 
 export default class SVGTransformData {

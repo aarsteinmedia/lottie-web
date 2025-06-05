@@ -5,10 +5,8 @@ import type {
   StrokeData,
   Vector3,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import { RendererType } from '@/utils/enums'

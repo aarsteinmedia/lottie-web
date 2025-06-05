@@ -5,7 +5,7 @@ import type {
   Effect, ElementInterfaceIntersect, LottieLayer
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type { BaseProperty } from '@/utils/Properties'
+import type BaseProperty from '@/utils/properties/BaseProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'

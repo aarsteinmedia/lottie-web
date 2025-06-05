@@ -10,7 +10,8 @@ import type {
   Vector3,
   VectorProperty
 } from '@/types'
-import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 
@@ -18,13 +19,13 @@ import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
 import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import ShapeElement from '@/elements/ShapeElement'
-import { degToRads } from '@/utils'
 import {
   lineCapEnum,
   lineJoinEnum,
   RendererType,
   ShapeType,
 } from '@/utils/enums'
+import { degToRads } from '@/utils/helpers/constants'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
 import DashProperty from '@/utils/shapes/properties/DashProperty'

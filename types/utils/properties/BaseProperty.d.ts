@@ -1,9 +1,12 @@
-import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, Vector2, Vector3, VectorProperty } from '../types';
-import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
-import type Matrix from '../utils/Matrix';
-import type ShapePath from '../utils/shapes/ShapePath';
-import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
-export declare abstract class BaseProperty extends DynamicPropertyContainer {
+import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, Vector3 } from '../../types';
+import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import type Matrix from '../../utils/Matrix';
+import type KeyframedValueProperty from '../../utils/properties/KeyframedValueProperty';
+import type MultiDimensionalProperty from '../../utils/properties/MultiDimensionalProperty';
+import type ValueProperty from '../../utils/properties/ValueProperty';
+import type ShapePath from '../../utils/shapes/ShapePath';
+import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
+export default abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
     _isFirstFrame?: boolean;
@@ -41,7 +44,7 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     x?: boolean;
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
-    getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
+    getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
     getValueAtTime(_val1?: unknown, _val2?: unknown): unknown;
     getVelocityAtTime(_frameNum: number): number | number[];
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): EffectFunction;
@@ -51,26 +54,4 @@ export declare abstract class BaseProperty extends DynamicPropertyContainer {
     speedAtTime(_frameNum: number): void;
     valueAtTime(_a: number, _b?: number): void;
     velocityAtTime(_frameNum: number): void;
-}
-export declare class ValueProperty<T extends number | number[] = number> extends BaseProperty {
-    pv: T;
-    v: T;
-    constructor(elem: ElementInterfaceIntersect, data: VectorProperty, mult?: null | number, container?: ElementInterfaceIntersect | null);
-}
-export declare class MultiDimensionalProperty<T extends any[] = Vector2> extends BaseProperty {
-    v: T;
-    constructor(elem: ElementInterfaceIntersect, data: VectorProperty<T>, mult?: null | number, container?: ElementInterfaceIntersect | null);
-}
-export declare class KeyframedValueProperty extends BaseProperty {
-    pv: number | number[];
-    v: number;
-    constructor(elem: ElementInterfaceIntersect, data: VectorProperty<Keyframe[]>, mult?: null | number, container?: ElementInterfaceIntersect | null);
-}
-export declare class KeyframedMultidimensionalProperty<T extends any[] = Vector2> extends BaseProperty {
-    pv: T;
-    v: T;
-    constructor(elem: ElementInterfaceIntersect, data: VectorProperty<any[]>, mult?: null | number, container?: ElementInterfaceIntersect | null);
-}
-export declare class NoProperty extends BaseProperty {
-    constructor();
 }

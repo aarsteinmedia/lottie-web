@@ -5,7 +5,7 @@ import type {
   Shape,
   VectorProperty,
 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'

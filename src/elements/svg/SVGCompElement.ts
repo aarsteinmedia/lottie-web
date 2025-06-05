@@ -4,7 +4,7 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/Properties'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
 
 import CompElement from '@/elements/CompElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'

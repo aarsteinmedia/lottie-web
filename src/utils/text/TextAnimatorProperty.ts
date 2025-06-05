@@ -8,11 +8,8 @@ import type {
   TextPathData,
   Vector3,
 } from '@/types'
-import type { MultiDimensionalProperty } from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
 
-import {
-  addBrightnessToRGB, addHueToRGB, addSaturationToRGB
-} from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -21,6 +18,156 @@ import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
+
+const rgbToHSV = (
+    r: number, g: number, b: number
+  ): Vector3 => {
+    const max = Math.max(
+        r, g, b
+      ),
+      min = Math.min(
+        r, g, b
+      ),
+      d = max - min
+    let h = 0
+    const s = max === 0 ? 0 : d / max,
+      v = max / 255
+
+    switch (max) {
+      case min: {
+        h = 0
+        break
+      }
+      case r: {
+        h = g - b + d * (g < b ? 6 : 0)
+        h /= 6 * d
+        break
+      }
+      case g: {
+        h = b - r + d * 2
+        h /= 6 * d
+        break
+      }
+      case b: {
+        h = r - g + d * 4
+        h /= 6 * d
+        break
+      }
+      default: {
+        break
+      }
+    }
+
+    return [h,
+      s,
+      v]
+  },
+  HSVtoRGB = (
+    h: number, s: number, v: number
+  ): Vector3 => {
+    let r = 0,
+      g = 0,
+      b = 0
+    const i = Math.floor(h * 6),
+      f = h * 6 - i,
+      p = v * (1 - s),
+      q = v * (1 - f * s),
+      t = v * (1 - (1 - f) * s)
+
+    switch (i % 6) {
+      case 0: {
+        r = v
+        g = t
+        b = p
+        break
+      }
+      case 1: {
+        r = q
+        g = v
+        b = p
+        break
+      }
+      case 2: {
+        r = p
+        g = v
+        b = t
+        break
+      }
+      case 3: {
+        r = p
+        g = q
+        b = v
+        break
+      }
+      case 4: {
+        r = t
+        g = p
+        b = v
+        break
+      }
+      case 5: {
+        r = v
+        g = p
+        b = q
+        break
+      }
+      default: {
+        break
+      }
+    }
+
+    return [r,
+      g,
+      b]
+  },
+  addBrightnessToRGB = (color: Vector3, offset: number) => {
+    const hsv = rgbToHSV(
+      color[0] * 255, color[1] * 255, color[2] * 255
+    )
+
+    hsv[2] += offset
+    if (hsv[2] > 1) {
+      hsv[2] = 1
+    } else if (hsv[2] < 0) {
+      hsv[2] = 0
+    }
+
+    return HSVtoRGB(
+      hsv[0], hsv[1], hsv[2]
+    )
+  },
+  addHueToRGB = (color: Vector3, offset: number): Vector3 => {
+    const hsv = rgbToHSV(
+      color[0] * 255, color[1] * 255, color[2] * 255
+    )
+
+    hsv[0] += offset / 360
+    if (hsv[0] > 1) {
+      hsv[0] -= 1
+    } else if (hsv[0] < 0) {
+      hsv[0]++
+    }
+
+    return HSVtoRGB(
+      hsv[0], hsv[1], hsv[2]
+    )
+  },
+  addSaturationToRGB = (color: Vector3, offset: number) => {
+    const hsv = rgbToHSV(
+      color[0] * 255, color[1] * 255, color[2] * 255
+    )
+
+    hsv[1] += offset
+    if (hsv[1] > 1) {
+      hsv[1] = 1
+    } else if (hsv[1] <= 0) {
+      hsv[1] = 0
+    }
+
+    return HSVtoRGB(
+      hsv[0], hsv[1], hsv[2]
+    )
+  }
 
 export default class TextAnimatorProperty extends DynamicPropertyContainer {
   _frameId: number

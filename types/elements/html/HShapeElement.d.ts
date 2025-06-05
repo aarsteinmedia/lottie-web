@@ -1,6 +1,6 @@
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
 import type { BoundingBox, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
-import type { ValueProperty } from '../../utils/Properties';
+import type ValueProperty from '../../utils/properties/ValueProperty';
 import RenderableElement from '../../elements/helpers/RenderableElement';
 export default class HShapeElement extends RenderableElement {
     animatedContents: any[];

@@ -2,13 +2,11 @@ import type {
   ElementInterfaceIntersect,
   VectorProperty,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  NoProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type NoProperty from '@/utils/properties/NoProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
-import { degToRads } from '@/utils'
+import { degToRads } from '@/utils/helpers/constants'
 import PropertyFactory from '@/utils/PropertyFactory'
 import TextSelectorProperty from '@/utils/text/TextSelectorProperty'
 

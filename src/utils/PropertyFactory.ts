@@ -7,13 +7,11 @@ import type {
 } from '@/types'
 import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
-import {
-  KeyframedMultidimensionalProperty,
-  KeyframedValueProperty,
-  MultiDimensionalProperty,
-  NoProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import KeyframedMultidimensionalProperty from '@/utils/properties/KeyframedMultidimensionalProperty'
+import KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import NoProperty from '@/utils/properties/NoProperty'
+import ValueProperty from '@/utils/properties/ValueProperty'
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
@@ -49,7 +47,7 @@ function getProp<T = number | number[]>(
       case 0: {
         p = new KeyframedValueProperty(
           elem,
-          data as unknown as VectorProperty<Keyframe[]>,
+          data as VectorProperty<Keyframe[]>,
           mult,
           container as ElementInterfaceIntersect
         )
@@ -58,7 +56,7 @@ function getProp<T = number | number[]>(
       case 1: {
         p = new KeyframedMultidimensionalProperty(
           elem,
-          data as VectorProperty<number[]>,
+          data as VectorProperty<Keyframe[]>,
           mult,
           container as ElementInterfaceIntersect
         )

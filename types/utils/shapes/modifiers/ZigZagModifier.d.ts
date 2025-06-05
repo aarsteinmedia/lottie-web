@@ -1,5 +1,5 @@
 import type { ElementInterfaceIntersect, Shape } from '../../../types';
-import type { ValueProperty } from '../../../utils/Properties';
+import type ValueProperty from '../../../utils/properties/ValueProperty';
 import type ShapePath from '../../../utils/shapes/ShapePath';
 import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
 export default class ZigZagModifier extends ShapeModifier {

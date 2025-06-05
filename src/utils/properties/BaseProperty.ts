@@ -11,27 +11,111 @@ import type {
   Shape,
   Vector2,
   Vector3,
+  Vector4,
   VectorProperty,
 } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type Matrix from '@/utils/Matrix'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import {
-  createQuaternion, quaternionToEuler, slerp
-} from '@/utils'
-import {
-  buildBezierData,
-  pointOnLine2D,
-  pointOnLine3D,
-} from '@/utils/Bezier'
+import { buildBezierData } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { degToRads, initialDefaultFrame } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
-export abstract class BaseProperty extends DynamicPropertyContainer {
+const quaternionToEuler = (out: Vector3, quat: Vector4) => {
+    const qx = quat[0],
+      qy = quat[1],
+      qz = quat[2],
+      qw = quat[3],
+      heading = Math.atan2(2 * qy * qw - 2 * qx * qz,
+        1 - 2 * qy * qy - 2 * qz * qz),
+      attitude = Math.asin(2 * qx * qy + 2 * qz * qw),
+      bank = Math.atan2(2 * qx * qw - 2 * qy * qz,
+        1 - 2 * qx * qx - 2 * qz * qz)
+
+    out[0] = heading / degToRads
+    out[1] = attitude / degToRads
+    out[2] = bank / degToRads
+  },
+  createQuaternion = (values: Vector3): Vector4 => {
+    const heading = values[0] * degToRads,
+      attitude = values[1] * degToRads,
+      bank = values[2] * degToRads,
+      c1 = Math.cos(heading / 2),
+      c2 = Math.cos(attitude / 2),
+      c3 = Math.cos(bank / 2),
+      s1 = Math.sin(heading / 2),
+      s2 = Math.sin(attitude / 2),
+      s3 = Math.sin(bank / 2),
+      w = c1 * c2 * c3 - s1 * s2 * s3,
+      x = s1 * s2 * c3 + c1 * c2 * s3,
+      y = s1 * c2 * c3 + c1 * s2 * s3,
+      z = c1 * s2 * c3 - s1 * c2 * s3
+
+    return [x,
+      y,
+      z,
+      w]
+  },
+  /**
+   * Based on Toji's https://github.com/toji/gl-matrix/.
+   */
+  slerp = (
+    a: Vector4, b: Vector4, t: number
+  ): Vector4 => {
+    const out: Vector4 = [0,
+        0,
+        0,
+        0],
+      ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3]
+    let bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3],
+      /**
+       *
+       */
+      omega,
+      cosom: number,
+      sinom,
+      scale0,
+      scale1
+
+    cosom = ax * bx + ay * by + az * bz + aw * bw
+    if (cosom < 0.0) {
+      cosom = -cosom
+      bx = -bx
+      by = -by
+      bz = -bz
+      bw = -bw
+    }
+    if (1.0 - cosom > 0.000001) {
+      omega = Math.acos(cosom)
+      sinom = Math.sin(omega)
+      scale0 = Math.sin((1.0 - t) * omega) / sinom
+      scale1 = Math.sin(t * omega) / sinom
+    } else {
+      scale0 = 1.0 - t
+      scale1 = t
+    }
+    out[0] = scale0 * ax + scale1 * bx
+    out[1] = scale0 * ay + scale1 * by
+    out[2] = scale0 * az + scale1 * bz
+    out[3] = scale0 * aw + scale1 * bw
+
+    return out
+  }
+
+export default abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
   _isFirstFrame?: boolean
@@ -181,7 +265,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
         keyData.s as unknown as Vector2,
         (nextKeyData.s ?? keyData.e) as unknown as Vector2,
         keyData.to,
-        keyData.ti
+        keyData.ti as Vector2
       )
       const { __fnct, bezierData } = keyframeMetadata
 
@@ -435,222 +519,5 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   velocityAtTime(_frameNum: number) {
     throw new Error('Method is not implemented')
-  }
-}
-export class ValueProperty<
-  T extends number | number[] = number,
-> extends BaseProperty {
-  override pv: T
-  override v: T
-  constructor(
-    elem: ElementInterfaceIntersect,
-    data: VectorProperty,
-    mult: null | number = null,
-    container: ElementInterfaceIntersect | null = null
-  ) {
-    super()
-    this.propType = PropType.UniDimensional
-    this.mult = mult || 1
-    this.data = data
-    this.v = (data.k * (mult || 1)) as T
-    this.pv = data.k as T
-    this._mdf = false
-    this.elem = elem
-    this.container = container
-    this.comp = elem.comp
-    this.k = false
-    this.kf = false
-    this.vel = 0
-    this.effectsSequence = []
-    this._isFirstFrame = true
-    this.getValue = this.processEffectsSequence
-  }
-}
-
-export class MultiDimensionalProperty<
-  T extends any[] = Vector2,
-> extends BaseProperty {
-  override v: T
-  constructor(
-    elem: ElementInterfaceIntersect,
-    data: VectorProperty<T>,
-    mult: null | number = null,
-    container: ElementInterfaceIntersect | null = null
-  ) {
-    super()
-    this.propType = PropType.MultiDimensional
-    this.mult = mult || 1
-    this.data = data
-    this._mdf = false
-    this.elem = elem
-    this.container = container
-    this.comp = elem.comp
-    this.k = false
-    this.kf = false
-    this.frameId = -1
-    const { length } = data.k
-
-    this.v = createTypedArray(ArrayType.Float32, length) as T
-    this.pv = createTypedArray(ArrayType.Float32, length) as T
-    this.vel = createTypedArray(ArrayType.Float32, length) as T
-    for (let i = 0; i < length; i++) {
-      this.v[i] = data.k[i] * this.mult
-      this.pv[i] = data.k[i]
-    }
-    this._isFirstFrame = true
-    this.effectsSequence = []
-    this.getValue = this.processEffectsSequence
-  }
-}
-export class KeyframedValueProperty extends BaseProperty {
-  override pv: number | number[]
-  override v: number
-  constructor(
-    elem: ElementInterfaceIntersect,
-    data: VectorProperty<Keyframe[]>,
-    mult: null | number = null,
-    container: ElementInterfaceIntersect | null = null
-  ) {
-    super()
-    this.propType = PropType.UniDimensional
-    this.keyframes = data.k
-    this.keyframesMetadata = []
-    this.offsetTime = elem.data.st
-    this.frameId = -1
-    this._caching = {
-      _lastKeyframeIndex: -1,
-      lastFrame: this.initFrame,
-      lastIndex: 0,
-      value: 0,
-    } as Caching
-    this.k = true
-    this.kf = true
-    this.data = data
-    this.mult = mult || 1
-    this.elem = elem
-    this.container = container
-    this.comp = elem.comp
-    this.v = this.initFrame
-    this.pv = this.initFrame
-    this._isFirstFrame = true
-    this.getValue = this.processEffectsSequence
-    this.effectsSequence = [this.getValueAtCurrentTime.bind(this)]
-  }
-}
-
-export class KeyframedMultidimensionalProperty<
-  T extends any[] = Vector2,
-> extends BaseProperty {
-  override pv: T
-  override v: T
-  constructor(
-    elem: ElementInterfaceIntersect,
-    data: VectorProperty<any[]>,
-    mult: null | number = null,
-    container: ElementInterfaceIntersect | null = null
-  ) {
-    super()
-    this.propType = PropType.MultiDimensional
-    const { length } = data.k
-    let s
-    let e
-    let to
-    let ti
-
-    for (let i = 0; i < length - 1; i++) {
-      if (data.k[i].to && data.k[i].s && data.k[i + 1]?.s) {
-        s = data.k[i].s as number[]
-        e = data.k[i + 1].s as number[]
-        to = data.k[i].to as number[]
-        ti = data.k[i].ti as number[]
-        if (
-          s.length === 2 &&
-          !(s[0] === e[0] && s[1] === e[1]) &&
-          pointOnLine2D(
-            s[0], s[1], e[0], e[1], s[0] + to[0], s[1] + to[1]
-          ) &&
-          pointOnLine2D(
-            s[0],
-            s[1],
-            e[0],
-            e[1],
-            e[0] + ti[0],
-            e[1] + ti[1]
-          ) ||
-          s.length === 3 &&
-          !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]) &&
-          pointOnLine3D(
-            s[0],
-            s[1],
-            s[2],
-            e[0],
-            e[1],
-            e[2],
-            s[0] + to[0],
-            s[1] + to[1],
-            s[2] + to[2]
-          ) &&
-          pointOnLine3D(
-            s[0],
-            s[1],
-            s[2],
-            e[0],
-            e[1],
-            e[2],
-            e[0] + ti[0],
-            e[1] + ti[1],
-            e[2] + ti[2]
-          )
-        ) {
-          data.k[i].to = null
-          data.k[i].ti = null
-        }
-        if (
-          s[0] === e[0] &&
-          s[1] === e[1] &&
-          to[0] === 0 &&
-          to[1] === 0 &&
-          ti[0] === 0 &&
-          ti[1] === 0 && s.length === 2 || s[2] === e[2] && to[2] === 0 && ti[2] === 0
-        ) {
-          data.k[i].to = null
-          data.k[i].ti = null
-        }
-      }
-    }
-    this.effectsSequence = [this.getValueAtCurrentTime.bind(this)]
-    this.data = data
-    this.keyframes = data.k
-    this.keyframesMetadata = []
-    this.offsetTime = elem.data.st
-    this.k = true
-    this.kf = true
-    this._isFirstFrame = true
-    this.mult = mult || 1
-    this.elem = elem
-    this.container = container
-    this.comp = elem.comp
-    this.getValue = this.processEffectsSequence
-    this.frameId = -1
-    const arrLen: number = data.k[0].s.length || 0
-
-    this.v = createTypedArray(ArrayType.Float32, arrLen) as T
-    this.pv = createTypedArray(ArrayType.Float32, arrLen) as T
-    for (let i = 0; i < arrLen; i++) {
-      this.v[i] = this.initFrame
-      this.pv[i] = this.initFrame
-    }
-    this._caching = {
-      lastFrame: this.initFrame,
-      lastIndex: 0,
-      value: createTypedArray(ArrayType.Float32, arrLen) as T,
-    } as unknown as Caching
-  }
-}
-
-export class NoProperty extends BaseProperty {
-  constructor() {
-    super()
-    this.propType = false
   }
 }

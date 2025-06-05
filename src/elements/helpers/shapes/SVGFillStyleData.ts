@@ -8,10 +8,8 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'

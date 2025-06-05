@@ -1,7 +1,6 @@
-import { inBrowser } from '@/utils'
 import createNS from '@/utils/helpers/svgElements'
 
-export function createAlphaToLuminanceFilter() {
+function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
 
   feColorMatrix.setAttribute('type', 'matrix')
@@ -12,7 +11,7 @@ export function createAlphaToLuminanceFilter() {
   return feColorMatrix
 }
 
-export function createFilter(filId: string, skipCoordinates?: boolean) {
+function createFilter(filId: string, skipCoordinates?: boolean) {
   const fil = createNS<SVGFilterElement>('filter')
 
   fil.id = filId
@@ -25,23 +24,6 @@ export function createFilter(filId: string, skipCoordinates?: boolean) {
   }
 
   return fil
-}
-
-export class FeatureSupport {
-  maskType = true
-  offscreenCanvas = typeof OffscreenCanvas !== 'undefined'
-  svgLumaHidden = true
-  constructor() {
-    if (!inBrowser()) {
-      return
-    }
-    this.maskType =
-      !/MSIE 10/i.test(navigator.userAgent) &&
-      !/MSIE 9/i.test(navigator.userAgent) &&
-      !/rv:11.0/i.test(navigator.userAgent) &&
-      !/Edge\/\d./i.test(navigator.userAgent)
-    this.svgLumaHidden = !/firefox/i.test(navigator.userAgent)
-  }
 }
 
 const FiltersFactory = {

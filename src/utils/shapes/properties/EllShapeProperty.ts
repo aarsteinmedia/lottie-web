@@ -1,5 +1,5 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
-import type { MultiDimensionalProperty } from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'

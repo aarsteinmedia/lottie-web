@@ -10,7 +10,7 @@ import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import { buildShapeString } from '@/utils'
+import buildShapeString from '@/utils/buildShapeString'
 import { RendererType, ShapeType } from '@/utils/enums'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'

@@ -1,7 +1,8 @@
 import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import type { BaseProperty, KeyframedValueProperty } from '@/utils/Properties'
+import type BaseProperty from '@/utils/properties/BaseProperty'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
 
 import { isArrayOfNum } from '@/utils'
 import { ArrayType } from '@/utils/enums'

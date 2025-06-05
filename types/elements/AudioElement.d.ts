@@ -1,5 +1,6 @@
 import type { Audio, ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '../types';
-import type { MultiDimensionalProperty, ValueProperty } from '../utils/Properties';
+import type MultiDimensionalProperty from '../utils/properties/MultiDimensionalProperty';
+import type ValueProperty from '../utils/properties/ValueProperty';
 import RenderableElement from '../elements/helpers/RenderableElement';
 export default class AudioElement extends RenderableElement {
     _canPlay: boolean;

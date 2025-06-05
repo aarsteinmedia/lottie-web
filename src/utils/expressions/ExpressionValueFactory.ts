@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { BaseProperty } from '@/utils/Properties'
+import type BaseProperty from '@/utils/properties/BaseProperty'
 
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'

@@ -68,11 +68,9 @@ import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContai
 import type ImagePreloader from '@/utils/ImagePreloader'
 import type Matrix from '@/utils/Matrix'
 import type PolynomialBezier from '@/utils/PolynomialBezier'
-import type {
-  BaseProperty,
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type BaseProperty from '@/utils/properties/BaseProperty'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type DashProperty from '@/utils/shapes/properties/DashProperty'
 import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
 import type GradientProperty from '@/utils/shapes/properties/GradientProperty'
@@ -1274,9 +1272,9 @@ export interface Keyframe {
   }
   n: string
   o: Coordinates
-  s: ShapePath[] | null
+  s: ShapePath[] | Vector3 | null
   t: number
-  ti: Vector2
+  ti: Vector2 | null
   to?: Vector2 | null
 }
 
@@ -1332,7 +1330,7 @@ export interface GlobalData {
   transformCanvas?: TransformCanvas
 }
 
-export type ExpressionProperty = VectorProperty<(ValueProperty | MultiDimensionalProperty)[]> & {
+export type ExpressionProperty = VectorProperty<Keyframe[]> & {
   release?: () => void
   x: string
 }

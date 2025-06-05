@@ -1,5 +1,5 @@
 import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../types';
-import type { ValueProperty } from '../utils/Properties';
+import type ValueProperty from '../utils/properties/ValueProperty';
 import RenderableDOMElement from '../elements/helpers/RenderableDOMElement';
 export default abstract class CompElement extends RenderableDOMElement {
     completeLayers?: boolean;

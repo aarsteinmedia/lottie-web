@@ -9,16 +9,15 @@ import type {
   Transformer,
   VectorProperty,
 } from '@/types'
-import type {
-  KeyframedValueProperty,
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
-import { createElementID, degToRads } from '@/utils'
+import { createElementID } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
+import { degToRads } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import createNS from '@/utils/helpers/svgElements'

@@ -1,6 +1,25 @@
 import type { Marker, MarkerData } from '@/types'
 
-import { parsePayloadLines } from '@/utils'
+const parsePayloadLines = (payload: string) => {
+  const lines = payload.split('\r\n'),
+    keys: Record<string, string> = {},
+    { length } = lines
+  let keysCount = 0
+
+  for (let i = 0; i < length; i++) {
+    const line = lines[i].split(':')
+
+    if (line.length === 2) {
+      keys[line[0]] = line[1].trim()
+      keysCount++
+    }
+  }
+  if (keysCount === 0) {
+    throw new Error('Could not parse markers')
+  }
+
+  return keys
+}
 
 export default function markerParser(markersFromProps: (MarkerData | Marker)[]) {
   const markers = [],

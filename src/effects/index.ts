@@ -1,6 +1,6 @@
 import type GroupEffect from '@/effects/GroupEffect'
 import type { EffectValue, ElementInterfaceIntersect } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import PropertyFactory from '@/utils/PropertyFactory'
 

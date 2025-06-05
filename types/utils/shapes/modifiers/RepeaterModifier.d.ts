@@ -1,7 +1,7 @@
 import type ShapeGroupData from '../../../elements/helpers/shapes/ShapeGroupData';
 import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
 import type { ElementInterfaceIntersect, Shape } from '../../../types';
-import type { ValueProperty } from '../../../utils/Properties';
+import type ValueProperty from '../../../utils/properties/ValueProperty';
 import Matrix from '../../../utils/Matrix';
 import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
 import { type TransformProperty } from '../../../utils/TransformProperty';

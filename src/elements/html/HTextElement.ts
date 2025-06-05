@@ -20,7 +20,6 @@ import createNS from '@/utils/helpers/svgElements'
 export default class HTextElement extends TextElement {
   compH?: number
   compW?: number
-  // extendPrototype([BaseElement, TransformElement, HBaseElement, HierarchyElement, FrameElement, RenderableDOMElement, TextElement], HTextElement);
 
   currentBBox?: {
     w: number

@@ -1,27 +1,31 @@
-// @ts-nocheck
 /* eslint-disable unicorn/consistent-destructuring */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
-  ElementInterfaceIntersect, ExpressionProperty, ExpressionReturn, Vector2,
+  ElementInterfaceIntersect, ExpressionProperty, ExpressionReturn, Shape, Vector2,
   Vector3,
+  Vector4,
 } from '@/types'
+import type CompExpressionInterface from '@/utils/expressions/CompInterface'
 import type { GroupEffectInterface } from '@/utils/expressions/EffectInterface'
 import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
 import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
+import type TextExpressionInterface from '@/utils/expressions/TextInterface'
 import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
-import type {
-  BaseProperty, KeyframedValueProperty, ValueProperty
-} from '@/utils/Properties'
+import type BaseProperty from '@/utils/properties/BaseProperty'
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import {
   clamp,
-  degToRads, hslToRgb, isArrayOfNum, rgbToHsl
+  isArray,
+  isArrayOfNum
 } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
-import { BMMath } from '@/utils/BMMath'
+import BMMath from '@/utils/BMMath'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
+import { degToRads } from '@/utils/helpers/constants'
 import shapePool from '@/utils/pooling/ShapePool'
 import seedrandom from '@/utils/seedrandom'
 
@@ -63,6 +67,108 @@ const $bm_div = div,
     0.167, 0.167, 0.667, 1, 'easeOut'
   ).get
 
+const hueToRGB = (
+    p: number, q: number, tFromProps: number
+  ) => {
+    let t = tFromProps
+
+    if (t < 0) {
+      t++
+    }
+    if (t > 1) {
+      t -= 1
+    }
+    if (t < 1 / 6) {
+      return p + (q - p) * 6 * t
+    }
+    if (t < 1 / 2) {
+      return q
+    }
+    if (t < 2 / 3) {
+      return p + (q - p) * (2 / 3 - t) * 6
+    }
+
+    return p
+  },
+
+  hslToRgb = (val: number[]): Vector4 => {
+    const h = val[0],
+      s = val[1],
+      l = val[2]
+
+    let r, g, b
+
+    if (s === 0) {
+      r = l // achromatic
+      b = l // achromatic
+      g = l // achromatic
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+      const p = 2 * l - q
+
+      r = hueToRGB(
+        p, q, h + 1 / 3
+      )
+      g = hueToRGB(
+        p, q, h
+      )
+      b = hueToRGB(
+        p, q, h - 1 / 3
+      )
+    }
+
+    return [r,
+      g,
+      b,
+      val[3]]
+  },
+  rgbToHsl = (val: Vector4) => {
+    const r = val[0],
+      g = val[1],
+      b = val[2],
+      max = Math.max(
+        r, g, b
+      ),
+      min = Math.min(
+        r, g, b
+      )
+    let h = 0,
+      s
+    const l = (max + min) / 2
+
+    if (max === min) {
+      h = 0 // achromatic
+      s = 0 // achromatic
+    } else {
+      const d = max - min
+
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+      switch (max) {
+        case r: {
+          h = (g - b) / d + (g < b ? 6 : 0)
+          break
+        }
+        case g: {
+          h = (b - r) / d + 2
+          break
+        }
+        case b: {
+          h = (r - g) / d + 4
+          break
+        }
+        default: {
+          break
+        }
+      }
+      h /= 6
+    }
+
+    return [h,
+      s,
+      l,
+      val[3]]
+  }
+
 function $bm_neg(a: unknown) {
   const tOfA = typeof a
 
@@ -92,7 +198,7 @@ function createPath(
 ) {
 
   const { length: len } = points
-  const path = shapePool.newElement<ShapePath>()
+  const path = shapePool.newElement() as ShapePath
 
   path.setPathData(Boolean(closed), len)
   const arrPlaceholder = [0, 0]
@@ -219,9 +325,21 @@ function initiateExpression(
     name = nm
   let
     anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromComp: (type: string, duration: number, flag?: boolean) => void,
-    fromCompToSurface: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    fromComp: null | ((arr: number[]) => {
+      x: number
+      y: number
+      z: number
+    }) = null,
+    fromCompToSurface: null | ((arr: number[]) => {
+      x: number
+      y: number
+      z: number
+    }) = null,
+    fromWorld: null | ((arr: number[], time: number) => {
+      x: number
+      y: number
+      z: number
+    }) = null,
     loopIn: (type: string, duration: number, wrap?: boolean) => void,
     loop_in: null | ((type: string, duration: number, wrap?: boolean) => void) = null,
     loopOut: (type: string, duration: number, wrap?: boolean) => void,
@@ -234,9 +352,9 @@ function initiateExpression(
     // eslint-disable-next-line prefer-const
     scale: null | ((type: string, duration: number, flag?: boolean) => void) = null,
     smooth: null | ((width: number, sample: number) => void) = null,
-    thisComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    toComp: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    toWorld: null | ((type: string, duration: number, flag?: boolean) => void) = null,
+    thisComp: null | CompExpressionInterface = null,
+    toComp: null | ((arr: number[], time: number) => void) = null,
+    toWorld: null | ((arr: number[], time: number) => number[]) = null,
 
     thisLayer: null | undefined | LayerExpressionInterface,
 
@@ -341,14 +459,14 @@ function initiateExpression(
   let time = 0,
     velocity: number,
     value: unknown = null,
-    text: string,
+    text: TextExpressionInterface | undefined,
     textIndex: number,
     textTotal: number,
-    selectorValue: string
+    selectorValue: string | undefined
 
   const numKeys = property.kf ? k.length : 0,
     propertyIndex = data.ix,
-    active = !this.data || this.data.hd !== true,
+    active = !this.data || (this.data as Shape).hd !== true,
 
     wiggle = (_freqFromProps: number, amp: number) => {
     // let freq: number
@@ -472,7 +590,7 @@ function initiateExpression(
 
     return {
       index: timeIndex,
-      time: keyTime / frameRate
+      time: keyTime || 0 / frameRate
     }
   }
 
@@ -485,20 +603,20 @@ function initiateExpression(
     ind -= 1
     const obKey: {
       time?: number
-      value: number[]
-      [val: number]: number
+      value: (number | ShapePath | undefined)[]
+      [val: number]: number | ShapePath | undefined
     } = {
       time: data.k[ind].t / frameRate,
       value: [],
     }
     const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e,
 
-      { length: lenKey } = arr
+      { length: lenKey } = arr ?? []
 
 
     for (let iKey = 0; iKey < lenKey; iKey += 1) {
-      obKey[iKey] = arr[iKey]
-      obKey.value[iKey] = arr[iKey]
+      obKey[iKey] = arr?.[iKey]
+      obKey.value[iKey] = arr?.[iKey]
     }
 
     return obKey
@@ -580,20 +698,20 @@ function initiateExpression(
       return value
     }
     if (this.propType === PropType.TextSelector) {
-      textIndex = this.textIndex
-      textTotal = this.textTotal
+      textIndex = this.textIndex ?? 0
+      textTotal = this.textTotal ?? 0
       selectorValue = this.selectorValue
     }
     if (!thisLayer) {
       text = elem.layerInterface?.text
       thisLayer = elem.layerInterface
-      thisComp = elem.comp?.compInterface
-      toWorld = thisLayer?.toWorld.bind(thisLayer)
-      fromWorld = thisLayer?.fromWorld.bind(thisLayer)
-      fromComp = thisLayer?.fromComp.bind(thisLayer)
-      toComp = thisLayer?.toComp.bind(thisLayer)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      mask = thisLayer?.mask ? thisLayer.mask.bind(thisLayer) : null
+      thisComp = elem.comp?.compInterface ?? null
+      toWorld = thisLayer?.toWorld.bind(thisLayer) ?? null
+      fromWorld = thisLayer?.fromWorld.bind(thisLayer) ?? null
+      fromComp = thisLayer?.fromComp.bind(thisLayer) ?? null
+      toComp = thisLayer?.toComp.bind(thisLayer) ?? null
+      // @ts-expect-error: TODO: This needs testing, but is probably wrong
+      mask = thisLayer?.mask ?? null
       fromCompToSurface = fromComp
     }
     if (!transform) {
@@ -620,7 +738,7 @@ function initiateExpression(
       seedRandom(randSeed + time)
     }
     if (needsVelocity) {
-      velocity = velocityAtTime(time)
+      velocity = velocityAtTime(time) as number
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -756,18 +874,22 @@ function linear(
   }
   const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
 
-  if (value1.length === 0) {
-    return value1 as number + (value2 - value1) * perc
+  if (!isArray(value1) && !isArray(value2)) {
+    return value1 + (value2 - value1) * perc
   }
 
-  const { length: len } = value1 as number[],
-    arr = createTypedArray(ArrayType.Float32, len)
+  if (isArray(value1) && isArray(value2)) {
+    const { length: len } = value1,
+      arr = createTypedArray(ArrayType.Float32, len)
 
-  for (let i = 0; i < len; i += 1) {
-    arr[i] = (value1 as number[])[i] + (value2[i] - value1[i]) * perc
+    for (let i = 0; i < len; i += 1) {
+      arr[i] = value1[i] + (value2[i] - value1[i]) * perc
+    }
+
+    return arr
   }
 
-  return arr
+  return 0
 }
 
 function normalize(vec: number[]) {

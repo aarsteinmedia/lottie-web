@@ -6,10 +6,8 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'

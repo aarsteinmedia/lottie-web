@@ -1,16 +1,158 @@
-import type { Vector2 } from '@/types'
+import type {
+  IntersectData, SVGGeometry, Vector2
+} from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import {
   floatZero,
-  intersectData,
-  intersectsImpl,
-  lerpPoint,
   pointEqual,
-  polynomialCoefficients,
-  quadRoots,
-  singlePoint,
 } from '@/utils'
+
+const quadRoots = (
+    a: number, b: number, c: number
+  ) => {
+  // no root
+    if (a === 0) {
+      return []
+    }
+    const s = b * b - 4 * a * c
+
+    // Complex roots
+    if (s < 0) {
+      return []
+    }
+    const singleRoot = -b / (2 * a)
+
+    // 1 root
+    if (s === 0) {
+      return [singleRoot]
+    }
+    const delta = Math.sqrt(s) / (2 * a)
+
+    // 2 roots
+    return [singleRoot - delta, singleRoot + delta]
+  },
+
+  polynomialCoefficients = (
+    p0: number, p1: number, p2: number, p3: number
+  ) => [
+    -p0 + 3 * p1 - 3 * p2 + p3,
+    3 * p0 - 6 * p1 + 3 * p2,
+    -3 * p0 + 3 * p1,
+    p0,
+  ],
+
+  lerp = (
+    p0: number, p1: number, amount: number
+  ) =>
+    p0 * (1 - amount) + p1 * amount,
+
+  lerpPoint = (
+    p0: Vector2, p1: Vector2, amount: number
+  ): Vector2 => [
+    lerp(
+      p0[0], p1[0], amount
+    ), lerp(
+      p0[1], p1[1], amount
+    ),
+  ],
+
+  boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
+    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
+    Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
+
+  intersectData = (
+    bez: PolynomialBezier,
+    t1: number,
+    t2: number
+  ): IntersectData => {
+    const box = bez.boundingBox()
+
+    return {
+      bez,
+      cx: box.cx,
+      cy: box.cy,
+      height: box.height,
+      t: (t1 + t2) / 2,
+      t1,
+      t2,
+      width: box.width,
+    }
+  },
+
+  splitData = (data: IntersectData) => {
+    const split = data.bez.split(0.5)
+
+    return [
+      intersectData(
+        split[0], data.t1, data.t
+      ), intersectData(
+        split[1], data.t, data.t2
+      ),
+    ]
+  },
+
+  intersectsImpl = (
+    d1: IntersectData,
+    d2: IntersectData,
+    depth: number,
+    tolerance: number,
+    intersections: unknown[],
+    maxRecursion: number
+  ) => {
+    if (!boxIntersect(d1, d2)) {
+      return
+    }
+    if (
+      depth >= maxRecursion ||
+      d1.width <= tolerance &&
+      d1.height <= tolerance &&
+      d2.width <= tolerance &&
+      d2.height <= tolerance
+    ) {
+      intersections.push([d1.t, d2.t])
+
+      return
+    }
+    const d1s = splitData(d1)
+    const d2s = splitData(d2)
+
+    intersectsImpl(
+      d1s[0],
+      d2s[0],
+      depth + 1,
+      tolerance,
+      intersections,
+      maxRecursion
+    )
+    intersectsImpl(
+      d1s[0],
+      d2s[1],
+      depth + 1,
+      tolerance,
+      intersections,
+      maxRecursion
+    )
+    intersectsImpl(
+      d1s[1],
+      d2s[0],
+      depth + 1,
+      tolerance,
+      intersections,
+      maxRecursion
+    )
+    intersectsImpl(
+      d1s[1],
+      d2s[1],
+      depth + 1,
+      tolerance,
+      intersections,
+      maxRecursion
+    )
+  },
+  singlePoint = (p: Vector2) => new PolynomialBezier(
+    p, p, p, p, false
+  )
 
 export default class PolynomialBezier {
   a: Vector2

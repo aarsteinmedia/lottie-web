@@ -4,7 +4,7 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CompElement from '@/elements/CompElement'

@@ -1,5 +1,6 @@
 import type { ElementInterfaceIntersect, ExpressionProperty, TextRangeValue, Vector3 } from '../../types';
-import { BaseProperty, type KeyframedValueProperty } from '../../utils/Properties';
+import type KeyframedValueProperty from '../../utils/properties/KeyframedValueProperty';
+import BaseProperty from '../../utils/properties/BaseProperty';
 export default class TextExpressionSelectorPropFactory extends BaseProperty {
     lastValue: Vector3;
     selectorValue: number;

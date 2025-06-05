@@ -4,7 +4,7 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import CompElement from '@/elements/CompElement'
 import HBaseElement from '@/elements/html/HBaseElement'

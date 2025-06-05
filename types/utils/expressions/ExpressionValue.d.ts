@@ -1,4 +1,4 @@
-import { BaseProperty } from '../../utils/Properties';
+import BaseProperty from '../../utils/properties/BaseProperty';
 export default class ExpressionValue extends BaseProperty {
     prop: BaseProperty;
     get velocity(): number | number[];

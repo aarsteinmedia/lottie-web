@@ -6,10 +6,8 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type {
-  MultiDimensionalProperty,
-  ValueProperty,
-} from '@/utils/Properties'
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import { RendererType } from '@/utils/enums'

@@ -12,7 +12,7 @@ import type {
   Transformer,
   Vector2,
 } from '@/types'
-import type { ValueProperty } from '@/utils/Properties'
+import type ValueProperty from '@/utils/properties/ValueProperty'
 
 import RenderableElement from '@/elements/helpers/RenderableElement'
 import createNS from '@/utils/helpers/svgElements'
