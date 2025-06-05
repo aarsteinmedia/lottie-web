@@ -36,7 +36,8 @@ const files = [
   'round-corners-modifier.json',
   'round-corners-modifier_.json',
   'West Mini Hero.json',
-  'rond-qui-tourne.lottie'
+  'rond-qui-tourne.lottie',
+  'rond-qui-tourne.json'
 ]
 
 export default files
