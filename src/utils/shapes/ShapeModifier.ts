@@ -12,7 +12,7 @@ import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
 import type TrimModifier from '@/utils/shapes/TrimModifier'
 import type ZigZagModifier from '@/utils/shapes/ZigZagModifier'
 
-import { initialDefaultFrame } from '@/utils/getterSetter'
+import { initialDefaultFrame } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 

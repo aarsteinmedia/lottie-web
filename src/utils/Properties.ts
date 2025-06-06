@@ -28,8 +28,8 @@ import {
 } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
-import { initialDefaultFrame } from '@/utils/getterSetter'
 import { createTypedArray } from '@/utils/helpers/arrays'
+import { initialDefaultFrame } from '@/utils/helpers/constants'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 
 export abstract class BaseProperty extends DynamicPropertyContainer {

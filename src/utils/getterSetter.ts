@@ -1,5 +1,5 @@
-export const initialDefaultFrame = -999999,
-  roundCorner = 0.5519
+// export const initialDefaultFrame = -999999,
+//   roundCorner = 0.5519
 
 /**
  *

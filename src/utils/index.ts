@@ -11,7 +11,8 @@ import type {
 import type Matrix from '@/utils/Matrix'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
-import { getIDPrefix, roundCorner } from '@/utils/getterSetter'
+import { getIDPrefix } from '@/utils/getterSetter'
+import { roundCorner } from '@/utils/helpers/constants'
 import PolynomialBezier from '@/utils/PolynomialBezier'
 
 /**
@@ -448,7 +449,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
 
     return Math.min(Math.max(n, min), max)
   },
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+
   createNS = <T extends SVGElement>(type: string) => {
     if (isServer()) {
       /**
@@ -464,7 +465,7 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
   /**
    * Download file, either SVG or dotLottie.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+
   createTag = <T extends HTMLElement>(type: string) => {
     if (isServer()) {
       return null as unknown as T
