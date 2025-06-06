@@ -58,7 +58,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       keyPropE,
       isHold,
       perc = 0,
-      vertexValue
+      vertexValue: number
     const kf = this.keyframes ?? []
 
     if (frameNum < kf[0].t - this.offsetTime) {
@@ -135,11 +135,11 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       }
       keyPropS = keyData.s?.[0]
     }
-
     if (
       !keyPropS || typeof keyPropS === 'number' || isArray(keyPropS)
-      || !keyPropE || typeof keyPropE === 'number'
+      || typeof keyPropE === 'number'
     ) {
+
       return
     }
 
@@ -152,15 +152,15 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       for (let k = 0; k < kLen; k++) {
         vertexValue = isHold
           ? keyPropS.i[j][k]
-          : keyPropS.i[j][k] + (keyPropE.i[j][k] - keyPropS.i[j][k]) * perc
+          : keyPropS.i[j][k] + ((keyPropE?.i[j][k] ?? 0) - keyPropS.i[j][k]) * perc
         previousValue.i[j][k] = vertexValue
         vertexValue = isHold
           ? keyPropS.o[j][k]
-          : keyPropS.o[j][k] + (keyPropE.o[j][k] - keyPropS.o[j][k]) * perc
+          : keyPropS.o[j][k] + ((keyPropE?.o[j][k] ?? 0) - keyPropS.o[j][k]) * perc
         previousValue.o[j][k] = vertexValue
         vertexValue = isHold
           ? keyPropS.v[j][k]
-          : keyPropS.v[j][k] + (keyPropE.v[j][k] - keyPropS.v[j][k]) * perc
+          : keyPropS.v[j][k] + ((keyPropE?.v[j][k] ?? 0) - keyPropS.v[j][k]) * perc
         previousValue.v[j][k] = vertexValue
       }
     }
