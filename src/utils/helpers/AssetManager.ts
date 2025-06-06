@@ -1,8 +1,8 @@
-import { createNS, createTag } from '@/utils'
-import { FeatureSupport } from '@/utils/FiltersFactory'
+import featureSupport from '@/utils/featureSupport'
+import createTag from '@/utils/helpers/htmlElements'
+import createNS from '@/utils/helpers/svgElements'
 
-const featureSupport = new FeatureSupport(),
-  id = '__lottie_element_luma_buffer'
+const id = '__lottie_element_luma_buffer'
 let lumaBuffer: null | HTMLCanvasElement = null,
   lumaBufferCtx: null | CanvasRenderingContext2D = null,
   svg: null | SVGSVGElement = null
@@ -27,7 +27,7 @@ function createLumaSvgFilter() {
   return _svg
 }
 
-export function loadLumaCanvas() {
+function loadLumaCanvas() {
   if (lumaBuffer && lumaBufferCtx) {
     return
   }
@@ -44,7 +44,7 @@ export function loadLumaCanvas() {
   }
 }
 
-export function getLumaCanvas(canvas: HTMLCanvasElement) {
+function getLumaCanvas(canvas: HTMLCanvasElement) {
   if (!lumaBuffer || !lumaBufferCtx) {
     loadLumaCanvas()
   }
@@ -58,7 +58,7 @@ export function getLumaCanvas(canvas: HTMLCanvasElement) {
   return lumaBuffer
 }
 
-export function createCanvas(width: number, height: number) {
+function createCanvas(width: number, height: number) {
   if (featureSupport.offscreenCanvas) {
     return new OffscreenCanvas(width, height)
   }

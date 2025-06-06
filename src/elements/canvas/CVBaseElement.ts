@@ -12,11 +12,7 @@ import CVEffects from '@/elements/canvas/CVEffects'
 import CVMaskElement from '@/elements/canvas/CVMaskElement'
 import { getBlendMode } from '@/utils'
 import { EffectTypes } from '@/utils/enums'
-import {
-  createCanvas,
-  getLumaCanvas,
-  loadLumaCanvas,
-} from '@/utils/helpers/AssetManager'
+import AssetManager from '@/utils/helpers/AssetManager'
 import Matrix from '@/utils/Matrix'
 
 const operationsMap = {
@@ -79,14 +75,14 @@ export default abstract class CVBaseElement {
     if (this.data.tt && this.data.tt >= 1) {
       this.buffers = []
       const { canvasContext } = this.globalData,
-        bufferCanvas = createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
+        bufferCanvas = AssetManager.createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas)
-      const bufferCanvas2 = createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
+      const bufferCanvas2 = AssetManager.createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas2)
       if (this.data.tt >= 3 && !document._isProxy) {
-        loadLumaCanvas()
+        AssetManager.loadLumaCanvas()
       }
     }
     this.canvasContext = this.globalData.canvasContext
@@ -170,7 +166,7 @@ export default abstract class CVBaseElement {
     if (matteMode >= 3 && !document._isProxy) {
       // We copy the painted mask to a buffer that has a color matrix filter applied to it
       // that applies the rgb values to the alpha channel
-      const lumaBuffer = getLumaCanvas(this.canvasContext.canvas),
+      const lumaBuffer = AssetManager.getLumaCanvas(this.canvasContext.canvas),
         lumaBufferCtx = lumaBuffer.getContext('2d')
 
       lumaBufferCtx?.drawImage(
