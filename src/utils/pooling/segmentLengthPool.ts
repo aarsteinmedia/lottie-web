@@ -1,5 +1,6 @@
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { PoolElement } from '@/types'
 
+import { isShapePath } from '@/utils'
 import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
 import PoolFactory from '@/utils/pooling/PoolFactory'
 
@@ -10,8 +11,12 @@ const segmentsLengthPool = (() =>
       lengths: [],
       totalLength: 0,
     }),
-    // @ts-expect-error: TODO:
-    (element: ShapePath) => {
+    (element: PoolElement) => {
+
+      if (!isShapePath(element)) {
+        return
+      }
+
       const { length } = element.lengths
 
       for (let i = 0; i < length; i++) {

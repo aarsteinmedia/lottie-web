@@ -2,6 +2,7 @@ import type {
   AnimationDirection,
   Constructor,
   IntersectData,
+  PoolElement,
   SVGGeometry,
   Vector2,
   Vector3,
@@ -1043,4 +1044,14 @@ export const addBrightnessToRGB = (color: Vector3, offset: number) => {
     element.style.transformOrigin = '0 0'
     element.style.backfaceVisibility = 'visible'
     element.style.transformStyle = 'preserve-3d'
+  },
+
+  isShapePath = (el?: PoolElement): el is ShapePath => {
+
+    if (!el || isArray(el)) {
+      return false
+    }
+
+    return el.constructor.name === 'ShapePath'
+
   }

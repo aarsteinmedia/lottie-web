@@ -25,10 +25,10 @@ import { Modifier, RendererType } from '@/utils/enums'
 import {
   setIDPrefix as setPrefix,
   setLocationHref,
-  setQuality,
   setSubframeEnabled,
   setWebWorker,
 } from '@/utils/getterSetter'
+import { setQuality } from '@/utils/helpers/resolution'
 import OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
 import PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
 import RepeaterModifier from '@/utils/shapes/RepeaterModifier'

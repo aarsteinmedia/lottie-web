@@ -1,8 +1,8 @@
 import type { BMMath as BMMathType } from '@/types'
 
 import { isArrayOfNum } from '@/utils'
-import { getShouldRoundValues } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import { getShouldRoundValues } from '@/utils/helpers/resolution'
 
 const bmPow = Math.pow,
   bmSqrt = Math.sqrt,

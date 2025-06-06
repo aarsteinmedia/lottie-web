@@ -798,6 +798,8 @@ export type BMMath = Omit<Math, 'abs'> & {
   seedrandom: (val: number) => number
 }
 
+export type PoolElement = ShapePath | number[] | BezierLength | SegmentLength
+
 export interface DocumentData extends FontList {
   __complete?: boolean
   ascent?: number

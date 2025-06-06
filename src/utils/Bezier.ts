@@ -5,8 +5,8 @@ import type {
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/utils/enums'
-import { getDefaultCurveSegments } from '@/utils/getterSetter'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
+import { getDefaultCurveSegments } from '@/utils/helpers/resolution'
 import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
 import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
 
@@ -191,10 +191,7 @@ export function getPointInSegment(
 }
 
 export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
-  const segmentsLength: {
-      lengths: BezierLength[]
-      totalLength: number
-    } = segmentsLengthPool.newElement(),
+  const segmentsLength = segmentsLengthPool.newElement() as SegmentLength,
     isClosed = shapeData.c,
     pathV = shapeData.v,
     pathO = shapeData.o,
@@ -289,11 +286,7 @@ function getBezierLength(
     ptDistance
   const point = [],
     lastPoint: number[] = [],
-    lengthData: {
-      percents: number[]
-      lengths: number[]
-      addedLength: number
-    } = bezierLengthPool.newElement(),
+    lengthData = bezierLengthPool.newElement() as BezierLength,
     len = pt3.length
 
   for (let k = 0; k < curveSegments; k++) {

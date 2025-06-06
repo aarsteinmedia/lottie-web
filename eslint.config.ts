@@ -49,6 +49,7 @@ const ignores = [
           ]
         }],
         '@stylistic/no-extra-parens': 'warn',
+        '@stylistic/no-multi-spaces': 'warn',
         '@stylistic/no-multiple-empty-lines': 'warn',
         '@stylistic/no-trailing-spaces': 'warn',
         '@stylistic/object-curly-newline': ['warn', {
@@ -59,6 +60,8 @@ const ignores = [
         '@stylistic/object-property-newline': 'warn',
         '@stylistic/quotes': ['warn', 'single'],
         '@stylistic/semi': ['warn', 'never'],
+        '@stylistic/space-before-blocks': 'warn',
+        '@stylistic/space-in-parens': 'warn',
         '@stylistic/type-annotation-spacing': 'warn',
         '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -116,6 +119,7 @@ const ignores = [
           },
         ],
         '@typescript-eslint/no-explicit-any': 'warn',
+        '@typescript-eslint/no-unnecessary-type-parameters': 0,
         '@typescript-eslint/no-unused-vars': [
           'error', {
             argsIgnorePattern: '^_',
