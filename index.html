@@ -68,6 +68,18 @@
       align-items: center;
       gap: 2em;
     }
+
+    #preview {
+      display: flex;
+      gap: 1em;
+      
+      & label {
+        flex: 1 1;
+        & select {
+          width: 100%;
+        }
+      }
+    }
   </style>
 </head>
 
@@ -76,6 +88,14 @@
     <div class="header-inner">
       <h1 style="margin: 0;">lottie-web</h1>
       <form id="preview">
+        <label>
+          Choose renderer:<br />
+          <select name="renderer">
+            <option value="svg">SVG</option>
+            <option value="canvas">Canvas</option>
+            <option value="html">HTML</option>
+          </select>
+        </label>
         <label>
           Select file to preview:<br />
           <select autofocus name="path" placeholder="Path to file">
