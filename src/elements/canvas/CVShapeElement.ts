@@ -11,7 +11,7 @@ import type {
   VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty, ValueProperty } from '@/utils/Properties'
-import type { ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
 import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
@@ -25,9 +25,9 @@ import {
   ShapeType,
 } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/DashProperty'
-import GradientProperty from '@/utils/shapes/GradientProperty'
-import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/ShapeModifiers'
+import DashProperty from '@/utils/shapes/properties/DashProperty'
+import GradientProperty from '@/utils/shapes/properties/GradientProperty'
+import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {

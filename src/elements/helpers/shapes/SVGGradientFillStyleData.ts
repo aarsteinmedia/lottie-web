@@ -24,7 +24,7 @@ import {
 import { getLocationHref } from '@/utils/getterSetter'
 import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
-import GradientProperty from '@/utils/shapes/GradientProperty'
+import GradientProperty from '@/utils/shapes/properties/GradientProperty'
 
 export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: MultiDimensionalProperty

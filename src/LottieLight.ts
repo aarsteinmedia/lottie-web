@@ -29,13 +29,13 @@ import {
   setWebWorker,
 } from '@/utils/getterSetter'
 import { setQuality } from '@/utils/helpers/resolution'
-import OffsetPathModifier from '@/utils/shapes/OffsetPathModifier'
-import PuckerAndBloatModifier from '@/utils/shapes/PuckerAndBloatModifier'
-import RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
-import { registerModifier } from '@/utils/shapes/ShapeModifiers'
-import TrimModifier from '@/utils/shapes/TrimModifier'
-import ZigZagModifier from '@/utils/shapes/ZigZagModifier'
+import OffsetPathModifier from '@/utils/shapes/modifiers/OffsetPathModifier'
+import PuckerAndBloatModifier from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
+import RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
+import { registerModifier } from '@/utils/shapes/modifiers'
+import TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import ZigZagModifier from '@/utils/shapes/modifiers/ZigZagModifier'
 
 const version = '[[BM_VERSION]]'
 

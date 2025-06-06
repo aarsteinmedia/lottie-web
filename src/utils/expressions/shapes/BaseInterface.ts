@@ -4,12 +4,12 @@ import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleDat
 import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
 import type { Shape, Transformer } from '@/types'
 import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type RoundCornersModifier from '@/utils/shapes/RoundCornersModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
 import type {
   EllShapeProperty, RectShapeProperty, StarShapeProperty
-} from '@/utils/shapes/ShapeProperty'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
+} from '@/utils/shapes/properties/ShapeProperty'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
 
 export default abstract class BaseInterface {
   _name?: string

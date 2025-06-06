@@ -13,7 +13,7 @@ import type {
 import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import { RendererType } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/DashProperty'
+import DashProperty from '@/utils/shapes/properties/DashProperty'
 
 export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
   c?: MultiDimensionalProperty<Vector3>

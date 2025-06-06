@@ -14,7 +14,7 @@ import { initialDefaultFrame } from '@/utils/helpers/constants'
 import Matrix from '@/utils/Matrix'
 import shapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 function loopOut(

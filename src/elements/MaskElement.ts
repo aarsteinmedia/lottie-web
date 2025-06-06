@@ -13,7 +13,7 @@ import { createElementID, createNS } from '@/utils'
 import { getLocationHref } from '@/utils/getterSetter'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory from '@/utils/shapes/properties/ShapeProperty'
 
 export default class MaskElement {
   data: LottieLayer

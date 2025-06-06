@@ -8,8 +8,8 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
-import type TrimModifier from '@/utils/shapes/TrimModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
 
 import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
@@ -29,8 +29,8 @@ import {
 } from '@/utils/enums'
 import { getLocationHref } from '@/utils/getterSetter'
 import Matrix from '@/utils/Matrix'
-import { getModifier } from '@/utils/shapes/ShapeModifiers'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import { getModifier } from '@/utils/shapes/modifiers'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class SVGShapeElement extends ShapeElement {

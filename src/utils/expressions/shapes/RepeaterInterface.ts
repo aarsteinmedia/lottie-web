@@ -1,4 +1,4 @@
-import type RepeaterModifier from '@/utils/shapes/RepeaterModifier'
+import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'

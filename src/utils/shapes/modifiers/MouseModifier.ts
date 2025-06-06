@@ -1,15 +1,17 @@
-// @ts-nocheck
+// @ts-nocheck: TODO:
 import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import type { Shape, Vector2 } from '@/types'
+import type {
+  ElementInterfaceIntersect, Shape, Vector2
+} from '@/types'
 import type ShapeCollection from '@/utils/shapes/ShapeCollection'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { Modifier } from '@/utils/enums'
-import ShapeModifier from '@/utils/shapes/ShapeModifier'
-import { registerModifier } from '@/utils/shapes/ShapeModifiers'
+import { registerModifier } from '@/utils/shapes/modifiers'
+import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
 
 export default class MouseModifier extends ShapeModifier {
-  data?: Shape | Shape[]
+  override data?: Shape | Shape[]
   positions: unknown[] = []
   override addShapeToModifier(_shapeData: SVGShapeData) {
     this.positions.push([])
@@ -23,10 +25,12 @@ export default class MouseModifier extends ShapeModifier {
   }
 
   override processKeys(forceRender?: boolean) {
-    if (this.elem?.globalData.frameId === this.frameId && !forceRender) {
-      return
+    if (this.elem?.globalData?.frameId === this.frameId && !forceRender) {
+      return 0
     }
     this._mdf = true
+
+    return 0
   }
 
   processPath(
@@ -112,10 +116,10 @@ export default class MouseModifier extends ShapeModifier {
       // iValues.push(path.i[i]);
       // oValues.push(path.o[i]);
 
-    /// //OPTION 4
-    // vValues.push(path.v[i]);
-    // oValues.push(positions.o[i]);
-    // iValues.push(positions.i[i]);
+      /// //OPTION 4
+      // vValues.push(path.v[i]);
+      // oValues.push(positions.o[i]);
+      // iValues.push(positions.i[i]);
     }
 
     /// / OPTION B
@@ -233,7 +237,7 @@ export default class MouseModifier extends ShapeModifier {
             }
           }
           newPaths.push(this.processPath(
-            // @ts-expect-error: TODO:
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             shapePaths[j], localMouseCoords, this.positions[i][j]
           ))
         }

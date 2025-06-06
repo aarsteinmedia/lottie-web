@@ -1,4 +1,4 @@
-import type { RectShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { RectShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'

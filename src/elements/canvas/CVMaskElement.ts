@@ -5,7 +5,7 @@ import type { LottieLayer, Shape } from '@/types'
 
 import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/ShapeProperty'
+import ShapePropertyFactory, { type ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 export default class CVMaskElement {
   _isFirstFrame?: boolean

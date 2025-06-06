@@ -80,7 +80,7 @@ export default class DashProperty extends DynamicPropertyContainer {
       }
       if (this.renderer === RendererType.SVG) {
 
-        this.dashStr += ` ${this.dataProps[i].p.v}`
+        this.dashStr += ` ${this.dataProps[i].p.v as string}`
         continue
       }
 

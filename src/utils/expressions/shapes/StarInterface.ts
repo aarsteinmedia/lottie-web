@@ -1,4 +1,4 @@
-import type { StarShapeProperty } from '@/utils/shapes/ShapeProperty'
+import type { StarShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
