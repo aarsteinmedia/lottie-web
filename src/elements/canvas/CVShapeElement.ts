@@ -1,4 +1,3 @@
-// @ts-nocheck TODO:
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
@@ -89,6 +88,7 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   override createContent() {
+    // console.log('foo')
     this.searchShapes(
       this.shapesData,
       this.itemsData,

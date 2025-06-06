@@ -1,6 +1,6 @@
 import { isServer, createElementID, PreserveAspectRatio as PreserveAspectRatio$1 } from '@aarsteinmedia/lottie-web/utils';
 import Lottie from '@aarsteinmedia/lottie-web';
-import { strToU8, strFromU8, zip, unzip as unzip$1 } from 'fflate';
+import { strToU8, zip, strFromU8, unzip as unzip$1 } from 'fflate';
 
 /**
  * Credit to: Leonardo Favre https://github.com/leofavre/observed-properties.
@@ -61,6 +61,8 @@ if (isServer()) {
   }
 }
 
+var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -webkit-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      -moz-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -ms-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n";
+
 var ObjectFit = /*#__PURE__*/ function (ObjectFit) {
   ObjectFit["Contain"] = "contain";
   ObjectFit["Cover"] = "cover";
@@ -115,8 +117,6 @@ var RendererType = /*#__PURE__*/ function (RendererType) {
   RendererType["SVG"] = "svg";
   return RendererType;
 }({});
-
-var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -webkit-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      -moz-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -ms-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n";
 
 /**
  * Render Controls.
@@ -196,45 +196,104 @@ var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-
   this.shadow.appendChild(this.template.content.cloneNode(true));
 }
 
-class CustomError extends Error {
-}
-/**
- * Methods used locally and exported.
- */ const getManifest = (unzipped) => {
-  const file = strFromU8(unzipped['manifest.json'], false), manifest = JSON.parse(file);
-  if (!('animations' in manifest)) {
-    throw new Error('Manifest not found');
-  }
-  if (manifest.animations.length === 0) {
-    throw new Error('No animations listed in manifest');
-  }
-  return manifest;
-};
-/**
- * Methods used only locally.
- */ const hasExt = (path) => {
+const hasExt = (path) => {
   const lastDotIndex = path?.split('/').pop()?.lastIndexOf('.');
   return (lastDotIndex ?? 0) > 1 && path && path.length - 1 > (lastDotIndex ?? 0);
 };
 /**
  * Get extension from filename, URL or path.
- */ const getExt = (str) => {
-  if (typeof str !== 'string' || !str || !hasExt(str)) {
-    return;
-  }
-  return str.split('.').pop()?.toLowerCase();
-};
-const unzip = async (resp) => {
-  const u8 = new Uint8Array(await resp.arrayBuffer()), unzipped = await new Promise((resolve, reject) => {
-    unzip$1(u8, (err, file) => {
-      if (err) {
-        reject(err);
+ */ const aspectRatio = (objectFit) => {
+  switch (objectFit) {
+    case ObjectFit.Contain:
+    case ObjectFit.ScaleDown:
+      {
+        return PreserveAspectRatio$1.Contain;
       }
-      resolve(file);
-    });
-  });
-  return unzipped;
-}, getArrayBuffer = async (zippable) => {
+    case ObjectFit.Cover:
+      {
+        return PreserveAspectRatio$1.Cover;
+      }
+    case ObjectFit.Fill:
+      {
+        return PreserveAspectRatio$1.Initial;
+      }
+    case ObjectFit.None:
+      {
+        return PreserveAspectRatio$1.None;
+      }
+    default:
+      {
+        return PreserveAspectRatio$1.Contain;
+      }
+  }
+}, /**
+   * Download file, either SVG or dotLottie.
+   */ download = (data, options) => {
+    const blob = new Blob([
+      data
+    ], {
+      type: options?.mimeType
+    }), fileName = options?.name || createElementID(), dataURL = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = dataURL;
+    link.download = fileName;
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      link.remove();
+      URL.revokeObjectURL(dataURL);
+    }, 1000);
+  }, getExt = (str) => {
+    if (typeof str !== 'string' || !str || !hasExt(str)) {
+      return;
+    }
+    return str.split('.').pop()?.toLowerCase();
+  }, /**
+     * Parse URL to get filename.
+     *
+     * @param src - The url string.
+     * @param keepExt - Whether to include file extension.
+     * @returns Filename, in lowercase.
+     */ getFilename = (src, keepExt) => {
+    // Because the regex strips all special characters, we need to extract the file extension, so we can add it later if we need it
+    getExt(src);
+    return `${src.split('/').pop()?.replace(/\.[^.]*$/, '').replaceAll(/\W+/g, '-')}${''}`;
+  }, addExt = (ext, str) => {
+    if (!str) {
+      return;
+    }
+    if (getExt(str)) {
+      if (getExt(str) === ext) {
+        return str;
+      }
+      return `${getFilename(str)}.${ext}`;
+    }
+    return `${str}.${ext}`;
+  }, parseBase64 = (str) => str.slice(Math.max(0, str.indexOf(',') + 1)), /**
+   * Convert Base64 encoded string to Uint8Array.
+   *
+   * @param str - Base64 encoded string.
+   * @returns UTF-8/Latin-1 binary.
+   */ base64ToU8 = (str) => strToU8(isServer() ? Buffer.from(parseBase64(str), 'base64').toString('binary') : atob(parseBase64(str)), true), getExtFromB64 = (str) => {
+    const mime = str.split(':')[1].split(';')[0], ext = mime.split('/')[1].split('+')[0];
+    return ext;
+  }, handleErrors = (err) => {
+    const res = {
+      message: 'Unknown error',
+      status: isServer() ? 500 : 400
+    };
+    if (err && typeof err === 'object') {
+      if ('message' in err && typeof err.message === 'string') {
+        res.message = err.message;
+      }
+      if ('status' in err) {
+        res.status = Number(err.status);
+      }
+    }
+    return res;
+  }, isAudio = (asset) => !('h' in asset) && !('w' in asset) && 'p' in asset && 'e' in asset && 'u' in asset && 'id' in asset, isImage = (asset) => 'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset, frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0');
+
+const getArrayBuffer = async (zippable) => {
   const arrayBuffer = await new Promise((resolve, reject) => {
     zip(zippable, {
       level: 9
@@ -251,7 +310,135 @@ const unzip = async (resp) => {
     });
   });
   return arrayBuffer;
-}, getMimeFromExt = (ext) => {
+}, fileToBase64 = async (url) => {
+  const response = await fetch(url), blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+          return;
+        }
+        reject(new Error('Could not create bas64'));
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+/**
+   * Convert a JSON Lottie to dotLottie or combine several animations and download new dotLottie file in your browser.
+   */ async function createDotLottie({ animations = [], fileName, manifest, shouldDownload = true }) {
+  try {
+    // Input validation
+    if (animations.length === 0 || !manifest) {
+      throw new Error(`Missing or malformed required parameter(s):\n ${animations.length > 0 ? '- manifest\n' : ''} ${manifest ? '- animations\n' : ''}`);
+    }
+    const manifestCompressionLevel = 0, animationCompressionLevel = 9, /**
+       * Prepare the dotLottie file.
+       */ name = addExt('lottie', fileName) || `${createElementID()}.lottie`, dotlottie = {
+        'manifest.json': [
+          strToU8(JSON.stringify(manifest), true),
+          {
+            level: manifestCompressionLevel
+          }
+        ]
+      };
+    // Add animations and assets to the dotLottie file
+    const { length } = animations;
+    for (let i = 0; i < length; i++) {
+      const { length: jLen } = animations[i].assets;
+      // Prepare assets
+      for (let j = 0; j < jLen; j++) {
+        const asset = animations[i].assets[j];
+        if (!asset.p || !isImage(asset) && !isAudio(asset)) {
+          continue;
+        }
+        const { p: file, u: path } = asset;
+        if (!file) {
+          continue;
+        }
+        // Original asset.id caused issues with multianimations
+        const assetId = createElementID(), isEncoded = file.startsWith('data:'), ext = isEncoded ? getExtFromB64(file) : getExt(file), /**
+           * Check if the asset is already base64-encoded. If not, get path, fetch it, and encode it.
+           */ dataURL = isEncoded ? file : await fileToBase64(path ? path.endsWith('/') && `${path}${file}` || `${path}/${file}` : file);
+        // Asset is encoded
+        // eslint-disable-next-line require-atomic-updates
+        animations[i].assets[j].e = 1;
+        // eslint-disable-next-line require-atomic-updates
+        animations[i].assets[j].p = `${assetId}.${ext}`;
+        // Asset is embedded, so path empty string
+        // eslint-disable-next-line require-atomic-updates
+        animations[i].assets[j].u = '';
+        dotlottie[`${isAudio(asset) ? 'audio' : 'images'}/${assetId}.${ext}`] = [
+          base64ToU8(dataURL),
+          {
+            level: animationCompressionLevel
+          }
+        ];
+      }
+      // Prepare expressions
+      const { length: kLen } = animations[i].layers;
+      for (let k = 0; k < kLen; k++) {
+        const { ks: shape } = animations[i].layers[k], props = Object.keys(shape), { length: pLen } = props;
+        for (let p = 0; p < pLen; p++) {
+          const { x: expression } = shape[props[p]];
+          if (!expression) {
+            continue;
+          }
+          // Base64 Encode to handle compression
+          // @ts-expect-error: We have checked this property is set
+          animations[i].layers[k].ks[props[p]].x = btoa(expression);
+          // Set e (encoded) to 1
+          // @ts-expect-error: We have checked this property is set
+          animations[i].layers[k].ks[props[p]].e = 1;
+        }
+      }
+      dotlottie[`a/${manifest.animations[i].id}.json`] = [
+        strToU8(JSON.stringify(animations[i]), true),
+        {
+          level: animationCompressionLevel
+        }
+      ];
+    }
+    const buffer = await getArrayBuffer(dotlottie);
+    if (shouldDownload) {
+      download(buffer, {
+        mimeType: 'application/zip',
+        name
+      });
+      return null;
+    }
+    return buffer;
+  } catch (error) {
+    console.error(handleErrors(error).message);
+    return null;
+  }
+}
+
+function createJSON({ animation, fileName, shouldDownload }) {
+  try {
+    if (!animation) {
+      throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'');
+    }
+    const name = addExt('json', fileName) || `${createElementID()}.json`, jsonString = JSON.stringify(animation);
+    if (shouldDownload) {
+      download(jsonString, {
+        mimeType: 'application/json',
+        name
+      });
+      return null;
+    }
+    return jsonString;
+  } catch (error) {
+    console.error(handleErrors(error).message);
+    return null;
+  }
+}
+
+const getMimeFromExt = (ext) => {
   switch (ext) {
     case 'svg':
     case 'svg+xml':
@@ -281,13 +468,14 @@ const unzip = async (resp) => {
         return '';
       }
   }
-}, isAudio = (asset) => !('h' in asset) && !('w' in asset) && 'p' in asset && 'e' in asset && 'u' in asset && 'id' in asset, isImage = (asset) => 'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset, parseBase64 = (str) => str.slice(Math.max(0, str.indexOf(',') + 1)), isBase64 = (str) => {
+}, isBase64 = (str) => {
   if (!str) {
     return false;
   }
   const regex = /^(?:[0-9a-z+/]{4})*(?:[0-9a-z+/]{2}==|[0-9a-z+/]{3}=)?$/i;
   return regex.test(parseBase64(str));
-}, resolveAssets = async (unzipped, assets) => {
+};
+async function resolveAssets(unzipped, assets) {
   if (!Array.isArray(assets)) {
     return;
   }
@@ -319,31 +507,39 @@ const unzip = async (resp) => {
     }));
   }
   await Promise.all(toResolve);
-}, prepareString = (str) => str.replaceAll(new RegExp(/"""/, 'g'), '""').replaceAll(/(["'])(.*?)\1/g, (_match, quote, content) => {
-  const replacedContent = content.replaceAll(/[^\w\s.#]/g, '');
-  return `${quote}${replacedContent}${quote}`;
-}), fileToBase64 = async (url) => {
-  const response = await fetch(url), blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    try {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          resolve(reader.result);
-          return;
-        }
-        reject(new Error('Could not create bas64'));
-      };
-      reader.readAsDataURL(blob);
-    } catch (error) {
-      reject(error);
-    }
+}
+
+const unzip = async (resp) => {
+  const u8 = new Uint8Array(await resp.arrayBuffer()), unzipped = await new Promise((resolve, reject) => {
+    unzip$1(u8, (err, file) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(file);
+    });
   });
-}, getLottieJSON = async (resp) => {
+  return unzipped;
+}, getManifest = (unzipped) => {
+  const file = strFromU8(unzipped['manifest.json'], false), manifest = JSON.parse(file);
+  if (!('animations' in manifest)) {
+    throw new Error('Manifest not found');
+  }
+  if (manifest.animations.length === 0) {
+    throw new Error('No animations listed in manifest');
+  }
+  return manifest;
+}, prepareString = (str) => str.replaceAll(new RegExp(/"""/, 'g'), '""').replaceAll(/(["'])(.*?)\1/g, (_match, quote, content) => {
+  /**
+   * TODO: This caused text layers and expressions to be mangled
+   * Consider a more nuanced sanitaiton, if at all.
+   */ // const replacedContent = content.replaceAll(/[^\w\s.#]/g, '')
+  return `${quote}${content}${quote}`;
+});
+async function getLottieJSON(resp) {
   const unzipped = await unzip(resp), manifest = getManifest(unzipped), data = [], toResolve = [], { length } = manifest.animations;
     /**
-     * Check whether Lottie animations folder is abbreviated.
-     */ let animationsFolder = 'animations';
+   * Check whether Lottie animations folder is abbreviated.
+   */ let animationsFolder = 'animations';
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (unzipped[`a/${manifest.animations[0].id}.json`]) {
     animationsFolder = 'a';
@@ -372,270 +568,82 @@ const unzip = async (resp) => {
     data,
     manifest
   };
-};
-/**
- * Download file, either SVG or dotLottie.
- */ const download = (data, options) => {
-  const blob = new Blob([
-    data
-  ], {
-    type: options?.mimeType
-  }), fileName = options?.name || createElementID(), dataURL = URL.createObjectURL(blob), link = document.createElement('a');
-  link.href = dataURL;
-  link.download = fileName;
-  link.hidden = true;
-  document.body.appendChild(link);
-  link.click();
-  setTimeout(() => {
-    link.remove();
-    URL.revokeObjectURL(dataURL);
-  }, 1000);
-}, /**
-     * Parse URL to get filename.
-     *
-     * @param src - The url string.
-     * @param keepExt - Whether to include file extension.
-     * @returns Filename, in lowercase.
-     */ getFilename = (src, keepExt) => {
-    // Because the regex strips all special characters, we need to extract the file extension, so we can add it later if we need it
-    getExt(src);
-    return `${src.split('/').pop()?.replace(/\.[^.]*$/, '').replaceAll(/\W+/g, '-')}${''}`;
-  }, addExt = (ext, str) => {
-    if (!str) {
-      return;
-    }
-    if (getExt(str)) {
-      if (getExt(str) === ext) {
-        return str;
-      }
-      return `${getFilename(str)}.${ext}`;
-    }
-    return `${str}.${ext}`;
-  }, aspectRatio = (objectFit) => {
-    switch (objectFit) {
-      case ObjectFit.Contain:
-      case ObjectFit.ScaleDown:
-        {
-          return PreserveAspectRatio$1.Contain;
-        }
-      case ObjectFit.Cover:
-        {
-          return PreserveAspectRatio$1.Cover;
-        }
-      case ObjectFit.Fill:
-        {
-          return PreserveAspectRatio$1.Initial;
-        }
-      case ObjectFit.None:
-        {
-          return PreserveAspectRatio$1.None;
-        }
-      default:
-        {
-          return PreserveAspectRatio$1.Contain;
-        }
-    }
-  }, /**
-   * Convert Base64 encoded string to Uint8Array.
-   *
-   * @param str - Base64 encoded string.
-   * @returns UTF-8/Latin-1 binary.
-   */ base64ToU8 = (str) => strToU8(isServer() ? Buffer.from(parseBase64(str), 'base64').toString('binary') : atob(parseBase64(str)), true), getExtFromB64 = (str) => {
-    const mime = str.split(':')[1].split(';')[0], ext = mime.split('/')[1].split('+')[0];
-    return ext;
-  }, handleErrors = (err) => {
-    const res = {
-      message: 'Unknown error',
-      status: isServer() ? 500 : 400
-    };
-    if (err && typeof err === 'object') {
-      if ('message' in err && typeof err.message === 'string') {
-        res.message = err.message;
-      }
-      if ('status' in err) {
-        res.status = Number(err.status);
-      }
-    }
-    return res;
-  }, /**
-   * Convert a JSON Lottie to dotLottie or combine several animations and download new dotLottie file in your browser.
-   */ createDotLottie = async ({ animations = [], fileName, manifest, shouldDownload = true }) => {
-    try {
-      // Input validation
-      if (animations.length === 0 || !manifest) {
-        throw new Error(`Missing or malformed required parameter(s):\n ${animations.length > 0 ? '- manifest\n' : ''} ${manifest ? '- animations\n' : ''}`);
-      }
-      const manifestCompressionLevel = 0, animationCompressionLevel = 9, /**
-         * Prepare the dotLottie file.
-         */ name = addExt('lottie', fileName) || `${createElementID()}.lottie`, dotlottie = {
-          'manifest.json': [
-            strToU8(JSON.stringify(manifest), true),
-            {
-              level: manifestCompressionLevel
-            }
-          ]
-        };
-      // Add animations and assets to the dotLottie file
-      const { length } = animations;
-      for (let i = 0; i < length; i++) {
-        const { length: jLen } = animations[i].assets;
-        // Prepare assets
-        for (let j = 0; j < jLen; j++) {
-          const asset = animations[i].assets[j];
-          if (!asset.p || !isImage(asset) && !isAudio(asset)) {
-            continue;
-          }
-          const { p: file, u: path } = asset;
-          if (!file) {
-            continue;
-          }
-          // Original asset.id caused issues with multianimations
-          const assetId = createElementID(), isEncoded = file.startsWith('data:'), ext = isEncoded ? getExtFromB64(file) : getExt(file), /**
-             * Check if the asset is already base64-encoded. If not, get path, fetch it, and encode it.
-             */ dataURL = isEncoded ? file : await fileToBase64(path ? path.endsWith('/') && `${path}${file}` || `${path}/${file}` : file);
-          // Asset is encoded
-          // eslint-disable-next-line require-atomic-updates
-          animations[i].assets[j].e = 1;
-          // eslint-disable-next-line require-atomic-updates
-          animations[i].assets[j].p = `${assetId}.${ext}`;
-          // Asset is embedded, so path empty string
-          // eslint-disable-next-line require-atomic-updates
-          animations[i].assets[j].u = '';
-          dotlottie[`${isAudio(asset) ? 'audio' : 'images'}/${assetId}.${ext}`] = [
-            base64ToU8(dataURL),
-            {
-              level: animationCompressionLevel
-            }
-          ];
-        }
-        // Prepare expressions
-        const { length: kLen } = animations[i].layers;
-        for (let k = 0; k < kLen; k++) {
-          const { ks: shape } = animations[i].layers[k], props = Object.keys(shape), { length: pLen } = props;
-          for (let p = 0; p < pLen; p++) {
-            const { x: expression } = shape[props[p]];
-            if (!expression) {
-              continue;
-            }
-            // Base64 Encode to handle compression
-            // @ts-expect-error: We have checked this property is set
-            animations[i].layers[k].ks[props[p]].x = btoa(expression);
-            // Set e (encoded) to 1
-            // @ts-expect-error: We have checked this property is set
-            animations[i].layers[k].ks[props[p]].e = 1;
-          }
-        }
-        dotlottie[`a/${manifest.animations[i].id}.json`] = [
-          strToU8(JSON.stringify(animations[i]), true),
-          {
-            level: animationCompressionLevel
-          }
-        ];
-      }
-      const buffer = await getArrayBuffer(dotlottie);
-      if (shouldDownload) {
-        download(buffer, {
-          mimeType: 'application/zip',
-          name
-        });
-        return null;
-      }
-      return buffer;
-    } catch (error) {
-      console.error(`❌ ${handleErrors(error).message}`);
-      return null;
-    }
-  }, createJSON = ({ animation, fileName, shouldDownload }) => {
-    try {
-      if (!animation) {
-        throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'');
-      }
-      const name = addExt('json', fileName) || `${createElementID()}.json`, jsonString = JSON.stringify(animation);
-      if (shouldDownload) {
-        download(jsonString, {
-          mimeType: 'application/json',
-          name
-        });
-      }
-      return;
-    } catch (error) {
-      console.error(`❌ ${handleErrors(error).message}`);
-    }
-  }, frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0'), getAnimationData = async (input) => {
-    try {
-      if (!input || typeof input !== 'string' && typeof input !== 'object') {
-        throw new Error('Broken file or invalid file format');
-      }
-      if (typeof input !== 'string') {
-        const animations = Array.isArray(input) ? input : [
-          input
-        ];
-        return {
-          animations,
-          isDotLottie: false,
-          manifest: null
-        };
-      }
-      const result = await fetch(input, {
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8'
-        }
-      });
-      if (!result.ok) {
-        const error = new CustomError(result.statusText);
-        error.status = result.status;
-        throw error;
-      }
-        /**
-       * Check if file is JSON, first by parsing headers for content-type,
-       * than by parsing filename, then – if filename has no extension – by
-       * cloning the response and parsing response for content.
-       */ let isJSON = true;
-      const contentType = result.headers.get('content-type');
-      if (contentType === 'application/zip+dotlottie') {
-        isJSON = false;
-      }
-      if (isJSON) {
-        const ext = getExt(input);
-        if (ext === 'json') {
-          const lottie = await result.json();
-          return {
-            animations: [
-              lottie
-            ],
-            isDotLottie: false,
-            manifest: null
-          };
-        }
-        const text = await result.clone().text();
-        try {
-          const lottie = JSON.parse(text);
-          return {
-            animations: [
-              lottie
-            ],
-            isDotLottie: false,
-            manifest: null
-          };
-        } catch (error) {
-          /* empty */
 }
-      }
-      const { data, manifest } = await getLottieJSON(result);
+
+async function getAnimationData(input) {
+  try {
+    if (!input || typeof input !== 'string' && typeof input !== 'object') {
+      throw new Error('Broken file or invalid file format');
+    }
+    if (typeof input !== 'string') {
+      const animations = Array.isArray(input) ? input : [
+        input
+      ];
       return {
-        animations: data,
-        isDotLottie: true,
-        manifest
-      };
-    } catch (error) {
-      console.error(`❌ ${handleErrors(error).message}`);
-      return {
-        animations: undefined,
+        animations,
         isDotLottie: false,
         manifest: null
       };
     }
-  };
+    const result = await fetch(input, {
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    });
+    if (!result.ok) {
+      const error = new Error(result.statusText);
+      throw error;
+    }
+        /**
+     * Check if file is JSON, first by parsing headers for content-type,
+     * than by parsing filename, then – if filename has no extension – by
+     * cloning the response and parsing response for content.
+     */ let isJSON = true;
+    const contentType = result.headers.get('content-type');
+    if (contentType === 'application/zip+dotlottie') {
+      isJSON = false;
+    }
+    if (isJSON) {
+      const ext = getExt(input);
+      if (ext === 'json') {
+        const lottie = await result.json();
+        return {
+          animations: [
+            lottie
+          ],
+          isDotLottie: false,
+          manifest: null
+        };
+      }
+      const text = await result.clone().text();
+      try {
+        const lottie = JSON.parse(text);
+        return {
+          animations: [
+            lottie
+          ],
+          isDotLottie: false,
+          manifest: null
+        };
+      } catch (error) {
+        /* empty */
+}
+    }
+    const { data, manifest } = await getLottieJSON(result);
+    return {
+      animations: data,
+      isDotLottie: true,
+      manifest
+    };
+  } catch (error) {
+    console.error(handleErrors(error).message);
+    return {
+      animations: undefined,
+      isDotLottie: false,
+      manifest: null
+    };
+  }
+}
 
 const generator = '@aarsteinmedia/dotlottie-player';
 /**
@@ -1069,22 +1077,20 @@ const generator = '@aarsteinmedia/dotlottie-player';
   }
   async convert({ animations: animationsFromProps, fileName, manifest, shouldDownload = true, src: srcFromProps, typeCheck }) {
     const src = srcFromProps || this.src || this.source;
-    if (!src) {
+    if (!src && !animationsFromProps?.length) {
       throw new Error('No animation to convert');
-    }
-    if (typeCheck || this._isDotLottie) {
-      const animationData = await getAnimationData(src);
-      createJSON({
-        animation: animationData.animations?.[0],
-        fileName: `${getFilename(fileName || src || 'converted')}.json`,
-        shouldDownload
-      });
-      return;
     }
     let animations = animationsFromProps;
     if (!animations) {
       const animationData = await getAnimationData(src);
       animations = animationData.animations;
+    }
+    if (typeCheck || this._isDotLottie) {
+      return createJSON({
+        animation: animations?.[0],
+        fileName: `${getFilename(fileName || src || 'converted')}.json`,
+        shouldDownload
+      });
     }
     return createDotLottie({
       animations,
@@ -1285,7 +1291,7 @@ const generator = '@aarsteinmedia/dotlottie-player';
     }
     if (name === '_currentAnimation' && typeof value === 'number') {
       next.hidden = value + 1 >= this._animations.length;
-      prev.hidden = Boolean(value);
+      prev.hidden = !value;
     }
     if (name === '_isSettingsOpen' && typeof value === 'boolean' && popover instanceof HTMLDivElement && convert instanceof HTMLButtonElement && snapshot instanceof HTMLButtonElement) {
       popover.hidden = !value;
