@@ -41,7 +41,9 @@ const files = [
   'wine.json',
   'wine.lottie',
   'dinide.lottie',
-  'laptop.lottie'
+  'laptop.lottie',
+  'hero-web.json',
+  'hero-web.lottie'
 ]
 
 export default files
