@@ -6,29 +6,15 @@ import type {
 } from '@/types'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import RenderableElement from '@/elements/helpers/RenderableElement'
 import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import createTag from '@/utils/helpers/htmlElements'
 
-export default class CVImageElement extends RenderableElement {
+export default class CVImageElement extends CVBaseElement {
   assetData: LottieAsset | null
-  canvasContext?: CanvasRenderingContext2D
-  clearCanvas = CVBaseElement.prototype.clearCanvas
-  createContainerElements = CVBaseElement.prototype.createContainerElements
-  createElements = CVBaseElement.prototype.createElements
-  createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
-  exitLayer = CVBaseElement.prototype.exitLayer
-  hideElement = CVBaseElement.prototype.hideElement
   img: HTMLCanvasElement
   initElement = SVGShapeElement.prototype.initElement
-  initRendererElement = CVBaseElement.prototype.initRendererElement
   prepareFrame = ImageElement.prototype.prepareFrame
-  prepareLayer = CVBaseElement.prototype.prepareLayer
-  renderFrame = CVBaseElement.prototype.renderFrame
-  override setBlendMode = CVBaseElement.prototype.setBlendMode
-  override show = CVBaseElement.prototype.show
-  showElement = CVBaseElement.prototype.showElement
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -46,7 +32,7 @@ export default class CVImageElement extends RenderableElement {
   }
 
 
-  createContent() {
+  override createContent() {
     if (!this.assetData) {
       throw new Error(`${this.constructor.name}: assetData is not implemented`)
     }
@@ -104,7 +90,7 @@ export default class CVImageElement extends RenderableElement {
     this.img = null as unknown as HTMLCanvasElement
   }
 
-  renderInnerContent() {
+  override renderInnerContent() {
     this.canvasContext?.drawImage(
       this.img, 0, 0
     )

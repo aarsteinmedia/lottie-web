@@ -1,4 +1,4 @@
-import type { Transformer, TransformSequence } from '../../../types';
+import type { Transformer, TransformSequence } from '@/types';
 export default class ShapeTransformManager {
     sequenceList: TransformSequence[];
     sequences: TransformSequence;
@@ -6,7 +6,7 @@ export default class ShapeTransformManager {
     constructor();
     addTransformSequence(transforms: {
         transform: Transformer;
-    }[]): unknown;
+    }[]): Transformer;
     getNewKey(): string;
     processSequence(sequence: TransformSequence, isFirstFrame?: boolean): void;
     processSequences(isFirstFrame?: boolean): void;

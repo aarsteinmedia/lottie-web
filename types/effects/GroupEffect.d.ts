@@ -1,5 +1,5 @@
-import type { Effect, EFXElement, ElementInterfaceIntersect, LottieLayer } from '../types';
-import DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
+import type { Effect, EFXElement, ElementInterfaceIntersect, LottieLayer } from '@/types';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
 export default class GroupEffect extends DynamicPropertyContainer {
     data?: Effect;
     effectElements: EFXElement[];

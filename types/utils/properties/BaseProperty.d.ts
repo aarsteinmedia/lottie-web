@@ -1,11 +1,11 @@
-import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, Vector3 } from '../../types';
-import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import type Matrix from '../../utils/Matrix';
-import type KeyframedValueProperty from '../../utils/properties/KeyframedValueProperty';
-import type MultiDimensionalProperty from '../../utils/properties/MultiDimensionalProperty';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import type ShapePath from '../../utils/shapes/ShapePath';
-import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
+import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, Vector3 } from '@/types';
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type Matrix from '@/utils/Matrix';
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty';
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import type ShapePath from '@/utils/shapes/ShapePath';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
 export default abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
@@ -44,7 +44,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
     x?: boolean;
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
-    getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
+    getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
     getValueAtTime(_val1?: unknown, _val2?: unknown): unknown;
     getVelocityAtTime(_frameNum: number): number | number[];
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): EffectFunction;

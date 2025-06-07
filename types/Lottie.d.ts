@@ -1,5 +1,5 @@
-import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from './animation/AnimationManager';
-import Expressions from './utils/expressions/Expressions';
+import { play, pause, togglePause, setSpeed, setDirection, stop, registerAnimation, resize, goToAndStop, destroy, freeze, unfreeze, setVolume, mute, unmute, getRegisteredAnimations, loadAnimation } from '@/animation/AnimationManager';
+import Expressions from '@/utils/expressions/Expressions';
 export declare const installPlugin: (type: string, plugin: typeof Expressions) => void, setSubframeRendering: (flag: boolean) => void;
 declare const Lottie: {
     destroy: typeof destroy;
@@ -28,5 +28,5 @@ declare const Lottie: {
     version: string;
 };
 export default Lottie;
-export { type default as AnimationItem } from './animation/AnimationItem';
-export type { AnimationConfiguration, AnimationData, AnimationDirection, Vector2 as AnimationSegment, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from './types';
+export { type default as AnimationItem } from '@/animation/AnimationItem';
+export type { AnimationConfiguration, AnimationData, AnimationDirection, Vector2 as AnimationSegment, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from '@/types';

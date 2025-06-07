@@ -1,6 +1,6 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import CompElement from '../../elements/CompElement';
-import SVGCompElement from '../../elements/svg/SVGCompElement';
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import CompElement from '@/elements/CompElement';
+import SVGCompElement from '@/elements/svg/SVGCompElement';
 export default class HCompElement extends CompElement {
     pendingElements: ElementInterfaceIntersect[];
     supports3d?: boolean;
@@ -25,6 +25,7 @@ export default class HCompElement extends CompElement {
     createSolid(_data: LottieLayer): void;
     createText(_data: LottieLayer): void;
     createThreeDContainer(_pos: number, _type: string): void;
+    getElementById(_id: number): void;
     getThreeDContainerByPos(_pos: number): void;
     initItems(): void;
     searchExtraCompositions(_assets: LottieLayer[]): void;

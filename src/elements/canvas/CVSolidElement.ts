@@ -6,13 +6,11 @@ import type {
 } from '@/types'
 
 import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import RenderableElement from '@/elements/helpers/RenderableElement'
 import ImageElement from '@/elements/ImageElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 
-export default class CVSolidElement extends RenderableElement {
+export default class CVSolidElement extends CVBaseElement {
   initElement = SVGShapeElement.prototype.initElement
-  initRendererElement = CVBaseElement.prototype.initRendererElement
   prepareFrame = ImageElement.prototype.prepareFrame
 
   constructor(
@@ -27,7 +25,7 @@ export default class CVSolidElement extends RenderableElement {
     )
   }
 
-  renderInnerContent() {
+  override renderInnerContent() {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData it not implemented`)
     }

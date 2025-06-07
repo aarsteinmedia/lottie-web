@@ -1,23 +1,10 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '../../types';
-import RenderableElement from '../../elements/helpers/RenderableElement';
-export default class CVImageElement extends RenderableElement {
+import type { ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '@/types';
+import CVBaseElement from '@/elements/canvas/CVBaseElement';
+export default class CVImageElement extends CVBaseElement {
     assetData: LottieAsset | null;
-    canvasContext?: CanvasRenderingContext2D;
-    clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
-    createContainerElements: () => void;
-    createElements: () => void;
-    createRenderableComponents: () => void;
-    exitLayer: () => void;
-    hideElement: () => void;
     img: HTMLCanvasElement;
-    initElement: (data: LottieLayer, globalData: GlobalData, comp: import("../../types").CompElementInterface) => void;
-    initRendererElement: () => void;
+    initElement: (data: LottieLayer, globalData: GlobalData, comp: import("@/types").CompElementInterface) => void;
     prepareFrame: (num: number) => void;
-    prepareLayer: () => void;
-    renderFrame: (forceRender?: number) => void;
-    setBlendMode: () => void;
-    show: () => void;
-    showElement: () => void;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     createContent(): void;
     destroy(): void;

@@ -5,15 +5,14 @@ import type {
   GlobalData,
   LottieLayer,
   TransformCanvas,
-  Transformer,
 } from '@/types'
 
 import CVEffects from '@/elements/canvas/CVEffects'
 import CVMaskElement from '@/elements/canvas/CVMaskElement'
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import { EffectTypes } from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
 import getBlendMode from '@/utils/helpers/getBlendMode'
-import Matrix from '@/utils/Matrix'
 
 const operationsMap = {
     1: 'source-in',
@@ -23,21 +22,12 @@ const operationsMap = {
   },
   notImplemented = 'Method is not implemented'
 
-export default abstract class CVBaseElement {
-  _isFirstFrame?: boolean
+export default abstract class CVBaseElement extends RenderableElement {
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
   canvasContext?: CanvasRenderingContext2D
-  comp?: ElementInterfaceIntersect
   currentTransform?: DOMMatrix
-  data?: LottieLayer
-  finalTransform?: Transformer
-  globalData?: GlobalData
-  hidden?: boolean
-  isInRange?: boolean
-  isTransparent?: boolean
-  maskManager?: CVMaskElement
-  mHelper = new Matrix()
-  renderableEffectsManager?: CVEffects
+  override maskManager?: CVMaskElement
+  override renderableEffectsManager?: CVEffects
   transformCanvas?: TransformCanvas
   transformEffects: GroupEffect[] = []
 
@@ -110,7 +100,7 @@ export default abstract class CVBaseElement {
     }
   }
 
-  destroy() {
+  override destroy() {
     this.canvasContext = null as unknown as CanvasRenderingContext2D
     this.data = null as unknown as LottieLayer
     this.globalData = null as unknown as GlobalData
@@ -193,10 +183,6 @@ export default abstract class CVBaseElement {
     this.canvasContext.setTransform(this.currentTransform)
     // We reset the globalCompositeOperation to source-over, the standard type of operation
     this.canvasContext.globalCompositeOperation = 'source-over'
-  }
-
-  hide() {
-    throw new Error(notImplemented)
   }
 
   hideElement() {
@@ -282,23 +268,19 @@ export default abstract class CVBaseElement {
     throw new Error(notImplemented)
   }
 
-  renderLocalTransform() {
-    // Pass through
-  }
+  // override renderLocalTransform() {
+  //   // Pass through
+  // }
 
-  renderRenderable() {
-    // Pass through
-  }
+  // override renderRenderable() {
+  //   // Pass through
+  // }
 
-  renderTransform() {
-    throw new Error(notImplemented)
-  }
+  // override searchEffectTransforms() {
+  //   // Pass through
+  // }
 
-  searchEffectTransforms() {
-    // Pass through
-  }
-
-  setBlendMode() {
+  override setBlendMode() {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
@@ -316,10 +298,6 @@ export default abstract class CVBaseElement {
 
       globalData.canvasContext.globalCompositeOperation = blendModeValue as GlobalCompositeOperation
     }
-  }
-
-  show() {
-    throw new Error(notImplemented)
   }
 
   showElement() {

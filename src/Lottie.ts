@@ -32,7 +32,7 @@ import { registerEffect as registerCanvasEffect } from '@/elements/canvas/CVEffe
 import { registerEffect } from '@/elements/svg/SVGEffects'
 import { registerRenderer } from '@/renderers'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
-import HybridRenderer from '@/renderers/HybridRenderer'
+// import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
 import { isServer } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
@@ -111,7 +111,7 @@ function checkReady() {
 
 // Registering renderers
 registerRenderer(RendererType.Canvas, CanvasRenderer)
-registerRenderer(RendererType.HTML, HybridRenderer)
+// registerRenderer(RendererType.HTML, HybridRenderer)
 registerRenderer(RendererType.SVG, SVGRenderer)
 
 // Registering shape modifiers

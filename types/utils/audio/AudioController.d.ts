@@ -1,5 +1,5 @@
-import type AudioElement from '../../elements/AudioElement';
-import type { AudioFactory } from '../../types';
+import type AudioElement from '@/elements/AudioElement';
+import type { AudioFactory } from '@/types';
 export declare class AudioController {
     audioFactory?: AudioFactory;
     audios: AudioElement[];

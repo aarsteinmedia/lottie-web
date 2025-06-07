@@ -1,3 +1,3 @@
-import type { PoolElement, Vector2 } from '../types';
-import type ShapePath from '../utils/shapes/ShapePath';
+import type { PoolElement, Vector2 } from '@/types';
+import type ShapePath from '@/utils/shapes/ShapePath';
 export declare const floatEqual: (a: number, b: number) => boolean, floatZero: (f: number) => boolean, isServer: () => boolean, pointEqual: (p1: Vector2, p2: Vector2) => boolean, createElementID: () => string, clamp: (n: number, minFromProps?: number, maxFromProps?: number) => number, inBrowser: () => boolean, isArray: <T>(input: unknown) => input is T[], isArrayOfNum: (input: unknown) => input is number[], isDeclaration: (str: string) => str is "var" | "let" | "const", isShapePath: (el?: PoolElement) => el is ShapePath, isSafari: () => boolean, rgbToHex: (rVal: number, gVal: number, bVal: number) => string, styleDiv: (element: HTMLElement | SVGSVGElement) => void;

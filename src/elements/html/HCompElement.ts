@@ -205,6 +205,10 @@ export default class HCompElement extends CompElement {
     throw new Error(`${this.constructor.name}: Method createThreeDContainer is not implemented`)
   }
 
+  getElementById(_id: number) {
+    throw new Error('Method is not implemented')
+  }
+
   getThreeDContainerByPos(_pos: number) {
     throw new Error(`${this.constructor.name}: Method getThreeDContainerByPos is not implemented`)
   }

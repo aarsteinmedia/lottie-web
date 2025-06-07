@@ -1,11 +1,14 @@
-import type { VectorProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
-import type { ShapeType } from '../../../utils/enums';
+import type { VectorProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
+import type { ShapeType } from '@/utils/enums';
 export default class SVGStyleData {
     _mdf: boolean;
     closed: boolean;
+    coOp?: number;
     d: string;
     data: Shape;
+    finalTransform?: Transformer;
     gr?: SVGGElement;
+    grd?: CanvasGradient;
     hd?: boolean;
     it?: ShapeDataInterface[];
     lvl: number;

@@ -1,22 +1,13 @@
-import type GroupEffect from '../../effects/GroupEffect';
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, TransformCanvas, Transformer } from '../../types';
-import CVEffects from '../../elements/canvas/CVEffects';
-import CVMaskElement from '../../elements/canvas/CVMaskElement';
-import Matrix from '../../utils/Matrix';
-export default abstract class CVBaseElement {
-    _isFirstFrame?: boolean;
+import type GroupEffect from '@/effects/GroupEffect';
+import type { TransformCanvas } from '@/types';
+import CVEffects from '@/elements/canvas/CVEffects';
+import CVMaskElement from '@/elements/canvas/CVMaskElement';
+import RenderableElement from '@/elements/helpers/RenderableElement';
+export default abstract class CVBaseElement extends RenderableElement {
     buffers: (HTMLCanvasElement | OffscreenCanvas)[];
     canvasContext?: CanvasRenderingContext2D;
-    comp?: ElementInterfaceIntersect;
     currentTransform?: DOMMatrix;
-    data?: LottieLayer;
-    finalTransform?: Transformer;
-    globalData?: GlobalData;
-    hidden?: boolean;
-    isInRange?: boolean;
-    isTransparent?: boolean;
     maskManager?: CVMaskElement;
-    mHelper: Matrix;
     renderableEffectsManager?: CVEffects;
     transformCanvas?: TransformCanvas;
     transformEffects: GroupEffect[];
@@ -27,17 +18,11 @@ export default abstract class CVBaseElement {
     createRenderableComponents(): void;
     destroy(): void;
     exitLayer(): void;
-    hide(): void;
     hideElement(): void;
     initRendererElement(): void;
     prepareLayer(): void;
     renderFrame(forceRender?: number): void;
     renderInnerContent(): void;
-    renderLocalTransform(): void;
-    renderRenderable(): void;
-    renderTransform(): void;
-    searchEffectTransforms(): void;
     setBlendMode(): void;
-    show(): void;
     showElement(): void;
 }

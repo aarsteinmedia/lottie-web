@@ -1,12 +1,12 @@
-import type SVGStyleData from '../../../elements/helpers/shapes/SVGStyleData';
-import type { ElementInterfaceIntersect, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
-import type KeyframedValueProperty from '../../../utils/properties/KeyframedValueProperty';
-import type MultiDimensionalProperty from '../../../utils/properties/MultiDimensionalProperty';
-import type ValueProperty from '../../../utils/properties/ValueProperty';
-import DynamicPropertyContainer from '../../../utils/helpers/DynamicPropertyContainer';
-import GradientProperty from '../../../utils/shapes/properties/GradientProperty';
+import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData';
+import type { ElementInterfaceIntersect, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
+import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty';
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer';
+import GradientProperty from '@/utils/shapes/properties/GradientProperty';
 export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
-    a?: MultiDimensionalProperty;
+    a?: ValueProperty;
     cst: SVGStopElement[];
     e?: MultiDimensionalProperty;
     g?: GradientProperty;

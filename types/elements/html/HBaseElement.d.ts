@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, Transformer } from '../../types';
-import CVEffects from '../../elements/canvas/CVEffects';
-import MaskElement from '../../elements/MaskElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, Transformer } from '@/types';
+import CVEffects from '@/elements/canvas/CVEffects';
+import MaskElement from '@/elements/MaskElement';
 export default class HBaseElement {
     _isFirstFrame?: boolean;
     baseElement?: SVGGElement | HTMLElement;

@@ -270,109 +270,113 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   drawLayer() {
-    if (!this.globalData) {
-      throw new Error(`${this.constructor.name} globalData is not implemented`)
-    }
-    if (!this.globalData.renderer) {
-      throw new Error(`${this.constructor.name} renderer is not implemented`)
-    }
+    try {
+      if (!this.globalData) {
+        throw new Error(`${this.constructor.name} globalData is not implemented`)
+      }
+      if (!this.globalData.renderer) {
+        throw new Error(`${this.constructor.name} renderer is not implemented`)
+      }
 
-    const { length } = this.stylesList,
-      { renderer } = this.globalData as { renderer: CanvasRenderer },
-      ctx = this.globalData.canvasContext
-    let currentStyle
+      const { length } = this.stylesList,
+        { renderer } = this.globalData as { renderer: CanvasRenderer },
+        ctx = this.globalData.canvasContext
+      let currentStyle
 
-    for (let i = 0; i < length; i++) {
-      currentStyle = this.stylesList[i]
-      const {
-          co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, type, wi
-        } = currentStyle,
-        isStroke =
+      for (let i = 0; i < length; i++) {
+        currentStyle = this.stylesList[i]
+        const {
+            co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, type, wi
+          } = currentStyle,
+          isStroke =
           type === ShapeType.Stroke || type === ShapeType.GradientStroke
 
-      // Skipping style when
-      // Stroke width equals 0
-      // style should not be rendered (extra unused repeaters)
-      // current opacity equals 0
-      // global opacity equals 0
-      if (
-        isStroke && wi === 0 ||
-        !data._shouldRender ||
-        coOp === 0 ||
-        this.globalData.currentGlobalAlpha === 0
-      ) {
-        continue
-      }
-      renderer.save()
-      const elems = elements
-
-      if (isStroke) {
-        renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
-        renderer.ctxLineWidth(wi || 0)
-
-        if (lc) {
-          renderer.ctxLineCap(lc)
+        // Skipping style when
+        // Stroke width equals 0
+        // style should not be rendered (extra unused repeaters)
+        // current opacity equals 0
+        // global opacity equals 0
+        if (
+          isStroke && wi === 0 ||
+          !data._shouldRender ||
+          coOp === 0 ||
+          this.globalData.currentGlobalAlpha === 0
+        ) {
+          continue
         }
+        renderer.save()
+        const elems = elements
 
-        if (lj) {
-          renderer.ctxLineJoin(lj)
-        }
-
-        renderer.ctxMiterLimit(ml || 0)
-      } else {
-        renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
-        // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
-      }
-      renderer.ctxOpacity(coOp)
-      if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
-        ctx?.beginPath()
-      }
-
-      renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
-      const { length: jLen } = elems
-
-      for (let j = 0; j < jLen; j++) {
-        if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
-          ctx?.beginPath()
-          if (ctx && da) {
-            ctx.setLineDash(da)
-            ctx.lineDashOffset = currentStyle.do || 0
-          }
-        }
-        const nodes = elems[j].trNodes,
-          { length: kLen } = nodes
-
-        for (let k = 0; k < kLen; k++) {
-          const { p: point = [], pts: points = [] } = nodes[k]
-
-          if (nodes[k].t === 'm') {
-            ctx?.moveTo(point[0], point[1])
-          } else if (nodes[k].t === 'c') {
-            ctx?.bezierCurveTo(
-              points[0],
-              points[1],
-              points[2],
-              points[3],
-              points[4],
-              points[5]
-            )
-          } else {
-            ctx?.closePath()
-          }
-        }
         if (isStroke) {
+          renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
+          renderer.ctxLineWidth(wi || 0)
+
+          if (lc) {
+            renderer.ctxLineCap(lc)
+          }
+
+          if (lj) {
+            renderer.ctxLineJoin(lj)
+          }
+
+          renderer.ctxMiterLimit(ml || 0)
+        } else {
+          renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
+        // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
+        }
+        renderer.ctxOpacity(coOp)
+        if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
+          ctx?.beginPath()
+        }
+
+        renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
+        const { length: jLen } = elems
+
+        for (let j = 0; j < jLen; j++) {
+          if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
+            ctx?.beginPath()
+            if (ctx && da) {
+              ctx.setLineDash(da)
+              ctx.lineDashOffset = currentStyle.do || 0
+            }
+          }
+          const nodes = elems[j].trNodes,
+            { length: kLen } = nodes
+
+          for (let k = 0; k < kLen; k++) {
+            const { p: point = [], pts: points = [] } = nodes[k]
+
+            if (nodes[k].t === 'm') {
+              ctx?.moveTo(point[0], point[1])
+            } else if (nodes[k].t === 'c') {
+              ctx?.bezierCurveTo(
+                points[0],
+                points[1],
+                points[2],
+                points[3],
+                points[4],
+                points[5]
+              )
+            } else {
+              ctx?.closePath()
+            }
+          }
+          if (isStroke) {
           // ctx.stroke();
-          renderer.ctxStroke()
-          if (da) {
-            ctx?.setLineDash(this.dashResetter)
+            renderer.ctxStroke()
+            if (da) {
+              ctx?.setLineDash(this.dashResetter)
+            }
           }
         }
-      }
-      if (!isStroke) {
+        if (!isStroke) {
         // ctx.fill(currentStyle.r);
-        ; (this.globalData.renderer as CanvasRenderer).ctxFill(currentStyle.r)
+          ; (this.globalData.renderer as CanvasRenderer).ctxFill(currentStyle.r)
+        }
+        renderer.restore()
       }
-      renderer.restore()
+    } catch (error) {
+      console.error(this.constructor.name, error)
     }
   }
 

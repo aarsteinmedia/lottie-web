@@ -1,4 +1,3 @@
-import type { Vector3, Vector4 } from '../../types';
 export default class LetterProps {
     __complete?: boolean;
     _mdf: {
@@ -16,6 +15,6 @@ export default class LetterProps {
     sc?: string | number[];
     sw?: number;
     t?: string;
-    constructor(o?: number, sw?: number, sc?: string, fc?: string, m?: number | string, p?: number);
-    update(o: number, sw: number, sc: Vector3 | Vector4, fc: Vector3 | Vector4, m: number, p: number | number[]): boolean;
+    constructor(o?: number, sw?: number, sc?: string, fc?: string, m?: number | string, p?: number | number[]);
+    update(o: number, sw: number, sc?: string, fc?: string, m?: string, p?: number[]): boolean;
 }

@@ -1,5 +1,6 @@
-import type MaskElement from '../../elements/MaskElement';
-import type { ElementInterfaceIntersect, Shape, ViewData } from '../../types';
+import type CVMaskElement from '@/elements/canvas/CVMaskElement';
+import type MaskElement from '@/elements/MaskElement';
+import type { ElementInterfaceIntersect, Shape, ViewData } from '@/types';
 declare class MaskInterface {
     _data: Shape;
     _mask: ViewData;
@@ -9,8 +10,8 @@ declare class MaskInterface {
 }
 export default class MaskManagerInterface {
     _masksInterfaces: MaskInterface[];
-    maskManager: MaskElement;
-    constructor(maskManager: MaskElement, _elem?: ElementInterfaceIntersect);
+    maskManager: MaskElement | CVMaskElement;
+    constructor(maskManager: MaskElement | CVMaskElement, _elem?: ElementInterfaceIntersect);
     getInterface(name: string): MaskInterface | null;
 }
 export {};

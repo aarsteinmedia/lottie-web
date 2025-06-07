@@ -1,12 +1,12 @@
-import type CVShapeData from '../../../elements/helpers/shapes/CVShapeData';
-import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
-import type SVGStyleData from '../../../elements/helpers/shapes/SVGStyleData';
-import type { ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
-import type { ShapeType } from '../../../utils/enums';
-import type Matrix from '../../../utils/Matrix';
-import type { ShapeProperty } from '../../../utils/shapes/properties/ShapeProperty';
-import type ShapeCollection from '../../../utils/shapes/ShapeCollection';
-import type ShapePath from '../../../utils/shapes/ShapePath';
+import type CVShapeData from '@/elements/helpers/shapes/CVShapeData';
+import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
+import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData';
+import type { ShapeDataInterface, SVGElementInterface, Transformer, TransformNode } from '@/types';
+import type { ShapeType } from '@/utils/enums';
+import type Matrix from '@/utils/Matrix';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
+import type ShapeCollection from '@/utils/shapes/ShapeCollection';
+import type ShapePath from '@/utils/shapes/ShapePath';
 export default abstract class ShapeData {
     _isAnimated?: boolean;
     _length?: number;
@@ -32,7 +32,7 @@ export default abstract class ShapeData {
     transforms?: {
         finalTransform: Matrix;
     };
-    trNodes: any[];
+    trNodes: TransformNode[];
     ty?: ShapeType;
     setAsAnimated(): void;
 }

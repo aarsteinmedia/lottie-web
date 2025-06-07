@@ -1,9 +1,9 @@
-import type { SegmentLength } from '../../types';
-import type ShapePath from '../../utils/shapes/ShapePath';
-import { ShapeProperty } from '../../utils/shapes/properties/ShapeProperty';
+import type { SegmentLength } from '@/types';
+import type ShapePath from '@/utils/shapes/ShapePath';
+import { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
 export default abstract class ShapeExpressions extends ShapeProperty {
     _segmentsLength?: SegmentLength;
-    getValueAtTime: (this: import("../properties/BaseProperty").default, _time?: number, _num?: number) => string | number | number[] | import("../../types").DocumentData | ShapePath | undefined;
+    getValueAtTime: (this: import("../properties/BaseProperty").default, _time?: number, _num?: number) => string | number | number[] | ShapePath | import("@/types").DocumentData | undefined;
     setGroupProperty: (this: import("../properties/BaseProperty").default, propertyGroup: import("./PropertyGroupFactory").default) => void;
     inTangents(time: number): unknown[];
     isClosed(): boolean;

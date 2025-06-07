@@ -1,6 +1,6 @@
-import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect, TextEffectFunction } from '../../types';
-import type LetterProps from '../../utils/text/LetterProps';
-import BaseProperty from '../../utils/properties/BaseProperty';
+import type { DocumentData, TextData, Vector2, ElementInterfaceIntersect, TextEffectFunction } from '@/types';
+import type LetterProps from '@/utils/text/LetterProps';
+import BaseProperty from '@/utils/properties/BaseProperty';
 export default class TextProperty extends BaseProperty {
     _frameId: number;
     canResize: boolean;
@@ -21,7 +21,7 @@ export default class TextProperty extends BaseProperty {
     completeTextData(documentData: DocumentData): void;
     copyData(obj: DocumentData, data: DocumentData | LetterProps): DocumentData;
     getExpressionValue(_currentValue: DocumentData, _text: string): void;
-    getKeyframeValue(): DocumentData | LetterProps | undefined;
+    getKeyframeValue(): LetterProps | DocumentData | undefined;
     getValue(_finalValue?: unknown): number;
     recalculate(index: number): void;
     searchExpressions(): boolean | null;

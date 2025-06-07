@@ -1,8 +1,8 @@
-import type { ElementInterfaceIntersect } from '../../types';
-import type MultiDimensionalProperty from '../../utils/properties/MultiDimensionalProperty';
-import type NoProperty from '../../utils/properties/NoProperty';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import TextSelectorProperty from '../../utils/text/TextSelectorProperty';
+import type { ElementInterfaceIntersect } from '@/types';
+import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty';
+import type NoProperty from '@/utils/properties/NoProperty';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import TextSelectorProperty from '@/utils/text/TextSelectorProperty';
 export default class TextAnimatorDataProperty {
     a?: {
         a: ValueProperty | NoProperty;

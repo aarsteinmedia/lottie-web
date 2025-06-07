@@ -1,11 +1,11 @@
-import type TransformEffect from '../../effects/TransformEffect';
-import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
-import type { ShapeProperty } from '../../utils/shapes/properties/ShapeProperty';
-import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
-import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
-import ShapeElement from '../../elements/ShapeElement';
-import { type TransformProperty } from '../../utils/TransformProperty';
+import type TransformEffect from '@/effects/TransformEffect';
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
+import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData';
+import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '@/types';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
+import CVShapeData from '@/elements/helpers/shapes/CVShapeData';
+import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager';
+import ShapeElement from '@/elements/ShapeElement';
 export default class CVShapeElement extends ShapeElement {
     canvasContext?: CanvasRenderingContext2D;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
@@ -21,7 +21,7 @@ export default class CVShapeElement extends ShapeElement {
     setBlendMode: () => void;
     show: () => void;
     stylesList: CVStyleElement[];
-    transformHelper: TransformProperty;
+    transformHelper: Transformer;
     transformsManager: ShapeTransformManager;
     constructor(data: LottieLayer, globalData: GlobalData, comp: CompElementInterface);
     addTransformToStyleList(transform: Transformer): void;
@@ -43,11 +43,11 @@ export default class CVShapeElement extends ShapeElement {
     reloadShapes(): void;
     removeTransformFromStyleList(): void;
     renderFill(_styleData: any, itemData: CanvasItem, groupTransform: TransformEffect): void;
-    renderGradientFill(styleData: any, itemData: CVShapeData, groupTransform: TransformEffect): void;
+    renderGradientFill(styleData: Shape, itemData: SVGGradientFillStyleData, groupTransform: TransformEffect): void;
     renderInnerContent(): void;
     renderPath(pathData: Shape, itemData: CVShapeData): void;
-    renderShape(parentTransform: TransformProperty, items: Shape[], data: ShapeGroupData[], isMain?: boolean): void;
-    renderShapeTransform(parentTransform: TransformEffect, groupTransform: TransformEffect): void;
+    renderShape(parentTransform: Transformer, items: Shape[], data: ShapeGroupData[], isMain?: boolean): void;
+    renderShapeTransform(parentTransform: Transformer, groupTransform: Transformer): void;
     renderStroke(_styleData: Shape, itemData: CanvasItem, groupTransform: TransformEffect): void;
     renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty): void;
     searchShapes(arr: Shape[], itemsData: CanvasItem[], prevViewData: CVShapeElement[], shouldRenderFromProps: boolean, transforms: Transformer[]): void;
