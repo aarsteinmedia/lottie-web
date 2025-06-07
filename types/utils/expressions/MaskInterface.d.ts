@@ -1,6 +1,6 @@
-import type CVMaskElement from '@/elements/canvas/CVMaskElement';
-import type MaskElement from '@/elements/MaskElement';
-import type { ElementInterfaceIntersect, Shape, ViewData } from '@/types';
+import type CVMaskElement from '../../elements/canvas/CVMaskElement';
+import type MaskElement from '../../elements/MaskElement';
+import type { ElementInterfaceIntersect, Shape, ViewData } from '../../types';
 declare class MaskInterface {
     _data: Shape;
     _mask: ViewData;

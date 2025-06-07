@@ -1,4 +1,4 @@
-import type { Characacter, DocumentData } from '@/types';
+import type { Characacter, DocumentData } from '../types';
 export declare function isCombinedCharacter(char: number): boolean;
 export declare function isFlagEmoji(string: string): boolean;
 export declare function isModifier(firstCharCode: number, secondCharCode: number): boolean;

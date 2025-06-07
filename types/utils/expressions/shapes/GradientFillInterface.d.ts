@@ -1,5 +1,5 @@
-import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type SVGGradientFillStyleData from '../../../elements/helpers/shapes/SVGGradientFillStyleData';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class GradientFillInterface extends BaseInterface {
     prop?: SVGGradientFillStyleData;
     get endPoint(): (() => {

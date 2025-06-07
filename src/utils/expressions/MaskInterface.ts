@@ -42,7 +42,7 @@ export default class MaskManagerInterface {
     const { length } = maskManager.viewData
 
     for (let i = 0; i < length; i++) {
-      this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i], maskManager.masksProperties[i])
+      this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i] as ViewData, maskManager.masksProperties[i])
     }
   }
 

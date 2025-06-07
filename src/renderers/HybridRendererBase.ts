@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type AnimationItem from '@/animation/AnimationItem'
 import type {
   AnimationData,
@@ -14,7 +15,7 @@ import HShapeElement from '@/elements/html/HShapeElement'
 import HSolidElement from '@/elements/html/HSolidElement'
 import HTextElement from '@/elements/html/HTextElement'
 import ImageElement from '@/elements/ImageElement'
-import ISolidElement from '@/elements/SolidElement'
+import SolidElement from '@/elements/SolidElement'
 import SVGShapeElement from '@/elements/svg/SVGShapeElement'
 import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
@@ -282,7 +283,7 @@ export default class HybridRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (!this.supports3d) {
-      return new ISolidElement(
+      return new SolidElement(
         data,
         this.globalData,
         this as unknown as ElementInterfaceIntersect

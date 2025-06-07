@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '@/types';
-import RenderableElement from '@/elements/helpers/RenderableElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieAsset, LottieLayer } from '../types';
+import RenderableElement from '../elements/helpers/RenderableElement';
 export default class FootageElement extends RenderableElement {
     assetData: null | LottieAsset;
     footageData: null | SVGElement;

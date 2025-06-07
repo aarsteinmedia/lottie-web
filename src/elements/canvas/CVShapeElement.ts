@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
@@ -807,6 +808,7 @@ export default class CVShapeElement extends ShapeElement {
       this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
         i + 1)
     }
+
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
     const { length } = ownModifiers

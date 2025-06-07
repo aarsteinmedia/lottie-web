@@ -1,4 +1,4 @@
-import type { PoolElement } from '@/types';
+import type { PoolElement } from '../../types';
 export default class PoolFactory {
     private _create;
     private _length;

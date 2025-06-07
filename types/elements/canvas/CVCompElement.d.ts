@@ -1,5 +1,5 @@
-import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
-import CompElement from '@/elements/CompElement';
+import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import CompElement from '../../elements/CompElement';
 export default class CVCompElement extends CompElement {
     addPendingElement: (element: ElementInterfaceIntersect) => void;
     buildAllItems: () => void;
@@ -9,7 +9,7 @@ export default class CVCompElement extends CompElement {
     checkLayers: (val?: number) => void;
     checkPendingElements: () => void;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
-    configAnimation: (animData: import("@/types").AnimationData) => void;
+    configAnimation: (animData: import("../../types").AnimationData) => void;
     createAudio: (data: LottieLayer) => import("../AudioElement").default;
     createCamera: (_data: LottieLayer) => import("../html/HCameraElement").default;
     createContainerElements: () => void;
@@ -51,7 +51,7 @@ export default class CVCompElement extends CompElement {
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setBlendMode: () => void;
     setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
-    setupGlobalData: (animData: import("@/types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
+    setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     showElement: () => void;
     updateContainerSize: (width?: number, height?: number) => void;

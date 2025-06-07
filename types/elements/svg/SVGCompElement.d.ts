@@ -1,6 +1,6 @@
-import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty';
-import SVGBaseElement from '@/elements/svg/SVGBaseElement';
+import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import type KeyframedValueProperty from '../../utils/properties/KeyframedValueProperty';
+import SVGBaseElement from '../../elements/svg/SVGBaseElement';
 export default class SVGCompElement extends SVGBaseElement {
     _debug?: boolean;
     addPendingElement: (element: ElementInterfaceIntersect) => void;
@@ -11,7 +11,7 @@ export default class SVGCompElement extends SVGBaseElement {
     checkLayers: (val?: number) => void;
     checkPendingElements: () => void;
     completeLayers: boolean;
-    configAnimation: (animData: import("@/types").AnimationData) => void;
+    configAnimation: (animData: import("../../types").AnimationData) => void;
     createAudio: (data: LottieLayer) => import("../AudioElement").default;
     createCamera: (_data: LottieLayer) => import("../html/HCameraElement").default;
     createFootage: (data: LottieLayer) => import("../FootageElement").default;
@@ -42,7 +42,7 @@ export default class SVGCompElement extends SVGBaseElement {
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setElements: (elems: ElementInterfaceIntersect[]) => void;
     setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
-    setupGlobalData: (animData: import("@/types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
+    setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     supports3d: boolean;
     tm?: KeyframedValueProperty;

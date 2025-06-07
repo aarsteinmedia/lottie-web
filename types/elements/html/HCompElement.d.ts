@@ -1,6 +1,6 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
-import CompElement from '@/elements/CompElement';
-import SVGCompElement from '@/elements/svg/SVGCompElement';
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import CompElement from '../../elements/CompElement';
+import SVGCompElement from '../../elements/svg/SVGCompElement';
 export default class HCompElement extends CompElement {
     pendingElements: ElementInterfaceIntersect[];
     supports3d?: boolean;

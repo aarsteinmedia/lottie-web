@@ -1,6 +1,6 @@
-import type GroupEffect from '@/effects/GroupEffect';
-import type { EffectValue, ElementInterfaceIntersect } from '@/types';
-import type ValueProperty from '@/utils/properties/ValueProperty';
+import type GroupEffect from '../effects/GroupEffect';
+import type { EffectValue, ElementInterfaceIntersect } from '../types';
+import type ValueProperty from '../utils/properties/ValueProperty';
 declare abstract class EffectZero {
     p?: ValueProperty;
     constructor(data: EffectValue, elem: ElementInterfaceIntersect, container: GroupEffect);

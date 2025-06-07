@@ -1,5 +1,5 @@
-import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type SVGStrokeStyleData from '../../../elements/helpers/shapes/SVGStrokeStyleData';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class StrokeInterface extends BaseInterface {
     dashOb?: Record<PropertyKey, unknown>;
     prop?: SVGStrokeStyleData;

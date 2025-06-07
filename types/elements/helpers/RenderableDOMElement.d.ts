@@ -1,5 +1,5 @@
-import type { CompElementInterface, GlobalData, LottieLayer } from '@/types';
-import RenderableElement from '@/elements/helpers/RenderableElement';
+import type { CompElementInterface, GlobalData, LottieLayer } from '../../types';
+import RenderableElement from '../../elements/helpers/RenderableElement';
 export default abstract class RenderableDOMElement extends RenderableElement {
     innerElem?: SVGGraphicsElement | HTMLElement | null;
     createContainerElements(): void;

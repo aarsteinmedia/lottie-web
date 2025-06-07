@@ -1,16 +1,16 @@
-import type AnimationItem from '@/animation/AnimationItem';
-import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '@/types';
-import HCameraElement from '@/elements/html/HCameraElement';
-import HImageElement from '@/elements/html/HImageElement';
-import HShapeElement from '@/elements/html/HShapeElement';
-import HSolidElement from '@/elements/html/HSolidElement';
-import HTextElement from '@/elements/html/HTextElement';
-import ImageElement from '@/elements/ImageElement';
-import ISolidElement from '@/elements/SolidElement';
-import SVGShapeElement from '@/elements/svg/SVGShapeElement';
-import SVGTextLottieElement from '@/elements/svg/SVGTextElement';
-import BaseRenderer from '@/renderers/BaseRenderer';
-import { RendererType } from '@/utils/enums';
+import type AnimationItem from '../animation/AnimationItem';
+import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '../types';
+import HCameraElement from '../elements/html/HCameraElement';
+import HImageElement from '../elements/html/HImageElement';
+import HShapeElement from '../elements/html/HShapeElement';
+import HSolidElement from '../elements/html/HSolidElement';
+import HTextElement from '../elements/html/HTextElement';
+import ImageElement from '../elements/ImageElement';
+import SolidElement from '../elements/SolidElement';
+import SVGShapeElement from '../elements/svg/SVGShapeElement';
+import SVGTextLottieElement from '../elements/svg/SVGTextElement';
+import BaseRenderer from '../renderers/BaseRenderer';
+import { RendererType } from '../utils/enums';
 export default class HybridRendererBase extends BaseRenderer {
     camera?: HCameraElement;
     destroyed: boolean;
@@ -28,7 +28,7 @@ export default class HybridRendererBase extends BaseRenderer {
     createCamera(data: LottieLayer): HCameraElement;
     createImage(data: LottieLayer): ImageElement | HImageElement;
     createShape(data: LottieLayer): SVGShapeElement | HShapeElement;
-    createSolid(data: LottieLayer): ISolidElement | HSolidElement;
+    createSolid(data: LottieLayer): SolidElement | HSolidElement;
     createText(data: LottieLayer): SVGTextLottieElement | HTextElement;
     createThreeDContainer(pos: number, type: string): {
         container: HTMLElement;

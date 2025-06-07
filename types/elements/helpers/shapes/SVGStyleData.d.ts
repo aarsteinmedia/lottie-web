@@ -1,5 +1,5 @@
-import type { VectorProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
-import type { ShapeType } from '@/utils/enums';
+import type { VectorProperty, Shape, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
+import type { ShapeType } from '../../../utils/enums';
 export default class SVGStyleData {
     _mdf: boolean;
     closed: boolean;

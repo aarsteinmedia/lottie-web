@@ -1,5 +1,5 @@
-import type BaseProperty from '@/utils/properties/BaseProperty';
-import { PropType } from '@/utils/enums';
+import type BaseProperty from '../../utils/properties/BaseProperty';
+import { PropType } from '../../utils/enums';
 export declare class ExpressionPropertyInterface {
     defaultMultidimensionalValue: {
         mult: number;

@@ -1,5 +1,7 @@
 import type GroupEffect from '@/effects/GroupEffect'
-import type { ElementInterfaceIntersect, Vector3 } from '@/types'
+import type {
+  ElementInterfaceIntersect, Vector3, ViewData
+} from '@/types'
 
 import { createElementID } from '@/utils'
 import { getLocationHref } from '@/utils/helpers/locationHref'
@@ -108,7 +110,7 @@ export default class SVGStrokeEffect {
       if (this.paths[i].m === -1) {
         continue
       }
-      mask = this.elem.maskManager?.viewData[this.paths[i].m]
+      mask = this.elem.maskManager?.viewData[this.paths[i].m] as ViewData | undefined
       path = this.paths[i].p
       if (
         mask &&
