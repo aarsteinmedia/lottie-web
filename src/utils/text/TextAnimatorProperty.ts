@@ -8,7 +8,13 @@ import type {
   Vector3,
 } from '@/types'
 import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
+import type ValueProperty from '@/utils/properties/ValueProperty'
+import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
+import type RectShapeProperty from '@/utils/shapes/properties/RectShapeProperty'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+import type StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
 
+import { isArray } from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -17,11 +23,6 @@ import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
-
-import type { ShapeProperty } from '../shapes/properties/ShapeProperty'
-import type ShapePath from '../shapes/ShapePath'
-
-import { isArray } from '..'
 
 const rgbToHSV = (
     r: number, g: number, b: number
@@ -183,7 +184,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   private _elem: ElementInterfaceIntersect
   private _hasMaskedPath: boolean
   private _moreOptions: { alignment: MultiDimensionalProperty }
-  private _pathData: Partial<TextPathData>
+  private _pathData: TextPathData
   private _renderType: RendererType
   private _textData: TextData
   private mHelper = new Matrix()
@@ -201,7 +202,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
     this._renderType = renderType
     this._elem = elem
     this._animatorsData = createSizedArray(Number(this._textData.a?.length))
-    this._pathData = {}
+    this._pathData = {} as TextPathData
     this._moreOptions = { alignment: {} as MultiDimensionalProperty }
     this.renderedLetters = []
     this.lettersChangedFlag = false
@@ -225,12 +226,14 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         textData = this._textData,
         matrixHelper = this.mHelper,
         renderType = this._renderType
+
       let renderedLettersCount = this.renderedLetters.length,
         xPos,
         yPos,
         i,
         len
       const letters = documentData.l
+
       let pathInfo: undefined | PathInfo,
         currentLength = 0,
         currentPoint: undefined | BezierPoint,
@@ -245,54 +248,55 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         totalLength = 0,
         perc,
         tanAngle,
-        mask: undefined | ShapeProperty
+        mask: null | ShapeProperty | StarShapeProperty | RectShapeProperty | EllShapeProperty = null
 
-      if (this._hasMaskedPath) {
+      if (this._hasMaskedPath && this._pathData.m) {
         mask = this._pathData.m
         if (!this._pathData.n || this._pathData._mdf) {
-          let paths: undefined | ShapePath | ShapePath[] = mask?.v
+          let paths = mask.v
 
-          if (this._pathData.r?.v) {
-            paths = (paths as ShapePath[] | undefined)?.reverse() ?? []
-          }
-          pathInfo = {
-            segments: [],
-            tLength: 0,
-          }
-          len = Number((paths as ShapePath | undefined)?._length) - 1
-          let bezierData
-
-          totalLength = 0
-          for (i = 0; i < len; i++) {
-            if (!paths || isArray(paths)) {
-              continue
+          if (paths) {
+            if (this._pathData.r?.v) {
+              paths = paths.reverse()
             }
-            bezierData = buildBezierData(
-              paths.v[i],
-              paths.v[i + 1],
-              [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
-              [
-                paths.i[i + 1][0] - paths.v[i + 1][0], paths.i[i + 1][1] - paths.v[i + 1][1],
-              ]
-            )
-            pathInfo.tLength += bezierData.segmentLength
-            pathInfo.segments.push(bezierData)
-            totalLength += bezierData.segmentLength
-          }
-          i = len
-          if (mask?.v?.c && paths && !isArray(paths)) {
-            bezierData = buildBezierData(
-              paths.v[i],
-              paths.v[0],
-              [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
-              [paths.i[0][0] - paths.v[0][0], paths.i[0][1] - paths.v[0][1]]
-            )
-            pathInfo.tLength += bezierData.segmentLength
-            pathInfo.segments.push(bezierData)
-            totalLength += bezierData.segmentLength
-          }
-          this._pathData.pi = pathInfo
+            pathInfo = {
+              segments: [],
+              tLength: 0,
+            }
+            len = Number(paths._length) - 1
+            let bezierData
 
+            totalLength = 0
+            for (i = 0; i < len; i++) {
+              if (isArray(paths)) {
+                continue
+              }
+              bezierData = buildBezierData(
+                paths.v[i],
+                paths.v[i + 1],
+                [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
+                [
+                  paths.i[i + 1][0] - paths.v[i + 1][0], paths.i[i + 1][1] - paths.v[i + 1][1],
+                ]
+              )
+              pathInfo.tLength += bezierData.segmentLength
+              pathInfo.segments.push(bezierData)
+              totalLength += bezierData.segmentLength
+            }
+            i = len
+            if (mask.v?.c && !isArray(paths)) {
+              bezierData = buildBezierData(
+                paths.v[i],
+                paths.v[0],
+                [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
+                [paths.i[0][0] - paths.v[0][0], paths.i[0][1] - paths.v[0][1]]
+              )
+              pathInfo.tLength += bezierData.segmentLength
+              pathInfo.segments.push(bezierData)
+              totalLength += bezierData.segmentLength
+            }
+            this._pathData.pi = pathInfo
+          }
         }
         pathInfo = this._pathData.pi
 
@@ -303,7 +307,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         // shouldMeasure = true
         segments = pathInfo?.segments ?? []
 
-        if (currentLength > 0 && mask?.v?.c) {
+        if (currentLength > 0 && mask.v?.c) {
           if (pathInfo?.tLength ?? 0 < Math.abs(currentLength)) {
             currentLength = -Math.abs(currentLength) % (pathInfo?.tLength ?? 0)
           }
@@ -345,9 +349,9 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
 
       let mult: number | number[] | undefined,
         ind = -1,
-        offf,
-        xPathPos,
-        yPathPos
+        offf: number,
+        xPathPos = 0,
+        yPathPos = 0
       const initPathPos = currentLength,
         initSegmentInd = segmentInd,
         initPointInd = pointInd
@@ -393,20 +397,29 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             if (!animatorProps?.t.propType) {
               continue
             }
+            const { v: animVal } = animatorProps.t
+
+            if (typeof animVal !== 'number') {
+              continue
+            }
+
             if (isNewLine && documentData.j === 2) {
-              animatorFirstCharOffset +=
-              Number(animatorProps.t.v) * justifyOffsetMult
+              animatorFirstCharOffset += animVal * justifyOffsetMult
             }
             animatorSelector = animators[j].s
             mult = animatorSelector?.getMult(letters[i].anIndexes[j],
               textData.a?.[j].s?.totalChars)
-            if (isArray(mult)) {
-              animatorJustifyOffset +=
-              Number(animatorProps.t.v) * mult[0] * justifyOffsetMult
-            } else {
-              animatorJustifyOffset +=
-              Number(animatorProps.t.v) * Number(mult) * justifyOffsetMult
+
+            if (mult !== undefined) {
+              if (isArray(mult)) {
+                animatorJustifyOffset +=
+                  animVal * mult[0] * justifyOffsetMult
+              } else {
+                animatorJustifyOffset +=
+                  animVal * mult * justifyOffsetMult
+              }
             }
+
           }
           isNewLine = false
         }
@@ -431,7 +444,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
           if (this._hasMaskedPath) {
             segmentInd = initSegmentInd || 0
             pointInd = initPointInd || 0
-            points = segments?.[segmentInd]?.points ?? []
+            points = segments[segmentInd]?.points ?? []
             prevPoint = points[pointInd - 1]
             currentPoint = points[pointInd]
             partialLength = currentPoint.partialLength
@@ -448,15 +461,13 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               switch (documentData.j) {
                 case 1: {
                   currentLength +=
-                  totalLength -
-                  documentData.lineWidths[letters[i].line]
+                  totalLength - documentData.lineWidths[letters[i].line]
                   break
                 }
                 case 2: {
                   currentLength +=
-                  (totalLength -
-                    documentData.lineWidths[letters[i].line]) /
-                    2
+                  (totalLength - documentData.lineWidths[letters[i].line]) /
+                  2
                   break
                 }
                 case undefined:
@@ -541,7 +552,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 Number(prevPoint?.point[1]) +
                 (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
                 perc
-                matrixHelper.translate(-alignment[0] * Number(letters[i].an) * 0.005,
+                matrixHelper.translate(-alignment[0] * letters[i].an * 0.005,
                   -(alignment[1] * yOff) * 0.01)
                 shouldMeasure = false
               } else if (points.length > 0) {
@@ -550,12 +561,12 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 if (pointInd >= points.length) {
                   pointInd = 0
                   segmentInd++
-                  if (segments?.[segmentInd]) {
+                  if (segments[segmentInd]) {
                     points = segments[segmentInd].points
-                  } else if (mask?.v.c) {
+                  } else if (mask?.v?.c) {
                     pointInd = 0
                     segmentInd = 0
-                    points = segments?.[segmentInd].points ?? []
+                    points = segments[segmentInd].points
                   } else {
                     segmentLength -= Number(currentPoint?.partialLength)
                     points = null
@@ -858,7 +869,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               matrixHelper.rotate(-rot * Math.PI / 180)
             }
             matrixHelper.translate(
-              Number(xPathPos), Number(yPathPos), 0
+              xPathPos, yPathPos, 0
             )
             currentLength -= alignment[0] * letters[i].an * 0.005
             if (letters[i + 1] && ind !== letters[i + 1].ind) {
@@ -1001,26 +1012,28 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         this as unknown as ElementInterfaceIntersect
       )
     }
-    if (this._textData.p && 'm' in this._textData.p) {
+
+    if (this._textData.p && 'm' in this._textData.p && this._elem.maskManager) {
       this._pathData = {
         a: getProp(
           this._elem, this._textData.p.a, 0, 0, this as unknown as ElementInterfaceIntersect
-        ),
+        ) as ValueProperty,
         f: getProp(
           this._elem, this._textData.p.f, 0, 0, this as unknown as ElementInterfaceIntersect
-        ),
+        ) as ValueProperty,
         l: getProp(
           this._elem, this._textData.p.l, 0, 0, this as unknown as ElementInterfaceIntersect
-        ),
-        m: this._elem.maskManager?.getMaskProperty(this._textData.p.m),
+        ) as ValueProperty,
+        m: this._elem.maskManager.getMaskProperty(this._textData.p.m),
         p: getProp(
           this._elem, this._textData.p.p, 0, 0, this as unknown as ElementInterfaceIntersect
-        ),
+        ) as ValueProperty,
         r: getProp(
           this._elem, this._textData.p.r, 0, 0, this as unknown as ElementInterfaceIntersect
-        ),
+        ) as ValueProperty,
       }
       this._hasMaskedPath = true
+
     } else {
       this._hasMaskedPath = false
     }

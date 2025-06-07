@@ -4,7 +4,6 @@ import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type { LottieLayer, Shape } from '@/types'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
-import MaskElement from '@/elements/MaskElement'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
@@ -13,9 +12,9 @@ export default class CVMaskElement {
   data: LottieLayer
   element: CVShapeElement | CVBaseElement
   hasMasks: boolean
+
   masksProperties: Shape[]
   viewData: ShapeProperty[]
-
   constructor(data: LottieLayer, element: CVShapeElement | CVBaseElement) {
     this.data = data
     this.element = element
@@ -38,15 +37,15 @@ export default class CVMaskElement {
     if (hasMasks) {
       ; (this.element as CVShapeElement).addRenderableComponent(this)
     }
-    this.getMaskProperty = MaskElement.prototype.getMaskProperty
   }
 
   destroy() {
     this.element = null as unknown as CVShapeElement
   }
 
-  getMaskProperty(_pos: number) {
-    throw new Error(`${this.constructor.name}: Method getMaskProperty is not implemented`)
+  getMaskProperty(pos: number) {
+
+    return this.viewData[pos]
   }
 
   renderFrame(_num?: number) {

@@ -27,9 +27,9 @@ export default class CanvasRenderer extends CanvasRendererBase {
       dpr: config?.dpr ?? 1,
       id: config?.id || '',
       imagePreserveAspectRatio:
-        config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
+          config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
       preserveAspectRatio:
-        config?.preserveAspectRatio || PreserveAspectRatio.Contain,
+          config?.preserveAspectRatio || PreserveAspectRatio.Contain,
       progressiveLoad: Boolean(config?.progressiveLoad),
       runExpressions: config?.runExpressions ?? true,
     }

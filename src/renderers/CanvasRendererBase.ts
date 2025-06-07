@@ -278,59 +278,65 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
   }
 
   renderFrame(num: number, forceRender?: boolean) {
-    if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
-    }
-    if (!this.animationItem) {
-      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
-    }
-
-    if (
-      this.renderedFrame === num &&
-      this.renderConfig?.clearCanvas === true &&
-      !forceRender ||
-      this.destroyed ||
-      num === -1
-    ) {
-      return
-    }
-    this.renderedFrame = num
-    this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame)
-    this.globalData.frameId++
-    this.globalData._mdf = !this.renderConfig?.clearCanvas || forceRender
-    this.globalData.projectInterface.currentFrame = num
-
-    const { length } = this.layers
-
-    if (!this.completeLayers) {
-      this.checkLayers(num)
-    }
-
-    for (let i = length - 1; i >= 0; i--) {
-      if (this.completeLayers || this.elements[i]) {
-        this.elements[i]?.prepareFrame(num - this.layers[i].st)
+    try {
+      if (!this.globalData) {
+        throw new Error('globalData is not implemented')
       }
-    }
-    if (this.globalData._mdf) {
-      if (this.renderConfig?.clearCanvas === true) {
-        this.canvasContext?.clearRect(
-          0,
-          0,
-          this.transformCanvas?.w || 0,
-          this.transformCanvas?.h || 0
-        )
-      } else {
-        this.save()
+      if (!this.animationItem) {
+        throw new Error('animationItem is not implemented')
       }
+
+      if (
+        this.renderedFrame === num &&
+        this.renderConfig?.clearCanvas === true &&
+        !forceRender ||
+        this.destroyed ||
+        num === -1
+      ) {
+        return
+      }
+      this.renderedFrame = num
+      this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame)
+      this.globalData.frameId++
+      this.globalData._mdf = !this.renderConfig?.clearCanvas || forceRender
+      this.globalData.projectInterface.currentFrame = num
+
+      const { length } = this.layers
+
+      if (!this.completeLayers) {
+        this.checkLayers(num)
+      }
+
       for (let i = length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i]?.renderFrame()
+          this.elements[i]?.prepareFrame(num - this.layers[i].st)
         }
       }
-      if (this.renderConfig?.clearCanvas !== true) {
-        this.restore()
+
+      if (this.globalData._mdf) {
+        if (this.renderConfig?.clearCanvas === true) {
+          this.canvasContext?.clearRect(
+            0,
+            0,
+            this.transformCanvas?.w || 0,
+            this.transformCanvas?.h || 0
+          )
+        } else {
+          this.save()
+        }
+        for (let i = length - 1; i >= 0; i--) {
+          if (this.completeLayers || this.elements[i]) {
+            this.elements[i]?.renderFrame()
+          }
+        }
+        if (this.renderConfig?.clearCanvas !== true) {
+          this.restore()
+        }
       }
+    } catch (error) {
+      console.error(this.constructor.name, error)
     }
+
   }
 
   reset() {

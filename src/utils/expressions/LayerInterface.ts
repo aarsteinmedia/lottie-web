@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type MaskElement from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect, ExpressionInterface, SourceRect
@@ -200,7 +201,7 @@ export default class LayerExpressionInterface {
     this.effect = effects
   }
 
-  registerMaskInterface(maskManager: MaskElement) {
+  registerMaskInterface(maskManager: MaskElement | CVMaskElement) {
     this.mask = new MaskManagerInterface(maskManager, this._elem)
   }
 

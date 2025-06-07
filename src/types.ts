@@ -956,7 +956,7 @@ export interface TextData {
   n?: any
   of: string
   /** Text Follow Path TODO:. */
-  p?: TextPathData
+  p?: TextVectorData
   ps: null | Vector2
   r?: { v: number[] }
   s: number
@@ -977,17 +977,29 @@ export interface PathInfo {
   tLength: 0,
 }
 
+export interface TextVectorData {
+  _mdf?: boolean
+  a?: VectorProperty
+  f?: VectorProperty
+  l: VectorProperty
+  m: number
+  n?: VectorProperty
+  p?: VectorProperty
+  r?: VectorProperty
+  v?: VectorProperty
+}
+
 export interface TextPathData {
   _mdf?: boolean
-  a: ValueProperty
-  f: ValueProperty
+  a?: ValueProperty
+  f?: ValueProperty
   l: ValueProperty
-  m?: ShapeProperty
-  n: ValueProperty
-  p: ValueProperty
-  pi: PathInfo
-  r: ValueProperty
-  v: ValueProperty
+  m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty
+  n?: ValueProperty
+  p?: ValueProperty
+  pi?: PathInfo
+  r?: ValueProperty
+  v?: ValueProperty
 }
 
 export type EffectElement =

@@ -1,5 +1,6 @@
 import type TransformEffect from '@/effects/TransformEffect'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
 import type {
   CanvasItem,
@@ -29,9 +30,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
 import DashProperty from '@/utils/shapes/properties/DashProperty'
 import GradientProperty from '@/utils/shapes/properties/GradientProperty'
-import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
-
-import type SVGGradientFillStyleData from '../helpers/shapes/SVGGradientFillStyleData'
+import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
@@ -522,73 +521,80 @@ export default class CVShapeElement extends ShapeElement {
     data: ShapeGroupData[],
     isMain?: boolean
   ) {
-    const len = items.length - 1
-    let groupTransform: TransformProperty
+    try {
+      const len = items.length - 1
+      let groupTransform: undefined | Transformer
 
-    groupTransform = parentTransform
-    for (let i = len; i >= 0; i--) {
-      switch (items[i].ty) {
-        case ShapeType.Transform: {
-          groupTransform = data[i].transform
-          this.renderShapeTransform(parentTransform,
-            groupTransform)
-          break
+      groupTransform = parentTransform
+      for (let i = len; i >= 0; i--) {
+        switch (items[i].ty) {
+          case ShapeType.Transform: {
+            groupTransform = data[i].transform
+            if (groupTransform) {
+              this.renderShapeTransform(parentTransform,
+                groupTransform)
+            }
+
+            break
+          }
+          case ShapeType.Path:
+          case ShapeType.Ellipse:
+          case ShapeType.Rectangle:
+          case ShapeType.PolygonStar: {
+            this.renderPath(items[i], data[i] as CVShapeData)
+            break
+          }
+          case ShapeType.Fill: {
+            this.renderFill(
+              items[i], data[i], groupTransform
+            )
+            break
+          }
+          case ShapeType.Stroke: {
+            this.renderStroke(
+              items[i], data[i], groupTransform
+            )
+            break
+          }
+          case ShapeType.GradientFill:
+          case ShapeType.GradientStroke: {
+            this.renderGradientFill(
+              items[i],
+              data[i],
+              groupTransform
+            )
+            break
+          }
+          case ShapeType.Group: {
+            this.renderShape(
+              groupTransform, items[i].it ?? [], data[i].it
+            )
+            break
+          }
+          case ShapeType.Trim:
+          default:
+          // Do nothing
         }
-        case ShapeType.Path:
-        case ShapeType.Ellipse:
-        case ShapeType.Rectangle:
-        case ShapeType.PolygonStar: {
-          this.renderPath(items[i], data[i])
-          break
-        }
-        case ShapeType.Fill: {
-          this.renderFill(
-            items[i], data[i], groupTransform
-          )
-          break
-        }
-        case ShapeType.Stroke: {
-          this.renderStroke(
-            items[i], data[i], groupTransform
-          )
-          break
-        }
-        case ShapeType.GradientFill:
-        case ShapeType.GradientStroke: {
-          this.renderGradientFill(
-            items[i],
-            data[i],
-            groupTransform
-          )
-          break
-        }
-        case ShapeType.Group: {
-          this.renderShape(
-            groupTransform, items[i].it ?? [], data[i].it
-          )
-          break
-        }
-        case ShapeType.Trim:
-        default:
-        // Do nothing
       }
-    }
-    if (isMain) {
-      this.drawLayer()
+      if (isMain) {
+        this.drawLayer()
+      }
+    } catch (error) {
+      console.error(this.constructor.name, error)
     }
   }
 
   renderShapeTransform(parentTransform: Transformer,
-    groupTransform: TransformEffect) {
+    groupTransform: Transformer) {
     if (
       !parentTransform._opMdf &&
-      !groupTransform.op?._mdf &&
+      !groupTransform.op._mdf &&
       !this._isFirstFrame
     ) {
       return
     }
     groupTransform.opacity = parentTransform.opacity
-    groupTransform.opacity *= groupTransform.op?.v || 1
+    groupTransform.opacity *= groupTransform.op.v
     groupTransform._opMdf = true
   }
 

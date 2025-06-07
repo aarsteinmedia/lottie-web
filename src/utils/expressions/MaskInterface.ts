@@ -1,3 +1,4 @@
+import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type MaskElement from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect, Shape, ViewData
@@ -33,9 +34,9 @@ class MaskInterface {
 
 export default class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
-  maskManager: MaskElement
+  maskManager: MaskElement | CVMaskElement
 
-  constructor (maskManager: MaskElement, _elem?: ElementInterfaceIntersect) {
+  constructor (maskManager: MaskElement | CVMaskElement, _elem?: ElementInterfaceIntersect) {
     this.maskManager = maskManager
     this._masksInterfaces = createSizedArray(maskManager.viewData.length)
     const { length } = maskManager.viewData

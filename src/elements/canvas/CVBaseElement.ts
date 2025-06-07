@@ -206,7 +206,7 @@ export default abstract class CVBaseElement {
   }
 
   initRendererElement() {
-    // Pass through?
+    // Pass through
   }
 
   prepareLayer() {

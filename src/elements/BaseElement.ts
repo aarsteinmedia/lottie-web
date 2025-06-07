@@ -1,3 +1,4 @@
+import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type MaskElement from '@/elements/MaskElement'
 import type {
@@ -35,7 +36,7 @@ export default abstract class BaseElement {
   layerElement?: SVGGElement | HTMLElement
   layerId?: string
   layerInterface?: null | LayerExpressionInterface = null
-  maskManager?: MaskElement
+  maskManager?: MaskElement | CVMaskElement
   shapesData: Shape[] = []
   type?: unknown
 
