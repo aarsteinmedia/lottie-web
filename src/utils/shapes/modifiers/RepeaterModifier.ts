@@ -7,6 +7,7 @@ import type {
 } from '@/types'
 import type ValueProperty from '@/utils/properties/ValueProperty'
 
+import { isArray } from '@/utils'
 import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -97,7 +98,7 @@ export default class RepeaterModifier extends ShapeModifier {
     posFromProps?: number,
     elemsData: ShapeGroupData[] = []
   ) {
-    if (!Array.isArray(arr)) {
+    if (!isArray(arr)) {
       throw new TypeError(`${this.constructor.name}: Method init, param arr must be array`)
     }
     let pos = Number(posFromProps)

@@ -400,7 +400,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             animatorSelector = animators[j].s
             mult = animatorSelector?.getMult(letters[i].anIndexes[j],
               textData.a?.[j].s?.totalChars)
-            if (Array.isArray(mult)) {
+            if (isArray(mult)) {
               animatorJustifyOffset +=
               Number(animatorProps.t.v) * mult[0] * justifyOffsetMult
             } else {
@@ -485,8 +485,8 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 if (!mult) {
                   continue
                 }
-                if (Array.isArray(animatorProps.p.v)) {
-                  if (Array.isArray(mult)) {
+                if (isArray(animatorProps.p.v)) {
+                  if (isArray(mult)) {
                     animatorOffset += animatorProps.p.v[0] * mult[0]
                   } else {
                     animatorOffset += animatorProps.p.v[0] * mult
@@ -502,10 +502,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               if (!mult) {
                 continue
               }
-              if (!Array.isArray(animatorProps.a.v)) {
+              if (!isArray(animatorProps.a.v)) {
                 continue
               }
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 animatorOffset += animatorProps.a.v[0] * mult[0]
                 continue
               }
@@ -597,7 +597,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
             if (xPos !== 0 || documentData.j !== 0) {
               if (this._hasMaskedPath) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   currentLength += Number(animatorProps.t.v) * mult[0]
                 } else {
                   currentLength += Number(animatorProps.t.v) * Number(mult)
@@ -605,7 +605,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 continue
               }
 
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 xPos += Number(animatorProps.t.v) * mult[0]
                 continue
               }
@@ -641,11 +641,11 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               animatorSelector = animators[j].s
               mult = animatorSelector?.getMult(letters[i].anIndexes[j],
                 textData.a?.[j].s?.totalChars)
-              if (!mult || !Array.isArray(animatorProps.a.v)) {
+              if (!mult || !isArray(animatorProps.a.v)) {
                 continue
               }
 
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.translate(
                   -animatorProps.a.v[0] * mult[0],
                   -animatorProps.a.v[1] * mult[1],
@@ -666,10 +666,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               animatorSelector = animators[j].s
               mult = animatorSelector?.getMult(letters[i].anIndexes[j],
                 textData.a?.[j].s?.totalChars)
-              if (!mult || !Array.isArray(animatorProps.s.v)) {
+              if (!mult || !isArray(animatorProps.s.v)) {
                 continue
               }
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.scale(
                   1 + (animatorProps.s.v[0] - 1) * mult[0],
                   1 + (animatorProps.s.v[1] - 1) * mult[1],
@@ -694,7 +694,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               continue
             }
             if (animatorProps?.sk.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult[0],
                   Number(animatorProps.sa.v) * mult[1])
               } else {
@@ -703,28 +703,28 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               }
             }
             if (animatorProps?.r.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult[2])
               } else {
                 matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult)
               }
             }
             if (animatorProps?.ry.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.rotateY(Number(animatorProps.ry.v) * mult[1])
               } else {
                 matrixHelper.rotateY(Number(animatorProps.ry.v) * mult)
               }
             }
             if (animatorProps?.rx.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 matrixHelper.rotateX(Number(animatorProps.rx.v) * mult[0])
               } else {
                 matrixHelper.rotateX(Number(animatorProps.rx.v) * mult)
               }
             }
             if (animatorProps?.o.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 elemOpacity +=
                 (Number(animatorProps.o.v) * mult[0] - elemOpacity) * mult[0]
               } else {
@@ -733,7 +733,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               }
             }
             if (documentData.strokeWidthAnim && animatorProps?.sw.propType) {
-              if (Array.isArray(mult)) {
+              if (isArray(mult)) {
                 sw += Number(animatorProps.sw.v) * mult[0]
               } else {
                 sw += Number(animatorProps.sw.v) * mult
@@ -742,10 +742,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             if (
               documentData.strokeColorAnim &&
               animatorProps?.sc.propType &&
-              Array.isArray(animatorProps.sc.v)
+              isArray(animatorProps.sc.v)
             ) {
               for (k = 0; k < 3; k++) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult[0]
                 } else {
                   sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult
@@ -755,10 +755,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             if (documentData.fillColorAnim && documentData.fc) {
               if (animatorProps?.fc.propType) {
                 for (k = 0; k < 3; k++) {
-                  if (!Array.isArray(animatorProps.fc.v)) {
+                  if (!isArray(animatorProps.fc.v)) {
                     continue
                   }
-                  if (Array.isArray(mult)) {
+                  if (isArray(mult)) {
                     fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult[0]
                   } else {
                     fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult
@@ -766,14 +766,14 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 }
               }
               if (animatorProps?.fh.propType) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult[0])
                 } else {
                   fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult)
                 }
               }
               if (animatorProps?.fs.propType) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   fc = addSaturationToRGB(fc,
                     Number(animatorProps.fs.v) * mult[0])
                 } else {
@@ -781,7 +781,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 }
               }
               if (animatorProps?.fb.propType) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   fc = addBrightnessToRGB(fc,
                     Number(animatorProps.fb.v) * mult[0])
                 } else {
@@ -798,11 +798,11 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               animatorSelector = animators[j].s
               mult = animatorSelector?.getMult(letters[i].anIndexes[j],
                 textData.a?.[j].s?.totalChars)
-              if (!mult || !Array.isArray(animatorProps.p.v)) {
+              if (!mult || !isArray(animatorProps.p.v)) {
                 continue
               }
               if (this._hasMaskedPath) {
-                if (Array.isArray(mult)) {
+                if (isArray(mult)) {
                   matrixHelper.translate(
                     0,
                     animatorProps.p.v[1] * mult[0],
@@ -815,7 +815,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                     -animatorProps.p.v[2] * mult
                   )
                 }
-              } else if (Array.isArray(mult)) {
+              } else if (isArray(mult)) {
                 matrixHelper.translate(
                   animatorProps.p.v[0] * mult[0],
                   animatorProps.p.v[1] * mult[1],
@@ -963,16 +963,14 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
           continue
         }
 
-        // console.log('foo', letterSc)
-
         letterValue = this.renderedLetters[i]
         this.lettersChangedFlag =
         letterValue.update(
           Number(letterO),
           Number(letterSw),
           letterSc,
-          letterFc as any,
-          letterM as any,
+          letterFc,
+          letterM, // matrix()-string
           letterP
         ) || this.lettersChangedFlag
 

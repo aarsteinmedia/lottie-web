@@ -1,7 +1,3 @@
-import type { Vector3, Vector4 } from '@/types'
-
-import { isArray } from '@/utils'
-
 export default class LetterProps {
   __complete?: boolean
   _mdf: {
@@ -48,9 +44,9 @@ export default class LetterProps {
     o: number,
     sw: number,
     sc?: string,
-    fc?: Vector3 | Vector4,
-    m?: number,
-    p?: number | number[]
+    fc?: string,
+    m?: string,
+    p?: number[]
   ) {
     // console.log('bar', sc)
     this._mdf.o = false
@@ -87,7 +83,7 @@ export default class LetterProps {
       isUpdated = true
     }
     if (
-      isArray(p) &&
+      p &&
       p.length > 0 &&
       ((this.p as number[])[0] !== p[0] ||
         (this.p as number[])[1] !== p[1] ||

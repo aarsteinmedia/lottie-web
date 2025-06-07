@@ -38,12 +38,10 @@ const files = [
   'West Mini Hero.json',
   'rond-qui-tourne.lottie',
   'rond-qui-tourne.json',
-  'wine.json',
   'wine.lottie',
   'dinide.lottie',
   'laptop.lottie',
   'hero-web.json',
-  'hero-web.lottie',
   'home_idea_es.lottie'
 ]
 
