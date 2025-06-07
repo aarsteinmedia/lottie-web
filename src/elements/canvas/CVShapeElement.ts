@@ -31,6 +31,8 @@ import DashProperty from '@/utils/shapes/properties/DashProperty'
 import GradientProperty from '@/utils/shapes/properties/GradientProperty'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
+import type SVGGradientFillStyleData from '../helpers/shapes/SVGGradientFillStyleData'
+
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas
@@ -49,7 +51,7 @@ export default class CVShapeElement extends ShapeElement {
   transformHelper = {
     _opMdf: false,
     opacity: 1,
-  } as TransformProperty
+  } as Transformer
   transformsManager: ShapeTransformManager
 
   constructor(
@@ -88,7 +90,6 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   override createContent() {
-    // console.log('foo')
     this.searchShapes(
       this.shapesData,
       this.itemsData,
@@ -328,7 +329,7 @@ export default class CVShapeElement extends ShapeElement {
         ctx?.beginPath()
       }
 
-      renderer.ctxTransform(preTransforms.finalTransform.props as Float32Array)
+      renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
       const { length: jLen } = elems
 
       for (let j = 0; j < jLen; j++) {
@@ -343,16 +344,18 @@ export default class CVShapeElement extends ShapeElement {
           { length: kLen } = nodes
 
         for (let k = 0; k < kLen; k++) {
+          const { p: point = [], pts: points = [] } = nodes[k]
+
           if (nodes[k].t === 'm') {
-            ctx?.moveTo(nodes[k].p[0], nodes[k].p[1])
+            ctx?.moveTo(point[0], point[1])
           } else if (nodes[k].t === 'c') {
             ctx?.bezierCurveTo(
-              nodes[k].pts[0],
-              nodes[k].pts[1],
-              nodes[k].pts[2],
-              nodes[k].pts[3],
-              nodes[k].pts[4],
-              nodes[k].pts[5]
+              points[0],
+              points[1],
+              points[2],
+              points[3],
+              points[4],
+              points[5]
             )
           } else {
             ctx?.closePath()
@@ -383,8 +386,8 @@ export default class CVShapeElement extends ShapeElement {
     }
     this.searchShapes(
       this.shapesData,
-      this.itemsData as any,
-      this.prevViewData as any,
+      this.itemsData,
+      this.prevViewData,
       true,
       []
     )
@@ -421,36 +424,36 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   renderGradientFill(
-    styleData: any,
-    itemData: CVShapeData,
+    styleData: Shape,
+    itemData: SVGGradientFillStyleData,
     groupTransform: TransformEffect
   ) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     const styleElem = itemData.style
-    let grd
+    let grd: CanvasGradient | undefined
 
     if (
-      !styleElem.grd ||
-      itemData.g._mdf ||
-      itemData.s._mdf ||
-      itemData.e._mdf ||
-      styleData.t !== 1 && (itemData.h._mdf || itemData.a._mdf)
+      !styleElem?.grd ||
+      itemData.g?._mdf ||
+      itemData.s?._mdf ||
+      itemData.e?._mdf ||
+      styleData.t !== 1 && (itemData.h?._mdf || itemData.a?._mdf)
     ) {
       const ctx = this.globalData.canvasContext,
-        pt1 = itemData.s.v,
-        pt2 = itemData.e.v
+        pt1 = itemData.s?.v ?? [0, 0],
+        pt2 = itemData.e?.v ?? [0, 0]
 
       if (styleData.t === 1) {
         grd = ctx?.createLinearGradient(
           pt1[0], pt1[1], pt2[0], pt2[1]
         )
       } else {
-        const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2))
-        const ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
+        const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2)),
+          ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
 
-        let percent = itemData.h.v
+        let percent = itemData.h?.v ?? 0
 
         if (percent >= 1) {
           percent = 0.99
@@ -458,29 +461,35 @@ export default class CVShapeElement extends ShapeElement {
           percent = -0.99
         }
         const dist = rad * percent,
-          x = Math.cos(ang + itemData.a.v) * dist + pt1[0],
-          y = Math.sin(ang + itemData.a.v) * dist + pt1[1]
+          aValue = itemData.a?.v ?? 0,
+          x = Math.cos(ang + aValue) * dist + pt1[0],
+          y = Math.sin(ang + aValue) * dist + pt1[1]
 
         grd = ctx?.createRadialGradient(
           x, y, 0, pt1[0], pt1[1], rad
         )
       }
 
-      const len = styleData.g.p,
-        cValues = itemData.g.c
+      const len = styleData.g?.p ?? 0,
+        cValues = itemData.g?.c ?? []
       let opacity = 1
 
       for (let i = 0; i < len; i++) {
-        if (itemData.g._hasOpacity && itemData.g._collapsable) {
+        if (itemData.g?._hasOpacity && itemData.g._collapsable) {
           opacity = itemData.g.o[i * 2 + 1]
         }
         grd?.addColorStop(cValues[i * 4] / 100,
           `rgba(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${cValues[i * 4 + 3]
           },${opacity})`)
       }
-      styleElem.grd = grd
+      if (styleElem) {
+        styleElem.grd = grd
+      }
+
     }
-    styleElem.coOp = itemData.o.v * groupTransform.opacity
+    if (styleElem) {
+      styleElem.coOp = (itemData.o?.v ?? 0) * groupTransform.opacity
+    }
   }
 
   override renderInnerContent() {
@@ -508,7 +517,7 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   renderShape(
-    parentTransform: TransformProperty,
+    parentTransform: Transformer,
     items: Shape[],
     data: ShapeGroupData[],
     isMain?: boolean
@@ -569,7 +578,7 @@ export default class CVShapeElement extends ShapeElement {
     }
   }
 
-  renderShapeTransform(parentTransform: TransformEffect,
+  renderShapeTransform(parentTransform: Transformer,
     groupTransform: TransformEffect) {
     if (
       !parentTransform._opMdf &&
@@ -632,7 +641,7 @@ export default class CVShapeElement extends ShapeElement {
       for (i = 1; i < len; i++) {
         if (i === 1) {
           shapeNodes.push({
-            p: groupTransformMat.applyToPointArray(
+            p: groupTransformMat?.applyToPointArray(
               pathNodes.v[0][0],
               pathNodes.v[0][1],
               0
@@ -641,17 +650,17 @@ export default class CVShapeElement extends ShapeElement {
           })
         }
         shapeNodes.push({
-          pts: groupTransformMat.applyToTriplePoints(
+          pts: groupTransformMat?.applyToTriplePoints(
             pathNodes.o[i - 1],
             pathNodes.i[i],
             pathNodes.v[i]
-          ),
+          ) as unknown as number[],
           t: 'c',
         })
       }
       if (len === 1) {
         shapeNodes.push({
-          p: groupTransformMat.applyToPointArray(
+          p: groupTransformMat?.applyToPointArray(
             pathNodes.v[0][0],
             pathNodes.v[0][1],
             0
@@ -661,11 +670,11 @@ export default class CVShapeElement extends ShapeElement {
       }
       if (pathNodes.c && len) {
         shapeNodes.push({
-          pts: groupTransformMat.applyToTriplePoints(
+          pts: groupTransformMat?.applyToTriplePoints(
             pathNodes.o[i - 1],
             pathNodes.i[0],
             pathNodes.v[0]
-          ),
+          ) as unknown as number[],
           t: 'c',
         }, { t: 'z' })
       }

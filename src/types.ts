@@ -26,7 +26,6 @@ import type CVMaskElement from '@/elements/canvas/CVMaskElement'
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type CVTextElement from '@/elements/canvas/CVTextElement'
 import type CVShapeData from '@/elements/helpers/shapes/CVShapeData'
-import type ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CreateRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
 import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
 import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
@@ -321,9 +320,7 @@ export interface CVStyleElement {
   lc?: CanvasLineCap
   lj?: CanvasLineJoin
   ml?: number
-  preTransforms: ReturnType<
-    typeof ShapeTransformManager.prototype.addTransformSequence
-  >
+  preTransforms: TransformSequence
   r?: 'evenodd' | 'nonzero'
   transforms: Transformer[]
   type: ShapeType
@@ -832,6 +829,17 @@ export interface DocumentData extends FontList {
   yOffset?: number
 }
 
+export interface TransformNode {
+  p?: number[]
+  pts?: number[]
+  t: string
+}
+
+export interface BezierPoint {
+  partialLength: number
+  point: number[];
+}
+
 export interface TextRangeValue {
   /** Max Amount. */
   a: {
@@ -964,17 +972,22 @@ export interface TextData {
   yOffset: number
 }
 
+export interface PathInfo {
+  segments: BezierData[],
+  tLength: 0,
+}
+
 export interface TextPathData {
   _mdf?: boolean
-  a: any
-  f: any
-  l: any
-  m?: any
-  n: any
-  p: any
-  pi: any
-  r: any
-  v: any
+  a: ValueProperty
+  f: ValueProperty
+  l: ValueProperty
+  m?: ShapeProperty
+  n: ValueProperty
+  p: ValueProperty
+  pi: PathInfo
+  r: ValueProperty
+  v: ValueProperty
 }
 
 export type EffectElement =

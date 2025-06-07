@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
-  BezierLength, SegmentLength, Vector2
+  BezierLength, BezierPoint, SegmentLength, Vector2
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
@@ -357,10 +357,7 @@ function getDistancePerc(perc: number,
 }
 
 export class BezierData {
-  points: {
-    point: number[];
-    partialLength: number
-  }[]
+  points: BezierPoint[]
   segmentLength: number
   constructor(length: number) {
     this.segmentLength = 0

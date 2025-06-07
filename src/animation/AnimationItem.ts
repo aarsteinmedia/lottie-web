@@ -29,7 +29,7 @@ import {
   getRegisteredRenderer,
   getRenderer,
 } from '@/renderers'
-import { createElementID } from '@/utils'
+import { createElementID, isArray } from '@/utils'
 import audioControllerFactory, { type AudioController } from '@/utils/audio/AudioController'
 import {
   completeAnimation, loadAnimation, loadData
@@ -563,7 +563,7 @@ export default class AnimationItem extends BaseEvent {
     if (forceFlag) {
       this.segments.length = 0
     }
-    if (Array.isArray(arr[0])) {
+    if (isArray(arr[0])) {
       const { length } = arr
 
       for (let i = 0; i < length; i++) {

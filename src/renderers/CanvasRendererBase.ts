@@ -308,7 +308,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
 
     for (let i = length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {
-        this.elements[i].prepareFrame(num - this.layers[i].st)
+        this.elements[i]?.prepareFrame(num - this.layers[i].st)
       }
     }
     if (this.globalData._mdf) {
@@ -324,7 +324,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
       }
       for (let i = length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i].renderFrame()
+          this.elements[i]?.renderFrame()
         }
       }
       if (this.renderConfig?.clearCanvas !== true) {

@@ -215,7 +215,7 @@ export default abstract class BaseRenderer extends FrameElement {
     const { length } = this.elements
 
     for (let i = 0; i < length; i++) {
-      if (this.elements[i].data.ind === ind) {
+      if (this.elements[i]?.data.ind === ind) {
         return this.elements[i]
       }
     }
@@ -233,7 +233,7 @@ export default abstract class BaseRenderer extends FrameElement {
       const { length } = this.elements
 
       for (let i = 0; i < length; i++) {
-        if (this.elements[i].data.nm === pathValue) {
+        if (this.elements[i]?.data.nm === pathValue) {
           element = this.elements[i]
           break
         }

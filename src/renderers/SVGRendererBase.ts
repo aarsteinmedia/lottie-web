@@ -33,13 +33,8 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       nextElement
 
     while (i < pos) {
-      if (
-        this.elements[i] &&
-        this.elements[i] !== (true as unknown as ElementInterfaceIntersect) &&
-        this.elements[i].getBaseElement()
-      ) {
-        nextElement = this.elements[i].getBaseElement()
-      }
+      nextElement = this.elements[i]?.getBaseElement?.()
+
       i++
     }
     if (nextElement) {

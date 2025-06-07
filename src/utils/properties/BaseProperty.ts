@@ -21,6 +21,7 @@ import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalPr
 import type ValueProperty from '@/utils/properties/ValueProperty'
 import type ShapePath from '@/utils/shapes/ShapePath'
 
+import { isArray } from '@/utils'
 import { buildBezierData } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
@@ -391,9 +392,9 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
                 if ((keyframeMetadata.__fnct as any)[i]) {
                   fnc = (keyframeMetadata.__fnct as any)[i]
                 } else if (
-                  Array.isArray(keyData.o.y) &&
-                  Array.isArray(keyData.i.y) &&
-                  Array.isArray(keyData.i.x)
+                  isArray(keyData.o.y) &&
+                  isArray(keyData.i.y) &&
+                  isArray(keyData.i.x)
                 ) {
                   outX =
                     keyData.o.x[i] ?? keyData.o.x[0]

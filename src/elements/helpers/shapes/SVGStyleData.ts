@@ -12,9 +12,12 @@ import createNS from '@/utils/helpers/svgElements'
 export default class SVGStyleData {
   _mdf: boolean
   closed: boolean
+  coOp?: number
   d: string
   data: Shape
+  finalTransform?: Transformer
   gr?: SVGGElement
+  grd?: CanvasGradient
   hd?: boolean
   it?: ShapeDataInterface[]
   lvl: number

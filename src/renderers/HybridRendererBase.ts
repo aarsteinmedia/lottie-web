@@ -118,7 +118,7 @@ export default class HybridRendererBase extends BaseRenderer {
           if (
             this.elements[i] !==
             (true as unknown as ElementInterfaceIntersect) &&
-            Boolean(this.elements[i].getBaseElement)
+            Boolean(this.elements[i]?.getBaseElement)
           ) {
             nextLayer = this.elements[i]
             tmpDOMElement = this.layers[i].ddd

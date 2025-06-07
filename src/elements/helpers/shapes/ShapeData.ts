@@ -3,6 +3,7 @@ import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
 import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ShapeDataInterface, SVGElementInterface, Transformer,
+  TransformNode,
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
 import type Matrix from '@/utils/Matrix'
@@ -35,7 +36,7 @@ export default abstract class ShapeData {
   transform?: Transformer
   transformers: Transformer[] = []
   transforms?: { finalTransform: Matrix }
-  trNodes: any[] = []
+  trNodes: TransformNode[] = []
   ty?: ShapeType
 
   setAsAnimated() {

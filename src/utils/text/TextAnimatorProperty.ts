@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import type {
+  BezierPoint,
   DocumentData,
   ElementInterfaceIntersect,
+  PathInfo,
   TextData,
   TextPathData,
   Vector3,
@@ -18,6 +17,11 @@ import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
+
+import type { ShapeProperty } from '../shapes/properties/ShapeProperty'
+import type ShapePath from '../shapes/ShapePath'
+
+import { isArray } from '..'
 
 const rgbToHSV = (
     r: number, g: number, b: number
@@ -205,305 +209,313 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
   }
 
   getMeasures(documentData: DocumentData, lettersChangedFlag?: boolean) {
-    this.lettersChangedFlag = Boolean(lettersChangedFlag)
-    if (
-      !this._mdf &&
-      !this._isFirstFrame &&
-      !lettersChangedFlag &&
-      (!this._hasMaskedPath || !this._pathData.m?._mdf)
-    ) {
-      return
-    }
-    this._isFirstFrame = false
-    const alignment = this._moreOptions.alignment.v
-    const animators = this._animatorsData
-    const textData = this._textData
-    const matrixHelper = this.mHelper
-    const renderType = this._renderType
-    let renderedLettersCount = this.renderedLetters.length,
-      xPos,
-      yPos,
-      i,
-      len
-    const letters = documentData.l
-    let pathInfo: {
-        segments: BezierData[]
-        tLength: number
-      },
-      currentLength = 0,
-      currentPoint,
-      segmentLength = 0,
-      shouldMeasure,
-      pointInd = 0,
-      segmentInd = 0,
-      prevPoint,
-      points: null | BezierData['points'] = null,
-      segments,
-      partialLength = 0,
-      totalLength = 0,
-      perc,
-      tanAngle,
-      mask
+    try {
+      this.lettersChangedFlag = Boolean(lettersChangedFlag)
+      if (
+        !this._mdf &&
+        !this._isFirstFrame &&
+        !lettersChangedFlag &&
+        (!this._hasMaskedPath || !this._pathData.m?._mdf)
+      ) {
+        return
+      }
+      this._isFirstFrame = false
+      const alignment = this._moreOptions.alignment.v,
+        animators = this._animatorsData,
+        textData = this._textData,
+        matrixHelper = this.mHelper,
+        renderType = this._renderType
+      let renderedLettersCount = this.renderedLetters.length,
+        xPos,
+        yPos,
+        i,
+        len
+      const letters = documentData.l
+      let pathInfo: undefined | PathInfo,
+        currentLength = 0,
+        currentPoint: undefined | BezierPoint,
+        segmentLength = 0,
+        shouldMeasure,
+        pointInd = 0,
+        segmentInd = 0,
+        prevPoint: undefined | BezierPoint,
+        points: null | BezierPoint[] = null,
+        segments: BezierData[] = [],
+        partialLength = 0,
+        totalLength = 0,
+        perc,
+        tanAngle,
+        mask: undefined | ShapeProperty
 
-    if (this._hasMaskedPath) {
-      mask = this._pathData.m
-      if (!this._pathData.n || this._pathData._mdf) {
-        let paths = mask?.v ?? []
+      if (this._hasMaskedPath) {
+        mask = this._pathData.m
+        if (!this._pathData.n || this._pathData._mdf) {
+          let paths: undefined | ShapePath | ShapePath[] = mask?.v
 
-        if (this._pathData.r?.v) {
-          paths = (paths as any[]).reverse()
+          if (this._pathData.r?.v) {
+            paths = (paths as ShapePath[] | undefined)?.reverse() ?? []
+          }
+          pathInfo = {
+            segments: [],
+            tLength: 0,
+          }
+          len = Number((paths as ShapePath | undefined)?._length) - 1
+          let bezierData
+
+          totalLength = 0
+          for (i = 0; i < len; i++) {
+            if (!paths || isArray(paths)) {
+              continue
+            }
+            bezierData = buildBezierData(
+              paths.v[i],
+              paths.v[i + 1],
+              [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
+              [
+                paths.i[i + 1][0] - paths.v[i + 1][0], paths.i[i + 1][1] - paths.v[i + 1][1],
+              ]
+            )
+            pathInfo.tLength += bezierData.segmentLength
+            pathInfo.segments.push(bezierData)
+            totalLength += bezierData.segmentLength
+          }
+          i = len
+          if (mask?.v?.c && paths && !isArray(paths)) {
+            bezierData = buildBezierData(
+              paths.v[i],
+              paths.v[0],
+              [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
+              [paths.i[0][0] - paths.v[0][0], paths.i[0][1] - paths.v[0][1]]
+            )
+            pathInfo.tLength += bezierData.segmentLength
+            pathInfo.segments.push(bezierData)
+            totalLength += bezierData.segmentLength
+          }
+          this._pathData.pi = pathInfo
+
         }
-        pathInfo = {
-          segments: [],
-          tLength: 0,
-        }
-        len = Number(paths._length) - 1
-        let bezierData
+        pathInfo = this._pathData.pi
 
-        totalLength = 0
+        currentLength = this._pathData.f?.v ?? 0
+        segmentInd = 0
+        pointInd = 1
+        segmentLength = 0
+        // shouldMeasure = true
+        segments = pathInfo?.segments ?? []
+
+        if (currentLength > 0 && mask?.v?.c) {
+          if (pathInfo?.tLength ?? 0 < Math.abs(currentLength)) {
+            currentLength = -Math.abs(currentLength) % (pathInfo?.tLength ?? 0)
+          }
+          segmentInd = segments.length - 1
+          points = segments[segmentInd].points
+          pointInd = points.length - 1
+
+          while (currentLength < 0) {
+            currentLength += points[pointInd]?.partialLength
+            pointInd -= 1
+            if (pointInd < 0) {
+              segmentInd -= 1
+              points = segments[segmentInd].points
+              pointInd = points.length - 1
+            }
+          }
+        }
+
+        points = segments[segmentInd]?.points ?? []
+        prevPoint = points[pointInd - 1]
+        currentPoint = points[pointInd]
+
+        // TODO: Canvas text layers break down here
+        partialLength = currentPoint.partialLength // ?? 0
+
+      }
+
+      len = letters.length || 0
+      xPos = 0
+      yPos = 0
+      const yOff = (documentData.finalSize || 0) * 1.2 * 0.714
+      let isFirstLine = true,
+        animatorProps,
+        animatorSelector,
+        j,
+        letterValue: LetterProps
+
+      const jLen = animators.length
+
+      let mult: number | number[] | undefined,
+        ind = -1,
+        offf,
+        xPathPos,
+        yPathPos
+      const initPathPos = currentLength,
+        initSegmentInd = segmentInd,
+        initPointInd = pointInd
+      let currentLine = -1,
+        elemOpacity,
+        sc: Vector3 = [0,
+          0,
+          0],
+        sw = 0,
+        fc: Vector3 = [0,
+          0,
+          0],
+        k,
+        letterSw,
+        letterSc,
+        letterFc,
+        letterM = '',
+        letterP = this.defaultPropsArray,
+        letterO
+
+      if (documentData.j === 2 || documentData.j === 1) {
+        let animatorJustifyOffset = 0
+        let animatorFirstCharOffset = 0
+        const justifyOffsetMult = documentData.j === 2 ? -0.5 : -1
+        let lastIndex = 0
+        let isNewLine = true
+
         for (i = 0; i < len; i++) {
-          bezierData = buildBezierData(
-            paths.v[i],
-            paths.v[i + 1],
-            [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
-            [
-              paths.i[i + 1][0] - paths.v[i + 1][0], paths.i[i + 1][1] - paths.v[i + 1][1],
-            ]
-          )
-          pathInfo.tLength += bezierData.segmentLength
-          pathInfo.segments.push(bezierData)
-          totalLength += bezierData.segmentLength
-        }
-        i = len
-        if (mask.v.c) {
-          bezierData = buildBezierData(
-            paths.v[i],
-            paths.v[0],
-            [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
-            [paths.i[0][0] - paths.v[0][0], paths.i[0][1] - paths.v[0][1]]
-          )
-          pathInfo.tLength += bezierData.segmentLength
-          pathInfo.segments.push(bezierData)
-          totalLength += bezierData.segmentLength
-        }
-        this._pathData.pi = pathInfo
-      }
-      pathInfo = this._pathData.pi
-
-      currentLength = this._pathData.f.v
-      segmentInd = 0
-      pointInd = 1
-      segmentLength = 0
-      // shouldMeasure = true
-      segments = pathInfo.segments
-      if (currentLength < 0 && mask.v.c) {
-        if (pathInfo.tLength < Math.abs(currentLength)) {
-          currentLength = -Math.abs(currentLength) % pathInfo.tLength
-        }
-        segmentInd = segments.length - 1
-        points = segments[segmentInd].points
-        pointInd = points.length - 1
-        while (currentLength < 0) {
-          currentLength += points[pointInd]?.partialLength
-          pointInd -= 1
-          if (pointInd < 0) {
-            segmentInd -= 1
-            points = segments[segmentInd].points
-            pointInd = points.length - 1
-          }
-        }
-      }
-      points = segments[segmentInd].points
-      prevPoint = points[pointInd - 1]
-      currentPoint = points[pointInd]
-      partialLength = currentPoint.partialLength
-    }
-
-    len = letters.length || 0
-    xPos = 0
-    yPos = 0
-    const yOff = (documentData.finalSize || 0) * 1.2 * 0.714
-    let isFirstLine = true
-    let animatorProps
-    let animatorSelector
-    let j
-    let letterValue
-
-    const jLen = animators.length
-
-    let mult: number | number[] | undefined,
-      ind = -1,
-      offf,
-      xPathPos,
-      yPathPos
-    const initPathPos = currentLength,
-      initSegmentInd = segmentInd,
-      initPointInd = pointInd
-    let currentLine = -1,
-      elemOpacity,
-      sc: Vector3 = [0,
-        0,
-        0],
-      sw = 0,
-      fc: Vector3 = [0,
-        0,
-        0],
-      k,
-      letterSw,
-      letterSc,
-      letterFc,
-      letterM = '',
-      letterP = this.defaultPropsArray,
-      letterO
-
-    if (documentData.j === 2 || documentData.j === 1) {
-      let animatorJustifyOffset = 0
-      let animatorFirstCharOffset = 0
-      const justifyOffsetMult = documentData.j === 2 ? -0.5 : -1
-      let lastIndex = 0
-      let isNewLine = true
-
-      for (i = 0; i < len; i++) {
-        if (letters[i].n) {
-          if (animatorJustifyOffset) {
-            animatorJustifyOffset += animatorFirstCharOffset
-          }
-          while (lastIndex < i) {
-            letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
-            lastIndex++
-          }
-          animatorJustifyOffset = 0
-          isNewLine = true
-          continue
-        }
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-          if (!animatorProps?.t.propType) {
+          if (letters[i].n) {
+            if (animatorJustifyOffset) {
+              animatorJustifyOffset += animatorFirstCharOffset
+            }
+            while (lastIndex < i) {
+              letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
+              lastIndex++
+            }
+            animatorJustifyOffset = 0
+            isNewLine = true
             continue
           }
-          if (isNewLine && documentData.j === 2) {
-            animatorFirstCharOffset +=
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
+            if (!animatorProps?.t.propType) {
+              continue
+            }
+            if (isNewLine && documentData.j === 2) {
+              animatorFirstCharOffset +=
               Number(animatorProps.t.v) * justifyOffsetMult
-          }
-          animatorSelector = animators[j].s
-          mult = animatorSelector?.getMult(letters[i].anIndexes[j],
-            textData.a?.[j].s?.totalChars)
-          if (Array.isArray(mult)) {
-            animatorJustifyOffset +=
+            }
+            animatorSelector = animators[j].s
+            mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+              textData.a?.[j].s?.totalChars)
+            if (Array.isArray(mult)) {
+              animatorJustifyOffset +=
               Number(animatorProps.t.v) * mult[0] * justifyOffsetMult
-          } else {
-            animatorJustifyOffset +=
+            } else {
+              animatorJustifyOffset +=
               Number(animatorProps.t.v) * Number(mult) * justifyOffsetMult
+            }
           }
+          isNewLine = false
         }
-        isNewLine = false
+        if (animatorJustifyOffset) {
+          animatorJustifyOffset += animatorFirstCharOffset
+        }
+        while (lastIndex < i) {
+          letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
+          lastIndex++
+        }
       }
-      if (animatorJustifyOffset) {
-        animatorJustifyOffset += animatorFirstCharOffset
-      }
-      while (lastIndex < i) {
-        letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
-        lastIndex++
-      }
-    }
 
-    for (i = 0; i < len; i++) {
-      matrixHelper.reset()
-      elemOpacity = 1
-      if (letters[i].n) {
-        xPos = 0
-        yPos += documentData.yOffset || 0
-        yPos += isFirstLine ? 1 : 0
-        currentLength = initPathPos
-        isFirstLine = false
-        if (this._hasMaskedPath) {
-          segmentInd = initSegmentInd || 0
-          pointInd = initPointInd || 0
-          points = segments?.[segmentInd]?.points ?? []
-          prevPoint = points[pointInd - 1]
-          currentPoint = points[pointInd]
-          partialLength = currentPoint.partialLength
-          segmentLength = 0
-        }
-        letterM = ''
-        letterFc = ''
-        letterSw = ''
-        letterO = ''
-        letterP = this.defaultPropsArray
-      } else {
-        if (this._hasMaskedPath) {
-          if (currentLine !== letters[i].line) {
-            switch (documentData.j) {
-              case 1: {
-                currentLength +=
+      for (i = 0; i < len; i++) {
+        matrixHelper.reset()
+        elemOpacity = 1
+        if (letters[i].n) {
+          xPos = 0
+          yPos += documentData.yOffset || 0
+          yPos += isFirstLine ? 1 : 0
+          currentLength = initPathPos
+          isFirstLine = false
+          if (this._hasMaskedPath) {
+            segmentInd = initSegmentInd || 0
+            pointInd = initPointInd || 0
+            points = segments?.[segmentInd]?.points ?? []
+            prevPoint = points[pointInd - 1]
+            currentPoint = points[pointInd]
+            partialLength = currentPoint.partialLength
+            segmentLength = 0
+          }
+          letterM = ''
+          letterFc = ''
+          letterSw = ''
+          letterO = ''
+          letterP = this.defaultPropsArray
+        } else {
+          if (this._hasMaskedPath) {
+            if (currentLine !== letters[i].line) {
+              switch (documentData.j) {
+                case 1: {
+                  currentLength +=
                   totalLength -
                   documentData.lineWidths[letters[i].line]
-                break
-              }
-              case 2: {
-                currentLength +=
+                  break
+                }
+                case 2: {
+                  currentLength +=
                   (totalLength -
                     documentData.lineWidths[letters[i].line]) /
                     2
-                break
+                  break
+                }
+                case undefined:
+                default: {
+                  break
+                }
               }
-              case undefined:
-              default: {
-                break
+              currentLine = letters[i].line || 0
+            }
+            if (ind !== letters[i].ind) {
+              if (letters[ind]) {
+                currentLength += Number(letters[ind].extra)
               }
+              currentLength += (letters[i].an || 0) / 2
+              ind = letters[i].ind || 0
             }
-            currentLine = letters[i].line || 0
-          }
-          if (ind !== letters[i].ind) {
-            if (letters[ind]) {
-              currentLength += Number(letters[ind].extra)
-            }
-            currentLength += (letters[i].an || 0) / 2
-            ind = letters[i].ind || 0
-          }
-          currentLength += alignment[0] * (letters[i].an || 0) * 0.005
-          let animatorOffset = 0
+            currentLength += alignment[0] * (letters[i].an || 0) * 0.005
+            let animatorOffset = 0
 
-          for (j = 0; j < jLen; j++) {
-            animatorProps = animators[j].a
-            if (animatorProps?.p.propType) {
+            for (j = 0; j < jLen; j++) {
+              animatorProps = animators[j].a
+              if (animatorProps?.p.propType) {
+                animatorSelector = animators[j].s
+                mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+                  textData.a?.[j].s?.totalChars)
+                if (!mult) {
+                  continue
+                }
+                if (Array.isArray(animatorProps.p.v)) {
+                  if (Array.isArray(mult)) {
+                    animatorOffset += animatorProps.p.v[0] * mult[0]
+                  } else {
+                    animatorOffset += animatorProps.p.v[0] * mult
+                  }
+                }
+              }
+              if (!animatorProps?.a.propType) {
+                continue
+              }
               animatorSelector = animators[j].s
-              mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+              mult = animatorSelector?.getMult(Number(letters[i].anIndexes[j]),
                 textData.a?.[j].s?.totalChars)
               if (!mult) {
                 continue
               }
-              if (Array.isArray(animatorProps.p.v)) {
-                if (Array.isArray(mult)) {
-                  animatorOffset += animatorProps.p.v[0] * mult[0]
-                } else {
-                  animatorOffset += animatorProps.p.v[0] * mult
-                }
+              if (!Array.isArray(animatorProps.a.v)) {
+                continue
               }
+              if (Array.isArray(mult)) {
+                animatorOffset += animatorProps.a.v[0] * mult[0]
+                continue
+              }
+              animatorOffset += animatorProps.a.v[0] * mult
             }
-            if (!animatorProps?.a.propType) {
-              continue
-            }
-            animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(Number(letters[i].anIndexes[j]),
-              textData.a?.[j].s?.totalChars)
-            if (!mult) {
-              continue
-            }
-            if (!Array.isArray(animatorProps.a.v)) {
-              continue
-            }
-            if (Array.isArray(mult)) {
-              animatorOffset += animatorProps.a.v[0] * mult[0]
-              continue
-            }
-            animatorOffset += animatorProps.a.v[0] * mult
-          }
-          shouldMeasure = true
+            shouldMeasure = true
 
-          // Force alignment only works with a single line for now
-          if (this._pathData.a?.v) {
-            currentLength =
+            // Force alignment only works with a single line for now
+            if (this._pathData.a?.v) {
+              currentLength =
               (letters[0].an || 0) * 0.5 +
               (totalLength -
                 Number(this._pathData.f?.v) -
@@ -511,454 +523,462 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 letters[letters.length - 1].an * 0.5) *
                 ind /
                 (len - 1)
-            currentLength += Number(this._pathData.f?.v)
-          }
-          while (shouldMeasure) {
-            if (
-              segmentLength + partialLength >= currentLength + animatorOffset ||
-              !points
-            ) {
-              perc =
+              currentLength += Number(this._pathData.f?.v)
+            }
+            while (shouldMeasure) {
+              if (
+                segmentLength + partialLength >= currentLength + animatorOffset ||
+                !points
+              ) {
+                perc =
                 (currentLength + animatorOffset - segmentLength) /
                 (currentPoint?.partialLength || 0)
-              xPathPos =
+                xPathPos =
                 Number(prevPoint?.point[0]) +
                 (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
                 perc
-              yPathPos =
+                yPathPos =
                 Number(prevPoint?.point[1]) +
                 (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
                 perc
-              matrixHelper.translate(-alignment[0] * Number(letters[i].an) * 0.005,
-                -(alignment[1] * yOff) * 0.01)
-              shouldMeasure = false
-            } else if (points.length > 0) {
-              segmentLength += Number(currentPoint?.partialLength)
-              pointInd++
-              if (pointInd >= points.length) {
-                pointInd = 0
-                segmentInd++
-                if (segments?.[segmentInd]) {
-                  points = segments[segmentInd].points
-                } else if (mask?.v.c) {
+                matrixHelper.translate(-alignment[0] * Number(letters[i].an) * 0.005,
+                  -(alignment[1] * yOff) * 0.01)
+                shouldMeasure = false
+              } else if (points.length > 0) {
+                segmentLength += Number(currentPoint?.partialLength)
+                pointInd++
+                if (pointInd >= points.length) {
                   pointInd = 0
-                  segmentInd = 0
-                  points = segments?.[segmentInd].points ?? []
-                } else {
-                  segmentLength -= Number(currentPoint?.partialLength)
-                  points = null
+                  segmentInd++
+                  if (segments?.[segmentInd]) {
+                    points = segments[segmentInd].points
+                  } else if (mask?.v.c) {
+                    pointInd = 0
+                    segmentInd = 0
+                    points = segments?.[segmentInd].points ?? []
+                  } else {
+                    segmentLength -= Number(currentPoint?.partialLength)
+                    points = null
+                  }
+                }
+                if (points) {
+                  prevPoint = currentPoint
+                  currentPoint = points[pointInd]
+                  partialLength = currentPoint.partialLength
                 }
               }
-              if (points) {
-                prevPoint = currentPoint
-                currentPoint = points[pointInd]
-                partialLength = currentPoint.partialLength
-              }
             }
-          }
-          offf = letters[i].an / 2 - letters[i].add
-          matrixHelper.translate(
-            -offf, 0, 0
-          )
-        } else {
-          offf = letters[i].an / 2 - letters[i].add
-          matrixHelper.translate(
-            -offf, 0, 0
-          )
-
-          // Grouping alignment
-          matrixHelper.translate(
-            -alignment[0] * letters[i].an * 0.005,
-            -alignment[1] * yOff * 0.01,
-            0
-          )
-        }
-
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-          if (!animatorProps?.t.propType) {
-            continue
-          }
-          animatorSelector = animators[j].s
-          mult = animatorSelector?.getMult(Number(letters[i].anIndexes[j]),
-            textData.a?.[j].s?.totalChars)
-          // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
-          if (xPos !== 0 || documentData.j !== 0) {
-            if (this._hasMaskedPath) {
-              if (Array.isArray(mult)) {
-                currentLength += Number(animatorProps.t.v) * mult[0]
-              } else {
-                currentLength += Number(animatorProps.t.v) * Number(mult)
-              }
-              continue
-            }
-
-            if (Array.isArray(mult)) {
-              xPos += Number(animatorProps.t.v) * mult[0]
-              continue
-            }
-            xPos += Number(animatorProps.t.v) * Number(mult)
-          }
-        }
-        if (documentData.strokeWidthAnim) {
-          sw = documentData.sw || 0
-        }
-        if (documentData.strokeColorAnim) {
-          if (documentData.sc) {
-            sc = [
-              Number(documentData.sc[0]),
-              Number(documentData.sc[1]),
-              Number(documentData.sc[2]),
-            ]
-          } else {
-            sc = [0,
-              0,
-              0]
-          }
-        }
-        if (documentData.fillColorAnim && documentData.fc) {
-          fc = [
-            Number(documentData.fc[0]),
-            Number(documentData.fc[1]),
-            Number(documentData.fc[2]),
-          ]
-        }
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-          if (animatorProps?.a.propType) {
-            animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(letters[i].anIndexes[j],
-              textData.a?.[j].s?.totalChars)
-            if (!mult || !Array.isArray(animatorProps.a.v)) {
-              continue
-            }
-
-            if (Array.isArray(mult)) {
-              matrixHelper.translate(
-                -animatorProps.a.v[0] * mult[0],
-                -animatorProps.a.v[1] * mult[1],
-                animatorProps.a.v[2] * mult[2]
-              )
-              continue
-            }
+            offf = letters[i].an / 2 - letters[i].add
             matrixHelper.translate(
-              -animatorProps.a.v[0] * mult,
-              -animatorProps.a.v[1] * mult,
-              animatorProps.a.v[2] * mult
+              -offf, 0, 0
+            )
+          } else {
+            offf = letters[i].an / 2 - letters[i].add
+            matrixHelper.translate(
+              -offf, 0, 0
+            )
+
+            // Grouping alignment
+            matrixHelper.translate(
+              -alignment[0] * letters[i].an * 0.005,
+              -alignment[1] * yOff * 0.01,
+              0
             )
           }
-        }
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-          if (animatorProps?.s.propType) {
+
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
+            if (!animatorProps?.t.propType) {
+              continue
+            }
             animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+            mult = animatorSelector?.getMult(Number(letters[i].anIndexes[j]),
               textData.a?.[j].s?.totalChars)
-            if (!mult || !Array.isArray(animatorProps.s.v)) {
-              continue
-            }
-            if (Array.isArray(mult)) {
-              matrixHelper.scale(
-                1 + (animatorProps.s.v[0] - 1) * mult[0],
-                1 + (animatorProps.s.v[1] - 1) * mult[1],
-                1
-              )
-              continue
-            }
-            matrixHelper.scale(
-              1 + (animatorProps.s.v[0] - 1) * mult,
-              1 + (animatorProps.s.v[1] - 1) * mult,
-              1
-            )
-          }
-        }
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-          animatorSelector = animators[j].s
-          mult = animatorSelector?.getMult(letters[i].anIndexes[j],
-            textData.a?.[j].s?.totalChars)
-          if (!mult) {
-            continue
-          }
-          if (animatorProps?.sk.propType) {
-            if (Array.isArray(mult)) {
-              matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult[0],
-                Number(animatorProps.sa.v) * mult[1])
-            } else {
-              matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult,
-                Number(animatorProps.sa.v) * mult)
-            }
-          }
-          if (animatorProps?.r.propType) {
-            if (Array.isArray(mult)) {
-              matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult[2])
-            } else {
-              matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult)
-            }
-          }
-          if (animatorProps?.ry.propType) {
-            if (Array.isArray(mult)) {
-              matrixHelper.rotateY(Number(animatorProps.ry.v) * mult[1])
-            } else {
-              matrixHelper.rotateY(Number(animatorProps.ry.v) * mult)
-            }
-          }
-          if (animatorProps?.rx.propType) {
-            if (Array.isArray(mult)) {
-              matrixHelper.rotateX(Number(animatorProps.rx.v) * mult[0])
-            } else {
-              matrixHelper.rotateX(Number(animatorProps.rx.v) * mult)
-            }
-          }
-          if (animatorProps?.o.propType) {
-            if (Array.isArray(mult)) {
-              elemOpacity +=
-                (Number(animatorProps.o.v) * mult[0] - elemOpacity) * mult[0]
-            } else {
-              elemOpacity +=
-                (Number(animatorProps.o.v) * mult - elemOpacity) * mult
-            }
-          }
-          if (documentData.strokeWidthAnim && animatorProps?.sw.propType) {
-            if (Array.isArray(mult)) {
-              sw += Number(animatorProps.sw.v) * mult[0]
-            } else {
-              sw += Number(animatorProps.sw.v) * mult
-            }
-          }
-          if (
-            documentData.strokeColorAnim &&
-            animatorProps?.sc.propType &&
-            Array.isArray(animatorProps.sc.v)
-          ) {
-            for (k = 0; k < 3; k++) {
-              if (Array.isArray(mult)) {
-                sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult[0]
-              } else {
-                sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult
+            // This condition is to prevent applying tracking to first character in each line. Might be better to use a boolean "isNewLine"
+            if (xPos !== 0 || documentData.j !== 0) {
+              if (this._hasMaskedPath) {
+                if (Array.isArray(mult)) {
+                  currentLength += Number(animatorProps.t.v) * mult[0]
+                } else {
+                  currentLength += Number(animatorProps.t.v) * Number(mult)
+                }
+                continue
               }
+
+              if (Array.isArray(mult)) {
+                xPos += Number(animatorProps.t.v) * mult[0]
+                continue
+              }
+              xPos += Number(animatorProps.t.v) * Number(mult)
+            }
+          }
+          if (documentData.strokeWidthAnim) {
+            sw = documentData.sw || 0
+          }
+          if (documentData.strokeColorAnim) {
+            if (documentData.sc) {
+              sc = [
+                Number(documentData.sc[0]),
+                Number(documentData.sc[1]),
+                Number(documentData.sc[2]),
+              ]
+            } else {
+              sc = [0,
+                0,
+                0]
             }
           }
           if (documentData.fillColorAnim && documentData.fc) {
-            if (animatorProps?.fc.propType) {
-              for (k = 0; k < 3; k++) {
-                if (!Array.isArray(animatorProps.fc.v)) {
-                  continue
-                }
-                if (Array.isArray(mult)) {
-                  fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult[0]
-                } else {
-                  fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult
-                }
+            fc = [
+              Number(documentData.fc[0]),
+              Number(documentData.fc[1]),
+              Number(documentData.fc[2]),
+            ]
+          }
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
+            if (animatorProps?.a.propType) {
+              animatorSelector = animators[j].s
+              mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+                textData.a?.[j].s?.totalChars)
+              if (!mult || !Array.isArray(animatorProps.a.v)) {
+                continue
               }
-            }
-            if (animatorProps?.fh.propType) {
+
               if (Array.isArray(mult)) {
-                fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult[0])
-              } else {
-                fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult)
+                matrixHelper.translate(
+                  -animatorProps.a.v[0] * mult[0],
+                  -animatorProps.a.v[1] * mult[1],
+                  animatorProps.a.v[2] * mult[2]
+                )
+                continue
               }
-            }
-            if (animatorProps?.fs.propType) {
-              if (Array.isArray(mult)) {
-                fc = addSaturationToRGB(fc,
-                  Number(animatorProps.fs.v) * mult[0])
-              } else {
-                fc = addSaturationToRGB(fc, Number(animatorProps.fs.v) * mult)
-              }
-            }
-            if (animatorProps?.fb.propType) {
-              if (Array.isArray(mult)) {
-                fc = addBrightnessToRGB(fc,
-                  Number(animatorProps.fb.v) * mult[0])
-              } else {
-                fc = addBrightnessToRGB(fc, Number(animatorProps.fb.v) * mult)
-              }
+              matrixHelper.translate(
+                -animatorProps.a.v[0] * mult,
+                -animatorProps.a.v[1] * mult,
+                animatorProps.a.v[2] * mult
+              )
             }
           }
-        }
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
+            if (animatorProps?.s.propType) {
+              animatorSelector = animators[j].s
+              mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+                textData.a?.[j].s?.totalChars)
+              if (!mult || !Array.isArray(animatorProps.s.v)) {
+                continue
+              }
+              if (Array.isArray(mult)) {
+                matrixHelper.scale(
+                  1 + (animatorProps.s.v[0] - 1) * mult[0],
+                  1 + (animatorProps.s.v[1] - 1) * mult[1],
+                  1
+                )
+                continue
+              }
+              matrixHelper.scale(
+                1 + (animatorProps.s.v[0] - 1) * mult,
+                1 + (animatorProps.s.v[1] - 1) * mult,
+                1
+              )
+            }
+          }
 
-        for (j = 0; j < jLen; j++) {
-          animatorProps = animators[j].a
-
-          if (animatorProps?.p.propType) {
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
             animatorSelector = animators[j].s
             mult = animatorSelector?.getMult(letters[i].anIndexes[j],
               textData.a?.[j].s?.totalChars)
-            if (!mult || !Array.isArray(animatorProps.p.v)) {
+            if (!mult) {
               continue
             }
-            if (this._hasMaskedPath) {
+            if (animatorProps?.sk.propType) {
               if (Array.isArray(mult)) {
+                matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult[0],
+                  Number(animatorProps.sa.v) * mult[1])
+              } else {
+                matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult,
+                  Number(animatorProps.sa.v) * mult)
+              }
+            }
+            if (animatorProps?.r.propType) {
+              if (Array.isArray(mult)) {
+                matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult[2])
+              } else {
+                matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult)
+              }
+            }
+            if (animatorProps?.ry.propType) {
+              if (Array.isArray(mult)) {
+                matrixHelper.rotateY(Number(animatorProps.ry.v) * mult[1])
+              } else {
+                matrixHelper.rotateY(Number(animatorProps.ry.v) * mult)
+              }
+            }
+            if (animatorProps?.rx.propType) {
+              if (Array.isArray(mult)) {
+                matrixHelper.rotateX(Number(animatorProps.rx.v) * mult[0])
+              } else {
+                matrixHelper.rotateX(Number(animatorProps.rx.v) * mult)
+              }
+            }
+            if (animatorProps?.o.propType) {
+              if (Array.isArray(mult)) {
+                elemOpacity +=
+                (Number(animatorProps.o.v) * mult[0] - elemOpacity) * mult[0]
+              } else {
+                elemOpacity +=
+                (Number(animatorProps.o.v) * mult - elemOpacity) * mult
+              }
+            }
+            if (documentData.strokeWidthAnim && animatorProps?.sw.propType) {
+              if (Array.isArray(mult)) {
+                sw += Number(animatorProps.sw.v) * mult[0]
+              } else {
+                sw += Number(animatorProps.sw.v) * mult
+              }
+            }
+            if (
+              documentData.strokeColorAnim &&
+              animatorProps?.sc.propType &&
+              Array.isArray(animatorProps.sc.v)
+            ) {
+              for (k = 0; k < 3; k++) {
+                if (Array.isArray(mult)) {
+                  sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult[0]
+                } else {
+                  sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult
+                }
+              }
+            }
+            if (documentData.fillColorAnim && documentData.fc) {
+              if (animatorProps?.fc.propType) {
+                for (k = 0; k < 3; k++) {
+                  if (!Array.isArray(animatorProps.fc.v)) {
+                    continue
+                  }
+                  if (Array.isArray(mult)) {
+                    fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult[0]
+                  } else {
+                    fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult
+                  }
+                }
+              }
+              if (animatorProps?.fh.propType) {
+                if (Array.isArray(mult)) {
+                  fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult[0])
+                } else {
+                  fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult)
+                }
+              }
+              if (animatorProps?.fs.propType) {
+                if (Array.isArray(mult)) {
+                  fc = addSaturationToRGB(fc,
+                    Number(animatorProps.fs.v) * mult[0])
+                } else {
+                  fc = addSaturationToRGB(fc, Number(animatorProps.fs.v) * mult)
+                }
+              }
+              if (animatorProps?.fb.propType) {
+                if (Array.isArray(mult)) {
+                  fc = addBrightnessToRGB(fc,
+                    Number(animatorProps.fb.v) * mult[0])
+                } else {
+                  fc = addBrightnessToRGB(fc, Number(animatorProps.fb.v) * mult)
+                }
+              }
+            }
+          }
+
+          for (j = 0; j < jLen; j++) {
+            animatorProps = animators[j].a
+
+            if (animatorProps?.p.propType) {
+              animatorSelector = animators[j].s
+              mult = animatorSelector?.getMult(letters[i].anIndexes[j],
+                textData.a?.[j].s?.totalChars)
+              if (!mult || !Array.isArray(animatorProps.p.v)) {
+                continue
+              }
+              if (this._hasMaskedPath) {
+                if (Array.isArray(mult)) {
+                  matrixHelper.translate(
+                    0,
+                    animatorProps.p.v[1] * mult[0],
+                    -animatorProps.p.v[2] * mult[1]
+                  )
+                } else {
+                  matrixHelper.translate(
+                    0,
+                    animatorProps.p.v[1] * mult,
+                    -animatorProps.p.v[2] * mult
+                  )
+                }
+              } else if (Array.isArray(mult)) {
                 matrixHelper.translate(
-                  0,
-                  animatorProps.p.v[1] * mult[0],
-                  -animatorProps.p.v[2] * mult[1]
+                  animatorProps.p.v[0] * mult[0],
+                  animatorProps.p.v[1] * mult[1],
+                  -animatorProps.p.v[2] * mult[2]
                 )
               } else {
                 matrixHelper.translate(
-                  0,
+                  animatorProps.p.v[0] * mult,
                   animatorProps.p.v[1] * mult,
                   -animatorProps.p.v[2] * mult
                 )
               }
-            } else if (Array.isArray(mult)) {
-              matrixHelper.translate(
-                animatorProps.p.v[0] * mult[0],
-                animatorProps.p.v[1] * mult[1],
-                -animatorProps.p.v[2] * mult[2]
-              )
-            } else {
-              matrixHelper.translate(
-                animatorProps.p.v[0] * mult,
-                animatorProps.p.v[1] * mult,
-                -animatorProps.p.v[2] * mult
-              )
             }
           }
-        }
-        if (documentData.strokeWidthAnim) {
-          letterSw = sw < 0 ? 0 : sw
-        }
-        if (documentData.strokeColorAnim) {
-          letterSc = `rgb(${Math.round(sc[0] * 255)},${Math.round(sc[1] * 255)},${Math.round(sc[2] * 255)})`
-        }
-        if (documentData.fillColorAnim && documentData.fc) {
-          letterFc = `rgb(${Math.round(fc[0] * 255)},${Math.round(fc[1] * 255)},${Math.round(fc[2] * 255)})`
-        }
+          if (documentData.strokeWidthAnim) {
+            letterSw = sw < 0 ? 0 : sw
+          }
+          if (documentData.strokeColorAnim) {
+            letterSc = `rgb(${Math.round(sc[0] * 255)},${Math.round(sc[1] * 255)},${Math.round(sc[2] * 255)})`
+          }
+          if (documentData.fillColorAnim && documentData.fc) {
+            letterFc = `rgb(${Math.round(fc[0] * 255)},${Math.round(fc[1] * 255)},${Math.round(fc[2] * 255)})`
+          }
 
-        if (this._hasMaskedPath) {
-          matrixHelper.translate(0, -Number(documentData.ls))
+          if (this._hasMaskedPath) {
+            matrixHelper.translate(0, -Number(documentData.ls))
 
-          matrixHelper.translate(
-            0, alignment[1] * yOff * 0.01 + yPos, 0
-          )
-          if (this._pathData.p?.v) {
-            tanAngle =
+            matrixHelper.translate(
+              0, alignment[1] * yOff * 0.01 + yPos, 0
+            )
+            if (this._pathData.p?.v) {
+              tanAngle =
               (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) /
               (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
-            let rot = Math.atan(tanAngle) * 180 / Math.PI
+              let rot = Math.atan(tanAngle) * 180 / Math.PI
 
-            if (Number(currentPoint?.point[0]) < Number(prevPoint?.point[0])) {
-              rot += 180
+              if (Number(currentPoint?.point[0]) < Number(prevPoint?.point[0])) {
+                rot += 180
+              }
+              matrixHelper.rotate(-rot * Math.PI / 180)
             }
-            matrixHelper.rotate(-rot * Math.PI / 180)
-          }
-          matrixHelper.translate(
-            Number(xPathPos), Number(yPathPos), 0
-          )
-          currentLength -= alignment[0] * letters[i].an * 0.005
-          if (letters[i + 1] && ind !== letters[i + 1].ind) {
-            currentLength += letters[i].an / 2
-            currentLength +=
-              documentData.tr * 0.001 * Number(documentData.finalSize)
-          }
-        } else {
-          matrixHelper.translate(
-            xPos, yPos, 0
-          )
-
-          if (documentData.ps) {
             matrixHelper.translate(
-              documentData.ps[0],
-              documentData.ps[1] + Number(documentData.ascent),
+              Number(xPathPos), Number(yPathPos), 0
+            )
+            currentLength -= alignment[0] * letters[i].an * 0.005
+            if (letters[i + 1] && ind !== letters[i + 1].ind) {
+              currentLength += letters[i].an / 2
+              currentLength +=
+              documentData.tr * 0.001 * Number(documentData.finalSize)
+            }
+          } else {
+            matrixHelper.translate(
+              xPos, yPos, 0
+            )
+
+            if (documentData.ps) {
+              matrixHelper.translate(
+                documentData.ps[0],
+                documentData.ps[1] + Number(documentData.ascent),
+                0
+              )
+            }
+            switch (documentData.j) {
+              case 1: {
+                matrixHelper.translate(
+                  letters[i].animatorJustifyOffset +
+                  Number(documentData.justifyOffset) +
+                  (Number(documentData.boxWidth) -
+                    Number(documentData.lineWidths[letters[i].line])),
+                  0,
+                  0
+                )
+                break
+              }
+              case 2: {
+                matrixHelper.translate(
+                  letters[i].animatorJustifyOffset +
+                  Number(documentData.justifyOffset) +
+                  (Number(documentData.boxWidth) -
+                    Number(documentData.lineWidths[letters[i].line])) /
+                    2,
+                  0,
+                  0
+                )
+                break
+              }
+              case undefined:
+              default: {
+                break
+              }
+            }
+            matrixHelper.translate(0, -Number(documentData.ls))
+            matrixHelper.translate(
+              offf, 0, 0
+            )
+            matrixHelper.translate(
+              alignment[0] * Number(letters[i].an) * 0.005,
+              alignment[1] * yOff * 0.01,
               0
             )
-          }
-          switch (documentData.j) {
-            case 1: {
-              matrixHelper.translate(
-                letters[i].animatorJustifyOffset +
-                Number(documentData.justifyOffset) +
-                (Number(documentData.boxWidth) -
-                  Number(documentData.lineWidths[letters[i].line])),
-                0,
-                0
-              )
-              break
-            }
-            case 2: {
-              matrixHelper.translate(
-                letters[i].animatorJustifyOffset +
-                Number(documentData.justifyOffset) +
-                (Number(documentData.boxWidth) -
-                  Number(documentData.lineWidths[letters[i].line])) /
-                  2,
-                0,
-                0
-              )
-              break
-            }
-            case undefined:
-            default: {
-              break
-            }
-          }
-          matrixHelper.translate(0, -Number(documentData.ls))
-          matrixHelper.translate(
-            offf, 0, 0
-          )
-          matrixHelper.translate(
-            alignment[0] * Number(letters[i].an) * 0.005,
-            alignment[1] * yOff * 0.01,
-            0
-          )
-          xPos +=
+            xPos +=
             letters[i].l +
             documentData.tr * 0.001 * Number(documentData.finalSize)
+          }
+          if (renderType === RendererType.HTML) {
+            letterM = matrixHelper.toCSS()
+          } else if (renderType === RendererType.SVG) {
+            letterM = matrixHelper.to2dCSS()
+          } else {
+            letterP = [
+              matrixHelper.props[0],
+              matrixHelper.props[1],
+              matrixHelper.props[2],
+              matrixHelper.props[3],
+              matrixHelper.props[4],
+              matrixHelper.props[5],
+              matrixHelper.props[6],
+              matrixHelper.props[7],
+              matrixHelper.props[8],
+              matrixHelper.props[9],
+              matrixHelper.props[10],
+              matrixHelper.props[11],
+              matrixHelper.props[12],
+              matrixHelper.props[13],
+              matrixHelper.props[14],
+              matrixHelper.props[15],
+            ]
+          }
+          letterO = elemOpacity
         }
-        if (renderType === RendererType.HTML) {
-          letterM = matrixHelper.toCSS()
-        } else if (renderType === RendererType.SVG) {
-          letterM = matrixHelper.to2dCSS()
-        } else {
-          letterP = [
-            matrixHelper.props[0],
-            matrixHelper.props[1],
-            matrixHelper.props[2],
-            matrixHelper.props[3],
-            matrixHelper.props[4],
-            matrixHelper.props[5],
-            matrixHelper.props[6],
-            matrixHelper.props[7],
-            matrixHelper.props[8],
-            matrixHelper.props[9],
-            matrixHelper.props[10],
-            matrixHelper.props[11],
-            matrixHelper.props[12],
-            matrixHelper.props[13],
-            matrixHelper.props[14],
-            matrixHelper.props[15],
-          ]
+
+        if (renderedLettersCount <= i) {
+          letterValue = new LetterProps(
+            Number(letterO),
+            Number(letterSw),
+            letterSc,
+            letterFc,
+            letterM,
+            letterP
+          )
+          this.renderedLetters.push(letterValue)
+          renderedLettersCount++
+          this.lettersChangedFlag = true
+
+          continue
         }
-        letterO = elemOpacity
-      }
 
-      if (renderedLettersCount <= i) {
-        letterValue = new LetterProps(
-          Number(letterO),
-          Number(letterSw),
-          letterSc,
-          letterFc,
-          letterM,
-          letterP as any
-        )
-        this.renderedLetters.push(letterValue)
-        renderedLettersCount++
-        this.lettersChangedFlag = true
+        // console.log('foo', letterSc)
 
-        continue
-      }
-      letterValue = this.renderedLetters[i]
-      this.lettersChangedFlag =
+        letterValue = this.renderedLetters[i]
+        this.lettersChangedFlag =
         letterValue.update(
           Number(letterO),
           Number(letterSw),
-          letterSc as any,
+          letterSc,
           letterFc as any,
           letterM as any,
           letterP
         ) || this.lettersChangedFlag
+
+      }
+    } catch (error) {
+      console.error(this.constructor.name, error)
     }
   }
 

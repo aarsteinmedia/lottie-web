@@ -33,7 +33,7 @@ export default class ShapeTransformManager {
       this.sequenceList.push(sequence as TransformSequence)
     }
 
-    return sequence
+    return sequence as Transformer
   }
 
   getNewKey() {

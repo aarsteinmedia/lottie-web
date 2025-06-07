@@ -25,13 +25,10 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import GradientProperty from '@/utils/shapes/properties/GradientProperty'
 
 export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
-  a?: MultiDimensionalProperty
+  a?: ValueProperty
   cst: SVGStopElement[] = []
-
   e?: MultiDimensionalProperty
-
   g?: GradientProperty
-
   gf?: SVGGradientElement
   gr?: SVGGElement
   h?: KeyframedValueProperty
@@ -99,7 +96,7 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
       0,
       degToRads,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty
+    ) as ValueProperty
     this.g = new GradientProperty(
       elem,
       data.g as GradientColor,

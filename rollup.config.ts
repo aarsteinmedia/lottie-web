@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { dts } from 'rollup-plugin-dts'
 import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-opener'
+// import sourcemaps from 'rollup-plugin-sourcemaps'
 import pluginSummary from 'rollup-plugin-summary'
 import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
@@ -55,6 +56,7 @@ const isProd = process.env.NODE_ENV !== 'development',
     commonjs(),
     injectVersion(),
     swc(),
+    // sourcemaps(),
     serve({
       browser: 'firefox',
       open: true,
@@ -104,6 +106,7 @@ const isProd = process.env.NODE_ENV !== 'development',
       exports: 'named',
       file: `./dist/${input.name}.js`,
       format: 'esm',
+      // sourcemap: !isProd,
     },
 
     plugins: plugins(),
