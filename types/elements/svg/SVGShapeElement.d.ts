@@ -37,7 +37,7 @@ export default class SVGShapeElement extends ShapeElement {
     reloadShapes(): void;
     renderInnerContent(): void;
     renderShape(): void;
-    searchShapes(arr: Shape[], itemsData: SVGElementInterface[], prevViewData: SVGElementInterface[], container: SVGGElement, level: number, transformers: Transformer[], renderFromProps: boolean): void;
+    searchShapes(arr: Shape[], itemsData: SVGElementInterface[], prevViewData: SVGElementInterface[], container: SVGGElement, level: number, transformers: Transformer[], shouldRenderFromProps: boolean): void;
     setElementStyles(elementData: SVGShapeData): void;
     setShapesAsAnimated(shapes: ShapeDataInterface[]): void;
 }

@@ -372,7 +372,6 @@ export interface ShapeColorValue {
 export interface Shape {
     _length: number;
     _processed?: boolean;
-    _render?: boolean;
     _shouldRender?: boolean;
     a?: VectorProperty<Vector1 | Vector2 | Vector3>;
     bm?: number;
@@ -877,7 +876,6 @@ export interface AnimationData {
 }
 export interface LottieLayer {
     __used?: boolean;
-    _render?: boolean;
     ao?: 0 | 1 | boolean;
     au?: {
         lv?: {

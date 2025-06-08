@@ -34,7 +34,7 @@ export default class CVShapeElement extends ShapeElement {
     createShapeElement(data: Shape): CVShapeData;
     createStyleElement(data: Shape, transforms: {
         transform: Transformer;
-    }[]): CVElement;
+    }[]): CVElement | null;
     createTransformElement(data: Shape): {
         transform: Transformer;
     };
