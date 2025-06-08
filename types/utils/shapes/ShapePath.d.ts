@@ -9,6 +9,7 @@ export default class ShapePath {
     o: Vector2[];
     s?: ShapePath[];
     v: Vector2[];
+    get _type(): string;
     constructor();
     doubleArrayLength(): void;
     length(): number;

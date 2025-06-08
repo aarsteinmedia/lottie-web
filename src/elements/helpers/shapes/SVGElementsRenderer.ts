@@ -287,29 +287,27 @@ function renderStroke(
   itemData?: SVGStrokeStyleData | SVGGradientStrokeStyleData,
   isFirstFrame?: boolean
 ) {
-  if (!itemData) {
+  if (!itemData?.style) {
     throw new Error('SVGElementsRenderer: Method renderStroke is missing data')
   }
 
   const {
-    c, d, o, style, w
+    c, d, o, style: { msElem, pElem }, w
   } = itemData
 
   if (d && (d._mdf || isFirstFrame) && d.dashStr) {
-    style?.pElem.setAttribute('stroke-dasharray', d.dashStr)
-    style?.pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
+    pElem.setAttribute('stroke-dasharray', d.dashStr)
+    pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
   if (c && (c._mdf || isFirstFrame)) {
-    style?.pElem.setAttribute('stroke', `rgb(${Math.floor(c.v[0])},${Math.floor(c.v[1])},${Math.floor(c.v[2])})`)
+    pElem.setAttribute('stroke', `rgb(${Math.floor(c.v[0])},${Math.floor(c.v[1])},${Math.floor(c.v[2])})`)
   }
   if (o?._mdf || isFirstFrame) {
-    style?.pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)
+    pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)
   }
   if (w?._mdf || isFirstFrame) {
-    style?.pElem.setAttribute('stroke-width', `${w?.v || 0}`)
-    if (style?.msElem) {
-      style.msElem.setAttribute('stroke-width', `${w?.v || 0}`)
-    }
+    pElem.setAttribute('stroke-width', `${w?.v || 0}`)
+    msElem?.setAttribute('stroke-width', `${w?.v || 0}`)
   }
 }
 

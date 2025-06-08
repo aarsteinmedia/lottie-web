@@ -67,7 +67,7 @@ export const floatEqual = (a: number, b: number) =>
       return false
     }
 
-    return el.constructor.name === 'ShapePath'
+    return '_type' in el && el._type === 'ShapePath'
 
   },
 

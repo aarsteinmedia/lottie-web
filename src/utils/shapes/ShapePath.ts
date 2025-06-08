@@ -13,6 +13,10 @@ export default class ShapePath {
   o: Vector2[]
   s?: ShapePath[]
   v: Vector2[]
+  get _type() {
+    return 'ShapePath'
+  }
+
   constructor() {
     this.c = false
     this._length = 0

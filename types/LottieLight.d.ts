@@ -26,4 +26,5 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
+export { loadAnimation };
 export default Lottie;

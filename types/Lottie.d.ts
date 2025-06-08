@@ -27,6 +27,7 @@ declare const Lottie: {
     useWebWorker: (flag: boolean) => void;
     version: string;
 };
+export { loadAnimation };
 export default Lottie;
 export { type default as AnimationItem } from './animation/AnimationItem';
 export type { AnimationConfiguration, AnimationData, AnimationDirection, Vector2 as AnimationSegment, AnimationSettings, LottieAsset, LottieManifest, Vector2 } from './types';
