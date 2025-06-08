@@ -42,7 +42,8 @@ const files = [
   'dinide.lottie',
   'laptop.lottie',
   'hero-web.json',
-  'home_idea_es.lottie'
+  'home_idea_es.lottie',
+  'bulb.lottie'
 ]
 
 export default files

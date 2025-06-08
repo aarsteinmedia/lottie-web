@@ -77,7 +77,7 @@ export default class RepeaterModifier extends ShapeModifier {
     const { length } = elements
 
     for (let i = 0; i < length; i++) {
-      elements[i]._render = renderFlag
+      elements[i]._shouldRender = renderFlag
       if (elements[i].ty === ShapeType.Group) {
         this.changeGroupRender(elements[i].it as Shape[], renderFlag)
       }
@@ -290,7 +290,7 @@ export default class RepeaterModifier extends ShapeModifier {
     for (i = 0; i <= length - 1; i++) {
       shouldRender = cont < copies
       if (this._groups[i]) {
-        this._groups[i]._render = shouldRender
+        this._groups[i]._shouldRender = shouldRender
       }
 
       this.changeGroupRender(this._groups[i].it ?? [], shouldRender)

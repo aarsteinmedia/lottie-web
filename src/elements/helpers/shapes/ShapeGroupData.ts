@@ -7,7 +7,7 @@ import type {
 import createNS from '@/utils/helpers/svgElements'
 
 export default class ShapeGroupData {
-  _render?: boolean
+  _shouldRender?: boolean
   closed?: boolean
   gr: SVGGElement
   it: ShapeDataInterface[]

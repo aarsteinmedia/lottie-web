@@ -124,119 +124,130 @@ export default class CVShapeElement extends ShapeElement {
   }
 
   createStyleElement(data: Shape, transforms: { transform: Transformer }[]) {
-    const styleElem: CVStyleElement = {
-        closed: data.hd === true,
-        data,
-        elements: [],
-        preTransforms: this.transformsManager.addTransformSequence(transforms) as unknown as TransformSequence,
-        transforms: [],
-        type: data.ty,
-      },
-      elementData = {} as unknown as CVElement
+    try {
+      const styleElem: CVStyleElement = {
+          closed: data.hd === true,
+          data,
+          elements: [],
+          preTransforms: this.transformsManager.addTransformSequence(transforms) as unknown as TransformSequence,
+          transforms: [],
+          type: data.ty,
+        },
+        elementData = {} as unknown as CVElement
 
-    switch (data.ty) {
-      case ShapeType.Fill:
-      case ShapeType.Stroke: {
-        elementData.c = PropertyFactory.getProp(
-          this as unknown as ElementInterfaceIntersect,
-          data.c as VectorProperty<Vector3>,
-          1,
-          255,
-          this as unknown as ElementInterfaceIntersect
-        ) as MultiDimensionalProperty<number[]>
-        if (!elementData.c.k) {
-          styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(elementData.c.v[1])},${Math.floor(elementData.c.v[2])})`
-        }
-        break
-      }
-      case ShapeType.GradientFill:
-      case ShapeType.GradientStroke: {
-        elementData.s = PropertyFactory.getProp(
-          this as unknown as ElementInterfaceIntersect,
-          data.s,
-          1,
-          null,
-          this as unknown as ElementInterfaceIntersect
-        ) as MultiDimensionalProperty
-        elementData.e = PropertyFactory.getProp(
-          this as unknown as ElementInterfaceIntersect,
-          data.e,
-          1,
-          null,
-          this as unknown as ElementInterfaceIntersect
-        ) as MultiDimensionalProperty
-        elementData.h = PropertyFactory.getProp(
-          this as unknown as ElementInterfaceIntersect,
-          (data.h ?? { k: 0 }) as VectorProperty,
-          0,
-          0.01,
-          this as unknown as ElementInterfaceIntersect
-        ) as ValueProperty
-        elementData.a = PropertyFactory.getProp(
-          this as unknown as ElementInterfaceIntersect,
-          (data.a ?? { k: 0 }) as VectorProperty,
-          0,
-          degToRads,
-          this as unknown as ElementInterfaceIntersect
-        ) as ValueProperty
-        if (data.g) {
-          elementData.g = new GradientProperty(
+      switch (data.ty) {
+        case ShapeType.Fill:
+        case ShapeType.Stroke: {
+          elementData.c = PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
-            data.g,
+            data.c as VectorProperty<Vector3>,
+            1,
+            255,
             this as unknown as ElementInterfaceIntersect
-          )
+          ) as MultiDimensionalProperty<number[]>
+          if (!elementData.c.k) {
+            styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(elementData.c.v[1])},${Math.floor(elementData.c.v[2])})`
+          }
+          break
         }
+        case ShapeType.GradientFill:
+        case ShapeType.GradientStroke: {
+          elementData.s = PropertyFactory.getProp(
+            this as unknown as ElementInterfaceIntersect,
+            data.s,
+            1,
+            null,
+            this as unknown as ElementInterfaceIntersect
+          ) as MultiDimensionalProperty
+          elementData.e = PropertyFactory.getProp(
+            this as unknown as ElementInterfaceIntersect,
+            data.e,
+            1,
+            null,
+            this as unknown as ElementInterfaceIntersect
+          ) as MultiDimensionalProperty
+          elementData.h = PropertyFactory.getProp(
+            this as unknown as ElementInterfaceIntersect,
+            (data.h ?? { k: 0 }) as VectorProperty,
+            0,
+            0.01,
+            this as unknown as ElementInterfaceIntersect
+          ) as ValueProperty
+          elementData.a = PropertyFactory.getProp(
+            this as unknown as ElementInterfaceIntersect,
+            (data.a ?? { k: 0 }) as VectorProperty,
+            0,
+            degToRads,
+            this as unknown as ElementInterfaceIntersect
+          ) as ValueProperty
+          if (data.g) {
+            elementData.g = new GradientProperty(
+              this as unknown as ElementInterfaceIntersect,
+              data.g,
+              this as unknown as ElementInterfaceIntersect
+            )
+          }
 
-        break
+          break
+        }
+        default:
       }
-      default:
-    }
 
-    elementData.o = PropertyFactory.getProp(
-      this as unknown as ElementInterfaceIntersect,
-      data.o,
-      0,
-      0.01,
-      this as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-
-    if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
-      styleElem.lc = lineCapEnum[data.lc || 2]
-      styleElem.lj = lineJoinEnum[data.lj || 2]
-      if (data.lj === 1) {
-        styleElem.ml = data.ml
-      }
-      elementData.w = PropertyFactory.getProp(
+      elementData.o = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
-        data.w,
+        data.o,
         0,
-        null,
+        0.01,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      if (!elementData.w.k) {
-        styleElem.wi = elementData.w.v
-      }
-      if (data.d && typeof data.d === 'object') {
-        const d = new DashProperty(
-          this as unknown as ElementInterfaceIntersect,
-          data.d,
-          RendererType.Canvas,
-          this as unknown as ElementInterfaceIntersect
-        )
 
-        elementData.d = d
-        if (!elementData.d.k) {
-          styleElem.da = elementData.d.dashArray
-          styleElem.do = elementData.d.dashoffset[0]
+      if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
+        styleElem.lc = lineCapEnum[data.lc || 2]
+        styleElem.lj = lineJoinEnum[data.lj || 2]
+        if (data.lj === 1) {
+          styleElem.ml = data.ml
         }
-      }
-    } else {
-      styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero'
-    }
-    this.stylesList.push(styleElem)
-    elementData.style = styleElem
+        elementData.w = PropertyFactory.getProp(
+          this as unknown as ElementInterfaceIntersect,
+          data.w,
+          0,
+          null,
+          this as unknown as ElementInterfaceIntersect
+        ) as ValueProperty
+        if (!elementData.w.k) {
+          styleElem.wi = elementData.w.v
+        }
+        if (data.d && typeof data.d === 'object') {
+          const d = new DashProperty(
+            this as unknown as ElementInterfaceIntersect,
+            data.d,
+            RendererType.Canvas,
+            this as unknown as ElementInterfaceIntersect
+          )
 
-    return elementData
+          elementData.d = d
+          if (!elementData.d.k) {
+            styleElem.da = elementData.d.dashArray
+            styleElem.do = elementData.d.dashoffset[0]
+          }
+        }
+      } else {
+        styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero'
+      }
+      this.stylesList.push(styleElem)
+      elementData.style = styleElem
+
+      // if (data.ty === ShapeType.GradientFill) {
+      //   console.log(elementData)
+      // }
+
+      return elementData
+
+    } catch (error) {
+      console.error(this.constructor.name, error)
+
+      return null
+    }
   }
 
   createTransformElement(data: Shape) {

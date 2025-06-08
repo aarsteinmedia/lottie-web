@@ -252,6 +252,10 @@ export default class SVGShapeElement extends ShapeElement {
       this.addToAnimatedContents(data, elementData)
     }
 
+    // if (data.ty === ShapeType.GradientFill) {
+    //   console.log(elementData)
+    // }
+
     return elementData
   }
 
@@ -393,9 +397,9 @@ export default class SVGShapeElement extends ShapeElement {
     container: SVGGElement,
     level: number,
     transformers: Transformer[],
-    renderFromProps: boolean
+    shouldRenderFromProps: boolean
   ) {
-    let shouldRender = renderFromProps
+    let shouldRender = shouldRenderFromProps
     // Make a clone of transfomers
     const ownTransformers = [...transformers],
       ownStyles = [],
@@ -409,7 +413,7 @@ export default class SVGShapeElement extends ShapeElement {
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
       } else {
-        arr[i]._render = shouldRender
+        arr[i]._shouldRender = shouldRender
       }
 
       switch (arr[i].ty) {
@@ -428,7 +432,7 @@ export default class SVGShapeElement extends ShapeElement {
             itemsData[i] = this.createStyleElement(arr[i],
               level) as SVGElementInterface
           }
-          if (arr[i]._render && itemsData[i]?.style?.pElem.parentNode !== container) {
+          if (arr[i]._shouldRender && itemsData[i]?.style?.pElem.parentNode !== container) {
             const { pElem } = itemsData[i].style ?? { pElem: null }
 
             if (pElem) {
@@ -468,7 +472,7 @@ export default class SVGShapeElement extends ShapeElement {
             shouldRender
           )
 
-          if (arr[i]._render && itemsData[i]?.gr?.parentNode !== container) {
+          if (arr[i]._shouldRender && itemsData[i]?.gr?.parentNode !== container) {
             const { gr } = itemsData[i]
 
             if (gr) {
