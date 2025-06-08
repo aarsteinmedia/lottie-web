@@ -1,7 +1,7 @@
-
-// @ts-nocheck
 import type GroupEffect from '@/effects/GroupEffect'
-import type { EffectElement, ElementInterfaceIntersect } from '@/types'
+import type {
+  EffectElement, EffectValue, ElementInterfaceIntersect
+} from '@/types'
 import type { EffectTypes } from '@/utils/enums'
 
 import { createElementID } from '@/utils'
@@ -38,7 +38,8 @@ export default class SVGEffects {
 
       if (Effect && ty && elem.effectsManager) {
         filterManager = new Effect(
-          fil,
+          fil as SVGFilterElement & EffectValue & GroupEffect,
+          // @ts-expect-error: TODO: fix typing
           elem.effectsManager.effectElements[i],
           elem,
           `${idPrefix}${count}`,
@@ -54,7 +55,7 @@ export default class SVGEffects {
       }
     }
     if (count) {
-      elem.globalData.defs.appendChild(fil)
+      elem.globalData?.defs.appendChild(fil)
       elem.layerElement?.setAttribute('filter',
         `url(${getLocationHref()}#${filId})`)
     }

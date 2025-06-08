@@ -8,6 +8,7 @@ import type {
   CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
   Shape,
   Transformer,
+  TransformSequence,
   Vector3,
   VectorProperty
 } from '@/types'
@@ -92,7 +93,7 @@ export default class CVShapeElement extends ShapeElement {
   override createContent() {
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
+      this.itemsData as unknown as CanvasItem[],
       this.prevViewData as unknown as CVShapeElement[],
       true,
       []
@@ -127,7 +128,7 @@ export default class CVShapeElement extends ShapeElement {
         closed: data.hd === true,
         data,
         elements: [],
-        preTransforms: this.transformsManager.addTransformSequence(transforms),
+        preTransforms: this.transformsManager.addTransformSequence(transforms) as unknown as TransformSequence,
         transforms: [],
         type: data.ty,
       },
@@ -390,8 +391,8 @@ export default class CVShapeElement extends ShapeElement {
     }
     this.searchShapes(
       this.shapesData,
-      this.itemsData,
-      this.prevViewData,
+      this.itemsData as unknown as CanvasItem[],
+      this.prevViewData as unknown as CVShapeElement[],
       true,
       []
     )

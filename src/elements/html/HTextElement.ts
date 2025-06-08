@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   DocumentData,
   ElementInterfaceIntersect,
@@ -259,14 +257,14 @@ export default class HTextElement extends TextElement {
         return
       }
       if (this.isMasked && this.finalTransform?._matMdf) {
-        // Todo Benchmark if using this is better than getBBox
+        // TODO: Benchmark if using this is better than getBBox
+
+        const { v: mValue } = this.finalTransform.mProp.p ?? { v: [0, 0] }
+
         this.svgElement?.setAttribute('viewBox',
-          `${-(this.finalTransform.mProp.p?.v as any[])[0]} ${-(
-            this.finalTransform.mProp.p?.v as any[]
-          )[1].v[1]} ${this.compW} ${this.compH}`)
+          `${-mValue[0]} ${-mValue[1]} ${this.compW} ${this.compH}`)
         svgStyle = this.svgElement?.style
-        const translation = `translate(${-(this.finalTransform.mProp.p as any)
-          ?.v[0]}px,${-(this.finalTransform.mProp.p as any)?.v[1]}px)`
+        const translation = `translate(${-mValue[0]}px,${-mValue[1]}px)`
 
         if (svgStyle) {
           svgStyle.transform = translation
@@ -284,9 +282,9 @@ export default class HTextElement extends TextElement {
       letters = this.textProperty?.currentData.l ?? []
 
     const { length } = letters
-    let renderedLetter
-    let textSpan
-    let textPath
+    let renderedLetter,
+      textSpan,
+      textPath
 
     for (let i = 0; i < length; i++) {
       if (letters[i].n) {

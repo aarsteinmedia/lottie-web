@@ -39,7 +39,7 @@ export default abstract class BaseRenderer extends FrameElement {
     createComp(_data: LottieLayer, _container?: HTMLElement, _comp?: CompElementInterface, _?: unknown): SVGCompElement | CVCompElement | HCompElement;
     createFootage(data: LottieLayer): FootageElement;
     createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement;
-    createItem(layer: LottieLayer): CVCompElement | HCompElement | SVGCompElement | ImageElement | AudioElement | SVGShapeElement | SVGTextLottieElement | CVTextElement | HShapeElement | CVShapeElement | FootageElement | CVImageElement | HImageElement | CVSolidElement | NullElement | HTextElement | HCameraElement;
+    createItem(layer: LottieLayer): CVCompElement | HCompElement | SVGCompElement | ImageElement | AudioElement | SVGShapeElement | SVGTextLottieElement | CVTextElement | CVShapeElement | HShapeElement | FootageElement | CVImageElement | CVSolidElement | NullElement | HTextElement | HCameraElement;
     createNull(_layer: LottieLayer): NullElement;
     createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement;
     createSolid(_layer: LottieLayer): CVSolidElement | SolidElement;

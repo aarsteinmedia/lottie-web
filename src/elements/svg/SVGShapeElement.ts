@@ -453,14 +453,14 @@ export default class SVGShapeElement extends ShapeElement {
                 continue
               }
 
-              pr[j] = it[j]
+              (pr as ShapeDataInterface[])[j] = it[j]
             }
           } else {
             itemsData[i] = this.createGroupElement(arr[i]) as SVGElementInterface
           }
           this.searchShapes(
             arr[i].it as Shape[],
-            itemsData[i]?.it ?? [],
+            (itemsData[i]?.it ?? []) as SVGElementInterface[],
             itemsData[i]?.prevViewData ?? [],
             itemsData[i].gr as SVGGElement,
             level + 1,

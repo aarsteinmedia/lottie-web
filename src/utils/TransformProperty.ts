@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
   ElementInterfaceIntersect,
+  Keyframe,
   Shape,
   Vector2,
   Vector3,
@@ -131,7 +132,7 @@ export class TransformProperty extends BaseProperty {
       }
       this.or = PropertyFactory.getProp(
         elem,
-        data.or as VectorProperty<number[]>,
+        data.or as VectorProperty<Keyframe[]>,
         1,
         degToRads,
         this as unknown as ElementInterfaceIntersect

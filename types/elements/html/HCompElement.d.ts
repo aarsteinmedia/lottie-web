@@ -1,11 +1,11 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer, ThreeDElement } from '../../types';
 import CompElement from '../../elements/CompElement';
 import SVGCompElement from '../../elements/svg/SVGCompElement';
 export default class HCompElement extends CompElement {
     pendingElements: ElementInterfaceIntersect[];
     supports3d?: boolean;
     svgElement?: SVGSVGElement;
-    threeDElements: any[];
+    threeDElements: ThreeDElement[];
     transformedElement?: SVGGElement | HTMLElement;
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);
     _createBaseContainerElements(): void;

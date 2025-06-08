@@ -3,6 +3,7 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  ThreeDElement,
 } from '@/types'
 import type ValueProperty from '@/utils/properties/ValueProperty'
 
@@ -17,7 +18,7 @@ export default class HCompElement extends CompElement {
   pendingElements: ElementInterfaceIntersect[]
   supports3d?: boolean
   svgElement?: SVGSVGElement
-  threeDElements: any[] = []
+  threeDElements: ThreeDElement[] = []
   transformedElement?: SVGGElement | HTMLElement
   constructor(
     data: LottieLayer,

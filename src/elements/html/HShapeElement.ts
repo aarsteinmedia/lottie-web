@@ -1,9 +1,6 @@
-
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
 import type {
   BoundingBox,
-  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
@@ -14,35 +11,23 @@ import type {
 } from '@/types'
 import type ValueProperty from '@/utils/properties/ValueProperty'
 
-import RenderableElement from '@/elements/helpers/RenderableElement'
+import ShapeElement from '@/elements/ShapeElement'
 import createNS from '@/utils/helpers/svgElements'
 
-export default class HShapeElement extends RenderableElement {
-  animatedContents: any[]
+export default class HShapeElement extends ShapeElement {
+  animatedContents: unknown[]
   currentBBox: BoundingBox
   prevViewData: HShapeElement[]
-
-  processedElements: any[]
-
   shapeBoundingBox = {
     bottom: 0,
     left: 0,
     right: 0,
     top: 0,
   }
-
   shapeCont?: SVGElement
-
-  shapeModifiers: any[]
-
-  shapes: Shape[]
-
   shapesContainer: SVGGElement
-
-  stylesList: any[]
-
+  stylesList: CSSStyleDeclaration[]
   svgElement?: SVGSVGElement
-
   tempBoundingBox = {
     height: 0,
     width: 0,
@@ -101,19 +86,16 @@ export default class HShapeElement extends RenderableElement {
 
     for (let i = 0; i < length; i++) {
       this.calculateShapeBoundingBox(itemsData[i], boundingBox)
-      continue
+      // continue
 
-      // TODO:
-      // @ts-expect-error
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (itemsData[i]?.it) {
-        // @ts-expect-error
         this.calculateBoundingBox(itemsData[i].it, boundingBox)
         continue
       }
-      // @ts-expect-error
       if (itemsData[i]?.style && itemsData[i].w) {
-        // @ts-expect-error
-        this.expandStrokeBoundingBox(itemsData[i].w, boundingBox)
+        this.expandStrokeBoundingBox(itemsData[i].w as ValueProperty, boundingBox)
       }
     }
   }
@@ -187,7 +169,7 @@ export default class HShapeElement extends RenderableElement {
     boundingBox.yMax = Math.max(bounds.bottom, boundingBox.yMax)
   }
 
-  createContent() {
+  override createContent() {
     let cont
 
     if (!this.baseElement) {
@@ -322,15 +304,7 @@ export default class HShapeElement extends RenderableElement {
     return point
   }
 
-  initElement(
-    _data: LottieLayer,
-    _globalData: GlobalData,
-    _comp: CompElementInterface
-  ) {
-    throw new Error(`${this.constructor.name}: Method initElement is not implemented`)
-  }
-
-  renderInnerContent() {
+  override renderInnerContent() {
     this._renderShapeFrame()
 
     if (!this.hidden && (this._isFirstFrame || this._mdf)) {
@@ -357,7 +331,7 @@ export default class HShapeElement extends RenderableElement {
           ? 0
           : tempBoundingBox.yMax - tempBoundingBox.y
       // var tempBoundingBox = this.shapeCont.getBBox();
-      if (this.currentBoxContains(tempBoundingBox as any)) {
+      if (this.currentBoxContains(tempBoundingBox as BoundingBox)) {
         return
       }
       let hasChanged = false

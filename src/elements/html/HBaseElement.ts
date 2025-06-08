@@ -1,11 +1,7 @@
-import type {
-  ElementInterfaceIntersect,
-  GlobalData,
-  LottieLayer,
-  Transformer,
-} from '@/types'
+import type { ElementInterfaceIntersect } from '@/types'
 
 import CVEffects from '@/elements/canvas/CVEffects'
+import RenderableElement from '@/elements/helpers/RenderableElement'
 import MaskElement from '@/elements/MaskElement'
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
 import BaseRenderer from '@/renderers/BaseRenderer'
@@ -13,21 +9,13 @@ import { styleDiv } from '@/utils'
 import createTag from '@/utils/helpers/htmlElements'
 import createNS from '@/utils/helpers/svgElements'
 
-export default class HBaseElement {
-  _isFirstFrame?: boolean
-  baseElement?: SVGGElement | HTMLElement
-  data?: LottieLayer
-  finalTransform?: Transformer
-  globalData?: GlobalData
-  hidden?: boolean
-  layerElement?: SVGGElement | HTMLElement
+export default class HBaseElement extends RenderableElement {
   maskedElement?: SVGGElement | HTMLElement
-  maskManager?: MaskElement
   matteElement?: SVGGElement | HTMLElement
-  renderableEffectsManager?: CVEffects
   svgElement?: SVGSVGElement
   transformedElement?: SVGGElement | HTMLElement
   constructor() {
+    super()
     const { getBaseElement } = SVGBaseElement.prototype,
       { buildElementParenting } = BaseRenderer.prototype
 
@@ -76,7 +64,7 @@ export default class HBaseElement {
     )
   }
 
-  destroy() {
+  override destroy() {
     this.layerElement = null as unknown as SVGGElement
     this.transformedElement = null as unknown as SVGGElement
     if (this.matteElement) {
@@ -86,14 +74,6 @@ export default class HBaseElement {
       this.maskManager.destroy()
       this.maskManager = null as unknown as MaskElement
     }
-  }
-
-  destroyBaseElement() {
-    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
-  }
-
-  getBaseElement(): null | HTMLElement | SVGGElement {
-    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
   }
 
   initRendererElement() {
@@ -142,18 +122,6 @@ export default class HBaseElement {
 
   renderInnerContent() {
     throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
-  }
-
-  renderRenderable() {
-    throw new Error(`${this.constructor.name}: Method renderRenderable is not implemented`)
-  }
-
-  renderTransform() {
-    throw new Error(`${this.constructor.name}: Method renderTransform is not implemented`)
-  }
-
-  setBlendMode() {
-    throw new Error(`${this.constructor.name}: Method setBlendMode is not implemented`)
   }
 
   setMatte() {

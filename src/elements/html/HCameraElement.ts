@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type HCompElement from '@/elements/html/HCompElement'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
+  Keyframe,
   LottieLayer,
   Shape,
   Transformer,
@@ -50,24 +49,30 @@ export default class HCameraElement extends FrameElement {
       0,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    if ((data.ks.p as any)?.s) {
+    if ((data.ks.p as unknown as VectorProperty<{ s: unknown }> | undefined)?.s) {
+      const prop = data.ks.p as unknown as {
+        x: VectorProperty
+        y: VectorProperty
+        z: VectorProperty
+      }
+
       this.px = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
-        (data.ks.p as any).x,
+        prop.x,
         1,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.py = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
-        (data.ks.p as any).y,
+        prop.y,
         1,
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.pz = PropertyFactory.getProp(
         this as unknown as ElementInterfaceIntersect,
-        (data.ks.p as any).z,
+        prop.z,
         1,
         0,
         this as unknown as ElementInterfaceIntersect
@@ -100,7 +105,7 @@ export default class HCameraElement extends FrameElement {
     }
     this.or = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
-      data.ks.or as VectorProperty<number[]>,
+      data.ks.or as VectorProperty<Keyframe[]>,
       1,
       degToRads,
       this as unknown as ElementInterfaceIntersect
@@ -287,7 +292,7 @@ export default class HCameraElement extends FrameElement {
 
         for (let i = 0; i < len; i++) {
           comp = this.comp.threeDElements[i]
-          if (comp?.type !== '3d') {
+          if (comp.type !== '3d') {
             continue
           }
           if (hasMatrixChanged) {

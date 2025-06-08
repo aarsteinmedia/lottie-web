@@ -4,20 +4,23 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
 import HBaseElement from '@/elements/html/HBaseElement'
+import SolidElement from '@/elements/SolidElement'
 import createTag from '@/utils/helpers/htmlElements'
 import createNS from '@/utils/helpers/svgElements'
 
-export default class HSolidElement extends RenderableDOMElement {
+export default class HSolidElement extends SolidElement {
   svgElement?: SVGSVGElement
+
 
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super()
+    super(
+      data, globalData, comp
+    )
 
     const {
       addEffects,
@@ -74,9 +77,5 @@ export default class HSolidElement extends RenderableDOMElement {
       }
     }
     this.layerElement?.appendChild(rect)
-  }
-
-  setMatte() {
-    throw new Error(`${this.constructor.name}: Method setMatte is not implemented`)
   }
 }

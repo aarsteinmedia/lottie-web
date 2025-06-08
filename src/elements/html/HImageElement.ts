@@ -1,7 +1,6 @@
 import type {
   ElementInterfaceIntersect,
   GlobalData,
-  LottieAsset,
   LottieLayer,
 } from '@/types'
 
@@ -9,8 +8,6 @@ import HSolidElement from '@/elements/html/HSolidElement'
 import createNS from '@/utils/helpers/svgElements'
 
 export default class HImageElement extends HSolidElement {
-  assetData: null | LottieAsset
-
   imageElem?: SVGImageElement
 
   constructor(

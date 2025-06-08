@@ -295,6 +295,12 @@ export interface ExpressionInterfaces {
   text: typeof TextExpressionInterface
 }
 
+export interface ThreeDElement {
+  container: HTMLElement
+  perspectiveElem: HTMLElement
+  type: string
+}
+
 export interface AnimatedContent {
   data: Shape
   element: ShapeDataInterface | SVGElementInterface
@@ -549,7 +555,7 @@ export interface Shape {
     x?: number
   }
   or?: {
-    k: any[]
+    k: Keyframe[]
     ix?: number
   }
   os?: { ix?: number }
@@ -894,6 +900,7 @@ export interface ShapeDataInterface {
   caches: string[]
   container: ElementInterfaceIntersect
   elements: ElementInterfaceIntersect[]
+  it: ShapeDataInterface[]
   lStr: string
   lvl: number
   setAsAnimated: () => void
@@ -912,9 +919,11 @@ export interface ShapeDataInterface {
       _length: number
     }
   }
+  style?: CSSStyleDeclaration
   styles: SVGStyleData[]
   transform: Transformer
   transformers: Transformer[]
+  w?: ValueProperty
 }
 
 export interface TextData {

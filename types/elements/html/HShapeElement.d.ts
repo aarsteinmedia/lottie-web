@@ -1,12 +1,11 @@
 import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type { BoundingBox, CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
+import type { BoundingBox, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
 import type ValueProperty from '../../utils/properties/ValueProperty';
-import RenderableElement from '../../elements/helpers/RenderableElement';
-export default class HShapeElement extends RenderableElement {
-    animatedContents: any[];
+import ShapeElement from '../../elements/ShapeElement';
+export default class HShapeElement extends ShapeElement {
+    animatedContents: unknown[];
     currentBBox: BoundingBox;
     prevViewData: HShapeElement[];
-    processedElements: any[];
     shapeBoundingBox: {
         bottom: number;
         left: number;
@@ -14,10 +13,8 @@ export default class HShapeElement extends RenderableElement {
         top: number;
     };
     shapeCont?: SVGElement;
-    shapeModifiers: any[];
-    shapes: Shape[];
     shapesContainer: SVGGElement;
-    stylesList: any[];
+    stylesList: CSSStyleDeclaration[];
     svgElement?: SVGSVGElement;
     tempBoundingBox: {
         height: number;
@@ -39,7 +36,6 @@ export default class HShapeElement extends RenderableElement {
     filterUniqueShapes(): void;
     getBoundsOfCurve(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): void;
     getTransformedPoint(transformers: Transformer[], pointFromProps: number[]): number[];
-    initElement(_data: LottieLayer, _globalData: GlobalData, _comp: CompElementInterface): void;
     renderInnerContent(): void;
     searchShapes(_shapes: Shape[], _itemsData: ShapeGroupData[], _prevViewData: HShapeElement[], _shapesContainer: SVGElement, _pos: number, _: unknown[], _flag: boolean): void;
 }

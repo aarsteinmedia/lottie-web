@@ -1,9 +1,7 @@
 import type AnimationItem from '../animation/AnimationItem';
 import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '../types';
 import HCameraElement from '../elements/html/HCameraElement';
-import HImageElement from '../elements/html/HImageElement';
 import HShapeElement from '../elements/html/HShapeElement';
-import HSolidElement from '../elements/html/HSolidElement';
 import HTextElement from '../elements/html/HTextElement';
 import ImageElement from '../elements/ImageElement';
 import SolidElement from '../elements/SolidElement';
@@ -26,9 +24,9 @@ export default class HybridRendererBase extends BaseRenderer {
     checkPendingElements(): void;
     configAnimation(animData: AnimationData): void;
     createCamera(data: LottieLayer): HCameraElement;
-    createImage(data: LottieLayer): ImageElement | HImageElement;
+    createImage(data: LottieLayer): ImageElement;
     createShape(data: LottieLayer): SVGShapeElement | HShapeElement;
-    createSolid(data: LottieLayer): SolidElement | HSolidElement;
+    createSolid(data: LottieLayer): SolidElement;
     createText(data: LottieLayer): SVGTextLottieElement | HTextElement;
     createThreeDContainer(pos: number, type: string): {
         container: HTMLElement;
