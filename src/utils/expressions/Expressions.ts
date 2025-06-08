@@ -41,9 +41,7 @@ function initExpressions(animation: AnimationItem) {
     throw new Error('Renderer -> GlobalData is not set')
   }
 
-  // @ts-expect-error: Hybrid renderer is excluded
   animation.renderer.compInterface = new CompExpressionInterface(animation.renderer)
-  // @ts-expect-error: Hybrid renderer is excluded
   animation.renderer.globalData.projectInterface.registerComposition(animation.renderer)
   animation.renderer.globalData.pushExpression = pushExpression
   animation.renderer.globalData.popExpression = popExpression

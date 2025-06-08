@@ -1,5 +1,5 @@
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
+// import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
 
 import { RendererType } from '@/utils/enums'
@@ -7,7 +7,7 @@ import { RendererType } from '@/utils/enums'
 type Renderer =
   | typeof SVGRenderer
   | typeof CanvasRenderer
-  | typeof HybridRenderer
+  // | typeof HybridRenderer
 const renderers: {
   [key in RendererType]?: Renderer
 } = {}

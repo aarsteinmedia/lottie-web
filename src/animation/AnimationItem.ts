@@ -1,5 +1,5 @@
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
+// import type HybridRenderer from '@/renderers/HybridRenderer'
 import type SVGRenderer from '@/renderers/SVGRenderer'
 import type {
   AnimationConfiguration,
@@ -74,7 +74,10 @@ export default class AnimationItem extends BaseEvent {
   public playSpeed: number
   public projectInterface: ProjectInterface
 
-  public renderer: SVGRenderer | CanvasRenderer | HybridRenderer
+  /**
+   * TODO: | HybridRenderer.
+   */
+  public renderer: SVGRenderer | CanvasRenderer
   public segmentPos: number
   public segments: Vector2[]
   public timeCompleted: number

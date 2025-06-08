@@ -1,5 +1,4 @@
 import type CanvasRenderer from '../renderers/CanvasRenderer';
-import type HybridRenderer from '../renderers/HybridRenderer';
 import type SVGRenderer from '../renderers/SVGRenderer';
 import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
 import BaseEvent, { type LottieEvent } from '../events';
@@ -39,7 +38,7 @@ export default class AnimationItem extends BaseEvent {
     playDirection: AnimationDirection;
     playSpeed: number;
     projectInterface: ProjectInterface;
-    renderer: SVGRenderer | CanvasRenderer | HybridRenderer;
+    renderer: SVGRenderer | CanvasRenderer;
     segmentPos: number;
     segments: Vector2[];
     timeCompleted: number;

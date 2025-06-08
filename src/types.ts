@@ -159,7 +159,6 @@ export interface Transformer {
 // type UnionToIntersection<U> =
 //   (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
 
-// type Renderer = SVGRenderer | CanvasRenderer | HybridRenderer
 type RendererIntersect = SVGRenderer & CanvasRenderer & HybridRenderer
 
 export type ElementInterfaceIntersect = CompElementInterface &

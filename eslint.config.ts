@@ -22,7 +22,7 @@ const ignores = [
     '**/types/*',
     'tsconfig.json',
     'player.js',
-    'player-light.js'
+    'player-light.js',
   ],
   config: ConfigArray = tseslint.config(
     sheriff(sheriffOptions),

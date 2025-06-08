@@ -287,7 +287,7 @@ export default class CVShapeElement extends ShapeElement {
       for (let i = 0; i < length; i++) {
         currentStyle = this.stylesList[i]
         const {
-            co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, type, wi
+            co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
           } = currentStyle,
           isStroke =
           type === ShapeType.Stroke || type === ShapeType.GradientStroke
@@ -372,7 +372,7 @@ export default class CVShapeElement extends ShapeElement {
         }
         if (!isStroke) {
         // ctx.fill(currentStyle.r);
-          ; (this.globalData.renderer as CanvasRenderer).ctxFill(currentStyle.r)
+          ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
         }
         renderer.restore()
       }
