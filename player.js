@@ -1,5 +1,5 @@
 import { isServer, createElementID, PreserveAspectRatio as PreserveAspectRatio$1 } from '@aarsteinmedia/lottie-web/utils';
-import Lottie from '@aarsteinmedia/lottie-web';
+import { loadAnimation } from '@aarsteinmedia/lottie-web';
 import { strToU8, zip, strFromU8, unzip as unzip$1 } from 'fflate';
 
 /**
@@ -1156,6 +1156,7 @@ const generator = '@aarsteinmedia/dotlottie-player';
     if (!this.shadowRoot || !src) {
       return;
     }
+
     this.source = src;
     // Load the resource
     try {
@@ -1192,7 +1193,7 @@ const generator = '@aarsteinmedia/dotlottie-player';
         this.playerState = PlayerState.Playing;
       }
       // Initialize lottie player and load animation
-      this._lottieInstance = Lottie.loadAnimation({
+      this._lottieInstance = loadAnimation({
         ...this._getOptions(),
         animationData: animations[this._currentAnimation]
       });
@@ -1200,6 +1201,7 @@ const generator = '@aarsteinmedia/dotlottie-player';
       this._errorMessage = handleErrors(error).message;
       this.playerState = PlayerState.Error;
       this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      console.error(error)
       return;
     }
     this._addEventListeners();
@@ -1814,7 +1816,7 @@ const generator = '@aarsteinmedia/dotlottie-player';
         this._lottieInstance.destroy();
       }
       // Re-initialize lottie player
-      this._lottieInstance = Lottie.loadAnimation({
+      this._lottieInstance = loadAnimation({
         ...this._getOptions(),
         animationData: this._animations[this._currentAnimation]
       });

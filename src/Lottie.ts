@@ -158,6 +158,8 @@ registerEffect(
 )
 registerCanvasEffect(35, CVTransformEffect)
 
+export { loadAnimation }
+
 export default Lottie
 
 export { type default as AnimationItem } from '@/animation/AnimationItem'

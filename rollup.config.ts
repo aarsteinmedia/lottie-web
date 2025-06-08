@@ -10,10 +10,11 @@ import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-opener'
 // import sourcemaps from 'rollup-plugin-sourcemaps'
 import pluginSummary from 'rollup-plugin-summary'
-import { swc } from 'rollup-plugin-swc3'
+import { minify, swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
 
 const isProd = process.env.NODE_ENV !== 'development',
+  isMinified = process.env.NODE_ENV === 'minified',
   { url } = import.meta,
   __dirname = path.dirname(fileURLToPath(url)),
 
@@ -104,13 +105,56 @@ const isProd = process.env.NODE_ENV !== 'development',
     },
     output: {
       exports: 'named',
+      extend: true,
       file: `./dist/${input.name}.js`,
       format: 'esm',
-      // sourcemap: !isProd,
     },
 
     plugins: plugins(),
   })),
-  output = [...outputs, ...types]
+  output = [...outputs, ...types],
+  minified: RollupOptions = {
+    input: path.resolve(__dirname, 'player.js'),
+    onwarn(warning, warn) {
+      if (warning.code === 'CIRCULAR_DEPENDENCY') {
+        return
+      }
+      warn(warning)
+    },
+    output: {
+      exports: 'named',
+      extend: true,
+      file: './player.min.js',
+      format: 'iife',
+      name: pkg.name
+      // sourcemap: !isProd,
+    },
+    plugins: [
+      typescriptPaths(),
+      nodeResolve({
+        extensions: ['.ts', '.js'],
+        preferBuiltins: true,
+      }),
+      commonjs(),
+      injectVersion(),
+      swc(),
+      minify(),
+      // sourcemaps(),
+      serve({
+        browser: 'firefox',
+        open: true,
+        port: 1002
+      }),
+      livereload()
+    ],
+  }
 
-export default isProd ? output : outputs[0]
+let bundle: RollupOptions | RollupOptions[] = output
+
+if (!isProd) {
+  bundle = outputs[0]
+} else if (isMinified) {
+  bundle = minified
+}
+
+export default bundle

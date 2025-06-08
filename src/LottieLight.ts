@@ -91,5 +91,6 @@ registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
 registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
 registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
+export { loadAnimation }
 
 export default Lottie

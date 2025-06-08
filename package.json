@@ -30,6 +30,7 @@
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
     "dev": "rollup -c --configPlugin typescript -w --environment NODE_ENV:development",
+    "min": "rollup -c --configPlugin typescript -w --environment NODE_ENV:minified",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
   },
