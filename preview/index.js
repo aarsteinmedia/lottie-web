@@ -1,4 +1,4 @@
-import './player.min.js'
+import './player.js'
 import files from './files.js'
 
 const previewForm = document.querySelector('form#preview'),

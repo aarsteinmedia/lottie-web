@@ -644,6 +644,7 @@ export default class CVShapeElement extends ShapeElement {
     if (!this._isFirstFrame && !shape._mdf && !styledShape.transforms._mdf) {
       return
     }
+
     const { transforms, trNodes: shapeNodes } = styledShape,
       { paths } = shape as { paths?: ShapeCollection }
     let i,

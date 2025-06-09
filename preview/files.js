@@ -16,6 +16,7 @@ const files = [
   '6468.json',
   '6538.json',
   '6555.json',
+  '6555.lottie',
   '6558.json',
   '6561.json',
   '1729.json',
@@ -43,7 +44,8 @@ const files = [
   'laptop.lottie',
   'hero-web.json',
   'home_idea_es.lottie',
-  'bulb.lottie'
+  'bulb.lottie',
+  'gradient-stroke.json'
 ]
 
 export default files
