@@ -43,7 +43,7 @@ import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorato
 import Expressions from '@/utils/expressions/Expressions'
 import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 import getInterface from '@/utils/expressions/InterfacesProvider'
-import { _isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants'
 import { setLocationHref } from '@/utils/helpers/locationHref'
 import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
 import { setQuality } from '@/utils/helpers/resolution'
@@ -99,7 +99,7 @@ const Lottie = {
 const readyStateCheckInterval = setInterval(checkReady, 100)
 
 function checkReady() {
-  if (_isServer) {
+  if (isServer) {
     return
   }
   if (document.readyState === 'complete') {

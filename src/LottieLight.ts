@@ -20,9 +20,8 @@ import {
 } from '@/animation/AnimationManager'
 import { registerRenderer } from '@/renderers'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { inBrowser } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
-import { _isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants'
 import { setLocationHref } from '@/utils/helpers/locationHref'
 import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
 import { setQuality } from '@/utils/helpers/resolution'
@@ -47,7 +46,6 @@ const Lottie = {
   freeze,
   getRegisteredAnimations,
   goToAndStop,
-  inBrowser,
   loadAnimation,
   mute,
   pause,
@@ -70,7 +68,7 @@ const Lottie = {
 }
 
 const checkReady = () => {
-    if (_isServer) {
+    if (isServer) {
       return
     }
     if (document.readyState === 'complete') {

@@ -14,8 +14,6 @@ export const floatEqual = (a: number, b: number) =>
 
   floatZero = (f: number) => Math.abs(f) <= 0.00001,
 
-  isServer = () => !(typeof window !== 'undefined' && document),
-
   pointEqual = (p1: Vector2, p2: Vector2) =>
     floatEqual(p1[0], p2[0]) && floatEqual(p1[1], p2[1]),
 
@@ -45,8 +43,6 @@ export const floatEqual = (a: number, b: number) =>
     return Math.min(Math.max(n, min), max)
   },
 
-  inBrowser = () => typeof navigator !== 'undefined',
-
   isArray = <T>(input: unknown): input is T[] => {
     return Symbol.iterator in Object(input) && (input as unknown[]).length > 0
   },
@@ -69,14 +65,6 @@ export const floatEqual = (a: number, b: number) =>
 
     return '_type' in el && el._type === 'ShapePath'
 
-  },
-
-  isSafari = (): boolean => {
-    const isTrue = inBrowser()
-      ? /^(?:(?!chrome|android).)*safari/i.test(navigator.userAgent)
-      : false
-
-    return isTrue
   },
 
   rgbToHex = (

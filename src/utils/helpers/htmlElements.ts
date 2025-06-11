@@ -1,7 +1,7 @@
-import { _isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants'
 
 export default function createTag<T extends HTMLElement>(type: string) {
-  if (_isServer) {
+  if (isServer) {
     return null as unknown as T
   }
 

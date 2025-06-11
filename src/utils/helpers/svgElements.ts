@@ -1,7 +1,7 @@
-import { _isServer, namespaceSVG } from '@/utils/helpers/constants'
+import { isServer, namespaceSVG } from '@/utils/helpers/constants'
 
 export default function createNS<T extends SVGElement>(type: string) {
-  if (_isServer) {
+  if (isServer) {
     /**
      * This lets the function run without errors in a server context,
      * while still working with TypeScript.

@@ -7,7 +7,7 @@ import type {
 
 import AnimationItem from '@/animation/AnimationItem'
 import { RendererType } from '@/utils/enums'
-import { _isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants'
 import createTag from '@/utils/helpers/htmlElements'
 
 let _isFrozen = false,
@@ -123,7 +123,7 @@ export function searchAnimations(
   standalone?: boolean,
   rendererFromProps?: RendererType
 ) {
-  if (_isServer) {
+  if (isServer) {
     return
   }
   let renderer = rendererFromProps
@@ -198,7 +198,7 @@ export function unmute(animation?: string) {
   }
 }
 function activate() {
-  if (_isFrozen || !playingAnimationsNum || !_isStopped || _isServer) {
+  if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer) {
     return
   }
   window.requestAnimationFrame(first)
@@ -211,7 +211,7 @@ function addPlayingCount() {
 
 function first(nowTime: number) {
   initTime = nowTime
-  if (!_isServer) {
+  if (!isServer) {
     window.requestAnimationFrame(resume)
   }
 }
@@ -243,7 +243,7 @@ function resume(nowTime: number) {
   }
   initTime = nowTime
   if (playingAnimationsNum && !_isFrozen) {
-    if (!_isServer) {
+    if (!isServer) {
       window.requestAnimationFrame(resume)
     }
   } else {

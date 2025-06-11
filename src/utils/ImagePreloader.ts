@@ -3,7 +3,7 @@ import type { ImageData, LottieAsset } from '@/types'
 import { loadData } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import {
-  _isSafari, _isServer, namespaceXlink
+  isSafari, isServer, namespaceXlink
 } from '@/utils/helpers/constants'
 import createTag from '@/utils/helpers/htmlElements'
 import createNS from '@/utils/helpers/svgElements'
@@ -77,7 +77,7 @@ export default class ImagePreloader {
       img,
     }
 
-    if (_isSafari) {
+    if (isSafari) {
       this.testImageLoaded(img)
     } else {
       img.addEventListener(
@@ -200,7 +200,7 @@ export default class ImagePreloader {
   }
 
   private _createProxyImage() {
-    if (_isServer) {
+    if (isServer) {
       return null
     }
     const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
@@ -285,7 +285,7 @@ export default class ImagePreloader {
   }
 
   private testImageLoaded(img: SVGGraphicsElement) {
-    if (_isServer) {
+    if (isServer) {
       return
     }
     let _count = 0

@@ -5,7 +5,6 @@ declare const Lottie: {
     freeze: typeof freeze;
     getRegisteredAnimations: typeof getRegisteredAnimations;
     goToAndStop: typeof goToAndStop;
-    inBrowser: () => boolean;
     loadAnimation: typeof loadAnimation;
     mute: typeof mute;
     pause: typeof pause;

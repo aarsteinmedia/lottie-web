@@ -1,7 +1,7 @@
 import type AudioElement from '@/elements/AudioElement'
 import type { AudioFactory } from '@/types'
 
-import { _isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants'
 
 export class AudioController {
   public audioFactory?: AudioFactory
@@ -26,7 +26,7 @@ export class AudioController {
     if (this.audioFactory) {
       return this.audioFactory(assetPath)
     }
-    if (!_isServer && 'Howl' in window) {
+    if (!isServer && 'Howl' in window) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
       return new (window.Howl as any)({ src: [assetPath] })
     }
