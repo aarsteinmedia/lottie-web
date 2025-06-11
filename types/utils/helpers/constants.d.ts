@@ -1,1 +1,1 @@
-export declare const degToRads: number, initialDefaultFrame = -999999, roundCorner = 0.5519;
+export declare const degToRads: number, initialDefaultFrame = -999999, roundCorner = 0.5519, namespaceXlink = "http://www.w3.org/1999/xlink", namespaceSVG = "http://www.w3.org/2000/svg", namespaceXML = "http://www.w3.org/XML/1998/namespace", _isServer: boolean, _inBrowser: boolean, _isSafari: boolean;

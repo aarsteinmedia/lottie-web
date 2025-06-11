@@ -27,8 +27,8 @@ export default class SolidElement extends ImageElement {
     }
     const rect = createNS<SVGRectElement>('rect')
 
-    rect.width.baseVal.value = Number(this.data.sw)
-    rect.height.baseVal.value = Number(this.data.sh)
+    rect.width.baseVal.value = this.data.sw || 0
+    rect.height.baseVal.value = this.data.sh || 0
     if (this.data.sc) {
       rect.setAttribute('fill', this.data.sc)
     }

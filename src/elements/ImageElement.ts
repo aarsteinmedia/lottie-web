@@ -7,6 +7,7 @@ import type {
 } from '@/types'
 
 import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+import { namespaceXlink } from '@/utils/helpers/constants'
 import createNS from '@/utils/helpers/svgElements'
 
 export default class ImageElement extends SVGBaseElement {
@@ -56,7 +57,7 @@ export default class ImageElement extends SVGBaseElement {
         this.globalData?.renderConfig?.imagePreserveAspectRatio ||
         '')
       this.innerElem.setAttributeNS(
-        'http://www.w3.org/1999/xlink',
+        namespaceXlink,
         'href',
         assetPath
       )

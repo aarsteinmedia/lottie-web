@@ -6,6 +6,7 @@ import SVGEffects from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
 import featureSupport from '@/utils/featureSupport'
 import FiltersFactory from '@/utils/FiltersFactory'
+import { namespaceXlink } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import createNS from '@/utils/helpers/svgElements'
 
@@ -155,7 +156,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
             matteType === 3 ? 'luminance' : 'alpha')
           useElement = createNS<SVGUseElement>('use')
           useElement.setAttributeNS(
-            'http://www.w3.org/1999/xlink',
+            namespaceXlink,
             'href',
             `#${this.layerId}`
           )
@@ -203,17 +204,19 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
         // if (!alphaRect) {
         //   throw new Error(`${this.constructor.name}: Could not create RECT element`)
         // }
-        alphaRect.setAttribute('width', `${Number(this.comp?.data?.w)}`)
-        alphaRect.setAttribute('height', `${Number(this.comp?.data?.h)}`)
-        alphaRect.setAttribute('x', '0')
-        alphaRect.setAttribute('y', '0')
+        alphaRect.width.baseVal.value = this.comp?.data?.w || 0
+        alphaRect.height.baseVal.value = this.comp?.data?.h || 0
+        alphaRect.x.baseVal.value = 0
+        alphaRect.y.baseVal.value = 0
+
         alphaRect.setAttribute('fill', '#ffffff')
         alphaRect.setAttribute('opacity', '0')
+
         maskGrouper.setAttribute('filter', `url(${getLocationHref()}#${filId})`)
         maskGrouper.appendChild(alphaRect)
-        useElement = createNS('use')
+        useElement = createNS<SVGUseElement>('use')
         useElement.setAttributeNS(
-          'http://www.w3.org/1999/xlink',
+          namespaceXlink,
           'href',
           `#${this.layerId}`
         )

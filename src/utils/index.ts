@@ -61,7 +61,7 @@ export const floatEqual = (a: number, b: number) =>
     return str === 'var' || str === 'let' || str === 'const'
   },
 
-  isShapePath =(el?: PoolElement): el is ShapePath => {
+  isShapePath = (el?: PoolElement): el is ShapePath => {
 
     if (!el || isArray(el)) {
       return false

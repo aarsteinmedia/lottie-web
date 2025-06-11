@@ -103,7 +103,7 @@ export default class SVGTextLottieElement extends TextElement {
       this.layerElement.setAttribute('font-style', fStyle)
       this.layerElement.setAttribute('font-weight', fWeight)
     }
-    this.layerElement.setAttribute('aria-label', `${documentData.t}`)
+    this.layerElement.ariaLabel = `${documentData.t}`
 
     const letters = documentData.l,
       hasGlyphs = Boolean(this.globalData.fontManager?.chars)
@@ -186,10 +186,15 @@ export default class SVGTextLottieElement extends TextElement {
             cachedSpansLength > i
               ? this.textSpans[i]?.span
               : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')
+
+          if (!tSpan) {
+            throw new Error('Could not create tSpan')
+          }
+
           if (cachedSpansLength <= i) {
-            tSpan?.setAttribute('stroke-linecap', 'butt')
-            tSpan?.setAttribute('stroke-linejoin', 'round')
-            tSpan?.setAttribute('stroke-miterlimit', '4')
+            tSpan.setAttribute('stroke-linecap', 'butt')
+            tSpan.setAttribute('stroke-linejoin', 'round')
+            tSpan.setAttribute('stroke-miterlimit', '4')
             if (this.textSpans[i]) {
               this.textSpans[i].span = tSpan
             }
@@ -197,7 +202,7 @@ export default class SVGTextLottieElement extends TextElement {
             if (hasGlyphs) {
               const childSpan = createNS<SVGGElement>('g')
 
-              tSpan?.appendChild(childSpan)
+              tSpan.appendChild(childSpan)
 
               if (this.textSpans[i]) {
                 this.textSpans[i].childSpan = childSpan
@@ -209,13 +214,9 @@ export default class SVGTextLottieElement extends TextElement {
               this.textSpans[i].span = tSpan
             }
 
-            if (tSpan) {
-              this.layerElement.appendChild(tSpan)
-            }
+            this.layerElement.appendChild(tSpan)
           }
-          if (tSpan) {
-            tSpan.style.display = 'inherit'
-          }
+          tSpan.style.display = 'inherit'
         }
 
         matrixHelper.reset()
@@ -297,19 +298,21 @@ export default class SVGTextLottieElement extends TextElement {
 
           continue
         }
-        if (singleShape) {
-          tSpan?.setAttribute('transform',
-            `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`)
-        }
         if (tSpan) {
-          tSpan.textContent = letters[i].val
-        }
+          if (singleShape) {
+            tSpan.setAttribute('transform',
+              `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`)
+          }
 
-        tSpan?.setAttributeNS(
-          'http://www.w3.org/XML/1998/namespace',
-          'xml:space',
-          'preserve'
-        )
+          tSpan.textContent = letters[i].val
+          tSpan.style.whiteSpace = 'preserve'
+
+          // tSpan.setAttributeNS(
+          //   namespaceXML,
+          //   'xml:space',
+          //   'preserve'
+          // )
+        }
       }
       if (singleShape) {
         tSpan?.setAttribute('d', shapeStr)

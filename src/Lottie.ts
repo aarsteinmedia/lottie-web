@@ -34,7 +34,6 @@ import { registerRenderer } from '@/renderers'
 import CanvasRenderer from '@/renderers/CanvasRenderer'
 // import HybridRenderer from '@/renderers/HybridRenderer'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { isServer } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
 import {
   setExpressionInterfaces,
@@ -44,6 +43,7 @@ import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorato
 import Expressions from '@/utils/expressions/Expressions'
 import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 import getInterface from '@/utils/expressions/InterfacesProvider'
+import { _isServer } from '@/utils/helpers/constants'
 import { setLocationHref } from '@/utils/helpers/locationHref'
 import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
 import { setQuality } from '@/utils/helpers/resolution'
@@ -99,7 +99,7 @@ const Lottie = {
 const readyStateCheckInterval = setInterval(checkReady, 100)
 
 function checkReady() {
-  if (isServer()) {
+  if (_isServer) {
     return
   }
   if (document.readyState === 'complete') {

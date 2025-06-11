@@ -98,6 +98,7 @@ const ignores = [
             leadingUnderscore: 'allowSingleOrDouble',
             prefix: [
               'is',
+              'in',
               'are',
               'has',
               'should',

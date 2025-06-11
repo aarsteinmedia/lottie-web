@@ -20,8 +20,9 @@ import {
 } from '@/animation/AnimationManager'
 import { registerRenderer } from '@/renderers'
 import SVGRenderer from '@/renderers/SVGRenderer'
-import { inBrowser, isServer } from '@/utils'
+import { inBrowser } from '@/utils'
 import { Modifier, RendererType } from '@/utils/enums'
+import { _isServer } from '@/utils/helpers/constants'
 import { setLocationHref } from '@/utils/helpers/locationHref'
 import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
 import { setQuality } from '@/utils/helpers/resolution'
@@ -69,7 +70,7 @@ const Lottie = {
 }
 
 const checkReady = () => {
-    if (isServer()) {
+    if (_isServer) {
       return
     }
     if (document.readyState === 'complete') {

@@ -3,10 +3,11 @@ import type {
   WorkerEvent
 } from '@/types'
 
-import { isServer } from '@/utils'
 import { loadAsset } from '@/utils/AssetLoader'
 import DataFunctions from '@/utils/DataFunctions'
 import { getWebWorker } from '@/utils/helpers/worker'
+
+import { _isServer } from './helpers/constants'
 
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void
@@ -125,7 +126,7 @@ const funcitonNotImplemented = 'Function not implemented.',
 let workerInstance: Worker | undefined
 
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {
-  if (!isServer() && getWebWorker()) {
+  if (!_isServer && getWebWorker()) {
     const blob = new Blob(['var _workerSelf = self; self.onmessage = ', fn.toString()],
       { type: 'text/javascript' })
     const url = URL.createObjectURL(blob)
@@ -253,7 +254,7 @@ export function loadAnimation(
   const processId = createProcess(onComplete, onError)
 
   workerInstance?.postMessage({
-    fullPath: isServer()
+    fullPath: _isServer
       ? path
       : window.location.origin + window.location.pathname,
     id: processId,
@@ -271,7 +272,7 @@ export function loadData(
   const processId = createProcess(onComplete, onError)
 
   workerInstance?.postMessage({
-    fullPath: isServer()
+    fullPath: _isServer
       ? path
       : window.location.origin + window.location.pathname,
     id: processId,

@@ -1,11 +1,11 @@
-import { inBrowser } from '@/utils'
+import { _inBrowser } from '@/utils/helpers/constants'
 
 class FeatureSupport {
   maskType = true
   offscreenCanvas = typeof OffscreenCanvas !== 'undefined'
   svgLumaHidden = true
   constructor() {
-    if (!inBrowser()) {
+    if (!_inBrowser) {
       return
     }
     this.maskType =

@@ -3,9 +3,9 @@ import type {
   Characacter, DocumentData, FontList, LottieLayer
 } from '@/types'
 
-import { isServer } from '@/utils'
 import { RendererType } from '@/utils/enums'
 import getFontProperties from '@/utils/getFontProperties'
+import { _isServer } from '@/utils/helpers/constants'
 import createTag from '@/utils/helpers/htmlElements'
 import createNS from '@/utils/helpers/svgElements'
 
@@ -146,7 +146,7 @@ function setUpNode(font: string,
     parent: HTMLElement;
     w: number
   } | undefined {
-  if (isServer()) {
+  if (_isServer) {
     return
   }
   const parentNode = createTag('span')
@@ -252,7 +252,7 @@ export default class FontManager {
     }
     const { length } = fontData.list
 
-    if (!isServer()) {
+    if (!_isServer) {
       this.isLoaded = true
 
       for (let i = 0; i < length; i++) {
@@ -279,8 +279,7 @@ export default class FontManager {
         fontData.list[i].loaded = true
         _pendingFonts -= 1
       } else if (
-        !isServer() &&
-        (fontData.list[i].fOrigin === 'p' || fontData.list[i].origin === 3)
+        fontData.list[i].fOrigin === 'p' || fontData.list[i].origin === 3
       ) {
         loadedSelector = document.querySelectorAll(`style[f-forigin="p"][f-family="${fontData.list[i].fFamily}"], style[f-origin="3"][f-family="${fontData.list[i].fFamily}"]`)
 
@@ -298,8 +297,7 @@ export default class FontManager {
           defs?.appendChild(s)
         }
       } else if (
-        !isServer() &&
-        (fontData.list[i].fOrigin === 'g' || fontData.list[i].origin === 1)
+        fontData.list[i].fOrigin === 'g' || fontData.list[i].origin === 1
       ) {
         loadedSelector = document.querySelectorAll<HTMLLinkElement>('link[f-forigin="g"], link[f-origin="1"]')
 
@@ -311,7 +309,7 @@ export default class FontManager {
           }
         }
 
-        if (shouldLoadFont && !isServer()) {
+        if (shouldLoadFont) {
           const link = createTag<HTMLLinkElement>('link')
 
           link.setAttribute('f-forigin', fontData.list[i].fOrigin)
@@ -322,8 +320,7 @@ export default class FontManager {
           document.body.appendChild(link)
         }
       } else if (
-        !isServer() &&
-        (fontData.list[i].fOrigin === 't' || fontData.list[i].origin === 2)
+        fontData.list[i].fOrigin === 't' || fontData.list[i].origin === 2
       ) {
         loadedSelector = document.querySelectorAll<HTMLScriptElement>('script[f-forigin="t"], script[f-origin="2"]')
 
@@ -480,7 +477,7 @@ export default class FontManager {
 
   private createHelper(fontData: FontList,
     def?: HTMLElement | SVGDefsElement): { measureText: (text: string) => number } | undefined {
-    if (isServer()) {
+    if (_isServer) {
       return
     }
     const engine = def ? RendererType.SVG : RendererType.Canvas

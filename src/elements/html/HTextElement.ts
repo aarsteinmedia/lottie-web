@@ -194,11 +194,12 @@ export default class HTextElement extends TextElement {
         }
       } else {
         tSpan.textContent = letters[i].val
-        tSpan.setAttributeNS(
-          'http://www.w3.org/XML/1998/namespace',
-          'xml:space',
-          'preserve'
-        )
+        tSpan.style.whiteSpace = 'preserve'
+        // tSpan.setAttributeNS(
+        //   namespaceXML,
+        //   'xml:space',
+        //   'preserve'
+        // )
         if (this.isMasked) {
           this.innerElem?.appendChild(tSpan)
         } else {

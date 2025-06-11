@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 
 import HSolidElement from '@/elements/html/HSolidElement'
+import { namespaceXlink } from '@/utils/helpers/constants'
 import createNS from '@/utils/helpers/svgElements'
 
 export default class HImageElement extends HSolidElement {
@@ -41,7 +42,7 @@ export default class HImageElement extends HSolidElement {
       this.imageElem.setAttribute('width', `${this.assetData.w}px`)
       this.imageElem.setAttribute('height', `${this.assetData.h}px`)
       this.imageElem.setAttributeNS(
-        'http://www.w3.org/1999/xlink',
+        namespaceXlink,
         'href',
         assetPath
       )

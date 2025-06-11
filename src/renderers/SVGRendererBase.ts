@@ -15,6 +15,7 @@ import BaseRenderer from '@/renderers/BaseRenderer'
 import { createElementID } from '@/utils'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { createSizedArray } from '@/utils/helpers/arrays'
+import { namespaceSVG } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import createNS from '@/utils/helpers/svgElements'
 
@@ -140,14 +141,14 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         throw new Error(`${this.constructor.name}: Can't access svgElement`)
       }
 
-      this.svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-      this.svgElement.setAttribute('xmlns:xlink',
-        'http://www.w3.org/1999/xlink')
+      this.svgElement.setAttribute('xmlns', namespaceSVG)
+      // this.svgElement.setAttribute('xmlns:xlink',
+      //   namespaceXlink)
       if (this.renderConfig.viewBoxSize) {
-        this.svgElement.setAttribute('viewBox', this.renderConfig.viewBoxSize)
-      } else {
         this.svgElement.setAttribute('viewBox',
-          `0 0 ${animData.w} ${animData.h}`)
+          this.renderConfig.viewBoxSize)
+      } else {
+        this.svgElement.setAttribute('viewBox', `0 0 ${animData.w} ${animData.h}`)
       }
 
       if (!this.renderConfig.viewBoxOnly) {
@@ -193,10 +194,10 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       const maskElement = createNS<SVGClipPathElement>('clipPath'),
         rect = createNS<SVGRectElement>('rect')
 
-      rect.setAttribute('width', `${animData.w}`)
-      rect.setAttribute('height', `${animData.h}`)
-      rect.setAttribute('x', '0')
-      rect.setAttribute('y', '0')
+      rect.width.baseVal.value = animData.w
+      rect.height.baseVal.value = animData.h
+      rect.x.baseVal.value = 0
+      rect.y.baseVal.value = 0
       const maskId = createElementID()
 
       maskElement.id = maskId
