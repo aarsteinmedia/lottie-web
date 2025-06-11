@@ -485,15 +485,15 @@ export interface AnimationSettings {
     mode?: PlayMode;
     speed?: number;
 }
-interface Animation extends AnimationSettings {
+export interface LottieAnimation extends AnimationSettings {
     id: string;
 }
 export type ValueOf<T> = T[keyof T];
-export interface AnimationConfig extends Animation {
+export interface AnimationConfig extends LottieAnimation {
     url: string;
 }
 export interface LottieManifest {
-    animations: Animation[];
+    animations: LottieAnimation[];
     author?: string;
     description?: string;
     generator?: string;

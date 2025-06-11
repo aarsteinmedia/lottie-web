@@ -675,14 +675,14 @@ export interface AnimationSettings {
   speed?: number
 }
 
-interface Animation extends AnimationSettings { id: string }
+export interface LottieAnimation extends AnimationSettings { id: string }
 
 export type ValueOf<T> = T[keyof T]
 
-export interface AnimationConfig extends Animation { url: string }
+export interface AnimationConfig extends LottieAnimation { url: string }
 
 export interface LottieManifest {
-  animations: Animation[]
+  animations: LottieAnimation[]
   author?: string
   description?: string
   generator?: string
