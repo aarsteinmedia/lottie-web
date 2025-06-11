@@ -1,3 +1,4 @@
+// eslint-disable
 import { loadAnimation } from '@aarsteinmedia/lottie-web'
 import {
   isServer, createElementID, PreserveAspectRatio as PreserveAspectRatio$1

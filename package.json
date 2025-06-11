@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {

@@ -4,4 +4,4 @@ export {
 export {
   ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
 } from '@/utils/enums'
-export { degToRads } from '@/utils/helpers/constants'
+export { _isServer, degToRads } from '@/utils/helpers/constants'

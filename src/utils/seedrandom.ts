@@ -1,4 +1,4 @@
-//@ts-nocheck
+//@ts-nocheck eslint-disable
 import type { BMMath as BMMathType } from '@/types'
 /*
  Copyright 2014 David Bau.
