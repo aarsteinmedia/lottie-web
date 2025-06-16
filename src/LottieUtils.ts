@@ -5,5 +5,5 @@ export {
   ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
 } from '@/utils/enums'
 export {
-  degToRads, inBrowser, isSafari, isServer
+  degToRads, inBrowser, isSafari, isServer, namespaceSVG
 } from '@/utils/helpers/constants'
