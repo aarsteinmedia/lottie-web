@@ -1,5 +1,5 @@
 export {
-  createElementID, floatEqual, floatZero
+  clamp, createElementID, floatEqual, floatZero
 } from '@/utils'
 export {
   ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
