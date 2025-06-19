@@ -45,7 +45,8 @@ const files = [
   'hero-web.json',
   'home_idea_es.lottie',
   'bulb.lottie',
-  'gradient-stroke.json'
+  'gradient-stroke.json',
+  'Network-Encryption.lottie'
 ]
 
 export default files

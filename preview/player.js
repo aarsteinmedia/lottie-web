@@ -1,17 +1,18 @@
-// eslint-disable
-import { loadAnimation } from '@aarsteinmedia/lottie-web'
+import Lottie from '@aarsteinmedia/lottie-web'
 import {
-  isServer, createElementID, PreserveAspectRatio as PreserveAspectRatio$1
+  isServer, PlayMode, PreserveAspectRatio, namespaceSVG, createElementID, RendererType, PlayerEvents
 } from '@aarsteinmedia/lottie-web/utils'
 import {
   strToU8, zip, strFromU8, unzip as unzip$1
 } from 'fflate'
 
+export { PlayerEvents, PlayMode } from '@aarsteinmedia/lottie-web/utils'
+
 /**
  * Credit to: Leonardo Favre https://github.com/leofavre/observed-properties.
  */ const updateOnConnected = Symbol('UPDATE_ON_CONNECTED')
 
-if (isServer()) {
+if (isServer) {
   // Mock HTMLElement for server-side rendering
   global.HTMLElement = // eslint-disable-next-line @typescript-eslint/no-extraneous-class
     class EmptyHTMLElement {
@@ -109,53 +110,6 @@ const PlayerState = /**
 
     return PlayerState
   }({})
-const PlayMode = /**
- *#__PURE__
- */ function (PlayMode) {
-    PlayMode['Bounce'] = 'bounce'
-    PlayMode['Normal'] = 'normal'
-
-    return PlayMode
-  }({})
-const PlayerEvents = /**
- *#__PURE__
- */ function (PlayerEvents) {
-    PlayerEvents['Complete'] = 'complete'
-    PlayerEvents['Destroyed'] = 'destroyed'
-    PlayerEvents['Error'] = 'error'
-    PlayerEvents['Frame'] = 'frame'
-    PlayerEvents['Freeze'] = 'freeze'
-    PlayerEvents['Load'] = 'load'
-    PlayerEvents['Loop'] = 'loop'
-    PlayerEvents['Next'] = 'next'
-    PlayerEvents['Pause'] = 'pause'
-    PlayerEvents['Play'] = 'play'
-    PlayerEvents['Previous'] = 'previous'
-    PlayerEvents['Ready'] = 'ready'
-    PlayerEvents['Rendered'] = 'rendered'
-    PlayerEvents['Stop'] = 'stop'
-
-    return PlayerEvents
-  }({})
-const PreserveAspectRatio = /**
- *#__PURE__
- */ function (PreserveAspectRatio) {
-    PreserveAspectRatio['Contain'] = 'xMidYMid meet'
-    PreserveAspectRatio['Cover'] = 'xMidYMid slice'
-    PreserveAspectRatio['Initial'] = 'none'
-    PreserveAspectRatio['None'] = 'xMinYMin slice'
-
-    return PreserveAspectRatio
-  }({})
-const RendererType = /**
- *#__PURE__
- */ function (RendererType) {
-    RendererType['Canvas'] = 'canvas'
-    RendererType['HTML'] = 'html'
-    RendererType['SVG'] = 'svg'
-
-    return RendererType
-  }({})
 
 /**
  * Render Controls.
@@ -240,7 +194,7 @@ const RendererType = /**
   if (!this.shadow) {
     throw new Error('No Shadow Element')
   }
-  this.template.innerHTML = /* HTML */ `<div class="animation-container main" data-controls="${this.controls ?? false}" lang="${this.description ? document.documentElement.lang : 'en'}" aria-label="${this.description ?? 'Lottie animation'}" data-loaded="${this._playerState.loaded}"><figure class="animation" style="background:${this.background}">${this.playerState === PlayerState.Error ? /* HTML */ `<div class="error"><svg preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1920" height="1080" viewBox="0 0 1920 1080"><path fill="#fff" d="M0 0h1920v1080H0z"/><path fill="#3a6d8b" d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"/><path fill="none" d="M718.9 807.7h645v285.4h-645z"/><text fill="#3a6d8b" style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif" x="50%" y="848.017" text-anchor="middle">${this._errorMessage}</text></svg></div>` : ''}</figure><slot name="controls"></slot></div>`
+  this.template.innerHTML = /* HTML */ `<div class="animation-container main" data-controls="${this.controls ?? false}" lang="${this.description ? document.documentElement.lang : 'en'}" aria-label="${this.description ?? 'Lottie animation'}" data-loaded="${this._playerState.loaded}"><figure class="animation" style="background:${this.background}">${this.playerState === PlayerState.Error ? /* HTML */ `<div class="error"><svg preserveAspectRatio="${PreserveAspectRatio.Cover}" xmlns="${namespaceSVG}" width="1920" height="1080" viewBox="0 0 1920 1080" style="white-space:preserve"><path fill="#fff" d="M0 0h1920v1080H0z"/><path fill="#3a6d8b" d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"/><path fill="none" d="M718.9 807.7h645v285.4h-645z"/><text fill="#3a6d8b" style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif" x="50%" y="848.017" text-anchor="middle">${this._errorMessage}</text></svg></div>` : ''}</figure><slot name="controls"></slot></div>`
   this.shadow.adoptedStyleSheets = [
     await DotLottiePlayer.styles()
   ]
@@ -259,23 +213,23 @@ const hasExt = (path) => {
       case ObjectFit.Contain:
       case ObjectFit.ScaleDown:
       {
-        return PreserveAspectRatio$1.Contain
+        return PreserveAspectRatio.Contain
       }
       case ObjectFit.Cover:
       {
-        return PreserveAspectRatio$1.Cover
+        return PreserveAspectRatio.Cover
       }
       case ObjectFit.Fill:
       {
-        return PreserveAspectRatio$1.Initial
+        return PreserveAspectRatio.Initial
       }
       case ObjectFit.None:
       {
-        return PreserveAspectRatio$1.None
+        return PreserveAspectRatio.None
       }
       default:
       {
-        return PreserveAspectRatio$1.Contain
+        return PreserveAspectRatio.Contain
       }
     }
   }, /**
@@ -329,14 +283,14 @@ const hasExt = (path) => {
    *
    * @param str - Base64 encoded string.
    * @returns UTF-8/Latin-1 binary.
-   */ base64ToU8 = (str) => strToU8(isServer() ? Buffer.from(parseBase64(str), 'base64').toString('binary') : atob(parseBase64(str)), true), getExtFromB64 = (str) => {
+   */ base64ToU8 = (str) => strToU8(isServer ? Buffer.from(parseBase64(str), 'base64').toString('binary') : atob(parseBase64(str)), true), getExtFromB64 = (str) => {
     const mime = str.split(':')[1].split(';')[0], ext = mime.split('/')[1].split('+')[0]
 
     return ext
   }, handleErrors = (err) => {
     const res = {
       message: 'Unknown error',
-      status: isServer() ? 500 : 400
+      status: isServer ? 500 : 400
     }
 
     if (err && typeof err === 'object') {
@@ -571,7 +525,7 @@ async function resolveAssets(unzipped, assets) {
     toResolve.push(new Promise((resolveAsset) => {
       let assetB64
 
-      if (isServer()) {
+      if (isServer) {
         assetB64 = Buffer.from(u8).toString('base64')
       } else {
         let result = ''
@@ -1056,15 +1010,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
    * Which animation to show, if several.
    */ this._currentAnimation = 0, this._isBounce = false, this._isDotLottie = false, this._lottieInstance = null, /**
    * Multi-animation settings.
-   */ this._multiAnimationSettings = [], /**
-   * Handle settings click event.
-   */ this._handleSettingsClick = ({ target }) => {
-      this._toggleSettings()
-      // Because Safari does not add focus on click, we need to add it manually, so the onblur event will fire
-      if (target instanceof HTMLElement) {
-        target.focus()
-      }
-    }
+   */ this._multiAnimationSettings = []
     this._complete = this._complete.bind(this)
     this._dataFailed = this._dataFailed.bind(this)
     this._dataReady = this._dataReady.bind(this)
@@ -1080,6 +1026,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
     this._mouseLeave = this._mouseLeave.bind(this)
     this._onVisibilityChange = this._onVisibilityChange.bind(this)
     this._switchInstance = this._switchInstance.bind(this)
+    this._handleSettingsClick = this._handleSettingsClick.bind(this)
     this.togglePlay = this.togglePlay.bind(this)
     this.stop = this.stop.bind(this)
     this.prev = this.prev.bind(this)
@@ -1213,7 +1160,6 @@ const generator = '@aarsteinmedia/dotlottie-player'
 
   /**
    * Get Multi-animation settings.
-   *
    */ _getOptions() {
     if (!this._container) {
       throw new Error('Container not rendered')
@@ -1296,7 +1242,6 @@ const generator = '@aarsteinmedia/dotlottie-player'
 
   /**
    * Get playback segment.
-   *
    */ _handleBlur() {
     setTimeout(() => {
       this._toggleSettings(false)
@@ -1309,7 +1254,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
     if (!this.animateOnScroll || !this._lottieInstance) {
       return
     }
-    if (isServer()) {
+    if (isServer) {
       console.warn('DotLottie: Scroll animations might not work properly in a Server Side Rendering context. Try to wrap this in a client component.')
 
       return
@@ -1345,6 +1290,16 @@ const generator = '@aarsteinmedia/dotlottie-player'
 
   /**
    * Pause.
+   */ _handleSettingsClick({ target }) {
+    this._toggleSettings()
+    // Because Safari does not add focus on click, we need to add it manually, so the onblur event will fire
+    if (target instanceof HTMLElement) {
+      target.focus()
+    }
+  }
+
+  /**
+   * Play.
    */ _handleWindowBlur({ type }) {
     if (this.playerState === PlayerState.Playing && type === 'blur') {
       this._freeze()
@@ -1355,7 +1310,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Play.
+   * Skip to previous animation.
    */ _isLottie(json) {
     const mandatory = [
       'v',
@@ -1371,7 +1326,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Skip to previous animation.
+   * Name: string, oldValue: string, newValue: string.
    */ _loopComplete() {
     if (!this._lottieInstance) {
       return
@@ -1416,7 +1371,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Name: string, oldValue: string, newValue: string.
+   * Reload animation.
    */ _mouseEnter() {
     if (this.hover && this.playerState !== PlayerState.Playing) {
       this.play()
@@ -1424,7 +1379,9 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Reload animation.
+   * Seek to a given frame.
+   *
+   * @param value - Frame to seek to.
    */ _mouseLeave() {
     if (this.hover && this.playerState === PlayerState.Playing) {
       this.stop()
@@ -1432,9 +1389,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Seek to a given frame.
-   *
-   * @param value - Frame to seek to.
+   * Dynamically set count for loops.
    */ _onVisibilityChange() {
     if (document.hidden && this.playerState === PlayerState.Playing) {
       this._freeze()
@@ -1447,15 +1402,16 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Dynamically set count for loops.
+   * Animation play direction.
+   *
+   * @param value - Animation direction.
    */ _removeEventListeners() {
     this._toggleEventListeners('remove')
   }
 
   /**
-   * Animation play direction.
+   * Set loop.
    *
-   * @param value - Animation direction.
    */ _switchInstance(isPrevious = false) {
     // Bail early if there is not animation to play
     if (!this._animations[this._currentAnimation]) {
@@ -1467,7 +1423,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
         this._lottieInstance.destroy()
       }
       // Re-initialize lottie player
-      this._lottieInstance = loadAnimation({
+      this._lottieInstance = Lottie.loadAnimation({
         ...this._getOptions(),
         animationData: this._animations[this._currentAnimation]
       })
@@ -1501,8 +1457,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Set loop.
-   *
+   * Set Multi-animation settings.
    */ _toggleEventListeners(action) {
     const method = action === 'add' ? 'addEventListener' : 'removeEventListener'
 
@@ -1541,8 +1496,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Set Multi-animation settings.
-   *
+   * Set playback segment.
    */ _toggleSettings(flag) {
     if (flag === undefined) {
       this._isSettingsOpen = !this._isSettingsOpen
@@ -1553,8 +1507,9 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Set playback segment.
+   * Set animation playback speed.
    *
+   * @param value - Playback speed.
    */ async addAnimation(
     configs, fileName, shouldDownload = true
   ) {
@@ -1608,9 +1563,9 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Set animation playback speed.
+   * Toggles subframe, for more smooth animations.
    *
-   * @param value - Playback speed.
+   * @param value - Whether animation uses subframe.
    */ async attributeChangedCallback(
     name, _oldValue, value
   ) {
@@ -1697,9 +1652,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Toggles subframe, for more smooth animations.
-   *
-   * @param value - Whether animation uses subframe.
+   * Snapshot and download the current frame as SVG.
    */ async connectedCallback() {
     await super.connectedCallback()
     await this._render()
@@ -1720,7 +1673,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Snapshot and download the current frame as SVG.
+   * Stop.
    */ async convert({
     animations: animationsFromProps, fileName, manifest, shouldDownload = true, src: srcFromProps, typeCheck
   }) {
@@ -1756,7 +1709,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Stop.
+   * Toggle Boomerang.
    */ destroy() {
     if (!this._lottieInstance?.destroy) {
       return
@@ -1770,7 +1723,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Toggle Boomerang.
+   * Toggle loop.
    */ disconnectedCallback() {
     // Remove intersection observer for detecting component being out-of-view
     if (this._intersectionObserver) {
@@ -1784,39 +1737,37 @@ const generator = '@aarsteinmedia/dotlottie-player'
   }
 
   /**
-   * Toggle loop.
+   * Toggle playing state.
    */ getLottie() {
     return this._lottieInstance
-  }
-
-  /**
-   * Toggle playing state.
-   */ getManifest() {
-    return this._manifest
   }
 
   /**
    * Freeze animation.
    * This internal state pauses animation and is used to differentiate between
    * user requested pauses and component instigated pauses.
+   */ getManifest() {
+    return this._manifest
+  }
+
+  /**
+   * Handle blur.
    */ getMultiAnimationSettings() {
     return this._multiAnimationSettings
   }
 
   /**
-   * Handle blur.
+   * Handles click and drag actions on the progress track.
    */ getSegment() {
     return this._segment
   }
 
   /**
-   * Handles click and drag actions on the progress track.
-   *
+   * Handle settings click event.
    */ async load(src) {
     if (!this.shadowRoot || !src) {
       return
     }
-
     this.source = src
     // Load the resource
     try {
@@ -1856,7 +1807,7 @@ const generator = '@aarsteinmedia/dotlottie-player'
         this.playerState = PlayerState.Playing
       }
       // Initialize lottie player and load animation
-      this._lottieInstance = loadAnimation({
+      this._lottieInstance = Lottie.loadAnimation({
         ...this._getOptions(),
         animationData: animations[this._currentAnimation]
       })
@@ -1864,7 +1815,6 @@ const generator = '@aarsteinmedia/dotlottie-player'
       this._errorMessage = handleErrors(error).message
       this.playerState = PlayerState.Error
       this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
-      console.error(error)
 
       return
     }
@@ -2180,14 +2130,13 @@ const generator = '@aarsteinmedia/dotlottie-player'
 
 /**
  * Expose DotLottiePlayer class as global variable.
- *
  */ globalThis.dotLottiePlayer = () => new DotLottiePlayer()
 const tagName = 'dotlottie-player'
 
-if (!isServer()) {
+if (!isServer) {
   customElements.define(tagName, DotLottiePlayer)
 }
 
 export {
-  DotLottiePlayer as default, PlayerEvents, PlayerState, PlayMode, tagName
+  DotLottiePlayer as default, PlayerState, tagName
 }
