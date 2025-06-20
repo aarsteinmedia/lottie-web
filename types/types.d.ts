@@ -1109,6 +1109,34 @@ export interface IntersectData {
     t2: number;
     width: number;
 }
+export interface ConvertParams {
+    animations?: AnimationData[];
+    currentAnimation?: number;
+    fileName?: string;
+    generator?: string;
+    isDotLottie?: boolean;
+    manifest?: LottieManifest;
+    shouldDownload?: boolean;
+    src?: string;
+    typeCheck?: boolean;
+}
+interface AnimationAttributes extends AnimationSettings {
+    id: string;
+    url: string;
+}
+export interface AddAnimationParams {
+    configs: AnimationAttributes[];
+    fileName?: string;
+    generator: string;
+    id?: string;
+    shouldDownload?: boolean;
+    src?: string;
+}
+export interface Result {
+    error?: string;
+    result?: null | string | ArrayBuffer;
+    success: boolean;
+}
 declare global {
     interface Document {
         _isProxy?: boolean;

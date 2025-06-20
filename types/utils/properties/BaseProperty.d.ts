@@ -44,7 +44,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
     x?: boolean;
     addEffect(effectFunction: EffectFunction): void;
     getSpeedAtTime(_frameNum: number): void;
-    getValueAtCurrentTime(): string | number | number[] | ShapePath | DocumentData | undefined;
+    getValueAtCurrentTime(): string | number | number[] | DocumentData | ShapePath | undefined;
     getValueAtTime(_val1?: unknown, _val2?: unknown): unknown;
     getVelocityAtTime(_frameNum: number): number | number[];
     initiateExpression(_elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty): EffectFunction;

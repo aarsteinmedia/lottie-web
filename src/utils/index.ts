@@ -1,4 +1,5 @@
 import type {
+  LottieAsset,
   PoolElement,
   Vector2,
 } from '@/types'
@@ -6,8 +7,16 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { getIDPrefix } from '@/utils/helpers/prefix'
 
+const hasExt = (path?: string) => {
+  const lastDotIndex = path?.split('/').pop()?.lastIndexOf('.')
+
+  return (
+    (lastDotIndex ?? 0) > 1 && path && path.length - 1 > (lastDotIndex ?? 0)
+  )
+}
+
 /**
- * Exported functions that are also used locally.
+ * Exported functions.
  */
 export const floatEqual = (a: number, b: number) =>
     Math.abs(a - b) * 100000 <= Math.min(Math.abs(a), Math.abs(b)),
@@ -43,6 +52,82 @@ export const floatEqual = (a: number, b: number) =>
     return Math.min(Math.max(n, min), max)
   },
 
+  /**
+   * Download file, either SVG or dotLottie.
+   */
+  download = (data: string | ArrayBuffer,
+    options?: {
+      name: string
+      mimeType: string
+    }) => {
+    const blob = new Blob([data], { type: options?.mimeType }),
+      fileName = options?.name || createElementID(),
+      dataURL = URL.createObjectURL(blob),
+      link = document.createElement('a')
+
+    link.href = dataURL
+    link.download = fileName
+    link.hidden = true
+    document.body.appendChild(link)
+
+    link.click()
+
+    setTimeout(() => {
+      link.remove()
+      URL.revokeObjectURL(dataURL)
+    }, 1000)
+  },
+
+  getExt = (str?: string) => {
+    if (typeof str !== 'string' || !str || !hasExt(str)) {
+      return
+    }
+
+    return str.split('.').pop()?.toLowerCase()
+  },
+
+  getExtFromB64 = (str: string) => {
+    const mime = str.split(':')[1].split(';')[0],
+      ext = mime.split('/')[1].split('+')[0]
+
+    return ext
+  },
+
+  /**
+     * Parse URL to get filename.
+     *
+     * @param src - The url string.
+     * @param keepExt - Whether to include file extension.
+     * @returns Filename, in lowercase.
+     */
+  getFilename = (src: string, keepExt?: boolean) => {
+    // Because the regex strips all special characters, we need to extract the file extension, so we can add it later if we need it
+    let ext = getExt(src)
+
+    ext = ext ? `.${ext}` : undefined
+
+    return `${src
+      .split('/')
+      .pop()
+      ?.replace(/\.[^.]*$/, '')
+      .replaceAll(/\W+/g, '-')}${keepExt && ext ? ext : ''}`
+  },
+
+  addExt = (ext: string, str?: string) => {
+    if (!str) {
+      return
+    }
+    if (getExt(str)) {
+      if (getExt(str) === ext) {
+        return str
+      }
+
+      return `${getFilename(str)}.${ext}`
+    }
+
+    return `${str}.${ext}`
+  },
+
   isArray = <T>(input: unknown): input is T[] => {
     return Symbol.iterator in Object(input) && (input as unknown[]).length > 0
   },
@@ -52,6 +137,17 @@ export const floatEqual = (a: number, b: number) =>
     return isArray(input) &&
       typeof input[0] === 'number'
   },
+
+  isAudio = (asset: LottieAsset) =>
+    !('h' in asset) &&
+    !('w' in asset) &&
+    'p' in asset &&
+    'e' in asset &&
+    'u' in asset &&
+    'id' in asset,
+
+  isImage = (asset: LottieAsset) =>
+    'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset,
 
   isDeclaration = (str: string) => {
     return str === 'var' || str === 'let' || str === 'const'
@@ -66,6 +162,8 @@ export const floatEqual = (a: number, b: number) =>
     return '_type' in el && el._type === 'ShapePath'
 
   },
+
+  parseBase64 = (str: string) => str.slice(Math.max(0, str.indexOf(',') + 1)),
 
   rgbToHex = (
     rVal: number, gVal: number, bVal: number

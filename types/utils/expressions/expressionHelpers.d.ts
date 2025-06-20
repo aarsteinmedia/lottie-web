@@ -6,7 +6,7 @@ declare function searchExpressions(elem: ElementInterfaceIntersect, data?: Expre
 declare function getValueAtTime(this: BaseProperty, frameNumFromProps: number): number | number[] | undefined;
 declare function getSpeedAtTime(this: BaseProperty, frameNum: number): number;
 declare function getVelocityAtTime(this: BaseProperty, frameNum: number): number | number[];
-declare function getStaticValueAtTime(this: BaseProperty, _time?: number, _num?: number): string | number | number[] | import("../shapes/ShapePath").default | import("../../types").DocumentData | undefined;
+declare function getStaticValueAtTime(this: BaseProperty, _time?: number, _num?: number): string | number | number[] | import("../../types").DocumentData | import("../shapes/ShapePath").default | undefined;
 declare function setGroupProperty(this: BaseProperty, propertyGroup: PropertyGroupFactory): void;
 declare const expressionHelpers: {
     getSpeedAtTime: typeof getSpeedAtTime;
