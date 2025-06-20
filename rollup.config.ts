@@ -89,6 +89,9 @@ const isProd = process.env.NODE_ENV !== 'development',
     plugins: [dts()],
   })),
   outputs: RollupOptions[] = inputs.map((input) => ({
+    external: [
+      'fflate'
+    ],
     input: input.file,
     onwarn(warning, warn) {
       if (warning.code === 'CIRCULAR_DEPENDENCY') {

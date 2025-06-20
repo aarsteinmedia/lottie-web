@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -46,6 +46,9 @@
     "min": "rollup -c --configPlugin typescript -w --environment NODE_ENV:minified",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
