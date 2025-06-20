@@ -73,9 +73,9 @@ const isProd = process.env.NODE_ENV !== 'development',
     },
     {
       file: path.resolve(
-        __dirname, 'src', 'DotlottieUtils.ts'
+        __dirname, 'src', 'Dotlottie.ts'
       ),
-      name: 'dotlottie-utils'
+      name: 'dotlottie'
     }
   ],
   types: RollupOptions[] = inputs.map((input) => ({
