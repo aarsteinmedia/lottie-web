@@ -6,8 +6,8 @@ import type {
 } from '@/types'
 
 import SVGComposableEffect from '@/effects/svg/SVGComposableEffect'
-import { degToRads } from '@/LottieUtils'
 import { rgbToHex } from '@/utils'
+import { degToRads } from '@/utils/helpers/constants'
 import createNS from '@/utils/helpers/svgElements'
 
 export default class SVGDropShadowEffect extends SVGComposableEffect {

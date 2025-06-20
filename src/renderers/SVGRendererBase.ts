@@ -34,15 +34,17 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       nextElement
 
     while (i < pos) {
-      nextElement = this.elements[i]?.getBaseElement?.()
-
+      if (this.elements[i] !== (true as unknown as ElementInterfaceIntersect) && this.elements[i]?.getBaseElement()) {
+        nextElement = this.elements[i].getBaseElement()
+      }
       i++
     }
     if (nextElement) {
       this.layerElement?.insertBefore(newElement, nextElement)
-    } else {
-      this.layerElement?.appendChild(newElement)
+
+      return
     }
+    this.layerElement?.appendChild(newElement)
   }
 
   override buildItem(pos: number) {

@@ -14,7 +14,7 @@ import { extendPrototype } from '@/utils/functionExtensions'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
 import Matrix from '@/utils/Matrix'
-import shapePool from '@/utils/pooling/ShapePool'
+import ShapePool from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
@@ -389,7 +389,7 @@ function getShapeValueAtTime(
   this._cachingAtTime = this._cachingAtTime ?? {
     lastIndex: 0,
     lastTime: initialDefaultFrame,
-    shapeValue: shapePool.clone(this.pv as ShapePath),
+    shapeValue: ShapePool.clone(this.pv as ShapePath),
   } as Caching
 
   let frameNum = frameNumFromProps
