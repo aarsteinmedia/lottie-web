@@ -1,5 +1,16 @@
 export {
-  clamp, createElementID, floatEqual, floatZero
+  addExt,
+  clamp,
+  createElementID,
+  download,
+  floatEqual,
+  floatZero,
+  getExt,
+  getExtFromB64,
+  getFilename,
+  isAudio,
+  isImage,
+  parseBase64
 } from '@/utils'
 export {
   ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
