@@ -1422,11 +1422,13 @@ interface AnimationAttributes extends AnimationSettings {
 }
 
 export interface AddAnimationParams {
+  /** Animation(s) to add. */
   configs: AnimationAttributes[]
   fileName?: string
   generator: string
   id?: string
   shouldDownload?: boolean
+  /** Animation(s) to extend. */
   src?: string
 }
 
