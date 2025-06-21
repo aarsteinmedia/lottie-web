@@ -164,6 +164,7 @@ export default Lottie
 
 export { type default as AnimationItem } from '@/animation/AnimationItem'
 export type {
+  AddAnimationParams,
   AnimationConfiguration,
   AnimationData,
   AnimationDirection,
@@ -172,5 +173,6 @@ export type {
   LottieAnimation,
   LottieAsset,
   LottieManifest,
+  Result,
   Vector2
 } from '@/types'
