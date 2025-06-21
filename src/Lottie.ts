@@ -170,6 +170,7 @@ export type {
   AnimationDirection,
   Vector2 as AnimationSegment,
   AnimationSettings,
+  ConvertParams,
   LottieAnimation,
   LottieAsset,
   LottieManifest,
