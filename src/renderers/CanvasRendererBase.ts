@@ -61,7 +61,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
 
     if (this.animationItem.wrapper) {
       this.animationItem.container = createTag('canvas')
-      const containerStyle = this.animationItem.container.style
+      const { style: containerStyle } = this.animationItem.container
 
       containerStyle.width = '100%'
       containerStyle.height = '100%'
@@ -83,6 +83,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     this.contextData?.setContext(this.canvasContext)
     this.data = animData as unknown as LottieLayer
     this.layers = animData.layers
+
     this.transformCanvas = {
       h: animData.h,
       sx: 0,
@@ -391,9 +392,9 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     this.reset()
     let elementWidth, elementHeight
 
-    if (width) {
+    if (width && height) {
       elementWidth = width
-      elementHeight = Number(height)
+      elementHeight = height
       this.canvasContext.canvas.width = elementWidth
       this.canvasContext.canvas.height = elementHeight
     } else {

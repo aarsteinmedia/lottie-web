@@ -33,18 +33,24 @@ function handleRefresh() {
       renderer = localStorage.getItem('renderer')
 
     if (selection || renderer) {
-      if (selection) {
-        pathSelect.value = selection
-        viewFile(selection)
-      }
-
       if (renderer) {
         rendererSelect.value = renderer
         changeRenderer(renderer)
       }
 
+      if (selection) {
+        pathSelect.value = selection
+
+        // TODO:
+        if (renderer === 'svg') {
+          viewFile(selection)
+        }
+
+      }
+
       return
     }
+
 
     if (previewForm?.path?.value) {
       const { value } = previewForm.path,
@@ -88,6 +94,10 @@ async function changeRenderer(e) {
     renderer = e.target.value
   } else {
     renderer = e
+  }
+
+  if (dotLottie.renderer === renderer) {
+    return
   }
 
   dotLottie.renderer = renderer
