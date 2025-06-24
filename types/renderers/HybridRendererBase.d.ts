@@ -1,14 +1,8 @@
-import type AnimationItem from '../animation/AnimationItem';
-import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '../types';
-import HCameraElement from '../elements/html/HCameraElement';
-import HShapeElement from '../elements/html/HShapeElement';
-import HTextElement from '../elements/html/HTextElement';
-import ImageElement from '../elements/ImageElement';
-import SolidElement from '../elements/SolidElement';
-import SVGShapeElement from '../elements/svg/SVGShapeElement';
-import SVGTextLottieElement from '../elements/svg/SVGTextElement';
-import BaseRenderer from '../renderers/BaseRenderer';
-import { RendererType } from '../utils/enums';
+import type AnimationItem from '@/animation/AnimationItem';
+import type { AnimationData, ElementInterfaceIntersect, HTMLRendererConfig, LottieLayer, ThreeDElements } from '@/types';
+import HCameraElement from '@/elements/html/HCameraElement';
+import BaseRenderer from '@/renderers/BaseRenderer';
+import { RendererType } from '@/utils/enums';
 export default class HybridRendererBase extends BaseRenderer {
     camera?: HCameraElement;
     destroyed: boolean;
@@ -23,20 +17,20 @@ export default class HybridRendererBase extends BaseRenderer {
     build3dContainers(): void;
     checkPendingElements(): void;
     configAnimation(animData: AnimationData): void;
-    createCamera(data: LottieLayer): HCameraElement;
-    createImage(data: LottieLayer): ImageElement;
-    createShape(data: LottieLayer): SVGShapeElement | HShapeElement;
-    createSolid(data: LottieLayer): SolidElement;
-    createText(data: LottieLayer): SVGTextLottieElement | HTextElement;
+    createCamera(data: LottieLayer): any;
+    createImage(data: LottieLayer): any;
+    createShape(data: LottieLayer): any;
+    createSolid(data: LottieLayer): any;
+    createText(data: LottieLayer): any;
     createThreeDContainer(pos: number, type: string): {
-        container: HTMLElement;
+        container: any;
         endPos: number;
-        perspectiveElem: HTMLDivElement;
+        perspectiveElem: any;
         startPos: number;
         type: string;
     };
     destroy(): void;
-    getThreeDContainerByPos(pos: number): HTMLDivElement | null;
+    getThreeDContainerByPos(pos: number): any;
     hide(): void;
     initItems(): void;
     renderFrame(_num: number | null): void;

@@ -1,4 +1,4 @@
-import type { CompElementInterface } from '../../types';
+import type { CompElementInterface } from '@/types';
 export default class CompExpressionInterface {
     _name?: string;
     comp: CompElementInterface;
@@ -10,5 +10,5 @@ export default class CompExpressionInterface {
     pixelAspect: number;
     width?: number;
     constructor(comp: CompElementInterface);
-    getInterface(name?: string | number | number[]): import("./LayerInterface").default | null | undefined;
+    getInterface(name?: string | number | number[]): any;
 }

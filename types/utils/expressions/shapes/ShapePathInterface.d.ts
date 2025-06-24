@@ -1,7 +1,7 @@
-import type ShapeData from '../../../elements/helpers/shapes/ShapeData';
-import type { Shape } from '../../../types';
-import type LayerExpressionInterface from '../../../utils/expressions/LayerInterface';
-import type { ShapeProperty } from '../../../utils/shapes/properties/ShapeProperty';
+import type ShapeData from '@/elements/helpers/shapes/ShapeData';
+import type { Shape } from '@/types';
+import type LayerExpressionInterface from '@/utils/expressions/LayerInterface';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
 export default class ShapePathInterface {
     _name?: string;
     ind?: number;
@@ -10,8 +10,8 @@ export default class ShapePathInterface {
     prop: null | ShapeProperty;
     propertyGroup: LayerExpressionInterface;
     propertyIndex?: number;
-    get path(): ShapeProperty | null;
-    get shape(): ShapeProperty | null;
+    get path(): any;
+    get shape(): any;
     constructor(shape: Shape, view: ShapeData, propertyGroup: LayerExpressionInterface);
-    getInterface(val: string | number): ShapeProperty | null;
+    getInterface(val: string | number): any;
 }

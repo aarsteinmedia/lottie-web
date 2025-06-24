@@ -1,3 +1,2 @@
-import PoolFactory from '../../utils/pooling/PoolFactory';
-declare const segmentsLengthPool: PoolFactory;
+declare const segmentsLengthPool: any;
 export default segmentsLengthPool;

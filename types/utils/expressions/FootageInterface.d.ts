@@ -1,4 +1,4 @@
-import type FootageElement from '../../elements/FootageElement';
+import type FootageElement from '@/elements/FootageElement';
 export default class FootageInterface {
     _name: string;
     currentProperty?: SVGElement | null;

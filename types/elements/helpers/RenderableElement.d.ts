@@ -1,5 +1,5 @@
-import type { RenderableComponent, SourceRect } from '../../types';
-import FrameElement from '../../elements/helpers/FrameElement';
+import type { RenderableComponent, SourceRect } from '@/types';
+import FrameElement from '@/elements/helpers/FrameElement';
 export default abstract class RenderableElement extends FrameElement {
     hidden?: boolean;
     isInRange?: boolean;

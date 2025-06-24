@@ -1,25 +1,25 @@
-import type TransformEffect from '../../effects/TransformEffect';
-import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type SVGGradientFillStyleData from '../../elements/helpers/shapes/SVGGradientFillStyleData';
-import type { CanvasItem, CompElementInterface, CVElement, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '../../types';
-import type { ShapeProperty } from '../../utils/shapes/properties/ShapeProperty';
-import CVShapeData from '../../elements/helpers/shapes/CVShapeData';
-import ShapeTransformManager from '../../elements/helpers/shapes/ShapeTransformManager';
-import ShapeElement from '../../elements/ShapeElement';
+import type TransformEffect from '@/effects/TransformEffect';
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
+import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData';
+import type { CanvasItem, CompElementInterface, CVStyleElement, GlobalData, LottieLayer, Shape, Transformer } from '@/types';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
+import CVShapeData from '@/elements/helpers/shapes/CVShapeData';
+import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager';
+import ShapeElement from '@/elements/ShapeElement';
 export default class CVShapeElement extends ShapeElement {
     canvasContext?: CanvasRenderingContext2D;
-    clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
-    createContainerElements: () => void;
-    createRenderableComponents: () => void;
+    clearCanvas: any;
+    createContainerElements: any;
+    createRenderableComponents: any;
     dashResetter: number[];
-    exitLayer: () => void;
-    hide: () => void;
-    initRendererElement: () => void;
-    prepareLayer: () => void;
+    exitLayer: any;
+    hide: any;
+    initRendererElement: any;
+    prepareLayer: any;
     prevViewData: ShapeGroupData[];
-    renderFrame: (forceRender?: number) => void;
-    setBlendMode: () => void;
-    show: () => void;
+    renderFrame: any;
+    setBlendMode: any;
+    show: any;
     stylesList: CVStyleElement[];
     transformHelper: Transformer;
     transformsManager: ShapeTransformManager;
@@ -31,10 +31,10 @@ export default class CVShapeElement extends ShapeElement {
         it: never[];
         prevViewData: never[];
     };
-    createShapeElement(data: Shape): CVShapeData;
+    createShapeElement(data: Shape): any;
     createStyleElement(data: Shape, transforms: {
         transform: Transformer;
-    }[]): CVElement | null;
+    }[]): any;
     createTransformElement(data: Shape): {
         transform: Transformer;
     };

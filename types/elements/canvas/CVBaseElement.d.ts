@@ -1,8 +1,8 @@
-import type GroupEffect from '../../effects/GroupEffect';
-import type { TransformCanvas } from '../../types';
-import CVEffects from '../../elements/canvas/CVEffects';
-import CVMaskElement from '../../elements/canvas/CVMaskElement';
-import RenderableElement from '../../elements/helpers/RenderableElement';
+import type GroupEffect from '@/effects/GroupEffect';
+import type { TransformCanvas } from '@/types';
+import CVEffects from '@/elements/canvas/CVEffects';
+import CVMaskElement from '@/elements/canvas/CVMaskElement';
+import RenderableElement from '@/elements/helpers/RenderableElement';
 export default abstract class CVBaseElement extends RenderableElement {
     buffers: (HTMLCanvasElement | OffscreenCanvas)[];
     canvasContext?: CanvasRenderingContext2D;

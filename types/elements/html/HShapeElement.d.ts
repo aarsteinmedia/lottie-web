@@ -1,7 +1,7 @@
-import type ShapeGroupData from '../../elements/helpers/shapes/ShapeGroupData';
-import type { BoundingBox, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '../../types';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import ShapeElement from '../../elements/ShapeElement';
+import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData';
+import type { BoundingBox, ElementInterfaceIntersect, GlobalData, LottieLayer, Shape, ShapeDataInterface, Transformer, Vector2 } from '@/types';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import ShapeElement from '@/elements/ShapeElement';
 export default class HShapeElement extends ShapeElement {
     animatedContents: unknown[];
     currentBBox: BoundingBox;

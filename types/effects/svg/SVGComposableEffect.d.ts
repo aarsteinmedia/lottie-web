@@ -1,3 +1,3 @@
 export default abstract class SVGComposableEffect {
-    createMergeNode(resultId: string, ins: string[]): SVGFEMergeElement;
+    createMergeNode(resultId: string, ins: string[]): any;
 }

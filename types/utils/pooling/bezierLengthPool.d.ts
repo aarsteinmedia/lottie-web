@@ -1,3 +1,2 @@
-import PoolFactory from '../../utils/pooling/PoolFactory';
-declare const bezierLengthPool: PoolFactory;
+declare const bezierLengthPool: any;
 export default bezierLengthPool;

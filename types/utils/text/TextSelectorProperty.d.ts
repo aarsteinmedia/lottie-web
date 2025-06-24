@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, TextRangeValue } from '../../types';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import BaseProperty from '../../utils/properties/BaseProperty';
+import type { ElementInterfaceIntersect, TextRangeValue } from '@/types';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import BaseProperty from '@/utils/properties/BaseProperty';
 export default class TextSelectorProperty extends BaseProperty {
     _currentTextLength: number;
     a: ValueProperty;

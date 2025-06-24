@@ -1,4 +1,4 @@
-import type { ElementInterfaceIntersect } from '../../types';
+import type { ElementInterfaceIntersect } from '@/types';
 export default class TextExpressionInterface {
     _sourceText?: {
         value: string;

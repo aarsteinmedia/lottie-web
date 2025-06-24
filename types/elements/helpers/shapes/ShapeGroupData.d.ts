@@ -1,4 +1,4 @@
-import type { ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
+import type { ShapeDataInterface, SVGElementInterface, Transformer } from '@/types';
 export default class ShapeGroupData {
     _shouldRender?: boolean;
     closed?: boolean;

@@ -1,10 +1,5 @@
-import type { AnimationData, ElementInterfaceIntersect, LottieLayer, SVGRendererConfig } from '../types';
-import ImageElement from '../elements/ImageElement';
-import NullElement from '../elements/NullElement';
-import SolidElement from '../elements/SolidElement';
-import SVGShapeElement from '../elements/svg/SVGShapeElement';
-import SVGTextLottieElement from '../elements/svg/SVGTextElement';
-import BaseRenderer from '../renderers/BaseRenderer';
+import type { AnimationData, ElementInterfaceIntersect, LottieLayer, SVGRendererConfig } from '@/types';
+import BaseRenderer from '@/renderers/BaseRenderer';
 export default abstract class SVGRendererBase extends BaseRenderer {
     destroyed?: boolean;
     renderConfig?: SVGRendererConfig;
@@ -13,11 +8,11 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     buildItem(pos: number): void;
     checkPendingElements(): void;
     configAnimation(animData: AnimationData): void;
-    createImage(data: LottieLayer): ImageElement;
-    createNull(data: LottieLayer): NullElement;
-    createShape(data: LottieLayer): SVGShapeElement;
-    createSolid(data: LottieLayer): SolidElement;
-    createText(data: LottieLayer): SVGTextLottieElement;
+    createImage(data: LottieLayer): any;
+    createNull(data: LottieLayer): any;
+    createShape(data: LottieLayer): any;
+    createSolid(data: LottieLayer): any;
+    createText(data: LottieLayer): any;
     destroy(): void;
     findIndexByInd(ind?: number): number;
     hide(): void;

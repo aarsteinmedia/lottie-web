@@ -1,6 +1,6 @@
-import type { ElementInterfaceIntersect, Shape, StrokeData } from '../../../types';
-import type ValueProperty from '../../../utils/properties/ValueProperty';
-import ShapeBaseProperty from '../../../utils/shapes/properties/ShapeBaseProperty';
+import type { ElementInterfaceIntersect, Shape, StrokeData } from '@/types';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import ShapeBaseProperty from '@/utils/shapes/properties/ShapeBaseProperty';
 export default class StarShapeProperty extends ShapeBaseProperty {
     d?: StrokeData[];
     ir?: ValueProperty;

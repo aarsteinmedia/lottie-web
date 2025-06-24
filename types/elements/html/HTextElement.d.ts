@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import TextElement from '../../elements/TextElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer } from '@/types';
+import TextElement from '@/elements/TextElement';
 export default class HTextElement extends TextElement {
     compH?: number;
     compW?: number;

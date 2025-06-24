@@ -1,4 +1,4 @@
-import type { AnimationData, LottieLayer } from '../types';
+import type { AnimationData, LottieLayer } from '@/types';
 declare function completeLayers(layers: LottieLayer[], comps: LottieLayer[]): void;
 declare function completeData(animationData: AnimationData): void;
 declare const DataFunctions: {

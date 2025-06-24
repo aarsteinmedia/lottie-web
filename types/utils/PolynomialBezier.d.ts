@@ -1,5 +1,5 @@
-import type { Vector2 } from '../types';
-import type ShapePath from '../utils/shapes/ShapePath';
+import type { Vector2 } from '@/types';
+import type ShapePath from '@/utils/shapes/ShapePath';
 export default class PolynomialBezier {
     a: Vector2;
     b: Vector2;
@@ -8,30 +8,30 @@ export default class PolynomialBezier {
     points: [Vector2, Vector2, Vector2, Vector2];
     constructor(p0: Vector2, p1FromProps: Vector2, p2FromProps: Vector2, p3: Vector2, linearize?: boolean);
     boundingBox(): {
-        bottom: number;
+        bottom: any;
         cx: number;
         cy: number;
         height: number;
-        left: number;
-        right: number;
-        top: number;
+        left: any;
+        right: any;
+        top: any;
         width: number;
     };
     bounds(): {
         x: {
-            max: number;
-            min: number;
+            max: any;
+            min: any;
         };
         y: {
-            max: number;
-            min: number;
+            max: any;
+            min: any;
         };
     };
-    derivative(t: number): number[];
+    derivative(t: number): any[];
     inflectionPoints(): number[];
     intersections(other: PolynomialBezier, toleranceFromProps?: number, maxRecursionFromProps?: number): number[][];
     normalAngle(t: number): number;
-    point(t: number): number[];
+    point(t: number): any[];
     split(t: number): PolynomialBezier[];
     tangentAngle(t: number): number;
     private _extrema;

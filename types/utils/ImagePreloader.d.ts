@@ -1,5 +1,5 @@
-import type { ImageData, LottieAsset } from '../types';
-import { RendererType } from '../utils/enums';
+import type { ImageData, LottieAsset } from '@/types';
+import { RendererType } from '@/utils/enums';
 export default class ImagePreloader {
     assetsPath: string;
     images: ImageData[];
@@ -19,7 +19,7 @@ export default class ImagePreloader {
     createImageData(assetData: LottieAsset): ImageData;
     destroy(): void;
     footageLoaded(): void;
-    getAsset(assetData: null | LottieAsset): HTMLMediaElement | HTMLCanvasElement | SVGElement | null;
+    getAsset(assetData: null | LottieAsset): any;
     imageLoaded(): void;
     loadAssets(assets: LottieAsset[], cb: ImagePreloader['imagesLoadedCb']): void;
     loadedFootages(): boolean;

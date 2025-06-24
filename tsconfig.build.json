@@ -5,7 +5,12 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "allowImportingTsExtensions": false,
-    "noEmit": false
+    "noEmit": false,
+    "paths": {
+      "@/*": [
+        "./types/*"
+      ]
+    }
   },
   "exclude": [
     "**/node_modules",

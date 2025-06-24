@@ -1,4 +1,4 @@
-import Matrix from '../../utils/Matrix';
+import Matrix from '@/utils/Matrix';
 declare class CanvasContext {
     fillStyle: string;
     id: number;

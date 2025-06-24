@@ -1,8 +1,8 @@
-import type HCompElement from '../../elements/html/HCompElement';
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, Vector3 } from '../../types';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import FrameElement from '../../elements/helpers/FrameElement';
-import Matrix from '../../utils/Matrix';
+import type HCompElement from '@/elements/html/HCompElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, Vector3 } from '@/types';
+import type ValueProperty from '@/utils/properties/ValueProperty';
+import FrameElement from '@/elements/helpers/FrameElement';
+import Matrix from '@/utils/Matrix';
 export default class HCameraElement extends FrameElement {
     _prevMat: Matrix;
     a?: ValueProperty<Vector3>;

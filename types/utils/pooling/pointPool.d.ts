@@ -1,3 +1,2 @@
-import PoolFactory from '../../utils/pooling/PoolFactory';
-declare const pointPool: PoolFactory;
+declare const pointPool: any;
 export default pointPool;
