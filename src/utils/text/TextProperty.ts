@@ -81,7 +81,7 @@ export default class TextProperty extends BaseProperty {
       yOffset: 0,
     } as unknown as DocumentData
 
-    const newData = this.data.d?.k[0].s
+    const newData = this.data.d?.k[0]?.s
 
     if (newData) {
       this.copyData(this.currentData, newData)
@@ -144,7 +144,7 @@ export default class TextProperty extends BaseProperty {
         shouldCombineNext = true
       }
       if (shouldCombine) {
-        charactersArray[charactersArray.length - 1] += currentChars
+        (charactersArray[charactersArray.length - 1] as string) += currentChars
         // shouldCombine = false
       } else {
         charactersArray.push(currentChars)
@@ -217,7 +217,7 @@ export default class TextProperty extends BaseProperty {
         let lastSpaceIndex = -1
 
         for (let i = 0; i < len; i++) {
-          charCode = finalText[i].charCodeAt(0)
+          charCode = finalText[i]?.charCodeAt(0) ?? 0
           newLineFlag = false
           if (finalText[i] === ' ') {
             lastSpaceIndex = i
@@ -229,7 +229,7 @@ export default class TextProperty extends BaseProperty {
           }
           if (fontManager.chars) {
             charData = fontManager.getCharData(
-              finalText[i],
+              finalText[i] ?? '',
               fontData.fStyle,
               fontData.fFamily
             )
@@ -239,7 +239,7 @@ export default class TextProperty extends BaseProperty {
           } else {
             cLength =
               fontManager.measureText(
-                finalText[i],
+                finalText[i] ?? '',
                 documentData.f,
                 documentData.finalSize
               ) || 0
@@ -285,7 +285,7 @@ export default class TextProperty extends BaseProperty {
 
     for (let i = 0; i < len; i++) {
       newLineFlag = false
-      currentChar = documentData.finalText[i]
+      currentChar = documentData.finalText[i] ?? ''
       charCode = currentChar.charCodeAt(0)
       if (charCode === 13 || charCode === 3) {
         uncollapsedSpaces = 0
@@ -337,9 +337,13 @@ export default class TextProperty extends BaseProperty {
             currentSize -= cLength
           }
           while (currentPos <= i) {
-            letters[currentPos].an = currentSize
-            letters[currentPos].ind = index
-            letters[currentPos].extra = cLength
+            const letter = letters[currentPos]
+
+            if (letter) {
+              letter.an = currentSize
+              letter.ind = index
+              letter.extra = cLength
+            }
             currentPos++
           }
           index++
@@ -351,18 +355,26 @@ export default class TextProperty extends BaseProperty {
           if (val === '') {
             currentSize -= cLength
           }
+          const letter = letters[currentPos]
+
           while (currentPos <= i) {
-            letters[currentPos].an = currentSize
-            letters[currentPos].ind = index
-            letters[currentPos].extra = cLength
+            if (letter) {
+              letter.an = currentSize
+              letter.ind = index
+              letter.extra = cLength
+            }
             currentPos++
           }
           currentSize = 0
           index++
         }
       } else {
-        letters[index].ind = index
-        letters[index].extra = 0
+        const letter = letters[index]
+
+        if (letter) {
+          letter.ind = index
+          letter.extra = 0
+        }
         index++
       }
     }
@@ -419,7 +431,7 @@ export default class TextProperty extends BaseProperty {
       ind = 0
       based = Number(animatorData.s?.b)
       for (let i = 0; i < len; i++) {
-        letterData = letters[i]
+        letterData = letters[i] ?? {} as Letter
         letterData.anIndexes[j] = ind
         if (
           based === 1 && letterData.val !== '' ||
@@ -434,7 +446,7 @@ export default class TextProperty extends BaseProperty {
           ind++
         }
       }
-      const textSelectorProperty = data.a?.[j].s
+      const textSelectorProperty = data.a?.[j]?.s
 
       if (textSelectorProperty) {
         textSelectorProperty.totalChars = ind
@@ -444,9 +456,9 @@ export default class TextProperty extends BaseProperty {
 
       if (animatorData.s?.rn === 1) {
         for (let i = 0; i < len; i++) {
-          letterData = letters[i]
+          letterData = letters[i] ?? {} as Letter
           if (currentInd !== Number(letterData.anIndexes[j])) {
-            currentInd = letterData.anIndexes[j]
+            currentInd = letterData.anIndexes[j] ?? 0
             newInd = indexes.splice(Math.floor(Math.random() * indexes.length),
               1)[0]
           }
@@ -468,9 +480,9 @@ export default class TextProperty extends BaseProperty {
       { length } = keys
 
     for (let i = 0; i < length; i++) {
-      if (Object.hasOwn(data, keys[i])) {
+      if (Object.hasOwn(data, keys[i] ?? '')) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (obj as any)[keys[i]] = data[keys[i] as keyof typeof data]
+        (obj as any)[keys[i] as keyof typeof obj] = data[keys[i] as keyof typeof data]
       }
     }
 
@@ -492,7 +504,7 @@ export default class TextProperty extends BaseProperty {
     const len = textKeys.length
 
     while (i <= len - 1) {
-      if (i === len - 1 || Number(textKeys[i + 1].t) > frameNum) {
+      if (i === len - 1 || Number(textKeys[i + 1]?.t) > frameNum) {
         break
       }
       i++
@@ -501,7 +513,7 @@ export default class TextProperty extends BaseProperty {
       this.keysIndex = i
     }
 
-    return this.data.d?.k[this.keysIndex].s
+    return this.data.d?.k[this.keysIndex]?.s
   }
 
   override getValue(_finalValue?: unknown) {
@@ -516,9 +528,9 @@ export default class TextProperty extends BaseProperty {
     ) {
       return 0
     }
-    const tValue = this.data.d?.k[this.keysIndex].s.t
+    const tValue = this.data.d?.k[this.keysIndex]?.s.t
 
-    if (tValue) {
+    if (tValue !== undefined) {
       this.currentData.t = tValue
     }
     const currentValue = this.currentData,
@@ -533,15 +545,15 @@ export default class TextProperty extends BaseProperty {
     this._mdf = false
     const { length } = this.effectsSequence
     let finalValue =
-      (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex].s
+      (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex]?.s
 
     for (let i = 0; i < length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
-        finalValue = this.effectsSequence[i](this.currentData,
+        finalValue = this.effectsSequence[i]?.(this.currentData,
           finalValue?.t as string)
       } else {
-        finalValue = this.effectsSequence[i](finalValue as DocumentData,
+        finalValue = this.effectsSequence[i]?.(finalValue as DocumentData,
           finalValue?.t as string)
       }
     }
@@ -561,9 +573,8 @@ export default class TextProperty extends BaseProperty {
       throw new Error(`${this.constructor.name}: data.k (TextData -> DocumentData) is not implemented`)
     }
 
-    const dData = this.data.d.k[index].s
+    const dData = this.data.d.k[index]?.s
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (dData) {
       dData.__complete = false
     }
@@ -617,11 +628,11 @@ export default class TextProperty extends BaseProperty {
     let index = indexFromProps
 
     index = index ?? this.keysIndex
-    let dData = this.copyData({} as DocumentData, this.data.d.k[index].s)
+    let dData = this.copyData({} as DocumentData, this.data.d.k[index]?.s ?? {} as DocumentData)
 
     dData = this.copyData(dData, newData)
 
-    this.data.d.k[index].s = dData
+    ;(this.data.d.k[index] ?? { s: null }).s = dData
     this.recalculate(index)
     this.setCurrentData(dData)
     this.elem.addDynamicProperty(this)
