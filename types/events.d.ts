@@ -1,5 +1,5 @@
-import type AnimationItem from '@/animation/AnimationItem';
-import type { AnimationDirection, AnimationEventName } from '@/types';
+import type AnimationItem from './animation/AnimationItem';
+import type { AnimationDirection, AnimationEventName } from './types';
 export declare class BMEnterFrameEvent {
     currentTime: number;
     direction: AnimationDirection;

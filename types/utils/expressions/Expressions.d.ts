@@ -1,7 +1,7 @@
-import type { AnimationItem } from '@/Lottie';
+import type { AnimationItem } from '../../Lottie';
 declare function initExpressions(animation: AnimationItem): void;
 declare const Expressions: {
     initExpressions: typeof initExpressions;
-    resetFrame: any;
+    resetFrame: () => void;
 };
 export default Expressions;

@@ -2,15 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    // "module": "nodenext",
+    // "moduleResolution": "nodenext",
     "allowImportingTsExtensions": false,
-    "noEmit": false,
-    "paths": {
-      "@/*": [
-        "./types/*"
-      ]
-    }
+    "noEmit": false
   },
   "exclude": [
     "**/node_modules",

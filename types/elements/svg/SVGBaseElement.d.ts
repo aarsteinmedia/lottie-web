@@ -1,4 +1,4 @@
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement';
+import RenderableDOMElement from '../../elements/helpers/RenderableDOMElement';
 export default abstract class SVGBaseElement extends RenderableDOMElement {
     _sizeChanged?: boolean;
     maskedElement?: HTMLElement | SVGGElement;
@@ -10,7 +10,7 @@ export default abstract class SVGBaseElement extends RenderableDOMElement {
     createContainerElements(): void;
     createRenderableComponents(): void;
     destroyBaseElement(): void;
-    getBaseElement(): any;
+    getBaseElement(): HTMLElement | SVGGElement | null;
     getMatte(matteType?: number): string;
     initRendererElement(): void;
     renderElement(): void;

@@ -1,5 +1,5 @@
-import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect, TextSpan } from '@/types';
-import TextElement from '@/elements/TextElement';
+import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect, TextSpan } from '../../types';
+import TextElement from '../../elements/TextElement';
 export default class SVGTextLottieElement extends TextElement {
     _sizeChanged?: boolean;
     bbox?: {
@@ -8,16 +8,16 @@ export default class SVGTextLottieElement extends TextElement {
         top: number;
         width: number;
     };
-    createContainerElements: any;
-    createRenderableComponents: any;
-    destroyBaseElement: any;
-    getBaseElement: any;
-    getMatte: any;
-    initRendererElement: any;
+    createContainerElements: () => void;
+    createRenderableComponents: () => void;
+    destroyBaseElement: () => void;
+    getBaseElement: () => HTMLElement | SVGGElement | null;
+    getMatte: (matteType?: number) => string;
+    initRendererElement: () => void;
     renderedFrame?: number;
     renderedLetters: string[];
-    renderElement: any;
-    setMatte: any;
+    renderElement: () => void;
+    setMatte: (id: string) => void;
     textContainer?: SVGTextElement;
     textSpans: TextSpan[];
     constructor(data: LottieLayer, globalData: GlobalData, comp: ElementInterfaceIntersect);

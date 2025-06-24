@@ -1,9 +1,9 @@
-import type CVShapeElement from '@/elements/canvas/CVShapeElement';
-import type HShapeElement from '@/elements/html/HShapeElement';
-import type SVGShapeElement from '@/elements/svg/SVGShapeElement';
-import type { Shape } from '@/types';
-import type ShapePath from '@/utils/shapes/ShapePath';
-import ShapeBaseProperty from '@/utils/shapes/properties/ShapeBaseProperty';
+import type CVShapeElement from '../../../elements/canvas/CVShapeElement';
+import type HShapeElement from '../../../elements/html/HShapeElement';
+import type SVGShapeElement from '../../../elements/svg/SVGShapeElement';
+import type { Shape } from '../../../types';
+import type ShapePath from '../../../utils/shapes/ShapePath';
+import ShapeBaseProperty from '../../../utils/shapes/properties/ShapeBaseProperty';
 export declare class ShapeProperty extends ShapeBaseProperty {
     ix?: number;
     pathsData?: ShapePath[] | ShapePath;
@@ -19,6 +19,6 @@ export declare class ShapeProperty extends ShapeBaseProperty {
     constructor(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number);
 }
 export declare class KeyframedShapeProperty extends ShapeBaseProperty {
-    lastFrame: any;
+    lastFrame: number;
     constructor(elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number);
 }

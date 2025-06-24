@@ -174,7 +174,7 @@ export default abstract class BaseEvent {
     const { length } = this._cbs[eventName]
 
     for (let i = 0; i < length; i++) {
-      this._cbs[eventName][i](ev)
+      this._cbs[eventName][i]?.(ev)
     }
   }
 }

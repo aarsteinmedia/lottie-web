@@ -1,6 +1,10 @@
-import type CVContextData from '@/elements/canvas/CVContextData';
-import type { AnimationData, CanvasRendererConfig, LottieLayer, TransformCanvas } from '@/types';
-import BaseRenderer from '@/renderers/BaseRenderer';
+import type CVContextData from '../elements/canvas/CVContextData';
+import type { AnimationData, CanvasRendererConfig, LottieLayer, TransformCanvas } from '../types';
+import CVImageElement from '../elements/canvas/CVImageElement';
+import CVShapeElement from '../elements/canvas/CVShapeElement';
+import CVSolidElement from '../elements/canvas/CVSolidElement';
+import CVTextElement from '../elements/canvas/CVTextElement';
+import BaseRenderer from '../renderers/BaseRenderer';
 export default abstract class CanvasRendererBase extends BaseRenderer {
     canvasContext?: null | CanvasRenderingContext2D;
     contextData?: CVContextData;
@@ -10,10 +14,10 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     buildItem(pos: number): void;
     checkPendingElements(): void;
     configAnimation(animData: AnimationData): void;
-    createImage(data: LottieLayer): any;
-    createShape(data: LottieLayer): any;
-    createSolid(data: LottieLayer): any;
-    createText(data: LottieLayer): any;
+    createImage(data: LottieLayer): CVImageElement;
+    createShape(data: LottieLayer): CVShapeElement;
+    createSolid(data: LottieLayer): CVSolidElement;
+    createText(data: LottieLayer): CVTextElement;
     ctxFill(rule?: CanvasFillRule): void;
     ctxFillRect(x: number, y: number, w: number, h: number): void;
     ctxFillStyle(value?: string): void;

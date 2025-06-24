@@ -1,5 +1,5 @@
-import type BaseProperty from '@/utils/properties/BaseProperty';
-import { PropType } from '@/utils/enums';
+import type BaseProperty from '../../utils/properties/BaseProperty';
+import { PropType } from '../../utils/enums';
 export declare class ExpressionPropertyInterface {
     defaultMultidimensionalValue: {
         mult: number;
@@ -19,8 +19,16 @@ export declare class ExpressionPropertyInterface {
         pv: number;
         v: number;
     };
-    getInterface(property?: BaseProperty): () => any;
-    MultidimensionalPropertyInterface(propertyFromProps: null | BaseProperty): () => any;
+    getInterface(property?: BaseProperty): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    MultidimensionalPropertyInterface(propertyFromProps: null | BaseProperty): () => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>;
     UnidimensionalPropertyInterface(propertyFromProps: null | BaseProperty): () => Number;
 }
-export default function expressionPropertyFactory(property?: BaseProperty): () => any;
+export default function expressionPropertyFactory(property?: BaseProperty): (() => {
+    mult: number;
+    pv: number;
+    v: number;
+}) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);

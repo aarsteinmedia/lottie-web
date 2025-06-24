@@ -1,6 +1,6 @@
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData';
-import type { ElementInterfaceIntersect, Shape, Vector2 } from '@/types';
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier';
+import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
+import type { ElementInterfaceIntersect, Shape, Vector2 } from '../../../types';
+import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
 export default class MouseModifier extends ShapeModifier {
     data?: Shape | Shape[];
     positions: unknown[];
@@ -21,9 +21,9 @@ export default class MouseModifier extends ShapeModifier {
         distI: number[];
     }): {
         c: Vector2[];
-        i: any[];
-        o: any[];
-        v: any[];
+        i: (Vector2 | undefined)[];
+        o: (Vector2 | undefined)[];
+        v: (Vector2 | undefined)[];
     };
     processShapes(): void;
 }

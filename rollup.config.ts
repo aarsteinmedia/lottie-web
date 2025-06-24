@@ -88,7 +88,7 @@ const isProd = process.env.NODE_ENV !== 'development',
       ),
       format: 'esm',
     },
-    plugins: [typescriptPaths({ tsConfigPath: resolve(__dirname, 'tsconfig.build.json') }), dts()],
+    plugins: [dts()],
   })),
   outputs: RollupOptions[] = inputs.map((input) => ({
     external: [

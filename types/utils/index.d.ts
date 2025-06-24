@@ -1,5 +1,5 @@
-import type { LottieAsset, PoolElement, Vector2 } from '@/types';
-import type ShapePath from '@/utils/shapes/ShapePath';
+import type { LottieAsset, PoolElement, Vector2 } from '../types';
+import type ShapePath from '../utils/shapes/ShapePath';
 export declare const floatEqual: (a: number, b: number) => boolean, floatZero: (f: number) => boolean, pointEqual: (p1: Vector2, p2: Vector2) => boolean, createElementID: () => string, clamp: (n: number, minFromProps?: number, maxFromProps?: number) => number, download: (data: string | ArrayBuffer, options?: {
     name: string;
     mimeType: string;

@@ -1,8 +1,20 @@
-import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type RepeaterModifier from '../../../utils/shapes/modifiers/RepeaterModifier';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class RepeaterInterface extends BaseInterface {
     prop?: RepeaterModifier;
-    get copies(): any;
-    get offset(): any;
-    getInterface(value: string | number): any;
+    get copies(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    get offset(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    getInterface(value: string | number): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>) | null;
 }

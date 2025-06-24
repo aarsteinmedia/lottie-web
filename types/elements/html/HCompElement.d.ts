@@ -1,5 +1,6 @@
-import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer, ThreeDElement } from '@/types';
-import CompElement from '@/elements/CompElement';
+import type { AnimationData, ElementInterfaceIntersect, GlobalData, LottieLayer, ThreeDElement } from '../../types';
+import CompElement from '../../elements/CompElement';
+import SVGCompElement from '../../elements/svg/SVGCompElement';
 export default class HCompElement extends CompElement {
     pendingElements: ElementInterfaceIntersect[];
     supports3d?: boolean;
@@ -17,7 +18,7 @@ export default class HCompElement extends CompElement {
     checkPendingElements(): void;
     configAnimation(_data: AnimationData): void;
     createCamera(_data: LottieLayer): void;
-    createComp(data: LottieLayer): any;
+    createComp(data: LottieLayer): HCompElement | SVGCompElement;
     createContainerElements(): void;
     createImage(_data: LottieLayer): void;
     createShape(_data: LottieLayer): void;

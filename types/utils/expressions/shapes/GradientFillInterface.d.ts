@@ -1,10 +1,26 @@
-import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type SVGGradientFillStyleData from '../../../elements/helpers/shapes/SVGGradientFillStyleData';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class GradientFillInterface extends BaseInterface {
     prop?: SVGGradientFillStyleData;
-    get endPoint(): any;
-    get opacity(): any;
-    get startPoint(): any;
+    get endPoint(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    get opacity(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    get startPoint(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
     get type(): string;
-    getInterface(val: string | number): any;
+    getInterface(val: string | number): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>) | null;
 }

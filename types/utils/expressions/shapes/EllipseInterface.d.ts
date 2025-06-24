@@ -1,8 +1,20 @@
-import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty';
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface';
+import type EllShapeProperty from '../../../utils/shapes/properties/EllShapeProperty';
+import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
 export default class EllipseInterface extends BaseInterface {
     prop?: EllShapeProperty;
-    get position(): any;
-    get size(): any;
-    getInterface(value: string | number): any;
+    get position(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    get size(): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>);
+    getInterface(value: string | number): (() => {
+        mult: number;
+        pv: number;
+        v: number;
+    }) | (() => Number) | (() => number[] | Float32Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Uint8ClampedArray<ArrayBuffer>) | null;
 }

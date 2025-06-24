@@ -1,9 +1,10 @@
-import type AnimationItem from '@/animation/AnimationItem';
-import type { LottieLayer, SVGRendererConfig } from '@/types';
-import SVGRendererBase from '@/renderers/SVGRendererBase';
-import { RendererType } from '@/utils/enums';
+import type AnimationItem from '../animation/AnimationItem';
+import type { LottieLayer, SVGRendererConfig } from '../types';
+import SVGCompElement from '../elements/svg/SVGCompElement';
+import SVGRendererBase from '../renderers/SVGRendererBase';
+import { RendererType } from '../utils/enums';
 export default class SVGRenderer extends SVGRendererBase {
     rendererType: RendererType;
     constructor(animationItem: AnimationItem, config?: SVGRendererConfig);
-    createComp(data: LottieLayer): any;
+    createComp(data: LottieLayer): SVGCompElement;
 }
