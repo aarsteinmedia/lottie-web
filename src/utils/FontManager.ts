@@ -256,8 +256,14 @@ export default class FontManager {
       this.isLoaded = true
 
       for (let i = 0; i < length; i++) {
-        ; (fontData.list[i] as DocumentData).helper = this.createHelper(fontData.list[i] as FontList)
-        ; (fontData.list[i] as DocumentData).cache = {}
+        const fontList = fontData.list[i]
+
+        if (!fontList) {
+          continue
+        }
+
+        fontList.helper = this.createHelper(fontList)
+        fontList.cache = {}
       }
       this.fonts = fontData.list
 
@@ -270,18 +276,24 @@ export default class FontManager {
       let shouldLoadFont = true,
         loadedSelector
 
-      fontData.list[i].loaded = false
-      fontData.list[i].monoCase = setUpNode(fontData.list[i]?.fFamily ?? '',
+      const fontList = fontData.list[i]
+
+      if (!fontList) {
+        continue
+      }
+
+      fontList.loaded = false
+      fontList.monoCase = setUpNode(fontList.fFamily,
         'monospace')
-      fontData.list[i].sansCase = setUpNode(fontData.list[i]?.fFamily ?? '',
+      fontList.sansCase = setUpNode(fontList.fFamily,
         'sans-serif')
-      if (!fontData.list[i]?.fPath) {
-        fontData.list[i].loaded = true
+      if (!fontList.fPath) {
+        fontList.loaded = true
         _pendingFonts -= 1
       } else if (
-        fontData.list[i]?.fOrigin === 'p' || fontData.list[i]?.origin === 3
+        fontList.fOrigin === 'p' || fontList.origin === 3
       ) {
-        loadedSelector = document.querySelectorAll(`style[f-forigin="p"][f-family="${fontData.list[i]?.fFamily}"], style[f-origin="3"][f-family="${fontData.list[i]?.fFamily}"]`)
+        loadedSelector = document.querySelectorAll(`style[f-forigin="p"][f-family="${fontList.fFamily}"], style[f-origin="3"][f-family="${fontList.fFamily}"]`)
 
         if (loadedSelector.length > 0) {
           shouldLoadFont = false
@@ -290,21 +302,21 @@ export default class FontManager {
         if (shouldLoadFont) {
           const s: HTMLStyleElement = createTag<HTMLStyleElement>('style')
 
-          s.setAttribute('f-forigin', fontData.list[i]?.fOrigin ?? '')
-          s.setAttribute('f-origin', `${fontData.list[i]?.origin}`)
-          s.setAttribute('f-family', fontData.list[i]?.fFamily ?? '')
-          s.innerText = `@font-face {font-family: ${fontData.list[i]?.fFamily}; font-style: normal; src: url('${fontData.list[i]?.fPath}');}`
+          s.setAttribute('f-forigin', fontList.fOrigin)
+          s.setAttribute('f-origin', `${fontList.origin}`)
+          s.setAttribute('f-family', fontList.fFamily)
+          s.innerText = `@font-face {font-family: ${fontList.fFamily}; font-style: normal; src: url('${fontList.fPath}');}`
           defs?.appendChild(s)
         }
       } else if (
-        fontData.list[i]?.fOrigin === 'g' || fontData.list[i]?.origin === 1
+        fontList.fOrigin === 'g' || fontList.origin === 1
       ) {
         loadedSelector = document.querySelectorAll<HTMLLinkElement>('link[f-forigin="g"], link[f-origin="1"]')
 
         const { length: len } = loadedSelector
 
         for (i = 0; i < len; i++) {
-          if (loadedSelector[i]?.href.includes(fontData.list[i]?.fPath ?? '')) {
+          if (loadedSelector[i]?.href.includes(fontList.fPath)) {
             shouldLoadFont = false
           }
         }
@@ -312,22 +324,22 @@ export default class FontManager {
         if (shouldLoadFont) {
           const link = createTag<HTMLLinkElement>('link')
 
-          link.setAttribute('f-forigin', fontData.list[i]?.fOrigin ?? '')
-          link.setAttribute('f-origin', `${fontData.list[i]?.origin}`)
+          link.setAttribute('f-forigin', fontList.fOrigin)
+          link.setAttribute('f-origin', `${fontList.origin}`)
           link.type = 'text/css'
           link.rel = 'stylesheet'
-          link.href = fontData.list[i]?.fPath ?? ''
+          link.href = fontList.fPath
           document.body.appendChild(link)
         }
       } else if (
-        fontData.list[i]?.fOrigin === 't' || fontData.list[i]?.origin === 2
+        fontList.fOrigin === 't' || fontList.origin === 2
       ) {
         loadedSelector = document.querySelectorAll<HTMLScriptElement>('script[f-forigin="t"], script[f-origin="2"]')
 
         const { length: len } = loadedSelector
 
         for (i = 0; i < len; i++) {
-          if (fontData.list[i]?.fPath === loadedSelector[i]?.src) {
+          if (fontList.fPath === loadedSelector[i]?.src) {
             shouldLoadFont = false
           }
         }
@@ -335,16 +347,16 @@ export default class FontManager {
         if (shouldLoadFont) {
           const sc = createTag<HTMLLinkElement>('link')
 
-          sc.setAttribute('f-forigin', fontData.list[i]?.fOrigin ?? '')
-          sc.setAttribute('f-origin', `${fontData.list[i]?.origin}`)
+          sc.setAttribute('f-forigin', fontList.fOrigin)
+          sc.setAttribute('f-origin', `${fontList.origin}`)
           sc.rel = 'stylesheet'
-          sc.href = fontData.list[i]?.fPath ?? ''
+          sc.href = fontList.fPath
           defs?.appendChild(sc)
         }
       }
-      fontData.list[i].helper = this.createHelper(fontData.list[i] as FontList, defs)
-      fontData.list[i].cache = {}
-      this.fonts.push(fontData.list[i] as DocumentData)
+      fontList.helper = this.createHelper(fontList, defs)
+      fontList.cache = {}
+      this.fonts.push(fontList)
     }
     if (_pendingFonts === 0) {
       this.isLoaded = true
@@ -429,39 +441,46 @@ export default class FontManager {
     let loadedCount = this.fonts.length
 
     for (let i = 0; i < loadedCount; i++) {
-      if (this.fonts[i]?.loaded) {
+
+      const font = this.fonts[i]
+
+      if (!font) {
+        continue
+      }
+
+      if (font.loaded) {
         loadedCount -= 1
         continue
       }
 
-      if (this.fonts[i]?.fOrigin === 'n' || this.fonts[i]?.origin === 0) {
-        this.fonts[i].loaded = true
+      if (font.fOrigin === 'n' || font.origin === 0) {
+        font.loaded = true
         continue
       }
-      node = this.fonts[i]?.monoCase?.node
-      w = this.fonts[i]?.monoCase?.w || 0
+      node = font.monoCase?.node
+      w = font.monoCase?.w || 0
       if (node?.offsetWidth === w) {
-        node = this.fonts[i]?.sansCase?.node
-        w = this.fonts[i]?.sansCase?.w || 0
+        node = font.sansCase?.node
+        w = font.sansCase?.w || 0
         if (node?.offsetWidth !== w) {
           loadedCount -= 1
-          this.fonts[i].loaded = true
+          font.loaded = true
         }
       } else {
         loadedCount -= 1
-        this.fonts[i].loaded = true
+        font.loaded = true
       }
-      if (!this.fonts[i]?.loaded) {
+      if (!font.loaded) {
         continue
       }
 
-      const { monoCase, sansCase } = this.fonts[i] ?? {}
+      const { monoCase, sansCase } = font
 
       if (sansCase) {
-        this.fonts[i]?.sansCase?.parent.parentNode?.removeChild(sansCase.parent)
+        sansCase.parent.parentNode?.removeChild(sansCase.parent)
       }
       if (monoCase) {
-        this.fonts[i]?.monoCase?.parent.parentNode?.removeChild(monoCase.parent)
+        monoCase.parent.parentNode?.removeChild(monoCase.parent)
       }
 
     }
