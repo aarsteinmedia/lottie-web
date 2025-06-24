@@ -24,7 +24,7 @@ export function newShapeCollection() {
 
 export function releaseShape(shapeCollection: ShapeCollection) {
   for (let i = 0; i < shapeCollection._length; i++) {
-    release(shapeCollection.shapes[i])
+    release(shapeCollection.shapes[i] as PoolElement)
   }
   shapeCollection._length = 0
 

@@ -18,7 +18,7 @@ export default class CVEffects {
 
     for (let i = 0; i < length; i++) {
       filterManager = null
-      const type = elem.data.ef?.[i].ty
+      const type = elem.data.ef?.[i]?.ty
 
       if (type && registeredEffects[type]) {
         /**
@@ -43,9 +43,13 @@ export default class CVEffects {
       effects = []
 
     for (let i = 0; i < length; i++) {
-      if (this.filters[i].type === type) {
-        effects.push(this.filters[i])
+      const filter = this.filters[i]
+
+      if (!filter || filter.type !== type) {
+        continue
       }
+
+      effects.push(filter)
     }
 
     return effects
@@ -55,7 +59,7 @@ export default class CVEffects {
     const { length } = this.filters
 
     for (let i = 0; i < length; i++) {
-      this.filters[i].renderFrame(_isFirstFrame)
+      this.filters[i]?.renderFrame(_isFirstFrame)
     }
   }
 }

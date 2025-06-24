@@ -124,7 +124,7 @@ export default abstract class CVBaseElement extends RenderableElement {
     // On the second buffer we store the current state of the global drawing
     // that only contains the content of this layer
     // (if it is a composition, it also includes the nested layers)
-    const bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
+    const bufferCtx = buffer?.getContext('2d') as CanvasRenderingContext2D
 
     this.clearCanvas(bufferCtx)
     bufferCtx.drawImage(
@@ -172,13 +172,13 @@ export default abstract class CVBaseElement extends RenderableElement {
       matteMode as keyof typeof operationsMap
     ] as GlobalCompositeOperation
     this.canvasContext.drawImage(
-      buffer, 0, 0
+      buffer as HTMLCanvasElement, 0, 0
     )
     // We finally draw the first buffer (that contains the content of the global drawing)
     // We use destination-over to draw the global drawing below the current layer
     this.canvasContext.globalCompositeOperation = 'destination-over'
     this.canvasContext.drawImage(
-      this.buffers[0], 0, 0
+      this.buffers[0] as HTMLCanvasElement, 0, 0
     )
     this.canvasContext.setTransform(this.currentTransform)
     // We reset the globalCompositeOperation to source-over, the standard type of operation
@@ -209,7 +209,7 @@ export default abstract class CVBaseElement extends RenderableElement {
       return
     }
     const buffer = this.buffers[0],
-      bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
+      bufferCtx = buffer?.getContext('2d') as CanvasRenderingContext2D
 
     this.clearCanvas(bufferCtx)
     // on the first buffer we store the current state of the global drawing

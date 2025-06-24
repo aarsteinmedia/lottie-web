@@ -32,7 +32,7 @@ export default class ExpressionValue extends BaseProperty {
         arrValue = createTypedArray(ArrayType.Float32, len) as number[]
         for (let i = 0; i < len; i++) {
           arrValue[i] = i < 3 ? Number((elementProp.v as number[] | undefined)?.[i]) * mult : 1
-          this.value[i] = arrValue[i]
+          this.value[i] = arrValue[i] ?? 0
         }
         this.value = arrValue
       }
@@ -47,7 +47,7 @@ export default class ExpressionValue extends BaseProperty {
       arrValue = createTypedArray(ArrayType.Float32, length) as number[]
       for (let i = 0; i < length; i++) {
         arrValue[i] = Number((elementProp.v as number[])[i]) * mult
-        expressionValue[i] = arrValue[i]
+        expressionValue[i] = arrValue[i] ?? 0
       }
       this.value = arrValue
     }
@@ -67,6 +67,6 @@ export default class ExpressionValue extends BaseProperty {
 
     const { keyframes = [] } = this
 
-    return keyframes[pos - 1].t
+    return keyframes[pos - 1]?.t ?? 0
   }
 }

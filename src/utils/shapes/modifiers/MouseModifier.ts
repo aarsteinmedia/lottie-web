@@ -74,7 +74,7 @@ export default class MouseModifier extends ShapeModifier {
       y = mouseCoords[1] - positions.v[i][1]
       let distance = Math.sqrt(x * x + y * y)
 
-      positions.distV[i] += (distance - positions.distV[i]) * dc
+      ;(positions.distV[i] as number) += (distance - positions.distV[i]) * dc
 
       positions.v[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distV[i]) / 2 + path.v[i][0]
       positions.v[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distV[i]) / 2 + path.v[i][1]
@@ -85,7 +85,7 @@ export default class MouseModifier extends ShapeModifier {
       x = mouseCoords[0] - positions.o[i][0]
       y = mouseCoords[1] - positions.o[i][1]
       distance = Math.sqrt(x * x + y * y)
-      positions.distO[i] += (distance - positions.distO[i]) * dc
+      ;(positions.distO[i] as number) += (distance - positions.distO[i]) * dc
 
       positions.o[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distO[i]) / 2 + path.o[i][0]
       positions.o[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distO[i]) / 2 + path.o[i][1]
@@ -96,7 +96,7 @@ export default class MouseModifier extends ShapeModifier {
       x = mouseCoords[0] - positions.i[i][0]
       y = mouseCoords[1] - positions.i[i][1]
       distance = Math.sqrt(x * x + y * y)
-      positions.distI[i] += (distance - positions.distI[i]) * dc
+      ; (positions.distI[i] as number) += (distance - positions.distI[i]) * dc
 
       positions.i[i][0] = Math.cos(theta) * Math.max(0, maxDist - positions.distI[i]) / 2 + path.i[i][0]
       positions.i[i][1] = Math.sin(theta) * Math.max(0, maxDist - positions.distI[i]) / 2 + path.i[i][1]

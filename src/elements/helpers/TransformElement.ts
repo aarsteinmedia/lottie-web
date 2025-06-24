@@ -98,10 +98,10 @@ export default abstract class TransformElement extends BaseElement {
     this.finalTransform._localMatMdf = Boolean(this.finalTransform._matMdf)
     if (!this.finalTransform._localMatMdf || !this.finalTransform._opMdf) {
       while (i < length) {
-        if (this.localTransforms[i]._mdf) {
+        if (this.localTransforms[i]?._mdf) {
           this.finalTransform._localMatMdf = true
         }
-        if (this.localTransforms[i]._opMdf && !this.finalTransform._opMdf) {
+        if (this.localTransforms[i]?._opMdf && !this.finalTransform._opMdf) {
           this.finalTransform.localOpacity = Number(this.finalTransform.mProp.o?.v)
           this.finalTransform._opMdf = true
         }
@@ -111,9 +111,9 @@ export default abstract class TransformElement extends BaseElement {
     if (this.finalTransform._localMatMdf) {
       const { localMat, mat } = this.finalTransform
 
-      this.localTransforms[0].matrix?.clone(localMat)
+      this.localTransforms[0]?.matrix?.clone(localMat)
       for (i = 1; i < length; i++) {
-        const lmat = this.localTransforms[i].matrix
+        const lmat = this.localTransforms[i]?.matrix
 
         if (lmat) {
           localMat.multiply(lmat)
@@ -125,7 +125,7 @@ export default abstract class TransformElement extends BaseElement {
       let localOp = this.finalTransform.localOpacity
 
       for (i = 0; i < length; i++) {
-        localOp *= this.localTransforms[i].opacity * 0.01
+        localOp *= this.localTransforms[i]?.opacity ?? 1 * 0.01
       }
       this.finalTransform.localOpacity = localOp
     }
@@ -146,7 +146,7 @@ export default abstract class TransformElement extends BaseElement {
       // Checking if any of the transformation matrices in the hierarchy chain has changed.
       if (!this.finalTransform._matMdf) {
         while (i < length) {
-          if (this.hierarchy[i].finalTransform?.mProp._mdf) {
+          if (this.hierarchy[i]?.finalTransform?.mProp._mdf) {
             this.finalTransform._matMdf = true
             break
           }
@@ -159,8 +159,8 @@ export default abstract class TransformElement extends BaseElement {
 
         finalMat.cloneFromProps(mat)
         for (i = 0; i < length; i++) {
-          if (this.hierarchy[i].finalTransform?.mProp.v) {
-            const { v: matrix } = this.hierarchy[i].finalTransform?.mProp ?? { v: null }
+          if (this.hierarchy[i]?.finalTransform?.mProp.v) {
+            const { v: matrix } = this.hierarchy[i]?.finalTransform?.mProp ?? { v: null }
 
             if (matrix) {
               finalMat.multiply(matrix)

@@ -8,6 +8,7 @@ import type {
   CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
   Shape,
   Transformer,
+  TransformNode,
   TransformSequence,
   Vector3,
   VectorProperty
@@ -297,7 +298,7 @@ export default class CVShapeElement extends ShapeElement {
       let currentStyle
 
       for (let i = 0; i < length; i++) {
-        currentStyle = this.stylesList[i]
+        currentStyle = this.stylesList[i] as CVStyleElement
         const {
             co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
           } = currentStyle,
@@ -357,7 +358,7 @@ export default class CVShapeElement extends ShapeElement {
             { length: kLen } = nodes
 
           for (let k = 0; k < kLen; k++) {
-            const { p: point = [], pts: points = [] } = nodes[k]
+            const { p: point = [], pts: points = [] } = nodes[k] as TransformNode
 
             if (nodes[k].t === 'm') {
               ctx?.moveTo(point[0], point[1])

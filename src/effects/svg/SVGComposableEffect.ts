@@ -10,7 +10,7 @@ export default abstract class SVGComposableEffect {
 
     for (let i = 0; i < length; i++) {
       feMergeNode = createNS<SVGFEMergeNodeElement>('feMergeNode')
-      feMergeNode.setAttribute('in', ins[i])
+      feMergeNode.setAttribute('in', ins[i] as string)
       feMerge.appendChild(feMergeNode)
       feMerge.appendChild(feMergeNode)
     }

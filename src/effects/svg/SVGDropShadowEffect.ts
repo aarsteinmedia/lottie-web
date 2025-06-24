@@ -83,14 +83,14 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
     ) {
       return
     }
-    if (forceRender || this.filterManager.effectElements[4].p._mdf) {
-      const stdDeviation = (this.filterManager.effectElements[4].p.v as number) / 4
+    if (forceRender || this.filterManager.effectElements[4]?.p._mdf) {
+      const stdDeviation = (this.filterManager.effectElements[4]?.p.v as number) / 4
 
       this.feGaussianBlur.setStdDeviation(stdDeviation, stdDeviation)
 
     }
-    if (forceRender || this.filterManager.effectElements[0].p._mdf) {
-      const col = this.filterManager.effectElements[0].p.v as Vector3
+    if (forceRender || this.filterManager.effectElements[0]?.p._mdf) {
+      const col = this.filterManager.effectElements[0]?.p.v as Vector3
 
       this.feFlood.setAttribute('flood-color',
         rgbToHex(
@@ -99,18 +99,18 @@ export default class SVGDropShadowEffect extends SVGComposableEffect {
           Math.round(col[2] * 255)
         ))
     }
-    if (forceRender || this.filterManager.effectElements[1].p._mdf) {
+    if (forceRender || this.filterManager.effectElements[1]?.p._mdf) {
       this.feFlood.setAttribute('flood-opacity',
-        `${(this.filterManager.effectElements[1].p.v as number) / 255}`)
+        `${(this.filterManager.effectElements[1]?.p.v as number) / 255}`)
     }
     if (
       forceRender ||
-      this.filterManager.effectElements[2].p._mdf ||
-      this.filterManager.effectElements[3].p._mdf
+      this.filterManager.effectElements[2]?.p._mdf ||
+      this.filterManager.effectElements[3]?.p._mdf
     ) {
-      const distance = this.filterManager.effectElements[3].p.v as number
+      const distance = this.filterManager.effectElements[3]?.p.v as number
       const angle =
-        ((this.filterManager.effectElements[2].p.v as number) - 90) * degToRads
+        ((this.filterManager.effectElements[2]?.p.v as number) - 90) * degToRads
       const x = distance * Math.cos(angle)
       const y = distance * Math.sin(angle)
 

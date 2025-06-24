@@ -85,7 +85,7 @@ export default class SVGShapeElement extends ShapeElement {
     const { length } = this.animatedContents
 
     while (i < length) {
-      if (this.animatedContents[i].element === element) {
+      if (this.animatedContents[i]?.element === element) {
         return
       }
       i++
@@ -225,8 +225,8 @@ export default class SVGShapeElement extends ShapeElement {
     }
 
     if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
-      pathElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
-      pathElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
+      pathElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2] as string)
+      pathElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2] as string)
       pathElement.setAttribute('fill-opacity', '0')
       if (data.lj === 1 && data.ml) {
         pathElement.setAttribute('stroke-miterlimit', `${data.ml}`)
@@ -298,13 +298,13 @@ export default class SVGShapeElement extends ShapeElement {
       areAnimated
 
     for (let j = 0; j < jLen; j++) {
-      style = this.stylesList[j]
+      style = this.stylesList[j] as SVGStyleData
       areAnimated = false
       tempShapes.length = 0
       for (let i = 0; i < length; i++) {
         if ((this.shapes[i] as SVGShapeData).styles.includes(style)) {
           tempShapes.push(this.shapes[i])
-          areAnimated = this.shapes[i]._isAnimated || areAnimated
+          areAnimated = this.shapes[i]?._isAnimated || areAnimated
         }
       }
       if (tempShapes.length > 1 && areAnimated) {
@@ -343,7 +343,7 @@ export default class SVGShapeElement extends ShapeElement {
     const { length: dLength } = this.dynamicProperties
 
     for (let i = 0; i < dLength; i++) {
-      this.dynamicProperties[i].getValue()
+      this.dynamicProperties[i]?.getValue()
     }
     this.renderModifiers()
   }
@@ -353,19 +353,19 @@ export default class SVGShapeElement extends ShapeElement {
     const { length } = this.stylesList
 
     for (let i = 0; i < length; i++) {
-      this.stylesList[i].reset()
+      this.stylesList[i]?.reset()
     }
     this.renderShape()
     for (let i = 0; i < length; i++) {
-      if (!this.stylesList[i]._mdf && !this._isFirstFrame) {
+      if (!this.stylesList[i]?._mdf && !this._isFirstFrame) {
         continue
       }
-      if (this.stylesList[i].msElem) {
-        this.stylesList[i].msElem?.setAttribute('d', this.stylesList[i].d)
+      if (this.stylesList[i]?.msElem) {
+        this.stylesList[i]?.msElem?.setAttribute('d', this.stylesList[i]?.d ?? '')
         // Adding M0 0 fixes same mask bug on all browsers
-        this.stylesList[i].d = `M0 0${this.stylesList[i].d}`
+        ; (this.stylesList[i] as SVGStyleData).d = `M0 0${this.stylesList[i]?.d ?? ''}`
       }
-      this.stylesList[i].pElem.setAttribute('d', this.stylesList[i].d || 'M0 0')
+      this.stylesList[i]?.pElem.setAttribute('d', this.stylesList[i]?.d || 'M0 0')
     }
   }
 
@@ -375,16 +375,16 @@ export default class SVGShapeElement extends ShapeElement {
     for (let i = 0; i < length; i++) {
       if (
         !this._isFirstFrame &&
-        !this.animatedContents[i].element._isAnimated ||
-        this.animatedContents[i].data === (true as unknown as Shape) ||
-        !this.animatedContents[i].fn
+        !this.animatedContents[i]?.element._isAnimated ||
+        this.animatedContents[i]?.data === (true as unknown as Shape) ||
+        !this.animatedContents[i]?.fn
       ) {
         continue
       }
-      this.animatedContents[i].fn?.(
-        this.animatedContents[i].data,
+      this.animatedContents[i]?.fn?.(
+        this.animatedContents[i]?.data as Shape,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        this.animatedContents[i].element as any,
+        this.animatedContents[i]?.element as any,
         this._isFirstFrame
       )
     }
@@ -411,12 +411,12 @@ export default class SVGShapeElement extends ShapeElement {
       const processedPos = this.searchProcessedElement(arr[i])
 
       if (processedPos) {
-        itemsData[i] = prevViewData[processedPos - 1]
+        itemsData[i] = prevViewData[processedPos - 1] as SVGElementInterface
       } else {
-        arr[i]._shouldRender = shouldRender
+        (arr[i] as Shape)._shouldRender = shouldRender
       }
 
-      switch (arr[i].ty) {
+      switch (arr[i]?.ty) {
         case ShapeType.Fill:
         case ShapeType.Stroke:
         case ShapeType.GradientFill:
@@ -429,11 +429,11 @@ export default class SVGShapeElement extends ShapeElement {
               style.closed = false
             }
           } else {
-            itemsData[i] = this.createStyleElement(arr[i],
+            itemsData[i] = this.createStyleElement(arr[i] as Shape,
               level) as SVGElementInterface
           }
-          if (arr[i]._shouldRender && itemsData[i]?.style?.pElem.parentNode !== container) {
-            const { pElem } = itemsData[i].style ?? { pElem: null }
+          if (arr[i]?._shouldRender && itemsData[i]?.style?.pElem.parentNode !== container) {
+            const { pElem } = itemsData[i]?.style ?? { pElem: null }
 
             if (pElem) {
               container.appendChild(pElem)
@@ -457,23 +457,23 @@ export default class SVGShapeElement extends ShapeElement {
                 continue
               }
 
-              (pr as ShapeDataInterface[])[j] = it[j]
+              ; (pr as ShapeDataInterface[])[j] = it[j] as ShapeDataInterface
             }
           } else {
-            itemsData[i] = this.createGroupElement(arr[i]) as SVGElementInterface
+            itemsData[i] = this.createGroupElement(arr[i] as Shape) as SVGElementInterface
           }
           this.searchShapes(
-            arr[i].it as Shape[],
+            arr[i]?.it as Shape[],
             (itemsData[i]?.it ?? []) as SVGElementInterface[],
             itemsData[i]?.prevViewData ?? [],
-            itemsData[i].gr as SVGGElement,
+            itemsData[i]?.gr as SVGGElement,
             level + 1,
             ownTransformers,
             shouldRender
           )
 
-          if (arr[i]._shouldRender && itemsData[i]?.gr?.parentNode !== container) {
-            const { gr } = itemsData[i]
+          if (arr[i]?._shouldRender && itemsData[i]?.gr?.parentNode !== container) {
+            const { gr } = itemsData[i] ?? {}
 
             if (gr) {
               container.appendChild(gr)
@@ -485,7 +485,7 @@ export default class SVGShapeElement extends ShapeElement {
         }
         case ShapeType.Transform: {
           if (!processedPos) {
-            itemsData[i] = this.createTransformElement(arr[i], container)
+            itemsData[i] = this.createTransformElement(arr[i] as Shape, container)
           }
           currentTransform = itemsData[i]?.transform
           if (currentTransform) {
@@ -500,7 +500,7 @@ export default class SVGShapeElement extends ShapeElement {
         case ShapeType.PolygonStar: {
           if (!processedPos) {
             itemsData[i] = this.createShapeElement(
-              arr[i],
+              arr[i] as Shape,
               ownTransformers,
               level
             )
@@ -518,8 +518,8 @@ export default class SVGShapeElement extends ShapeElement {
             Modifier = itemsData[i] as unknown as TrimModifier
             Modifier.closed = false
           } else {
-            Modifier = getModifier<TrimModifier>(arr[i].ty)
-            Modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
+            Modifier = getModifier<TrimModifier>(arr[i]?.ty ?? ShapeType.Unknown)
+            Modifier.init(this as unknown as ElementInterfaceIntersect, arr[i] as Shape)
             ; (itemsData as unknown as TrimModifier[])[i] = Modifier
             this.shapeModifiers.push(Modifier)
           }
@@ -533,7 +533,7 @@ export default class SVGShapeElement extends ShapeElement {
             ownModifiers.push(Modifier)
             break
           }
-          Modifier = getModifier<RepeaterModifier>(arr[i].ty)
+          Modifier = getModifier<RepeaterModifier>(arr[i]?.ty ?? ShapeType.Unknown)
           ; (itemsData as unknown as RepeaterModifier[])[i] = Modifier
           Modifier.init(
             this as unknown as ElementInterfaceIntersect,
@@ -567,7 +567,7 @@ export default class SVGShapeElement extends ShapeElement {
     const { length: mLen } = ownModifiers
 
     for (let i = 0; i < mLen; i++) {
-      ownModifiers[i].closed = true
+      ; (ownModifiers[i] as TrimModifier).closed = true
     }
   }
 
@@ -575,8 +575,8 @@ export default class SVGShapeElement extends ShapeElement {
     const { length } = this.stylesList
 
     for (let i = 0; i < length; i++) {
-      if (!this.stylesList[i].closed) {
-        elementData.styles.push(this.stylesList[i])
+      if (!this.stylesList[i]?.closed) {
+        elementData.styles.push(this.stylesList[i] as SVGStyleData)
       }
     }
   }
@@ -585,7 +585,7 @@ export default class SVGShapeElement extends ShapeElement {
     const { length } = shapes
 
     for (let i = 0; i < length; i++) {
-      shapes[i].setAsAnimated()
+      shapes[i]?.setAsAnimated()
     }
   }
 }

@@ -217,11 +217,11 @@ function setupWorker() {
 
     processes[id] = null as any
     if (status === 'success') {
-      process.onComplete(payload)
+      process?.onComplete(payload)
 
       return
     }
-    if (process.onError) {
+    if (process?.onError) {
       process.onError()
     }
   }

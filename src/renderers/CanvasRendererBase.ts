@@ -28,10 +28,10 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
   override buildItem(pos: number) {
     const { elements, layers } = this
 
-    if (elements[pos] || layers[pos].ty === 99) {
+    if (elements[pos] || layers[pos]?.ty === 99) {
       return
     }
-    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
 
     elements[pos] = element
     element.initExpressions()
@@ -240,12 +240,12 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
       return
     }
     this.canvasContext.transform(
-      props[0],
-      props[1],
-      props[4],
-      props[5],
-      props[12],
-      props[13]
+      props[0] ?? 0,
+      props[1] ?? 0,
+      props[4] ?? 0,
+      props[5] ?? 0,
+      props[12] ?? 0,
+      props[13] ?? 0
     )
   }
 
@@ -310,7 +310,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
 
       for (let i = length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i]?.prepareFrame(num - this.layers[i].st)
+          this.elements[i]?.prepareFrame(num - (this.layers[i]?.st ?? 0))
         }
       }
 

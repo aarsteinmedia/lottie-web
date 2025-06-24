@@ -36,7 +36,7 @@ export default class SVGGaussianBlurEffect {
     // Empirical value, matching AE's blur appearance.
     const kBlurrinessToSigma = 0.3,
       sigma =
-        (this.filterManager.effectElements[0].p.v as number) *
+        (this.filterManager.effectElements[0]?.p.v as number) *
         kBlurrinessToSigma,
       // Dimensions mapping:
       //
@@ -46,7 +46,7 @@ export default class SVGGaussianBlurEffect {
       /**
        *
        */
-      dimensions = Number(this.filterManager.effectElements[1].p.v),
+      dimensions = Number(this.filterManager.effectElements[1]?.p.v),
       sigmaX = dimensions === 3 ? 0 : sigma,
       sigmaY = dimensions === 2 ? 0 : sigma
 
@@ -57,7 +57,7 @@ export default class SVGGaussianBlurEffect {
     //   0 -> off -> duplicate
     //   1 -> on  -> wrap
     const edgeMode =
-      Number(this.filterManager.effectElements[2].p.v) === 1
+      Number(this.filterManager.effectElements[2]?.p.v) === 1
         ? 'wrap'
         : 'duplicate'
 

@@ -71,7 +71,7 @@ BMMath.abs = (val: number | number[]) => {
       { length } = val
 
     for (let i = 0; i < length; i++) {
-      absArr[i] = Math.abs(val[i])
+      absArr[i] = Math.abs(val[i] ?? 0)
     }
 
     return absArr

@@ -2,7 +2,9 @@ import {
   strToU8, zip, type Zippable
 } from 'fflate'
 
-import type { AnimationData, LottieManifest } from '@/types'
+import type {
+  AnimationData, LottieManifest, Shape
+} from '@/types'
 
 import {
   addExt, createElementID, download, getExt, getExtFromB64, isAudio, isImage,
@@ -105,14 +107,14 @@ export default async function createDotLottie({
     const { length } = animations
 
     for (let i = 0; i < length; i++) {
-      const { length: jLen } = animations[i].assets
+      const { length: jLen } = animations[i]?.assets ?? []
 
       // Prepare assets
       for (let j = 0; j < jLen; j++) {
-        const asset = animations[i].assets[j]
+        const asset = animations[i]?.assets[j]
 
         if (
-          !asset.p ||
+          !asset?.p ||
           !isImage(asset) &&
           !isAudio(asset)
         ) {
@@ -139,14 +141,15 @@ export default async function createDotLottie({
               : file)
 
         // Asset is encoded
-        // eslint-disable-next-line require-atomic-updates
-        animations[i].assets[j].e = 1
-        // eslint-disable-next-line require-atomic-updates
-        animations[i].assets[j].p = `${assetId}.${ext}`
-        // Asset is embedded, so path empty string
-        // eslint-disable-next-line require-atomic-updates
-        animations[i].assets[j].u = ''
 
+        const thisAsset = animations[i]?.assets[j]
+
+        if (thisAsset) {
+          thisAsset.e = 1
+          thisAsset.p = `${assetId}.${ext}`
+          // Asset is embedded, so path empty string
+          thisAsset.u = ''
+        }
 
         dotlottie[
           `${isAudio(asset) ? 'audio' : 'images'}/${assetId}.${ext}`
@@ -154,32 +157,34 @@ export default async function createDotLottie({
       }
 
       // Prepare expressions
-      const { length: kLen } = animations[i].layers
+      const { length: kLen } = animations[i]?.layers ?? []
 
       for (let k = 0; k < kLen; k++) {
-        const { ks: shape } = animations[i].layers[k],
-          props = Object.keys(shape) as (keyof typeof shape)[],
+        const { ks: shape } = animations[i]?.layers[k] ?? {},
+          props = Object.keys(shape ?? {}) as (keyof Shape)[],
           { length: pLen } = props
 
         for (let p = 0; p < pLen; p++) {
-          const { x: expression } = shape[props[p]] as { x?: string }
+          const { x: expression } = shape?.[props[p] as keyof Shape] as { x?: string }
 
           if (!expression) {
             continue
           }
 
+          const thisShape = animations[i]?.layers[k]?.ks[props[p] as keyof Shape] as keyof Shape
+
           // Base64 Encode to handle compression
-          // @ts-expect-error: We have checked this property is set
-          animations[i].layers[k].ks[props[p]].x = btoa(expression)
+          // @ts-expect-error: TODO:
+          thisShape.x = btoa(expression)
 
           // Set e (encoded) to 1
-          // @ts-expect-error: We have checked this property is set
-          animations[i].layers[k].ks[props[p]].e = 1
+          // @ts-expect-error: TODO:
+          thisShape.e = 1
         }
 
       }
 
-      dotlottie[`a/${manifest.animations[i].id}.json`] = [
+      dotlottie[`a/${manifest.animations[i]?.id}.json`] = [
         strToU8(JSON.stringify(animations[i]), true), { level: animationCompressionLevel },
       ]
     }

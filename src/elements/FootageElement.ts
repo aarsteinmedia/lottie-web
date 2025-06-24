@@ -20,7 +20,7 @@ export default class FootageElement extends RenderableElement {
     this.initFrame()
     this.initRenderable()
     if (data.refId) {
-      this.assetData = globalData.getAssetData(data.refId)
+      this.assetData = globalData.getAssetData(data.refId) ?? null
     }
     if (!globalData.imageLoader) {
       throw new Error(`${this.constructor.name}: imageLoader is not implemented in globalData`)

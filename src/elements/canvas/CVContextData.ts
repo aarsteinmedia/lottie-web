@@ -112,62 +112,102 @@ export default class CVContextData {
   }
 
   fillStyle(value: string) {
-    if (this.stack[this.cArrPos].fillStyle === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (thisStack?.fillStyle === value) {
       return
     }
     this.currentFillStyle = value
-    this.stack[this.cArrPos].fillStyle = value
+
+    if (thisStack) {
+      thisStack.fillStyle = value
+    }
+
   }
 
   lineCap(value: string) {
-    if (this.stack[this.cArrPos].lineCap === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (thisStack?.lineCap === value) {
       return
     }
     this.currentLineCap = value
-    this.stack[this.cArrPos].lineCap = value
+
+    if (thisStack) {
+      thisStack.lineCap = value
+    }
   }
 
   lineJoin(value: string) {
-    if (this.stack[this.cArrPos].lineJoin === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (!thisStack) {
+      return
+    }
+
+    if (thisStack.lineJoin === value) {
       return
     }
     this.currentLineJoin = value
-    this.stack[this.cArrPos].lineJoin = value
+    thisStack.lineJoin = value
   }
 
   lineWidth(value: number) {
-    if (this.stack[this.cArrPos].lineWidth === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (!thisStack) {
+      return
+    }
+
+    if (thisStack.lineWidth === value) {
       return
     }
     this.currentLineWidth = value
-    this.stack[this.cArrPos].lineWidth = value
+    thisStack.lineWidth = value
   }
 
   miterLimit(value: number) {
-    if (this.stack[this.cArrPos].miterLimit === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (!thisStack) {
+      return
+    }
+
+    if (thisStack.miterLimit === value) {
       return
     }
     this.currentMiterLimit = value
-    this.stack[this.cArrPos].miterLimit = value
+    thisStack.miterLimit = value
   }
 
   opacity(op: number) {
-    let currentOpacity = this.stack[this.cArrPos].opacity
+    const thisStack = this.stack[this.cArrPos]
+
+    if (!thisStack) {
+      return
+    }
+
+    let currentOpacity = thisStack.opacity
 
     currentOpacity *= op < 0 ? 0 : op
-    if (this.stack[this.cArrPos].opacity !== currentOpacity) {
+    if (thisStack.opacity !== currentOpacity) {
       if (this.nativeContext && this.currentOpacity !== op) {
         this.nativeContext.globalAlpha = op
         this.currentOpacity = op
       }
-      this.stack[this.cArrPos].opacity = currentOpacity
+      thisStack.opacity = currentOpacity
     }
   }
 
   reset() {
+    const thisStack = this.stack[this.cArrPos]
+
     this.cArrPos = 0
     this.cTr.reset()
-    this.stack[this.cArrPos].opacity = 1
+
+    if (thisStack) {
+      thisStack.opacity = 1
+    }
   }
 
   restore(forceRestore?: boolean) {
@@ -175,15 +215,15 @@ export default class CVContextData {
     const currentContext = this.stack[this.cArrPos],
       {
         fillStyle, lineCap, lineJoin, lineWidth, miterLimit, opacity, strokeStyle, transform
-      } = currentContext,
+      } = currentContext as CanvasContext,
       arr = this.cTr.props
 
     for (let i = 0; i < 16; i++) {
-      arr[i] = transform[i]
+      arr[i] = transform[i] ?? 0
     }
     if (forceRestore) {
       this.nativeContext?.restore()
-      const prevStack = this.stack[this.cArrPos + 1]
+      const prevStack = this.stack[this.cArrPos + 1] as CanvasContext
 
       this.appliedFillStyle = prevStack.fillStyle
       this.appliedStrokeStyle = prevStack.strokeStyle
@@ -193,12 +233,12 @@ export default class CVContextData {
       this.appliedMiterLimit = prevStack.miterLimit
     }
     this.nativeContext?.setTransform(
-      transform[0],
-      transform[1],
-      transform[4],
-      transform[5],
-      transform[12],
-      transform[13]
+      transform[0] as number,
+      transform[1] as number,
+      transform[4] as number,
+      transform[5] as number,
+      transform[12] as number,
+      transform[13] as number
     )
     if (
       this.nativeContext &&
@@ -227,14 +267,14 @@ export default class CVContextData {
       this.duplicate()
     }
 
-    const currentStack = this.stack[this.cArrPos]
+    const currentStack = this.stack[this.cArrPos] as CanvasContext
     let i
 
     for (i = 0; i < 16; i++) {
-      currentStack.transform[i] = props[i]
+      currentStack.transform[i] = props[i] ?? 0
     }
     this.cArrPos++
-    const newStack = this.stack[this.cArrPos]
+    const newStack = this.stack[this.cArrPos] as CanvasContext
 
     newStack.opacity = currentStack.opacity
     newStack.fillStyle = currentStack.fillStyle
@@ -250,7 +290,11 @@ export default class CVContextData {
   }
 
   setOpacity(value: number) {
-    this.stack[this.cArrPos].opacity = value
+    const thisStack = this.stack[this.cArrPos]
+
+    if (thisStack) {
+      thisStack.opacity = value
+    }
   }
 
   stroke() {
@@ -282,11 +326,16 @@ export default class CVContextData {
   }
 
   strokeStyle(value: string) {
-    if (this.stack[this.cArrPos].strokeStyle === value) {
+    const thisStack = this.stack[this.cArrPos]
+
+    if (thisStack?.strokeStyle === value) {
       return
     }
     this.currentStrokeStyle = value
-    this.stack[this.cArrPos].strokeStyle = value
+
+    if (thisStack) {
+      thisStack.strokeStyle = value
+    }
   }
 
   transform(props: Float32Array) {
@@ -302,12 +351,12 @@ export default class CVContextData {
 
     // Applying the new transform to the canvas
     this.nativeContext?.setTransform(
-      trProps[0],
-      trProps[1],
-      trProps[4],
-      trProps[5],
-      trProps[12],
-      trProps[13]
+      trProps[0] as number,
+      trProps[1] as number,
+      trProps[4] as number,
+      trProps[5] as number,
+      trProps[12] as number,
+      trProps[13] as number
     )
   }
 }

@@ -7,10 +7,11 @@ const parsePayloadLines = (payload: string) => {
   let keysCount = 0
 
   for (let i = 0; i < length; i++) {
-    const line = lines[i].split(':')
+    const line = lines[i]?.split(':') ?? []
 
     if (line.length === 2) {
-      keys[line[0]] = line[1].trim()
+      // @ts-expect-error: TODO:
+      keys[line[0]] = line[1]?.trim()
       keysCount++
     }
   }
@@ -26,7 +27,7 @@ export default function markerParser(markersFromProps: (MarkerData | Marker)[]) 
     { length } = markersFromProps
 
   for (let i = 0; i < length; i++) {
-    if ('duration' in markersFromProps[i]) {
+    if ('duration' in (markersFromProps[i] ?? {})) {
       markers.push(markersFromProps[i])
       continue
     }

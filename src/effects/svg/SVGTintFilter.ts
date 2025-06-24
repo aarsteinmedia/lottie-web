@@ -53,17 +53,15 @@ export default class SVGTintFilter extends SVGComposableEffect {
     ) {
       return
     }
-    const colorBlack = this.filterManager.effectElements[0].p.v as Vector3
-    const colorWhite = this.filterManager.effectElements[1].p.v as Vector3
-    const opacity = (this.filterManager.effectElements[2].p.v as number) / 100
+    const colorBlack = this.filterManager.effectElements[0]?.p.v as Vector3,
+      colorWhite = this.filterManager.effectElements[1]?.p.v as Vector3,
+      opacity = (this.filterManager.effectElements[2]?.p.v as number) / 100
 
     this.linearFilter.setAttribute('values',
       `${linearFilterValue} ${opacity} 0`)
     this.matrixFilter.setAttribute('values',
-      `${colorWhite[0] - colorBlack[0]} 0 0 0 ${colorBlack[0]} ${
-        colorWhite[1] - colorBlack[1]
-      } 0 0 0 ${colorBlack[1]} ${colorWhite[2] - colorBlack[2]} 0 0 0 ${
-        colorBlack[2]
+      `${colorWhite[0] - colorBlack[0]} 0 0 0 ${colorBlack[0]} ${colorWhite[1] - colorBlack[1]
+      } 0 0 0 ${colorBlack[1]} ${colorWhite[2] - colorBlack[2]} 0 0 0 ${colorBlack[2]
       } 0 0 0 1 0`)
   }
 }

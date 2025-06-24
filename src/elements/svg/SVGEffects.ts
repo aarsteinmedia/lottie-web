@@ -69,7 +69,7 @@ export default class SVGEffects {
       effects = []
 
     for (let i = 0; i < length; i++) {
-      if (this.filters[i].type === type) {
+      if (this.filters[i]?.type === type) {
         effects.push(this.filters[i])
       }
     }
@@ -81,7 +81,7 @@ export default class SVGEffects {
     const { length } = this.filters
 
     for (let i = 0; i < length; i++) {
-      this.filters[i].renderFrame(frame)
+      this.filters[i]?.renderFrame(frame)
     }
   }
 }

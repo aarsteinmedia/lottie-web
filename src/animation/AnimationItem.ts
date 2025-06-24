@@ -312,7 +312,7 @@ export default class AnimationItem extends BaseEvent {
     const { length } = this.assets
 
     while (i < length) {
-      if (id === this.assets[i].id) {
+      if (id === this.assets[i]?.id) {
         return this.assets[i]
       }
       i++
@@ -351,7 +351,7 @@ export default class AnimationItem extends BaseEvent {
 
   public getMarkerData(markerName: number) {
     for (let i = 0; i < this.markers.length; i++) {
-      if (this.markers[i].payload?.name === markerName) {
+      if (this.markers[i]?.payload?.name === markerName) {
         return this.markers[i]
       }
     }
@@ -457,8 +457,8 @@ export default class AnimationItem extends BaseEvent {
     for (let j = 0; j < jLen; j++) {
       i = 0
       while (i < len) {
-        if (layers[i].id === newLayers[j].id) {
-          layers[i] = newLayers[j]
+        if (layers[i]?.id === newLayers[j]?.id) {
+          layers[i] = newLayers[j] as LottieLayer
           break
         }
         i++
@@ -471,7 +471,7 @@ export default class AnimationItem extends BaseEvent {
     }
     len = data.assets.length
     for (i = 0; i < len; i++) {
-      assets.push(data.assets[i])
+      assets.push(data.assets[i] as LottieAsset)
     }
     this.animationData.__complete = false
     completeAnimation(this.animationData,

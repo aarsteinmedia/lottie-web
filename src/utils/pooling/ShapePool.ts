@@ -22,12 +22,12 @@ export function clone(shape: ShapePath) {
 
   for (let i = 0; i < len; i++) {
     cloned.setTripleAt(
-      shape.v[i][0],
-      shape.v[i][1],
-      shape.o[i][0],
-      shape.o[i][1],
-      shape.i[i][0],
-      shape.i[i][1],
+      shape.v[i]?.[0] ?? 0,
+      shape.v[i]?.[1] ?? 0,
+      shape.o[i]?.[0] ?? 0,
+      shape.o[i]?.[1] ?? 0,
+      shape.i[i]?.[0] ?? 0,
+      shape.i[i]?.[1] ?? 0,
       i
     )
   }
@@ -48,9 +48,9 @@ function _release(shapePath: PoolElement) {
   const len = shapePath._length
 
   for (let i = 0; i < len; i++) {
-    pointPool.release(shapePath.v[i])
-    pointPool.release(shapePath.i[i])
-    pointPool.release(shapePath.o[i])
+    pointPool.release(shapePath.v[i] as PoolElement)
+    pointPool.release(shapePath.i[i] as PoolElement)
+    pointPool.release(shapePath.o[i] as PoolElement)
     shapePath.v[i] = null as unknown as Vector2
     shapePath.i[i] = null as unknown as Vector2
     shapePath.o[i] = null as unknown as Vector2

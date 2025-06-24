@@ -60,7 +60,7 @@ export default class EllShapeProperty extends ShapeBaseProperty {
       _cw = this.d !== 3,
       _v = this.v
 
-    if (!_v) {
+    if (!_v?.v[0] || !_v.v[1] || !_v.v[2] || !_v.v[3] || !_v.i[0] || !_v.i[1] || !_v.i[2] || !_v.i[3] || !_v.o[0] || !_v.o[1] || !_v.o[2] || !_v.o[3]) {
       throw new Error(`${this.constructor.name}: Could not get value of ellipse`)
     }
     _v.v[0][0] = p0

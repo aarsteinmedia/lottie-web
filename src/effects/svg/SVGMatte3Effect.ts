@@ -46,14 +46,14 @@ export default class SVGMatte3Effect {
   }
 
   initialize() {
-    const ind = this.filterManager.effectElements[0].p.v
+    const ind = this.filterManager.effectElements[0]?.p.v
     const elements = this.elem.comp?.elements ?? []
     let i = 0
     const { length } = elements
 
     while (i < length) {
-      if (elements[i] && elements[i].data.ind === ind) {
-        this.setElementAsMask(this.elem, elements[i])
+      if (elements[i] && elements[i]?.data.ind === ind) {
+        this.setElementAsMask(this.elem, elements[i] as ElementInterfaceIntersect)
       }
       i++
     }

@@ -122,12 +122,18 @@ export class TransformProperty extends BaseProperty {
         degToRads,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-      if (data.or?.k[0].ti) {
+      if (data.or?.k[0]?.ti) {
         const { length } = data.or.k
 
         for (let i = 0; i < length; i++) {
-          data.or.k[i].to = null
-          data.or.k[i].ti = null
+          const thisK = data.or.k[i]
+
+          if (!thisK) {
+            continue
+          }
+
+          thisK.to = null
+          thisK.ti = null
         }
       }
       this.or = PropertyFactory.getProp(
@@ -224,7 +230,7 @@ export class TransformProperty extends BaseProperty {
     this._mdf = Boolean(this._mdf)
     if (this.a) {
       mat.translate(
-        -this.a.v[0], -this.a.v[1], this.a.v[2]
+        -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
       )
     }
     if (this.s) {
@@ -288,7 +294,7 @@ export class TransformProperty extends BaseProperty {
       this.v.cloneFromProps(this.pre.props)
       if (this.appliedTransformations < 1 && this.a) {
         this.v.translate(
-          -this.a.v[0], -this.a.v[1], this.a.v[2]
+          -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
         )
       }
       if (this.appliedTransformations < 2 && this.s) {
@@ -318,19 +324,19 @@ export class TransformProperty extends BaseProperty {
         if (this.p?.keyframes) {
           if (
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) <=
-            this.p.keyframes[0].t
+            (this.p.keyframes[0]?.t ?? 0)
           ) {
-            v1 = this.p.getValueAtTime((this.p.keyframes[0].t + 0.01) / frameRate,
+            v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
               0) as Vector2
-            v2 = this.p.getValueAtTime(Number(this.p.keyframes[0].t) / frameRate,
+            v2 = this.p.getValueAtTime(Number(this.p.keyframes[0]?.t) / frameRate,
               0) as Vector2
           } else if (
             Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) >=
-            this.p.keyframes[this.p.keyframes.length - 1].t
+            (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
           ) {
-            v1 = this.p.getValueAtTime(this.p.keyframes[this.p.keyframes.length - 1].t / frameRate,
+            v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) / frameRate,
               0) as Vector2
-            v2 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) /
+            v2 = this.p.getValueAtTime(((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) - 0.05) /
               frameRate,
             0) as Vector2
           } else {
@@ -350,31 +356,31 @@ export class TransformProperty extends BaseProperty {
 
           if (
             Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
-            pxKeyframes[0].t
+            (pxKeyframes[0]?.t ?? 0)
           ) {
-            v1[0] = px.getValueAtTime((pxKeyframes[0].t + 0.01) / frameRate,
+            v1[0] = px.getValueAtTime(((pxKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
               0) as number
-            v1[1] = py.getValueAtTime((pyKeyframes[0].t + 0.01) / frameRate,
+            v1[1] = py.getValueAtTime(((pyKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
               0) as number
-            v2[0] = px.getValueAtTime(pxKeyframes[0].t / frameRate,
+            v2[0] = px.getValueAtTime((pxKeyframes[0]?.t ?? 0) / frameRate,
               0) as number
             v2[1] = py.getValueAtTime(Number(pyKeyframes[0]?.t) / frameRate,
               0) as number
           } else if (
             Number(px._caching?.lastFrame) + px.offsetTime >=
-            pxKeyframes[pxKeyframes.length - 1].t
+            (pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
           ) {
-            v1[0] = px.getValueAtTime(pxKeyframes[pxKeyframes.length - 1].t /
+            v1[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) /
               frameRate,
             0) as number
-            v1[1] = py.getValueAtTime(pyKeyframes[pyKeyframes.length - 1].t /
+            v1[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) /
               frameRate,
             0) as number
-            v2[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1].t -
+            v2[0] = px.getValueAtTime(((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) -
               0.01) /
               frameRate,
             0) as number
-            v2[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1].t -
+            v2[1] = py.getValueAtTime(((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) -
               0.01) /
               frameRate,
             0) as number
@@ -429,7 +435,7 @@ export class TransformProperty extends BaseProperty {
     }
 
     this.pre.translate(
-      -this.a.v[0], -this.a.v[1], this.a.v[2]
+      -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
     )
     this.appliedTransformations = 1
 

@@ -30,16 +30,16 @@ export default abstract class TransformEffect {
       return
     }
     const effectElements = this.effectsManager?.effectElements ?? [],
-      anchor = effectElements[0].p.v as Vector3,
-      position = effectElements[1].p.v as Vector2,
-      isUniformScale = effectElements[2].p.v === 1,
-      scaleHeight = effectElements[3].p.v as number,
+      anchor = effectElements[0]?.p.v as Vector3,
+      position = effectElements[1]?.p.v as Vector2,
+      isUniformScale = effectElements[2]?.p.v === 1,
+      scaleHeight = effectElements[3]?.p.v as number,
       scaleWidth = isUniformScale
         ? scaleHeight
-        : (effectElements[4].p.v as number),
-      skew = effectElements[5].p.v as number,
-      skewAxis = effectElements[6].p.v as number,
-      rotation = effectElements[7].p.v as number
+        : (effectElements[4]?.p.v as number),
+      skew = effectElements[5]?.p.v as number,
+      skewAxis = effectElements[6]?.p.v as number,
+      rotation = effectElements[7]?.p.v as number
 
     this.matrix?.reset()
     this.matrix?.translate(
@@ -54,8 +54,8 @@ export default abstract class TransformEffect {
       position[0], position[1], 0
     )
     this._mdf = true
-    if (this.opacity !== effectElements[8].p.v) {
-      this.opacity = effectElements[8].p.v as number
+    if (this.opacity !== effectElements[8]?.p.v) {
+      this.opacity = effectElements[8]?.p.v as number
       this._opMdf = true
     }
   }

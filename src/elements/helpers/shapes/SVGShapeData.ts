@@ -25,7 +25,7 @@ export default class SVGShapeData extends ShapeData {
     const { length } = transformers
 
     while (i < length) {
-      if (transformers[i].mProps.dynamicProperties.length > 0) {
+      if ((transformers[i]?.mProps.dynamicProperties.length ?? 0) > 0) {
         this._isAnimated = true
         break
       }

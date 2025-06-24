@@ -95,12 +95,18 @@ export default class HCameraElement extends FrameElement {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty<Vector3>
     }
-    if (data.ks.or?.k.length && data.ks.or.k[0].to) {
+    if (data.ks.or?.k.length && data.ks.or.k[0]?.to) {
       const { length } = data.ks.or.k
 
       for (let i = 0; i < length; i++) {
-        data.ks.or.k[i].to = null
-        data.ks.or.k[i].ti = null
+        const thisK = data.ks.or.k[i]
+
+        if (!thisK) {
+          continue
+        }
+
+        thisK.to = null
+        thisK.ti = null
       }
     }
     this.or = PropertyFactory.getProp(
@@ -166,7 +172,7 @@ export default class HCameraElement extends FrameElement {
       const { length } = this.hierarchy
 
       for (let i = 0; i < length; i++) {
-        isFirst = this.hierarchy[i].finalTransform?.mProp._mdf || isFirst
+        isFirst = this.hierarchy[i]?.finalTransform?.mProp._mdf || isFirst
       }
     }
     if (
@@ -186,7 +192,7 @@ export default class HCameraElement extends FrameElement {
         const len = this.hierarchy.length - 1
 
         for (let i = len; i >= 0; i--) {
-          const mTransf = this.hierarchy[i].finalTransform?.mProp
+          const mTransf = this.hierarchy[i]?.finalTransform?.mProp
 
           if (
             !mTransf?.p ||
@@ -216,13 +222,13 @@ export default class HCameraElement extends FrameElement {
             1 / mTransf.s.v[2]
           )
           this.mat?.translate(
-            mTransf.a.v[0], mTransf.a.v[1], mTransf.a.v[2]
+            mTransf.a.v[0] ?? 0, mTransf.a.v[1] ?? 0, mTransf.a.v[2]
           )
         }
       }
       if (this.p) {
         this.mat?.translate(
-          -this.p.v[0], -this.p.v[1], this.p.v[2]
+          -(this.p.v[0] ?? 0), -(this.p.v[1] ?? 0), this.p.v[2]
         )
       } else if (this.px && this.py && this.pz) {
         this.mat?.translate(
@@ -234,9 +240,9 @@ export default class HCameraElement extends FrameElement {
 
         if (this.p) {
           diffVector = [
-            this.p.v[0] - this.a.v[0],
-            this.p.v[1] - this.a.v[1],
-            this.p.v[2] - this.a.v[2],
+            this.p.v[0] ?? 0 - this.a.v[0],
+            this.p.v[1] ?? 0 - this.a.v[1],
+            this.p.v[2] ?? 0 - this.a.v[2],
           ]
         } else if (this.px && this.py && this.pz) {
           diffVector = [
@@ -245,18 +251,18 @@ export default class HCameraElement extends FrameElement {
             this.pz.v - this.a.v[2],
           ]
         }
-        const mag = Math.sqrt(Math.pow(diffVector[0], 2) +
-          Math.pow(diffVector[1], 2) +
-          Math.pow(diffVector[2], 2))
+        const mag = Math.sqrt(Math.pow(diffVector[0] as number, 2) +
+          Math.pow(diffVector[1] as number, 2) +
+          Math.pow(diffVector[2] as number, 2))
         // var lookDir = getNormalizedPoint(getDiffVector(this.a.v,this.p.v));
         const lookDir = [
-          diffVector[0] / mag,
-          diffVector[1] / mag,
-          diffVector[2] / mag,
+          diffVector[0] as number / mag,
+          diffVector[1] as number / mag,
+          diffVector[2] as number / mag,
         ]
-        const lookLengthOnXZ = Math.sqrt(lookDir[2] * lookDir[2] + lookDir[0] * lookDir[0])
-        const mRotationX = Math.atan2(lookDir[1], lookLengthOnXZ)
-        const mRotationY = Math.atan2(lookDir[0], -lookDir[2])
+        const lookLengthOnXZ = Math.sqrt(lookDir[2] as number * (lookDir[2] as number) + (lookDir[0] as number) * (lookDir[0] as number)),
+          mRotationX = Math.atan2(lookDir[1] as number, lookLengthOnXZ),
+          mRotationY = Math.atan2(lookDir[0] as number, -(lookDir[2] as number))
 
         this.mat?.rotateY(mRotationY).rotateX(-mRotationX)
       }
@@ -292,7 +298,7 @@ export default class HCameraElement extends FrameElement {
 
         for (let i = 0; i < len; i++) {
           comp = this.comp.threeDElements[i]
-          if (comp.type !== '3d') {
+          if (comp?.type !== '3d') {
             continue
           }
           if (hasMatrixChanged) {

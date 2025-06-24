@@ -62,7 +62,7 @@ export default abstract class BaseRenderer extends FrameElement {
     let i = 0
 
     while (i < length) {
-      if (layers[i].ind !== parentName) {
+      if (layers[i]?.ind !== parentName) {
         i++
         continue
       }
@@ -79,15 +79,15 @@ export default abstract class BaseRenderer extends FrameElement {
         i++
         continue
       }
-      hierarchy.push(elements[i])
-      ;(elements[i] as HierarchyElement).setAsParent()
-      if (layers[i].parent === undefined) {
+      hierarchy.push(elements[i] as ElementInterfaceIntersect)
+      ; (elements[i] as HierarchyElement).setAsParent()
+      if (layers[i]?.parent === undefined) {
         element.setHierarchy(hierarchy)
         i++
         continue
       }
       this.buildElementParenting(
-        element, layers[i].parent, hierarchy
+        element, layers[i]?.parent, hierarchy
       )
       i++
     }
@@ -102,11 +102,13 @@ export default abstract class BaseRenderer extends FrameElement {
     const { length } = this.layers
 
     for (let i = length - 1; i >= 0; i--) {
-      if (!this.elements[i] &&
-        (this.layers[i].ip - this.layers[i].st <=
-          Number(val) - this.layers[i].st &&
-          this.layers[i].op - this.layers[i].st >
-          Number(val) - this.layers[i].st)
+      const layer = this.layers[i]
+
+      if (!this.elements[i] && layer &&
+        (layer.ip - layer.st <=
+          Number(val) - layer.st &&
+          layer.op - layer.st >
+          Number(val) - layer.st)
       ) {
         this.buildItem(i)
       }
@@ -216,7 +218,7 @@ export default abstract class BaseRenderer extends FrameElement {
 
     for (let i = 0; i < length; i++) {
       if (this.elements[i]?.data.ind === ind) {
-        return this.elements[i]
+        return this.elements[i] as ElementInterfaceIntersect
       }
     }
 
@@ -255,8 +257,8 @@ export default abstract class BaseRenderer extends FrameElement {
       let j = 0
 
       while (j < jLen) {
-        if (this.layers[j].id === newLayers[i].id) {
-          this.layers[j] = newLayers[i]
+        if (this.layers[j]?.id === newLayers[i]?.id) {
+          this.layers[j] = newLayers[i] as LottieLayer
           break
         }
         j++
@@ -278,8 +280,8 @@ export default abstract class BaseRenderer extends FrameElement {
     const { length } = assets
 
     for (let i = 0; i < length; i++) {
-      if (assets[i].xt) {
-        const comp = this.createComp(assets[i])
+      if (assets[i]?.xt) {
+        const comp = this.createComp(assets[i] as LottieLayer)
 
         comp.initExpressions()
         this.globalData?.projectInterface.registerComposition(comp)

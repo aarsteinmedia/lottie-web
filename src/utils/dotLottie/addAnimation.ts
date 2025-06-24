@@ -41,17 +41,17 @@ export default async function addAnimation ({
     const { length } = configs
 
     for (let i = 0; i < length; i++) {
-      const { url } = configs[i],
+      const { url } = configs[i] ?? {},
         { animations: animationsToAdd } = await getAnimationData(url)
 
       if (!animationsToAdd) {
         throw new Error('No animation loaded')
       }
-      if (manifest.animations.some((anim) => anim.id === configs[i].id)) {
+      if (manifest.animations.some((anim) => anim.id === configs[i]?.id)) {
         throw new Error('Duplicate id for animation')
       }
 
-      manifest.animations = [...manifest.animations, { id: configs[i].id }]
+      manifest.animations = [...manifest.animations, { id: configs[i]?.id ?? '' }]
 
       animations.push(...animationsToAdd)
     }

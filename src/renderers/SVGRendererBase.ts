@@ -35,7 +35,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
 
     while (i < pos) {
       if (this.elements[i] !== (true as unknown as ElementInterfaceIntersect) && this.elements[i]?.getBaseElement()) {
-        nextElement = this.elements[i].getBaseElement()
+        nextElement = this.elements[i]?.getBaseElement()
       }
       i++
     }
@@ -57,23 +57,23 @@ export default abstract class SVGRendererBase extends BaseRenderer {
       elements, globalData, layers
     } = this
 
-    if (elements[pos] || layers[pos].ty === 99) {
+    if (elements[pos] || layers[pos]?.ty === 99) {
       return
     }
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
 
     elements[pos] = element
     if (getExpressionsPlugin()) {
-      if (layers[pos].ty === 0) {
+      if (layers[pos]?.ty === 0) {
         globalData.projectInterface.registerComposition(element)
       }
       element.initExpressions()
     }
     this.appendElementInPos(element, pos)
-    if (layers[pos].tt) {
+    if (layers[pos]?.tt) {
       const elementIndex =
         'tp' in layers[pos]
           ? this.findIndexByInd(layers[pos].tp)
@@ -119,7 +119,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
           const elementIndex = 'tp' in element.data
               ? this.findIndexByInd(element.data.tp)
               : i - 1,
-            matteMask = this.elements[elementIndex].getMatte(this.layers[i].tt)
+            matteMask = this.elements[elementIndex]?.getMatte(this.layers[i]?.tt) ?? ''
 
           element.setMatte(matteMask)
           break
@@ -302,7 +302,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
-      if (this.layers[i].ind === ind) {
+      if (this.layers[i]?.ind === ind) {
         return i
       }
     }
@@ -348,7 +348,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
         }
 
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i]?.prepareFrame(Number(num) - this.layers[i].st)
+          this.elements[i]?.prepareFrame(Number(num) - (this.layers[i]?.st ?? 0))
         }
       }
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

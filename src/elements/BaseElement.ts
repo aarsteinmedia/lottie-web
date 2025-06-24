@@ -60,8 +60,8 @@ export default abstract class BaseElement {
 
     while (i < length) {
       if (
-        this.data.masksProperties?.[i].mode !== 'n' &&
-        this.data.masksProperties?.[i].cl !== (false as unknown as string)
+        this.data.masksProperties?.[i]?.mode !== 'n' &&
+        this.data.masksProperties?.[i]?.cl !== (false as unknown as string)
       ) {
         return true
       }

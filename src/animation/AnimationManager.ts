@@ -22,7 +22,7 @@ const registeredAnimations: {
 
 export function destroy(animation?: string) {
   for (let i = len - 1; i >= 0; i--) {
-    registeredAnimations[i].animation.destroy(animation)
+    registeredAnimations[i]?.animation.destroy(animation)
   }
 }
 export function freeze() {
@@ -34,7 +34,7 @@ export function getRegisteredAnimations() {
     animations = []
 
   for (let i = 0; i < lenAnims; i++) {
-    animations.push(registeredAnimations[i].animation)
+    animations.push(registeredAnimations[i]?.animation)
   }
 
   return animations
@@ -46,7 +46,7 @@ export function goToAndStop(
   animation?: string
 ) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.goToAndStop(
+    registeredAnimations[i]?.animation.goToAndStop(
       value, isFrame, animation
     )
   }
@@ -68,19 +68,19 @@ export function loadAnimation(params: AnimationConfiguration) {
 
 export function mute(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.mute(animation)
+    registeredAnimations[i]?.animation.mute(animation)
   }
 }
 
 export function pause(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.pause(animation)
+    registeredAnimations[i]?.animation.pause(animation)
   }
 }
 
 export function play(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.play(animation)
+    registeredAnimations[i]?.animation.play(animation)
   }
 }
 
@@ -94,10 +94,10 @@ export function registerAnimation(element: HTMLElement | null,
 
     while (i < len) {
       if (
-        registeredAnimations[i].elem === element &&
-        registeredAnimations[i].elem !== null
+        registeredAnimations[i]?.elem === element &&
+        registeredAnimations[i]?.elem !== null
       ) {
-        return registeredAnimations[i].animation
+        return registeredAnimations[i]?.animation
       }
       i++
     }
@@ -114,7 +114,7 @@ export function registerAnimation(element: HTMLElement | null,
 }
 export function resize() {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.resize()
+    registeredAnimations[i]?.animation.resize()
   }
 }
 
@@ -133,23 +133,26 @@ export function searchAnimations(
     { length } = animElements
 
   for (let i = 0; i < length; i++) {
-    if (renderer) {
-      animElements[i].dataset.bmType = renderer
+    const animElement = animElements[i]
+
+    if (!animElement) {
+      continue
     }
-    registerAnimation(animElements[i], animationData)
+
+    if (renderer) {
+      animElement.dataset.bmType = renderer
+    }
+    registerAnimation(animElement, animationData)
   }
   if (standalone && length === 0) {
     if (!renderer) {
       renderer = RendererType.SVG
     }
-    const body = document.getElementsByTagName('body')[0]
+    const { body } = document
 
     body.innerText = ''
     const div = createTag('div')
 
-    // if (!div) {
-    //   throw new Error('Could not create DIV')
-    // }
     div.style.width = '100%'
     div.style.height = '100%'
     div.dataset.bmType = renderer
@@ -160,31 +163,31 @@ export function searchAnimations(
 
 export function setDirection(val: AnimationDirection, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.setDirection(val, animation)
+    registeredAnimations[i]?.animation.setDirection(val, animation)
   }
 }
 
 export function setSpeed(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.setSpeed(val, animation)
+    registeredAnimations[i]?.animation.setSpeed(val, animation)
   }
 }
 
 export function setVolume(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.setVolume(val, animation)
+    registeredAnimations[i]?.animation.setVolume(val, animation)
   }
 }
 
 export function stop(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.stop(animation)
+    registeredAnimations[i]?.animation.stop(animation)
   }
 }
 
 export function togglePause(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.togglePause(animation)
+    registeredAnimations[i]?.animation.togglePause(animation)
   }
 }
 export function unfreeze() {
@@ -194,7 +197,7 @@ export function unfreeze() {
 
 export function unmute(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.unmute(animation)
+    registeredAnimations[i]?.animation.unmute(animation)
   }
 }
 function activate() {
@@ -223,7 +226,7 @@ function removeElement({ target: animItem }: LottieEvent) {
     throw new Error('No animation to remove')
   }
   while (i < len) {
-    if (registeredAnimations[i].animation === animItem) {
+    if (registeredAnimations[i]?.animation === animItem) {
       registeredAnimations.splice(i, 1)
       i--
       len -= 1
@@ -239,7 +242,7 @@ function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
 
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i].animation.advanceTime(elapsedTime)
+    registeredAnimations[i]?.animation.advanceTime(elapsedTime)
   }
   initTime = nowTime
   if (playingAnimationsNum && !_isFrozen) {

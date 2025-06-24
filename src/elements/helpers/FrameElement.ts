@@ -34,12 +34,12 @@ export default abstract class FrameElement extends HierarchyElement {
     for (let i = 0; i < length; i++) {
       if (
         !isVisible &&
-        !(this._isParent && this.dynamicProperties[i].propType === PropType.Transform)
+        !(this._isParent && this.dynamicProperties[i]?.propType === PropType.Transform)
       ) {
         continue
       }
-      this.dynamicProperties[i].getValue()
-      if (!this.globalData || !this.dynamicProperties[i]._mdf) {
+      this.dynamicProperties[i]?.getValue()
+      if (!this.globalData || !this.dynamicProperties[i]?._mdf) {
         continue
       }
       this.globalData._mdf = true

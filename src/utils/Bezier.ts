@@ -63,7 +63,7 @@ export function buildBezierData(
       ptDistance = 0
       for (let i = 0; i < length; i++) {
         ptCoord =
-          Math.pow(1 - perc, 3) * pt1[i] +
+          Math.pow(1 - perc, 3) * (pt1[i] ?? 0) +
           3 * Math.pow(1 - perc, 2) * perc * (pt1[i] + pt3[i]) +
           3 * (1 - perc) * Math.pow(perc, 2) * (pt2[i] + pt4[i]) +
           Math.pow(perc, 3) * pt2[i]

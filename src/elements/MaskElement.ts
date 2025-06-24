@@ -54,17 +54,17 @@ export default class MaskElement {
 
     for (let i = 0; i < length; i++) {
       if (
-        properties[i].mode !== 'a' && properties[i].mode !== 'n' ||
-        properties[i].inv ||
-        properties[i].o?.k !== 100 ||
-        properties[i].o?.x
+        properties[i]?.mode !== 'a' && properties[i]?.mode !== 'n' ||
+        properties[i]?.inv ||
+        properties[i]?.o?.k !== 100 ||
+        properties[i]?.o?.x
       ) {
         maskType = 'mask'
         maskRef = 'mask'
       }
 
       if (
-        (properties[i].mode === 's' || properties[i].mode === 'i') &&
+        (properties[i]?.mode === 's' || properties[i]?.mode === 'i') &&
         count === 0
       ) {
         rect = createNS<SVGRectElement>('rect')
@@ -78,21 +78,21 @@ export default class MaskElement {
 
       const path = createNS<SVGPathElement>('path')
 
-      if (properties[i].mode === 'n') {
+      if (properties[i]?.mode === 'n') {
         // TODO: move this to a factory or to a constructor
         this.viewData[i] = {
           elem: path,
           lastPath: '',
           op: PropertyFactory.getProp(
             this.element,
-            properties[i].o,
+            properties[i]?.o,
             0,
             0.01,
             this.element
           ) as ValueProperty,
           prop: ShapePropertyFactory.getShapeProp(
             this.element,
-            properties[i],
+            properties[i] as Shape,
             3
           ),
         }
@@ -102,11 +102,11 @@ export default class MaskElement {
       count++
 
       path.setAttribute('fill',
-        properties[i].mode === 's' ? '#000000' : '#ffffff')
+        properties[i]?.mode === 's' ? '#000000' : '#ffffff')
       path.setAttribute('clip-rule', 'nonzero')
       let filterID
 
-      if (properties[i].x?.k === 0) {
+      if (properties[i]?.x?.k === 0) {
         feMorph = null
         x = null
       } else {
@@ -114,7 +114,7 @@ export default class MaskElement {
         maskRef = 'mask'
         x = PropertyFactory.getProp(
           this.element,
-          properties[i].x,
+          properties[i]?.x,
           0,
           null,
           this.element
@@ -130,7 +130,7 @@ export default class MaskElement {
         expansor.appendChild(feMorph)
         defs.appendChild(expansor)
         path.setAttribute('stroke',
-          properties[i].mode === 's' ? '#000000' : '#ffffff')
+          properties[i]?.mode === 's' ? '#000000' : '#ffffff')
       }
 
       // TODO: move this to a factory or to a constructor
@@ -143,12 +143,12 @@ export default class MaskElement {
         lastRadius: 0,
         x,
       }
-      if (properties[i].mode === 'i') {
+      if (properties[i]?.mode === 'i') {
         const { length: jLen } = currentMasks,
           g = createNS<SVGGElement>('g')
 
         for (let j = 0; j < jLen; j++) {
-          g.appendChild(currentMasks[j])
+          g.appendChild(currentMasks[j] as SVGElement)
         }
         const mask = createNS<SVGMaskElement>('mask')
 
@@ -163,7 +163,7 @@ export default class MaskElement {
       } else {
         currentMasks.push(path)
       }
-      if (properties[i].inv && !this.solidPath) {
+      if (properties[i]?.inv && !this.solidPath) {
         this.solidPath = this.createLayerSolidPath()
       }
       // TODO: move this to a factory or to a constructor
@@ -173,22 +173,22 @@ export default class MaskElement {
         lastPath: '',
         op: PropertyFactory.getProp(
           this.element,
-          properties[i].o,
+          properties[i]?.o,
           0,
           0.01,
           this.element
         ) as ValueProperty,
         prop: ShapePropertyFactory.getShapeProp(
-          this.element, properties[i], 3
+          this.element, properties[i] as Shape, 3
         ),
       }
-      const shapePath = this.viewData[i].prop?.v
+      const shapePath = this.viewData[i]?.prop?.v
 
-      if (!this.viewData[i].prop?.k && shapePath) {
+      if (!this.viewData[i]?.prop?.k && shapePath) {
         this.drawPath(
-          properties[i],
+          properties[i] ?? null,
           shapePath,
-          this.viewData[i]
+          this.viewData[i] as ViewData
         )
       }
     }
@@ -198,7 +198,7 @@ export default class MaskElement {
     const { length: cLen } = currentMasks
 
     for (let i = 0; i < cLen; i++) {
-      this.maskElement.appendChild(currentMasks[i])
+      this.maskElement.appendChild(currentMasks[i] as SVGElement)
     }
 
     if (count > 0) {
@@ -268,7 +268,7 @@ export default class MaskElement {
   }
 
   getMaskProperty(pos: number) {
-    return this.viewData[pos].prop
+    return this.viewData[pos]?.prop ?? null
   }
 
   renderFrame(frame?: number | null) {
@@ -276,52 +276,54 @@ export default class MaskElement {
       { length } = this.masksProperties
 
     for (let i = 0; i < length; i++) {
-      const shapePath = this.viewData[i].prop?.v
+      const shapePath = this.viewData[i]?.prop?.v
 
-      if (shapePath && (this.viewData[i].prop?._mdf || frame)) {
+      if (shapePath && (this.viewData[i]?.prop?._mdf || frame)) {
         this.drawPath(
-          this.masksProperties[i] || null,
+          this.masksProperties[i] ?? null,
           shapePath,
-          this.viewData[i]
+          this.viewData[i] as ViewData
         )
       }
-      if (this.viewData[i].op._mdf || frame) {
-        this.viewData[i].elem.setAttribute('fill-opacity',
-          `${this.viewData[i].op.v}`)
+      if (this.viewData[i]?.op._mdf || frame) {
+        this.viewData[i]?.elem.setAttribute('fill-opacity',
+          `${this.viewData[i]?.op.v ?? 1}`)
       }
-      if (this.masksProperties[i].mode === 'n') {
+      if (this.masksProperties[i]?.mode === 'n') {
         continue
       }
       if (
-        this.viewData[i].invRect &&
+        this.viewData[i]?.invRect &&
         (this.element.finalTransform?.mProp._mdf || frame)
       ) {
-        this.viewData[i].invRect?.setAttribute('transform',
+        this.viewData[i]?.invRect?.setAttribute('transform',
           `${finalMat?.getInverseMatrix().to2dCSS()}`)
       }
+      const storedData = this.storedData[i]
+
       if (
-        !this.storedData[i]?.x ||
-        !(this.storedData[i].x?._mdf || frame)
+        !storedData?.x ||
+        !(storedData.x._mdf || frame)
       ) {
         continue
       }
-      const feMorph = this.storedData[i].expan
+      const feMorph = storedData.expan
 
-      if (Number(this.storedData[i].x?.v) < 0) {
-        if (this.storedData[i].lastOperator !== 'erode') {
-          this.storedData[i].lastOperator = 'erode'
-          this.storedData[i].elem.setAttribute('filter',
-            `url(${getLocationHref()}#${this.storedData[i].filterId})`)
+      if (storedData.x.v < 0) {
+        if (storedData.lastOperator !== 'erode') {
+          storedData.lastOperator = 'erode'
+          storedData.elem.setAttribute('filter',
+            `url(${getLocationHref()}#${storedData.filterId})`)
         }
-        feMorph?.setAttribute('radius', `${-Number(this.storedData[i].x?.v)}`)
+        feMorph?.setAttribute('radius', `${-storedData.x.v}`)
         continue
       }
-      if (this.storedData[i].lastOperator !== 'dilate') {
-        this.storedData[i].lastOperator = 'dilate'
-        this.storedData[i].elem.removeAttribute('filter')
+      if (storedData.lastOperator !== 'dilate') {
+        storedData.lastOperator = 'dilate'
+        storedData.elem.removeAttribute('filter')
       }
-      this.storedData[i].elem.setAttribute('stroke-width',
-        `${Number(this.storedData[i].x?.v) * 2}`)
+      storedData.elem.setAttribute('stroke-width',
+        `${storedData.x.v * 2}`)
     }
   }
 }

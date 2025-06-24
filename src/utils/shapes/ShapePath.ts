@@ -48,12 +48,12 @@ export default class ShapePath {
 
     if (this.c) {
       newPath.setTripleAt(
-        vertices[0][0],
-        vertices[0][1],
-        inPoints[0][0],
-        inPoints[0][1],
-        outPoints[0][0],
-        outPoints[0][1],
+        vertices[0]?.[0] ?? 0,
+        vertices[0]?.[1] ?? 0,
+        inPoints[0]?.[0] ?? 0,
+        inPoints[0]?.[1] ?? 0,
+        outPoints[0]?.[0] ?? 0,
+        outPoints[0]?.[1] ?? 0,
         0,
         false
       )
@@ -64,12 +64,12 @@ export default class ShapePath {
 
     for (let i = init; i < _length; i++) {
       newPath.setTripleAt(
-        vertices[cnt][0],
-        vertices[cnt][1],
-        inPoints[cnt][0],
-        inPoints[cnt][1],
-        outPoints[cnt][0],
-        outPoints[cnt][1],
+        vertices[cnt]?.[0] ?? 0,
+        vertices[cnt]?.[1] ?? 0,
+        inPoints[cnt]?.[0] ?? 0,
+        inPoints[cnt]?.[1] ?? 0,
+        outPoints[cnt]?.[0] ?? 0,
+        outPoints[cnt]?.[1] ?? 0,
         i,
         false
       )
@@ -147,7 +147,7 @@ export default class ShapePath {
         break
       }
     }
-    if (!arr[pos] || arr[pos] && !replace) {
+    if (!arr[pos] || !replace) {
       arr[pos] = pointPool.newElement() as Vector2
     }
     arr[pos][0] = x

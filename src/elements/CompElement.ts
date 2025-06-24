@@ -91,7 +91,7 @@ export default abstract class CompElement extends RenderableDOMElement {
     // This iteration needs to be backwards because of how expressions connect between each other
     for (let i = length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {
-        this.elements[i]?.prepareFrame(this.renderedFrame - this.layers[i].st)
+        this.elements[i]?.prepareFrame(this.renderedFrame - (this.layers[i]?.st ?? 0))
         if (this.elements[i]?._mdf) {
           this._mdf = true
         }

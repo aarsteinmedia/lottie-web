@@ -32,7 +32,7 @@ function initExpressions(animation: AnimationItem) {
     const { length } = registers
 
     for (let i = 0; i < length; i++) {
-      registers[i].release?.()
+      registers[i]?.release?.()
     }
     registers.length = 0
   }

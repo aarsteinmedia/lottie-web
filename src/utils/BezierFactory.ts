@@ -68,8 +68,8 @@ class BezierEasing {
     for (let i = 0; i < this.kSplineTableSize; ++i) {
       this._mSampleValues[i] = this.calcBezier(
         i * this.kSampleStepSize,
-        mX1,
-        mX2
+        mX1 ?? 0,
+        mX2 ?? 0
       )
     }
   }
@@ -104,12 +104,12 @@ class BezierEasing {
     const guessForT = intervalStart + dist * this.kSampleStepSize
 
     const initialSlope = this.getSlope(
-      guessForT, mX1, mX2
+      guessForT, mX1 ?? 0, mX2 ?? 0
     )
 
     if (initialSlope >= this.NEWTON_MIN_SLOPE) {
       return this.newtonRaphsonIterate(
-        aX, guessForT, mX1, mX2
+        aX, guessForT, mX1 ?? 0, mX2 ?? 0
       )
     }
     if (initialSlope === 0.0) {
@@ -120,8 +120,8 @@ class BezierEasing {
       aX,
       intervalStart,
       intervalStart + this.kSampleStepSize,
-      mX1,
-      mX2
+      mX1 ?? 0,
+      mX2 ?? 0
     )
   }
 
@@ -158,7 +158,7 @@ class BezierEasing {
     }
 
     return this.calcBezier(
-      this._getTForX(x), mY1, mY2
+      this._getTForX(x), mY1 ?? 0, mY2 ?? 0
     )
   }
 

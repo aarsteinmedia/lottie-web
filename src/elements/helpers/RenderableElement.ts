@@ -108,7 +108,7 @@ export default abstract class RenderableElement extends FrameElement {
     const { length } = this.renderableComponents
 
     for (let i = 0; i < length; i++) {
-      this.renderableComponents[i].renderFrame(Number(this._isFirstFrame))
+      this.renderableComponents[i]?.renderFrame(Number(this._isFirstFrame))
     }
     /* this.maskManager.renderFrame(this.finalTransform.mat);
         this.renderableEffectsManager.renderFrame(this._isFirstFrame); */

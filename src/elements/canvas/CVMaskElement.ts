@@ -1,7 +1,9 @@
 import type CVBaseElement from '@/elements/canvas/CVBaseElement'
 import type CVShapeElement from '@/elements/canvas/CVShapeElement'
 import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type { LottieLayer, Shape } from '@/types'
+import type {
+  LottieLayer, Shape, Vector2
+} from '@/types'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -24,12 +26,12 @@ export default class CVMaskElement {
     let hasMasks = false
 
     for (let i = 0; i < length; i++) {
-      if (this.masksProperties[i].mode !== 'n') {
+      if (this.masksProperties[i]?.mode !== 'n') {
         hasMasks = true
       }
       this.viewData[i] = ShapePropertyFactory.getShapeProp(
         this.element as CVShapeElement,
-        this.masksProperties[i],
+        this.masksProperties[i] as Shape,
         3
       ) as ShapeProperty
     }
@@ -63,8 +65,8 @@ export default class CVMaskElement {
 
     ctx?.beginPath()
     for (let i = 0; i < length; i++) {
-      if (this.masksProperties[i].mode !== 'n') {
-        if (this.masksProperties[i].inv) {
+      if (this.masksProperties[i]?.mode !== 'n') {
+        if (this.masksProperties[i]?.inv) {
           ctx?.moveTo(0, 0)
           ctx?.lineTo(this.element.globalData.compSize.w, 0)
           ctx?.lineTo(this.element.globalData.compSize.w,
@@ -72,37 +74,37 @@ export default class CVMaskElement {
           ctx?.lineTo(0, this.element.globalData.compSize.h)
           ctx?.lineTo(0, 0)
         }
-        const data = this.viewData[i].v
+        const data = this.viewData[i]?.v
 
         if (!data) {
           throw new Error(`${this.constructor.name}: Could not access ShapePath`)
         }
         const pt =
           transform?.applyToPointArray(
-            data.v[0][0], data.v[0][1], 0
+            data.v[0]?.[0] ?? 0, data.v[0]?.[1] ?? 0, 0
           ) ?? []
 
-        ctx?.moveTo(pt[0], pt[1])
+        ctx?.moveTo(pt[0] ?? 0, pt[1] ?? 0)
         const jLen = data._length
 
         for (j = 1; j < jLen; j++) {
           pts =
             transform?.applyToTriplePoints(
-              data.o[j - 1],
-              data.i[j],
-              data.v[j]
+              data.o[j - 1] as number[],
+              data.i[j] as number[],
+              data.v[j] as number[]
             ) ?? []
           ctx?.bezierCurveTo(
-            pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]
+            pts[0] ?? 0, pts[1] ?? 0, pts[2] ?? 0, pts[3] ?? 0, pts[4] ?? 0, pts[5] ?? 0
           )
         }
         pts =
           transform?.applyToTriplePoints(
-            data.o[j - 1], data.i[0], data.v[0]
+            data.o[j - 1] as Vector2, data.i[0] as Vector2, data.v[0] as Vector2
           ) ??
           []
         ctx?.bezierCurveTo(
-          pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]
+          pts[0] ?? 0, pts[1] ?? 0, pts[2] ?? 0, pts[3] ?? 0, pts[4] ?? 0, pts[5] ?? 0
         )
       }
     }

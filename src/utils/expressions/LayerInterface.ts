@@ -45,15 +45,15 @@ export default class LayerExpressionInterface {
     return Boolean(this._elem.hierarchy?.length)
   }
 
-  get parent() {
-    return this._elem.hierarchy?.[0].layerInterface
+  get parent(): LayerExpressionInterface | null {
+    return this._elem.hierarchy?.[0]?.layerInterface ?? null
   }
 
   get transform() {
     return this.transformInterface
   }
 
-  constructor (elem: ElementInterfaceIntersect) {
+  constructor(elem: ElementInterfaceIntersect) {
     this.sourceRectAtTime = elem.sourceRectAtTime.bind(elem)
     this._elem = elem
 
@@ -93,12 +93,12 @@ export default class LayerExpressionInterface {
       const { length } = this._elem.hierarchy
 
       for (let i = 0; i < length; i++) {
-        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
+        this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
       }
     }
 
     return matrix.applyToPointArray(
-      arr[0], arr[1], arr[2] || 0
+      arr[0] ?? 0, arr[1] ?? 0, arr[2] ?? 0
     )
   }
 
@@ -113,7 +113,7 @@ export default class LayerExpressionInterface {
       const len = this._elem.hierarchy.length
 
       for (i = 0; i < len; i += 1) {
-        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(toWorldMat)
+        this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(toWorldMat)
       }
 
       return toWorldMat.inversePoint(arr)
@@ -190,7 +190,7 @@ export default class LayerExpressionInterface {
       const { length } = this._elem.hierarchy
 
       for (let i = 0; i < length; i++) {
-        this._elem.hierarchy[i].finalTransform?.mProp.applyToMatrix(matrix)
+        this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
       }
     }
 

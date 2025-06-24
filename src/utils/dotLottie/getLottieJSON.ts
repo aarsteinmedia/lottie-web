@@ -2,7 +2,9 @@ import {
   strFromU8, unzip as unzipOrg, type Unzipped
 } from 'fflate'
 
-import type { AnimationData, LottieManifest } from '@/types'
+import type {
+  AnimationData, LottieManifest, Shape
+} from '@/types'
 
 import resolveAssets from '@/utils/dotLottie/resolveAssets'
 
@@ -22,7 +24,7 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
   },
 
   getManifest = (unzipped: Unzipped) => {
-    const file = strFromU8(unzipped['manifest.json'], false),
+    const file = strFromU8(unzipped['manifest.json'] as Uint8Array, false),
       manifest: LottieManifest = JSON.parse(file)
 
     if (!('animations' in manifest)) {
@@ -62,25 +64,25 @@ export default async function getLottieJSON(resp: Response) {
    */
   let animationsFolder = 'animations'
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (unzipped[`a/${manifest.animations[0].id}.json`]) {
+
+  if (unzipped[`a/${manifest.animations[0]?.id}.json`]) {
     animationsFolder = 'a'
   }
 
   for (let i = 0; i < length; i++) {
-    const str = strFromU8(unzipped[`${animationsFolder}/${manifest.animations[i].id}.json`]),
+    const str = strFromU8(unzipped[`${animationsFolder}/${manifest.animations[i]?.id}.json`] as Uint8Array),
       lottie: AnimationData = JSON.parse(prepareString(str))
 
     // Handle Expressions
     const { length: jLen } = lottie.layers
 
     for (let j = 0; j < jLen; j++) {
-      const { ks: shape } = lottie.layers[j],
-        props = Object.keys(shape) as (keyof typeof shape)[],
+      const { ks: shape } = lottie.layers[j] ?? {},
+        props = Object.keys(shape as Shape) as (keyof Shape)[],
         { length: pLen } = props
 
       for (let p = 0; p < pLen; p++) {
-        const { e: isEncoded, x: expression } = shape[props[p]] as {
+        const { e: isEncoded, x: expression } = shape?.[props[p] as keyof Shape] as {
           x?: string;
           e?: 0 | 1
         }
@@ -89,9 +91,13 @@ export default async function getLottieJSON(resp: Response) {
           continue
         }
 
+        const keyofShape = lottie.layers[j]?.ks[props[p] as keyof Shape]
+
         // Base64 Decode to handle compression
-        // @ts-expect-error
-        lottie.layers[j].ks[props[p]].x = atob(expression)
+        if (keyofShape) {
+          // @ts-expect-error
+          keyofShape.x = atob(expression)
+        }
       }
 
     }

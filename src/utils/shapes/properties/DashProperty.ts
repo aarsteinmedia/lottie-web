@@ -37,14 +37,14 @@ export default class DashProperty extends DynamicPropertyContainer {
     for (let i = 0; i < len; i++) {
       prop = PropertyFactory.getProp(
         elem,
-        data[i].v,
+        data[i]?.v,
         0,
         0,
         this as unknown as ElementInterfaceIntersect
       )
       this.k = prop.k || this.k
       this.dataProps[i] = {
-        n: data[i].n,
+        n: data[i]?.n ?? 'd', // TODO: Check what this is
         p: prop
       }
     }
@@ -73,18 +73,18 @@ export default class DashProperty extends DynamicPropertyContainer {
       this.dashStr = ''
     }
     for (let i = 0; i < len; i++) {
-      if (this.dataProps[i].n === 'o') {
+      if (this.dataProps[i]?.n === 'o') {
 
-        this.dashoffset[0] = this.dataProps[i].p.v as number
+        this.dashoffset[0] = this.dataProps[i]?.p.v as number
         continue
       }
       if (this.renderer === RendererType.SVG) {
 
-        this.dashStr += ` ${this.dataProps[i].p.v as string}`
+        this.dashStr += ` ${this.dataProps[i]?.p.v as string}`
         continue
       }
 
-      this.dashArray[i] = this.dataProps[i].p.v as number
+      this.dashArray[i] = this.dataProps[i]?.p.v as number
     }
 
     return 0

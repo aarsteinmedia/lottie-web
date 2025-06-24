@@ -18,8 +18,10 @@ export default abstract class ShapeElement extends RenderableDOMElement {
 
     while (i) {
       i--
-      if (processedElements[i].elem === elem) {
-        processedElements[i].pos = pos
+      const processedElement = processedElements[i]
+
+      if (processedElement?.elem === elem) {
+        processedElement.pos = pos
 
         return
       }
@@ -31,7 +33,7 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     const { length } = this.shapeModifiers
 
     for (let i = 0; i < length; i++) {
-      this.shapeModifiers[i].addShape(data)
+      this.shapeModifiers[i]?.addShape(data)
     }
   }
 
@@ -40,7 +42,7 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     const { length } = this.shapeModifiers
 
     while (i < length) {
-      if (this.shapeModifiers[i].isAnimatedWithShape(data)) {
+      if (this.shapeModifiers[i]?.isAnimatedWithShape(data)) {
         return true
       }
       i++
@@ -61,14 +63,14 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     const { length } = this.shapes
 
     for (let i = 0; i < length; i++) {
-      this.shapes[i].sh?.reset()
+      this.shapes[i]?.sh?.reset()
     }
 
     const { length: len } = this.shapeModifiers
     let shouldBreakProcess
 
     for (let i = len - 1; i >= 0; i--) {
-      shouldBreakProcess = this.shapeModifiers[i].processShapes(Boolean(this._isFirstFrame))
+      shouldBreakProcess = this.shapeModifiers[i]?.processShapes(Boolean(this._isFirstFrame))
       // workaround to fix cases where a repeater resets the shape so the following processes get called twice
       // TODO: find a better solution for this
       if (shouldBreakProcess) {
@@ -83,8 +85,8 @@ export default abstract class ShapeElement extends RenderableDOMElement {
     let i = 0
 
     while (i < length) {
-      if (processedElements[i].elem === elem) {
-        return processedElements[i].pos
+      if (processedElements[i]?.elem === elem) {
+        return processedElements[i]?.pos ?? 0
       }
       i++
     }

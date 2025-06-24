@@ -19,7 +19,7 @@ export default class ShapeTransformManager {
 
     for (let i = 0; i < length; i++) {
 
-      key += `${transforms[i].transform.key}_`
+      key += `${transforms[i]?.transform.key}_`
     }
     let sequence = this.sequences[key]
 
@@ -50,7 +50,7 @@ export default class ShapeTransformManager {
 
     if (!isFirstFrame) {
       while (i < length) {
-        if (sequence.transforms?.[i].transform.mProps._mdf) {
+        if (sequence.transforms?.[i]?.transform.mProps._mdf) {
           _mdf = true
           break
         }
@@ -61,7 +61,7 @@ export default class ShapeTransformManager {
     if (_mdf) {
       sequence.finalTransform?.reset()
       for (i = length - 1; i >= 0; i -= 1) {
-        const { v: matrix } = sequence.transforms?.[i].transform.mProps ?? { v: null }
+        const { v: matrix } = sequence.transforms?.[i]?.transform.mProps ?? { v: null }
 
         if (matrix) {
           sequence.finalTransform?.multiply(matrix)
@@ -75,7 +75,7 @@ export default class ShapeTransformManager {
     const { length } = this.sequenceList
 
     for (let i = 0; i < length; i++) {
-      this.processSequence(this.sequenceList[i], isFirstFrame)
+      this.processSequence(this.sequenceList[i] as TransformSequence, isFirstFrame)
     }
   }
 }

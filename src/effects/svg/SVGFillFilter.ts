@@ -30,8 +30,8 @@ export default class SVGFillFilter {
     ) {
       return
     }
-    const color = this.filterManager.effectElements[2].p.v as Vector3
-    const opacity = this.filterManager.effectElements[6].p.v as number
+    const color = this.filterManager.effectElements[2]?.p.v as Vector3
+    const opacity = this.filterManager.effectElements[6]?.p.v as number
 
     this.matrixFilter.setAttribute('values',
       `0 0 0 0 ${color[0]} 0 0 0 0 ${color[1]} 0 0 0 0 ${color[2]} 0 0 0 ${

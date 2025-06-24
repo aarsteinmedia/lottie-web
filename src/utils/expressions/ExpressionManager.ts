@@ -92,9 +92,9 @@ const hueToRGB = (
   },
 
   hslToRgb = (val: number[]): Vector4 => {
-    const h = val[0],
-      s = val[1],
-      l = val[2]
+    const h = val[0] ?? 0,
+      s = val[1] ?? 0,
+      l = val[2] ?? 0
 
     let r, g, b
 
@@ -120,7 +120,7 @@ const hueToRGB = (
     return [r,
       g,
       b,
-      val[3]]
+      val[3] ?? 0]
   },
   rgbToHsl = (val: Vector4) => {
     const r = val[0],
@@ -181,7 +181,7 @@ function $bm_neg(a: unknown) {
       retArr: number[] = []
 
     for (let i = 0; i < lenA; i++) {
-      retArr[i] = -(a as number[])[i]
+      retArr[i] = -Number((a as number[])[i])
     }
 
     return retArr
@@ -209,7 +209,7 @@ function createPath(
     inVertexPoint = inTangents[i] ?? arrPlaceholder
     outVertexPoint = outTangents[i] ?? arrPlaceholder
     path.setTripleAt(
-      points[i][0], points[i][1], outVertexPoint[0] + points[i][0], outVertexPoint[1] + points[i][1], inVertexPoint[0] + points[i][0], inVertexPoint[1] + points[i][1], i, true
+      points[i]?.[0] ?? 0, points[i]?.[1] ?? 0, (outVertexPoint[0] ?? 0) + (points[i]?.[0] ?? 0), (outVertexPoint[1] ?? 0) + (points[i]?.[1] ?? 0), (inVertexPoint[0] ?? 0) + (points[i]?.[0] ?? 0), (inVertexPoint[1] ?? 0) + (points[i]?.[1] ?? 0), i, true
     )
   }
 
@@ -243,7 +243,7 @@ function applyEase(
     const arr = createTypedArray(ArrayType.Float32, lenKey)
 
     for (iKey = 0; iKey < lenKey; iKey += 1) {
-      arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
+      arr[iKey] = (val2[iKey] as number - (val1[iKey] as number)) * mult + (val1[iKey] as number)
     }
 
     return arr
@@ -311,7 +311,7 @@ function initiateExpression(
   thisProperty.valueAtTime = thisProperty.getValueAtTime
   Object.defineProperty(
     thisProperty, 'value', {
-      get () {
+      get() {
         return thisProperty.v
       },
     }
@@ -469,7 +469,7 @@ function initiateExpression(
     active = !this.data || (this.data as Shape).hd !== true,
 
     wiggle = (_freqFromProps: number, amp: number) => {
-    // let freq: number
+      // let freq: number
       const { pv: prop } = this,
         lenWiggle = isArrayOfNum(prop) ? prop.length : 1,
         addedAmps = createTypedArray(ArrayType.Float32, lenWiggle),
@@ -480,10 +480,10 @@ function initiateExpression(
       let iWiggle = 0
 
       while (iWiggle < iterations) {
-      // var rnd = BMMath.random();
+        // var rnd = BMMath.random();
         for (let j = 0; j < lenWiggle; j++) {
-          addedAmps[j] += -amp + amp * 2 * BMMath.random()
-        // addedAmps[j] += -amp + amp*2*rnd;
+          ; (addedAmps[j] as number) += -amp + amp * 2 * BMMath.random()
+          // addedAmps[j] += -amp + amp*2*rnd;
         }
         iWiggle++
       }
@@ -494,15 +494,15 @@ function initiateExpression(
 
       if (lenWiggle > 1) {
         for (let j = 0; j < lenWiggle; j++) {
-          arr[j] = (prop as number[])[j] + addedAmps[j] + (-amp + amp * 2 * BMMath.random()) * perc
-        // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
-        // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
+          arr[j] = (prop as number[])[j] as number + (addedAmps[j] as number) + (-amp + amp * 2 * BMMath.random()) * perc
+          // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
+          // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
         }
 
         return arr
       }
 
-      return prop as number + addedAmps[0] + (-amp + amp * 2 * BMMath.random()) * perc
+      return prop as number + (addedAmps[0] as number) + (-amp + amp * 2 * BMMath.random()) * perc
     }
 
   if (thisProperty.loopIn) {
@@ -561,29 +561,29 @@ function initiateExpression(
     } else {
       timeIndex = -1
       timeKey *= frameRate
-      if (timeKey < k[0].t) {
+      if (timeKey < (k[0]?.t ?? 0)) {
         timeIndex = 1
-        keyTime = k[0].t
+        keyTime = k[0]?.t ?? 0
       } else {
         for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
-          if (timeKey === k[iKey].t) {
+          if (timeKey === k[iKey]?.t) {
             timeIndex = iKey + 1
-            keyTime = k[iKey].t
+            keyTime = k[iKey]?.t ?? 0
             break
-          } else if (timeKey > k[iKey].t && timeKey < k[iKey + 1].t) {
-            if (timeKey - k[iKey].t > k[iKey + 1].t - timeKey) {
+          } else if (timeKey > (k[iKey]?.t ?? 0) && timeKey < (k[iKey + 1]?.t ?? 0)) {
+            if (timeKey - (k[iKey]?.t ?? 0) > (k[iKey + 1]?.t ?? 0) - timeKey) {
               timeIndex = iKey + 2
-              keyTime = k[iKey + 1].t
+              keyTime = k[iKey + 1]?.t ?? 0
             } else {
               timeIndex = iKey + 1
-              keyTime = k[iKey].t
+              keyTime = k[iKey]?.t ?? 0
             }
             break
           }
         }
         if (timeIndex === -1) {
           timeIndex = iKey + 1
-          keyTime = data.k[iKey].t
+          keyTime = data.k[iKey]?.t ?? 0
         }
       }
     }
@@ -598,7 +598,7 @@ function initiateExpression(
     let ind = indFormProps
 
     if (data.k.length === 0 || typeof data.k[0] === 'number') {
-      throw new Error(`The property has no keyframe at index ${ ind}`)
+      throw new Error(`The property has no keyframe at index ${ind}`)
     }
     ind -= 1
     const obKey: {
@@ -606,17 +606,17 @@ function initiateExpression(
       value: (number | ShapePath | undefined)[]
       [val: number]: number | ShapePath | undefined
     } = {
-      time: data.k[ind].t / frameRate,
+      time: (data.k[ind]?.t ?? 0) / frameRate,
       value: [],
     }
-    const arr = Object.hasOwn(data.k[ind], 's') ? data.k[ind].s : data.k[ind - 1].e,
+    const arr = (Object.hasOwn(data.k[ind] ?? {}, 's') ? data.k[ind]?.s : data.k[ind - 1]?.e) ?? [],
 
-      { length: lenKey } = arr ?? []
+      { length: lenKey } = arr
 
 
     for (let iKey = 0; iKey < lenKey; iKey += 1) {
-      obKey[iKey] = arr?.[iKey]
-      obKey.value[iKey] = arr?.[iKey]
+      obKey[iKey] = arr[iKey]
+      obKey.value[iKey] = arr[iKey]
     }
 
     return obKey
@@ -731,7 +731,7 @@ function initiateExpression(
     effect = effect ?? thisLayer?.getInterface(4) as GroupEffectInterface
     hasParent = Boolean(elem.hierarchy?.length)
     if (hasParent && !parent) {
-      parent = elem.hierarchy?.[0].layerInterface ?? null
+      parent = elem.hierarchy?.[0]?.layerInterface ?? null
     }
     time = (this.comp?.renderedFrame ?? 0) / (this.comp?.globalData?.frameRate ?? 60)
     if (_needsRandom) {
@@ -883,7 +883,7 @@ function linear(
       arr = createTypedArray(ArrayType.Float32, len)
 
     for (let i = 0; i < len; i += 1) {
-      arr[i] = value1[i] + (value2[i] - value1[i]) * perc
+      arr[i] = value1[i] ?? 0 + (value2[i] ?? 0 - (value1[i] ?? 0)) * perc
     }
 
     return arr
@@ -920,7 +920,7 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
       rnd = BMMath.random()
 
     for (let i = 0; i < len; i += 1) {
-      arr[i] = (min as number[])[i] + rnd * (max[i] - (min as number[])[i])
+      arr[i] = (min as number[])[i] ?? 0 + rnd * (max[i] ?? 0 - ((min as number[])[i] ?? 0))
     }
 
     return arr
@@ -960,7 +960,7 @@ function div(a: unknown, b: unknown) {
     len = a.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = a[i] / Number(b)
+      arr[i] = (a[i] ?? 0) / Number(b)
     }
 
     return arr
@@ -969,7 +969,7 @@ function div(a: unknown, b: unknown) {
     len = b.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = Number(a) / b[i]
+      arr[i] = Number(a) / (b[i] ?? 0)
     }
 
     return arr
@@ -1000,7 +1000,7 @@ function length(arr1: number | number[], arr2FromProps?: number | number[]) {
   let addedLength = 0
 
   for (i = 0; i < len; i += 1) {
-    addedLength += Math.pow((arr2 as number[])[i] - arr1[i], 2)
+    addedLength += Math.pow(((arr2 as number[])[i] ?? 0) - (arr1[i] ?? 0), 2)
   }
 
   return Math.sqrt(addedLength)
@@ -1037,7 +1037,7 @@ function mul(a: unknown, b: unknown) {
     len = a.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i += 1) {
-      arr[i] = a[i] * Number(b)
+      arr[i] = (a[i] ?? 0) * Number(b)
     }
 
     return arr
@@ -1046,7 +1046,7 @@ function mul(a: unknown, b: unknown) {
     len = b.length
     arr = createTypedArray(ArrayType.Float32, len)
     for (i = 0; i < len; i++) {
-      arr[i] = Number(a) * b[i]
+      arr[i] = Number(a) * (b[i] ?? 0)
     }
 
     return arr
@@ -1081,13 +1081,13 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    ;(a as number[])[0] -= Number(b)
+    ; ((a as number[])[0] as number) -= Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    ;(b as number[])[0] = Number(a) - (b as number[])[0]
+    ; (b as number[])[0] = Number(a) - ((b as number[])[0] as number)
 
     return b
   }
@@ -1100,11 +1100,11 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
 
     while (i < lenA || i < lenB) {
       if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
-        retArr[i] = a[i] - b[i]
+        retArr[i] = (a[i] ?? 0) - (b[i] ?? 0)
         i++
         continue
       }
-      retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
+      retArr[i] = ((b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]) ?? 0
       i++
     }
 
@@ -1126,13 +1126,13 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    ;(a as number[])[0] += Number(b)
+    ; ((a as number[])[0] as number) += Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    ;(b as number[])[0] = a as number + (b as number[])[0]
+    ; (b as number[])[0] = a as number + ((b as number[])[0] as number)
 
     return b
   }
@@ -1145,7 +1145,7 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
 
     while (i < lenA || i < lenB) {
       if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
-        retArr[i] = a[i] + b[i]
+        retArr[i] = a[i] ?? 0 + (b[i] ?? 0)
         i++
         continue
       }

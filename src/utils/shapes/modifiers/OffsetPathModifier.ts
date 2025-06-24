@@ -20,9 +20,9 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
 
 const crossProduct = (a: number[], b: number[]) => [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0],
+    a[1] ?? 0 * (b[2] ?? 0) - (a[2] ?? 0) * (b[1] ?? 0),
+    a[2] ?? 0 * (b[0] ?? 0) - (a[0] ?? 0) * (b[2] ?? 0),
+    a[0] ?? 0 * (b[1] ?? 0) - (a[1] ?? 0) * (b[0] ?? 0),
   ],
 
   polarOffset = (
@@ -66,11 +66,11 @@ const crossProduct = (a: number[], b: number[]) => [
        */
       r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
 
-    if (floatZero(r[2])) {
+    if (floatZero(r[2] ?? 0)) {
       return null
     }
 
-    return [r[0] / r[2], r[1] / r[2]]
+    return [r[0] ?? 0 / (r[2] ?? 0), r[1] ?? 0 / (r[2] ?? 0)]
   },
 
   pointDistance = (p1: Vector2, p2: Vector2) =>
@@ -164,52 +164,52 @@ const crossProduct = (a: number[], b: number[]) => [
     let e: Vector2[]
 
     e = linearOffset(
-      segment.points[0], segment.points[1], amount
+      segment.points[0] as Vector2, segment.points[1] as Vector2, amount
     )
-    const p0: Vector2 = e[0],
+    const p0 = e[0] as Vector2,
       p1a = e[1]
 
     e = linearOffset(
-      segment.points[1], segment.points[2], amount
+      segment.points[1] as Vector2, segment.points[2] as Vector2, amount
     )
     const p1b = e[0],
       p2b = e[1]
 
     e = linearOffset(
-      segment.points[2], segment.points[3], amount
+      segment.points[2] as Vector2, segment.points[3] as Vector2, amount
     )
     const p2a = e[0],
       p3 = e[1]
     let p1 = lineIntersection(
       p0,
-      p1a,
-      p1b,
-      p2b
+      p1a as Vector2,
+      p1b as Vector2,
+      p2b as Vector2
     )
 
-    p1 = p1 ?? p1a
+    p1 = p1 ?? p1a as Vector2
     let p2 = lineIntersection(
-      p2a,
-      p3,
-      p1b,
-      p2b
+      p2a as Vector2,
+      p3 as Vector2,
+      p1b as Vector2,
+      p2b as Vector2
     )
 
-    p2 = p2 ?? p2a
+    p2 = p2 ?? p2a as Vector2
 
     return new PolynomialBezier(
-      p0, p1, p2, p3
+      p0, p1, p2, p3 as Vector2
     )
   },
 
   offsetSegmentSplit = (segment: PolynomialBezier, amount: number) => {
-  /*
-  We split each bezier segment into smaller pieces based
-  on inflection points, this ensures the control point
-  polygon is convex.
+    /*
+    We split each bezier segment into smaller pieces based
+    on inflection points, this ensures the control point
+    polygon is convex.
 
-  (A cubic bezier can have none, one, or two inflection points)
-*/
+    (A cubic bezier can have none, one, or two inflection points)
+  */
     const flex = segment.inflectionPoints()
     let left: PolynomialBezier,
       right: PolynomialBezier,
@@ -219,22 +219,22 @@ const crossProduct = (a: number[], b: number[]) => [
       return [offsetSegment(segment, amount)]
     }
 
-    if (flex.length === 1 || floatEqual(flex[1], 1)) {
-      split = segment.split(flex[0])
-      left = split[0]
-      right = split[1]
+    if (flex.length === 1 || floatEqual(flex[1] ?? 0, 1)) {
+      split = segment.split(flex[0] ?? 0)
+      left = split[0] as PolynomialBezier
+      right = split[1] as PolynomialBezier
 
       return [offsetSegment(left, amount), offsetSegment(right, amount)]
     }
 
-    split = segment.split(flex[0])
-    left = split[0]
-    const t = (flex[1] - flex[0]) / (1 - flex[0])
+    split = segment.split(flex[0] ?? 0)
+    left = split[0] as PolynomialBezier
+    const t = (flex[1] ?? 0 - (flex[0] ?? 0)) / (1 - (flex[0] ?? 0))
 
-    split = split[1].split(t)
-    const mid = split[0]
+    split = split[1]?.split(t) as PolynomialBezier[]
+    const mid = split[0] as PolynomialBezier
 
-    right = split[1]
+    right = split[1] as PolynomialBezier
 
     return [
       offsetSegment(left, amount),
@@ -245,7 +245,7 @@ const crossProduct = (a: number[], b: number[]) => [
   getIntersection = (a: PolynomialBezier, b: PolynomialBezier) => {
     const intersect = a.intersections(b)
 
-    if (intersect.length > 0 && floatEqual(intersect[0][0], 1)) {
+    if (intersect.length > 0 && floatEqual(intersect[0]?.[0] ?? 0, 1)) {
       intersect.shift()
     }
 
@@ -258,17 +258,17 @@ const crossProduct = (a: number[], b: number[]) => [
   pruneSegmentIntersection = (a: PolynomialBezier[], b: PolynomialBezier[]) => {
     const outa = [...a],
       outb = [...b]
-    let intersect = getIntersection(a[a.length - 1], b[0])
+    let intersect = getIntersection(a[a.length - 1] as PolynomialBezier, b[0] as PolynomialBezier)
 
     if (intersect) {
-      outa[a.length - 1] = a[a.length - 1].split(intersect[0])[0]
-      outb[0] = b[0].split(intersect[1])[1]
+      outa[a.length - 1] = a[a.length - 1]?.split(intersect[0] ?? 0)[0] as PolynomialBezier
+      outb[0] = b[0]?.split(intersect[1] ?? 0)[1] as PolynomialBezier
     }
     if (a.length > 1 && b.length > 1) {
-      intersect = getIntersection(a[0], b[b.length - 1])
+      intersect = getIntersection(a[0] as PolynomialBezier, b[b.length - 1] as PolynomialBezier)
       if (intersect) {
         return [
-          [a[0].split(intersect[0])[0]], [b[b.length - 1].split(intersect[1])[1]],
+          [a[0]?.split(intersect[0] ?? 0)[0]], [b[b.length - 1]?.split(intersect[1] ?? 0)[1]],
         ]
       }
     }
@@ -279,15 +279,15 @@ const crossProduct = (a: number[], b: number[]) => [
     let e
 
     for (let i = 1; i < segments.length; i++) {
-      e = pruneSegmentIntersection(segments[i - 1], segments[i])
-      segments[i - 1] = e[0]
-      segments[i] = e[1]
+      e = pruneSegmentIntersection(segments[i - 1] as PolynomialBezier[], segments[i] as PolynomialBezier[])
+      segments[i - 1] = e[0] as PolynomialBezier[]
+      segments[i] = e[1] as PolynomialBezier[]
     }
 
     if (segments.length > 1) {
-      e = pruneSegmentIntersection(segments[segments.length - 1], segments[0])
-      segments[segments.length - 1] = e[0]
-      segments[0] = e[1]
+      e = pruneSegmentIntersection(segments[segments.length - 1] as PolynomialBezier[], segments[0] as PolynomialBezier[])
+      segments[segments.length - 1] = e[0] as PolynomialBezier[]
+      segments[0] = e[1] as PolynomialBezier[]
     }
 
     return segments
@@ -356,13 +356,13 @@ export default class OffsetPathModifier extends ShapeModifier {
     const { length } = multiSegments
 
     for (let i = 0; i < length; i++) {
-      const multiSegment = multiSegments[i]
+      const multiSegment = multiSegments[i] as PolynomialBezier[]
 
       if (lastSeg) {
         lastPoint = joinLines(
           outputBezier,
           lastSeg,
-          multiSegment[0],
+          multiSegment[0] as PolynomialBezier,
           lineJoin,
           miterLimit
         )
@@ -373,7 +373,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       const { length: mLength } = multiSegment
 
       for (let j = 0; j < mLength; j++) {
-        segment = multiSegment[j]
+        segment = multiSegment[j] as PolynomialBezier
 
         if (lastPoint && pointEqual(segment.points[0], lastPoint)) {
           outputBezier.setXYAt(
@@ -412,7 +412,7 @@ export default class OffsetPathModifier extends ShapeModifier {
       joinLines(
         outputBezier,
         lastSeg,
-        multiSegments[0][0],
+        multiSegments[0]?.[0] as PolynomialBezier,
         lineJoin,
         miterLimit
       )

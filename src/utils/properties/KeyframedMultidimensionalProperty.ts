@@ -27,52 +27,52 @@ export default class KeyframedMultidimensionalProperty<
       ti
 
     for (let i = 0; i < length - 1; i++) {
-      if (data.k[i].to && data.k[i].s && data.k[i + 1]?.s) {
-        s = data.k[i].s as number[]
-        e = data.k[i + 1].s as number[]
-        to = data.k[i].to as number[]
-        ti = data.k[i].ti as number[]
+      if (data.k[i]?.to && data.k[i]?.s && data.k[i + 1]?.s) {
+        s = data.k[i]?.s as number[]
+        e = data.k[i + 1]?.s as number[]
+        to = data.k[i]?.to as number[]
+        ti = data.k[i]?.ti as number[]
         if (
           s.length === 2 &&
           !(s[0] === e[0] && s[1] === e[1]) &&
           pointOnLine2D(
-            s[0], s[1], e[0], e[1], s[0] + to[0], s[1] + to[1]
+            s[0] ?? 0, s[1] ?? 0, e[0] ?? 0, e[1] ?? 0, s[0] ?? 0 + (to[0] ?? 0), s[1] ?? 0 + (to[1] ?? 0)
           ) &&
           pointOnLine2D(
-            s[0],
-            s[1],
-            e[0],
-            e[1],
-            e[0] + ti[0],
-            e[1] + ti[1]
+            s[0] ?? 0,
+            s[1] ?? 0,
+            e[0] ?? 0,
+            e[1] ?? 0,
+            e[0] ?? 0 + (ti[0] ?? 0),
+            e[1] ?? 0 + (ti[1] ?? 0)
           ) ||
           s.length === 3 &&
           !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]) &&
           pointOnLine3D(
-            s[0],
-            s[1],
-            s[2],
-            e[0],
-            e[1],
-            e[2],
-            s[0] + to[0],
-            s[1] + to[1],
-            s[2] + to[2]
+            s[0] ?? 0,
+            s[1] ?? 0,
+            s[2] ?? 0,
+            e[0] ?? 0,
+            e[1] ?? 0,
+            e[2] ?? 0,
+            s[0] ?? 0 + (to[0] ?? 0),
+            s[1] ?? 0 + (to[1] ?? 0),
+            s[2] ?? 0 + (to[2] ?? 0)
           ) &&
           pointOnLine3D(
-            s[0],
-            s[1],
-            s[2],
-            e[0],
-            e[1],
-            e[2],
-            e[0] + ti[0],
-            e[1] + ti[1],
-            e[2] + ti[2]
+            s[0] ?? 0,
+            s[1] ?? 0,
+            s[2] ?? 0,
+            e[0] ?? 0,
+            e[1] ?? 0,
+            e[2] ?? 0,
+            e[0] ?? 0 + (ti[0] ?? 0),
+            e[1] ?? 0 + (ti[1] ?? 0),
+            e[2] ?? 0 + (ti[2] ?? 0)
           )
         ) {
-          data.k[i].to = null
-          data.k[i].ti = null
+          ; (data.k[i] as Keyframe).to = null
+          ; (data.k[i] as Keyframe).ti = null
         }
         if (
           s[0] === e[0] &&
@@ -82,8 +82,8 @@ export default class KeyframedMultidimensionalProperty<
           ti[0] === 0 &&
           ti[1] === 0 && s.length === 2 || s[2] === e[2] && to[2] === 0 && ti[2] === 0
         ) {
-          data.k[i].to = null
-          data.k[i].ti = null
+          ; (data.k[i] as Keyframe).to = null
+          ; (data.k[i] as Keyframe).ti = null
         }
       }
     }
@@ -101,7 +101,7 @@ export default class KeyframedMultidimensionalProperty<
     this.comp = elem.comp
     this.getValue = this.processEffectsSequence
     this.frameId = -1
-    const arrLen: number = data.k[0].s?.length || 0
+    const arrLen: number = data.k[0]?.s?.length || 0
 
     this.v = createTypedArray(ArrayType.Float32, arrLen) as T
     this.pv = createTypedArray(ArrayType.Float32, arrLen) as T

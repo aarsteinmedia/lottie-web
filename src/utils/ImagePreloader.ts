@@ -127,8 +127,8 @@ export default class ImagePreloader {
     const { length } = this.images
 
     while (i < length) {
-      if (this.images[i].assetData === assetData) {
-        return this.images[i].img
+      if (this.images[i]?.assetData === assetData) {
+        return this.images[i]?.img ?? null
       }
       i++
     }
@@ -153,12 +153,12 @@ export default class ImagePreloader {
     const { length } = assets
 
     for (let i = 0; i < length; i++) {
-      if (assets[i].layers) {
+      if (assets[i]?.layers) {
         continue
       }
-      if ((!assets[i].t || assets[i].t === 'seq') && this._createImageData) {
+      if ((!assets[i]?.t || assets[i]?.t === 'seq') && this._createImageData) {
         this.totalImages++
-        const imageData = this._createImageData(assets[i])
+        const imageData = this._createImageData(assets[i] as LottieAsset)
 
         if (imageData) {
           this.images.push(imageData)
@@ -167,9 +167,9 @@ export default class ImagePreloader {
         continue
       }
 
-      if (Number(assets[i].t) === 3) {
+      if (Number(assets[i]?.t) === 3) {
         this.totalFootages++
-        this.images.push(this.createFootageData(assets[i]))
+        this.images.push(this.createFootageData(assets[i] as LottieAsset))
       }
     }
   }

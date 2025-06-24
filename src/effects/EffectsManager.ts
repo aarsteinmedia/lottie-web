@@ -9,6 +9,7 @@ import type {
   SliderEffect,
 } from '@/effects'
 import type {
+  Effect,
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
@@ -29,7 +30,7 @@ export default class EffectsManager {
 
     for (let i = 0; i < length; i++) {
       const effectItem = new GroupEffect(
-        effects[i], element, data
+        effects[i] as Effect, element, data
       )
 
       this.effectElements.push(effectItem)

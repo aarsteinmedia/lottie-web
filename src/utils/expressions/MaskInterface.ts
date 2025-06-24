@@ -36,21 +36,21 @@ export default class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
   maskManager: MaskElement | CVMaskElement
 
-  constructor (maskManager: MaskElement | CVMaskElement, _elem?: ElementInterfaceIntersect) {
+  constructor(maskManager: MaskElement | CVMaskElement, _elem?: ElementInterfaceIntersect) {
     this.maskManager = maskManager
     this._masksInterfaces = createSizedArray(maskManager.viewData.length)
     const { length } = maskManager.viewData
 
     for (let i = 0; i < length; i++) {
-      this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i] as ViewData, maskManager.masksProperties[i])
+      this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i] as ViewData, maskManager.masksProperties[i] as Shape)
     }
   }
 
-  getInterface (name: string) {
+  getInterface(name: string) {
     let i = 0
 
     while (i < length) {
-      if (this.maskManager.masksProperties[i].nm === name) {
+      if (this.maskManager.masksProperties[i]?.nm === name) {
         return this._masksInterfaces[i]
       }
       i++

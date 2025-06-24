@@ -49,9 +49,10 @@ export default class RoundCornersModifier extends ShapeModifier {
 
     for (let i = 0; i < len; i++) {
       currentV = path.v[i]
-      currentO = path.o[i]
-      currentI = path.i[i]
+      currentO = path.o[i] as Vector2
+      currentI = path.i[i] as Vector2
       if (
+        currentV &&
         currentV[0] === currentO[0] &&
         currentV[1] === currentO[1] &&
         currentV[0] === currentI[0] &&
@@ -73,9 +74,9 @@ export default class RoundCornersModifier extends ShapeModifier {
           index++
         } else {
           if (i === 0) {
-            closerV = path.v[len - 1]
+            closerV = path.v[len - 1] as Vector2
           } else {
-            closerV = path.v[i - 1]
+            closerV = path.v[i - 1] as Vector2
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
             Math.pow(currentV[1] - closerV[1], 2))
@@ -92,9 +93,9 @@ export default class RoundCornersModifier extends ShapeModifier {
           index++
 
           if (i === len - 1) {
-            closerV = path.v[0]
+            closerV = path.v[0] as Vector2
           } else {
-            closerV = path.v[i + 1]
+            closerV = path.v[i + 1] as Vector2
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
             Math.pow(currentV[1] - closerV[1], 2))
@@ -112,12 +113,12 @@ export default class RoundCornersModifier extends ShapeModifier {
         }
       } else {
         clonedPath.setTripleAt(
-          path.v[i][0],
-          path.v[i][1],
-          path.o[i][0],
-          path.o[i][1],
-          path.i[i][0],
-          path.i[i][1],
+          path.v[i]?.[0] ?? 0,
+          path.v[i]?.[1] ?? 0,
+          path.o[i]?.[0] ?? 0,
+          path.o[i]?.[1] ?? 0,
+          path.i[i]?.[0] ?? 0,
+          path.i[i]?.[1] ?? 0,
           index
         )
         index++
@@ -147,7 +148,7 @@ export default class RoundCornersModifier extends ShapeModifier {
           const jLen = shapeData.shape?.paths?._length || 0
 
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(this.processPath(shapePaths[j], rd as number))
+            localShapeCollection?.addShape(this.processPath(shapePaths[j] as ShapePath, rd as number))
           }
         }
         if (shapeData.shape) {

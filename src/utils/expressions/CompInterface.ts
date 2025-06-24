@@ -10,7 +10,7 @@ export default class CompExpressionInterface {
   numLayers?: number
   pixelAspect: number
   width?: number
-  constructor (comp: CompElementInterface) {
+  constructor(comp: CompElementInterface) {
     this.comp = comp
     this._name = comp.data?.nm
     this.layer = this
@@ -23,14 +23,14 @@ export default class CompExpressionInterface {
     this.numLayers = comp.layers?.length
   }
 
-  getInterface (name?: string | number | number[]) {
+  getInterface(name?: string | number | number[]) {
     let i = 0
 
     const { length } = this.comp.layers ?? []
 
     while (i < length) {
-      if (this.comp.layers?.[i].nm === name || this.comp.layers?.[i].ind === name) {
-        return this.comp.elements[i].layerInterface
+      if (this.comp.layers?.[i]?.nm === name || this.comp.layers?.[i]?.ind === name) {
+        return this.comp.elements[i]?.layerInterface ?? null
       }
       i++
     }

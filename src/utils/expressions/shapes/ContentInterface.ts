@@ -12,7 +12,7 @@ export default class ContentInterface extends BaseInterface {
     const { length } = this.interfaces
 
     while (i < length) {
-      if (this.interfaces[i]._name === value || this.interfaces[i].mn === value || this.interfaces[i].propertyIndex === value || this.interfaces[i].ix === value || this.interfaces[i].ind === value) {
+      if (this.interfaces[i]?._name === value || this.interfaces[i]?.mn === value || this.interfaces[i]?.propertyIndex === value || this.interfaces[i]?.ix === value || this.interfaces[i]?.ind === value) {
         return this.interfaces[i]
       }
       i++

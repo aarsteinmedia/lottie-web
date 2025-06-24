@@ -51,8 +51,8 @@ export default abstract class DynamicPropertyContainer {
     const { length } = this.dynamicProperties
 
     for (let i = 0; i < length; i++) {
-      this.dynamicProperties[i].getValue()
-      if (this.dynamicProperties[i]._mdf) {
+      this.dynamicProperties[i]?.getValue()
+      if (this.dynamicProperties[i]?._mdf) {
         this._mdf = true
       }
     }

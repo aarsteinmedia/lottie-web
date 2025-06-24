@@ -89,10 +89,10 @@ export default abstract class TextElement extends RenderableDOMElement {
     const { length } = shapes
 
     for (let i = 0; i < length; i++) {
-      if (shapes[i].ty !== ShapeType.Path || !shapes[i].ks?.k) {
+      if (shapes[i]?.ty !== ShapeType.Path || !shapes[i]?.ks?.k) {
         continue
       }
-      pathNodes = shapes[i].ks?.k as ShapePath
+      pathNodes = shapes[i]?.ks?.k as ShapePath
       shapeStr += buildShapeString(
         pathNodes,
         pathNodes.i.length,

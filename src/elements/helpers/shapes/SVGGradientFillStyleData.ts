@@ -153,8 +153,8 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     opFill.setAttribute('spreadMethod', 'pad')
     opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
     const jLen =
-      ((data.g?.k.k as Stop[] | undefined)?.[0].s
-        ? (data.g?.k.k as Stop[])[0].s.length
+      ((data.g?.k.k as Stop[] | undefined)?.[0]?.s
+        ? (data.g?.k.k as Stop[])[0]?.s.length
         : data.g?.k.k.length) || 0,
       { stops } = this
 
@@ -167,8 +167,8 @@ export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
     maskElement.setAttribute(data.ty === ShapeType.GradientFill ? 'fill' : 'stroke',
       `url(${getLocationHref()}#${opacityId})`)
     if (data.ty === ShapeType.GradientStroke) {
-      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
-      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
+      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2] as string)
+      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2] as string)
       if (data.lj === 1) {
         maskElement.setAttribute('stroke-miterlimit', `${Number(data.ml)}`)
       }

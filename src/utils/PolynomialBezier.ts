@@ -83,6 +83,10 @@ const quadRoots = (
   splitData = (data: IntersectData) => {
     const split = data.bez.split(0.5)
 
+    if (!split[0] || !split[1]) {
+      throw new Error('Could not set PolynomialBezier')
+    }
+
     return [
       intersectData(
         split[0], data.t1, data.t
@@ -114,8 +118,12 @@ const quadRoots = (
 
       return
     }
-    const d1s = splitData(d1)
-    const d2s = splitData(d2)
+    const d1s = splitData(d1),
+      d2s = splitData(d2)
+
+    if (!d1s[0] || !d1s[1] || !d2s[0] || !d2s[1]) {
+      throw new Error('Could not set IntersectData')
+    }
 
     intersectsImpl(
       d1s[0],
@@ -187,10 +195,10 @@ export default class PolynomialBezier {
         p0[1], p1[1], p2[1], p3[1]
       )
 
-    this.a = [coeffx[0], coeffy[0]]
-    this.b = [coeffx[1], coeffy[1]]
-    this.c = [coeffx[2], coeffy[2]]
-    this.d = [coeffx[3], coeffy[3]]
+    this.a = [coeffx[0] as number, coeffy[0] as number]
+    this.b = [coeffx[1] as number, coeffy[1] as number]
+    this.c = [coeffx[2] as number, coeffy[2] as number]
+    this.d = [coeffx[3] as number, coeffy[3] as number]
     this.points = [p0,
       p1,
       p2,
@@ -284,7 +292,7 @@ export default class PolynomialBezier {
   normalAngle(t: number) {
     const p = this.derivative(t)
 
-    return Math.atan2(p[0], p[1])
+    return Math.atan2(p[0] ?? 0, p[1] ?? 0)
   }
 
   point(t: number) {
@@ -298,7 +306,7 @@ export default class PolynomialBezier {
       return [singlePoint(this.points[0]), this]
     }
     if (t >= 1) {
-      return [this, singlePoint(this.points[this.points.length - 1])]
+      return [this, singlePoint(this.points[this.points.length - 1] as Vector2)]
     }
     const p10 = lerpPoint(
         this.points[0], this.points[1], t
@@ -331,12 +339,12 @@ export default class PolynomialBezier {
   tangentAngle(t: number) {
     const p = this.derivative(t)
 
-    return Math.atan2(p[1], p[0])
+    return Math.atan2(p[1] ?? 0, p[0] ?? 0)
   }
 
   private _extrema(bez: PolynomialBezier, comp: number) {
-    let min = bez.points[0][comp],
-      max = bez.points[bez.points.length - 1][comp]
+    let min = bez.points[0][comp] ?? 0,
+      max = bez.points[bez.points.length - 1]?.[comp] ?? 0
 
     if (min > max) {
       const e = max
@@ -346,15 +354,15 @@ export default class PolynomialBezier {
     }
     // Derivative roots to find min/max
     const f = quadRoots(
-        3 * bez.a[comp], 2 * bez.b[comp], bez.c[comp]
+        3 * (bez.a[comp] ?? 0), 2 * (bez.b[comp] ?? 0), bez.c[comp] ?? 0
       ),
       { length } = f
 
     for (let i = 0; i < length; i++) {
-      if (f[i] <= 0 || f[i] >= 1) {
+      if ((f[i] ?? 0) <= 0 || (f[i] ?? 0) >= 1) {
         continue
       }
-      const val = bez.point(f[i])[comp]
+      const val = bez.point(f[i] ?? 0)[comp] ?? 0
 
       if (val < min) {
         min = val
@@ -377,10 +385,10 @@ export function shapeSegment(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
 
   return new PolynomialBezier(
-    shapePath.v[index],
-    shapePath.o[index],
-    shapePath.i[nextIndex],
-    shapePath.v[nextIndex],
+    shapePath.v[index] as Vector2,
+    shapePath.o[index] as Vector2,
+    shapePath.i[nextIndex] as Vector2,
+    shapePath.v[nextIndex] as Vector2,
     true
   )
 }
@@ -389,10 +397,10 @@ export function shapeSegmentInverted(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
 
   return new PolynomialBezier(
-    shapePath.v[nextIndex],
-    shapePath.i[nextIndex],
-    shapePath.o[index],
-    shapePath.v[index],
+    shapePath.v[nextIndex] as Vector2,
+    shapePath.i[nextIndex] as Vector2,
+    shapePath.o[index] as Vector2,
+    shapePath.v[index] as Vector2,
     true
   )
 }

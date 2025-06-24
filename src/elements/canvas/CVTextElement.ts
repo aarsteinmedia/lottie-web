@@ -138,20 +138,20 @@ export default class CVTextElement extends TextElement {
 
     for (let i = 0; i < length; i++) {
       const charData = this.globalData.fontManager.getCharData(
-        documentData.finalText[i],
+        documentData.finalText[i] as string,
         fontData.fStyle,
         this.globalData.fontManager.getFontByName(documentData.f).fFamily
       )
       const shapeData = charData.data ?? {} as Partial<LottieLayer>
 
       matrixHelper.reset()
-      if (singleShape && letters[i].n) {
+      if (singleShape && letters[i]?.n) {
         xPos = -trackingOffset
         yPos += Number(documentData.yOffset)
         yPos += isFirstLine ? 1 : 0
         isFirstLine = false
       }
-      const shapes = shapeData.shapes?.[0].it ?? []
+      const shapes = shapeData.shapes?.[0]?.it ?? []
 
       matrixHelper.scale(Number(documentData.finalSize) / 100,
         Number(documentData.finalSize) / 100)
@@ -159,7 +159,7 @@ export default class CVTextElement extends TextElement {
         this.applyTextPropertiesToMatrix(
           documentData,
           matrixHelper,
-          letters[i].line,
+          letters[i]?.line ?? 0,
           xPos,
           yPos
         )
@@ -169,80 +169,80 @@ export default class CVTextElement extends TextElement {
       let commandsCounter = 0
 
       for (let j = 0; j < jLen; j++) {
-        if (shapes[j].ty !== ShapeType.Path) {
+        if (shapes[j]?.ty !== ShapeType.Path) {
           continue
         }
-        const { length: kLen } = (shapes[j].ks?.k as ShapePath).i,
-          pathNodes = shapes[j].ks?.k as ShapePath,
+        const { length: kLen } = (shapes[j]?.ks?.k as ShapePath).i,
+          pathNodes = shapes[j]?.ks?.k as ShapePath,
           pathArr = []
 
         for (k = 1; k < kLen; k++) {
           if (k === 1) {
             pathArr.push(matrixHelper.applyToX(
-              pathNodes.v[0][0], pathNodes.v[0][1], 0
+              pathNodes.v[0]?.[0] ?? 0, pathNodes.v[0]?.[1] ?? 0, 0
             ),
             matrixHelper.applyToY(
-              pathNodes.v[0][0], pathNodes.v[0][1], 0
+              pathNodes.v[0]?.[0] ?? 0, pathNodes.v[0]?.[1] ?? 0, 0
             ))
           }
           pathArr.push(
             matrixHelper.applyToX(
-              pathNodes.o[k - 1][0],
-              pathNodes.o[k - 1][1],
+              pathNodes.o[k - 1]?.[0] ?? 0,
+              pathNodes.o[k - 1]?.[1] ?? 0,
               0
             ),
             matrixHelper.applyToY(
-              pathNodes.o[k - 1][0],
-              pathNodes.o[k - 1][1],
+              pathNodes.o[k - 1]?.[0] ?? 0,
+              pathNodes.o[k - 1]?.[1] ?? 0,
               0
             ),
             matrixHelper.applyToX(
-              pathNodes.i[k][0], pathNodes.i[k][1], 0
+              pathNodes.i[k]?.[0] ?? 0, pathNodes.i[k]?.[1] ?? 0, 0
             ),
             matrixHelper.applyToY(
-              pathNodes.i[k][0], pathNodes.i[k][1], 0
+              pathNodes.i[k]?.[0] ?? 0, pathNodes.i[k]?.[1] ?? 0, 0
             ),
             matrixHelper.applyToX(
-              pathNodes.v[k][0], pathNodes.v[k][1], 0
+              pathNodes.v[k]?.[0] ?? 0, pathNodes.v[k]?.[1] ?? 0, 0
             ),
             matrixHelper.applyToY(
-              pathNodes.v[k][0], pathNodes.v[k][1], 0
+              pathNodes.v[k]?.[0] ?? 0, pathNodes.v[k]?.[1] ?? 0, 0
             )
           )
         }
         pathArr.push(
           matrixHelper.applyToX(
-            pathNodes.o[k - 1][0],
-            pathNodes.o[k - 1][1],
+            pathNodes.o[k - 1]?.[0] ?? 0,
+            pathNodes.o[k - 1]?.[1] ?? 0,
             0
           ),
           matrixHelper.applyToY(
-            pathNodes.o[k - 1][0],
-            pathNodes.o[k - 1][1],
+            pathNodes.o[k - 1]?.[0] ?? 0,
+            pathNodes.o[k - 1]?.[1] ?? 0,
             0
           ),
           matrixHelper.applyToX(
-            pathNodes.i[0][0], pathNodes.i[0][1], 0
+            pathNodes.i[0]?.[0] ?? 0, pathNodes.i[0]?.[1] ?? 0, 0
           ),
           matrixHelper.applyToY(
-            pathNodes.i[0][0], pathNodes.i[0][1], 0
+            pathNodes.i[0]?.[0] ?? 0, pathNodes.i[0]?.[1] ?? 0, 0
           ),
           matrixHelper.applyToX(
-            pathNodes.v[0][0], pathNodes.v[0][1], 0
+            pathNodes.v[0]?.[0] ?? 0, pathNodes.v[0]?.[1] ?? 0, 0
           ),
           matrixHelper.applyToY(
-            pathNodes.v[0][0], pathNodes.v[0][1], 0
+            pathNodes.v[0]?.[0] ?? 0, pathNodes.v[0]?.[1] ?? 0, 0
           )
         )
         commands[commandsCounter] = pathArr
         commandsCounter++
       }
       if (singleShape) {
-        xPos += letters[i].l
+        xPos += letters[i]?.l ?? 0
         xPos += trackingOffset
       }
       if (this.textSpans[cnt]) {
-        this.textSpans[cnt].elem = commands as number[][]
+        (this.textSpans[cnt] as TextSpan).elem = commands as number[][]
       } else {
         this.textSpans[cnt] = { elem: commands } as TextSpan
       }
@@ -286,7 +286,7 @@ export default class CVTextElement extends TextElement {
     let j,
       jLen: number,
       k,
-      kLen
+      kLen: number
     const { renderedLetters } = this.textAnimator
 
     const letters = this.textProperty.currentData.l
@@ -301,15 +301,15 @@ export default class CVTextElement extends TextElement {
       { length } = letters
 
     for (let i = 0; i < length; i++) {
-      if (letters[i].n) {
+      if (letters[i]?.n) {
         continue
       }
       renderedLetter = renderedLetters[i]
       renderer.save()
-      renderer.ctxTransform(renderedLetter.p as unknown as Float32Array)
-      renderer.ctxOpacity(renderedLetter.o)
+      renderer.ctxTransform(renderedLetter?.p as unknown as Float32Array)
+      renderer.ctxOpacity(renderedLetter?.o)
       if (this.fill) {
-        if (renderedLetter.fc) {
+        if (renderedLetter?.fc) {
           if (lastFill !== renderedLetter.fc) {
             renderer.ctxFillStyle(renderedLetter.fc as string)
             lastFill = renderedLetter.fc
@@ -320,23 +320,23 @@ export default class CVTextElement extends TextElement {
           renderer.ctxFillStyle(this.values.fill)
           // ctx.fillStyle = this.values.fill;
         }
-        commands = this.textSpans[i].elem ?? []
+        commands = this.textSpans[i]?.elem ?? []
         const { length: lLen } = commands
 
         this.globalData.canvasContext?.beginPath()
         for (j = 0; j < lLen; j++) {
-          pathArr = commands[j] || []
+          pathArr = commands[j] ?? []
           const { length: mLen } = pathArr
 
-          this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
+          this.globalData.canvasContext?.moveTo(pathArr[0] ?? 0, pathArr[1] ?? 0)
           for (k = 2; k < mLen; k += 6) {
             this.globalData.canvasContext?.bezierCurveTo(
-              pathArr[k],
-              pathArr[k + 1],
-              pathArr[k + 2],
-              pathArr[k + 3],
-              pathArr[k + 4],
-              pathArr[k + 5]
+              pathArr[k] ?? 0,
+              pathArr[k + 1] ?? 0,
+              pathArr[k + 2] ?? 0,
+              pathArr[k + 3] ?? 0,
+              pathArr[k + 4] ?? 0,
+              pathArr[k + 5] ?? 0
             )
           }
         }
@@ -346,7 +346,7 @@ export default class CVTextElement extends TextElement {
         // / ctx.fillText(this.textSpans[i].val,0,0);
       }
       if (this.stroke) {
-        if (renderedLetter.sw) {
+        if (renderedLetter?.sw) {
           if (lastStrokeW !== renderedLetter.sw) {
             lastStrokeW = renderedLetter.sw
             renderer.ctxLineWidth(renderedLetter.sw)
@@ -357,7 +357,7 @@ export default class CVTextElement extends TextElement {
           renderer.ctxLineWidth(this.values.sWidth)
           // ctx.lineWidth = this.values.sWidth;
         }
-        if (renderedLetter.sc) {
+        if (renderedLetter?.sc) {
           if (lastStroke !== renderedLetter.sc) {
             lastStroke = renderedLetter.sc
             renderer.ctxStrokeStyle(renderedLetter.sc as string)
@@ -368,21 +368,21 @@ export default class CVTextElement extends TextElement {
           renderer.ctxStrokeStyle(this.values.stroke)
           // ctx.strokeStyle = this.values.stroke;
         }
-        commands = this.textSpans[i].elem ?? []
+        commands = this.textSpans[i]?.elem ?? []
         jLen = commands.length
         this.globalData.canvasContext?.beginPath()
         for (j = 0; j < jLen; j++) {
-          pathArr = commands[j]
+          pathArr = commands[j] ?? []
           kLen = pathArr.length
-          this.globalData.canvasContext?.moveTo(pathArr[0], pathArr[1])
+          this.globalData.canvasContext?.moveTo(pathArr[0] ?? 0, pathArr[1] ?? 0)
           for (k = 2; k < kLen; k += 6) {
             this.globalData.canvasContext?.bezierCurveTo(
-              pathArr[k],
-              pathArr[k + 1],
-              pathArr[k + 2],
-              pathArr[k + 3],
-              pathArr[k + 4],
-              pathArr[k + 5]
+              pathArr[k] ?? 0,
+              pathArr[k + 1] ?? 0,
+              pathArr[k + 2] ?? 0,
+              pathArr[k + 3] ?? 0,
+              pathArr[k + 4] ?? 0,
+              pathArr[k + 5] ?? 0
             )
           }
         }

@@ -54,12 +54,18 @@ export default async function resolveAssets(unzipped?: Unzipped, assets?: Lottie
     { length } = assets
 
   for (let i = 0; i < length; i++) {
-    if (!isAudio(assets[i]) && !isImage(assets[i])) {
+    const asset = assets[i]
+
+    if (!asset) {
       continue
     }
 
-    const type = isImage(assets[i]) ? 'images' : 'audio',
-      u8 = unzipped?.[`${type}/${assets[i].p}`]
+    if (!isAudio(asset) && !isImage(asset)) {
+      continue
+    }
+
+    const type = isImage(asset) ? 'images' : 'audio',
+      u8 = unzipped?.[`${type}/${asset.p}`]
 
     if (!u8) {
       continue
@@ -75,18 +81,18 @@ export default async function resolveAssets(unzipped?: Unzipped, assets?: Lottie
         const { length: jLen } = u8
 
         for (let j = 0; j < jLen; j++) {
-          result += String.fromCharCode(u8[j])
+          result += String.fromCharCode(u8[j] as number)
         }
 
         assetB64 = btoa(result)
       }
 
-      assets[i].p =
-        assets[i].p?.startsWith('data:') || isBase64(assets[i].p)
-          ? assets[i].p
-          : `data:${getMimeFromExt(getExt(assets[i].p))};base64,${assetB64}`
-      assets[i].e = 1
-      assets[i].u = ''
+      asset.p =
+        asset.p?.startsWith('data:') || isBase64(asset.p)
+          ? asset.p
+          : `data:${getMimeFromExt(getExt(asset.p))};base64,${assetB64}`
+      asset.e = 1
+      asset.u = ''
 
       resolveAsset()
     }))

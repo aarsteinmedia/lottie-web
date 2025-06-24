@@ -151,18 +151,16 @@ export default class SVGTextLottieElement extends TextElement {
       for (i = 0; i < len; i++) {
 
         tSpan = this.textSpans[i]?.span ?? createNS<SVGTSpanElement>('tspan')
-        tSpan.textContent = textContent[i]
+        tSpan.textContent = textContent[i] ?? ''
         tSpan.setAttribute('x', '0')
         tSpan.setAttribute('y', `${yPos}`)
         tSpan.style.display = 'inherit'
         tElement?.appendChild(tSpan)
-        if (!this.textSpans[i]) {
-          this.textSpans[i] = {
-            glyph: null,
-            span: null,
-          } as any
-        }
-        this.textSpans[i].span = tSpan
+        this.textSpans[i] = this.textSpans[i] ?? ({
+          glyph: null,
+          span: null,
+        } as any)
+        ; (this.textSpans[i] as TextSpan).span = tSpan
         yPos += Number(documentData.finalLineHeight)
       }
 
@@ -174,18 +172,16 @@ export default class SVGTextLottieElement extends TextElement {
       let charData
 
       for (i = 0; i < len; i++) {
-        if (!this.textSpans[i]) {
-          this.textSpans[i] = {
-            childSpan: null,
-            glyph: null,
-            span: null,
-          } as any
-        }
+        this.textSpans[i] = this.textSpans[i] ?? ({
+          childSpan: null,
+          glyph: null,
+          span: null,
+        } as any)
         if (!hasGlyphs || !singleShape || i === 0) {
           tSpan =
-            cachedSpansLength > i
+            (cachedSpansLength > i
               ? this.textSpans[i]?.span
-              : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')
+              : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')) ?? null
 
           if (!tSpan) {
             throw new Error('Could not create tSpan')
@@ -196,7 +192,7 @@ export default class SVGTextLottieElement extends TextElement {
             tSpan.setAttribute('stroke-linejoin', 'round')
             tSpan.setAttribute('stroke-miterlimit', '4')
             if (this.textSpans[i]) {
-              this.textSpans[i].span = tSpan
+              ; (this.textSpans[i] as TextSpan).span = tSpan
             }
 
             if (hasGlyphs) {
@@ -205,13 +201,13 @@ export default class SVGTextLottieElement extends TextElement {
               tSpan.appendChild(childSpan)
 
               if (this.textSpans[i]) {
-                this.textSpans[i].childSpan = childSpan
+                ; (this.textSpans[i] as TextSpan).childSpan = childSpan
               }
 
             }
 
             if (this.textSpans[i]) {
-              this.textSpans[i].span = tSpan
+              ; (this.textSpans[i] as TextSpan).span = tSpan
             }
 
             this.layerElement.appendChild(tSpan)
@@ -221,7 +217,7 @@ export default class SVGTextLottieElement extends TextElement {
 
         matrixHelper.reset()
         if (singleShape) {
-          if (letters[i].n) {
+          if (letters[i]?.n) {
             xPos = -trackingOffset
             yPos += Number(documentData.yOffset)
             yPos += isFirstLine ? 1 : 0
@@ -230,17 +226,17 @@ export default class SVGTextLottieElement extends TextElement {
           this.applyTextPropertiesToMatrix(
             documentData,
             matrixHelper,
-            letters[i].line,
+            letters[i]?.line ?? 0,
             xPos,
             yPos
           )
-          xPos += letters[i].l || 0
+          xPos += letters[i]?.l || 0
           // xPos += letters[i].val === ' ' ? 0 : trackingOffset;
           xPos += trackingOffset
         }
         if (hasGlyphs) {
           charData = this.globalData.fontManager?.getCharData(
-            documentData.finalText[i],
+            documentData.finalText[i] ?? '',
             fontData?.fStyle,
             this.globalData.fontManager.getFontByName(documentData.f).fFamily
           )
@@ -267,7 +263,7 @@ export default class SVGTextLottieElement extends TextElement {
             )
           }
           if (this.textSpans[i]) {
-            const { glyph } = this.textSpans[i]
+            const { glyph } = this.textSpans[i] ?? {}
 
             if (glyph) {
               if (glyph.layerElement) {
@@ -278,7 +274,7 @@ export default class SVGTextLottieElement extends TextElement {
             }
 
 
-            this.textSpans[i].glyph = glyphElement
+            ; (this.textSpans[i] as TextSpan).glyph = glyphElement
           }
           glyphElement._debug = true
           glyphElement.prepareFrame(0)
@@ -304,7 +300,7 @@ export default class SVGTextLottieElement extends TextElement {
               `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`)
           }
 
-          tSpan.textContent = letters[i].val
+          tSpan.textContent = letters[i]?.val ?? ''
           tSpan.style.whiteSpace = 'preserve'
 
           // tSpan.setAttributeNS(
@@ -340,10 +336,10 @@ export default class SVGTextLottieElement extends TextElement {
     if (data.shapes.length > 0) {
       const shape = data.shapes[0]
 
-      if (shape.it) {
+      if (shape?.it) {
         const shapeItem = shape.it[shape.it.length - 1]
 
-        if (shapeItem.s) {
+        if (shapeItem?.s) {
           shapeItem.s.k[0] = scale
           shapeItem.s.k[1] = scale
         }
@@ -367,7 +363,7 @@ export default class SVGTextLottieElement extends TextElement {
         textContents.push(currentTextContent)
         currentTextContent = ''
       } else {
-        currentTextContent += textArray[i]
+        currentTextContent += textArray[i] ?? ''
       }
       i++
     }
@@ -397,7 +393,7 @@ export default class SVGTextLottieElement extends TextElement {
 
     this.renderedFrame = this.comp?.renderedFrame
     for (let i = 0; i < length; i++) {
-      glyphElement = this.textSpans[i].glyph
+      glyphElement = this.textSpans[i]?.glyph
       if (glyphElement) {
         glyphElement.prepareFrame(Number(this.comp?.renderedFrame) - Number(this.data.st))
         if (glyphElement._mdf) {
@@ -428,12 +424,12 @@ export default class SVGTextLottieElement extends TextElement {
       let renderedLetter, textSpan, glyphElement
 
       for (let i = 0; i < length; i++) {
-        if (letters[i].n) {
+        if (letters[i]?.n) {
           continue
         }
         renderedLetter = renderedLetters?.[i]
-        textSpan = this.textSpans[i].span
-        glyphElement = this.textSpans[i].glyph
+        textSpan = this.textSpans[i]?.span
+        glyphElement = this.textSpans[i]?.glyph
         if (glyphElement) {
           glyphElement.renderFrame()
         }

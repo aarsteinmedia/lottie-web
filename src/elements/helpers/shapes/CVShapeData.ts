@@ -50,14 +50,14 @@ export default class CVShapeData extends ShapeData {
     let styledShape
 
     for (let i = 0; i < length; i++) {
-      if (!styles[i].closed) {
+      if (!styles[i]?.closed) {
         styledShape = {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          transforms: transformsManager.addTransformSequence(styles[i].transforms as any),
+          transforms: transformsManager.addTransformSequence(styles[i]?.transforms as any),
           trNodes: [],
         } as unknown as CVShapeData
         this.styledShapes.push(styledShape)
-        styles[i].elements.push(styledShape)
+        styles[i]?.elements.push(styledShape)
       }
     }
   }

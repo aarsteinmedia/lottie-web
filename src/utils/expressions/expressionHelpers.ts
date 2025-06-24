@@ -49,7 +49,7 @@ function getSpeedAtTime(this: BaseProperty, frameNum: number) {
     const { length } = v1
 
     for (let i = 0; i < length; i++) {
-      speed += Math.pow(v2[i] - v1[i], 2)
+      speed += Math.pow(v2[i] as number - (v1[i] as number), 2)
     }
     speed = Math.sqrt(speed) * 100
   } else {
@@ -80,7 +80,7 @@ function getVelocityAtTime(this: BaseProperty, frameNum: number): number | numbe
       // removing frameRate
       // if needed, don't add it here
       // velocity[i] = this.elem.globalData.frameRate*((v2[i] - v1[i])/delta);
-      velocity[i] = (v2[i] - v1[i]) / delta
+      velocity[i] = (v2[i] as number - (v1[i] as number)) / delta
     }
 
     return velocity as number[]

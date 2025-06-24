@@ -113,7 +113,7 @@ export default class HCompElement extends CompElement {
       nextElement
 
     while (j < pos) {
-      nextElement = this.elements[j].getBaseElement()
+      nextElement = this.elements[j]?.getBaseElement()
       j++
     }
     if (nextElement) {

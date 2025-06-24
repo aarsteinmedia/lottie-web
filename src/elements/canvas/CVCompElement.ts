@@ -138,7 +138,7 @@ export default class CVCompElement extends CompElement {
 
     for (let i = length - 1; i >= 0; i--) {
       if (completeLayers || elements[i]) {
-        elements[i].renderFrame()
+        elements[i]?.renderFrame()
       }
     }
   }

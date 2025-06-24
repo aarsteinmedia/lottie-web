@@ -5,7 +5,7 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
     let sourcePrototype: Record<string, unknown>
 
     for (let i = 0; i < length; i++) {
-      sourcePrototype = sources[i].prototype
+      sourcePrototype = sources[i]?.prototype
       const properties = Object.getOwnPropertyNames(sourcePrototype),
         { length: jLen } = properties
 
@@ -13,9 +13,9 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
         if (properties[j] === 'constructor') {
           continue
         }
-        if (Object.hasOwn(sourcePrototype, properties[j])) {
+        if (Object.hasOwn(sourcePrototype, properties[j] ?? '')) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          destination.prototype[properties[j]] = sourcePrototype[properties[j]]
+          destination.prototype[properties[j] ?? ''] = sourcePrototype[properties[j] ?? '']
         }
       }
     }
@@ -35,9 +35,9 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
     const destinationProperties = Object.getOwnPropertyNames(destination?.prototype as Record<string, unknown> | undefined ?? {})
 
     for (let i = length - 1; i >= 0; i--) {
-      sourcePrototype = sources[i].prototype
+      sourcePrototype = sources[i]?.prototype
 
-      const { name } = sources[i],
+      const { name } = sources[i] ?? { name: '' },
         properties = Object.getOwnPropertyNames(sourcePrototype),
         { length: jLen } = properties
 
@@ -45,13 +45,13 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
         if (
           properties[j] === 'constructor' ||
           combinedPrototypes.some(({ prop }) => prop === properties[j]) ||
-          destinationProperties.includes(properties[j])
+          destinationProperties.includes(properties[j] ?? '')
         ) {
           continue
         }
         combinedPrototypes.push({
           name,
-          prop: properties[j]
+          prop: properties[j] ?? ''
         })
       }
     }

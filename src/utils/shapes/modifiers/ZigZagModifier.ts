@@ -18,7 +18,7 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
       rot = -Math.PI * 0.5,
       rotatedVector = [
-        Math.cos(rot) * vector[0] - Math.sin(rot) * vector[1], Math.sin(rot) * vector[0] + Math.cos(rot) * vector[1],
+        Math.cos(rot) * (vector[0] ?? 0) - Math.sin(rot) * (vector[1] ?? 0), Math.sin(rot) * (vector[0] ?? 0) + Math.cos(rot) * (vector[1] ?? 0),
       ]
 
     return rotatedVector
@@ -27,9 +27,9 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
   getProjectingAngle = (path: ShapePath, cur: number) => {
     const prevIndex = cur === 0 ? path.length() - 1 : cur - 1,
       nextIndex = (cur + 1) % path.length(),
-      prevPoint = path.v[prevIndex],
-      nextPoint = path.v[nextIndex],
-      pVector = getPerpendicularVector(prevPoint, nextPoint)
+      prevPoint = path.v[prevIndex] as Vector2,
+      nextPoint = path.v[nextIndex] as Vector2,
+      pVector = getPerpendicularVector(prevPoint, nextPoint) as Vector2
 
     return Math.atan2(0, 1) - Math.atan2(pVector[1], pVector[0])
   },
@@ -69,23 +69,23 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     direction: AnimationDirection
   ) => {
     const angle = getProjectingAngle(path, cur),
-      point = path.v[cur % path._length],
-      prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1],
-      nextPoint = path.v[(cur + 1) % path._length],
+      point = path.v[cur % path._length] as Vector2,
+      prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1] as Vector2,
+      nextPoint = path.v[(cur + 1) % path._length] as Vector2,
       prevDist =
-      pointType === 2
-        ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2) +
-          Math.pow(point[1] - prevPoint[1], 2))
-        : 0,
+        pointType === 2
+          ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2) +
+            Math.pow(point[1] - prevPoint[1], 2))
+          : 0,
       nextDist =
-      pointType === 2
-        ? Math.sqrt(Math.pow(point[0] - nextPoint[0], 2) +
-          Math.pow(point[1] - nextPoint[1], 2))
-        : 0
+        pointType === 2
+          ? Math.sqrt(Math.pow(point[0] - nextPoint[0], 2) +
+            Math.pow(point[1] - nextPoint[1], 2))
+          : 0
 
     setPoint(
       outputBezier,
-      path.v[cur % path._length] || [0, 0],
+      path.v[cur % path._length] ?? [0, 0],
       angle,
       direction,
       amplitude,
@@ -107,10 +107,10 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     for (let i = 0; i < frequency; i++) {
       const t = (i + 1) / (frequency + 1),
         dist =
-        pointType === 2
-          ? Math.sqrt(Math.pow(segment.points[3][0] - segment.points[0][0], 2) +
-            Math.pow(segment.points[3][1] - segment.points[0][1], 2))
-          : 0,
+          pointType === 2
+            ? Math.sqrt(Math.pow(segment.points[3][0] - segment.points[0][0], 2) +
+              Math.pow(segment.points[3][1] - segment.points[0][1], 2))
+            : 0,
         angle = segment.normalAngle(t),
         point = segment.point(t) as Vector2
 
@@ -241,7 +241,7 @@ export default class ZigZagModifier extends ShapeModifier {
       const { length } = this.shapes
 
       for (let i = 0; i < length; i++) {
-        shapeData = (this.shapes as unknown as ShapeProperty[])[i]
+        shapeData = (this.shapes as unknown as ShapeProperty[])[i] as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
@@ -254,7 +254,7 @@ export default class ZigZagModifier extends ShapeModifier {
 
           for (let j = 0; j < _length; j++) {
             localShapeCollection?.addShape(this.processPath(
-              shapePaths[j], amplitude, frequency, pointType
+              shapePaths[j] as ShapePath, amplitude, frequency, pointType
             ))
           }
         }

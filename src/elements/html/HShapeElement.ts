@@ -85,17 +85,16 @@ export default class HShapeElement extends ShapeElement {
     const { length } = itemsData
 
     for (let i = 0; i < length; i++) {
-      this.calculateShapeBoundingBox(itemsData[i], boundingBox)
+      this.calculateShapeBoundingBox(itemsData[i] as ShapeDataInterface, boundingBox)
       // continue
 
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (itemsData[i]?.it) {
-        this.calculateBoundingBox(itemsData[i].it, boundingBox)
+        this.calculateBoundingBox(itemsData[i]?.it ?? [], boundingBox)
         continue
       }
-      if (itemsData[i]?.style && itemsData[i].w) {
-        this.expandStrokeBoundingBox(itemsData[i].w as ValueProperty, boundingBox)
+      if (itemsData[i]?.style && itemsData[i]?.w) {
+        this.expandStrokeBoundingBox(itemsData[i]?.w as ValueProperty, boundingBox)
       }
     }
   }
@@ -109,10 +108,10 @@ export default class HShapeElement extends ShapeElement {
     i: number
   ) {
     return (
-      Math.pow(1 - t, 3) * p0[i] +
-      3 * Math.pow(1 - t, 2) * t * p1[i] +
-      3 * (1 - t) * Math.pow(t, 2) * p2[i] +
-      Math.pow(t, 3) * p3[i]
+      Math.pow(1 - t, 3) * (p0[i] as number) +
+      3 * Math.pow(1 - t, 2) * t * (p1[i] as number) +
+      3 * (1 - t) * Math.pow(t, 2) * (p2[i] as number) +
+      Math.pow(t, 3) * (p3[i] as number)
     )
   }
 
@@ -130,21 +129,21 @@ export default class HShapeElement extends ShapeElement {
       return
     }
     for (i = 0; i < len - 1; i++) {
-      vPoint = this.getTransformedPoint(transformers, shape.v[i]) as Vector2
-      oPoint = this.getTransformedPoint(transformers, shape.o[i]) as Vector2
+      vPoint = this.getTransformedPoint(transformers, shape.v[i] ?? []) as Vector2
+      oPoint = this.getTransformedPoint(transformers, shape.o[i] ?? []) as Vector2
       nextIPoint = this.getTransformedPoint(transformers,
-        shape.i[i + 1]) as Vector2
+        shape.i[i + 1] ?? []) as Vector2
       nextVPoint = this.getTransformedPoint(transformers,
-        shape.v[i + 1]) as Vector2
+        shape.v[i + 1] ?? []) as Vector2
       this.checkBounds(
         vPoint, oPoint, nextIPoint, nextVPoint, boundingBox
       )
     }
     if (shape.c) {
-      vPoint = this.getTransformedPoint(transformers, shape.v[i]) as Vector2
-      oPoint = this.getTransformedPoint(transformers, shape.o[i]) as Vector2
-      nextIPoint = this.getTransformedPoint(transformers, shape.i[0]) as Vector2
-      nextVPoint = this.getTransformedPoint(transformers, shape.v[0]) as Vector2
+      vPoint = this.getTransformedPoint(transformers, shape.v[i] ?? []) as Vector2
+      oPoint = this.getTransformedPoint(transformers, shape.o[i] ?? []) as Vector2
+      nextIPoint = this.getTransformedPoint(transformers, shape.i[0] ?? []) as Vector2
+      nextVPoint = this.getTransformedPoint(transformers, shape.v[0] ?? []) as Vector2
       this.checkBounds(
         vPoint, oPoint, nextIPoint, nextVPoint, boundingBox
       )
@@ -218,7 +217,7 @@ export default class HShapeElement extends ShapeElement {
 
     if (widthProperty.keyframes) {
       for (let i = 0; i < widthProperty.keyframes.length; i++) {
-        const kfw = widthProperty.keyframes[i].s as unknown as number
+        const kfw = widthProperty.keyframes[i]?.s as unknown as number
 
         if (kfw > width) {
           width = kfw
@@ -247,9 +246,9 @@ export default class HShapeElement extends ShapeElement {
     ]
 
     for (let a, b, c, t, b2ac, t1, t2, i = 0; i < 2; ++i) {
-      b = 6 * p0[i] - 12 * p1[i] + 6 * p2[i]
-      a = -3 * p0[i] + 9 * p1[i] - 9 * p2[i] + 3 * p3[i]
-      c = 3 * p1[i] - 3 * p0[i]
+      b = 6 * (p0[i] as number) - 12 * (p1[i] as number) + 6 * (p2[i] as number)
+      a = -3 * (p0[i] as number) + 9 * (p1[i] as number) - 9 * (p2[i] as number) + 3 * (p3[i] as number)
+      c = 3 * (p1[i] as number) - 3 * (p0[i] as number)
 
       b |= 0
       a |= 0
@@ -261,7 +260,7 @@ export default class HShapeElement extends ShapeElement {
         t = -c / b
 
         if (t > 0 && t < 1) {
-          bounds[i].push(this.calculateF(
+          bounds[i]?.push(this.calculateF(
             t, p0, p1, p2, p3, i
           ))
         }
@@ -271,13 +270,13 @@ export default class HShapeElement extends ShapeElement {
         if (b2ac >= 0) {
           t1 = (-b + Math.sqrt(b2ac)) / (2 * a)
           if (t1 > 0 && t1 < 1) {
-            bounds[i].push(this.calculateF(
+            bounds[i]?.push(this.calculateF(
               t1, p0, p1, p2, p3, i
             ))
           }
           t2 = (-b - Math.sqrt(b2ac)) / (2 * a)
           if (t2 > 0 && t2 < 1) {
-            bounds[i].push(this.calculateF(
+            bounds[i]?.push(this.calculateF(
               t2, p0, p1, p2, p3, i
             ))
           }
@@ -285,10 +284,10 @@ export default class HShapeElement extends ShapeElement {
       }
     }
 
-    this.shapeBoundingBox.left = Math.min.apply(null, bounds[0])
-    this.shapeBoundingBox.top = Math.min.apply(null, bounds[1])
-    this.shapeBoundingBox.right = Math.max.apply(null, bounds[0])
-    this.shapeBoundingBox.bottom = Math.max.apply(null, bounds[1])
+    this.shapeBoundingBox.left = Math.min.apply(null, bounds[0] ?? [])
+    this.shapeBoundingBox.top = Math.min.apply(null, bounds[1] ?? [])
+    this.shapeBoundingBox.right = Math.max.apply(null, bounds[0] ?? [])
+    this.shapeBoundingBox.bottom = Math.max.apply(null, bounds[1] ?? [])
   }
 
   getTransformedPoint(transformers: Transformer[], pointFromProps: number[]) {
@@ -296,9 +295,9 @@ export default class HShapeElement extends ShapeElement {
     const { length } = transformers
 
     for (let i = 0; i < length; i++) {
-      point = transformers[i].mProps.v.applyToPointArray(
-        point[0], point[1], 0
-      )
+      point = transformers[i]?.mProps.v.applyToPointArray(
+        point[0] ?? 0, point[1] ?? 0, 0
+      ) ?? []
     }
 
     return point

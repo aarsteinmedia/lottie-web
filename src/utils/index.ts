@@ -87,8 +87,8 @@ export const floatEqual = (a: number, b: number) =>
   },
 
   getExtFromB64 = (str: string) => {
-    const mime = str.split(':')[1].split(';')[0],
-      ext = mime.split('/')[1].split('+')[0]
+    const mime = str.split(':')[1]?.split(';')[0],
+      ext = mime?.split('/')[1]?.split('+')[0]
 
     return ext
   },
