@@ -40,7 +40,7 @@
     "prebuild": "rimraf ./dist",
     "build": "rollup -c --configPlugin typescript",
     "prebuild:types": "rimraf ./types ",
-    "build:types": "tsc -p tsconfig.build.json && tsc-alias",
+    "build:types": "tsc -p tsconfig.build.json",
     "prod": "pnpm build:types && pnpm build",
     "dev": "rollup -c --configPlugin typescript -w --environment NODE_ENV:development",
     "min": "rollup -c --configPlugin typescript -w --environment NODE_ENV:minified",
@@ -60,7 +60,7 @@
     "fflate": "^0.8.2",
     "globals": "^16.2.0",
     "jiti": "^2.4.2",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.44.0",
     "rollup-plugin-dts": "^6.2.1",
@@ -73,7 +73,7 @@
     "tsc-alias": "^1.8.16",
     "tslib": "^2.8.1",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.34.1"
+    "typescript-eslint": "^8.35.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
