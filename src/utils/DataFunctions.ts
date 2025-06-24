@@ -1,6 +1,7 @@
 import type {
   AnimationData,
   Characacter, DocumentData, LottieLayer, Shape,
+  ShapeColorValue,
   Vector3
 } from '@/types'
 import type ShapePath from '@/utils/shapes/ShapePath'
@@ -170,9 +171,13 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
   const { length } = path.i
 
   for (let i = 0; i < length; i++) {
+    // @ts-expect-error: TODO:
     path.i[i][0] += path.v[i]?.[0] ?? 0
+    // @ts-expect-error: TODO:
     path.i[i][1] += path.v[i]?.[1] ?? 0
+    // @ts-expect-error: TODO:
     path.o[i][0] += path.v[i]?.[0] ?? 0
+    // @ts-expect-error: TODO:
     path.o[i][1] += path.v[i]?.[1] ?? 0
   }
 }
@@ -429,15 +434,17 @@ const checkColors = (() => {
 
         const { length: jLen } = shapeColorValue
 
-        for (let j = 0; j < jLen; j += 1) {
-          shapeColorValue[j].s[0] /= 255
-          shapeColorValue[j].s[1] /= 255
-          shapeColorValue[j].s[2] /= 255
-          shapeColorValue[j].s[3] /= 255
-          shapeColorValue[j].e[0] /= 255
-          shapeColorValue[j].e[1] /= 255
-          shapeColorValue[j].e[2] /= 255
-          shapeColorValue[j].e[3] /= 255
+        for (let j = 0; j < jLen; j++) {
+          const colorValue = shapeColorValue[j] as ShapeColorValue
+
+          colorValue.s[0] /= 255
+          colorValue.s[1] /= 255
+          colorValue.s[2] /= 255
+          colorValue.s[3] /= 255
+          colorValue.e[0] /= 255
+          colorValue.e[1] /= 255
+          colorValue.e[2] /= 255
+          colorValue.e[3] /= 255
         }
       }
     },
@@ -508,10 +515,10 @@ const checkShapes = (() => {
             sPaths = shapePath[j]?.s ?? []
 
           if (ePaths.length > 0) {
-            ePaths[0].c = isClosed
+            ;(ePaths[0] as ShapePath).c = isClosed
           }
           if (sPaths.length > 0) {
-            sPaths[0].c = isClosed
+            ;(sPaths[0] as ShapePath).c = isClosed
           }
         }
       }
@@ -551,10 +558,10 @@ const checkShapes = (() => {
                 sPaths = shapePath[k]?.s ?? []
 
               if (ePaths.length > 0) {
-                ePaths[0].c = isClosed
+                ;(ePaths[0] as ShapePath).c = isClosed
               }
               if (sPaths.length > 0) {
-                sPaths[0].c = isClosed
+                ;(sPaths[0] as ShapePath).c = isClosed
               }
             }
           }
