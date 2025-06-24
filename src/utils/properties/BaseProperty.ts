@@ -168,9 +168,9 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
 
     const offsetTime = Number(this.offsetTime),
       frameNum = Number(this.comp?.renderedFrame) - offsetTime,
-      initTime = this.keyframes[0].t - offsetTime,
+      initTime = (this.keyframes[0]?.t ?? 0) - offsetTime,
       length = this.keyframes.length - 1,
-      endTime = this.keyframes[length].t - offsetTime,
+      endTime = (this.keyframes[length]?.t ?? 0) - offsetTime,
       lastFrame = Number(this._caching.lastFrame)
 
     if (
@@ -226,12 +226,12 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
       i = iterationIndex,
       len = keyframes.length - 1,
       shouldInterpolate = true,
-      keyData = keyframes[0],
-      nextKeyData = keyframes[1]
+      keyData = keyframes[0] ?? {} as Keyframe,
+      nextKeyData = keyframes[1] ?? {} as Keyframe
 
     while (shouldInterpolate) {
-      keyData = keyframes[i]
-      nextKeyData = keyframes[i + 1]
+      keyData = keyframes[i] ?? {} as Keyframe
+      nextKeyData = keyframes[i + 1] ?? {} as Keyframe
       if (i === len - 1 && frameNum >= nextKeyData.t - offsetTime) {
         if (keyData.h) {
           keyData = nextKeyData
@@ -273,9 +273,9 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
       if (frameNum >= nextKeyTime || frameNum < keyTime) {
         const ind = frameNum >= nextKeyTime ? bezierData.points.length - 1 : 0
 
-        kLen = bezierData.points[ind].point.length
+        kLen = bezierData.points[ind]?.point.length ?? 0
         for (let k = 0; k < kLen; k++) {
-          newValue[k] = bezierData.points[ind].point[k]
+          newValue[k] = bezierData.points[ind]?.point[k] ?? 0
         }
         // caching._lastKeyframeIndex = -1;
       } else {
@@ -309,15 +309,15 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
         shouldInterpolate = true
         jLen = bezierData.points.length
         while (shouldInterpolate) {
-          addedLength += bezierData.points[j].partialLength
+          addedLength += bezierData.points[j]?.partialLength ?? 0
           if (
             distanceInLine === 0 ||
             perc === 0 ||
             j === bezierData.points.length - 1
           ) {
-            kLen = bezierData.points[j].point.length
+            kLen = bezierData.points[j]?.point.length ?? 0
             for (let k = 0; k < kLen; k++) {
-              newValue[k] = bezierData.points[j].point[k]
+              newValue[k] = bezierData.points[j]?.point[k] ?? 0
             }
             break
           }
@@ -325,17 +325,17 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
           if (
             distanceInLine >= addedLength &&
             distanceInLine <
-              addedLength + bezierData.points[j + 1].partialLength
+              addedLength + (bezierData.points[j + 1]?.partialLength ?? 0)
           ) {
             segmentPerc =
               (distanceInLine - addedLength) /
-              bezierData.points[j + 1].partialLength
-            kLen = bezierData.points[j].point.length
+              (bezierData.points[j + 1]?.partialLength ?? 0)
+            kLen = bezierData.points[j]?.point.length ?? 0
             for (let k = 0; k < kLen; k++) {
               newValue[k] =
-                bezierData.points[j].point[k] +
-                (bezierData.points[j + 1].point[k] -
-                  bezierData.points[j].point[k]) *
+                (bezierData.points[j]?.point[k] ?? 0) +
+                ((bezierData.points[j + 1]?.point[k] ?? 0) -
+                  (bezierData.points[j]?.point[k] ?? 0)) *
                   segmentPerc
             }
             break
@@ -348,7 +348,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
         }
         caching._lastPoint = j
         caching._lastAddedLength =
-          addedLength - bezierData.points[j].partialLength
+          addedLength - (bezierData.points[j]?.partialLength ?? 0)
         caching._lastKeyframeIndex = i
       }
     } else {
@@ -405,7 +405,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
                   inY =
                     keyData.i.y[i] ?? keyData.i.y[0]
                   fnc = getBezierEasing(
-                    outX, outY, inX, inY
+                    outX ?? 0, outY ?? 0, inX ?? 0, inY ?? 0
                   ).get
                   ; (keyframeMetadata.__fnct as any)[i] = fnc
                 }
@@ -429,7 +429,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
           keyValue =
             keyData.h === 1
               ? keyData.s?.[i]
-              : Number(keyData.s?.[i]) + ((endValue as number[])[i] - Number(keyData.s?.[i])) * Number(perc)
+              : Number(keyData.s?.[i]) + (((endValue as number[])[i] ?? 0) - Number(keyData.s?.[i])) * Number(perc)
 
           if (keyValue !== undefined) {
             if (propType === PropType.MultiDimensional) {
@@ -475,7 +475,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
       : (this.data as unknown as VectorProperty<Keyframe[]>).k
 
     for (let i = 0; i < len; i++) {
-      finalValue = this.effectsSequence[i](finalValue)
+      finalValue = this.effectsSequence[i]?.(finalValue)
     }
     this.setVValue(finalValue as number | number[])
     this._isFirstFrame = false
@@ -501,8 +501,8 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
     const { length } = this.v as number[]
 
     while (i < length) {
-      multipliedValue = (val as number[])[i] * Number(this.mult)
-      if (Math.abs((this.v as number[])[i] - multipliedValue) > 0.00001) {
+      multipliedValue = ((val as number[])[i] ?? 0) * Number(this.mult)
+      if (Math.abs(((this.v as number[])[i] ?? 0) - multipliedValue) > 0.00001) {
         ; (this.v as number[])[i] = multipliedValue
         this._mdf = true
       }

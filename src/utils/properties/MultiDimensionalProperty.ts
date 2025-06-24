@@ -33,8 +33,8 @@ export default class MultiDimensionalProperty<
     this.pv = createTypedArray(ArrayType.Float32, length) as T
     this.vel = createTypedArray(ArrayType.Float32, length) as T
     for (let i = 0; i < length; i++) {
-      this.v[i] = data.k[i] * this.mult
-      this.pv[i] = data.k[i]
+      this.v[i] = (data.k[i] ?? 0) * this.mult
+      this.pv[i] = data.k[i] ?? 0
     }
     this._isFirstFrame = true
     this.effectsSequence = []

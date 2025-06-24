@@ -29,8 +29,8 @@ export default class GradientProperty extends DynamicPropertyContainer {
     super()
     this.data = data
     this.c = createTypedArray(ArrayType.Uint8c, data.p * 4) as Uint8ClampedArray
-    const cLength = (data.k.k as Stop[] | undefined)?.[0].s
-      ? (data.k.k as Stop[])[0].s.length - data.p * 4
+    const cLength = (data.k.k as Stop[] | undefined)?.[0]?.s ?? 0
+      ? ((data.k.k as Stop[])[0]?.s.length ?? 0) - data.p * 4
       : data.k.k.length - data.p * 4
 
     this.o = createTypedArray(ArrayType.Float32, cLength) as Float32Array
@@ -54,12 +54,12 @@ export default class GradientProperty extends DynamicPropertyContainer {
     if (this.o.length / 2 !== this.c.length / 4) {
       return false
     }
-    if ((this.data.k.k as Stop[] | undefined)?.[0].s) {
+    if ((this.data.k.k as Stop[] | undefined)?.[0]?.s) {
       let i = 0
       const len = this.data.k.k.length
 
       while (i < len) {
-        if (!this.comparePoints((this.data.k.k as Stop[])[i].s, this.data.p)) {
+        if (!this.comparePoints((this.data.k.k as Stop[])[i]?.s ?? [], this.data.p)) {
           return false
         }
         i++
@@ -79,7 +79,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
     let diff
 
     while (i < len) {
-      diff = Math.abs(values[i * 4] - values[points * 4 + i * 2])
+      diff = Math.abs((values[i * 4] ?? 0) - (values[points * 4 + i * 2] ?? 0))
       if (diff > 0.01) {
         return false
       }
@@ -103,7 +103,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
 
     for (let i = 0; i < len; i++) {
       mult = i % 4 === 0 ? 100 : 255
-      val = Math.round(this.prop.v[i] * mult)
+      val = Math.round((this.prop.v[i] ?? 0) * mult)
       if (this.c[i] !== val) {
         this.c[i] = val
         this._cmdf = !forceRender
@@ -114,7 +114,7 @@ export default class GradientProperty extends DynamicPropertyContainer {
 
       for (let i = this.data.p * 4; i < length; i++) {
         // mult = i % 2 === 0 ? 100 : 1
-        val = i % 2 === 0 ? Math.round(this.prop.v[i] * 100) : this.prop.v[i]
+        val = (i % 2 === 0 ? Math.round((this.prop.v[i] ?? 0) * 100) : this.prop.v[i]) ?? 0
         if (this.o[i - this.data.p * 4] !== val) {
           this.o[i - this.data.p * 4] = val
           this._omdf = !forceRender

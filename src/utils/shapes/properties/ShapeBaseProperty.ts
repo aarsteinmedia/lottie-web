@@ -61,14 +61,14 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       vertexValue: number
     const kf = this.keyframes ?? []
 
-    if (frameNum < kf[0].t - this.offsetTime) {
-      keyPropS = kf[0].s?.[0]
+    if (frameNum < (kf[0]?.t ?? 0) - this.offsetTime) {
+      keyPropS = kf[0]?.s?.[0] ?? 0
       isHold = true
       iterationIndex = 0
-    } else if (frameNum >= kf[kf.length - 1].t - this.offsetTime) {
-      keyPropS = kf[kf.length - 1].s
-        ? kf[kf.length - 1].s?.[0]
-        : kf[kf.length - 2].e[0]
+    } else if (frameNum >= (kf[kf.length - 1]?.t ?? 0) - this.offsetTime) {
+      keyPropS = kf[kf.length - 1]?.s
+        ? kf[kf.length - 1]?.s?.[0]
+        : kf[kf.length - 2]?.e[0]
       /* if(kf[kf.length - 1].s){
                 keyPropS = kf[kf.length - 1].s[0];
             }else{
@@ -78,14 +78,14 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     } else {
       let i = iterationIndex
       const len = kf.length - 1
-      let shouldInterpolate = true
-      let keyData
-      let nextKeyData
+      let shouldInterpolate = true,
+        keyData,
+        nextKeyData
 
       while (shouldInterpolate) {
         keyData = kf[i]
         nextKeyData = kf[i + 1]
-        if (nextKeyData.t - this.offsetTime > frameNum) {
+        if ((nextKeyData?.t ?? 0) - this.offsetTime > frameNum) {
           break
         }
         if (i < len - 1) {
@@ -97,7 +97,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       if (!keyData || !nextKeyData) {
         throw new Error(`${this.constructor.name}: Could not set keyframe data`)
       }
-      const keyframeMetadata = this.keyframesMetadata[i] || {}
+      const keyframeMetadata = this.keyframesMetadata[i] ?? {}
 
       isHold = keyData.h === 1
       iterationIndex = i
@@ -144,23 +144,26 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     }
 
     const jLen = previousValue._length,
-      kLen = keyPropS.i[0].length
+      kLen = keyPropS.i[0]?.length ?? 0
 
     caching.lastIndex = iterationIndex
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
-        vertexValue = isHold
-          ? keyPropS.i[j][k]
-          : keyPropS.i[j][k] + ((keyPropE?.i[j][k] ?? 0) - keyPropS.i[j][k]) * perc
+        vertexValue = (isHold
+          ? keyPropS.i[j]?.[k]
+          : (keyPropS.i[j]?.[k] ?? 0) + ((keyPropE?.i[j]?.[k] ?? 0) - (keyPropS.i[j]?.[k] ?? 0)) * perc) ?? 0
+        // @ts-expect-error: TODO:
         previousValue.i[j][k] = vertexValue
-        vertexValue = isHold
-          ? keyPropS.o[j][k]
-          : keyPropS.o[j][k] + ((keyPropE?.o[j][k] ?? 0) - keyPropS.o[j][k]) * perc
+        vertexValue = (isHold
+          ? keyPropS.o[j]?.[k]
+          : (keyPropS.o[j]?.[k] ?? 0) + ((keyPropE?.o[j]?.[k] ?? 0) - (keyPropS.o[j]?.[k] ?? 0)) * perc) ?? 0
+        // @ts-expect-error: TODO:
         previousValue.o[j][k] = vertexValue
-        vertexValue = isHold
-          ? keyPropS.v[j][k]
-          : keyPropS.v[j][k] + ((keyPropE?.v[j][k] ?? 0) - keyPropS.v[j][k]) * perc
+        vertexValue = (isHold
+          ? keyPropS.v[j]?.[k]
+          : (keyPropS.v[j]?.[k] ?? 0) + ((keyPropE?.v[j]?.[k] ?? 0) - (keyPropS.v[j]?.[k] ?? 0)) * perc) ?? 0
+        // @ts-expect-error: TODO:
         previousValue.v[j][k] = vertexValue
       }
     }
@@ -178,8 +181,8 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     this._caching = this._caching ?? ({} as Caching)
 
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
-      initTime = this.keyframes[0].t - this.offsetTime,
-      endTime = this.keyframes[this.keyframes.length - 1].t - this.offsetTime,
+      initTime = (this.keyframes[0]?.t ?? 0) - this.offsetTime,
+      endTime = (this.keyframes[this.keyframes.length - 1]?.t ?? 0)- this.offsetTime,
       lastFrame = Number(this._caching.lastFrame)
 
     if (
@@ -233,7 +236,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     const len = this.effectsSequence.length
 
     for (i = 0; i < len; i++) {
-      finalValue = this.effectsSequence[i](finalValue)
+      finalValue = this.effectsSequence[i]?.(finalValue)
     }
     this.setVValue(finalValue as ShapePath)
     this.lock = false
