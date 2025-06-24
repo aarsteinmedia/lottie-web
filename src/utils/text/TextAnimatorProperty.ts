@@ -2,9 +2,11 @@ import type {
   BezierPoint,
   DocumentData,
   ElementInterfaceIntersect,
+  Letter,
   PathInfo,
   TextData,
   TextPathData,
+  Vector2,
   Vector3,
 } from '@/types'
 import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
@@ -23,6 +25,8 @@ import Matrix from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import LetterProps from '@/utils/text/LetterProps'
 import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
+
+import type TextSelectorProperty from './TextSelectorProperty'
 
 const rgbToHSV = (
     r: number, g: number, b: number
@@ -272,11 +276,11 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
                 continue
               }
               bezierData = buildBezierData(
-                paths.v[i],
-                paths.v[i + 1],
-                [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
+                paths.v[i] as Vector2,
+                paths.v[i + 1] as Vector2,
+                [(paths.o[i]?.[0] ?? 0) - (paths.v[i]?.[0] ?? 0), (paths.o[i]?.[1] ?? 0) - (paths.v[i]?.[1] ?? 0)],
                 [
-                  paths.i[i + 1][0] - paths.v[i + 1][0], paths.i[i + 1][1] - paths.v[i + 1][1],
+                  (paths.i[i + 1]?.[0] ?? 0) - (paths.v[i + 1]?.[0] ?? 0), (paths.i[i + 1]?.[1] ?? 0) - (paths.v[i + 1]?.[1] ?? 0),
                 ]
               )
               pathInfo.tLength += bezierData.segmentLength
@@ -286,10 +290,10 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             i = len
             if (mask.v?.c && !isArray(paths)) {
               bezierData = buildBezierData(
-                paths.v[i],
-                paths.v[0],
-                [paths.o[i][0] - paths.v[i][0], paths.o[i][1] - paths.v[i][1]],
-                [paths.i[0][0] - paths.v[0][0], paths.i[0][1] - paths.v[0][1]]
+                paths.v[i] as Vector2,
+                paths.v[0] as Vector2,
+                [(paths.o[i]?.[0] ?? 0) - (paths.v[i]?.[0] ?? 0), (paths.o[i]?.[1] ?? 0) - (paths.v[i]?.[1] ?? 0)],
+                [(paths.i[0]?.[0] ?? 0) - (paths.v[0]?.[0] ?? 0), (paths.i[0]?.[1] ?? 0) - (paths.v[0]?.[1] ?? 0)]
               )
               pathInfo.tLength += bezierData.segmentLength
               pathInfo.segments.push(bezierData)
@@ -312,15 +316,15 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             currentLength = -Math.abs(currentLength) % (pathInfo?.tLength ?? 0)
           }
           segmentInd = segments.length - 1
-          points = segments[segmentInd].points
+          points = segments[segmentInd]?.points ?? []
           pointInd = points.length - 1
 
           while (currentLength < 0) {
-            currentLength += points[pointInd]?.partialLength
+            currentLength += points[pointInd]?.partialLength ?? 0
             pointInd -= 1
             if (pointInd < 0) {
               segmentInd -= 1
-              points = segments[segmentInd].points
+              points = segments[segmentInd]?.points ?? []
               pointInd = points.length - 1
             }
           }
@@ -329,9 +333,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         points = segments[segmentInd]?.points ?? []
         prevPoint = points[pointInd - 1]
         currentPoint = points[pointInd]
-
-        // TODO: Canvas text layers break down here
-        partialLength = currentPoint.partialLength // ?? 0
+        partialLength = currentPoint?.partialLength ?? 0
 
       }
 
@@ -380,12 +382,12 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
         let isNewLine = true
 
         for (i = 0; i < len; i++) {
-          if (letters[i].n) {
+          if (letters[i]?.n) {
             if (animatorJustifyOffset) {
               animatorJustifyOffset += animatorFirstCharOffset
             }
             while (lastIndex < i) {
-              letters[lastIndex].animatorJustifyOffset = animatorJustifyOffset
+              ;(letters[lastIndex] ?? {} as Letter).animatorJustifyOffset = animatorJustifyOffset
               lastIndex++
             }
             animatorJustifyOffset = 0
@@ -393,8 +395,8 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             continue
           }
           for (j = 0; j < jLen; j++) {
-            animatorProps = animators[j].a
-            if (!animatorProps?.t.propType) {
+            animatorProps = animators[j]?.a ?? {}
+            if (!animatorProps.t?.propType) {
               continue
             }
             const { v: animVal } = animatorProps.t
@@ -406,9 +408,9 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
             if (isNewLine && documentData.j === 2) {
               animatorFirstCharOffset += animVal * justifyOffsetMult
             }
-            animatorSelector = animators[j].s
-            mult = animatorSelector?.getMult(letters[i].anIndexes[j],
-              textData.a?.[j].s?.totalChars)
+            animatorSelector = animators[j]?.s
+            mult = animatorSelector?.getMult(letters[i]?.anIndexes[j] ?? 0,
+              textData.a?.[j]?.s?.totalChars)
 
             if (mult !== undefined) {
               if (isArray(mult)) {
