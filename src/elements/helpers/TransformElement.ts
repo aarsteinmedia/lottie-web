@@ -6,7 +6,7 @@ import type {
 import BaseElement from '@/elements/BaseElement'
 import { EffectTypes } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
-import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 
 export default abstract class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
@@ -95,7 +95,7 @@ export default abstract class TransformElement extends BaseElement {
     let i = 0
     const { length } = this.localTransforms
 
-    this.finalTransform._localMatMdf = Boolean(this.finalTransform._matMdf)
+    this.finalTransform._localMatMdf = this.finalTransform._matMdf
     if (!this.finalTransform._localMatMdf || !this.finalTransform._opMdf) {
       while (i < length) {
         if (this.localTransforms[i]?._mdf) {

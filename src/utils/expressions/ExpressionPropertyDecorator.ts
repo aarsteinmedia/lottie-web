@@ -15,9 +15,9 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
 import Matrix from '@/utils/Matrix'
 import ShapePool from '@/utils/pooling/ShapePool'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory from '@/utils/shapes/properties'
-import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 function loopOut(
   this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean

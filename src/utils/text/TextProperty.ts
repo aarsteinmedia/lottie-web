@@ -482,7 +482,7 @@ export default class TextProperty extends BaseProperty {
     for (let i = 0; i < length; i++) {
       if (Object.hasOwn(data, keys[i] ?? '')) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (obj as any)[keys[i] as keyof typeof obj] = data[keys[i] as keyof typeof data]
+        (obj as any)[keys[i] as keyof DocumentData] = data[keys[i] as keyof typeof data]
       }
     }
 

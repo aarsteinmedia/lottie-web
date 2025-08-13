@@ -30,9 +30,9 @@ import {
 import getBlendMode from '@/utils/helpers/getBlendMode'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import Matrix from '@/utils/Matrix'
+import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import { getModifier } from '@/utils/shapes/modifiers'
 import ShapePropertyFactory from '@/utils/shapes/properties'
-import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class SVGShapeElement extends ShapeElement {
   _debug?: boolean

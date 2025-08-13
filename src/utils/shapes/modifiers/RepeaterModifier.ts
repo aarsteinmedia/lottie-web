@@ -11,9 +11,9 @@ import type ValueProperty from '@/utils/properties/ValueProperty'
 import { isArray } from '@/utils'
 import { ShapeType } from '@/utils/enums'
 import Matrix from '@/utils/Matrix'
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
-import TransformPropertyFactory, { type TransformProperty } from '@/utils/TransformProperty'
 
 export default class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []

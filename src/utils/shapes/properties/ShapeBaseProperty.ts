@@ -183,7 +183,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
       initTime = (this.keyframes[0]?.t ?? 0) - this.offsetTime,
       endTime = (this.keyframes[this.keyframes.length - 1]?.t ?? 0)- this.offsetTime,
-      lastFrame = Number(this._caching.lastFrame)
+      { lastFrame, lastIndex } = this._caching
 
     if (
       !(
@@ -193,7 +193,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
       )
     ) {
       this._caching.lastIndex =
-        lastFrame < frameNum ? Number(this._caching.lastIndex) : 0
+        lastFrame < frameNum ? lastIndex : 0
       this.interpolateShape(
         frameNum, this.pv, this._caching
       )

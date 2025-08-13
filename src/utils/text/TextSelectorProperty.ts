@@ -238,7 +238,7 @@ export default class TextSelectorProperty extends BaseProperty {
       }
     }
 
-    return mult * Number(this.a.v)
+    return mult * this.a.v
   }
 
   getTextSelectorProp(
@@ -255,9 +255,9 @@ export default class TextSelectorProperty extends BaseProperty {
       this.e.v = this._currentTextLength
     }
     const divisor = this.data.r === 2 ? 1 : 100 / this.data.totalChars,
-      o = Number(this.o.v) / divisor
+      o = this.o.v / divisor
     let s = Number(this.s?.v) / divisor + o,
-      e = Number(this.e.v) / divisor + o
+      e = this.e.v / divisor + o
 
     if (s > e) {
       const _s = s

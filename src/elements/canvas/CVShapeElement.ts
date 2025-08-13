@@ -29,11 +29,11 @@ import {
   ShapeType,
 } from '@/utils/enums'
 import { degToRads } from '@/utils/helpers/constants'
+import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
 import DashProperty from '@/utils/shapes/properties/DashProperty'
 import GradientProperty from '@/utils/shapes/properties/GradientProperty'
-import TransformPropertyFactory from '@/utils/TransformProperty'
 
 export default class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D

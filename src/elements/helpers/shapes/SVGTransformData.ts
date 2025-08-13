@@ -5,8 +5,8 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
+import type { TransformProperty } from '@/utils/properties/TransformProperty'
 import type ValueProperty from '@/utils/properties/ValueProperty'
-import type { TransformProperty } from '@/utils/TransformProperty'
 
 export default class SVGTransformData {
   _isAnimated: boolean
@@ -27,7 +27,7 @@ export default class SVGTransformData {
       op,
     } as Transformer
     this.elements = []
-    this._isAnimated = Boolean(this.transform.mProps.dynamicProperties.length > 0 ||
-      this.transform.op.effectsSequence.length > 0)
+    this._isAnimated = this.transform.mProps.dynamicProperties.length > 0 ||
+      this.transform.op.effectsSequence.length > 0
   }
 }

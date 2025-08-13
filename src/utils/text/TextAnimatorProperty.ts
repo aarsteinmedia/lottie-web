@@ -265,7 +265,7 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
               segments: [],
               tLength: 0,
             }
-            len = Number(paths._length) - 1
+            len = paths._length - 1
             let bezierData
 
             totalLength = 0
@@ -629,9 +629,9 @@ export default class TextAnimatorProperty extends DynamicPropertyContainer {
           if (documentData.strokeColorAnim) {
             if (documentData.sc) {
               sc = [
-                Number(documentData.sc[0]),
-                Number(documentData.sc[1]),
-                Number(documentData.sc[2]),
+                documentData.sc[0],
+                documentData.sc[1],
+                documentData.sc[2],
               ]
             } else {
               sc = [0,

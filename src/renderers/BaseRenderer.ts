@@ -320,8 +320,8 @@ export default abstract class BaseRenderer extends FrameElement {
     this.globalData.frameRate = animData.fr || 60
     this.globalData.nm = animData.nm
     this.globalData.compSize = {
-      h: Number(animData.h),
-      w: Number(animData.w),
+      h: animData.h,
+      w: animData.w,
     }
   }
 }

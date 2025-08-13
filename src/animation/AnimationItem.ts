@@ -373,7 +373,7 @@ export default class AnimationItem extends BaseEvent {
     if (name && this.name !== name) {
       return
     }
-    const numValue = Number(value)
+    const numValue = value
 
     if (isNaN(numValue)) {
       const marker = this.getMarkerData(value)
@@ -399,7 +399,7 @@ export default class AnimationItem extends BaseEvent {
     if (name && this.name !== name) {
       return
     }
-    const numValue = Number(value)
+    const numValue = value
 
     if (isNaN(numValue)) {
       const marker = this.getMarkerData(value)
@@ -418,6 +418,7 @@ export default class AnimationItem extends BaseEvent {
   public gotoFrame() {
     this.currentFrame = this.isSubframeEnabled
       ? this.currentRawFrame
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
       : ~~this.currentRawFrame
 
     if (
@@ -810,8 +811,8 @@ export default class AnimationItem extends BaseEvent {
     this.updaFrameModifier()
   }
 
-  public setSubframe(flag: boolean) {
-    this.isSubframeEnabled = Boolean(flag)
+  public setSubframe(flag = false) {
+    this.isSubframeEnabled = flag
   }
 
   public setupAnimation(data: AnimationData) {

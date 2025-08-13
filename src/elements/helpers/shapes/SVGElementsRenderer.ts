@@ -270,7 +270,7 @@ function renderPath(
           pathStringTransformed += buildShapeString(
             pathNodes,
             pathNodes._length,
-            Boolean(pathNodes.c),
+            pathNodes.c,
             mat
           )
         }

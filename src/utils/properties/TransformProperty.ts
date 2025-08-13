@@ -242,7 +242,7 @@ export class TransformProperty extends BaseProperty {
       mat.skewFromAxis(-this.sk.v, Number(this.sa?.v))
     }
     if (this.r) {
-      mat.rotate(-Number(this.r.v))
+      mat.rotate(-this.r.v)
     } else {
       mat
         .rotateZ(-Number(this.rz?.v))
@@ -306,7 +306,7 @@ export class TransformProperty extends BaseProperty {
         this.v.skewFromAxis(-this.sk.v, Number(this.sa?.v))
       }
       if (this.r && this.appliedTransformations < 4) {
-        this.v.rotate(-Number(this.r.v))
+        this.v.rotate(-this.r.v)
       } else if (!this.r && this.appliedTransformations < 4) {
         this.v
           .rotateZ(-Number(this.rz?.v))
@@ -323,7 +323,7 @@ export class TransformProperty extends BaseProperty {
 
         if (this.p?.keyframes) {
           if (
-            Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) <=
+            Number(this.p._caching?.lastFrame) + this.p.offsetTime <=
             (this.p.keyframes[0]?.t ?? 0)
           ) {
             v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
@@ -331,7 +331,7 @@ export class TransformProperty extends BaseProperty {
             v2 = this.p.getValueAtTime(Number(this.p.keyframes[0]?.t) / frameRate,
               0) as Vector2
           } else if (
-            Number(this.p._caching?.lastFrame) + Number(this.p.offsetTime) >=
+            Number(this.p._caching?.lastFrame) + this.p.offsetTime >=
             (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
           ) {
             v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) / frameRate,
@@ -342,10 +342,10 @@ export class TransformProperty extends BaseProperty {
           } else {
             v1 = this.p.pv as Vector2
             v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
-              Number(this.p.offsetTime) -
+              this.p.offsetTime -
               0.01) /
               frameRate,
-            Number(this.p.offsetTime)) as Vector2
+            this.p.offsetTime) as Vector2
           }
         } else if (this.px?.keyframes && this.py?.keyframes) {
           v1 = [0, 0]
@@ -355,7 +355,7 @@ export class TransformProperty extends BaseProperty {
             { keyframes: pyKeyframes = [] } = py
 
           if (
-            Number(px._caching?.lastFrame) + Number(px.offsetTime) <=
+            Number(px._caching?.lastFrame) + px.offsetTime <=
             (pxKeyframes[0]?.t ?? 0)
           ) {
             v1[0] = px.getValueAtTime(((pxKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
@@ -461,7 +461,7 @@ export class TransformProperty extends BaseProperty {
     }
     if (this.r) {
       if (this.r.effectsSequence.length === 0) {
-        this.pre.rotate(-Number(this.r.v))
+        this.pre.rotate(-this.r.v)
         this.appliedTransformations = 4
       }
 

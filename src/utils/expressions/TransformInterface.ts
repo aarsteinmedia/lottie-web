@@ -1,4 +1,4 @@
-import type { TransformProperty } from '@/utils/TransformProperty'
+import type { TransformProperty } from '@/utils/properties/TransformProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 

@@ -124,8 +124,8 @@ export default class StarShapeProperty extends ShapeBaseProperty {
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y)
       const oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
 
-      x += Number(this.p.v[0])
-      y += Number(this.p.v[1])
+      x += this.p.v[0]
+      y += this.p.v[1]
       this.v?.setTripleAt(
         x,
         y,

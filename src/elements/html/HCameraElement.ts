@@ -9,8 +9,8 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
+import type { TransformProperty } from '@/utils/properties/TransformProperty'
 import type ValueProperty from '@/utils/properties/ValueProperty'
-import type { TransformProperty } from '@/utils/TransformProperty'
 
 import FrameElement from '@/elements/helpers/FrameElement'
 import { degToRads } from '@/utils/helpers/constants'

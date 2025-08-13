@@ -166,12 +166,14 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
       return
     }
 
-    const offsetTime = Number(this.offsetTime),
-      frameNum = Number(this.comp?.renderedFrame) - offsetTime,
-      initTime = (this.keyframes[0]?.t ?? 0) - offsetTime,
-      length = this.keyframes.length - 1,
-      endTime = (this.keyframes[length]?.t ?? 0) - offsetTime,
-      lastFrame = Number(this._caching.lastFrame)
+    const {
+        _caching, comp, keyframes, offsetTime
+      } = this,
+      frameNum = Number(comp?.renderedFrame) - offsetTime,
+      initTime = (keyframes[0]?.t ?? 0) - offsetTime,
+      length = keyframes.length - 1,
+      endTime = (keyframes[length]?.t ?? 0) - offsetTime,
+      { lastFrame } = _caching
 
     if (
       !(
@@ -182,16 +184,18 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
       )
     ) {
       if (lastFrame >= frameNum) {
-        this._caching._lastKeyframeIndex = -1
-        this._caching.lastIndex = 0
+        _caching._lastKeyframeIndex = -1
+        _caching.lastIndex = 0
       }
 
-      const renderResult = this.interpolateValue(frameNum, this._caching)
+      // const renderResult = this.interpolateValue(frameNum, _caching)
 
-      this.pv = renderResult
+      this.pv = this.interpolateValue(frameNum, _caching)
+
     }
-    this._caching.lastFrame = frameNum
+    _caching.lastFrame = frameNum
 
+    // eslint-disable-next-line unicorn/consistent-destructuring
     return this.pv
   }
 
@@ -210,14 +214,14 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
   }
 
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
-    const offsetTime = Number(this.offsetTime)
+    const { offsetTime, pv } = this
     let newValue: Vector3 | ShapePath = [0,
       0,
       0]
 
-    if (this.propType === PropType.MultiDimensional && this.pv) {
+    if (this.propType === PropType.MultiDimensional && pv) {
       newValue = createTypedArray(ArrayType.Float32,
-        (this.pv as number[]).length) as Vector3
+        (pv as number[]).length) as Vector3
     }
     const {
       keyframes = [], keyframesMetadata, propType
@@ -296,13 +300,13 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
 
         let segmentPerc,
           addedLength =
-            Number(caching.lastFrame) < frameNum &&
+            caching.lastFrame < frameNum &&
             caching._lastKeyframeIndex === i
               ? caching._lastAddedLength
               : 0
 
         j =
-          Number(caching.lastFrame) < frameNum &&
+          caching.lastFrame < frameNum &&
           caching._lastKeyframeIndex === i
             ? caching._lastPoint
             : 0
