@@ -1,4 +1,4 @@
-import type { TransformProperty } from '../../utils/TransformProperty';
+import type { TransformProperty } from '../../utils/properties/TransformProperty';
 export default class TransformExpressionInterface {
     transform: TransformProperty;
     get anchorPoint(): (() => {

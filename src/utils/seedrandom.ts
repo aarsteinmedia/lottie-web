@@ -32,19 +32,33 @@ function copy(f, t) {
   return t
 }
 
-function flatten(obj, depth) {
-  let result = [], typ = typeof obj, prop
+function flatten(obj: unknown, depth = 0): string[] {
+  const result = [],
+    typ = typeof obj
 
-  if (depth && typ == 'object') {
-    for (prop in obj) {
-      try { result.push(flatten(obj[prop], depth - 1)) } catch (error) { }
+  if (depth && typ === 'object') {
+
+    const keys = Object.keys(obj),
+      { length } = keys
+
+    for (let i = 0; i < length; i++) {
+      try {
+        result.push(flatten(obj[keys[i]]), depth - 1)
+      } catch (error) {
+        //
+      }
     }
   }
 
-  return result.length > 0 ? result : typ == 'string' ? obj : `${obj}\0`
+  if (result.length > 0) {
+    return result
+  }
+
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  return typ === 'string' ? obj : `${obj}\0`
 }
 
-function tostring(a) {
+function tostring(a: number) {
   return String.fromCharCode.apply(0, a)
 }
 

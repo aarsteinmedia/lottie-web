@@ -94,7 +94,7 @@ export default class AnimationItem extends BaseEvent {
     setParams(params: AnimationConfiguration): void;
     setSegment(init: number, end: number): void;
     setSpeed(val: number, name?: string): void;
-    setSubframe(flag: boolean): void;
+    setSubframe(flag?: boolean): void;
     setupAnimation(data: AnimationData): void;
     setVolume(val: number, name?: string): void;
     show(): void;

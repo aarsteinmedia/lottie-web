@@ -54,6 +54,7 @@ import type Matrix from './utils/Matrix';
 import type PolynomialBezier from './utils/PolynomialBezier';
 import type BaseProperty from './utils/properties/BaseProperty';
 import type MultiDimensionalProperty from './utils/properties/MultiDimensionalProperty';
+import type { TransformProperty } from './utils/properties/TransformProperty';
 import type ValueProperty from './utils/properties/ValueProperty';
 import type DashProperty from './utils/shapes/properties/DashProperty';
 import type EllShapeProperty from './utils/shapes/properties/EllShapeProperty';
@@ -66,7 +67,6 @@ import type { SlotManager } from './utils/SlotManager';
 import type LetterProps from './utils/text/LetterProps';
 import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
 import type TextProperty from './utils/text/TextProperty';
-import type { TransformProperty } from './utils/TransformProperty';
 export type AnimationDirection = 1 | -1;
 export type AnimationEventName = 'drawnFrame' | 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images' | '_play' | '_pause' | '_idle' | '_active' | 'configError' | 'renderFrameError';
 export interface SVGGeometry {
