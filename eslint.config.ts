@@ -1,5 +1,6 @@
 import type { ConfigArray } from 'typescript-eslint'
 
+// import { defineConfig } from 'eslint/config'
 import {
   sheriff, type SheriffSettings, tseslint
 } from 'eslint-config-sheriff'
