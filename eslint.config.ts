@@ -1,10 +1,10 @@
 import type { ConfigArray } from 'typescript-eslint'
 
-// import { defineConfig } from 'eslint/config'
 import {
   sheriff, type SheriffSettings, tseslint
 } from 'eslint-config-sheriff'
 import perfectionist from 'eslint-plugin-perfectionist'
+import { defineConfig } from 'eslint/config'
 
 const sheriffOptions: SheriffSettings = {
   'astro': false,
@@ -25,7 +25,8 @@ const ignores = [
     'player.js',
     'player-light.js',
   ],
-  config: ConfigArray = tseslint.config(
+  config: ConfigArray = defineConfig(
+    // @ts-expect-error types not working correctly
     sheriff(sheriffOptions),
     {
       files: ['**/*.{ts,js}'],

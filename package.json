@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.1.10",
+  "version": "1.2.0",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -11,6 +11,14 @@
     "./light": {
       "default": "./dist/lottie-light.js",
       "types": "./dist/lottie-light.d.ts"
+    },
+    "./svg": {
+      "default": "./dist/lottie-svg.js",
+      "types": "./dist/lottie-svg.d.ts"
+    },
+    "./canvas": {
+      "default": "./dist/lottie-canvas.js",
+      "types": "./dist/lottie-canvas.d.ts"
     },
     "./utils": {
       "default": "./dist/lottie-utils.js",
@@ -52,7 +60,7 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.4",
     "@swc/core": "^1.13.5",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.3.1",
     "eslint": "^9.34.0",
     "eslint-config-sheriff": "^28.1.0",
     "eslint-plugin-perfectionist": "^4.15.0",

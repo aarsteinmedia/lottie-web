@@ -67,6 +67,18 @@ const isProd = process.env.NODE_ENV !== 'development',
     },
     {
       file: resolve(
+        __dirname, 'src', 'LottieSVG.ts'
+      ),
+      name: 'lottie-svg',
+    },
+    {
+      file: resolve(
+        __dirname, 'src', 'LottieCanvas.ts'
+      ),
+      name: 'lottie-canvas',
+    },
+    {
+      file: resolve(
         __dirname, 'src', 'LottieUtils.ts'
       ),
       name: 'lottie-utils',
