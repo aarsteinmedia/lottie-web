@@ -418,7 +418,7 @@ export default class AnimationItem extends BaseEvent {
   public gotoFrame() {
     this.currentFrame = this.isSubframeEnabled
       ? this.currentRawFrame
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
+
       : ~~this.currentRawFrame
 
     if (
