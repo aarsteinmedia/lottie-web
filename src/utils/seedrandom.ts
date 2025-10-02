@@ -24,7 +24,14 @@ import type { BMMath as BMMathType } from '@/types'
 
  */
 
-function copy(f, t) {
+interface ARC4Key {
+  g: (count: number) => number
+  i: number
+  j: unknown
+  S: unknown[]
+}
+
+function copy(f: ARC4Key, t: ARC4Key) {
   t.i = f.i
   t.j = f.j
   t.S = [...f.S]
@@ -62,14 +69,14 @@ function tostring(a: number) {
   return String.fromCharCode.apply(0, a)
 }
 
-function seedRandom(pool, math: Math) {
+function seedRandom(pool: number, math: Math) {
 //
 // The following constants are related to IEEE 754 limits.
 //
   /**
-     * Node.js crypto module, initialized at the bottom.
-     */
-  let global = this,
+   * Node.js crypto module, initialized at the bottom.
+   */
+  const global = this,
     width = 256,
     chunks = 6,
     digits = 52,
@@ -77,21 +84,32 @@ function seedRandom(pool, math: Math) {
     startdenom = math.pow(width, chunks),
     significance = math.pow(2, digits),
     overflow = significance * 2,
-    mask = width - 1,
-    nodecrypto
+    mask = width - 1
+  let nodecrypto
 
 
   function seedrandom(
-    seed, optionsFromProps, callback
+    seed: string | null,
+    optionsFromProps?: {
+      entropy: boolean;
+      pass: boolean
+    },
+    callback?: () => void
   ) {
     let options = optionsFromProps
-    const key = []
+    const key: number[] = []
 
-    options = options === true ? { entropy: true } : options || {}
+    options = options === true ? { entropy: true } : options ?? {}
 
     // Flatten the seed string or build one from local entropy if needed.
-    const shortseed = mixkey(flatten(options.entropy ? [seed, tostring(pool)] :
-      seed === null ? autoseed() : seed, 3), key)
+    let toFlatten: string | string[]
+
+    if (options.entropy) {
+      toFlatten = [seed, tostring(pool)]
+    } else {
+      toFlatten = seed ?? autoseed()
+    }
+    const shortseed = mixkey(flatten(toFlatten, 3), key)
 
     // Use the seed to initialize an ARC4 generator.
     const arc4 = new ARC4(key)
@@ -119,8 +137,8 @@ function seedRandom(pool, math: Math) {
       return (n + x) / d // Form the number within [0, 1).
     }
 
-    prng.int32 = function() { return arc4.g(4) | 0 }
-    prng.quick = function() { return arc4.g(4) / 0x100000000 }
+    prng.int32 = () => arc4.g(4) | 0
+    prng.quick = () => arc4.g(4) / 0x100000000
     prng.double = prng
 
     // Mix the randomness into accumulated entropy.
@@ -131,7 +149,7 @@ function seedRandom(pool, math: Math) {
      */
     return (options.pass || callback ||
       function(
-        prng, seed, is_math_call, state
+        prng, seed: string, is_math_call: boolean, state: ARC4Key
       ) {
         if (state) {
           // Load the arc4 state from the given state if it has an S array.
@@ -139,7 +157,7 @@ function seedRandom(pool, math: Math) {
           /**
            * Only provide the .state method if requested via options.state.
            */
-          prng.state = function() { return copy(arc4, {}) }
+          prng.state = () => copy(arc4, {})
         }
 
         // If called as a method of Math (Math.seedrandom()), mutate
@@ -170,12 +188,24 @@ function seedRandom(pool, math: Math) {
   // the next (count) outputs from ARC4.  Its return value is a number x
   // that is in the range 0 <= x < (width ^ count).
 
-  function ARC4(key): number {
-    let t, keylen = key.length,
-      me = this, i = 0, j = me.i = me.j = 0, s = me.S = []
+  function ARC4(this: ARC4Key, keyFromProps: number[]): number {
+    let key = keyFromProps,
+      t,
+      keylen = key.length,
+      me = this,
+      i = 0,
+      j = 0
+
+    const s = []
+
+    me.i = 0
+    me.j = 0
+    me.S = []
 
     // The empty key [] is treated as [0].
-    if (!keylen) { key = [keylen++] }
+    if (!keylen) {
+      key = [keylen++]
+    }
 
     // Set up S using the standard key scheduling algorithm.
     while (i < width) {
@@ -189,9 +219,11 @@ function seedRandom(pool, math: Math) {
     /**
      * The "g" method returns the next (count) outputs as one number.
      */
-    me.g = function(count) {
+    me.g = function(countFromProps: number) {
       // Using instance members instead of closure state nearly doubles speed.
-      let t, r = 0,
+      let count = countFromProps,
+        t,
+        r = 0,
         { i } = me, { j } = me, s = me.S
 
       while (count--) {
@@ -208,8 +240,10 @@ function seedRandom(pool, math: Math) {
   }
 
 
-  function mixkey(seed, key) {
-    let stringseed = `${seed }`, smear, j = 0
+  function mixkey(seed: number, key) {
+    let stringseed = `${seed}`,
+      smear,
+      j = 0
 
     while (j < stringseed.length) {
       key[mask & j] =
@@ -221,7 +255,9 @@ function seedRandom(pool, math: Math) {
 
   function autoseed() {
     try {
-      if (nodecrypto) { return tostring(nodecrypto.randomBytes(width)) }
+      if (nodecrypto) {
+        return tostring(nodecrypto.randomBytes(width))
+      }
       const out = new Uint8Array(width);
 
       (global.crypto || global.msCrypto).getRandomValues(out)
@@ -254,7 +290,7 @@ function seedRandom(pool, math: Math) {
   //
 
 // End anonymous scope, and pass initial values.
-};
+}
 
 function initialize(BMMath: BMMathType) {
   seedRandom([], BMMath)
