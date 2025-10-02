@@ -112,7 +112,7 @@ function seedRandom(pool: number, math: Math) {
     const shortseed = mixkey(flatten(toFlatten, 3), key)
 
     // Use the seed to initialize an ARC4 generator.
-    const arc4 = new ARC4(key)
+    const arc4: ARC4Key = new ARC4(key)
 
 
     const prng = function() {
@@ -212,7 +212,7 @@ function seedRandom(pool: number, math: Math) {
       s[i] = i++
     }
     for (i = 0; i < width; i++) {
-      s[i] = s[j = mask & j + key[i % keylen] + (t = s[i])]
+      s[i] = s[j = mask & j + (key[i % keylen] ?? 0) + (t = s[i] ?? 0)]
       s[j] = t
     }
 
@@ -224,11 +224,13 @@ function seedRandom(pool: number, math: Math) {
       let count = countFromProps,
         t,
         r = 0,
-        { i } = me, { j } = me, s = me.S
+        {
+          i, j, S
+        } = me
 
       while (count--) {
-        t = s[i = mask & i + 1]
-        r = r * width + s[mask & (s[i] = s[j = mask & j + t]) + (s[j] = t)]
+        t = S[i = mask & i + 1]
+        r = r * width + S[mask & (S[i] = S[j = mask & j + t]) + (S[j] = t)]
       }
       me.i = i; me.j = j
 
