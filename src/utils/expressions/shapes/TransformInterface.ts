@@ -53,10 +53,10 @@ export default class TransformInterface extends BaseInterface {
     if (this.shape?.s?.ix === value || value === 'Scale') {
       return this.scale
     }
-    if (this.shape?.sk && this.shape.sk.ix === value || value === 'Skew') {
+    if (this.shape?.sk?.ix === value || value === 'Skew') {
       return this.skew
     }
-    if (this.shape?.sa && this.shape.sa.ix === value || value === 'Skew Axis') {
+    if (this.shape?.sa?.ix === value || value === 'Skew Axis') {
       return this.skewAxis
     }
 

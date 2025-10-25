@@ -1,12 +1,14 @@
 import type GroupEffect from '@/effects/GroupEffect'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
-const registeredEffects: {
+interface RegisteredEffects {
   [id: string]: {
     countsAsEffect?: boolean
     effect: EffectElement
   } | undefined
-} = {}
+}
+
+const registeredEffects: RegisteredEffects = {}
 
 export default class CVEffects {
   filters: GroupEffect[]
@@ -45,7 +47,7 @@ export default class CVEffects {
     for (let i = 0; i < length; i++) {
       const filter = this.filters[i]
 
-      if (!filter || filter.type !== type) {
+      if (filter?.type !== type) {
         continue
       }
 

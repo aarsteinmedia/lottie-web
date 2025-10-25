@@ -8,6 +8,13 @@ import DataFunctions from '@/utils/DataFunctions'
 import { isServer } from '@/utils/helpers/constants'
 import { getWebWorker } from '@/utils/helpers/worker'
 
+interface Message { data: string }
+interface MessageData {
+  id: string
+  payload?: unknown
+  status: string
+}
+
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void
 
@@ -25,7 +32,7 @@ const funcitonNotImplemented = 'Function not implemented.',
       throw new Error(funcitonNotImplemented)
     },
     onerror: null,
-    onmessage: (_: { data: string }) => {
+    onmessage: (_: Message) => {
       throw new Error('workerProxy: Method onmessage not implemented')
     },
     onmessageerror: null,
@@ -45,17 +52,9 @@ const funcitonNotImplemented = 'Function not implemented.',
   },
   _workerSelf: {
     dataManager?: typeof DataFunctions
-    postMessage: (data: {
-      id: string
-      payload?: unknown
-      status: string
-    }) => void
+    postMessage: (data: MessageData) => void
   } = {
-    postMessage: (data: {
-      id: string;
-      payload?: unknown;
-      status: string
-    }) => {
+    postMessage: (data: MessageData) => {
       if (!workerProxy.onmessage) {
         return
       }

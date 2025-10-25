@@ -10,6 +10,8 @@ import { getDefaultCurveSegments } from '@/utils/helpers/resolution'
 import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
 import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
 
+interface StoredData { [key: string]: BezierData | undefined }
+
 const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8)
 
 export function buildBezierData(
@@ -18,7 +20,7 @@ export function buildBezierData(
   pt3: Vector2,
   pt4: Vector2
 ) {
-  const storedData: { [key: string]: BezierData | undefined } = {},
+  const storedData: StoredData = {},
     bezierName = `${pt1[0]}_${pt1[1]}_${pt2[0]}_${pt2[1]}_${pt3[0]}_${pt3[1]
     }_${pt4[0]}_${pt4[1]}`.replaceAll('.', 'p')
 

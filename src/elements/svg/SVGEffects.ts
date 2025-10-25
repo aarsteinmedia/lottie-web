@@ -8,13 +8,15 @@ import { createElementID } from '@/utils'
 import FiltersFactory from '@/utils/FiltersFactory'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 
+interface RegisteredEffects {
+  [id: string]: {
+    countsAsEffect?: boolean
+    effect: EffectElement
+  } | undefined
+}
+
 const idPrefix = 'filter_result_',
-  registeredEffects: {
-    [id: string]: {
-      countsAsEffect?: boolean
-      effect: EffectElement
-    } | undefined
-  } = {}
+  registeredEffects: RegisteredEffects = {}
 
 export default class SVGEffects {
   filters: GroupEffect[]

@@ -10,15 +10,17 @@ import { RendererType } from '@/utils/enums'
 import { isServer } from '@/utils/helpers/constants'
 import createTag from '@/utils/helpers/htmlElements'
 
+interface RegisteredAnimation {
+  animation: AnimationItem
+  elem: HTMLElement | null
+}
+
 let _isFrozen = false,
   _isStopped = true,
   initTime = 0,
   len = 0,
   playingAnimationsNum = 0
-const registeredAnimations: {
-  animation: AnimationItem
-  elem: HTMLElement | null
-}[] = []
+const registeredAnimations: RegisteredAnimation[] = []
 
 export function destroy(animation?: string) {
   for (let i = len - 1; i >= 0; i--) {

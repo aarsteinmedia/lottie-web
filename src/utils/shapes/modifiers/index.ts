@@ -21,7 +21,9 @@ type Modifier =
   | typeof OffsetPathModifier
   | typeof MouseModifier
 
-const Modifiers: { [key: string]: Modifier | undefined } = {}
+interface Modifiers {[key: string]: Modifier | undefined}
+
+const Modifiers: Modifiers = {}
 
 
 export function getModifier<T extends ShapeModifierInterface>(

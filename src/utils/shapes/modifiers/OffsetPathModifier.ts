@@ -19,6 +19,8 @@ import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
 
+interface Segment { points: Vector2[] }
+
 const crossProduct = (a: number[], b: number[]) => [
     a[1] ?? 0 * (b[2] ?? 0) - (a[2] ?? 0) * (b[1] ?? 0),
     a[2] ?? 0 * (b[0] ?? 0) - (a[0] ?? 0) * (b[2] ?? 0),
@@ -160,7 +162,7 @@ const crossProduct = (a: number[], b: number[]) => [
     return p0
   },
 
-  offsetSegment = (segment: { points: Vector2[] }, amount: number) => {
+  offsetSegment = (segment: Segment, amount: number) => {
     let e: Vector2[]
 
     e = linearOffset(
