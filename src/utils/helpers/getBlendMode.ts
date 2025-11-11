@@ -1,5 +1,7 @@
+interface BlendModeEnums { [key: number]: string }
+
 export default function getBlendMode(mode = 16) {
-  const blendModeEnums: { [key: number]: string } = {
+  const blendModeEnums: BlendModeEnums = {
     0: 'source-over',
     1: 'multiply',
     10: 'difference',

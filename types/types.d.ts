@@ -316,7 +316,7 @@ export interface AnimationConfiguration<T extends RendererType = RendererType.Ca
     autoplay?: boolean;
     container?: HTMLElement;
     initialSegment?: Vector2;
-    loop?: Loop;
+    loop?: HTMLBooleanAttribute;
     name?: string;
     path?: string;
     prerender?: boolean;
@@ -478,10 +478,11 @@ export interface LottieAsset {
     w?: number;
     xt?: number;
 }
+export type HTMLBooleanAttribute = boolean | string | number | null;
 export interface AnimationSettings {
-    autoplay?: Autoplay;
+    autoplay?: HTMLBooleanAttribute;
     direction?: AnimationDirection;
-    loop?: Loop;
+    loop?: HTMLBooleanAttribute;
     mode?: PlayMode;
     speed?: number;
 }
@@ -500,8 +501,6 @@ export interface LottieManifest {
     keywords?: string;
     version?: string;
 }
-type Autoplay = boolean | '' | 'autoplay' | null;
-type Loop = boolean | '' | 'loop' | null | number;
 type Vector1 = number;
 export type Vector2 = [number, number];
 export type Vector3 = [number, number, number];
@@ -1136,6 +1135,11 @@ export interface Result {
     error?: string;
     result?: null | string | ArrayBuffer;
     success: boolean;
+}
+export interface Cartesian3D {
+    x: number;
+    y: number;
+    z: number;
 }
 declare global {
     interface Document {

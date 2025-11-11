@@ -1,5 +1,10 @@
 import type { Constructor } from '@/types'
 
+interface PrototypeProps {
+  name: string
+  prop: string
+}
+
 export const extendPrototype = (sources: Constructor[], destination: Constructor) => {
     const { length } = sources
     let sourcePrototype: Record<string, unknown>
@@ -24,10 +29,7 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
     return Object.getOwnPropertyDescriptor(object, prop)
   },
   logPrototype = (sources: Constructor[], destination?: Constructor) => {
-    const combinedPrototypes: {
-        name: string
-        prop: string
-      }[] = [],
+    const combinedPrototypes: PrototypeProps[] = [],
       { length } = sources
 
     let sourcePrototype: Record<string, unknown>

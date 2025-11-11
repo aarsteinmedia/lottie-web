@@ -30,4 +30,4 @@ declare const Lottie: {
 export { loadAnimation };
 export default Lottie;
 export { type default as AnimationItem } from './animation/AnimationItem';
-export type { AddAnimationParams, AnimationConfiguration, AnimationData, AnimationDirection, Vector2 as AnimationSegment, AnimationSettings, ConvertParams, LottieAnimation, LottieAsset, LottieManifest, Result, Vector2 } from './types';
+export type { AddAnimationParams, AnimationConfiguration, AnimationData, AnimationDirection, Vector2 as AnimationSegment, AnimationSettings, ConvertParams, HTMLBooleanAttribute, LottieAnimation, LottieAsset, LottieManifest, Result, Vector2 } from './types';

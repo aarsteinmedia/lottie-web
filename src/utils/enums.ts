@@ -86,12 +86,15 @@ export enum PropType {
   UniDimensional = 'unidimensional'
 }
 
-export const lineCapEnum: { [key: number]: CanvasLineCap } = {
+interface LineCapEnum { [key: number]: CanvasLineCap }
+interface LineJoinEnum { [key: number]: CanvasLineJoin }
+
+export const lineCapEnum: LineCapEnum = {
     1: 'butt',
     2: 'round',
     3: 'square',
   },
-  lineJoinEnum: { [key: number]: CanvasLineJoin } = {
+  lineJoinEnum: LineJoinEnum = {
     1: 'miter',
     2: 'round',
     3: 'bevel',

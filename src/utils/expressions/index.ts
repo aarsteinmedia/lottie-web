@@ -1,10 +1,12 @@
 import type Expressions from '@/utils/expressions/Expressions'
 import type getInterface from '@/utils/expressions/InterfacesProvider'
 
-const expressions: {
+interface Expression {
   interface: null | typeof getInterface
   plugin: null | typeof Expressions
-} = {
+}
+
+const expressions: Expression = {
   interface: null,
   plugin: null
 }

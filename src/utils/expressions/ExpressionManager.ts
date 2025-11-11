@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/consistent-destructuring */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
+  Cartesian3D,
   ElementInterfaceIntersect, ExpressionProperty, ExpressionReturn, Shape, Vector2,
   Vector3,
   Vector4,
@@ -325,21 +326,9 @@ function initiateExpression(
     name = nm
   let
     anchorPoint: null | ((type: string, duration: number, flag?: boolean) => void) = null,
-    fromComp: null | ((arr: number[]) => {
-      x: number
-      y: number
-      z: number
-    }) = null,
-    fromCompToSurface: null | ((arr: number[]) => {
-      x: number
-      y: number
-      z: number
-    }) = null,
-    fromWorld: null | ((arr: number[], time: number) => {
-      x: number
-      y: number
-      z: number
-    }) = null,
+    fromComp: null | ((arr: number[]) => Cartesian3D) = null,
+    fromCompToSurface: null | ((arr: number[]) => Cartesian3D) = null,
+    fromWorld: null | ((arr: number[], time: number) => Cartesian3D) = null,
     loopIn: (type: string, duration: number, wrap?: boolean) => void,
     loop_in: null | ((type: string, duration: number, wrap?: boolean) => void) = null,
     loopOut: (type: string, duration: number, wrap?: boolean) => void,
@@ -360,7 +349,9 @@ function initiateExpression(
 
     scoped_bm_rt = noOp
 
-  const obj: { scoped_bm_rt?: ExpressionReturn } = {},
+  interface ScopedBodymovinReturn { scoped_bm_rt?: ExpressionReturn }
+
+  const obj: ScopedBodymovinReturn = {},
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     expression_function = new Function(
       '_lottieGlobal',
@@ -594,6 +585,12 @@ function initiateExpression(
     }
   }
 
+  interface ObjectKey {
+    [val: number]: number | ShapePath | undefined
+    time?: number
+    value: (number | ShapePath | undefined)[]
+  }
+
   function key(indFormProps: number) {
     let ind = indFormProps
 
@@ -601,11 +598,7 @@ function initiateExpression(
       throw new Error(`The property has no keyframe at index ${ind}`)
     }
     ind -= 1
-    const obKey: {
-      time?: number
-      value: (number | ShapePath | undefined)[]
-      [val: number]: number | ShapePath | undefined
-    } = {
+    const obKey: ObjectKey = {
       time: (data.k[ind]?.t ?? 0) / frameRate,
       value: [],
     }

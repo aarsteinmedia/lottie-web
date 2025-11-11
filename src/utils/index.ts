@@ -7,6 +7,11 @@ import type ShapePath from '@/utils/shapes/ShapePath'
 
 import { getIDPrefix } from '@/utils/helpers/prefix'
 
+interface DownloadOptions {
+  mimeType: string
+  name: string
+}
+
 const hasExt = (path?: string) => {
   const lastDotIndex = path?.split('/').pop()?.lastIndexOf('.')
 
@@ -56,10 +61,7 @@ export const floatEqual = (a: number, b: number) =>
    * Download file, either SVG or dotLottie.
    */
   download = (data: string | ArrayBuffer,
-    options?: {
-      name: string
-      mimeType: string
-    }) => {
+    options?: DownloadOptions) => {
     const blob = new Blob([data], { type: options?.mimeType }),
       fileName = options?.name || createElementID(),
       dataURL = URL.createObjectURL(blob),

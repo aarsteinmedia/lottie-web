@@ -1,7 +1,9 @@
 import type { AnimationData, LottieManifest } from '../../types';
-export default function createDotLottie({ animations, fileName, manifest, shouldDownload, }: {
+interface CreateDotLottieProps {
     animations?: AnimationData[];
-    manifest?: LottieManifest;
     fileName?: string;
+    manifest?: LottieManifest;
     shouldDownload?: boolean;
-}): Promise<ArrayBuffer | null>;
+}
+export default function createDotLottie({ animations, fileName, manifest, shouldDownload, }: CreateDotLottieProps): Promise<ArrayBuffer | null>;
+export {};

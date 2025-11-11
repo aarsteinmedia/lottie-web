@@ -4,15 +4,17 @@ import {
   addExt, createElementID, download
 } from '@/utils'
 
+interface CreateJSONProps {
+  animation?: AnimationData
+  fileName?: string
+  shouldDownload?: boolean
+}
+
 export default function createJSON({
   animation,
   fileName,
   shouldDownload,
-}: {
-  animation?: AnimationData
-  fileName?: string
-  shouldDownload?: boolean
-}) {
+}: CreateJSONProps) {
   try {
     if (!animation) {
       throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'')

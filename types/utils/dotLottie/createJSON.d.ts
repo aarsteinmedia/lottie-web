@@ -1,6 +1,8 @@
 import type { AnimationData } from '../../types';
-export default function createJSON({ animation, fileName, shouldDownload, }: {
+interface CreateJSONProps {
     animation?: AnimationData;
     fileName?: string;
     shouldDownload?: boolean;
-}): string | null;
+}
+export default function createJSON({ animation, fileName, shouldDownload, }: CreateJSONProps): string | null;
+export {};

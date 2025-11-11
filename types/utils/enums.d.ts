@@ -77,8 +77,11 @@ export declare enum PropType {
     Transform = "transform",
     UniDimensional = "unidimensional"
 }
-export declare const lineCapEnum: {
+interface LineCapEnum {
     [key: number]: CanvasLineCap;
-}, lineJoinEnum: {
+}
+interface LineJoinEnum {
     [key: number]: CanvasLineJoin;
-};
+}
+export declare const lineCapEnum: LineCapEnum, lineJoinEnum: LineJoinEnum;
+export {};

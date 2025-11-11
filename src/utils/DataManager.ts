@@ -14,6 +14,16 @@ interface MessageData {
   payload?: unknown
   status: string
 }
+interface Processes {
+  [key: string]: {
+    onComplete: (data: AnimationData) => void
+    onError?: (error?: unknown) => void
+  }
+}
+interface WorkerSelf {
+  dataManager?: typeof DataFunctions
+  postMessage: (data: MessageData) => void
+}
 
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void
@@ -50,10 +60,7 @@ const funcitonNotImplemented = 'Function not implemented.',
       throw new Error(funcitonNotImplemented)
     },
   },
-  _workerSelf: {
-    dataManager?: typeof DataFunctions
-    postMessage: (data: MessageData) => void
-  } = {
+  _workerSelf: WorkerSelf = {
     postMessage: (data: MessageData) => {
       if (!workerProxy.onmessage) {
         return
@@ -115,12 +122,7 @@ const funcitonNotImplemented = 'Function not implemented.',
       })
     },
   },
-  processes: {
-    [key: string]: {
-      onComplete: (data: AnimationData) => void
-      onError?: (error?: unknown) => void
-    }
-  } = {}
+  processes: Processes = {}
 let workerInstance: Worker | undefined
 
 function createWorker(fn: (e: WorkerEvent) => unknown): Worker {

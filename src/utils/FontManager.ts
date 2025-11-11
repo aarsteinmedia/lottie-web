@@ -140,12 +140,14 @@ function getCodePoint(string: string): number {
   return codePoint
 }
 
+interface NodeSetup {
+  node: HTMLElement;
+  parent: HTMLElement;
+  w: number
+}
+
 function setUpNode(font: string,
-  family: string): {
-    node: HTMLElement;
-    parent: HTMLElement;
-    w: number
-  } | undefined {
+  family: string): NodeSetup | undefined {
   if (isServer) {
     return
   }

@@ -171,6 +171,7 @@ export type {
   Vector2 as AnimationSegment,
   AnimationSettings,
   ConvertParams,
+  HTMLBooleanAttribute,
   LottieAnimation,
   LottieAsset,
   LottieManifest,
