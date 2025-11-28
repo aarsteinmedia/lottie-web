@@ -59,18 +59,18 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@swc/core": "^1.15.1",
-    "@types/node": "^24.10.0",
+    "@swc/core": "^1.15.3",
+    "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
     "eslint-config-sheriff": "^31.0.0",
     "eslint-plugin-perfectionist": "^4.15.1",
     "fflate": "^0.8.2",
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
-    "prettier": "^3.6.2",
-    "rimraf": "^6.1.0",
-    "rollup": "^4.53.2",
-    "rollup-plugin-dts": "^6.2.3",
+    "prettier": "^3.7.1",
+    "rimraf": "^6.1.2",
+    "rollup": "^4.53.3",
+    "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-opener": "^0.1.5",
     "rollup-plugin-sourcemaps": "^0.6.3",
@@ -80,7 +80,7 @@
     "tsc-alias": "^1.8.16",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.48.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
