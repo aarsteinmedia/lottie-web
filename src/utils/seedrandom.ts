@@ -1,4 +1,6 @@
 //@ts-nocheck eslint-disable
+import type NodeCrypto from 'node:crypto'
+
 import type { BMMath as BMMathType } from '@/types'
 /*
  Copyright 2014 David Bau.
@@ -29,6 +31,11 @@ interface ARC4Key {
   i: number
   j: unknown
   S: unknown[]
+}
+
+interface SeedRandomOptions {
+  entropy: boolean;
+  pass: boolean
 }
 
 function copy(f: ARC4Key, t: ARC4Key) {
@@ -65,11 +72,11 @@ function flatten(obj: unknown, depth = 0): string[] {
   return typ === 'string' ? obj : `${obj}\0`
 }
 
-function tostring(a: number) {
+function tostring(a: Buffer | Uint8Array) {
   return String.fromCharCode.apply(0, a)
 }
 
-function seedRandom(pool: number, math: Math) {
+function seedRandom(pool: number[], math: Math) {
 //
 // The following constants are related to IEEE 754 limits.
 //
@@ -85,15 +92,12 @@ function seedRandom(pool: number, math: Math) {
     significance = math.pow(2, digits),
     overflow = significance * 2,
     mask = width - 1
-  let nodecrypto
+  let nodecrypto: undefined | typeof NodeCrypto
 
 
   function seedrandom(
     seed: string | null,
-    optionsFromProps?: {
-      entropy: boolean;
-      pass: boolean
-    },
+    optionsFromProps?: SeedRandomOptions | boolean,
     callback?: () => void
   ) {
     let options = optionsFromProps
@@ -242,9 +246,9 @@ function seedRandom(pool: number, math: Math) {
   }
 
 
-  function mixkey(seed: number, key) {
-    let stringseed = `${seed}`,
-      smear,
+  function mixkey(seed: number, key: Buffer) {
+    const stringseed = `${seed}`
+    let smear,
       j = 0
 
     while (j < stringseed.length) {

@@ -90,7 +90,7 @@ export default class TrimModifier extends ShapeModifier {
     shapePathFromProps?: ShapePath
   ) {
     let shapePath = shapePathFromProps
-    const { pathsData = [], shape } = shapeData,
+    const { pathsData, shape } = shapeData,
       shapePaths = (shape?.paths as ShapeCollection | undefined)?.shapes ?? [],
       len = (shape?.paths as ShapeCollection | undefined)?._length || 0
     let j,
