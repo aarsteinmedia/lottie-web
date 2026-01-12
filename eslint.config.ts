@@ -26,7 +26,6 @@ const ignores = [
     'player-light.js',
   ],
   config: ConfigArray = defineConfig(
-    // @ts-expect-error types not working correctly
     sheriff(sheriffOptions),
     {
       files: ['**/*.{ts,js}'],

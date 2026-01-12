@@ -52,8 +52,7 @@ export default class RoundCornersModifier extends ShapeModifier {
       currentO = path.o[i] as Vector2
       currentI = path.i[i] as Vector2
       if (
-        currentV &&
-        currentV[0] === currentO[0] &&
+        currentV?.[0] === currentO[0] &&
         currentV[1] === currentO[1] &&
         currentV[0] === currentI[0] &&
         currentV[1] === currentI[1]
