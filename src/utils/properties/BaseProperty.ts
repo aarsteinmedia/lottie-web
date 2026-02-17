@@ -122,12 +122,12 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   _isFirstFrame?: boolean
   _name?: string
   _placeholder?: boolean
-  comp?: CompElementInterface
+  comp?: undefined | CompElementInterface
   e?: ValueProperty | { v: number }
   effectsSequence: EffectFunction[] = []
   elem?: ElementInterfaceIntersect
   frameExpressionId?: number
-  frameId?: number
+  frameId?: undefined | number
   g?: unknown
   initFrame = initialDefaultFrame
   k?: boolean

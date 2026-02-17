@@ -162,7 +162,7 @@ export { loadAnimation }
 
 export default Lottie
 
-export { type default as AnimationItem } from '@/animation/AnimationItem'
+export { type AnimationItem } from '@/animation/AnimationItem'
 export type {
   AddAnimationParams,
   AnimationConfiguration,

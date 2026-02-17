@@ -52,8 +52,10 @@ export class SVGMatte3Effect {
     const { length } = elements
 
     while (i < length) {
-      if (elements[i] && elements[i]?.data.ind === ind) {
-        this.setElementAsMask(this.elem, elements[i])
+      const element = elements[i]
+
+      if (element && element.data.ind === ind) {
+        this.setElementAsMask(this.elem, element)
       }
       i++
     }

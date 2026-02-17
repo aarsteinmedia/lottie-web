@@ -9,7 +9,7 @@ import type { TextProperty } from '@/utils/text/TextProperty'
 
 export abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
-  _mdf?: boolean
+  _mdf?: undefined | boolean
   container?: ElementInterfaceIntersect | null
   data?:
     | DynamicProperty
@@ -23,7 +23,7 @@ export abstract class DynamicPropertyContainer {
   dynamicProperties: DynamicPropertyContainer[] = []
   hd?: boolean
   keyframes?: Keyframe[]
-  propertyIndex?: number
+  propertyIndex?: undefined | number
   propType?: PropType | false
 
   addDynamicProperty(prop: DynamicPropertyContainer) {

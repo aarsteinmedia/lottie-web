@@ -14,28 +14,28 @@ import { Matrix } from '@/utils/Matrix'
 
 export class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
-  _name?: string
+  _name?: undefined | string
   anchor_point: ExpressionInterface
   anchorPoint: ExpressionInterface
   content?: ShapeExpressionInterface
   effect: ExpressionInterface
-  height?: number
-  index?: number
+  height?: undefined | number
+  index?: undefined | number
   inPoint: number
-  mask?: MaskManagerInterface
+  mask?: undefined | MaskManagerInterface
   opacity: ExpressionInterface
   outPoint: number
   position: ExpressionInterface
   rotation: ExpressionInterface
   scale: ExpressionInterface
   shapeInterface?: ShapeExpressionInterface
-  source?: string
+  source?: undefined | string
   sourceRectAtTime: () => SourceRect | null
   startTime: number
   text?: TextExpressionInterface
   textInterface?: TextExpressionInterface
   transformInterface: TransformExpressionInterface
-  width?: number
+  width?: undefined | number
 
   get active() {
     return this._elem.isInRange

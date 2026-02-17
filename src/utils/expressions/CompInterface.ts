@@ -1,15 +1,15 @@
 import type { CompElementInterface } from '@/types'
 
 export class CompExpressionInterface {
-  _name?: string
+  _name?: undefined | string
   comp: CompElementInterface
   displayStartTime: number
   frameDuration: number
-  height?: number
+  height?: undefined | number
   layer: CompExpressionInterface
-  numLayers?: number
+  numLayers?: undefined | number
   pixelAspect: number
-  width?: number
+  width?: undefined | number
   constructor(comp: CompElementInterface) {
     this.comp = comp
     this._name = comp.data?.nm

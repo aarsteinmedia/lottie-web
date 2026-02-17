@@ -5,7 +5,7 @@ import {
 } from '@/utils'
 
 interface CreateJSONProps {
-  animation?: AnimationData
+  animation?: undefined | AnimationData
   fileName?: string
   shouldDownload?: boolean
 }

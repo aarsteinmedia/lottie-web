@@ -18,7 +18,7 @@ export class ImagePreloader {
   totalFootages: number
   totalImages: number
   private _createImageData?: (assetData: LottieAsset) => ImageData | undefined
-  private _elementHelper?: SVGElement
+  private _elementHelper?: undefined | SVGElement
   private _footageLoaded
   private _imageLoaded
   private proxyImage: HTMLCanvasElement | null

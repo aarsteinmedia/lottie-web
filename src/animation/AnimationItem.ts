@@ -83,7 +83,7 @@ export class AnimationItem extends BaseEvent {
   protected autoloadSegments = false
   protected fileName?: string
 
-  protected initialSegment?: Vector2
+  protected initialSegment?: Vector2 | undefined
   protected onComplete: null | ((arg: unknown) => void) = null
   protected onDestroy: null | ((arg: unknown) => void) = null
   protected onEnterFrame: null | ((arg: unknown) => void) = null
@@ -273,7 +273,7 @@ export class AnimationItem extends BaseEvent {
       if (typeof this.animationData.fr !== 'undefined') {
         this.frameMult = this.animationData.fr / 1000
       }
-      this.renderer.searchExtraCompositions(animData.assets as LottieLayer[])
+      this.renderer.searchExtraCompositions(animData.assets as unknown as LottieLayer[])
       this.markers = markerParser(animData.markers ?? []) as MarkerData[]
       this.trigger('config_ready')
       this.preloadImages()
@@ -751,7 +751,7 @@ export class AnimationItem extends BaseEvent {
       } else {
         this.loop = parseInt(`${params.loop}`, 10)
       }
-      this.autoplay = Boolean('autoplay' in params ? params.autoplay : true)
+      this.autoplay = 'autoplay' in params ? params.autoplay : true
       this.name = params.name ?? ''
       this.autoloadSegments = Boolean(Object.hasOwn(params,
         'autoloadSegments')

@@ -435,7 +435,7 @@ export interface AnimationConfiguration<
     | RendererType.HTML
     | RendererType.SVG,
 > {
-  animationData?: AnimationData
+  animationData?: AnimationData | undefined
   animType?: RendererType
   assetsPath?: string
   audioFactory?: AudioFactory
@@ -649,7 +649,7 @@ export interface LottieAsset {
   nm?: string
 
   /** Filename – e.g image_0.png / audio_0.mp3 | DataURL, Base64 encoded. */
-  p?: string
+  p?: undefined | string
 
   /** Aspect Ratio. */
   pr?: string
@@ -786,7 +786,7 @@ interface LayerStyle {
 }
 
 export interface TransformSequence {
-  _mdf?: boolean
+  _mdf?: undefined | boolean
   [key: string]: unknown
   finalTransform?: Matrix
   transforms?: { transform: Transformer }[]
@@ -1055,9 +1055,9 @@ export interface FontList {
   fPath: string
   fStyle: string
   fWeight: string
-  helper?: { measureText: (str: string, fontName?: string, size?: number) => number }
+  helper?: undefined | { measureText: (str: string, fontName?: string, size?: number) => number }
   loaded?: boolean
-  monoCase?: {
+  monoCase?: undefined | {
     node: HTMLElement
     parent: HTMLElement
     w: number
@@ -1065,7 +1065,7 @@ export interface FontList {
   origin: number /**
    * 0 | 1.
    */
-  sansCase?: {
+  sansCase?: undefined | {
     node: HTMLElement
     parent: HTMLElement
     w: number

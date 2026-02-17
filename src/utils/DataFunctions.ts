@@ -597,8 +597,8 @@ function completeData(animationData: AnimationData) {
   checkChars(animationData)
   checkPathProperties(animationData)
   checkShapes(animationData)
-  completeLayers(animationData.layers, animationData.assets as LottieLayer[])
-  completeChars(animationData.chars, animationData.assets as LottieLayer[])
+  completeLayers(animationData.layers, animationData.assets as unknown as LottieLayer[])
+  completeChars(animationData.chars, animationData.assets as unknown as LottieLayer[])
   animationData.__complete = true
 }
 

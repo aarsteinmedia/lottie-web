@@ -4,7 +4,7 @@ import type { AudioFactory } from '@/types'
 import { isServer } from '@/utils/helpers/constants'
 
 export class AudioController {
-  public audioFactory?: AudioFactory
+  public audioFactory?: undefined | AudioFactory
 
   public audios: AudioElement[]
   isPlaying?: boolean

@@ -4,7 +4,7 @@ import { getExt } from '@/utils'
 import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON'
 
 export async function getAnimationData(input: unknown): Promise<{
-  animations?: AnimationData[]
+  animations?: undefined | AnimationData[]
   manifest: LottieManifest | null
   isDotLottie: boolean
 }> {
