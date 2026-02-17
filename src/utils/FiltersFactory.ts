@@ -1,4 +1,4 @@
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
 function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')

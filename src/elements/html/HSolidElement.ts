@@ -4,12 +4,12 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import HBaseElement from '@/elements/html/HBaseElement'
-import SolidElement from '@/elements/SolidElement'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { HBaseElement } from '@/elements/html/HBaseElement'
+import { SolidElement } from '@/elements/SolidElement'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HSolidElement extends SolidElement {
+export class HSolidElement extends SolidElement {
   svgElement?: SVGSVGElement
 
 

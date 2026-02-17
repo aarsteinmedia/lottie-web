@@ -6,11 +6,11 @@ import type {
   SourceRect,
 } from '@/types'
 
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import { namespaceXlink } from '@/utils/helpers/constants'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class ImageElement extends SVGBaseElement {
+export class ImageElement extends SVGBaseElement {
   assetData?: LottieAsset | null
 
   layers: LottieLayer[] = []

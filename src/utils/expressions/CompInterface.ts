@@ -1,6 +1,6 @@
 import type { CompElementInterface } from '@/types'
 
-export default class CompExpressionInterface {
+export class CompExpressionInterface {
   _name?: string
   comp: CompElementInterface
   displayStartTime: number

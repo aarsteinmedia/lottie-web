@@ -1,6 +1,6 @@
 import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 
 class CanvasContext {
   fillStyle: string
@@ -25,7 +25,7 @@ class CanvasContext {
   }
 }
 
-export default class CVContextData {
+export class CVContextData {
   _length: number
   appliedFillStyle: string
   appliedLineCap: string

@@ -3,11 +3,11 @@ import type {
 } from '@/types'
 
 import { getFilename } from '@/utils'
-import createDotLottie from '@/utils/dotLottie/createDotLottie'
-import createJSON from '@/utils/dotLottie/createJSON'
-import getAnimationData from '@/utils/dotLottie/getAnimationData'
+import { createDotLottie } from '@/utils/dotLottie/createDotLottie'
+import { createJSON } from '@/utils/dotLottie/createJSON'
+import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
 
-export default async function convert ({
+export async function convert ({
   animations: animationsFromProps,
   currentAnimation = 0,
   fileName: fileNameFromProps,

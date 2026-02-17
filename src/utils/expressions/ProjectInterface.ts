@@ -1,6 +1,6 @@
 import type { CompElementInterface } from '@/types'
 
-export default class ProjectInterface {
+export class ProjectInterface {
   compositions: CompElementInterface[] = []
   currentFrame = 0
   getComposition(name?: string) {

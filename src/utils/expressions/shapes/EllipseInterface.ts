@@ -1,10 +1,10 @@
-import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
+import type { EllShapeProperty } from '@/utils/shapes/properties/EllShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
-export default class EllipseInterface extends BaseInterface {
+export class EllipseInterface extends BaseInterface {
   override prop?: EllShapeProperty
 
   get position() {

@@ -1,4 +1,4 @@
-import type HCompElement from '@/elements/html/HCompElement'
+import type { HCompElement } from '@/elements/html/HCompElement'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
@@ -10,14 +10,14 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { TransformProperty } from '@/utils/properties/TransformProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import FrameElement from '@/elements/helpers/FrameElement'
+import { FrameElement } from '@/elements/helpers/FrameElement'
 import { degToRads } from '@/utils/helpers/constants'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class HCameraElement extends FrameElement {
+export class HCameraElement extends FrameElement {
   _prevMat: Matrix
   a?: ValueProperty<Vector3>
   override comp?: HCompElement

@@ -1,9 +1,9 @@
-import type ShapePathInterface from '@/utils/expressions/shapes/ShapePathInterface'
+import type { ShapePathInterface } from '@/utils/expressions/shapes/ShapePathInterface'
 
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
-export default class ContentInterface extends BaseInterface {
+export class ContentInterface extends BaseInterface {
   interfaces: ShapePathInterface[] = []
 
   override getInterface(value: string | number) {

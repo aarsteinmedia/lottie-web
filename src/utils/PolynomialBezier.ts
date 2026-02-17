@@ -1,7 +1,7 @@
 import type {
   IntersectData, SVGGeometry, Vector2
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import {
   floatZero,
@@ -162,7 +162,7 @@ const quadRoots = (
     p, p, p, p, false
   )
 
-export default class PolynomialBezier {
+export class PolynomialBezier {
   a: Vector2
   b: Vector2
   c: Vector2

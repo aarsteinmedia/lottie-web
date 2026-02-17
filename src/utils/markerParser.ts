@@ -22,7 +22,7 @@ const parsePayloadLines = (payload: string) => {
   return keys
 }
 
-export default function markerParser(markersFromProps: (MarkerData | Marker)[]) {
+export function markerParser(markersFromProps: (MarkerData | Marker)[]) {
   const markers = [],
     { length } = markersFromProps
 

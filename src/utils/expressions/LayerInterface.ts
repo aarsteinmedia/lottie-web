@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type CVMaskElement from '@/elements/canvas/CVMaskElement'
-import type MaskElement from '@/elements/MaskElement'
+import type { CVMaskElement } from '@/elements/canvas/CVMaskElement'
+import type { MaskElement } from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect, ExpressionInterface, SourceRect
 } from '@/types'
 import type { GroupEffectInterface } from '@/utils/expressions/EffectInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
-import type TextExpressionInterface from '@/utils/expressions/TextInterface'
+import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
+import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
 
-import MaskManagerInterface from '@/utils/expressions/MaskInterface'
-import TransformExpressionInterface from '@/utils/expressions/TransformInterface'
-import Matrix from '@/utils/Matrix'
+import { MaskManagerInterface } from '@/utils/expressions/MaskInterface'
+import { TransformExpressionInterface } from '@/utils/expressions/TransformInterface'
+import { Matrix } from '@/utils/Matrix'
 
-export default class LayerExpressionInterface {
+export class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
   _name?: string
   anchor_point: ExpressionInterface

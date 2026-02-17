@@ -14,7 +14,7 @@ const sheriffOptions: SheriffSettings = {
   'playwright': false,
   'react': false,
   'remeda': false,
-  'storybook': true,
+  'storybook': false,
   'vitest': false
 }
 
@@ -142,6 +142,7 @@ const ignores = [
         'arrow-return-style/arrow-return-style': 0,
         'fsecond/prefer-destructured-optionals': 0,
         'func-style': 0,
+        'import/no-default-export': 'warn',
         'no-plusplus': 'off',
         'no-restricted-globals': ['error',
           'event',

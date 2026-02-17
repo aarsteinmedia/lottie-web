@@ -1,4 +1,4 @@
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
@@ -6,18 +6,18 @@ import type {
   TextSpan,
   Vector3,
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
-import type LetterProps from '@/utils/text/LetterProps'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
+import type { LetterProps } from '@/utils/text/LetterProps'
 
-import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import TextElement from '@/elements/TextElement'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
+import { TextElement } from '@/elements/TextElement'
 import { RendererType, ShapeType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import createTag from '@/utils/helpers/htmlElements'
+import { createTag } from '@/utils/helpers/htmlElements'
 
 const transparent = 'rgba(0,0,0,0)'
 
-export default class CVTextElement extends TextElement {
+export class CVTextElement extends TextElement {
 
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas

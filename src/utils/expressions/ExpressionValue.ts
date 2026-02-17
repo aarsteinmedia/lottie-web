@@ -1,8 +1,8 @@
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 
-export default class ExpressionValue extends BaseProperty {
+export class ExpressionValue extends BaseProperty {
   prop: BaseProperty
 
   get velocity() {

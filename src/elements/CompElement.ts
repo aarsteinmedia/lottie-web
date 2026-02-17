@@ -4,11 +4,11 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
+import { RenderableDOMElement } from '@/elements/helpers/RenderableDOMElement'
 
-export default abstract class CompElement extends RenderableDOMElement {
+export abstract class CompElement extends RenderableDOMElement {
   completeLayers?: boolean
   currentFrame = 0
   elements: ElementInterfaceIntersect[] = []

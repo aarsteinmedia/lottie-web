@@ -1,4 +1,4 @@
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
 import type {
   BoundingBox,
   ElementInterfaceIntersect,
@@ -9,12 +9,12 @@ import type {
   Transformer,
   Vector2,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import ShapeElement from '@/elements/ShapeElement'
-import createNS from '@/utils/helpers/svgElements'
+import { ShapeElement } from '@/elements/ShapeElement'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HShapeElement extends ShapeElement {
+export class HShapeElement extends ShapeElement {
   animatedContents: unknown[]
   currentBBox: BoundingBox
   prevViewData: HShapeElement[]

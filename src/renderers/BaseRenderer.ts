@@ -1,36 +1,36 @@
-import type AnimationItem from '@/animation/AnimationItem'
-import type CVCompElement from '@/elements/canvas/CVCompElement'
-import type CVImageElement from '@/elements/canvas/CVImageElement'
-import type CVShapeElement from '@/elements/canvas/CVShapeElement'
-import type CVSolidElement from '@/elements/canvas/CVSolidElement'
-import type CVTextElement from '@/elements/canvas/CVTextElement'
-import type HierarchyElement from '@/elements/helpers/HierarchyElement'
-import type HCameraElement from '@/elements/html/HCameraElement'
-import type HCompElement from '@/elements/html/HCompElement'
-import type HImageElement from '@/elements/html/HImageElement'
-import type HShapeElement from '@/elements/html/HShapeElement'
-import type HTextElement from '@/elements/html/HTextElement'
-import type ImageElement from '@/elements/ImageElement'
-import type NullElement from '@/elements/NullElement'
-import type SolidElement from '@/elements/SolidElement'
-import type SVGCompElement from '@/elements/svg/SVGCompElement'
-import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import type SVGTextLottieElement from '@/elements/svg/SVGTextElement'
+import type { AnimationItem } from '@/animation/AnimationItem'
+import type { CVCompElement } from '@/elements/canvas/CVCompElement'
+import type { CVImageElement } from '@/elements/canvas/CVImageElement'
+import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
+import type { CVSolidElement } from '@/elements/canvas/CVSolidElement'
+import type { CVTextElement } from '@/elements/canvas/CVTextElement'
+import type { HierarchyElement } from '@/elements/helpers/HierarchyElement'
+import type { HCameraElement } from '@/elements/html/HCameraElement'
+import type { HCompElement } from '@/elements/html/HCompElement'
+import type { HImageElement } from '@/elements/html/HImageElement'
+import type { HShapeElement } from '@/elements/html/HShapeElement'
+import type { HTextElement } from '@/elements/html/HTextElement'
+import type { ImageElement } from '@/elements/ImageElement'
+import type { NullElement } from '@/elements/NullElement'
+import type { SolidElement } from '@/elements/SolidElement'
+import type { SVGCompElement } from '@/elements/svg/SVGCompElement'
+import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import type { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
 import type {
   AnimationData,
   CompElementInterface,
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
-import type ProjectInterface from '@/utils/expressions/ProjectInterface'
+import type { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 
-import AudioElement from '@/elements/AudioElement'
-import FootageElement from '@/elements/FootageElement'
-import FrameElement from '@/elements/helpers/FrameElement'
+import { AudioElement } from '@/elements/AudioElement'
+import { FootageElement } from '@/elements/FootageElement'
+import { FrameElement } from '@/elements/helpers/FrameElement'
 import FontManager from '@/utils/FontManager'
-import slotFactory from '@/utils/SlotManager'
+import { slotFactory } from '@/utils/SlotManager'
 
-export default abstract class BaseRenderer extends FrameElement {
+export abstract class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
   completeLayers?: boolean
   currentFrame = 0
@@ -79,7 +79,7 @@ export default abstract class BaseRenderer extends FrameElement {
         i++
         continue
       }
-      hierarchy.push(elements[i] as ElementInterfaceIntersect)
+      hierarchy.push(elements[i])
       ; (elements[i] as HierarchyElement).setAsParent()
       if (layers[i]?.parent === undefined) {
         element.setHierarchy(hierarchy)
@@ -218,7 +218,7 @@ export default abstract class BaseRenderer extends FrameElement {
 
     for (let i = 0; i < length; i++) {
       if (this.elements[i]?.data.ind === ind) {
-        return this.elements[i] as ElementInterfaceIntersect
+        return this.elements[i]
       }
     }
 

@@ -45,7 +45,7 @@ const getMimeFromExt = (ext?: string) => {
     return regex.test(parseBase64(str))
   }
 
-export default async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[]) {
+export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[]) {
   if (!Array.isArray(assets)) {
     return
   }

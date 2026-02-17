@@ -79,7 +79,7 @@ interface CreateDotLottieProps {
   shouldDownload?: boolean
 }
 
-export default async function createDotLottie({
+export async function createDotLottie({
   animations = [],
   fileName,
   manifest,

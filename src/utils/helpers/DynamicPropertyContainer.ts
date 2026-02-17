@@ -4,10 +4,10 @@ import type {
   ElementInterfaceIntersect, GradientColor, Keyframe, Shape, TextData, TextRangeValue, VectorProperty
 } from '@/types'
 import type { PropType } from '@/utils/enums'
-import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import type TextProperty from '@/utils/text/TextProperty'
+import type { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
+import type { TextProperty } from '@/utils/text/TextProperty'
 
-export default abstract class DynamicPropertyContainer {
+export abstract class DynamicPropertyContainer {
   _isAnimated?: boolean
   _mdf?: boolean
   container?: ElementInterfaceIntersect | null

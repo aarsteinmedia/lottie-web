@@ -1,15 +1,15 @@
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
 } from '@/types'
 
-import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import ImageElement from '@/elements/ImageElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
+import { ImageElement } from '@/elements/ImageElement'
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 
-export default class CVSolidElement extends CVBaseElement {
+export class CVSolidElement extends CVBaseElement {
   initElement = SVGShapeElement.prototype.initElement
   prepareFrame = ImageElement.prototype.prepareFrame
 

@@ -9,14 +9,14 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { PropType } from '@/utils/enums'
 import { degToRads } from '@/utils/helpers/constants'
-import Matrix from '@/utils/Matrix'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { Matrix } from '@/utils/Matrix'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export class TransformProperty extends BaseProperty {

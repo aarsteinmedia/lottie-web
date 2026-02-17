@@ -1,9 +1,9 @@
 import type { ElementInterfaceIntersect, VectorProperty } from '@/types'
 
 import { PropType } from '@/utils/enums'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 
-export default class ValueProperty<
+export class ValueProperty<
   T extends number | number[] = number,
 > extends BaseProperty {
   override pv: T

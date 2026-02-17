@@ -1,14 +1,14 @@
-import type SVGEffects from '@/elements/svg/SVGEffects'
+import type { SVGEffects } from '@/elements/svg/SVGEffects'
 import type {
   ElementInterfaceIntersect, Transformer, Vector3
 } from '@/types'
 
-import BaseElement from '@/elements/BaseElement'
+import { BaseElement } from '@/elements/BaseElement'
 import { EffectTypes } from '@/utils/enums'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 
-export default abstract class TransformElement extends BaseElement {
+export abstract class TransformElement extends BaseElement {
   _isFirstFrame?: boolean
   finalTransform?: Transformer
   hierarchy?: ElementInterfaceIntersect[]

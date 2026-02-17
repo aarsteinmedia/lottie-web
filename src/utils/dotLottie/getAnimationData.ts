@@ -1,9 +1,9 @@
 import type { AnimationData, LottieManifest } from '@/types'
 
 import { getExt } from '@/utils'
-import getLottieJSON from '@/utils/dotLottie/getLottieJSON'
+import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON'
 
-export default async function getAnimationData(input: unknown): Promise<{
+export async function getAnimationData(input: unknown): Promise<{
   animations?: AnimationData[]
   manifest: LottieManifest | null
   isDotLottie: boolean

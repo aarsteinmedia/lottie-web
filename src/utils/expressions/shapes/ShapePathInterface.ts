@@ -1,12 +1,12 @@
-import type ShapeData from '@/elements/helpers/shapes/ShapeData'
+import type { ShapeData } from '@/elements/helpers/shapes/ShapeData'
 import type { Shape } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
-import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import PropertyInterface from '@/utils/expressions/PropertyInterface'
+import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
+import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
 
-export default class ShapePathInterface {
+export class ShapePathInterface {
   _name?: string
   ind?: number
   ix?: number

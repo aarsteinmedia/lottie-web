@@ -1,13 +1,13 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
-export default class PuckerAndBloatModifier extends ShapeModifier {
+export class PuckerAndBloatModifier extends ShapeModifier {
   amount?: ValueProperty
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {

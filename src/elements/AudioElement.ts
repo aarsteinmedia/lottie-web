@@ -6,13 +6,13 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import RenderableElement from '@/elements/helpers/RenderableElement'
+import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class AudioElement extends RenderableElement {
+export class AudioElement extends RenderableElement {
   _canPlay: boolean
   _currentTime: number
   _isPlaying: boolean

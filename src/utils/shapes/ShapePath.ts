@@ -1,9 +1,9 @@
 import type { BezierLength, Vector2 } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
-import pointPool from '@/utils/pooling/pointPool'
+import { pointPool } from '@/utils/pooling/pointPool'
 
-export default class ShapePath {
+export class ShapePath {
   _length: number
   _maxLength: number
   c: boolean

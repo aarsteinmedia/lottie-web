@@ -3,7 +3,7 @@ import type {
   PoolElement,
   Vector2,
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { getIDPrefix } from '@/utils/helpers/prefix'
 

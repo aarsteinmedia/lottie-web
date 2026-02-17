@@ -1,6 +1,6 @@
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
-import type SVGRenderer from '@/renderers/SVGRenderer'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { HybridRenderer } from '@/renderers/HybridRenderer'
+import type { SVGRenderer } from '@/renderers/SVGRenderer'
 import type {
   AnimationConfiguration,
   AnimationData,
@@ -36,12 +36,12 @@ import {
 } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import { getExpressionsPlugin } from '@/utils/expressions'
-import ProjectInterface from '@/utils/expressions/ProjectInterface'
+import { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 import { getSubframeEnabled } from '@/utils/helpers/subframe'
-import ImagePreloader from '@/utils/ImagePreloader'
-import markerParser from '@/utils/markerParser'
+import { ImagePreloader } from '@/utils/ImagePreloader'
+import { markerParser } from '@/utils/markerParser'
 
-export default class AnimationItem extends BaseEvent {
+export class AnimationItem extends BaseEvent {
   public __complete?: boolean
   public _isFirstFrame?: number
   public animationData: AnimationData

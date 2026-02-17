@@ -1,10 +1,10 @@
-import type RoundCornersModifier from '@/utils/shapes/modifiers/RoundCornersModifier'
+import type { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCornersModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
-export default class RoundCornersInterface extends BaseInterface {
+export class RoundCornersInterface extends BaseInterface {
   override prop?: RoundCornersModifier
 
   get radius() {

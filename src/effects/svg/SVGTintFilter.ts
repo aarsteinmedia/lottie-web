@@ -1,13 +1,13 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect, Vector3 } from '@/types'
 
-import SVGComposableEffect from '@/effects/svg/SVGComposableEffect'
-import createNS from '@/utils/helpers/svgElements'
+import { SVGComposableEffect } from '@/effects/svg/SVGComposableEffect'
+import { createNS } from '@/utils/helpers/svgElements'
 
 const linearFilterValue =
   '0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0'
 
-export default class SVGTintFilter extends SVGComposableEffect {
+export class SVGTintFilter extends SVGComposableEffect {
   filterManager: GroupEffect
   linearFilter: SVGFEColorMatrixElement
   matrixFilter: SVGFEColorMatrixElement

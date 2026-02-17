@@ -1,5 +1,5 @@
-import type GroupEffect from '@/effects/GroupEffect'
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type { GroupEffect } from '@/effects/GroupEffect'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
@@ -7,12 +7,12 @@ import type {
   TransformCanvas,
 } from '@/types'
 
-import CVEffects from '@/elements/canvas/CVEffects'
-import CVMaskElement from '@/elements/canvas/CVMaskElement'
-import RenderableElement from '@/elements/helpers/RenderableElement'
+import { CVEffects } from '@/elements/canvas/CVEffects'
+import { CVMaskElement } from '@/elements/canvas/CVMaskElement'
+import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { EffectTypes } from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
-import getBlendMode from '@/utils/helpers/getBlendMode'
+import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
 const operationsMap = {
     1: 'source-in',
@@ -22,13 +22,13 @@ const operationsMap = {
   },
   notImplemented = 'Method is not implemented'
 
-export default abstract class CVBaseElement extends RenderableElement {
+export abstract class CVBaseElement extends RenderableElement {
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
   canvasContext?: CanvasRenderingContext2D
   currentTransform?: DOMMatrix
   override maskManager?: CVMaskElement
   override renderableEffectsManager?: CVEffects
-  transformCanvas?: TransformCanvas
+  transformCanvas?: TransformCanvas | undefined
   transformEffects: GroupEffect[] = []
 
   clearCanvas(canvasContext?:

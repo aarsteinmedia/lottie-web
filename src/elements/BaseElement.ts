@@ -1,6 +1,6 @@
-import type CVMaskElement from '@/elements/canvas/CVMaskElement'
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
-import type MaskElement from '@/elements/MaskElement'
+import type { CVMaskElement } from '@/elements/canvas/CVMaskElement'
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
+import type { MaskElement } from '@/elements/MaskElement'
 import type {
   CompElementInterface,
   ElementInterfaceIntersect,
@@ -10,20 +10,20 @@ import type {
   Shape,
   // SVGElementInterface,
 } from '@/types'
-import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import type EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 // import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
-import type TextExpressionInterface from '@/utils/expressions/TextInterface'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
+import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
+import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-import EffectsManager from '@/effects/EffectsManager'
+import { EffectsManager } from '@/effects/EffectsManager'
 import { createElementID } from '@/utils'
 import { getExpressionInterfaces } from '@/utils/expressions'
-import getBlendMode from '@/utils/helpers/getBlendMode'
+import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
-export default abstract class BaseElement {
+export abstract class BaseElement {
   baseElement?: HTMLElement | SVGGElement
   comp?: CompElementInterface
   compInterface?: CompExpressionInterface

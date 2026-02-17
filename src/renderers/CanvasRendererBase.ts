@@ -1,5 +1,5 @@
-import type CVContextData from '@/elements/canvas/CVContextData'
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type { CVContextData } from '@/elements/canvas/CVContextData'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   AnimationData,
   CanvasRendererConfig,
@@ -8,17 +8,17 @@ import type {
   TransformCanvas,
 } from '@/types'
 
-import CVImageElement from '@/elements/canvas/CVImageElement'
-import CVShapeElement from '@/elements/canvas/CVShapeElement'
-import CVSolidElement from '@/elements/canvas/CVSolidElement'
-import CVTextElement from '@/elements/canvas/CVTextElement'
-import BaseRenderer from '@/renderers/BaseRenderer'
-import SVGRenderer from '@/renderers/SVGRenderer'
+import { CVImageElement } from '@/elements/canvas/CVImageElement'
+import { CVShapeElement } from '@/elements/canvas/CVShapeElement'
+import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
+import { CVTextElement } from '@/elements/canvas/CVTextElement'
+import { BaseRenderer } from '@/renderers/BaseRenderer'
+import { SVGRenderer } from '@/renderers/SVGRenderer'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import createTag from '@/utils/helpers/htmlElements'
+import { createTag } from '@/utils/helpers/htmlElements'
 
-export default abstract class CanvasRendererBase extends BaseRenderer {
+export abstract class CanvasRendererBase extends BaseRenderer {
   canvasContext?: null | CanvasRenderingContext2D
   contextData?: CVContextData
   destroyed?: boolean
@@ -31,7 +31,7 @@ export default abstract class CanvasRendererBase extends BaseRenderer {
     if (elements[pos] || layers[pos]?.ty === 99) {
       return
     }
-    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos] as LottieLayer)
 
     elements[pos] = element
     element.initExpressions()

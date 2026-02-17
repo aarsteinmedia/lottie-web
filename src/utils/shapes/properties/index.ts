@@ -1,15 +1,15 @@
-import type CVShapeElement from '@/elements/canvas/CVShapeElement'
-import type HShapeElement from '@/elements/html/HShapeElement'
-import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
+import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
+import type { HShapeElement } from '@/elements/html/HShapeElement'
+import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   ElementInterfaceIntersect,
   Shape,
 } from '@/types'
 
-import EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
-import RectShapeProperty from '@/utils/shapes/properties/RectShapeProperty'
+import { EllShapeProperty } from '@/utils/shapes/properties/EllShapeProperty'
+import { RectShapeProperty } from '@/utils/shapes/properties/RectShapeProperty'
 import { KeyframedShapeProperty, ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
+import { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 function getConstructorFunction() {
   return ShapeProperty

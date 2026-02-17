@@ -1,10 +1,10 @@
 import type { PoolElement } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { release } from '@/utils/pooling/ShapePool'
 
-export default class ShapeCollection {
+export class ShapeCollection {
   public _length: number
   public _maxLength: number
   public shapes: ShapePath[]

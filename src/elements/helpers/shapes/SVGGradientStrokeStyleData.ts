@@ -1,19 +1,19 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   Shape,
   StrokeData,
   Vector3,
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 import { RendererType } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/properties/DashProperty'
+import { DashProperty } from '@/utils/shapes/properties/DashProperty'
 
-export default class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
+export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
   c?: MultiDimensionalProperty<Vector3>
   d: DashProperty
   w?: ValueProperty

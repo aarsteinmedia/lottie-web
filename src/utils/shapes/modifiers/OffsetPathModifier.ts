@@ -1,9 +1,9 @@
 import type {
   ElementInterfaceIntersect, Shape, Vector2, VectorProperty
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import {
   floatEqual,
@@ -11,13 +11,14 @@ import {
   pointEqual,
 } from '@/utils'
 import { roundCorner } from '@/utils/helpers/constants'
-import PolynomialBezier, {
+import {
+  PolynomialBezier,
   shapeSegment,
   shapeSegmentInverted,
 } from '@/utils/PolynomialBezier'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
 interface Segment { points: Vector2[] }
 
@@ -295,7 +296,7 @@ const crossProduct = (a: number[], b: number[]) => [
     return segments
   }
 
-export default class OffsetPathModifier extends ShapeModifier {
+export class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty
   lineJoin?: number
   miterLimit?: ValueProperty

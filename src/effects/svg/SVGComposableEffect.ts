@@ -1,6 +1,6 @@
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default abstract class SVGComposableEffect {
+export abstract class SVGComposableEffect {
   createMergeNode(resultId: string, ins: string[]) {
     const feMerge = createNS<SVGFEMergeElement>('feMerge')
 

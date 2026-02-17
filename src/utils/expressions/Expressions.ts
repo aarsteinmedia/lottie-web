@@ -1,7 +1,7 @@
 import type { AnimationItem } from '@/Lottie'
 import type { ExpressionProperty } from '@/types'
 
-import CompExpressionInterface from '@/utils/expressions/CompInterface'
+import { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 
 const { resetFrame } = ExpressionManager

@@ -5,13 +5,13 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-import KeyframedMultidimensionalProperty from '@/utils/properties/KeyframedMultidimensionalProperty'
-import KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
-import MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import NoProperty from '@/utils/properties/NoProperty'
-import ValueProperty from '@/utils/properties/ValueProperty'
+import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty'
+import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import { NoProperty } from '@/utils/properties/NoProperty'
+import { ValueProperty } from '@/utils/properties/ValueProperty'
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,

@@ -1,15 +1,15 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
-import CVEffects from '@/elements/canvas/CVEffects'
-import RenderableElement from '@/elements/helpers/RenderableElement'
-import MaskElement from '@/elements/MaskElement'
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import BaseRenderer from '@/renderers/BaseRenderer'
+import { CVEffects } from '@/elements/canvas/CVEffects'
+import { RenderableElement } from '@/elements/helpers/RenderableElement'
+import { MaskElement } from '@/elements/MaskElement'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
+import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { styleDiv } from '@/utils'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HBaseElement extends RenderableElement {
+export class HBaseElement extends RenderableElement {
   maskedElement?: SVGGElement | HTMLElement
   matteElement?: SVGGElement | HTMLElement
   svgElement?: SVGSVGElement

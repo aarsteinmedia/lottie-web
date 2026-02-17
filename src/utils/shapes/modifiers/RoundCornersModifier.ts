@@ -4,16 +4,16 @@ import type {
   Vector2,
   VectorProperty,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
-export default class RoundCornersModifier extends ShapeModifier {
+export class RoundCornersModifier extends ShapeModifier {
   rd?: ValueProperty
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {

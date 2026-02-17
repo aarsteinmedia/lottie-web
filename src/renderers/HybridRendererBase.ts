@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type AnimationItem from '@/animation/AnimationItem'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
   AnimationData,
   ElementInterfaceIntersect,
@@ -9,23 +9,23 @@ import type {
   ThreeDElements,
 } from '@/types'
 
-import HCameraElement from '@/elements/html/HCameraElement'
-import HImageElement from '@/elements/html/HImageElement'
-import HShapeElement from '@/elements/html/HShapeElement'
-import HSolidElement from '@/elements/html/HSolidElement'
-import HTextElement from '@/elements/html/HTextElement'
-import ImageElement from '@/elements/ImageElement'
-import SolidElement from '@/elements/SolidElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
-import BaseRenderer from '@/renderers/BaseRenderer'
-import SVGRenderer from '@/renderers/SVGRenderer'
+import { HCameraElement } from '@/elements/html/HCameraElement'
+import { HImageElement } from '@/elements/html/HImageElement'
+import { HShapeElement } from '@/elements/html/HShapeElement'
+import { HSolidElement } from '@/elements/html/HSolidElement'
+import { HTextElement } from '@/elements/html/HTextElement'
+import { ImageElement } from '@/elements/ImageElement'
+import { SolidElement } from '@/elements/SolidElement'
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
+import { BaseRenderer } from '@/renderers/BaseRenderer'
+import { SVGRenderer } from '@/renderers/SVGRenderer'
 import { styleDiv } from '@/utils'
 import { RendererType } from '@/utils/enums'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HybridRendererBase extends BaseRenderer {
+export class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement
   destroyed: boolean
   renderConfig: HTMLRendererConfig

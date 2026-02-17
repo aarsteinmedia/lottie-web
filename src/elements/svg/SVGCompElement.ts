@@ -4,15 +4,15 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 
-import CompElement from '@/elements/CompElement'
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import SVGRendererBase from '@/renderers/SVGRendererBase'
+import { CompElement } from '@/elements/CompElement'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
+import { SVGRendererBase } from '@/renderers/SVGRendererBase'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class SVGCompElement extends SVGBaseElement {
+export class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
   addPendingElement = SVGRendererBase.prototype.addPendingElement
   appendElementInPos = SVGRendererBase.prototype.appendElementInPos

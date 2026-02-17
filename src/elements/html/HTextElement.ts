@@ -7,16 +7,16 @@ import type {
   Vector3,
 } from '@/types'
 
-import TextElement from '@/elements/TextElement'
+import { TextElement } from '@/elements/TextElement'
 import { styleDiv } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, RendererType
 } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HTextElement extends TextElement {
+export class HTextElement extends TextElement {
   compH?: number
   compW?: number
 
@@ -150,7 +150,7 @@ export default class HTextElement extends TextElement {
         )
         let shapeData
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
         if (charData) {
           shapeData = charData.data
         } else {

@@ -1,4 +1,4 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   Shape,
@@ -8,13 +8,13 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class SVGFillStyleData extends DynamicPropertyContainer {
+export class SVGFillStyleData extends DynamicPropertyContainer {
   c?: MultiDimensionalProperty<Vector3>
   gr?: SVGGElement
   it: ShapeDataInterface[] = []

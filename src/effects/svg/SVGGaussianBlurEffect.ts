@@ -1,9 +1,9 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect } from '@/types'
 
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGGaussianBlurEffect {
+export class SVGGaussianBlurEffect {
   feGaussianBlur: SVGFEGaussianBlurElement
   filterManager: GroupEffect
   constructor(

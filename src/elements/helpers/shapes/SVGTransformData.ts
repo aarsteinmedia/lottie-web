@@ -1,4 +1,4 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   ShapeDataInterface,
@@ -6,9 +6,9 @@ import type {
   Transformer,
 } from '@/types'
 import type { TransformProperty } from '@/utils/properties/TransformProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-export default class SVGTransformData {
+export class SVGTransformData {
   _isAnimated: boolean
   elements: ElementInterfaceIntersect[]
   gr?: SVGGElement

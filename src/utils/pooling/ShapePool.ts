@@ -1,9 +1,9 @@
 import type { PoolElement, Vector2 } from '@/types'
 
 import { isShapePath } from '@/utils'
-import pointPool from '@/utils/pooling/pointPool'
-import PoolFactory from '@/utils/pooling/PoolFactory'
-import ShapePath from '@/utils/shapes/ShapePath'
+import { pointPool } from '@/utils/pooling/pointPool'
+import { PoolFactory } from '@/utils/pooling/PoolFactory'
+import { ShapePath } from '@/utils/shapes/ShapePath'
 
 const _factory = new PoolFactory(
   4, _create, _release

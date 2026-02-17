@@ -1,13 +1,13 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type {
   ElementInterfaceIntersect, Vector3, ViewData
 } from '@/types'
 
 import { createElementID } from '@/utils'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGStrokeEffect {
+export class SVGStrokeEffect {
   elem: ElementInterfaceIntersect
   filterManager: GroupEffect
   initialized: boolean

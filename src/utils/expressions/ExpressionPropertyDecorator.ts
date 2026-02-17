@@ -1,19 +1,19 @@
 import type {
-  Caching, ElementInterfaceIntersect, ExpressionProperty, Vector3
+  Caching, ExpressionProperty, Vector3
 } from '@/types'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { isArrayOfNum } from '@/utils'
 import { ArrayType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
-import ShapeExpressions from '@/utils/expressions/ShapeExpressions'
+import { ShapeExpressions } from '@/utils/expressions/ShapeExpressions'
 import { extendPrototype } from '@/utils/functionExtensions'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 import ShapePool from '@/utils/pooling/ShapePool'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -499,11 +499,11 @@ function addPropertyDecorator() {
     prop.lock = false
     if (type === 3) {
       expressionHelpers.searchExpressions(
-        elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     } else if (type === 4) {
       expressionHelpers.searchExpressions(
-        elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     }
     if (prop.k) {

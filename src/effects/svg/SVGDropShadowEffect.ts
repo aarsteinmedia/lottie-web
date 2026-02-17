@@ -1,16 +1,16 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type {
   ElementInterfaceIntersect,
   SVGRendererConfig,
   Vector3,
 } from '@/types'
 
-import SVGComposableEffect from '@/effects/svg/SVGComposableEffect'
+import { SVGComposableEffect } from '@/effects/svg/SVGComposableEffect'
 import { rgbToHex } from '@/utils'
 import { degToRads } from '@/utils/helpers/constants'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGDropShadowEffect extends SVGComposableEffect {
+export class SVGDropShadowEffect extends SVGComposableEffect {
   feFlood: SVGFEFloodElement
   feGaussianBlur: SVGFEGaussianBlurElement
   feOffset: SVGFEOffsetElement

@@ -1,10 +1,10 @@
-import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
-export default class TrimInterface extends BaseInterface {
+export class TrimInterface extends BaseInterface {
   override prop?: TrimModifier
   get end() {
     return expressionPropertyFactory(this.prop?.e)

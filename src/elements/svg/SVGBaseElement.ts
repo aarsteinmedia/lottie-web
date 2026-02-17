@@ -1,16 +1,16 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
-import MaskElement from '@/elements/MaskElement'
-import SVGEffects from '@/elements/svg/SVGEffects'
+import { RenderableDOMElement } from '@/elements/helpers/RenderableDOMElement'
+import { MaskElement } from '@/elements/MaskElement'
+import { SVGEffects } from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
-import featureSupport from '@/utils/featureSupport'
+import { featureSupport } from '@/utils/featureSupport'
 import FiltersFactory from '@/utils/FiltersFactory'
 import { namespaceXlink } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default abstract class SVGBaseElement extends RenderableDOMElement {
+export abstract class SVGBaseElement extends RenderableDOMElement {
   _sizeChanged?: boolean
   maskedElement?: HTMLElement | SVGGElement
   matteElement?: SVGGElement

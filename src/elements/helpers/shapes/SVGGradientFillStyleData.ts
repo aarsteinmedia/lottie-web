@@ -1,4 +1,4 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   GradientColor,
@@ -9,22 +9,22 @@ import type {
   Transformer,
   VectorProperty,
 } from '@/types'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { createElementID } from '@/utils'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
 import { degToRads } from '@/utils/helpers/constants'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 import PropertyFactory from '@/utils/PropertyFactory'
-import GradientProperty from '@/utils/shapes/properties/GradientProperty'
+import { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
 
-export default class SVGGradientFillStyleData extends DynamicPropertyContainer {
+export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   a?: ValueProperty
   cst: SVGStopElement[] = []
   e?: MultiDimensionalProperty

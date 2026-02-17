@@ -1,4 +1,4 @@
-import type AnimationItem from '@/animation/AnimationItem'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type { AnimationDirection, AnimationEventName } from '@/types'
 
 export class BMEnterFrameEvent {

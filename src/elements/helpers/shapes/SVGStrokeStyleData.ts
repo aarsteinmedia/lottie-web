@@ -1,4 +1,4 @@
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   Shape,
@@ -6,15 +6,15 @@ import type {
   Vector3,
   VectorProperty,
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
+import { SVGFillStyleData } from '@/elements/helpers/shapes/SVGFillStyleData'
 import { RendererType } from '@/utils/enums'
 import PropertyFactory from '@/utils/PropertyFactory'
-import DashProperty from '@/utils/shapes/properties/DashProperty'
+import { DashProperty } from '@/utils/shapes/properties/DashProperty'
 
-export default class SVGStrokeStyleData extends SVGFillStyleData {
+export class SVGStrokeStyleData extends SVGFillStyleData {
   d?: DashProperty
   constructor(
     elem: ElementInterfaceIntersect,

@@ -1,12 +1,12 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import { createElementID } from '@/utils'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
 const _svgMatteSymbols: ElementInterfaceIntersect[] = []
 
-export default class SVGMatte3Effect {
+export class SVGMatte3Effect {
   elem: ElementInterfaceIntersect
   filterElem: SVGFilterElement
   filterManager: GroupEffect
@@ -53,7 +53,7 @@ export default class SVGMatte3Effect {
 
     while (i < length) {
       if (elements[i] && elements[i]?.data.ind === ind) {
-        this.setElementAsMask(this.elem, elements[i] as ElementInterfaceIntersect)
+        this.setElementAsMask(this.elem, elements[i])
       }
       i++
     }

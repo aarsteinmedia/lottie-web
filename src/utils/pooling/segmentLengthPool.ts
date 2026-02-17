@@ -1,10 +1,10 @@
 import type { PoolElement } from '@/types'
 
 import { isShapePath } from '@/utils'
-import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
-import PoolFactory from '@/utils/pooling/PoolFactory'
+import { bezierLengthPool } from '@/utils/pooling/bezierLengthPool'
+import { PoolFactory } from '@/utils/pooling/PoolFactory'
 
-const segmentsLengthPool = (() =>
+export const segmentsLengthPool = (() =>
   new PoolFactory(
     8,
     () => ({
@@ -25,5 +25,3 @@ const segmentsLengthPool = (() =>
       element.lengths.length = 0
     }
   ))()
-
-export default segmentsLengthPool

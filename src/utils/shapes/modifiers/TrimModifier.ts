@@ -1,20 +1,20 @@
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   BezierLength,
   ElementInterfaceIntersect, PoolElement, Shape, Vector2
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapeCollection from '@/utils/shapes/ShapeCollection'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { getNewSegment, getSegmentsLength } from '@/utils/Bezier'
-import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
+import { segmentsLengthPool } from '@/utils/pooling/segmentLengthPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
-export default class TrimModifier extends ShapeModifier {
+export class TrimModifier extends ShapeModifier {
   e?: ValueProperty
 
   eValue?: number

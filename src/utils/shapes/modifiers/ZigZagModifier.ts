@@ -5,14 +5,14 @@ import type {
   Vector2,
   VectorProperty,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { type default as PolynomialBezier, shapeSegment } from '@/utils/PolynomialBezier'
+import { type PolynomialBezier, shapeSegment } from '@/utils/PolynomialBezier'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
 const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
@@ -130,7 +130,7 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     return direction
   }
 
-export default class ZigZagModifier extends ShapeModifier {
+export class ZigZagModifier extends ShapeModifier {
   amplitude?: ValueProperty
   frequency?: ValueProperty
   pointsType?: ValueProperty

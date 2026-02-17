@@ -5,12 +5,12 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import ImageElement from '@/elements/ImageElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import createTag from '@/utils/helpers/htmlElements'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
+import { ImageElement } from '@/elements/ImageElement'
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { createTag } from '@/utils/helpers/htmlElements'
 
-export default class CVImageElement extends CVBaseElement {
+export class CVImageElement extends CVBaseElement {
   assetData: LottieAsset | null
   img: HTMLCanvasElement
   initElement = SVGShapeElement.prototype.initElement

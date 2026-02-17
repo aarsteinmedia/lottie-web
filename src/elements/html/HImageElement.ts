@@ -4,11 +4,11 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import HSolidElement from '@/elements/html/HSolidElement'
+import { HSolidElement } from '@/elements/html/HSolidElement'
 import { namespaceXlink } from '@/utils/helpers/constants'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class HImageElement extends HSolidElement {
+export class HImageElement extends HSolidElement {
   imageElem?: SVGImageElement
 
   constructor(

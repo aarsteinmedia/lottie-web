@@ -1,9 +1,9 @@
-import CompExpressionInterface from '@/utils/expressions/CompInterface'
+import { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
-import FootageInterface from '@/utils/expressions/FootageInterface'
-import LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
-import TextExpressionInterface from '@/utils/expressions/TextInterface'
+import { FootageInterface } from '@/utils/expressions/FootageInterface'
+import { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
+import { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
+import { TextExpressionInterface } from '@/utils/expressions/TextInterface'
 
 const interfaces = {
   comp: CompExpressionInterface,
@@ -16,8 +16,6 @@ const interfaces = {
 
 // type ExpressionInterface = typeof interfaces[keyof typeof interfaces]
 
-function getInterface(type: keyof typeof interfaces) {
+export function getInterface(type: keyof typeof interfaces) {
   return interfaces[type]
 }
-
-export default getInterface

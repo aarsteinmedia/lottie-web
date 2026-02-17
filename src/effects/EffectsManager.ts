@@ -13,11 +13,11 @@ import type {
   ElementInterfaceIntersect,
   LottieLayer,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-import GroupEffect from '@/effects/GroupEffect'
+import { GroupEffect } from '@/effects/GroupEffect'
 
-export default class EffectsManager {
+export class EffectsManager {
   _mdf?: boolean
   effectElements: EffectInterface[]
   constructor(

@@ -4,15 +4,15 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import CompElement from '@/elements/CompElement'
-import CanvasRendererBase from '@/renderers/CanvasRendererBase'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
+import { CompElement } from '@/elements/CompElement'
+import { CanvasRendererBase } from '@/renderers/CanvasRendererBase'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class CVCompElement extends CompElement {
+export class CVCompElement extends CompElement {
   addPendingElement = CanvasRendererBase.prototype.addPendingElement
   override buildAllItems = CanvasRendererBase.prototype.buildAllItems
   buildElementParenting = CanvasRendererBase.prototype.buildElementParenting

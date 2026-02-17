@@ -4,9 +4,9 @@ import type {
   Transformer,
 } from '@/types'
 
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class ShapeGroupData {
+export class ShapeGroupData {
   _shouldRender?: boolean
   closed?: boolean
   gr: SVGGElement

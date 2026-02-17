@@ -1,8 +1,8 @@
 // @ts-nocheck
-import type TransformEffect from '@/effects/TransformEffect'
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
-import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
+import type { TransformEffect } from '@/effects/TransformEffect'
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
+import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   CanvasItem,
   CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
@@ -13,15 +13,15 @@ import type {
   Vector3,
   VectorProperty
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type ShapeCollection from '@/utils/shapes/ShapeCollection'
+import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 
-import CVBaseElement from '@/elements/canvas/CVBaseElement'
-import CVShapeData from '@/elements/helpers/shapes/CVShapeData'
-import ShapeTransformManager from '@/elements/helpers/shapes/ShapeTransformManager'
-import ShapeElement from '@/elements/ShapeElement'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
+import { CVShapeData } from '@/elements/helpers/shapes/CVShapeData'
+import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
+import { ShapeElement } from '@/elements/ShapeElement'
 import {
   lineCapEnum,
   lineJoinEnum,
@@ -32,10 +32,10 @@ import { degToRads } from '@/utils/helpers/constants'
 import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
-import DashProperty from '@/utils/shapes/properties/DashProperty'
-import GradientProperty from '@/utils/shapes/properties/GradientProperty'
+import { DashProperty } from '@/utils/shapes/properties/DashProperty'
+import { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
 
-export default class CVShapeElement extends ShapeElement {
+export class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
   clearCanvas = CVBaseElement.prototype.clearCanvas
   override createContainerElements = CVBaseElement.prototype.createContainerElements

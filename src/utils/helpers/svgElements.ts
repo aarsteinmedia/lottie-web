@@ -1,6 +1,6 @@
 import { isServer, namespaceSVG } from '@/utils/helpers/constants'
 
-export default function createNS<T extends SVGElement>(type: string) {
+export function createNS<T extends SVGElement>(type: string) {
   if (isServer) {
     /**
      * This lets the function run without errors in a server context,

@@ -1,17 +1,17 @@
 import type {
   ElementInterfaceIntersect, Shape, StrokeData, VectorProperty
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { degToRads } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeBaseProperty from '@/utils/shapes/properties/ShapeBaseProperty'
+import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
-export default class StarShapeProperty extends ShapeBaseProperty {
+export class StarShapeProperty extends ShapeBaseProperty {
   d?: StrokeData[]
   ir?: ValueProperty
   is?: ValueProperty

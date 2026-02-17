@@ -8,33 +8,33 @@ import type {
   SVGElementInterface,
   Transformer,
 } from '@/types'
-import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
-import type TrimModifier from '@/utils/shapes/modifiers/TrimModifier'
+import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier'
+import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
-import ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
+import { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
 import { createRenderFunction } from '@/elements/helpers/shapes/SVGElementsRenderer'
-import SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
-import SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
-import SVGGradientStrokeStyleData from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
-import SVGNoStyleData from '@/elements/helpers/shapes/SVGNoStyleData'
-import SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
-import SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
-import SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
-import ShapeElement from '@/elements/ShapeElement'
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
+import { SVGFillStyleData } from '@/elements/helpers/shapes/SVGFillStyleData'
+import { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import { SVGGradientStrokeStyleData } from '@/elements/helpers/shapes/SVGGradientStrokeStyleData'
+import { SVGNoStyleData } from '@/elements/helpers/shapes/SVGNoStyleData'
+import { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
+import { SVGStrokeStyleData } from '@/elements/helpers/shapes/SVGStrokeStyleData'
+import { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
+import { SVGTransformData } from '@/elements/helpers/shapes/SVGTransformData'
+import { ShapeElement } from '@/elements/ShapeElement'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
-import getBlendMode from '@/utils/helpers/getBlendMode'
+import { getBlendMode } from '@/utils/helpers/getBlendMode'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import { getModifier } from '@/utils/shapes/modifiers'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
-export default class SVGShapeElement extends ShapeElement {
+export class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   animatedContents: AnimatedContent[]
   override createContainerElements = SVGBaseElement.prototype.createContainerElements
@@ -411,7 +411,7 @@ export default class SVGShapeElement extends ShapeElement {
       const processedPos = this.searchProcessedElement(arr[i])
 
       if (processedPos) {
-        itemsData[i] = prevViewData[processedPos - 1] as SVGElementInterface
+        itemsData[i] = prevViewData[processedPos - 1]
       } else {
         (arr[i] as Shape)._shouldRender = shouldRender
       }
@@ -430,7 +430,7 @@ export default class SVGShapeElement extends ShapeElement {
             }
           } else {
             itemsData[i] = this.createStyleElement(arr[i] as Shape,
-              level) as SVGElementInterface
+              level)
           }
           if (arr[i]?._shouldRender && itemsData[i]?.style?.pElem.parentNode !== container) {
             const { pElem } = itemsData[i]?.style ?? { pElem: null }

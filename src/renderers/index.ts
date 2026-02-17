@@ -1,6 +1,6 @@
-import type CanvasRenderer from '@/renderers/CanvasRenderer'
-import type HybridRenderer from '@/renderers/HybridRenderer'
-import type SVGRenderer from '@/renderers/SVGRenderer'
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { HybridRenderer } from '@/renderers/HybridRenderer'
+import type { SVGRenderer } from '@/renderers/SVGRenderer'
 
 import { RendererType } from '@/utils/enums'
 

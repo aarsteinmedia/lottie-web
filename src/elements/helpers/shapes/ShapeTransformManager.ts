@@ -1,8 +1,8 @@
 import type { Transformer, TransformSequence } from '@/types'
 
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 
-export default class ShapeTransformManager {
+export class ShapeTransformManager {
   sequenceList: TransformSequence[]
   sequences: TransformSequence
   // eslint-disable-next-line @typescript-eslint/naming-convention

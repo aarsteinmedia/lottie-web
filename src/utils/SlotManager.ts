@@ -25,6 +25,6 @@ export class SlotManager {
   }
 }
 
-export default function slotFactory(animationData: LottieLayer) {
+export function slotFactory(animationData: LottieLayer) {
   return new SlotManager(animationData)
 }

@@ -1,9 +1,9 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect, Vector3 } from '@/types'
 
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGFillFilter {
+export class SVGFillFilter {
   filterManager: GroupEffect
   matrixFilter: SVGFEColorMatrixElement
   constructor(

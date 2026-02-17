@@ -1,11 +1,11 @@
 import type { ElementInterfaceIntersect, TextRangeValue } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { getBezierEasing } from '@/utils/BezierFactory'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class TextSelectorProperty extends BaseProperty {
+export class TextSelectorProperty extends BaseProperty {
   _currentTextLength: number
   a: ValueProperty
   b?: ValueProperty

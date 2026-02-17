@@ -1,6 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
-export default class TextExpressionInterface {
+export class TextExpressionInterface {
 
   _sourceText?: {
     value: string

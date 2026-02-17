@@ -1,14 +1,14 @@
 import type { ElementInterfaceIntersect, Shape } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeBaseProperty from '@/utils/shapes/properties/ShapeBaseProperty'
+import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
-export default class EllShapeProperty extends ShapeBaseProperty {
+export class EllShapeProperty extends ShapeBaseProperty {
   _cPoint = roundCorner
   d?: number
   s: MultiDimensionalProperty

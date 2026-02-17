@@ -5,9 +5,9 @@ import type {
 import { pointOnLine2D, pointOnLine3D } from '@/utils/Bezier'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 
-export default class KeyframedMultidimensionalProperty<
+export class KeyframedMultidimensionalProperty<
   T extends number[] = Vector2,
 > extends BaseProperty {
   override pv: T

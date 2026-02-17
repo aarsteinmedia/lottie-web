@@ -1,10 +1,10 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGProLevelsFilter {
+export class SVGProLevelsFilter {
   feFuncA?: SVGFEFuncAElement
   feFuncB?: SVGFEFuncBElement
   feFuncBComposed?: SVGFEFuncBElement

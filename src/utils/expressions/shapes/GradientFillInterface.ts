@@ -1,9 +1,9 @@
-import type SVGGradientFillStyleData from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-export default class GradientFillInterface extends BaseInterface {
+export class GradientFillInterface extends BaseInterface {
   override prop?: SVGGradientFillStyleData
 
   get endPoint() {

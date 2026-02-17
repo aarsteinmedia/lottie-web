@@ -6,16 +6,16 @@ import type {
   Vector3,
   Vector4,
 } from '@/types'
-import type CompExpressionInterface from '@/utils/expressions/CompInterface'
+import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import type { GroupEffectInterface } from '@/utils/expressions/EffectInterface'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type ShapeExpressionInterface from '@/utils/expressions/shapes/ShapeInterface'
-import type TextExpressionInterface from '@/utils/expressions/TextInterface'
-import type TransformExpressionInterface from '@/utils/expressions/TransformInterface'
-import type BaseProperty from '@/utils/properties/BaseProperty'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
+import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
+import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
+import type { TransformExpressionInterface } from '@/utils/expressions/TransformInterface'
+import type { BaseProperty } from '@/utils/properties/BaseProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import {
   clamp,

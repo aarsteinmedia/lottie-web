@@ -1,4 +1,4 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
 interface RegisteredEffects {
@@ -10,7 +10,7 @@ interface RegisteredEffects {
 
 const registeredEffects: RegisteredEffects = {}
 
-export default class CVEffects {
+export class CVEffects {
   filters: GroupEffect[]
   constructor(elem: ElementInterfaceIntersect) {
     const { length } = elem.data.ef ?? []

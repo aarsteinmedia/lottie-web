@@ -1,4 +1,4 @@
-export default class LetterProps {
+export class LetterProps {
   __complete?: boolean
   _mdf: {
     fc: boolean

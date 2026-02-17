@@ -7,9 +7,9 @@ import type {
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
 
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGStyleData {
+export class SVGStyleData {
   _mdf: boolean
   closed: boolean
   coOp?: number

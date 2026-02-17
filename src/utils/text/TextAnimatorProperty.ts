@@ -9,22 +9,22 @@ import type {
   Vector2,
   Vector3,
 } from '@/types'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
-import type EllShapeProperty from '@/utils/shapes/properties/EllShapeProperty'
-import type RectShapeProperty from '@/utils/shapes/properties/RectShapeProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { EllShapeProperty } from '@/utils/shapes/properties/EllShapeProperty'
+import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapeProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
+import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 import { isArray } from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-import Matrix from '@/utils/Matrix'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+import { Matrix } from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
-import LetterProps from '@/utils/text/LetterProps'
-import TextAnimatorDataProperty from '@/utils/text/TextAnimatorDataProperty'
+import { LetterProps } from '@/utils/text/LetterProps'
+import { TextAnimatorDataProperty } from '@/utils/text/TextAnimatorDataProperty'
 
 const rgbToHSV = (
     r: number, g: number, b: number
@@ -176,7 +176,7 @@ const rgbToHSV = (
     )
   }
 
-export default class TextAnimatorProperty extends DynamicPropertyContainer {
+export class TextAnimatorProperty extends DynamicPropertyContainer {
   _frameId: number
   _isFirstFrame: boolean
   defaultPropsArray: number[] = []

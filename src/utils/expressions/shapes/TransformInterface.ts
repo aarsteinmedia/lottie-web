@@ -1,11 +1,11 @@
-import type SVGFillStyleData from '@/elements/helpers/shapes/SVGFillStyleData'
-import type SVGTransformData from '@/elements/helpers/shapes/SVGTransformData'
+import type { SVGFillStyleData } from '@/elements/helpers/shapes/SVGFillStyleData'
+import type { SVGTransformData } from '@/elements/helpers/shapes/SVGTransformData'
 import type { ShapeType } from '@/utils/enums'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-export default class TransformInterface extends BaseInterface {
+export class TransformInterface extends BaseInterface {
   override prop?: SVGTransformData | SVGFillStyleData
   ty?: ShapeType
 

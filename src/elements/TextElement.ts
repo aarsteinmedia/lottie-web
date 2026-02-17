@@ -6,17 +6,17 @@ import type {
   Shape,
   Vector3,
 } from '@/types'
-import type Matrix from '@/utils/Matrix'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { Matrix } from '@/utils/Matrix'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import RenderableDOMElement from '@/elements/helpers/RenderableDOMElement'
+import { RenderableDOMElement } from '@/elements/helpers/RenderableDOMElement'
 import { RendererType, ShapeType } from '@/utils/enums'
-import buildShapeString from '@/utils/shapes/buildShapeString'
-import LetterProps from '@/utils/text/LetterProps'
-import TextAnimatorProperty from '@/utils/text/TextAnimatorProperty'
-import TextProperty from '@/utils/text/TextProperty'
+import { buildShapeString } from '@/utils/shapes/buildShapeString'
+import { LetterProps } from '@/utils/text/LetterProps'
+import { TextAnimatorProperty } from '@/utils/text/TextAnimatorProperty'
+import { TextProperty } from '@/utils/text/TextProperty'
 
-export default abstract class TextElement extends RenderableDOMElement {
+export abstract class TextElement extends RenderableDOMElement {
   emptyProp?: LetterProps
   lettersChangedFlag?: boolean
   renderType?: RendererType

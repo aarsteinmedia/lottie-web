@@ -1,6 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
-export default class ProcessedElement {
+export class ProcessedElement {
   elem: ElementInterfaceIntersect
   pos: number
   constructor(element: ElementInterfaceIntersect, position: number) {

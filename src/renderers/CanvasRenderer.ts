@@ -1,4 +1,4 @@
-import type AnimationItem from '@/animation/AnimationItem'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
   CanvasRendererConfig,
   ElementInterfaceIntersect,
@@ -6,13 +6,13 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import CVCompElement from '@/elements/canvas/CVCompElement'
-import CVContextData from '@/elements/canvas/CVContextData'
-import CanvasRendererBase from '@/renderers/CanvasRendererBase'
+import { CVCompElement } from '@/elements/canvas/CVCompElement'
+import { CVContextData } from '@/elements/canvas/CVContextData'
+import { CanvasRendererBase } from '@/renderers/CanvasRendererBase'
 import { PreserveAspectRatio, RendererType } from '@/utils/enums'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 
-export default class CanvasRenderer extends CanvasRendererBase {
+export class CanvasRenderer extends CanvasRendererBase {
   rendererType: RendererType
   transformMat: Matrix
 

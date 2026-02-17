@@ -1,4 +1,4 @@
-import type AnimationItem from '@/animation/AnimationItem'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
   AnimationData,
   ElementInterfaceIntersect,
@@ -6,20 +6,20 @@ import type {
   SVGRendererConfig,
 } from '@/types'
 
-import ImageElement from '@/elements/ImageElement'
-import NullElement from '@/elements/NullElement'
-import SolidElement from '@/elements/SolidElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import SVGTextLottieElement from '@/elements/svg/SVGTextElement'
-import BaseRenderer from '@/renderers/BaseRenderer'
+import { ImageElement } from '@/elements/ImageElement'
+import { NullElement } from '@/elements/NullElement'
+import { SolidElement } from '@/elements/SolidElement'
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
+import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { createElementID } from '@/utils'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { namespaceSVG } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default abstract class SVGRendererBase extends BaseRenderer {
+export abstract class SVGRendererBase extends BaseRenderer {
   destroyed?: boolean
   renderConfig?: SVGRendererConfig
   svgElement?: SVGSVGElement
@@ -63,7 +63,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos] as LottieLayer)
 
     elements[pos] = element
     if (getExpressionsPlugin()) {
@@ -351,7 +351,7 @@ export default abstract class SVGRendererBase extends BaseRenderer {
           this.elements[i]?.prepareFrame(Number(num) - (this.layers[i]?.st ?? 0))
         }
       }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
       if (this.globalData._mdf) {
         for (let i = 0; i < length; i++) {
           if (typeof this.elements[i] === 'boolean') {

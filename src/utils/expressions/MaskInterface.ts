@@ -1,5 +1,5 @@
-import type CVMaskElement from '@/elements/canvas/CVMaskElement'
-import type MaskElement from '@/elements/MaskElement'
+import type { CVMaskElement } from '@/elements/canvas/CVMaskElement'
+import type { MaskElement } from '@/elements/MaskElement'
 import type {
   ElementInterfaceIntersect, Shape, ViewData
 } from '@/types'
@@ -32,7 +32,7 @@ class MaskInterface {
 }
 
 
-export default class MaskManagerInterface {
+export class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
   maskManager: MaskElement | CVMaskElement
 

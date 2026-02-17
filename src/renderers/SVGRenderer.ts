@@ -1,4 +1,4 @@
-import type AnimationItem from '@/animation/AnimationItem'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
   ElementInterfaceIntersect,
   GlobalData,
@@ -6,13 +6,13 @@ import type {
   SVGRendererConfig,
 } from '@/types'
 
-import SVGCompElement from '@/elements/svg/SVGCompElement'
-import SVGRendererBase from '@/renderers/SVGRendererBase'
+import { SVGCompElement } from '@/elements/svg/SVGCompElement'
+import { SVGRendererBase } from '@/renderers/SVGRendererBase'
 import { createElementID } from '@/utils'
 import { RendererType } from '@/utils/enums'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SVGRenderer extends SVGRendererBase {
+export class SVGRenderer extends SVGRendererBase {
   rendererType: RendererType
 
   constructor(animationItem: AnimationItem, config?: SVGRendererConfig) {

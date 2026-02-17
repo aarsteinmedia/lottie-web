@@ -4,9 +4,9 @@ import type {
 } from '@/types'
 
 import { PropType } from '@/utils/enums'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 
-export default class KeyframedValueProperty extends BaseProperty {
+export class KeyframedValueProperty extends BaseProperty {
   override pv: number | number[]
   selectorValue?: string
   override v: number

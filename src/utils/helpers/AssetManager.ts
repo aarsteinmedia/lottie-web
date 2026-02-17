@@ -1,6 +1,6 @@
-import featureSupport from '@/utils/featureSupport'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { featureSupport } from '@/utils/featureSupport'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
 const id = '__lottie_element_luma_buffer'
 let lumaBuffer: null | HTMLCanvasElement = null,

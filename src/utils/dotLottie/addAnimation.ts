@@ -2,14 +2,14 @@ import type {
   AddAnimationParams, LottieManifest, Result
 } from '@/types'
 
-import createDotLottie from '@/utils/dotLottie/createDotLottie'
-import getAnimationData from '@/utils/dotLottie/getAnimationData'
+import { createDotLottie } from '@/utils/dotLottie/createDotLottie'
+import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
 
 /**
  * Creates a new dotLottie file, by combinig several animations.
  * If set to false the function returns an ArrayBuffer. Defaults to true.
  */
-export default async function addAnimation ({
+export async function addAnimation ({
   configs,
   fileName,
   generator,

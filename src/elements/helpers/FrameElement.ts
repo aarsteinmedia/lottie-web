@@ -1,6 +1,6 @@
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-import HierarchyElement from '@/elements/helpers/HierarchyElement'
+import { HierarchyElement } from '@/elements/helpers/HierarchyElement'
 import { PropType } from '@/utils/enums'
 
 /**
@@ -9,7 +9,7 @@ import { PropType } from '@/utils/enums'
  *
  */
 
-export default abstract class FrameElement extends HierarchyElement {
+export abstract class FrameElement extends HierarchyElement {
   _mdf?: boolean
   displayStartTime = 0
 

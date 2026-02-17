@@ -17,6 +17,4 @@ class FeatureSupport {
   }
 }
 
-const featureSupport = new FeatureSupport()
-
-export default featureSupport
+export const featureSupport = new FeatureSupport()

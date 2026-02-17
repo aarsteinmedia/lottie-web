@@ -14,12 +14,12 @@ import type {
   Vector4,
   VectorProperty,
 } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type Matrix from '@/utils/Matrix'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
-import type MultiDimensionalProperty from '@/utils/properties/MultiDimensionalProperty'
-import type ValueProperty from '@/utils/properties/ValueProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
+import type { Matrix } from '@/utils/Matrix'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { isArray } from '@/utils'
 import { buildBezierData } from '@/utils/Bezier'
@@ -27,7 +27,7 @@ import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { degToRads, initialDefaultFrame } from '@/utils/helpers/constants'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 const quaternionToEuler = (out: Vector3, quat: Vector4) => {
     const qx = quat[0],
@@ -116,7 +116,7 @@ const quaternionToEuler = (out: Vector3, quat: Vector4) => {
     return out
   }
 
-export default abstract class BaseProperty extends DynamicPropertyContainer {
+export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
   _isFirstFrame?: boolean

@@ -2,10 +2,10 @@ import type { ElementInterfaceIntersect, StrokeData } from '@/types'
 
 import { ArrayType, RendererType } from '@/utils/enums'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class DashProperty extends DynamicPropertyContainer {
+export class DashProperty extends DynamicPropertyContainer {
   dashArray: Float32Array
   dashoffset: Float32Array
   dashStr: string

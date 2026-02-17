@@ -8,10 +8,10 @@ import type {
 import { isArrayOfNum } from '@/utils'
 import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class GradientProperty extends DynamicPropertyContainer {
+export class GradientProperty extends DynamicPropertyContainer {
   _cmdf: boolean
   _collapsable: boolean
   _hasOpacity: number

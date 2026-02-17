@@ -19,7 +19,7 @@ import { createTypedArray } from '@/utils/helpers/arrays'
  *
  * All values are handled as floating point values.
  */
-export default class Matrix {
+export class Matrix {
   props: Float32Array
   private _identity: boolean
   private _identityCalculated: boolean

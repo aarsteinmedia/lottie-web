@@ -1,20 +1,20 @@
 
-import type CVShapeElement from '@/elements/canvas/CVShapeElement'
-import type HShapeElement from '@/elements/html/HShapeElement'
-import type SVGShapeElement from '@/elements/svg/SVGShapeElement'
+import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
+import type { HShapeElement } from '@/elements/html/HShapeElement'
+import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   Caching,
   ElementInterfaceIntersect,
   Keyframe,
   Shape,
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { PropType } from '@/utils/enums'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
-import ShapeBaseProperty from '@/utils/shapes/properties/ShapeBaseProperty'
+import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
 export class ShapeProperty extends ShapeBaseProperty {
   ix?: number

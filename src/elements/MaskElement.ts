@@ -6,17 +6,17 @@ import type {
   StoredData,
   ViewData,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { createElementID } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { getLocationHref } from '@/utils/helpers/locationHref'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
-export default class MaskElement {
+export class MaskElement {
   data: LottieLayer
   element: ElementInterfaceIntersect
   globalData: GlobalData

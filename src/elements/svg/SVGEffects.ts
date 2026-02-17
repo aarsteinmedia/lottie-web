@@ -1,4 +1,4 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type {
   EffectElement, EffectValue, ElementInterfaceIntersect
 } from '@/types'
@@ -18,7 +18,7 @@ interface RegisteredEffects {
 const idPrefix = 'filter_result_',
   registeredEffects: RegisteredEffects = {}
 
-export default class SVGEffects {
+export class SVGEffects {
   filters: GroupEffect[]
   constructor(elem: ElementInterfaceIntersect) {
     let source = 'SourceGraphic'

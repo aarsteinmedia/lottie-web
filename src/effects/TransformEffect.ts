@@ -1,12 +1,12 @@
-import type GroupEffect from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect'
 import type { Vector2, Vector3 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { EffectTypes } from '@/utils/enums'
 import { degToRads } from '@/utils/helpers/constants'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 
-export default abstract class TransformEffect {
+export abstract class TransformEffect {
   _mdf?: boolean
   _opMdf?: boolean
   effectsManager?: GroupEffect

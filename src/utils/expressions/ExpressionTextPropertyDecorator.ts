@@ -1,8 +1,8 @@
 import type { DocumentData, ExpressionProperty } from '@/types'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
-import TextProperty from '@/utils/text/TextProperty'
+import { TextProperty } from '@/utils/text/TextProperty'
 
 function searchExpressions(this: TextProperty) {
   if (this.data.d?.x) {

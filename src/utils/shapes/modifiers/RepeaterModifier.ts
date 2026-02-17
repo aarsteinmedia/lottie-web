@@ -1,21 +1,21 @@
-import type ShapeGroupData from '@/elements/helpers/shapes/ShapeGroupData'
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
+import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
   Shape,
   ShapeDataInterface,
   VectorProperty,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { isArray } from '@/utils'
 import { ShapeType } from '@/utils/enums'
-import Matrix from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
-export default class RepeaterModifier extends ShapeModifier {
+export class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []
   c?: ValueProperty
   override data?: Shape

@@ -1,16 +1,16 @@
 // @ts-nocheck: TODO:
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
+import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect, Shape, Vector2
 } from '@/types'
-import type ShapeCollection from '@/utils/shapes/ShapeCollection'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { Modifier } from '@/utils/enums'
 import { registerModifier } from '@/utils/shapes/modifiers'
-import ShapeModifier from '@/utils/shapes/modifiers/ShapeModifier'
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 
-export default class MouseModifier extends ShapeModifier {
+export class MouseModifier extends ShapeModifier {
   override data?: Shape | Shape[]
   positions: unknown[] = []
   override addShapeToModifier(_shapeData: SVGShapeData) {

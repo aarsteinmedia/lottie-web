@@ -1,6 +1,6 @@
 import type { FontList } from '@/types'
 
-export default function getFontProperties(fontData: FontList) {
+export function getFontProperties(fontData: FontList) {
   const styles = fontData.fStyle ? fontData.fStyle.split(' ') : []
 
   let fWeight = 'normal',

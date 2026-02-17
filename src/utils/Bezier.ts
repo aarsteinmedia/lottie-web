@@ -2,13 +2,13 @@
 import type {
   BezierLength, BezierPoint, SegmentLength, Vector2
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { ArrayType } from '@/utils/enums'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import { getDefaultCurveSegments } from '@/utils/helpers/resolution'
-import bezierLengthPool from '@/utils/pooling/bezierLengthPool'
-import segmentsLengthPool from '@/utils/pooling/segmentLengthPool'
+import { bezierLengthPool } from '@/utils/pooling/bezierLengthPool'
+import { segmentsLengthPool } from '@/utils/pooling/segmentLengthPool'
 
 interface StoredData { [key: string]: BezierData | undefined }
 

@@ -4,9 +4,9 @@ import type {
   SVGRendererConfig,
 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
+import { FrameElement } from '@/elements/helpers/FrameElement'
 
-export default abstract class RenderableElement extends FrameElement {
+export abstract class RenderableElement extends FrameElement {
   hidden?: boolean
   isInRange?: boolean
   isTransparent?: boolean

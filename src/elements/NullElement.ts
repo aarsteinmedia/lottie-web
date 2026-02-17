@@ -4,9 +4,9 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import FrameElement from '@/elements/helpers/FrameElement'
+import { FrameElement } from '@/elements/helpers/FrameElement'
 
-export default class NullElement extends FrameElement {
+export class NullElement extends FrameElement {
   constructor(
     data: LottieLayer,
     globalData: GlobalData,

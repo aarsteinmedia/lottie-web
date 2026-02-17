@@ -1,9 +1,9 @@
-import type RepeaterModifier from '@/utils/shapes/modifiers/RepeaterModifier'
+import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-export default class RepeaterInterface extends BaseInterface {
+export class RepeaterInterface extends BaseInterface {
   override prop?: RepeaterModifier
 
   get copies() {

@@ -5,10 +5,10 @@ import type {
 import {
   AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect
 } from '@/effects'
-import EffectsManager from '@/effects/EffectsManager'
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { EffectsManager } from '@/effects/EffectsManager'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-export default class GroupEffect extends DynamicPropertyContainer {
+export class GroupEffect extends DynamicPropertyContainer {
   override data?: Effect
   effectElements: EFXElement[] = []
   override getValue = this.iterateDynamicProperties

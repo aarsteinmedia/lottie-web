@@ -6,7 +6,7 @@ import type {
   AnimationData, LottieManifest, Shape
 } from '@/types'
 
-import resolveAssets from '@/utils/dotLottie/resolveAssets'
+import { resolveAssets } from '@/utils/dotLottie/resolveAssets'
 
 const unzip = async (resp: Response): Promise<Unzipped> => {
     const u8 = new Uint8Array(await resp.arrayBuffer()),
@@ -52,7 +52,7 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
         return `${quote}${content}${quote}`
       })
 
-export default async function getLottieJSON(resp: Response) {
+export async function getLottieJSON(resp: Response) {
   const unzipped = await unzip(resp),
     manifest = getManifest(unzipped),
     data = [],

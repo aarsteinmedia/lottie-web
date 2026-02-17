@@ -1,10 +1,10 @@
 import type { PoolElement } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
-import double from '@/utils/pooling/double'
+import { double } from '@/utils/pooling/double'
 
-export default class PoolFactory {
+export class PoolFactory {
   private _create: (_element?: ShapePath) => PoolElement
   private _length = 0
   private _maxLength: number
@@ -29,7 +29,7 @@ export default class PoolFactory {
 
     if (this._length) {
       this._length -= 1
-      element = this.pool[this._length] as PoolElement
+      element = this.pool[this._length]
     } else {
       element = this._create()
     }

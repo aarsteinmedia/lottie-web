@@ -1,16 +1,16 @@
 // @ts-nocheck
-import type EffectsManager from '@/effects/EffectsManager'
-import type BaseElement from '@/elements/BaseElement'
+import type { EffectsManager } from '@/effects/EffectsManager'
+import type { BaseElement } from '@/elements/BaseElement'
 import type {
   Effect, ElementInterfaceIntersect, LottieLayer
 } from '@/types'
-import type LayerExpressionInterface from '@/utils/expressions/LayerInterface'
-import type BaseProperty from '@/utils/properties/BaseProperty'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
+import type { BaseProperty } from '@/utils/properties/BaseProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
-import PropertyInterface from '@/utils/expressions/PropertyInterface'
+import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
+import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
 
 export class GroupEffectInterface {
   effectElements: Effect[]

@@ -1,6 +1,6 @@
-import type PropertyGroupFactory from '@/utils/expressions/PropertyGroupFactory'
+import type { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 
-export default class PropertyInterface {
+export class PropertyInterface {
 
   _name: string
   propertyGroup: PropertyGroupFactory

@@ -10,7 +10,7 @@ interface CreateJSONProps {
   shouldDownload?: boolean
 }
 
-export default function createJSON({
+export function createJSON({
   animation,
   fileName,
   shouldDownload,

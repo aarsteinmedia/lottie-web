@@ -5,10 +5,10 @@ import type {
   AnimationDirection,
 } from '@/types'
 
-import AnimationItem from '@/animation/AnimationItem'
+import { AnimationItem } from '@/animation/AnimationItem'
 import { RendererType } from '@/utils/enums'
 import { isServer } from '@/utils/helpers/constants'
-import createTag from '@/utils/helpers/htmlElements'
+import { createTag } from '@/utils/helpers/htmlElements'
 
 interface RegisteredAnimation {
   animation: AnimationItem

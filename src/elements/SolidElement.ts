@@ -4,10 +4,10 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import ImageElement from '@/elements/ImageElement'
-import createNS from '@/utils/helpers/svgElements'
+import { ImageElement } from '@/elements/ImageElement'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class SolidElement extends ImageElement {
+export class SolidElement extends ImageElement {
   constructor(
     data: LottieLayer,
     globalData: GlobalData,

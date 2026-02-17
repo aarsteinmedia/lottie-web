@@ -1,5 +1,5 @@
 import type Expressions from '@/utils/expressions/Expressions'
-import type getInterface from '@/utils/expressions/InterfacesProvider'
+import type { getInterface } from '@/utils/expressions/InterfacesProvider'
 
 interface Expression {
   interface: null | typeof getInterface

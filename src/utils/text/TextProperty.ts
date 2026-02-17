@@ -6,8 +6,8 @@ import type {
   ElementInterfaceIntersect,
   TextEffectFunction,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
-import type LetterProps from '@/utils/text/LetterProps'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+import type { LetterProps } from '@/utils/text/LetterProps'
 
 import {
   isCombinedCharacter,
@@ -17,11 +17,11 @@ import {
   isVariationSelector,
   isZeroWidthJoiner,
 } from '@/utils/FontManager'
-import getFontProperties from '@/utils/getFontProperties'
+import { getFontProperties } from '@/utils/getFontProperties'
 import { initialDefaultFrame } from '@/utils/helpers/constants'
-import BaseProperty from '@/utils/properties/BaseProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
 
-export default class TextProperty extends BaseProperty {
+export class TextProperty extends BaseProperty {
   _frameId: number
   canResize: boolean
   currentData: DocumentData

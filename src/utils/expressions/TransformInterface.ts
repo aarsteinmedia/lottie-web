@@ -2,7 +2,7 @@ import type { TransformProperty } from '@/utils/properties/TransformProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
 
-export default class TransformExpressionInterface {
+export class TransformExpressionInterface {
   transform: TransformProperty
 
   get anchorPoint() {

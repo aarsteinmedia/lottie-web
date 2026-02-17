@@ -4,7 +4,7 @@ import type {
   ShapeColorValue,
   Vector3
 } from '@/types'
-import type ShapePath from '@/utils/shapes/ShapePath'
+import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { isArray, isArrayOfNum } from '@/utils'
 import { ShapeType } from '@/utils/enums'

@@ -1,10 +1,10 @@
-import type StarShapeProperty from '@/utils/shapes/properties/StarShapeProperty'
+import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
-export default class StarInterface extends BaseInterface {
+export class StarInterface extends BaseInterface {
   override prop?: StarShapeProperty
 
   get innerRadius() {

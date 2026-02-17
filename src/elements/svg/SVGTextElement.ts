@@ -7,19 +7,19 @@ import type {
   TextSpan,
   Vector3,
 } from '@/types'
-import type DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-import SVGBaseElement from '@/elements/svg/SVGBaseElement'
-import SVGCompElement from '@/elements/svg/SVGCompElement'
-import SVGShapeElement from '@/elements/svg/SVGShapeElement'
-import TextElement from '@/elements/TextElement'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
+import { SVGCompElement } from '@/elements/svg/SVGCompElement'
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { TextElement } from '@/elements/TextElement'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import createNS from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
 const emptyShapeData = { shapes: [] } as unknown as LottieLayer
 
-export default class SVGTextLottieElement extends TextElement {
+export class SVGTextLottieElement extends TextElement {
   _sizeChanged?: boolean
   bbox?: {
     height: number
@@ -113,7 +113,7 @@ export default class SVGTextLottieElement extends TextElement {
     let tSpan: SVGTextElement | SVGGElement | null = null
     const matrixHelper = this.mHelper,
       shapeStr = '',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+
       { singleShape } = this.data
     let xPos = 0,
       yPos = 0,

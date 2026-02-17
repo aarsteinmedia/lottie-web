@@ -4,10 +4,10 @@ import type {
 } from '@/types'
 
 import { RendererType } from '@/utils/enums'
-import getFontProperties from '@/utils/getFontProperties'
+import { getFontProperties } from '@/utils/getFontProperties'
 import { isServer } from '@/utils/helpers/constants'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
 const A_TAG_CODE_POINT = 917601,
   BLACK_FLAG_CODE_POINT = 127988,

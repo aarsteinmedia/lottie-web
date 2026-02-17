@@ -2,17 +2,17 @@ import type {
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
 } from '@/types'
-import type KeyframedValueProperty from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 
 import { PropType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
-import BaseProperty from '@/utils/properties/BaseProperty'
-import TextSelectorProp from '@/utils/text/TextSelectorProperty'
+import { BaseProperty } from '@/utils/properties/BaseProperty'
+import { TextSelectorProperty } from '@/utils/text/TextSelectorProperty'
 
 const notImplemented = 'Method not implemented'
 
-export default class TextExpressionSelectorPropFactory extends BaseProperty {
+export class TextExpressionSelectorPropFactory extends BaseProperty {
   lastValue: Vector3
   selectorValue: number
 
@@ -64,9 +64,9 @@ export default class TextExpressionSelectorPropFactory extends BaseProperty {
   }
 }
 
-const propertyGetTextProp = TextSelectorProp.prototype.getTextSelectorProp
+const propertyGetTextProp = TextSelectorProperty.prototype.getTextSelectorProp
 
-TextSelectorProp.prototype.getTextSelectorProp = function (
+TextSelectorProperty.prototype.getTextSelectorProp = function (
   elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, arr: unknown[]
 ) {
   if (data.t === 1) {

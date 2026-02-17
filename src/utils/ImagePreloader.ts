@@ -5,10 +5,10 @@ import { RendererType } from '@/utils/enums'
 import {
   isSafari, isServer, namespaceXlink
 } from '@/utils/helpers/constants'
-import createTag from '@/utils/helpers/htmlElements'
-import createNS from '@/utils/helpers/svgElements'
+import { createTag } from '@/utils/helpers/htmlElements'
+import { createNS } from '@/utils/helpers/svgElements'
 
-export default class ImagePreloader {
+export class ImagePreloader {
   assetsPath: string
   images: ImageData[]
   imagesLoadedCb: null | ((images: ImageData[] | null) => void)

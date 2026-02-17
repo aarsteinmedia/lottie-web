@@ -1,9 +1,9 @@
-import type SVGStrokeStyleData from '@/elements/helpers/shapes/SVGStrokeStyleData'
+import type { SVGStrokeStyleData } from '@/elements/helpers/shapes/SVGStrokeStyleData'
 
 import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import BaseInterface from '@/utils/expressions/shapes/BaseInterface'
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-export default class StrokeInterface extends BaseInterface {
+export class StrokeInterface extends BaseInterface {
   dashOb?: Record<PropertyKey, unknown>
   override prop?: SVGStrokeStyleData
 

@@ -5,10 +5,10 @@ import type {
   LottieLayer,
 } from '@/types'
 
-import RenderableElement from '@/elements/helpers/RenderableElement'
+import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { getExpressionInterfaces } from '@/utils/expressions'
 
-export default class FootageElement extends RenderableElement {
+export class FootageElement extends RenderableElement {
   assetData: null | LottieAsset = null
   footageData: null | SVGElement
   constructor(

@@ -1,5 +1,5 @@
-import type SVGShapeData from '@/elements/helpers/shapes/SVGShapeData'
-import type SVGStyleData from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type {
   ElementInterfaceIntersect,
   ShapeDataInterface,
@@ -7,9 +7,9 @@ import type {
   Transformer,
 } from '@/types'
 
-import DynamicPropertyContainer from '@/utils/helpers/DynamicPropertyContainer'
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
-export default class SVGNoStyleData extends DynamicPropertyContainer {
+export class SVGNoStyleData extends DynamicPropertyContainer {
   gr?: SVGGElement
   it: ShapeDataInterface[] = []
   prevViewData: SVGElementInterface[] = []

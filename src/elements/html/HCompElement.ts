@@ -5,16 +5,16 @@ import type {
   LottieLayer,
   ThreeDElement,
 } from '@/types'
-import type ValueProperty from '@/utils/properties/ValueProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import CompElement from '@/elements/CompElement'
-import HBaseElement from '@/elements/html/HBaseElement'
-import SVGCompElement from '@/elements/svg/SVGCompElement'
-import HybridRendererBase from '@/renderers/HybridRendererBase'
+import { CompElement } from '@/elements/CompElement'
+import { HBaseElement } from '@/elements/html/HBaseElement'
+import { SVGCompElement } from '@/elements/svg/SVGCompElement'
+import { HybridRendererBase } from '@/renderers/HybridRendererBase'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
-export default class HCompElement extends CompElement {
+export class HCompElement extends CompElement {
   pendingElements: ElementInterfaceIntersect[]
   supports3d?: boolean
   svgElement?: SVGSVGElement
