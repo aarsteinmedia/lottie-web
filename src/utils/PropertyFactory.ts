@@ -78,4 +78,5 @@ function getProp<T = number | number[]>(
 
 const PropertyFactory = { getProp }
 
+// eslint-disable-next-line import/no-default-export
 export default PropertyFactory

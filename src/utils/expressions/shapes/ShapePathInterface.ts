@@ -7,13 +7,13 @@ import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
 
 export class ShapePathInterface {
-  _name?: string
-  ind?: number
-  ix?: number
-  mn?: string
+  _name?: undefined | string
+  ind?: undefined | number
+  ix?: undefined | number
+  mn?: undefined | string
   prop: null | ShapeProperty
   propertyGroup: LayerExpressionInterface
-  propertyIndex?: number
+  propertyIndex?: undefined | number
 
   get path() {
     if (this.prop?.k) {

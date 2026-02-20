@@ -2,9 +2,10 @@ import type { ShapePathInterface } from '@/utils/expressions/shapes/ShapePathInt
 
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
+// @ts-expect-error: incompatible type _name
 export class GroupInterface extends BaseInterface {
   content?: (value: string | number) => ShapePathInterface | null
-  // @ts-expect-error
+  // @ts-expect-error: incompatible type
   override get _name() {
     return this.shape?.nm
   }

@@ -8,13 +8,13 @@ export class LetterProps {
     sc: boolean
     sw: boolean
   }
-  fc?: string | number[]
-  m?: number | string
-  o?: number
-  p?: number | number[]
-  sc?: string | number[]
-  sw?: number
-  t?: string
+  fc?: string | number[] | undefined
+  m?: number | string | undefined
+  o?: number | undefined
+  p?: number | number[] | undefined
+  sc?: string | number[] | undefined
+  sw?: number | undefined
+  t?: string | undefined
 
   constructor(
     o?: number,

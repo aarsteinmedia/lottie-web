@@ -3,7 +3,7 @@ import type { EffectElement, ElementInterfaceIntersect } from '@/types'
 
 interface RegisteredEffects {
   [id: string]: {
-    countsAsEffect?: boolean
+    countsAsEffect?: undefined | boolean
     effect: EffectElement
   } | undefined
 }

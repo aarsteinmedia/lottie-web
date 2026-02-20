@@ -10,7 +10,7 @@ import { getLocationHref } from '@/utils/helpers/locationHref'
 
 interface RegisteredEffects {
   [id: string]: {
-    countsAsEffect?: boolean
+    countsAsEffect?: undefined | boolean
     effect: EffectElement
   } | undefined
 }

@@ -5,7 +5,7 @@ import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
 export class EllipseInterface extends BaseInterface {
-  override prop?: EllShapeProperty
+  override prop?: EllShapeProperty = undefined
 
   get position() {
     return expressionPropertyFactory(this.prop?.p)

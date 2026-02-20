@@ -21,7 +21,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   pathsData?: ShapePath[] | ShapePath
   shape?: {
     _mdf?: boolean
-    paths?: {
+    paths?: undefined | {
       shapes: ShapePath[]
       _length: number
     }

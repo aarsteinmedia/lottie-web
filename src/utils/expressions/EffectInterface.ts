@@ -39,7 +39,7 @@ export class GroupEffectInterface {
   }
 }
 
-export default class EffectsExpressionInterface {
+export class EffectsExpressionInterface {
   effectElements: Effect[] = []
   effects: Effect[] = []
   effectsData: Effect[] = []

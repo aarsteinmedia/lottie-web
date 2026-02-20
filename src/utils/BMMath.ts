@@ -88,6 +88,7 @@ function bmRnd(value: number) {
   return value
 }
 
+// eslint-disable-next-line import/no-default-export
 export default BMMath
 
 export {

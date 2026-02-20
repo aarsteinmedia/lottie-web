@@ -298,7 +298,7 @@ const crossProduct = (a: number[], b: number[]) => [
 
 export class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty
-  lineJoin?: number
+  lineJoin?: number | undefined
   miterLimit?: ValueProperty
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {

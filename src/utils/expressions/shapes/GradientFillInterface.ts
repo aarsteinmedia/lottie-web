@@ -4,7 +4,7 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class GradientFillInterface extends BaseInterface {
-  override prop?: SVGGradientFillStyleData
+  override prop?: SVGGradientFillStyleData = undefined
 
   get endPoint() {
     return expressionPropertyFactory(this.prop?.e)

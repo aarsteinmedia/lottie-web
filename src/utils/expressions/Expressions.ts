@@ -53,4 +53,5 @@ const Expressions = {
   resetFrame
 }
 
+// eslint-disable-next-line import/no-default-export
 export default Expressions

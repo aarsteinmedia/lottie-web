@@ -411,7 +411,7 @@ export class SVGShapeElement extends ShapeElement {
       const processedPos = this.searchProcessedElement(arr[i])
 
       if (processedPos) {
-        itemsData[i] = prevViewData[processedPos - 1]
+        itemsData[i] = prevViewData[processedPos - 1] as SVGElementInterface
       } else {
         (arr[i] as Shape)._shouldRender = shouldRender
       }
@@ -430,7 +430,7 @@ export class SVGShapeElement extends ShapeElement {
             }
           } else {
             itemsData[i] = this.createStyleElement(arr[i] as Shape,
-              level)
+              level) as SVGElementInterface
           }
           if (arr[i]?._shouldRender && itemsData[i]?.style?.pElem.parentNode !== container) {
             const { pElem } = itemsData[i]?.style ?? { pElem: null }
@@ -457,14 +457,14 @@ export class SVGShapeElement extends ShapeElement {
                 continue
               }
 
-              ; (pr as ShapeDataInterface[])[j] = it[j] as ShapeDataInterface
+              ; (pr as unknown as ShapeDataInterface[])[j] = it[j] as ShapeDataInterface
             }
           } else {
             itemsData[i] = this.createGroupElement(arr[i] as Shape) as SVGElementInterface
           }
           this.searchShapes(
             arr[i]?.it as Shape[],
-            (itemsData[i]?.it ?? []) as SVGElementInterface[],
+            (itemsData[i]?.it ?? []) as unknown as SVGElementInterface[],
             itemsData[i]?.prevViewData ?? [],
             itemsData[i]?.gr as SVGGElement,
             level + 1,

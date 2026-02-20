@@ -18,7 +18,7 @@ import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 export class RepeaterModifier extends ShapeModifier {
   arr: Shape[] = []
   c?: ValueProperty
-  override data?: Shape
+  override data?: Shape = undefined
   elemsData: ShapeGroupData[] = []
   eo?: ValueProperty
   matrix?: Matrix

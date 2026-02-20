@@ -5,7 +5,7 @@ import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
 export class RoundCornersInterface extends BaseInterface {
-  override prop?: RoundCornersModifier
+  override prop?: RoundCornersModifier = undefined
 
   get radius() {
     return expressionPropertyFactory(this.prop?.rd)

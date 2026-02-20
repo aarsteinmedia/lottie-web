@@ -62,7 +62,7 @@ export const floatEqual = (a: number, b: number) =>
    */
   download = (data: string | ArrayBuffer,
     options?: DownloadOptions) => {
-    const blob = new Blob([data], { type: options?.mimeType }),
+    const blob = new Blob([data], { type: options?.mimeType ?? '' }),
       fileName = options?.name || createElementID(),
       dataURL = URL.createObjectURL(blob),
       link = document.createElement('a')

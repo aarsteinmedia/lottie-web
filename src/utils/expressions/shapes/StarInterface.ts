@@ -5,7 +5,7 @@ import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
 export class StarInterface extends BaseInterface {
-  override prop?: StarShapeProperty
+  override prop?: StarShapeProperty = undefined
 
   get innerRadius() {
     return expressionPropertyFactory(this.prop?.ir)

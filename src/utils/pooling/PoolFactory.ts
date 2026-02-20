@@ -8,7 +8,7 @@ export class PoolFactory {
   private _create: (_element?: ShapePath) => PoolElement
   private _length = 0
   private _maxLength: number
-  private _release?: (el: PoolElement) => void
+  private _release?: ((el: PoolElement) => void) | undefined
   private pool: PoolElement[]
   constructor(
     initialLength: number,
@@ -29,7 +29,7 @@ export class PoolFactory {
 
     if (this._length) {
       this._length -= 1
-      element = this.pool[this._length]
+      element = this.pool[this._length] as PoolElement
     } else {
       element = this._create()
     }

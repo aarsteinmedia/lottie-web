@@ -139,7 +139,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   mult?: number
   numKeys?: number
   offsetTime = 0
-  propertyGroup?: LayerExpressionInterface
+  propertyGroup?: undefined | LayerExpressionInterface
   pv?: string | number | number[] | DocumentData | ShapePath
   s?: ValueProperty | MultiDimensionalProperty<Vector3>
   sh?: Shape

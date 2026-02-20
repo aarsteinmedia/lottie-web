@@ -125,4 +125,5 @@ const isProd = process.env.NODE_ENV !== 'development',
   })),
   output = [...outputs, ...types]
 
+// eslint-disable-next-line import/no-default-export
 export default isProd ? output : output[0]

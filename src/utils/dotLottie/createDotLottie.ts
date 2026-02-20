@@ -73,10 +73,10 @@ const getArrayBuffer = async (zippable: Zippable) => {
  * Convert a JSON Lottie to dotLottie or combine several animations and download new dotLottie file in your browser.
  */
 interface CreateDotLottieProps {
-  animations?: AnimationData[]
-  fileName?: string
-  manifest?: LottieManifest
-  shouldDownload?: boolean
+  animations?: undefined | AnimationData[]
+  fileName?: undefined | string
+  manifest?: undefined | LottieManifest
+  shouldDownload?: undefined | boolean
 }
 
 export async function createDotLottie({

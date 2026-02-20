@@ -147,6 +147,7 @@ export class ExpressionPropertyInterface {
   }
 }
 
+// eslint-disable-next-line import/no-default-export
 export default function expressionPropertyFactory(property?: BaseProperty) {
   return new ExpressionPropertyInterface().getInterface(property)
 }

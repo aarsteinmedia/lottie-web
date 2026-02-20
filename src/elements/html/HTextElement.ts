@@ -17,8 +17,8 @@ import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class HTextElement extends TextElement {
-  compH?: number
-  compW?: number
+  compH?: undefined | number
+  compW?: undefined | number
 
   currentBBox?: {
     w: number
@@ -151,6 +151,7 @@ export class HTextElement extends TextElement {
         let shapeData
 
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (charData) {
           shapeData = charData.data
         } else {

@@ -194,7 +194,7 @@ function trimFontOptions(font: string): string {
   return enabledFamilies.join(',')
 }
 
-export default class FontManager {
+export class FontManager {
   public chars: Characacter[] | null = null
   public fonts: DocumentData[] = []
   public isLoaded = false

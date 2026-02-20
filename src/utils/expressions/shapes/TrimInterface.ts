@@ -5,7 +5,7 @@ import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
 export class TrimInterface extends BaseInterface {
-  override prop?: TrimModifier
+  override prop?: TrimModifier = undefined
   get end() {
     return expressionPropertyFactory(this.prop?.e)
   }

@@ -4,7 +4,7 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class RectInterface extends BaseInterface {
-  override prop?: RectShapeProperty
+  override prop?: RectShapeProperty = undefined
   get position() {
     return expressionPropertyFactory(this.prop?.p)
   }

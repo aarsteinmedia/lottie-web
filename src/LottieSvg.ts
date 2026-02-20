@@ -153,6 +153,7 @@ registerEffect(
 
 export { loadAnimation }
 
+// eslint-disable-next-line import/no-default-export
 export default Lottie
 
 export { type AnimationItem } from '@/animation/AnimationItem'

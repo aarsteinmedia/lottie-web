@@ -19,7 +19,7 @@ export class HCompElement extends CompElement {
   supports3d?: boolean
   svgElement?: SVGSVGElement
   threeDElements: ThreeDElement[] = []
-  transformedElement?: SVGGElement | HTMLElement
+  transformedElement?: undefined | SVGGElement | HTMLElement
   constructor(
     data: LottieLayer,
     globalData: GlobalData,

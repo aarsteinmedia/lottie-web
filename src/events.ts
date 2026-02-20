@@ -126,7 +126,7 @@ export class BMAnimationConfigErrorEvent {
   }
 }
 
-export default abstract class BaseEvent {
+export abstract class BaseEvent {
   _cbs: Partial<
     Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>
   > = {}

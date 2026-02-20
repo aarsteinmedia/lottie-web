@@ -1,5 +1,5 @@
 import type {
-  Caching, ExpressionProperty, Vector3
+  Caching, ElementInterfaceIntersect, ExpressionProperty, Vector3
 } from '@/types'
 import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
@@ -499,11 +499,11 @@ function addPropertyDecorator() {
     prop.lock = false
     if (type === 3) {
       expressionHelpers.searchExpressions(
-        elem, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     } else if (type === 4) {
       expressionHelpers.searchExpressions(
-        elem, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
       )
     }
     if (prop.k) {
@@ -518,4 +518,5 @@ function initialize() {
   addPropertyDecorator()
 }
 
+// eslint-disable-next-line import/no-default-export
 export default initialize

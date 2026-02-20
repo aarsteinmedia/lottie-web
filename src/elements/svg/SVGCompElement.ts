@@ -44,7 +44,7 @@ export class SVGCompElement extends SVGBaseElement {
   includeLayers = SVGRendererBase.prototype.includeLayers
   override initElement = CompElement.prototype.initElement
   initItems = SVGRendererBase.prototype.initItems
-  layers?: LottieLayer[]
+  layers?: undefined | LottieLayer[]
   pendingElements: ElementInterfaceIntersect[]
   override prepareFrame = CompElement.prototype.prepareFrame
   renderedFrame = -1

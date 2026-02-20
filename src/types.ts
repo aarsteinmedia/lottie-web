@@ -62,7 +62,7 @@ import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterfac
 import type { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
 import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
-import type FontManager from '@/utils/FontManager'
+import type { FontManager } from '@/utils/FontManager'
 import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import type { ImagePreloader } from '@/utils/ImagePreloader'
 import type { Matrix } from '@/utils/Matrix'
@@ -504,7 +504,7 @@ export interface ShapeColorValue {
 export interface Shape {
   _length: number
   _processed?: boolean
-  _shouldRender?: boolean
+  _shouldRender?: boolean | undefined
   /** Anchor point / Highlight angle for radial gradient. */
   a?: VectorProperty<Vector1 | Vector2 | Vector3>
   /** Blend Mode. */
@@ -612,7 +612,7 @@ export interface Shape {
 export interface StoredData {
   elem: SVGPathElement
   expan: SVGFEMorphologyElement | null
-  filterId?: string
+  filterId?: undefined | string
   lastOperator: string
   lastPath: string
   lastRadius: number
@@ -996,16 +996,16 @@ export interface TextVectorData {
 }
 
 export interface TextPathData {
-  _mdf?: boolean
-  a?: ValueProperty
-  f?: ValueProperty
-  l: ValueProperty
-  m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty
-  n?: ValueProperty
-  p?: ValueProperty
-  pi?: PathInfo
-  r?: ValueProperty
-  v?: ValueProperty
+  _mdf?: boolean | undefined
+  a?: ValueProperty | undefined
+  f?: ValueProperty | undefined
+  l: ValueProperty | undefined
+  m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | undefined
+  n?: ValueProperty | undefined
+  p?: ValueProperty | undefined
+  pi?: PathInfo | undefined
+  r?: ValueProperty | undefined
+  v?: ValueProperty | undefined
 }
 
 export type EffectElement =
@@ -1183,7 +1183,7 @@ export interface LottieLayer {
   /** Time remappoing. */
   tm?: VectorProperty
   /** Matte reference (for shape). */
-  tp?: number
+  tp?: undefined | number
   /** Matte mode. */
   tt?: number
   /** Layer type.*/
@@ -1327,10 +1327,10 @@ export interface Caching {
 }
 
 export interface GlobalData {
-  _mdf?: boolean
+  _mdf?: undefined | boolean
   audioController?: AudioController
   blendMode?: string
-  canvasContext?: null | CanvasRenderingContext2D
+  canvasContext?: undefined | null | CanvasRenderingContext2D
   comp?: CompElementInterface
   compSize?: {
     w: number
@@ -1340,7 +1340,7 @@ export interface GlobalData {
   defs: SVGDefsElement
   fontManager?: FontManager
   frameId: number
-  frameNum?: number
+  frameNum?: undefined | number
   frameRate: number
   getAssetData: AnimationItem['getAssetData']
   getAssetsPath: AnimationItem['getAssetsPath']
@@ -1350,7 +1350,7 @@ export interface GlobalData {
   mouseY?: number
   nm?: string
   popExpression: () => void
-  progressiveLoad?: boolean
+  progressiveLoad?: undefined | boolean
   projectInterface: ProjectInterface
   pushExpression: () => void
   registerExpressionProperty: (expression: ExpressionProperty) => void

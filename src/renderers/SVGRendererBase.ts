@@ -63,7 +63,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(layers[pos] as LottieLayer)
+    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
 
     elements[pos] = element
     if (getExpressionsPlugin()) {
@@ -352,6 +352,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
         }
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (this.globalData._mdf) {
         for (let i = 0; i < length; i++) {
           if (typeof this.elements[i] === 'boolean') {

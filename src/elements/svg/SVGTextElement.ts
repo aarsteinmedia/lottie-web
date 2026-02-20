@@ -33,7 +33,7 @@ export class SVGTextLottieElement extends TextElement {
   override getBaseElement = SVGBaseElement.prototype.getBaseElement
   getMatte = SVGBaseElement.prototype.getMatte
   override initRendererElement = SVGBaseElement.prototype.initRendererElement
-  renderedFrame?: number
+  renderedFrame?: undefined | number
   renderedLetters: string[] = []
   override renderElement = SVGBaseElement.prototype.renderElement
   setMatte = SVGBaseElement.prototype.setMatte
@@ -114,14 +114,14 @@ export class SVGTextLottieElement extends TextElement {
     const matrixHelper = this.mHelper,
       shapeStr = '',
 
-      { singleShape } = this.data
+      { singleShape: isSingleShape } = this.data
     let xPos = 0,
       yPos = 0,
       isFirstLine = true
     const trackingOffset =
       documentData.tr * 0.001 * Number(documentData.finalSize)
 
-    if (singleShape && !hasGlyphs && !documentData.sz) {
+    if (isSingleShape && !hasGlyphs && !documentData.sz) {
       const tElement = this.textContainer
 
       let justify
@@ -177,7 +177,7 @@ export class SVGTextLottieElement extends TextElement {
           glyph: null,
           span: null,
         } as any)
-        if (!hasGlyphs || !singleShape || i === 0) {
+        if (!hasGlyphs || !isSingleShape || i === 0) {
           tSpan =
             (cachedSpansLength > i
               ? this.textSpans[i]?.span
@@ -216,7 +216,7 @@ export class SVGTextLottieElement extends TextElement {
         }
 
         matrixHelper.reset()
-        if (singleShape) {
+        if (isSingleShape) {
           if (letters[i]?.n) {
             xPos = -trackingOffset
             yPos += Number(documentData.yOffset)
@@ -295,7 +295,7 @@ export class SVGTextLottieElement extends TextElement {
           continue
         }
         if (tSpan) {
-          if (singleShape) {
+          if (isSingleShape) {
             tSpan.setAttribute('transform',
               `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`)
           }
@@ -310,7 +310,7 @@ export class SVGTextLottieElement extends TextElement {
           // )
         }
       }
-      if (singleShape) {
+      if (isSingleShape) {
         tSpan?.setAttribute('d', shapeStr)
       }
     }

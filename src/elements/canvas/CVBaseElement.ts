@@ -26,8 +26,8 @@ export abstract class CVBaseElement extends RenderableElement {
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
   canvasContext?: CanvasRenderingContext2D
   currentTransform?: DOMMatrix
-  override maskManager?: CVMaskElement
-  override renderableEffectsManager?: CVEffects
+  override maskManager?: CVMaskElement = undefined
+  override renderableEffectsManager?: CVEffects = undefined
   transformCanvas?: TransformCanvas | undefined
   transformEffects: GroupEffect[] = []
 

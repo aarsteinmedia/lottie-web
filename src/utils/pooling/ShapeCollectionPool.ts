@@ -43,4 +43,5 @@ const ShapeCollectionPool = {
   releaseShape
 }
 
+// eslint-disable-next-line import/no-default-export
 export default ShapeCollectionPool

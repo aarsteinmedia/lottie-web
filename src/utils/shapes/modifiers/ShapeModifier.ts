@@ -27,7 +27,7 @@ export type ModifierInterface =
 export class ShapeModifier extends DynamicPropertyContainer {
   closed?: boolean
   elem?: ElementInterfaceIntersect
-  frameId?: number
+  frameId?: number | undefined
   k?: boolean
   shapes: SVGShapeData[] = []
   addShape(data: SVGShapeData | CVShapeData) {

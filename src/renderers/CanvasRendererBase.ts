@@ -19,7 +19,7 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
 
 export abstract class CanvasRendererBase extends BaseRenderer {
-  canvasContext?: null | CanvasRenderingContext2D
+  canvasContext?: undefined | null | CanvasRenderingContext2D
   contextData?: CVContextData
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
@@ -31,7 +31,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     if (elements[pos] || layers[pos]?.ty === 99) {
       return
     }
-    const element = this.createItem(layers[pos] as LottieLayer)
+    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
 
     elements[pos] = element
     element.initExpressions()

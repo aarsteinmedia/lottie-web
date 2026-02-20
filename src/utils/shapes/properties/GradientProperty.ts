@@ -18,7 +18,7 @@ export class GradientProperty extends DynamicPropertyContainer {
   _omdf: boolean
   c: Uint8ClampedArray
   override data: GradientColor
-  k?: boolean
+  k?: boolean | undefined
   o: Float32Array
   prop: ReturnType<typeof PropertyFactory.getProp>
   constructor(

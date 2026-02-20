@@ -4,7 +4,7 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class RepeaterInterface extends BaseInterface {
-  override prop?: RepeaterModifier
+  override prop?: RepeaterModifier = undefined
 
   get copies() {
     return expressionPropertyFactory(this.prop?.c)

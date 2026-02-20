@@ -5,7 +5,7 @@ import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class StrokeInterface extends BaseInterface {
   dashOb?: Record<PropertyKey, unknown>
-  override prop?: SVGStrokeStyleData
+  override prop?: SVGStrokeStyleData = undefined
 
   get color() {
     return expressionPropertyFactory(this.prop?.c)

@@ -9,7 +9,7 @@ import { EffectsManager } from '@/effects/EffectsManager'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 export class GroupEffect extends DynamicPropertyContainer {
-  override data?: Effect
+  override data?: Effect = undefined
   effectElements: EFXElement[] = []
   override getValue = this.iterateDynamicProperties
   type?: string

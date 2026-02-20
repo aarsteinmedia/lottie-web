@@ -24,7 +24,7 @@ export class HShapeElement extends ShapeElement {
     right: 0,
     top: 0,
   }
-  shapeCont?: SVGElement
+  shapeCont?: undefined | SVGElement
   shapesContainer: SVGGElement
   stylesList: CSSStyleDeclaration[]
   svgElement?: SVGSVGElement

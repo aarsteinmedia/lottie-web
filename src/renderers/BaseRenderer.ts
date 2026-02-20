@@ -4,7 +4,6 @@ import type { CVImageElement } from '@/elements/canvas/CVImageElement'
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import type { CVTextElement } from '@/elements/canvas/CVTextElement'
-import type { HierarchyElement } from '@/elements/helpers/HierarchyElement'
 import type { HCameraElement } from '@/elements/html/HCameraElement'
 import type { HCompElement } from '@/elements/html/HCompElement'
 import type { HImageElement } from '@/elements/html/HImageElement'
@@ -27,7 +26,7 @@ import type { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 import { AudioElement } from '@/elements/AudioElement'
 import { FootageElement } from '@/elements/FootageElement'
 import { FrameElement } from '@/elements/helpers/FrameElement'
-import FontManager from '@/utils/FontManager'
+import { FontManager } from '@/utils/FontManager'
 import { slotFactory } from '@/utils/SlotManager'
 
 export abstract class BaseRenderer extends FrameElement {
@@ -66,21 +65,21 @@ export abstract class BaseRenderer extends FrameElement {
         i++
         continue
       }
+
+      const el = elements[i]
+
       if (
-        !elements[i] ||
-        elements[i] === (true as unknown as ElementInterfaceIntersect)
+        !el ||
+        el === (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(i)
 
-        // if (!this.addPendingElement) {
-        //   throw new Error(`${this.constructor.name}: Method addPendingElement is not initialized`)
-        // }
         this.addPendingElement(element)
         i++
         continue
       }
-      hierarchy.push(elements[i])
-      ; (elements[i] as HierarchyElement).setAsParent()
+      hierarchy.push(el)
+      el.setAsParent()
       if (layers[i]?.parent === undefined) {
         element.setHierarchy(hierarchy)
         i++
@@ -218,7 +217,7 @@ export abstract class BaseRenderer extends FrameElement {
 
     for (let i = 0; i < length; i++) {
       if (this.elements[i]?.data.ind === ind) {
-        return this.elements[i]
+        return this.elements[i] ?? null
       }
     }
 

@@ -20,7 +20,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 export class HCameraElement extends FrameElement {
   _prevMat: Matrix
   a?: ValueProperty<Vector3>
-  override comp?: HCompElement
+  override comp?: HCompElement = undefined
   mat?: Matrix
   or?: ValueProperty<Vector3>
   p?: ValueProperty<number[]>

@@ -14,7 +14,8 @@ import type {
 } from '@/types'
 // import type Expressions from '@/utils/expressions/Expressions'
 
-import BaseEvent, {
+import {
+  BaseEvent,
   BMCompleteEvent,
   BMCompleteLoopEvent,
   BMConfigErrorEvent,

@@ -385,4 +385,5 @@ const Bezier = {
   pointOnLine3D,
 }
 
+// eslint-disable-next-line import/no-default-export
 export default Bezier

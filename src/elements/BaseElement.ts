@@ -11,7 +11,7 @@ import type {
   // SVGElementInterface,
 } from '@/types'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
-import type EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
+import type { EffectsExpressionInterface } from '@/utils/expressions/EffectInterface'
 // import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'

@@ -6,7 +6,7 @@ import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactor
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class TransformInterface extends BaseInterface {
-  override prop?: SVGTransformData | SVGFillStyleData
+  override prop?: SVGTransformData | SVGFillStyleData = undefined
   ty?: ShapeType
 
   get anchorPoint() {

@@ -20,8 +20,8 @@ import { clone } from '@/utils/pooling/ShapePool'
 export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
-  public comp?: CompElementInterface
-  public override data?: Shape
+  public comp?: CompElementInterface | undefined
+  public override data?: Shape = undefined
   public effectsSequence: ((arg: unknown) => ShapePath)[] = []
   public elem?: SVGShapeElement | CVShapeElement | HShapeElement
   frameId?: number
@@ -32,7 +32,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   lock?: boolean
   offsetTime = 0
   p?: MultiDimensionalProperty
-  public paths?: ShapePath[] | ShapeCollection
+  public paths?: ShapePath[] | ShapeCollection | undefined
   public pv?: ShapePath
   ty?: ShapeType
   public v?: ShapePath

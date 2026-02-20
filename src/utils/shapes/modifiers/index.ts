@@ -47,4 +47,5 @@ const ShapeModifiers = {
   registerModifier
 }
 
+// eslint-disable-next-line import/no-default-export
 export default ShapeModifiers

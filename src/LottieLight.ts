@@ -92,4 +92,5 @@ registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
 
 export { loadAnimation }
 
+// eslint-disable-next-line import/no-default-export
 export default Lottie
