@@ -69,7 +69,7 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
 
     let u8: Uint8Array | undefined
 
-    const assetPath = asset.u?.slice(1)
+    const assetPath = asset.u?.replace(/^\/+/, '')
 
     /**
      * Check whether dotLottie is v.1.0 or v.2.0: if images folder is abbreviated.
