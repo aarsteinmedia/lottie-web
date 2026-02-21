@@ -52,7 +52,8 @@
     "prod": "pnpm build:types && pnpm build",
     "dev": "rollup -cw --configPlugin typescript --environment NODE_ENV:development",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "deploy": "npm publish"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
