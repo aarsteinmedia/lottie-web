@@ -1,6 +1,6 @@
-import type GroupEffect from '../../effects/GroupEffect';
+import type { GroupEffect } from '../../effects/GroupEffect';
 import type { ElementInterfaceIntersect } from '../../types';
-export default class SVGTritoneFilter {
+export declare class SVGTritoneFilter {
     feFuncB: SVGFEFuncBElement;
     feFuncG: SVGFEFuncGElement;
     feFuncR: SVGFEFuncRElement;

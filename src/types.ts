@@ -390,20 +390,20 @@ export interface Letter {
 }
 
 export type SVGRendererConfig = BaseRendererConfig & {
-  title?: string
-  description?: string
-  preserveAspectRatio?: string
-  progressiveLoad?: boolean
-  hideOnTransparent?: boolean
-  viewBoxOnly?: boolean
-  viewBoxSize?: string | false
-  focusable?: boolean
-  filterSize?: FilterSizeConfig
-  contentVisibility?: string
-  runExpressions?: boolean
-  width?: number
-  height?: number
-  id?: string
+  title?: undefined | string
+  description?: undefined | string
+  preserveAspectRatio?: undefined | string
+  progressiveLoad?: undefined | boolean
+  hideOnTransparent?: undefined | boolean
+  viewBoxOnly?: undefined | boolean
+  viewBoxSize?: undefined | string | false
+  focusable?: undefined | boolean
+  filterSize?: undefined | FilterSizeConfig
+  contentVisibility?: undefined | string
+  runExpressions?: undefined | boolean
+  width?: undefined | number
+  height?: undefined | number
+  id?: undefined | string
 }
 
 export type CanvasRendererConfig = BaseRendererConfig & {
@@ -1433,4 +1433,8 @@ export interface Cartesian3D {
   x: number
   y: number
   z: number
+}
+
+declare global {
+  interface Document { _isProxy?: boolean }
 }

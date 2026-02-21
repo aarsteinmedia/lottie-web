@@ -60,7 +60,7 @@ export async function getLottieJSON(resp: Response) {
     { length } = manifest.animations
 
   /**
-   * Check whether Lottie animations folder is abbreviated.
+   * Check whether dotLottie is v.1.0 or v.2.0: if animations folder is abbreviated.
    */
   let animationsFolder = 'animations'
 

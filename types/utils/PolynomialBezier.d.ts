@@ -1,6 +1,6 @@
 import type { Vector2 } from '../types';
-import type ShapePath from '../utils/shapes/ShapePath';
-export default class PolynomialBezier {
+import type { ShapePath } from '../utils/shapes/ShapePath';
+export declare class PolynomialBezier {
     a: Vector2;
     b: Vector2;
     c: Vector2;

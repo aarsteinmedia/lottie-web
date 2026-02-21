@@ -1,6 +1,6 @@
 import type { RenderableComponent, SourceRect } from '../../types';
-import FrameElement from '../../elements/helpers/FrameElement';
-export default abstract class RenderableElement extends FrameElement {
+import { FrameElement } from '../../elements/helpers/FrameElement';
+export declare abstract class RenderableElement extends FrameElement {
     hidden?: boolean;
     isInRange?: boolean;
     isTransparent?: boolean;

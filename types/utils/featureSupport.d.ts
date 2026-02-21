@@ -4,5 +4,5 @@ declare class FeatureSupport {
     svgLumaHidden: boolean;
     constructor();
 }
-declare const featureSupport: FeatureSupport;
-export default featureSupport;
+export declare const featureSupport: FeatureSupport;
+export {};

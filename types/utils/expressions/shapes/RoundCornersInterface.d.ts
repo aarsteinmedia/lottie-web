@@ -1,6 +1,6 @@
-import type RoundCornersModifier from '../../../utils/shapes/modifiers/RoundCornersModifier';
-import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-export default class RoundCornersInterface extends BaseInterface {
+import type { RoundCornersModifier } from '../../../utils/shapes/modifiers/RoundCornersModifier';
+import { BaseInterface } from '../../../utils/expressions/shapes/BaseInterface';
+export declare class RoundCornersInterface extends BaseInterface {
     prop?: RoundCornersModifier;
     get radius(): (() => {
         mult: number;

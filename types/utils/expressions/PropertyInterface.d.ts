@@ -1,5 +1,5 @@
-import type PropertyGroupFactory from '../../utils/expressions/PropertyGroupFactory';
-export default class PropertyInterface {
+import type { PropertyGroupFactory } from '../../utils/expressions/PropertyGroupFactory';
+export declare class PropertyInterface {
     _name: string;
     propertyGroup: PropertyGroupFactory;
     constructor(propertyName: string, propertyGroup: PropertyGroupFactory);

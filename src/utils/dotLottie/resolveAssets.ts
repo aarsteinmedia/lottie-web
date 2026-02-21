@@ -64,8 +64,24 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
       continue
     }
 
-    const type = isImage(asset) ? 'images' : 'audio',
-      u8 = unzipped?.[`${type}/${asset.p}`]
+    const _isImage = isImage(asset),
+      type = _isImage ? 'images' : 'audio'
+
+    let u8: Uint8Array | undefined
+
+    const assetPath = asset.u?.slice(1)
+
+    /**
+     * Check whether dotLottie is v.1.0 or v.2.0: if images folder is abbreviated.
+     */
+    if (assetPath && assetPath !== '') {
+      u8 = unzipped?.[`${assetPath}${asset.p}`]
+    } else if (_isImage) {
+      u8 = unzipped?.[`i/${asset.p}`]
+    }
+
+    u8 = u8 ?? unzipped?.[`${type}/${asset.p}`]
+
 
     if (!u8) {
       continue

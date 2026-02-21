@@ -1,4 +1,4 @@
-export default class Matrix {
+export declare class Matrix {
     props: Float32Array;
     private _identity;
     private _identityCalculated;

@@ -1,25 +1,25 @@
 import type { Caching, CompElementInterface, DocumentData, EffectFunction, ElementInterfaceIntersect, ExpressionProperty, Keyframe, KeyframesMetadata, Shape, Vector3 } from '../../types';
-import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
-import type Matrix from '../../utils/Matrix';
-import type KeyframedValueProperty from '../../utils/properties/KeyframedValueProperty';
-import type MultiDimensionalProperty from '../../utils/properties/MultiDimensionalProperty';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import type ShapePath from '../../utils/shapes/ShapePath';
-import DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
-export default abstract class BaseProperty extends DynamicPropertyContainer {
+import type { LayerExpressionInterface } from '../../utils/expressions/LayerInterface';
+import type { Matrix } from '../../utils/Matrix';
+import type { KeyframedValueProperty } from '../../utils/properties/KeyframedValueProperty';
+import type { MultiDimensionalProperty } from '../../utils/properties/MultiDimensionalProperty';
+import type { ValueProperty } from '../../utils/properties/ValueProperty';
+import type { ShapePath } from '../../utils/shapes/ShapePath';
+import { DynamicPropertyContainer } from '../../utils/helpers/DynamicPropertyContainer';
+export declare abstract class BaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
     _isFirstFrame?: boolean;
     _name?: string;
     _placeholder?: boolean;
-    comp?: CompElementInterface;
+    comp?: undefined | CompElementInterface;
     e?: ValueProperty | {
         v: number;
     };
     effectsSequence: EffectFunction[];
     elem?: ElementInterfaceIntersect;
     frameExpressionId?: number;
-    frameId?: number;
+    frameId?: undefined | number;
     g?: unknown;
     initFrame: number;
     k?: boolean;
@@ -31,7 +31,7 @@ export default abstract class BaseProperty extends DynamicPropertyContainer {
     mult?: number;
     numKeys?: number;
     offsetTime: number;
-    propertyGroup?: LayerExpressionInterface;
+    propertyGroup?: undefined | LayerExpressionInterface;
     pv?: string | number | number[] | DocumentData | ShapePath;
     s?: ValueProperty | MultiDimensionalProperty<Vector3>;
     sh?: Shape;

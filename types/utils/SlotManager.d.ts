@@ -4,4 +4,4 @@ export declare class SlotManager {
     constructor(animationData: LottieLayer);
     getProp(data: DocumentData | LottieLayer | LottieAsset): any;
 }
-export default function slotFactory(animationData: LottieLayer): SlotManager;
+export declare function slotFactory(animationData: LottieLayer): SlotManager;

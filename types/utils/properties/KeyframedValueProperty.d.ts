@@ -1,6 +1,6 @@
 import type { ElementInterfaceIntersect, Keyframe, VectorProperty } from '../../types';
-import BaseProperty from '../../utils/properties/BaseProperty';
-export default class KeyframedValueProperty extends BaseProperty {
+import { BaseProperty } from '../../utils/properties/BaseProperty';
+export declare class KeyframedValueProperty extends BaseProperty {
     pv: number | number[];
     selectorValue?: string;
     v: number;

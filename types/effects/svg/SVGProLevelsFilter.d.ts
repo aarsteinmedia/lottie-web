@@ -1,6 +1,6 @@
-import type GroupEffect from '../../effects/GroupEffect';
+import type { GroupEffect } from '../../effects/GroupEffect';
 import type { ElementInterfaceIntersect } from '../../types';
-export default class SVGProLevelsFilter {
+export declare class SVGProLevelsFilter {
     feFuncA?: SVGFEFuncAElement;
     feFuncB?: SVGFEFuncBElement;
     feFuncBComposed?: SVGFEFuncBElement;

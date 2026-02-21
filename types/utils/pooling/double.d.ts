@@ -1,2 +1,2 @@
 import type { PoolElement } from '../../types';
-export default function double(arr: PoolElement[]): PoolElement[];
+export declare function double(arr: PoolElement[]): PoolElement[];

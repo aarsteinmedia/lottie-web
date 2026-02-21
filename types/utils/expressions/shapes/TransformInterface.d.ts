@@ -1,8 +1,8 @@
-import type SVGFillStyleData from '../../../elements/helpers/shapes/SVGFillStyleData';
-import type SVGTransformData from '../../../elements/helpers/shapes/SVGTransformData';
+import type { SVGFillStyleData } from '../../../elements/helpers/shapes/SVGFillStyleData';
+import type { SVGTransformData } from '../../../elements/helpers/shapes/SVGTransformData';
 import type { ShapeType } from '../../../utils/enums';
-import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-export default class TransformInterface extends BaseInterface {
+import { BaseInterface } from '../../../utils/expressions/shapes/BaseInterface';
+export declare class TransformInterface extends BaseInterface {
     prop?: SVGTransformData | SVGFillStyleData;
     ty?: ShapeType;
     get anchorPoint(): (() => {

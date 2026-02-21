@@ -60,6 +60,7 @@ export async function convert ({
         manifest: {
           ...manifest ?? manifest,
           generator,
+          version: '2'
         } as LottieManifest,
         shouldDownload,
       }),

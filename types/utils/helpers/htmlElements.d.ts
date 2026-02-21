@@ -1,1 +1,1 @@
-export default function createTag<T extends HTMLElement>(type: string): T;
+export declare function createTag<T extends HTMLElement>(type: string): T;

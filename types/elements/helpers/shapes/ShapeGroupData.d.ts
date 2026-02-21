@@ -1,5 +1,5 @@
 import type { ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
-export default class ShapeGroupData {
+export declare class ShapeGroupData {
     _shouldRender?: boolean;
     closed?: boolean;
     gr: SVGGElement;

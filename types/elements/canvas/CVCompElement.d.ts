@@ -1,6 +1,6 @@
 import type { CompElementInterface, ElementInterfaceIntersect, GlobalData, LottieLayer } from '../../types';
-import CompElement from '../../elements/CompElement';
-export default class CVCompElement extends CompElement {
+import { CompElement } from '../../elements/CompElement';
+export declare class CVCompElement extends CompElement {
     addPendingElement: (element: ElementInterfaceIntersect) => void;
     buildAllItems: () => void;
     buildElementParenting: (element: ElementInterfaceIntersect, parentName?: number, hierarchy?: ElementInterfaceIntersect[]) => void;
@@ -10,19 +10,19 @@ export default class CVCompElement extends CompElement {
     checkPendingElements: () => void;
     clearCanvas: (canvasContext?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null) => void;
     configAnimation: (animData: import("../../types").AnimationData) => void;
-    createAudio: (data: LottieLayer) => import("../AudioElement").default;
-    createCamera: (_data: LottieLayer) => import("../html/HCameraElement").default;
+    createAudio: (data: LottieLayer) => import("../AudioElement").AudioElement;
+    createCamera: (_data: LottieLayer) => import("../html/HCameraElement").HCameraElement;
     createContainerElements: () => void;
     createContent: () => void;
     createElements: () => void;
-    createFootage: (data: LottieLayer) => import("../FootageElement").default;
-    createImage: (data: LottieLayer) => import("./CVImageElement").default;
-    createItem: (layer: LottieLayer) => CVCompElement | import("../html/HCompElement").default | import("../svg/SVGCompElement").default | import("../ImageElement").default | import("../AudioElement").default | import("../svg/SVGShapeElement").default | import("../svg/SVGTextElement").default | import("./CVTextElement").default | import("./CVShapeElement").default | import("../html/HShapeElement").default | import("../FootageElement").default | import("./CVImageElement").default | import("./CVSolidElement").default | import("../NullElement").default | import("../html/HTextElement").default | import("../html/HCameraElement").default;
-    createNull: (_layer: LottieLayer) => import("../NullElement").default;
+    createFootage: (data: LottieLayer) => import("../FootageElement").FootageElement;
+    createImage: (data: LottieLayer) => import("./CVImageElement").CVImageElement;
+    createItem: (layer: LottieLayer) => CVCompElement | import("../html/HCompElement").HCompElement | import("../svg/SVGCompElement").SVGCompElement | import("../ImageElement").ImageElement | import("../AudioElement").AudioElement | import("../svg/SVGShapeElement").SVGShapeElement | import("../svg/SVGTextElement").SVGTextLottieElement | import("./CVTextElement").CVTextElement | import("./CVShapeElement").CVShapeElement | import("../html/HCameraElement").HCameraElement | import("../html/HShapeElement").HShapeElement | import("../FootageElement").FootageElement | import("./CVImageElement").CVImageElement | import("./CVSolidElement").CVSolidElement | import("../NullElement").NullElement | import("../html/HTextElement").HTextElement;
+    createNull: (_layer: LottieLayer) => import("../NullElement").NullElement;
     createRenderableComponents: () => void;
-    createShape: (data: LottieLayer) => import("./CVShapeElement").default;
-    createSolid: (data: LottieLayer) => import("./CVSolidElement").default;
-    createText: (data: LottieLayer) => import("./CVTextElement").default;
+    createShape: (data: LottieLayer) => import("./CVShapeElement").CVShapeElement;
+    createSolid: (data: LottieLayer) => import("./CVSolidElement").CVSolidElement;
+    createText: (data: LottieLayer) => import("./CVTextElement").CVTextElement;
     ctxFill: (rule?: CanvasFillRule) => void;
     ctxFillRect: (x: number, y: number, w: number, h: number) => void;
     ctxFillStyle: (value?: string) => void;
@@ -50,7 +50,7 @@ export default class CVCompElement extends CompElement {
     save: (_flag?: boolean) => void;
     searchExtraCompositions: (assets: LottieLayer[]) => void;
     setBlendMode: () => void;
-    setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").default | null) => void;
+    setProjectInterface: (pInterface: import("../../utils/expressions/ProjectInterface").ProjectInterface | null) => void;
     setupGlobalData: (animData: import("../../types").AnimationData, fontsContainer: HTMLElement | SVGDefsElement) => void;
     show: () => void;
     showElement: () => void;

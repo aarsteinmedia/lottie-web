@@ -1,5 +1,5 @@
 import type { PoolElement } from '../../types';
-export default class PoolFactory {
+export declare class PoolFactory {
     private _create;
     private _length;
     private _maxLength;

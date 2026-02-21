@@ -1,6 +1,6 @@
-import type RepeaterModifier from '../../../utils/shapes/modifiers/RepeaterModifier';
-import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-export default class RepeaterInterface extends BaseInterface {
+import type { RepeaterModifier } from '../../../utils/shapes/modifiers/RepeaterModifier';
+import { BaseInterface } from '../../../utils/expressions/shapes/BaseInterface';
+export declare class RepeaterInterface extends BaseInterface {
     prop?: RepeaterModifier;
     get copies(): (() => {
         mult: number;

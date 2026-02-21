@@ -1,5 +1,5 @@
 import type { Transformer, TransformSequence } from '../../../types';
-export default class ShapeTransformManager {
+export declare class ShapeTransformManager {
     sequenceList: TransformSequence[];
     sequences: TransformSequence;
     transform_key_count: number;

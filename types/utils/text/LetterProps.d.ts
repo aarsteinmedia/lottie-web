@@ -1,4 +1,4 @@
-export default class LetterProps {
+export declare class LetterProps {
     __complete?: boolean;
     _mdf: {
         fc: boolean;
@@ -8,13 +8,13 @@ export default class LetterProps {
         sc: boolean;
         sw: boolean;
     };
-    fc?: string | number[];
-    m?: number | string;
-    o?: number;
-    p?: number | number[];
-    sc?: string | number[];
-    sw?: number;
-    t?: string;
+    fc?: string | number[] | undefined;
+    m?: number | string | undefined;
+    o?: number | undefined;
+    p?: number | number[] | undefined;
+    sc?: string | number[] | undefined;
+    sw?: number | undefined;
+    t?: string | undefined;
     constructor(o?: number, sw?: number, sc?: string, fc?: string, m?: number | string, p?: number | number[]);
     update(o: number, sw: number, sc?: string, fc?: string, m?: string, p?: number[]): boolean;
 }

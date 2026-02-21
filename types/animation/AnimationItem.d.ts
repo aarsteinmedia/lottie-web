@@ -1,14 +1,14 @@
-import type CanvasRenderer from '../renderers/CanvasRenderer';
-import type HybridRenderer from '../renderers/HybridRenderer';
-import type SVGRenderer from '../renderers/SVGRenderer';
+import type { CanvasRenderer } from '../renderers/CanvasRenderer';
+import type { HybridRenderer } from '../renderers/HybridRenderer';
+import type { SVGRenderer } from '../renderers/SVGRenderer';
 import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
-import BaseEvent, { type LottieEvent } from '../events';
+import { BaseEvent, type LottieEvent } from '../events';
 import { type AudioController } from '../utils/audio/AudioController';
 import { RendererType } from '../utils/enums';
 import { getExpressionsPlugin } from '../utils/expressions';
-import ProjectInterface from '../utils/expressions/ProjectInterface';
-import ImagePreloader from '../utils/ImagePreloader';
-export default class AnimationItem extends BaseEvent {
+import { ProjectInterface } from '../utils/expressions/ProjectInterface';
+import { ImagePreloader } from '../utils/ImagePreloader';
+export declare class AnimationItem extends BaseEvent {
     __complete?: boolean;
     _isFirstFrame?: number;
     animationData: AnimationData;
@@ -48,7 +48,7 @@ export default class AnimationItem extends BaseEvent {
     protected animType?: RendererType;
     protected autoloadSegments: boolean;
     protected fileName?: string;
-    protected initialSegment?: Vector2;
+    protected initialSegment?: Vector2 | undefined;
     protected onComplete: null | ((arg: unknown) => void);
     protected onDestroy: null | ((arg: unknown) => void);
     protected onEnterFrame: null | ((arg: unknown) => void);

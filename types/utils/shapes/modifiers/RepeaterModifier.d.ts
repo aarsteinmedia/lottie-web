@@ -1,11 +1,11 @@
-import type ShapeGroupData from '../../../elements/helpers/shapes/ShapeGroupData';
-import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
+import type { ShapeGroupData } from '../../../elements/helpers/shapes/ShapeGroupData';
+import type { SVGShapeData } from '../../../elements/helpers/shapes/SVGShapeData';
 import type { ElementInterfaceIntersect, Shape } from '../../../types';
-import type ValueProperty from '../../../utils/properties/ValueProperty';
-import Matrix from '../../../utils/Matrix';
+import type { ValueProperty } from '../../../utils/properties/ValueProperty';
+import { Matrix } from '../../../utils/Matrix';
 import { type TransformProperty } from '../../../utils/properties/TransformProperty';
-import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
-export default class RepeaterModifier extends ShapeModifier {
+import { ShapeModifier } from '../../../utils/shapes/modifiers/ShapeModifier';
+export declare class RepeaterModifier extends ShapeModifier {
     arr: Shape[];
     c?: ValueProperty;
     data?: Shape;

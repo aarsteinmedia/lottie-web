@@ -1,7 +1,7 @@
 import type { CompElementInterface } from '../../types';
-export default class ProjectInterface {
+export declare class ProjectInterface {
     compositions: CompElementInterface[];
     currentFrame: number;
-    getComposition(name?: string): import("./CompInterface").default | null | undefined;
+    getComposition(name?: string): import("./CompInterface").CompExpressionInterface | null | undefined;
     registerComposition(comp: CompElementInterface): void;
 }

@@ -1,15 +1,15 @@
-import type CVShapeElement from '../../../elements/canvas/CVShapeElement';
-import type HShapeElement from '../../../elements/html/HShapeElement';
-import type SVGShapeElement from '../../../elements/svg/SVGShapeElement';
+import type { CVShapeElement } from '../../../elements/canvas/CVShapeElement';
+import type { HShapeElement } from '../../../elements/html/HShapeElement';
+import type { SVGShapeElement } from '../../../elements/svg/SVGShapeElement';
 import type { Shape } from '../../../types';
-import type ShapePath from '../../../utils/shapes/ShapePath';
-import ShapeBaseProperty from '../../../utils/shapes/properties/ShapeBaseProperty';
+import type { ShapePath } from '../../../utils/shapes/ShapePath';
+import { ShapeBaseProperty } from '../../../utils/shapes/properties/ShapeBaseProperty';
 export declare class ShapeProperty extends ShapeBaseProperty {
     ix?: number;
     pathsData?: ShapePath[] | ShapePath;
     shape?: {
         _mdf?: boolean;
-        paths?: {
+        paths?: undefined | {
             shapes: ShapePath[];
             _length: number;
         };

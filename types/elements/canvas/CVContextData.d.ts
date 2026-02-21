@@ -1,4 +1,4 @@
-import Matrix from '../../utils/Matrix';
+import { Matrix } from '../../utils/Matrix';
 declare class CanvasContext {
     fillStyle: string;
     id: number;
@@ -11,7 +11,7 @@ declare class CanvasContext {
     transform: number[];
     constructor();
 }
-export default class CVContextData {
+export declare class CVContextData {
     _length: number;
     appliedFillStyle: string;
     appliedLineCap: string;
@@ -28,7 +28,7 @@ export default class CVContextData {
     currentMiterLimit: string | number;
     currentOpacity: number;
     currentStrokeStyle: string;
-    nativeContext?: null | CanvasRenderingContext2D;
+    nativeContext?: undefined | null | CanvasRenderingContext2D;
     stack: CanvasContext[];
     transformMat: Matrix;
     constructor();

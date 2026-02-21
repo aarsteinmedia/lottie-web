@@ -1,6 +1,6 @@
-import type GroupEffect from '../../effects/GroupEffect';
+import type { GroupEffect } from '../../effects/GroupEffect';
 import type { ElementInterfaceIntersect } from '../../types';
-export default class SVGStrokeEffect {
+export declare class SVGStrokeEffect {
     elem: ElementInterfaceIntersect;
     filterManager: GroupEffect;
     initialized: boolean;

@@ -1,5 +1,5 @@
 import type { TransformProperty } from '../../utils/properties/TransformProperty';
-export default class TransformExpressionInterface {
+export declare class TransformExpressionInterface {
     transform: TransformProperty;
     get anchorPoint(): (() => {
         mult: number;

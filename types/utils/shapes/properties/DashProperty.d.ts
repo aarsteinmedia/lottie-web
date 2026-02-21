@@ -1,7 +1,7 @@
 import type { ElementInterfaceIntersect, StrokeData } from '../../../types';
 import { RendererType } from '../../../utils/enums';
-import DynamicPropertyContainer from '../../../utils/helpers/DynamicPropertyContainer';
-export default class DashProperty extends DynamicPropertyContainer {
+import { DynamicPropertyContainer } from '../../../utils/helpers/DynamicPropertyContainer';
+export declare class DashProperty extends DynamicPropertyContainer {
     dashArray: Float32Array;
     dashoffset: Float32Array;
     dashStr: string;

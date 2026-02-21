@@ -6,7 +6,7 @@ export declare function isRegionalCode(string: string): boolean;
 export declare function isRegionalFlag(text: string, indexFromProps: number): boolean;
 export declare function isVariationSelector(charCode: number): boolean;
 export declare function isZeroWidthJoiner(charCode: number): boolean;
-export default class FontManager {
+export declare class FontManager {
     chars: Characacter[] | null;
     fonts: DocumentData[];
     isLoaded: boolean;

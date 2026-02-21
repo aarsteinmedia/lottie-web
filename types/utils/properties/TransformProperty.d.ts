@@ -1,9 +1,9 @@
 import type { ElementInterfaceIntersect, Shape, Vector3 } from '../../types';
-import type DynamicPropertyContainer from '../../utils/helpers/DynamicPropertyContainer';
-import type MultiDimensionalProperty from '../../utils/properties/MultiDimensionalProperty';
-import type ValueProperty from '../../utils/properties/ValueProperty';
-import Matrix from '../../utils/Matrix';
-import BaseProperty from '../../utils/properties/BaseProperty';
+import type { DynamicPropertyContainer } from '../../utils/helpers/DynamicPropertyContainer';
+import type { MultiDimensionalProperty } from '../../utils/properties/MultiDimensionalProperty';
+import type { ValueProperty } from '../../utils/properties/ValueProperty';
+import { Matrix } from '../../utils/Matrix';
+import { BaseProperty } from '../../utils/properties/BaseProperty';
 export declare class TransformProperty extends BaseProperty {
     _isDirty?: boolean;
     _opMdf?: boolean;

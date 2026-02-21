@@ -1,7 +1,7 @@
-import type GroupEffect from '../effects/GroupEffect';
-import type ValueProperty from '../utils/properties/ValueProperty';
-import Matrix from '../utils/Matrix';
-export default abstract class TransformEffect {
+import type { GroupEffect } from '../effects/GroupEffect';
+import type { ValueProperty } from '../utils/properties/ValueProperty';
+import { Matrix } from '../utils/Matrix';
+export declare abstract class TransformEffect {
     _mdf?: boolean;
     _opMdf?: boolean;
     effectsManager?: GroupEffect;

@@ -1,12 +1,12 @@
-import type CVMaskElement from '../elements/canvas/CVMaskElement';
-import type ShapeGroupData from '../elements/helpers/shapes/ShapeGroupData';
-import type MaskElement from '../elements/MaskElement';
+import type { CVMaskElement } from '../elements/canvas/CVMaskElement';
+import type { ShapeGroupData } from '../elements/helpers/shapes/ShapeGroupData';
+import type { MaskElement } from '../elements/MaskElement';
 import type { CompElementInterface, GlobalData, LottieLayer, Shape } from '../types';
-import type CompExpressionInterface from '../utils/expressions/CompInterface';
-import type LayerExpressionInterface from '../utils/expressions/LayerInterface';
-import type DynamicPropertyContainer from '../utils/helpers/DynamicPropertyContainer';
-import EffectsManager from '../effects/EffectsManager';
-export default abstract class BaseElement {
+import type { CompExpressionInterface } from '../utils/expressions/CompInterface';
+import type { LayerExpressionInterface } from '../utils/expressions/LayerInterface';
+import type { DynamicPropertyContainer } from '../utils/helpers/DynamicPropertyContainer';
+import { EffectsManager } from '../effects/EffectsManager';
+export declare abstract class BaseElement {
     baseElement?: HTMLElement | SVGGElement;
     comp?: CompElementInterface;
     compInterface?: CompExpressionInterface;

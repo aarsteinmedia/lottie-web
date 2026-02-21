@@ -1,72 +1,72 @@
-import type AnimationItem from './animation/AnimationItem';
+import type { AnimationItem } from './animation/AnimationItem';
 import type { AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect } from './effects';
-import type CVTransformEffect from './effects/canvas/CVTransformEffect';
-import type SVGDropShadowEffect from './effects/svg/SVGDropShadowEffect';
-import type SVGFillFilter from './effects/svg/SVGFillFilter';
-import type SVGGaussianBlurEffect from './effects/svg/SVGGaussianBlurEffect';
-import type SVGMatte3Effect from './effects/svg/SVGMatte3Effect';
-import type SVGProLevelsFilter from './effects/svg/SVGProLevelsFilter';
-import type SVGStrokeEffect from './effects/svg/SVGStrokeEffect';
-import type SVGTintFilter from './effects/svg/SVGTintFilter';
-import type SVGTransformEffect from './effects/svg/SVGTransformEffect';
-import type SVGTritoneFilter from './effects/svg/SVGTritoneFilter';
-import type AudioElement from './elements/AudioElement';
-import type CVCompElement from './elements/canvas/CVCompElement';
-import type CVEffects from './elements/canvas/CVEffects';
-import type CVMaskElement from './elements/canvas/CVMaskElement';
-import type CVShapeElement from './elements/canvas/CVShapeElement';
-import type CVTextElement from './elements/canvas/CVTextElement';
-import type CVShapeData from './elements/helpers/shapes/CVShapeData';
+import type { CVTransformEffect } from './effects/canvas/CVTransformEffect';
+import type { SVGDropShadowEffect } from './effects/svg/SVGDropShadowEffect';
+import type { SVGFillFilter } from './effects/svg/SVGFillFilter';
+import type { SVGGaussianBlurEffect } from './effects/svg/SVGGaussianBlurEffect';
+import type { SVGMatte3Effect } from './effects/svg/SVGMatte3Effect';
+import type { SVGProLevelsFilter } from './effects/svg/SVGProLevelsFilter';
+import type { SVGStrokeEffect } from './effects/svg/SVGStrokeEffect';
+import type { SVGTintFilter } from './effects/svg/SVGTintFilter';
+import type { SVGTransformEffect } from './effects/svg/SVGTransformEffect';
+import type { SVGTritoneFilter } from './effects/svg/SVGTritoneFilter';
+import type { AudioElement } from './elements/AudioElement';
+import type { CVCompElement } from './elements/canvas/CVCompElement';
+import type { CVEffects } from './elements/canvas/CVEffects';
+import type { CVMaskElement } from './elements/canvas/CVMaskElement';
+import type { CVShapeElement } from './elements/canvas/CVShapeElement';
+import type { CVTextElement } from './elements/canvas/CVTextElement';
+import type { CVShapeData } from './elements/helpers/shapes/CVShapeData';
 import type { CreateRenderFunction } from './elements/helpers/shapes/SVGElementsRenderer';
-import type SVGFillStyleData from './elements/helpers/shapes/SVGFillStyleData';
-import type SVGGradientFillStyleData from './elements/helpers/shapes/SVGGradientFillStyleData';
-import type SVGGradientStrokeStyleData from './elements/helpers/shapes/SVGGradientStrokeStyleData';
-import type SVGNoStyleData from './elements/helpers/shapes/SVGNoStyleData';
-import type SVGShapeData from './elements/helpers/shapes/SVGShapeData';
-import type SVGStrokeStyleData from './elements/helpers/shapes/SVGStrokeStyleData';
-import type SVGStyleData from './elements/helpers/shapes/SVGStyleData';
-import type SVGTransformData from './elements/helpers/shapes/SVGTransformData';
-import type HCompElement from './elements/html/HCompElement';
-import type ImageElement from './elements/ImageElement';
-import type MaskElement from './elements/MaskElement';
-import type ShapeElement from './elements/ShapeElement';
-import type SVGCompElement from './elements/svg/SVGCompElement';
-import type SVGEffects from './elements/svg/SVGEffects';
-import type SVGShapeElement from './elements/svg/SVGShapeElement';
-import type SVGTextLottieElement from './elements/svg/SVGTextElement';
-import type BaseRenderer from './renderers/BaseRenderer';
-import type CanvasRenderer from './renderers/CanvasRenderer';
-import type HybridRenderer from './renderers/HybridRenderer';
-import type SVGRenderer from './renderers/SVGRenderer';
+import type { SVGFillStyleData } from './elements/helpers/shapes/SVGFillStyleData';
+import type { SVGGradientFillStyleData } from './elements/helpers/shapes/SVGGradientFillStyleData';
+import type { SVGGradientStrokeStyleData } from './elements/helpers/shapes/SVGGradientStrokeStyleData';
+import type { SVGNoStyleData } from './elements/helpers/shapes/SVGNoStyleData';
+import type { SVGShapeData } from './elements/helpers/shapes/SVGShapeData';
+import type { SVGStrokeStyleData } from './elements/helpers/shapes/SVGStrokeStyleData';
+import type { SVGStyleData } from './elements/helpers/shapes/SVGStyleData';
+import type { SVGTransformData } from './elements/helpers/shapes/SVGTransformData';
+import type { HCompElement } from './elements/html/HCompElement';
+import type { ImageElement } from './elements/ImageElement';
+import type { MaskElement } from './elements/MaskElement';
+import type { ShapeElement } from './elements/ShapeElement';
+import type { SVGCompElement } from './elements/svg/SVGCompElement';
+import type { SVGEffects } from './elements/svg/SVGEffects';
+import type { SVGShapeElement } from './elements/svg/SVGShapeElement';
+import type { SVGTextLottieElement } from './elements/svg/SVGTextElement';
+import type { BaseRenderer } from './renderers/BaseRenderer';
+import type { CanvasRenderer } from './renderers/CanvasRenderer';
+import type { HybridRenderer } from './renderers/HybridRenderer';
+import type { SVGRenderer } from './renderers/SVGRenderer';
 import type { AudioController } from './utils/audio/AudioController';
 import type { BezierData } from './utils/Bezier';
 import type { PlayMode, ShapeType, RendererType, PreserveAspectRatio } from './utils/enums';
-import type CompExpressionInterface from './utils/expressions/CompInterface';
-import type FootageInterface from './utils/expressions/FootageInterface';
-import type LayerExpressionInterface from './utils/expressions/LayerInterface';
-import type ProjectInterface from './utils/expressions/ProjectInterface';
-import type ShapeExpressionInterface from './utils/expressions/shapes/ShapeInterface';
-import type TextExpressionInterface from './utils/expressions/TextInterface';
-import type FontManager from './utils/FontManager';
-import type DynamicPropertyContainer from './utils/helpers/DynamicPropertyContainer';
-import type ImagePreloader from './utils/ImagePreloader';
-import type Matrix from './utils/Matrix';
-import type PolynomialBezier from './utils/PolynomialBezier';
-import type BaseProperty from './utils/properties/BaseProperty';
-import type MultiDimensionalProperty from './utils/properties/MultiDimensionalProperty';
+import type { CompExpressionInterface } from './utils/expressions/CompInterface';
+import type { FootageInterface } from './utils/expressions/FootageInterface';
+import type { LayerExpressionInterface } from './utils/expressions/LayerInterface';
+import type { ProjectInterface } from './utils/expressions/ProjectInterface';
+import type { ShapeExpressionInterface } from './utils/expressions/shapes/ShapeInterface';
+import type { TextExpressionInterface } from './utils/expressions/TextInterface';
+import type { FontManager } from './utils/FontManager';
+import type { DynamicPropertyContainer } from './utils/helpers/DynamicPropertyContainer';
+import type { ImagePreloader } from './utils/ImagePreloader';
+import type { Matrix } from './utils/Matrix';
+import type { PolynomialBezier } from './utils/PolynomialBezier';
+import type { BaseProperty } from './utils/properties/BaseProperty';
+import type { MultiDimensionalProperty } from './utils/properties/MultiDimensionalProperty';
 import type { TransformProperty } from './utils/properties/TransformProperty';
-import type ValueProperty from './utils/properties/ValueProperty';
-import type DashProperty from './utils/shapes/properties/DashProperty';
-import type EllShapeProperty from './utils/shapes/properties/EllShapeProperty';
-import type GradientProperty from './utils/shapes/properties/GradientProperty';
-import type RectShapeProperty from './utils/shapes/properties/RectShapeProperty';
+import type { ValueProperty } from './utils/properties/ValueProperty';
+import type { DashProperty } from './utils/shapes/properties/DashProperty';
+import type { EllShapeProperty } from './utils/shapes/properties/EllShapeProperty';
+import type { GradientProperty } from './utils/shapes/properties/GradientProperty';
+import type { RectShapeProperty } from './utils/shapes/properties/RectShapeProperty';
 import type { KeyframedShapeProperty, ShapeProperty } from './utils/shapes/properties/ShapeProperty';
-import type StarShapeProperty from './utils/shapes/properties/StarShapeProperty';
-import type ShapePath from './utils/shapes/ShapePath';
+import type { StarShapeProperty } from './utils/shapes/properties/StarShapeProperty';
+import type { ShapePath } from './utils/shapes/ShapePath';
 import type { SlotManager } from './utils/SlotManager';
-import type LetterProps from './utils/text/LetterProps';
-import type TextAnimatorDataProperty from './utils/text/TextAnimatorDataProperty';
-import type TextProperty from './utils/text/TextProperty';
+import type { LetterProps } from './utils/text/LetterProps';
+import type { TextAnimatorDataProperty } from './utils/text/TextAnimatorDataProperty';
+import type { TextProperty } from './utils/text/TextProperty';
 export type AnimationDirection = 1 | -1;
 export type AnimationEventName = 'drawnFrame' | 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images' | '_play' | '_pause' | '_idle' | '_active' | 'configError' | 'renderFrameError';
 export interface SVGGeometry {
@@ -271,20 +271,20 @@ export interface Letter {
     yOffset: number;
 }
 export type SVGRendererConfig = BaseRendererConfig & {
-    title?: string;
-    description?: string;
-    preserveAspectRatio?: string;
-    progressiveLoad?: boolean;
-    hideOnTransparent?: boolean;
-    viewBoxOnly?: boolean;
-    viewBoxSize?: string | false;
-    focusable?: boolean;
-    filterSize?: FilterSizeConfig;
-    contentVisibility?: string;
-    runExpressions?: boolean;
-    width?: number;
-    height?: number;
-    id?: string;
+    title?: undefined | string;
+    description?: undefined | string;
+    preserveAspectRatio?: undefined | string;
+    progressiveLoad?: undefined | boolean;
+    hideOnTransparent?: undefined | boolean;
+    viewBoxOnly?: undefined | boolean;
+    viewBoxSize?: undefined | string | false;
+    focusable?: undefined | boolean;
+    filterSize?: undefined | FilterSizeConfig;
+    contentVisibility?: undefined | string;
+    runExpressions?: undefined | boolean;
+    width?: undefined | number;
+    height?: undefined | number;
+    id?: undefined | string;
 };
 export type CanvasRendererConfig = BaseRendererConfig & {
     clearCanvas?: boolean;
@@ -308,7 +308,7 @@ export type HTMLRendererConfig = BaseRendererConfig & {
     runExpressions?: boolean;
 };
 export interface AnimationConfiguration<T extends RendererType = RendererType.Canvas | RendererType.HTML | RendererType.SVG> {
-    animationData?: AnimationData;
+    animationData?: AnimationData | undefined;
     animType?: RendererType;
     assetsPath?: string;
     audioFactory?: AudioFactory;
@@ -372,7 +372,7 @@ export interface ShapeColorValue {
 export interface Shape {
     _length: number;
     _processed?: boolean;
-    _shouldRender?: boolean;
+    _shouldRender?: boolean | undefined;
     a?: VectorProperty<Vector1 | Vector2 | Vector3>;
     bm?: number;
     c?: ShapeColor;
@@ -448,7 +448,7 @@ export interface Shape {
 export interface StoredData {
     elem: SVGPathElement;
     expan: SVGFEMorphologyElement | null;
-    filterId?: string;
+    filterId?: undefined | string;
     lastOperator: string;
     lastPath: string;
     lastRadius: number;
@@ -470,7 +470,7 @@ export interface LottieAsset {
         __used?: boolean;
     };
     nm?: string;
-    p?: string;
+    p?: undefined | string;
     pr?: string;
     sid?: string;
     t?: string;
@@ -589,7 +589,7 @@ interface LayerStyle {
     ty: number;
 }
 export interface TransformSequence {
-    _mdf?: boolean;
+    _mdf?: undefined | boolean;
     [key: string]: unknown;
     finalTransform?: Matrix;
     transforms?: {
@@ -773,16 +773,16 @@ export interface TextVectorData {
     v?: VectorProperty;
 }
 export interface TextPathData {
-    _mdf?: boolean;
-    a?: ValueProperty;
-    f?: ValueProperty;
-    l: ValueProperty;
-    m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty;
-    n?: ValueProperty;
-    p?: ValueProperty;
-    pi?: PathInfo;
-    r?: ValueProperty;
-    v?: ValueProperty;
+    _mdf?: boolean | undefined;
+    a?: ValueProperty | undefined;
+    f?: ValueProperty | undefined;
+    l: ValueProperty | undefined;
+    m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | undefined;
+    n?: ValueProperty | undefined;
+    p?: ValueProperty | undefined;
+    pi?: PathInfo | undefined;
+    r?: ValueProperty | undefined;
+    v?: ValueProperty | undefined;
 }
 export type EffectElement = typeof SliderEffect | typeof AngleEffect | typeof ColorEffect | typeof PointEffect | typeof CheckboxEffect | typeof NoValueEffect | typeof LayerIndexEffect | typeof MaskIndexEffect | typeof SVGTintFilter | typeof SVGFillFilter | typeof SVGStrokeEffect | typeof SVGTritoneFilter | typeof SVGProLevelsFilter | typeof SVGDropShadowEffect | typeof SVGMatte3Effect | typeof SVGGaussianBlurEffect | typeof SVGTransformEffect | typeof CVTransformEffect;
 export interface EffectValue {
@@ -811,17 +811,17 @@ export interface FontList {
     fPath: string;
     fStyle: string;
     fWeight: string;
-    helper?: {
+    helper?: undefined | {
         measureText: (str: string, fontName?: string, size?: number) => number;
     };
     loaded?: boolean;
-    monoCase?: {
+    monoCase?: undefined | {
         node: HTMLElement;
         parent: HTMLElement;
         w: number;
     };
     origin: number;
-    sansCase?: {
+    sansCase?: undefined | {
         node: HTMLElement;
         parent: HTMLElement;
         w: number;
@@ -934,7 +934,7 @@ export interface LottieLayer {
     };
     tg?: string;
     tm?: VectorProperty;
-    tp?: number;
+    tp?: undefined | number;
     tt?: number;
     ty: number;
     w?: number;
@@ -1055,10 +1055,10 @@ export interface Caching {
     value: number | number[];
 }
 export interface GlobalData {
-    _mdf?: boolean;
+    _mdf?: undefined | boolean;
     audioController?: AudioController;
     blendMode?: string;
-    canvasContext?: null | CanvasRenderingContext2D;
+    canvasContext?: undefined | null | CanvasRenderingContext2D;
     comp?: CompElementInterface;
     compSize?: {
         w: number;
@@ -1068,7 +1068,7 @@ export interface GlobalData {
     defs: SVGDefsElement;
     fontManager?: FontManager;
     frameId: number;
-    frameNum?: number;
+    frameNum?: undefined | number;
     frameRate: number;
     getAssetData: AnimationItem['getAssetData'];
     getAssetsPath: AnimationItem['getAssetsPath'];
@@ -1078,7 +1078,7 @@ export interface GlobalData {
     mouseY?: number;
     nm?: string;
     popExpression: () => void;
-    progressiveLoad?: boolean;
+    progressiveLoad?: undefined | boolean;
     projectInterface: ProjectInterface;
     pushExpression: () => void;
     registerExpressionProperty: (expression: ExpressionProperty) => void;

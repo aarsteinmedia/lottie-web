@@ -1,6 +1,6 @@
 import type { AnimationData, LottieManifest } from '../../types';
-export default function getAnimationData(input: unknown): Promise<{
-    animations?: AnimationData[];
+export declare function getAnimationData(input: unknown): Promise<{
+    animations?: undefined | AnimationData[];
     manifest: LottieManifest | null;
     isDotLottie: boolean;
 }>;

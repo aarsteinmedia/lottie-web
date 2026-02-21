@@ -1,7 +1,7 @@
-import type GroupEffect from '../../effects/GroupEffect';
+import type { GroupEffect } from '../../effects/GroupEffect';
 import type { EffectElement, ElementInterfaceIntersect } from '../../types';
 import type { EffectTypes } from '../../utils/enums';
-export default class SVGEffects {
+export declare class SVGEffects {
     filters: GroupEffect[];
     constructor(elem: ElementInterfaceIntersect);
     getEffects(type: EffectTypes): (GroupEffect | undefined)[];

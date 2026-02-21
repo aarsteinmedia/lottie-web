@@ -1,5 +1,5 @@
-import RenderableDOMElement from '../../elements/helpers/RenderableDOMElement';
-export default abstract class SVGBaseElement extends RenderableDOMElement {
+import { RenderableDOMElement } from '../../elements/helpers/RenderableDOMElement';
+export declare abstract class SVGBaseElement extends RenderableDOMElement {
     _sizeChanged?: boolean;
     maskedElement?: HTMLElement | SVGGElement;
     matteElement?: SVGGElement;

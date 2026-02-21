@@ -1,7 +1,7 @@
-import type AudioElement from '../../elements/AudioElement';
+import type { AudioElement } from '../../elements/AudioElement';
 import type { AudioFactory } from '../../types';
 export declare class AudioController {
-    audioFactory?: AudioFactory;
+    audioFactory?: undefined | AudioFactory;
     audios: AudioElement[];
     isPlaying?: boolean;
     private _isMuted;

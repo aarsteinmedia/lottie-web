@@ -1,8 +1,8 @@
-import type CVBaseElement from '../../elements/canvas/CVBaseElement';
-import type CVShapeElement from '../../elements/canvas/CVShapeElement';
+import type { CVBaseElement } from '../../elements/canvas/CVBaseElement';
+import type { CVShapeElement } from '../../elements/canvas/CVShapeElement';
 import type { LottieLayer, Shape } from '../../types';
 import type { ShapeProperty } from '../../utils/shapes/properties/ShapeProperty';
-export default class CVMaskElement {
+export declare class CVMaskElement {
     _isFirstFrame?: boolean;
     data: LottieLayer;
     element: CVShapeElement | CVBaseElement;

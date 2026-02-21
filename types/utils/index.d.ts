@@ -1,5 +1,5 @@
 import type { LottieAsset, PoolElement, Vector2 } from '../types';
-import type ShapePath from '../utils/shapes/ShapePath';
+import type { ShapePath } from '../utils/shapes/ShapePath';
 interface DownloadOptions {
     mimeType: string;
     name: string;

@@ -1,6 +1,6 @@
 import type { ElementInterfaceIntersect, GlobalData, LottieLayer, SourceRect, TextSpan } from '../../types';
-import TextElement from '../../elements/TextElement';
-export default class SVGTextLottieElement extends TextElement {
+import { TextElement } from '../../elements/TextElement';
+export declare class SVGTextLottieElement extends TextElement {
     _sizeChanged?: boolean;
     bbox?: {
         height: number;
@@ -14,7 +14,7 @@ export default class SVGTextLottieElement extends TextElement {
     getBaseElement: () => HTMLElement | SVGGElement | null;
     getMatte: (matteType?: number) => string;
     initRendererElement: () => void;
-    renderedFrame?: number;
+    renderedFrame?: undefined | number;
     renderedLetters: string[];
     renderElement: () => void;
     setMatte: (id: string) => void;

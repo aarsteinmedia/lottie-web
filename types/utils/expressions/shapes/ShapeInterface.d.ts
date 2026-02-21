@@ -1,18 +1,18 @@
-import type ShapeData from '../../../elements/helpers/shapes/ShapeData';
-import type ShapeGroupData from '../../../elements/helpers/shapes/ShapeGroupData';
-import type SVGFillStyleData from '../../../elements/helpers/shapes/SVGFillStyleData';
-import type SVGGradientFillStyleData from '../../../elements/helpers/shapes/SVGGradientFillStyleData';
-import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
-import type SVGStrokeStyleData from '../../../elements/helpers/shapes/SVGStrokeStyleData';
-import type SVGTransformData from '../../../elements/helpers/shapes/SVGTransformData';
+import type { ShapeData } from '../../../elements/helpers/shapes/ShapeData';
+import type { ShapeGroupData } from '../../../elements/helpers/shapes/ShapeGroupData';
+import type { SVGFillStyleData } from '../../../elements/helpers/shapes/SVGFillStyleData';
+import type { SVGGradientFillStyleData } from '../../../elements/helpers/shapes/SVGGradientFillStyleData';
+import type { SVGShapeData } from '../../../elements/helpers/shapes/SVGShapeData';
+import type { SVGStrokeStyleData } from '../../../elements/helpers/shapes/SVGStrokeStyleData';
+import type { SVGTransformData } from '../../../elements/helpers/shapes/SVGTransformData';
 import type { Shape } from '../../../types';
-import type LayerExpressionInterface from '../../../utils/expressions/LayerInterface';
-import type RepeaterModifier from '../../../utils/shapes/modifiers/RepeaterModifier';
-import type RoundCornersModifier from '../../../utils/shapes/modifiers/RoundCornersModifier';
-import type TrimModifier from '../../../utils/shapes/modifiers/TrimModifier';
-import PropertyGroupFactory from '../../../utils/expressions/PropertyGroupFactory';
-import ShapePathInterface from '../../../utils/expressions/shapes/ShapePathInterface';
-export default class ShapeExpressionInterface {
+import type { LayerExpressionInterface } from '../../../utils/expressions/LayerInterface';
+import type { RepeaterModifier } from '../../../utils/shapes/modifiers/RepeaterModifier';
+import type { RoundCornersModifier } from '../../../utils/shapes/modifiers/RoundCornersModifier';
+import type { TrimModifier } from '../../../utils/shapes/modifiers/TrimModifier';
+import { PropertyGroupFactory } from '../../../utils/expressions/PropertyGroupFactory';
+import { ShapePathInterface } from '../../../utils/expressions/shapes/ShapePathInterface';
+export declare class ShapeExpressionInterface {
     _name: string;
     arr: never[];
     interfaces: ShapePathInterface[];

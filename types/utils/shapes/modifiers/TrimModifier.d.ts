@@ -1,10 +1,10 @@
-import type SVGShapeData from '../../../elements/helpers/shapes/SVGShapeData';
+import type { SVGShapeData } from '../../../elements/helpers/shapes/SVGShapeData';
 import type { ElementInterfaceIntersect, Shape, Vector2 } from '../../../types';
-import type ValueProperty from '../../../utils/properties/ValueProperty';
-import type ShapeCollection from '../../../utils/shapes/ShapeCollection';
-import type ShapePath from '../../../utils/shapes/ShapePath';
-import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
-export default class TrimModifier extends ShapeModifier {
+import type { ValueProperty } from '../../../utils/properties/ValueProperty';
+import type { ShapeCollection } from '../../../utils/shapes/ShapeCollection';
+import type { ShapePath } from '../../../utils/shapes/ShapePath';
+import { ShapeModifier } from '../../../utils/shapes/modifiers/ShapeModifier';
+export declare class TrimModifier extends ShapeModifier {
     e?: ValueProperty;
     eValue?: number;
     m?: Shape['m'];

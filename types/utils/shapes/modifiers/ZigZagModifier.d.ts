@@ -1,8 +1,8 @@
 import type { ElementInterfaceIntersect, Shape } from '../../../types';
-import type ValueProperty from '../../../utils/properties/ValueProperty';
-import type ShapePath from '../../../utils/shapes/ShapePath';
-import ShapeModifier from '../../../utils/shapes/modifiers/ShapeModifier';
-export default class ZigZagModifier extends ShapeModifier {
+import type { ValueProperty } from '../../../utils/properties/ValueProperty';
+import type { ShapePath } from '../../../utils/shapes/ShapePath';
+import { ShapeModifier } from '../../../utils/shapes/modifiers/ShapeModifier';
+export declare class ZigZagModifier extends ShapeModifier {
     amplitude?: ValueProperty;
     frequency?: ValueProperty;
     pointsType?: ValueProperty;

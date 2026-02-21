@@ -1,1 +1,1 @@
-export default function createNS<T extends SVGElement>(type: string): T;
+export declare function createNS<T extends SVGElement>(type: string): T;

@@ -1,14 +1,14 @@
 import type { CompElementInterface } from '../../types';
-export default class CompExpressionInterface {
-    _name?: string;
+export declare class CompExpressionInterface {
+    _name?: undefined | string;
     comp: CompElementInterface;
     displayStartTime: number;
     frameDuration: number;
-    height?: number;
+    height?: undefined | number;
     layer: CompExpressionInterface;
-    numLayers?: number;
+    numLayers?: undefined | number;
     pixelAspect: number;
-    width?: number;
+    width?: undefined | number;
     constructor(comp: CompElementInterface);
-    getInterface(name?: string | number | number[]): import("./LayerInterface").default | null;
+    getInterface(name?: string | number | number[]): import("./LayerInterface").LayerExpressionInterface | null;
 }

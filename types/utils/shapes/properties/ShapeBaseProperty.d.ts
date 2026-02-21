@@ -1,17 +1,17 @@
-import type CVShapeElement from '../../../elements/canvas/CVShapeElement';
-import type HShapeElement from '../../../elements/html/HShapeElement';
-import type SVGShapeElement from '../../../elements/svg/SVGShapeElement';
+import type { CVShapeElement } from '../../../elements/canvas/CVShapeElement';
+import type { HShapeElement } from '../../../elements/html/HShapeElement';
+import type { SVGShapeElement } from '../../../elements/svg/SVGShapeElement';
 import type { Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata, Shape } from '../../../types';
 import type { ShapeType } from '../../../utils/enums';
-import type KeyframedValueProperty from '../../../utils/properties/KeyframedValueProperty';
-import type MultiDimensionalProperty from '../../../utils/properties/MultiDimensionalProperty';
-import type ShapeCollection from '../../../utils/shapes/ShapeCollection';
-import type ShapePath from '../../../utils/shapes/ShapePath';
-import DynamicPropertyContainer from '../../../utils/helpers/DynamicPropertyContainer';
-export default abstract class ShapeBaseProperty extends DynamicPropertyContainer {
+import type { KeyframedValueProperty } from '../../../utils/properties/KeyframedValueProperty';
+import type { MultiDimensionalProperty } from '../../../utils/properties/MultiDimensionalProperty';
+import type { ShapeCollection } from '../../../utils/shapes/ShapeCollection';
+import type { ShapePath } from '../../../utils/shapes/ShapePath';
+import { DynamicPropertyContainer } from '../../../utils/helpers/DynamicPropertyContainer';
+export declare abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     _caching?: Caching;
     _cachingAtTime?: Caching;
-    comp?: CompElementInterface;
+    comp?: CompElementInterface | undefined;
     data?: Shape;
     effectsSequence: ((arg: unknown) => ShapePath)[];
     elem?: SVGShapeElement | CVShapeElement | HShapeElement;
@@ -23,7 +23,7 @@ export default abstract class ShapeBaseProperty extends DynamicPropertyContainer
     lock?: boolean;
     offsetTime: number;
     p?: MultiDimensionalProperty;
-    paths?: ShapePath[] | ShapeCollection;
+    paths?: ShapePath[] | ShapeCollection | undefined;
     pv?: ShapePath;
     ty?: ShapeType;
     v?: ShapePath;

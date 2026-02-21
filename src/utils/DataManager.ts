@@ -17,7 +17,7 @@ interface MessageData {
 interface Processes {
   [key: string]: {
     onComplete: (data: AnimationData) => void
-    onError?: (error?: unknown) => void
+    onError?: undefined | ((error?: unknown) => void)
   }
 }
 interface WorkerSelf {

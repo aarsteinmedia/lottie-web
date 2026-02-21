@@ -154,7 +154,7 @@ export async function createDotLottie({
         }
 
         dotlottie[
-          `${isAudio(asset) ? 'audio' : 'images'}/${assetId}.${ext}`
+          `${isAudio(asset) ? 'audio' : 'i'}/${assetId}.${ext}`
         ] = [base64ToU8(dataURL), { level: animationCompressionLevel }]
       }
 

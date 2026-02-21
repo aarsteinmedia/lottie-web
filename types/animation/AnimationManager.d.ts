@@ -1,5 +1,5 @@
 import type { AnimationConfiguration, AnimationData, AnimationDirection } from '../types';
-import AnimationItem from '../animation/AnimationItem';
+import { AnimationItem } from '../animation/AnimationItem';
 import { RendererType } from '../utils/enums';
 export declare function destroy(animation?: string): void;
 export declare function freeze(): void;

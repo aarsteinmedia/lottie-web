@@ -55,9 +55,7 @@
     }
   },
   "include": [
-    "src/**/*.ts",
-    "*.d.ts",
-    "*.config.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "**/node_modules",

@@ -1,6 +1,6 @@
-import type BaseElement from '../../elements/BaseElement';
+import type { BaseElement } from '../../elements/BaseElement';
 import type { Effect } from '../../types';
-import type LayerExpressionInterface from '../../utils/expressions/LayerInterface';
+import type { LayerExpressionInterface } from '../../utils/expressions/LayerInterface';
 export declare class GroupEffectInterface {
     effectElements: Effect[];
     effects: Effect[];
@@ -8,7 +8,7 @@ export declare class GroupEffectInterface {
     constructor(effects: Effect[], effectElements: Effect[]);
     getInterface(name: string | number): Effect | null | undefined;
 }
-export default class EffectsExpressionInterface {
+export declare class EffectsExpressionInterface {
     effectElements: Effect[];
     effects: Effect[];
     effectsData: Effect[];

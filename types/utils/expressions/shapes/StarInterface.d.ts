@@ -1,6 +1,6 @@
-import type StarShapeProperty from '../../../utils/shapes/properties/StarShapeProperty';
-import BaseInterface from '../../../utils/expressions/shapes/BaseInterface';
-export default class StarInterface extends BaseInterface {
+import type { StarShapeProperty } from '../../../utils/shapes/properties/StarShapeProperty';
+import { BaseInterface } from '../../../utils/expressions/shapes/BaseInterface';
+export declare class StarInterface extends BaseInterface {
     prop?: StarShapeProperty;
     get innerRadius(): (() => {
         mult: number;

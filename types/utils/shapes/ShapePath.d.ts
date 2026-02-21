@@ -1,5 +1,5 @@
 import type { BezierLength, Vector2 } from '../../types';
-export default class ShapePath {
+export declare class ShapePath {
     _length: number;
     _maxLength: number;
     c: boolean;

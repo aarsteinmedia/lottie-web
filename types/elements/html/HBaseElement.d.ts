@@ -1,10 +1,10 @@
 import type { ElementInterfaceIntersect } from '../../types';
-import RenderableElement from '../../elements/helpers/RenderableElement';
-export default class HBaseElement extends RenderableElement {
-    maskedElement?: SVGGElement | HTMLElement;
+import { RenderableElement } from '../../elements/helpers/RenderableElement';
+export declare class HBaseElement extends RenderableElement {
+    maskedElement?: undefined | SVGGElement | HTMLElement;
     matteElement?: SVGGElement | HTMLElement;
     svgElement?: SVGSVGElement;
-    transformedElement?: SVGGElement | HTMLElement;
+    transformedElement?: undefined | SVGGElement | HTMLElement;
     constructor();
     addEffects(): void;
     buildElementParenting(_element: ElementInterfaceIntersect, _parentName?: number, _hierarchy?: ElementInterfaceIntersect[]): void;
