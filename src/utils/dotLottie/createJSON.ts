@@ -6,8 +6,8 @@ import {
 
 interface CreateJSONProps {
   animation?: undefined | AnimationData
-  fileName?: string
-  shouldDownload?: boolean
+  fileName?: undefined | string
+  shouldDownload?: undefined | boolean
 }
 
 export function createJSON({

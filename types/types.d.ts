@@ -1109,15 +1109,15 @@ export interface IntersectData {
     width: number;
 }
 export interface ConvertParams {
-    animations?: AnimationData[];
-    currentAnimation?: number;
-    fileName?: string;
-    generator?: string;
-    isDotLottie?: boolean;
-    manifest?: LottieManifest;
-    shouldDownload?: boolean;
-    src?: string;
-    typeCheck?: boolean;
+    animations?: undefined | AnimationData[];
+    currentAnimation?: undefined | number;
+    fileName?: undefined | string;
+    generator?: undefined | string;
+    isDotLottie?: undefined | boolean;
+    manifest?: undefined | LottieManifest;
+    shouldDownload?: undefined | boolean;
+    src?: undefined | string;
+    typeCheck?: undefined | boolean;
 }
 interface AnimationAttributes extends AnimationSettings {
     id: string;
@@ -1125,11 +1125,11 @@ interface AnimationAttributes extends AnimationSettings {
 }
 export interface AddAnimationParams {
     configs: AnimationAttributes[];
-    fileName?: string;
+    fileName?: undefined | string;
     generator: string;
-    id?: string;
-    shouldDownload?: boolean;
-    src?: string;
+    id?: undefined | string;
+    shouldDownload?: undefined | boolean;
+    src?: undefined | string;
 }
 export interface Result {
     error?: string;
