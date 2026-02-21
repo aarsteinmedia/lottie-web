@@ -4,7 +4,7 @@ import type { AnimationDirection, AnimationEventName } from '@/types'
 export class BMEnterFrameEvent {
   currentTime: number
   direction: AnimationDirection
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   totalTime: number
   type: AnimationEventName
   constructor(
@@ -22,7 +22,7 @@ export class BMEnterFrameEvent {
 
 export class BMCompleteEvent {
   direction: AnimationDirection
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   type: AnimationEventName
   constructor(type: AnimationEventName, frameMultiplier: number) {
     this.type = type
@@ -33,7 +33,7 @@ export class BMCompleteEvent {
 export class BMDrawnFrameEvent {
   currentTime: number
   direction: AnimationDirection
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   totalTime: number
   type: AnimationEventName
   constructor(
@@ -52,7 +52,7 @@ export class BMDrawnFrameEvent {
 export class BMCompleteLoopEvent {
   currentLoop: number
   direction: AnimationDirection
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   totalLoops: number | boolean
   type: AnimationEventName
   constructor(
@@ -71,7 +71,7 @@ export class BMCompleteLoopEvent {
 
 export class BMSegmentStartEvent {
   firstFrame: number
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   totalFrames: number
   type: AnimationEventName
   constructor(
@@ -97,7 +97,7 @@ export class BMDestroyEvent {
 export class BMRenderFrameErrorEvent {
   currentTime: number
   nativeError: unknown
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   type: AnimationEventName
   constructor(nativeError: unknown, currentTime: number) {
     this.type = 'renderFrameError'
@@ -108,7 +108,7 @@ export class BMRenderFrameErrorEvent {
 
 export class BMConfigErrorEvent {
   nativeError: unknown
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   type: AnimationEventName
   constructor(nativeError: unknown, _: number) {
     this.type = 'configError'
@@ -118,7 +118,7 @@ export class BMConfigErrorEvent {
 
 export class BMAnimationConfigErrorEvent {
   nativeError: unknown
-  target?: AnimationItem
+  target?: undefined | AnimationItem
   type: AnimationEventName
   constructor(type: AnimationEventName, nativeError: unknown) {
     this.type = type

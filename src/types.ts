@@ -120,11 +120,11 @@ export interface Constructor {
 }
 export interface TextSpan {
   children: SVGSVGElement[]
-  childSpan?: null | SVGTextElement | SVGGElement
-  elem?: number[][]
+  childSpan?: undefined | null | SVGTextElement | SVGGElement
+  elem?: undefined | number[][]
   glyph: null | SVGCompElement | SVGShapeElement
   span: null | SVGTextElement | SVGGElement
-  style?: CSSStyleDeclaration
+  style?: undefined | CSSStyleDeclaration
 }
 
 export type SVGElementInterface =
@@ -138,10 +138,10 @@ export type SVGElementInterface =
 export interface Transformer {
   _localMatMdf: boolean
   _matMdf: boolean
-  _mdf?: boolean
+  _mdf?: undefined | boolean
   _opMdf: boolean
   container: SVGGElement
-  key?: string
+  key?: undefined | string
   localMat: Matrix
   localOpacity: number
   mat: Matrix
@@ -190,7 +190,7 @@ export type RenderableComponent =
 
 export interface TransformCanvas {
   h: number
-  props?: Float32Array
+  props?: undefined | Float32Array
   sx: number
   sy: number
   tx: number
@@ -214,7 +214,7 @@ export interface SegmentLength {
 export type CVElementIntersect = CVTextElement | CVShapeElement | CVCompElement
 
 export interface CompInterface extends AnimationItem {
-  _mdf?: boolean
+  _mdf?: undefined | boolean
   addDynamicProperty: (prop: TextProperty | DynamicPropertyContainer) => void
   animationItem: AnimationItem
   assetData: ImageData
@@ -272,7 +272,7 @@ export interface CompInterface extends AnimationItem {
   setAsParent: () => void
   setMatte: (id: string) => void
   supports3d: boolean
-  svgElement?: SVGSVGElement
+  svgElement?: undefined | SVGSVGElement
   textProperty?: { currentData: { l: number[] } }
   tm: number
 }
@@ -435,26 +435,26 @@ export interface AnimationConfiguration<
     | RendererType.HTML
     | RendererType.SVG,
 > {
-  animationData?: AnimationData | undefined
-  animType?: RendererType
-  assetsPath?: string
-  audioFactory?: AudioFactory
-  autoloadSegments?: boolean
-  autoplay?: boolean
-  container?: HTMLElement
-  initialSegment?: Vector2
-  loop?: HTMLBooleanAttribute
-  name?: string
-  path?: string
-  prerender?: boolean
+  animationData?: undefined | AnimationData
+  animType?: undefined | RendererType
+  assetsPath?: undefined | string
+  audioFactory?: undefined | AudioFactory
+  autoloadSegments?: undefined | boolean
+  autoplay?: undefined | boolean
+  container?: undefined | HTMLElement
+  initialSegment?: undefined | Vector2
+  loop?: undefined | HTMLBooleanAttribute
+  name?: undefined | string
+  path?: undefined | string
+  prerender?: undefined | boolean
 
-  renderer?: T
-  rendererSettings?: {
+  renderer?: undefined | T
+  rendererSettings?: undefined | {
     svg: SVGRendererConfig
     canvas: CanvasRendererConfig
     html: HTMLRendererConfig
   }[T]
-  wrapper?: HTMLElement
+  wrapper?: undefined | HTMLElement
 }
 
 export interface Stop { s: number[] }
