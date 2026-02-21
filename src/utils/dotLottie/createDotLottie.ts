@@ -195,7 +195,7 @@ export async function createDotLottie({
 
     if (shouldDownload) {
       download(buffer, {
-        mimeType: 'application/zip',
+        mimeType: 'application/zip+dotlottie',
         name,
       })
 
