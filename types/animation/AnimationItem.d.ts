@@ -17,7 +17,7 @@ export declare class AnimationItem extends BaseEvent {
     assetsPath: string;
     audioController: AudioController;
     autoplay: boolean;
-    container?: HTMLCanvasElement;
+    container?: undefined | HTMLCanvasElement;
     currentFrame: number;
     currentRawFrame: number;
     drawnFrameEvent: LottieEvent;
@@ -45,10 +45,10 @@ export declare class AnimationItem extends BaseEvent {
     timeCompleted: number;
     totalFrames: number;
     wrapper: HTMLElement | null;
-    protected animType?: RendererType;
+    protected animType?: undefined | RendererType;
     protected autoloadSegments: boolean;
-    protected fileName?: string;
-    protected initialSegment?: Vector2 | undefined;
+    protected fileName?: undefined | string;
+    protected initialSegment?: undefined | Vector2;
     protected onComplete: null | ((arg: unknown) => void);
     protected onDestroy: null | ((arg: unknown) => void);
     protected onEnterFrame: null | ((arg: unknown) => void);

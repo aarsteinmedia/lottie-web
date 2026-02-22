@@ -46,7 +46,10 @@ const files = [
   'home_idea_es.lottie',
   'bulb.lottie',
   'gradient-stroke.json',
-  'Network-Encryption.lottie'
+  'Network-Encryption.lottie',
+  'road-trip.lottie',
+  'card-stack.lottie',
+  'apple-tv.lottie'
 ]
 
 export default files

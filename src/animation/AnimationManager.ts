@@ -206,7 +206,7 @@ function activate() {
   if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer) {
     return
   }
-  window.requestAnimationFrame(first)
+  requestAnimationFrame(first)
   _isStopped = false
 }
 function addPlayingCount() {
@@ -217,7 +217,7 @@ function addPlayingCount() {
 function first(nowTime: number) {
   initTime = nowTime
   if (!isServer) {
-    window.requestAnimationFrame(resume)
+    requestAnimationFrame(resume)
   }
 }
 
@@ -249,7 +249,7 @@ function resume(nowTime: number) {
   initTime = nowTime
   if (playingAnimationsNum && !_isFrozen) {
     if (!isServer) {
-      window.requestAnimationFrame(resume)
+      requestAnimationFrame(resume)
     }
   } else {
     _isStopped = true

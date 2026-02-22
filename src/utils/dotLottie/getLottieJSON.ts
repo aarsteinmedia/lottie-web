@@ -64,8 +64,7 @@ export async function getLottieJSON(resp: Response) {
    */
   let animationsFolder = 'animations'
 
-
-  if (unzipped[`a/${manifest.animations[0]?.id}.json`]) {
+  if (manifest.version === '2' || unzipped[`a/${manifest.animations[0]?.id}.json`]) {
     animationsFolder = 'a'
   }
 

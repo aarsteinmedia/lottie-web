@@ -74,7 +74,7 @@ export class RepeaterModifier extends ShapeModifier {
     )
   }
 
-  changeGroupRender(elements: Shape[], renderFlag?: boolean) {
+  changeGroupRender(elements: Shape[], renderFlag = false) {
     const { length } = elements
 
     for (let i = 0; i < length; i++) {

@@ -14,9 +14,9 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import { DashProperty } from '@/utils/shapes/properties/DashProperty'
 
 export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
-  c?: MultiDimensionalProperty<Vector3>
+  c?: undefined | MultiDimensionalProperty<Vector3>
   d: DashProperty
-  w?: ValueProperty
+  w?: undefined | ValueProperty
   constructor(
     elem: ElementInterfaceIntersect,
     data: Shape,

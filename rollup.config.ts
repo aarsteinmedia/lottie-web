@@ -1,6 +1,5 @@
 import type { Plugin, RollupOptions } from 'rollup'
 
-import commonjs from '@rollup/plugin-commonjs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -34,7 +33,6 @@ const isProd = process.env.NODE_ENV !== 'development',
       extensions: ['.ts'],
       preferBuiltins: true,
     }),
-    commonjs(),
     swc(),
     pluginSummary(),
   ] : [
@@ -43,7 +41,6 @@ const isProd = process.env.NODE_ENV !== 'development',
       extensions: ['.ts'],
       preferBuiltins: true,
     }),
-    commonjs(),
     swc(),
     serve({
       browser: 'firefox',

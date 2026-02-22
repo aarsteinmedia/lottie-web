@@ -25,24 +25,24 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
 
 export class SVGGradientFillStyleData extends DynamicPropertyContainer {
-  a?: ValueProperty
+  a?: undefined | ValueProperty
   cst: SVGStopElement[] = []
-  e?: MultiDimensionalProperty
-  g?: GradientProperty
-  gf?: SVGGradientElement
-  gr?: SVGGElement
-  h?: KeyframedValueProperty
+  e?: undefined | MultiDimensionalProperty
+  g?: undefined | GradientProperty
+  gf?: undefined | SVGGradientElement
+  gr?: undefined | SVGGElement
+  h?: undefined | KeyframedValueProperty
   it: ShapeDataInterface[] = []
-  maskId?: string
-  ms?: SVGMaskElement
-  o?: ValueProperty
-  of?: SVGElement
+  maskId?: undefined | string
+  ms?: undefined | SVGMaskElement
+  o?: undefined | ValueProperty
+  of?: undefined | SVGElement
   ost: SVGStopElement[] = []
   prevViewData: SVGElementInterface[] = []
-  s?: MultiDimensionalProperty
+  s?: undefined | MultiDimensionalProperty
   stops: SVGStopElement[] = []
-  style?: SVGStyleData
-  transform?: Transformer
+  style?: undefined | SVGStyleData
+  transform?: undefined | Transformer
   constructor(
     elem: ElementInterfaceIntersect,
     data: Shape,

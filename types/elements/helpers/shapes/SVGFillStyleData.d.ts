@@ -4,13 +4,13 @@ import type { MultiDimensionalProperty } from '../../../utils/properties/MultiDi
 import type { ValueProperty } from '../../../utils/properties/ValueProperty';
 import { DynamicPropertyContainer } from '../../../utils/helpers/DynamicPropertyContainer';
 export declare class SVGFillStyleData extends DynamicPropertyContainer {
-    c?: MultiDimensionalProperty<Vector3>;
-    gr?: SVGGElement;
+    c?: undefined | MultiDimensionalProperty<Vector3>;
+    gr?: undefined | SVGGElement;
     it: ShapeDataInterface[];
-    o?: ValueProperty;
+    o?: undefined | ValueProperty;
     prevViewData: SVGElementInterface[];
     style: SVGStyleData;
-    transform?: Transformer;
-    w?: ValueProperty;
+    transform?: undefined | Transformer;
+    w?: undefined | ValueProperty;
     constructor(elem: ElementInterfaceIntersect, data: Shape, styleObj: SVGStyleData);
 }

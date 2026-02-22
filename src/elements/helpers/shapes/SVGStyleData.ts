@@ -12,24 +12,24 @@ import { createNS } from '@/utils/helpers/svgElements'
 export class SVGStyleData {
   _mdf: boolean
   closed: boolean
-  coOp?: number
+  coOp?: undefined | number
   d: string
   data: Shape
-  finalTransform?: Transformer
-  gr?: SVGGElement
-  grd?: CanvasGradient
-  hd?: boolean
-  it?: ShapeDataInterface[]
+  finalTransform?: undefined | Transformer
+  gr?: undefined | SVGGElement
+  grd?: undefined | CanvasGradient
+  hd?: undefined | boolean
+  it?: undefined | ShapeDataInterface[]
   lvl: number
   msElem: null | SVGMaskElement | SVGPathElement
   pElem: SVGPathElement
-  prevViewData?: SVGElementInterface[]
-  pt?: VectorProperty
-  style?: SVGStyleData
-  t?: number
-  transform?: Transformer
-  ty?: ShapeType
-  type?: ShapeType
+  prevViewData?: undefined | SVGElementInterface[]
+  pt?: undefined | VectorProperty
+  style?: undefined | SVGStyleData
+  t?: undefined | number
+  transform?: undefined | Transformer
+  ty?: undefined | ShapeType
+  type?: undefined | ShapeType
   constructor(data: Shape, level: number) {
     this.data = data
     this.type = data.ty

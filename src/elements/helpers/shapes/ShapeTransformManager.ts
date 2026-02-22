@@ -68,7 +68,7 @@ export class ShapeTransformManager {
         }
       }
     }
-    sequence._mdf = _mdf
+    sequence._mdf = Boolean(_mdf)
   }
 
   processSequences(isFirstFrame?: boolean) {

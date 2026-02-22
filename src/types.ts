@@ -138,14 +138,14 @@ export type SVGElementInterface =
 export interface Transformer {
   _localMatMdf: boolean
   _matMdf: boolean
-  _mdf?: undefined | boolean
+  _mdf?: boolean
   _opMdf: boolean
   container: SVGGElement
   key?: undefined | string
   localMat: Matrix
   localOpacity: number
   mat: Matrix
-  matrix?: Matrix
+  matrix?: undefined | Matrix
   mProp: TransformProperty
   mProps: TransformProperty
   op: ValueProperty
@@ -214,7 +214,7 @@ export interface SegmentLength {
 export type CVElementIntersect = CVTextElement | CVShapeElement | CVCompElement
 
 export interface CompInterface extends AnimationItem {
-  _mdf?: undefined | boolean
+  _mdf?: boolean
   addDynamicProperty: (prop: TextProperty | DynamicPropertyContainer) => void
   animationItem: AnimationItem
   assetData: ImageData
@@ -273,7 +273,7 @@ export interface CompInterface extends AnimationItem {
   setMatte: (id: string) => void
   supports3d: boolean
   svgElement?: undefined | SVGSVGElement
-  textProperty?: { currentData: { l: number[] } }
+  textProperty?: undefined | { currentData: { l: number[] } }
   tm: number
 }
 
@@ -315,36 +315,36 @@ export type CompElementInterface =
 
 export interface CVStyleElement {
   closed: boolean
-  co?: string
-  coOp?: number
-  da?: Float32Array
+  co?: undefined | string
+  coOp?: undefined | number
+  da?: undefined | Float32Array
   data: Shape
-  do?: number
+  do?: undefined | number
   elements: CVShapeData[]
-  grd?: string
-  lc?: CanvasLineCap
-  lj?: CanvasLineJoin
-  ml?: number
+  grd?: undefined | string
+  lc?: undefined | CanvasLineCap
+  lj?: undefined | CanvasLineJoin
+  ml?: undefined | number
   preTransforms: TransformSequence
   r?: 'evenodd' | 'nonzero'
   transforms: Transformer[]
   type: ShapeType
-  wi?: number
+  wi?: undefined | number
 }
 
 export interface CVElement {
-  a?: ValueProperty
-  c?: MultiDimensionalProperty<number[]>
-  d?: DashProperty
-  e?: MultiDimensionalProperty
-  g?: GradientProperty
-  h?: ValueProperty
+  a?: undefined | ValueProperty
+  c?: undefined | MultiDimensionalProperty<number[]>
+  d?: undefined | DashProperty
+  e?: undefined | MultiDimensionalProperty
+  g?: undefined | GradientProperty
+  h?: undefined | ValueProperty
   it: CVElement[]
-  o?: ValueProperty
+  o?: undefined | ValueProperty
   prevViewData: CVElement[]
-  s?: MultiDimensionalProperty
-  style?: CVStyleElement
-  w?: ValueProperty
+  s?: undefined | MultiDimensionalProperty
+  style?: undefined | CVStyleElement
+  w?: undefined | ValueProperty
 }
 
 export interface ThreeDElements {
@@ -359,12 +359,12 @@ export interface EFXElement { p: BaseProperty }
 
 export interface KeyframesMetadata {
   __fnct?: (val: number) => number | number[]
-  bezierData?: BezierData
+  bezierData?: undefined | BezierData
 }
 
 interface BaseRendererConfig {
-  className?: string
-  imagePreserveAspectRatio?: string
+  className?: undefined | string
+  imagePreserveAspectRatio?: undefined | string
 }
 
 export interface FilterSizeConfig {
@@ -379,8 +379,8 @@ export interface Letter {
   an: number
   animatorJustifyOffset: number
   anIndexes: number[]
-  extra?: number
-  ind?: number
+  extra?: undefined | number
+  ind?: undefined | number
   l: number
   line: number
   n: boolean
@@ -407,26 +407,26 @@ export type SVGRendererConfig = BaseRendererConfig & {
 }
 
 export type CanvasRendererConfig = BaseRendererConfig & {
-  clearCanvas?: boolean
-  context?: null | CanvasRenderingContext2D
+  clearCanvas?: undefined | boolean
+  context?: undefined | null | CanvasRenderingContext2D
   contentVisibility: string
   id: string
   imagePreserveAspectRatio: PreserveAspectRatio
   preserveAspectRatio: PreserveAspectRatio
-  progressiveLoad?: boolean
-  runExpressions?: boolean
-  dpr?: number
+  progressiveLoad?: undefined | boolean
+  runExpressions?: undefined | boolean
+  dpr?: undefined | number
 }
 
 export type HTMLRendererConfig = BaseRendererConfig & {
-  hideOnTransparent?: boolean
-  filterSize?: {
+  hideOnTransparent?: undefined | boolean
+  filterSize?: undefined | {
     width: string
     height: string
     y: string
     x: string
   }
-  runExpressions?: boolean
+  runExpressions?: undefined | boolean
 }
 
 export interface AnimationConfiguration<
@@ -474,7 +474,7 @@ type BoolInt = 0 | 1
 interface ShapeDataProperty {
   _mdf?: boolean
   a: 1 | 0
-  ix?: number
+  ix?: undefined | number
   k: ShapePath | ShapePath[]
   paths: {
     _length: number
@@ -492,7 +492,7 @@ export interface StrokeData {
 
 interface ShapeColor {
   a: 1 | 0
-  ix?: number
+  ix?: undefined | number
   k: number | number[] | ShapeColorValue[]
 }
 
@@ -504,87 +504,87 @@ export interface ShapeColorValue {
 export interface Shape {
   _length: number
   _processed?: boolean
-  _shouldRender?: boolean | undefined
+  _shouldRender?: boolean
   /** Anchor point / Highlight angle for radial gradient. */
-  a?: VectorProperty<Vector1 | Vector2 | Vector3>
+  a?: undefined | VectorProperty<Vector1 | Vector2 | Vector3>
   /** Blend Mode. */
-  bm?: number
+  bm?: undefined | number
   /** Color. */
-  c?: ShapeColor
-  cix?: number
+  c?: undefined | ShapeColor
+  cix?: undefined | number
   /** CSS Class. */
-  cl?: string
-  closed?: boolean
-  d?: number | StrokeData[]
-  dc?: number
+  cl?: undefined | string
+  closed?: undefined | boolean
+  d?: undefined | number | StrokeData[]
+  dc?: undefined | number
   /** Endpoint for gradient. */
-  e?: VectorProperty<Vector2>
-  eo?: VectorProperty
+  e?: undefined | VectorProperty<Vector2>
+  eo?: undefined | VectorProperty
   /** Gradient colors. */
-  g?: GradientColor
+  g?: undefined | GradientColor
   /** Highlight length for radial gradient. */
-  h?: VectorProperty
-  hd?: boolean
-  ind?: number
-  inv?: boolean
-  ir?: { ix?: number }
-  is?: { ix?: number }
-  it?: Shape[]
-  ix?: number
-  ks?: ShapeDataProperty
+  h?: undefined | VectorProperty
+  hd?: undefined | boolean
+  ind?: undefined | number
+  inv?: undefined | boolean
+  ir?: undefined | { ix?: number }
+  is?: undefined | { ix?: number }
+  it?: undefined | Shape[]
+  ix?: undefined | number
+  ks?: undefined | ShapeDataProperty
   lc?: 1 | 2 | 3
   lj?: 1 | 2 | 3
-  ln?: string
+  ln?: undefined | string
   /** Stacking order. 1: Above 2: Below. */
   m?: 1 | 2
-  maxDist?: number
-  ml?: number
-  mn?: string
-  mode?: string
-  nm?: string
+  maxDist?: undefined | number
+  ml?: undefined | number
+  mn?: undefined | string
+  mode?: undefined | string
+  nm?: undefined | string
   /** Number of properties. */
-  np?: number
+  np?: undefined | number
   /**
    * O?: VectorProperty.
    */
-  o?: {
+  o?: undefined | {
     a: 0 | 1
     k: number
     ix?: number
     x?: number
   }
-  or?: {
+  or?: undefined | {
     k: Keyframe[]
     ix?: number
   }
-  os?: { ix?: number }
+  os?: undefined | { ix?: number }
   /** Position. */
-  p?: VectorProperty<Vector2>
-  pt?: VectorProperty<ShapePath | ShapePath[]>
+  p?: undefined | VectorProperty<Vector2>
+  pt?: undefined | VectorProperty<ShapePath | ShapePath[]>
   /** Rotation (for transforms) | Fill-rule (for fills). */
-  r?: VectorProperty<{
+  r?: undefined | VectorProperty<{
     e: number;
     s: number;
     t: number
   }[]>
-  rx?: VectorProperty
-  ry?: VectorProperty
-  rz?: VectorProperty
+  rx?: undefined | VectorProperty
+  ry?: undefined | VectorProperty
+  rz?: undefined | VectorProperty
   /** Scale / StartPoint for gradient. */
-  s?: VectorProperty<Vector2 | Vector3>
+  s?: undefined | VectorProperty<Vector2 | Vector3>
   /** Skew Axis. */
   sa?: VectorProperty
   /** Skew. */
-  sk?: VectorProperty
+  sk?: undefined | VectorProperty
 
-  so?: VectorProperty
-  sy?: number
+  so?: undefined | VectorProperty
+  sy?: undefined | number
   /** Gradient type. */
-  t?: number
-  tr?: Shape
-  ty: ShapeType
-  w?: VectorProperty
-  x?: {
+  t?: undefined | number
+  tr?: undefined | Shape
+  ty: undefined | ShapeType
+  w?: undefined | VectorProperty
+  x?: undefined | {
     a: 0 | 1
     k: number
     ix?: number
@@ -621,7 +621,7 @@ export interface StoredData {
 
 export interface ViewData {
   elem: SVGPathElement
-  invRect?: SVGRectElement | null
+  invRect?: undefined | SVGRectElement | null
   lastPath: string
   op: ValueProperty
   prop:
@@ -636,45 +636,45 @@ export interface ViewData {
 export interface LottieAsset {
   __used?: boolean
   /** Whether the data is embedded/encoded. */
-  e?: BoolInt
+  e?: undefined | BoolInt
   /** Height of image in pixels. */
-  h?: number
+  h?: undefined | number
 
   /** Id/slug of asset – e.g. Image_0 / audio_0. */
-  id?: string
+  id?: undefined | string
 
-  layers?: LottieLayer[] & { __used?: boolean }
+  layers?: undefined | LottieLayer[] & { __used?: boolean }
 
   /** Name of asset – e.g. "Black Mouse Ears". */
-  nm?: string
+  nm?: undefined | string
 
   /** Filename – e.g image_0.png / audio_0.mp3 | DataURL, Base64 encoded. */
   p?: undefined | string
 
   /** Aspect Ratio. */
-  pr?: string
+  pr?: undefined | string
 
-  sid?: string
+  sid?: undefined | string
 
-  t?: string
+  t?: undefined | string
 
   /** Path to asset. Empty string if asset is embedded. */
-  u?: string
+  u?: undefined | string
   /** Width of image in pixels. */
-  w?: number
+  w?: undefined | number
 
   /** Extra composition. */
-  xt?: number
+  xt?: undefined | number
 }
 
 export type HTMLBooleanAttribute = boolean | string | number | null
 
 export interface AnimationSettings {
-  autoplay?: HTMLBooleanAttribute
-  direction?: AnimationDirection
-  loop?: HTMLBooleanAttribute
-  mode?: PlayMode
-  speed?: number
+  autoplay?: undefined | HTMLBooleanAttribute
+  direction?: undefined | AnimationDirection
+  loop?: undefined | HTMLBooleanAttribute
+  mode?: undefined | PlayMode
+  speed?: undefined | number
 }
 
 export interface LottieAnimation extends AnimationSettings { id: string }
@@ -685,11 +685,11 @@ export interface AnimationConfig extends LottieAnimation { url: string }
 
 export interface LottieManifest {
   animations: LottieAnimation[]
-  author?: string
-  description?: string
-  generator?: string
-  keywords?: string
-  version?: string
+  author?: undefined | string
+  description?: undefined | string
+  generator?: undefined | string
+  keywords?: undefined | string
+  version?: undefined | string
 }
 
 type Vector1 = number
@@ -700,23 +700,23 @@ export type Vector4 = [number, number, number, number]
 export interface VectorProperty<T = Vector1> {
   _mdf?: boolean
   a: 1 | 0
-  ix?: number
+  ix?: undefined | number
   k: T
-  s?: number
-  sid?: number
-  v?: T
-  z?: number
+  s?: undefined | number
+  sid?: undefined | number
+  v?: undefined | T
+  z?: undefined | number
 }
 
 export interface Coordinates {
-  c?: boolean
+  c?: undefined | boolean
   x: number | number[]
   y: number | number[]
 }
 
 export interface MaskData {
-  c?: boolean
-  e?: Coordinates[]
+  c?: undefined | boolean
+  e?: undefined | Coordinates[]
   i: Coordinates
   o: Coordinates
   s: Coordinates[]
@@ -724,8 +724,8 @@ export interface MaskData {
 }
 
 export interface Mask {
-  cl?: string
-  d?: number
+  cl?: undefined | string
+  d?: undefined | number
   inv: boolean
   mode: string
   nm: string
@@ -748,11 +748,11 @@ export interface Mask {
 }
 
 interface LayerStyle {
-  a?: {
+  a?: undefined | {
     a: 0 | 1
     k: number
   }
-  bm?: {
+  bm?: undefined | {
     a: 0 | 1
     k: number
   }
@@ -760,21 +760,21 @@ interface LayerStyle {
     a: 0 | 1
     k: Vector3 | Vector4
   }
-  ch?: {
+  ch?: undefined | {
     a: 0 | 1
     k: number
   }
-  d?: {
+  d?: undefined | {
     a: 0 | 1
     k: number
   }
   mn: string
   nm: string
-  no?: {
+  no?: undefined | {
     a: 0 | 1
     k: number
   }
-  o?: {
+  o?: undefined | {
     a: 0 | 1
     k: number
   }
@@ -786,10 +786,10 @@ interface LayerStyle {
 }
 
 export interface TransformSequence {
-  _mdf?: undefined | boolean
+  _mdf?: boolean
   [key: string]: unknown
-  finalTransform?: Matrix
-  transforms?: { transform: Transformer }[]
+  finalTransform?: undefined | Matrix
+  transforms?: undefined | { transform: Transformer }[]
 }
 
 export type BMMath = Omit<Math, 'abs'> & {
@@ -799,16 +799,16 @@ export type BMMath = Omit<Math, 'abs'> & {
 
 export interface DocumentData extends FontList {
   __complete?: boolean
-  ascent?: number
-  boxWidth?: Vector2 | number
+  ascent?: undefined | number
+  boxWidth?: undefined | Vector2 | number
   f: string
-  fc?: Vector3 | string
-  fillColorAnim?: boolean
-  finalLineHeight?: number
-  finalSize?: number
+  fc?: undefined | Vector3 | string
+  fillColorAnim?: undefined | boolean
+  finalLineHeight?: undefined | number
+  finalSize?: undefined | number
   finalText: string[]
-  j?: number
-  justifyOffset?: number
+  j?: undefined | number
+  justifyOffset?: undefined | number
   k: {
     s: LetterProps | DocumentData
     t: number
@@ -816,25 +816,25 @@ export interface DocumentData extends FontList {
   l: Letter[]
   lh: number
   lineWidths: number[]
-  ls?: number
-  of?: string
-  ps?: Vector2 | null
+  ls?: undefined | number
+  of?: undefined | string
+  ps?: undefined | Vector2 | null
   s: number
-  sc?: Vector3
+  sc?: undefined | Vector3
   sid?: unknown
-  strokeColorAnim?: boolean
-  strokeWidthAnim?: boolean
-  sw?: number
-  sz?: Vector2
+  strokeColorAnim?: undefined | boolean
+  strokeWidthAnim?: undefined | boolean
+  sw?: undefined | number
+  sz?: undefined | Vector2
   t: string | number
   tr: number
-  x?: string
-  yOffset?: number
+  x?: undefined | string
+  yOffset?: undefined | number
 }
 
 export interface TransformNode {
-  p?: number[]
-  pts?: number[]
+  p?: undefined | number[]
+  pts?: undefined | number[]
   t: string
 }
 
@@ -856,14 +856,14 @@ export interface TextRangeValue {
     a: 0 | 1
     k: number
   }
-  hd?: boolean
+  hd?: undefined | boolean
   /** Min Ease. */
-  ne?: {
+  ne?: undefined | {
     a: 0 | 1
     k: number
   }
   /** Offset. */
-  o?: {
+  o?: undefined | {
     a: 0 | 1
     k: number
   }
@@ -872,21 +872,21 @@ export interface TextRangeValue {
   /** Randomize. */
   rn: 0 | 1
   /** Start. */
-  s?: {
+  s?: undefined | {
     a: 0 | 1
     k: number
   }
   /** Shape. */
   sh: number
   /** Smoothness. */
-  sm?: {
+  sm?: undefined | {
     a: 0 | 1
     k: number
   }
   t: 0 | 1
   totalChars: number
   /** Max Ease. */
-  xe?: {
+  xe?: undefined | {
     a: 0 | 1
     k: number
   }
@@ -917,22 +917,22 @@ export interface ShapeDataInterface {
       _length: number
     }
   }
-  style?: CSSStyleDeclaration
+  style?: undefined | CSSStyleDeclaration
   styles: SVGStyleData[]
   transform: Transformer
   transformers: Transformer[]
-  w?: ValueProperty
+  w?: undefined | ValueProperty
 }
 
 export interface TextData {
-  __complete: boolean
+  __complete?: boolean
   _mdf?: boolean
   /** Text range. */
-  a?: TextAnimatorDataProperty[]
+  a?: undefined | TextAnimatorDataProperty[]
   ascent: number
   boxWidth: Vector2
   /** Text Document. */
-  d?: DocumentData
+  d?: undefined | DocumentData
   f: string
   fc: string
   fillColorAnim: boolean
@@ -941,14 +941,14 @@ export interface TextData {
   finalText: string[]
   fStyle: string
   fWeight: string
-  hd?: boolean
+  hd?: undefined | boolean
   justifyOffset: number
   l: Letter[]
   lh: number
   lineWidths: number[]
   ls: number
   /** Text Alignment. */
-  m?: {
+  m?: undefined | {
     _mdf?: boolean
     /** Grouping. */
     g: number
@@ -962,9 +962,9 @@ export interface TextData {
   n?: any
   of: string
   /** Text Follow Path TODO:. */
-  p?: TextVectorData
+  p?: undefined | TextVectorData
   ps: null | Vector2
-  r?: { v: number[] }
+  r?: undefined | { v: number[] }
   s: number
   sc: string
   strokeColorAnim: boolean
@@ -985,27 +985,27 @@ export interface PathInfo {
 
 export interface TextVectorData {
   _mdf?: boolean
-  a?: VectorProperty
-  f?: VectorProperty
+  a?: undefined | VectorProperty
+  f?: undefined | VectorProperty
   l: VectorProperty
   m: number
-  n?: VectorProperty
-  p?: VectorProperty
-  r?: VectorProperty
-  v?: VectorProperty
+  n?: undefined | VectorProperty
+  p?: undefined | VectorProperty
+  r?: undefined | VectorProperty
+  v?: undefined | VectorProperty
 }
 
 export interface TextPathData {
-  _mdf?: boolean | undefined
-  a?: ValueProperty | undefined
-  f?: ValueProperty | undefined
-  l: ValueProperty | undefined
-  m?: null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty | undefined
-  n?: ValueProperty | undefined
-  p?: ValueProperty | undefined
-  pi?: PathInfo | undefined
-  r?: ValueProperty | undefined
-  v?: ValueProperty | undefined
+  _mdf?: boolean
+  a?: undefined | ValueProperty
+  f?: undefined | ValueProperty
+  l: ValueProperty
+  m?: undefined | null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty
+  n?: undefined | ValueProperty
+  p?: undefined | ValueProperty
+  pi?: undefined | PathInfo
+  r?: undefined | ValueProperty
+  v?: undefined | ValueProperty
 }
 
 export type EffectElement =
@@ -1038,16 +1038,16 @@ export interface EffectValue {
 export interface Effect {
   ef: EffectValue[]
   en: 1 | 0
-  fs?: FilterSizeConfig
-  ix?: number
-  mn?: string
-  nm?: string
+  fs?: undefined | FilterSizeConfig
+  ix?: undefined | number
+  mn?: undefined | string
+  nm?: undefined | string
   np: number
   ty: number
 }
 
 export interface FontList {
-  cache?: Record<string, unknown>
+  cache?: undefined | Record<string, unknown>
   fClass: string
   fFamily: string
   fName: string
@@ -1073,12 +1073,12 @@ export interface FontList {
 }
 
 export interface Characacter {
-  ch?: Characacter
-  data?: LottieLayer
-  fFamily?: string
+  ch?: undefined | Characacter
+  data?: undefined | LottieLayer
+  fFamily?: undefined | string
   shapes: Shape[]
   size: number
-  style?: string
+  style?: undefined | string
   t: number
   w: number
 }
@@ -1086,13 +1086,13 @@ export interface Characacter {
 export interface AnimationData {
   __complete?: boolean
   $schema?: string
-  ao?: boolean | 0 | 1
+  ao?: undefined | boolean | 0 | 1
   assets: LottieAsset[]
   /** Characters. */
   chars: Characacter[] | null
   /** Is three dimensional. */
   ddd: 0 | 1
-  fonts?: { list: DocumentData[] }
+  fonts?: undefined | { list: DocumentData[] }
   /** Framerate. */
   fr: number
   /** Height. */
@@ -1101,7 +1101,7 @@ export interface AnimationData {
   ip: number
   layers: LottieLayer[]
   markers?: MarkerData[]
-  meta?: {
+  meta?: undefined | {
     a: string
     d: string
     k: string
@@ -1109,13 +1109,13 @@ export interface AnimationData {
     g: string
   }
   /** Match name. */
-  mn?: string
+  mn?: undefined | string
   /** Name. */
   nm: string
   /** Out point. */
   op: number
-  segments?: { time: number }[]
-  slots?: { [key: string]: { p: any } }
+  segments?: undefined | { time: number }[]
+  slots?: undefined | { [key: string]: { p: any } }
   /** Version. */
   v: string
   /** Width. */
@@ -1124,73 +1124,73 @@ export interface AnimationData {
 
 export interface LottieLayer {
   __used?: boolean
-  ao?: 0 | 1 | boolean
-  au?: { lv?: { k: number[] } }
+  ao?: undefined | 0 | 1 | boolean
+  au?: undefined | { lv?: { k: number[] } }
   /** Blend Mode. */
-  bm?: number
-  chars?: Characacter[]
-  cl?: string
-  completed?: boolean
+  bm?: undefined | number
+  chars?: undefined | Characacter[]
+  cl?: undefined | string
+  completed?: undefined | boolean
   /** Whether transforms should be applied before or after masks. */
   ct?: 0 | 1
   ddd?: 0 | 1
-  ef?: Effect[]
-  en?: number
-  fonts?: { list: DocumentData[] }
-  fr?: number
-  h?: number
-  hasMask?: boolean
-  hd?: boolean
-  height?: number
-  id?: string
-  ind?: number
+  ef?: undefined | Effect[]
+  en?: undefined | number
+  fonts?: undefined | { list: DocumentData[] }
+  fr?: undefined | number
+  h?: undefined | number
+  hasMask?: undefined | boolean
+  hd?: undefined | boolean
+  height?: undefined | number
+  id?: undefined | string
+  ind?: undefined | number
   /** In point. */
   ip: number
   ks: Shape
-  layers?: LottieLayer[] & { __used?: boolean }
-  ln?: string
-  masksProperties?: Shape[]
-  mn?: string
+  layers?: undefined | (LottieLayer[] & { __used?: boolean })
+  ln?: undefined | string
+  masksProperties?: undefined | Shape[]
+  mn?: undefined | string
   nm: string
-  np?: string
+  np?: undefined | string
   /** Out point. */
   op: number
-  parent?: number
-  pe?: VectorProperty
+  parent?: undefined | number
+  pe?: undefined | VectorProperty
   /** Asset ID. */
-  refId?: string
-  sc?: string
-  sh?: number
+  refId?: undefined | string
+  sc?: undefined | string
+  sh?: undefined | number
   shapes: Shape[]
   singleShape?: boolean
-  slots?: { [key: string]: { p: any } }
+  slots?: undefined | { [key: string]: { p: any } }
   /** Time stretch. */
-  sr?: number
+  sr?: undefined | number
   /** Start time. */
   st: number
-  sw?: number
-  sy?: LayerStyle[]
+  sw?: undefined | number
+  sy?: undefined | LayerStyle[]
   /** Text Data. */
-  t?: TextData
+  t?: undefined | TextData
   /** Matte target: If set to 1 it means a layer is using this layer as a track matte. */
   td?: 0 | 1
-  textData?: {
+  textData?: undefined | {
     height: number
     width: number
   }
   /** TagName. */
-  tg?: string
+  tg?: undefined | string
   /** Time remappoing. */
-  tm?: VectorProperty
+  tm?: undefined | VectorProperty
   /** Matte reference (for shape). */
   tp?: undefined | number
   /** Matte mode. */
-  tt?: number
+  tt?: undefined | number
   /** Layer type.*/
   ty: number
-  w?: number
-  width?: number
-  xt?: number
+  w?: undefined | number
+  width?: undefined | number
+  xt?: undefined | number
 }
 export interface Marker {
   /** Comment. */
@@ -1214,7 +1214,7 @@ export interface BoundingBox {
 
 export interface MarkerData {
   duration: number
-  payload?: Record<string, unknown>
+  payload?: undefined | Record<string, unknown>
   time: number
 }
 
@@ -1265,13 +1265,13 @@ export interface ImageData {
 
 export interface CanvasItem {
   c: MultiDimensionalProperty<Vector3>
-  d?: {
+  d?: undefined | {
     dashoffset: string
     _mdf?: boolean
   }
-  it?: CanvasItem
+  it?: undefined | CanvasItem
   o: ValueProperty
-  prevViewData?: CanvasItem
+  prevViewData?: undefined | CanvasItem
   style: {
     closed?: boolean
     co: string
@@ -1286,7 +1286,7 @@ export interface CanvasItem {
     type: string
     wi: number
   }
-  w?: {
+  w?: undefined | {
     _mdf?: boolean
     v: number
   }
@@ -1294,7 +1294,7 @@ export interface CanvasItem {
 
 export interface Keyframe {
   e: Vector3
-  h?: number
+  h?: undefined | number
   i: Coordinates
   keyframeMetadata?: {
     length: number
@@ -1305,7 +1305,7 @@ export interface Keyframe {
   s: ShapePath[] | Vector3 | null
   t: number
   ti: Vector2 | null
-  to?: Vector2 | null
+  to?: undefined | Vector2 | null
 }
 
 export type EffectFunction = (...args: any[]) => any
@@ -1327,9 +1327,9 @@ export interface Caching {
 }
 
 export interface GlobalData {
-  _mdf?: undefined | boolean
-  audioController?: AudioController
-  blendMode?: string
+  _mdf?: boolean
+  audioController?: undefined | AudioController
+  blendMode?: undefined | string
   canvasContext?: undefined | null | CanvasRenderingContext2D
   comp?: CompElementInterface
   compSize?: {
@@ -1338,26 +1338,26 @@ export interface GlobalData {
   }
   currentGlobalAlpha: number
   defs: SVGDefsElement
-  fontManager?: FontManager
+  fontManager?: undefined | FontManager
   frameId: number
   frameNum?: undefined | number
   frameRate: number
   getAssetData: AnimationItem['getAssetData']
   getAssetsPath: AnimationItem['getAssetsPath']
-  imageLoader?: ImagePreloader | null
-  isDashed?: boolean
-  mouseX?: number
-  mouseY?: number
-  nm?: string
+  imageLoader?: undefined | ImagePreloader | null
+  isDashed?: undefined | boolean
+  mouseX?: undefined | number
+  mouseY?: undefined | number
+  nm?: undefined | string
   popExpression: () => void
   progressiveLoad?: undefined | boolean
   projectInterface: ProjectInterface
   pushExpression: () => void
   registerExpressionProperty: (expression: ExpressionProperty) => void
-  renderConfig?: SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
-  renderer?: CanvasRenderer | SVGRenderer
-  slotManager?: SlotManager
-  transformCanvas?: TransformCanvas
+  renderConfig?: undefined | SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
+  renderer?: undefined | CanvasRenderer | SVGRenderer
+  slotManager?: undefined | SlotManager
+  transformCanvas?: undefined | TransformCanvas
 }
 
 export type ExpressionProperty = VectorProperty<Keyframe[]> & {
@@ -1424,8 +1424,8 @@ export interface AddAnimationParams {
 }
 
 export interface Result {
-  error?: string
-  result?: null | string | ArrayBuffer
+  error?: undefined | string
+  result?: undefined | null | string | ArrayBuffer
   success: boolean
 }
 

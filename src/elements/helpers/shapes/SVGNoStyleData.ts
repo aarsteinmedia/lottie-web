@@ -10,11 +10,11 @@ import type {
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 export class SVGNoStyleData extends DynamicPropertyContainer {
-  gr?: SVGGElement
+  gr?: undefined | SVGGElement
   it: ShapeDataInterface[] = []
   prevViewData: SVGElementInterface[] = []
   style: SVGStyleData
-  transform?: Transformer
+  transform?: undefined | Transformer
   constructor(
     elem: ElementInterfaceIntersect,
     _data: SVGShapeData,

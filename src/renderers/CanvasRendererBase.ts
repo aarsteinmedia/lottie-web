@@ -60,7 +60,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     }
 
     if (this.animationItem.wrapper) {
-      this.animationItem.container = createTag('canvas')
+      this.animationItem.container = createTag<HTMLCanvasElement>('canvas')
       const { style: containerStyle } = this.animationItem.container
 
       containerStyle.width = '100%'
@@ -299,7 +299,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       this.renderedFrame = num
       this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame)
       this.globalData.frameId++
-      this.globalData._mdf = !this.renderConfig?.clearCanvas || forceRender
+      this.globalData._mdf = Boolean(!this.renderConfig?.clearCanvas || forceRender)
       this.globalData.projectInterface.currentFrame = num
 
       const { length } = this.layers

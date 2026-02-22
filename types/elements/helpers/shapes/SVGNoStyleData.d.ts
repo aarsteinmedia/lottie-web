@@ -3,10 +3,10 @@ import type { SVGStyleData } from '../../../elements/helpers/shapes/SVGStyleData
 import type { ElementInterfaceIntersect, ShapeDataInterface, SVGElementInterface, Transformer } from '../../../types';
 import { DynamicPropertyContainer } from '../../../utils/helpers/DynamicPropertyContainer';
 export declare class SVGNoStyleData extends DynamicPropertyContainer {
-    gr?: SVGGElement;
+    gr?: undefined | SVGGElement;
     it: ShapeDataInterface[];
     prevViewData: SVGElementInterface[];
     style: SVGStyleData;
-    transform?: Transformer;
+    transform?: undefined | Transformer;
     constructor(elem: ElementInterfaceIntersect, _data: SVGShapeData, styleObj: SVGStyleData);
 }
