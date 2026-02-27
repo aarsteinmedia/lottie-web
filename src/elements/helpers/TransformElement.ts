@@ -18,9 +18,8 @@ export abstract class TransformElement extends BaseElement {
 
   globalToLocal(point: Vector3) {
     let pt = point
-    const transforms = []
+    const transforms = [ this.finalTransform]
 
-    transforms.push(this.finalTransform)
     let shouldTransform = true,
       { comp } = this
 

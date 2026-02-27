@@ -259,7 +259,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
           if (paths) {
             if (this._pathData.r?.v) {
-              paths = paths.reverse()
+              paths = paths.toReversed()
             }
             pathInfo = {
               segments: [],

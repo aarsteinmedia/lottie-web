@@ -37,48 +37,6 @@ export class ShapePath {
     return this._length
   }
 
-  reverse() {
-    const newPath = new ShapePath()
-
-    newPath.setPathData(this.c, this._length)
-    const vertices = this.v,
-      outPoints = this.o,
-      inPoints = this.i
-    let init = 0
-
-    if (this.c) {
-      newPath.setTripleAt(
-        vertices[0]?.[0] ?? 0,
-        vertices[0]?.[1] ?? 0,
-        inPoints[0]?.[0] ?? 0,
-        inPoints[0]?.[1] ?? 0,
-        outPoints[0]?.[0] ?? 0,
-        outPoints[0]?.[1] ?? 0,
-        0,
-        false
-      )
-      init = 1
-    }
-    const { _length } = this
-    let cnt = _length - 1
-
-    for (let i = init; i < _length; i++) {
-      newPath.setTripleAt(
-        vertices[cnt]?.[0] ?? 0,
-        vertices[cnt]?.[1] ?? 0,
-        inPoints[cnt]?.[0] ?? 0,
-        inPoints[cnt]?.[1] ?? 0,
-        outPoints[cnt]?.[0] ?? 0,
-        outPoints[cnt]?.[1] ?? 0,
-        i,
-        false
-      )
-      cnt -= 1
-    }
-
-    return newPath
-  }
-
   setLength(len: number) {
     while (this._maxLength < len) {
       this.doubleArrayLength()
@@ -152,5 +110,47 @@ export class ShapePath {
     }
     arr[pos][0] = x
     arr[pos][1] = y
+  }
+
+  toReversed() {
+    const newPath = new ShapePath()
+
+    newPath.setPathData(this.c, this._length)
+    const vertices = this.v,
+      outPoints = this.o,
+      inPoints = this.i
+    let init = 0
+
+    if (this.c) {
+      newPath.setTripleAt(
+        vertices[0]?.[0] ?? 0,
+        vertices[0]?.[1] ?? 0,
+        inPoints[0]?.[0] ?? 0,
+        inPoints[0]?.[1] ?? 0,
+        outPoints[0]?.[0] ?? 0,
+        outPoints[0]?.[1] ?? 0,
+        0,
+        false
+      )
+      init = 1
+    }
+    const { _length } = this
+    let cnt = _length - 1
+
+    for (let i = init; i < _length; i++) {
+      newPath.setTripleAt(
+        vertices[cnt]?.[0] ?? 0,
+        vertices[cnt]?.[1] ?? 0,
+        inPoints[cnt]?.[0] ?? 0,
+        inPoints[cnt]?.[1] ?? 0,
+        outPoints[cnt]?.[0] ?? 0,
+        outPoints[cnt]?.[1] ?? 0,
+        i,
+        false
+      )
+      cnt -= 1
+    }
+
+    return newPath
   }
 }
