@@ -1,5 +1,3 @@
-import type { ConfigArray } from 'typescript-eslint'
-
 import {
   sheriff, type SheriffSettings, tseslint
 } from 'eslint-config-sheriff'
@@ -25,7 +23,7 @@ const ignores = [
     'player.js',
     'player-light.js',
   ],
-  config: ConfigArray = defineConfig(
+  config = defineConfig(
     sheriff(sheriffOptions),
     {
       files: ['**/*.{ts,js}'],
