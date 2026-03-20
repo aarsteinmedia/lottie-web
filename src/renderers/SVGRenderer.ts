@@ -69,7 +69,7 @@ export class SVGRenderer extends SVGRendererBase {
       preserveAspectRatio: config?.preserveAspectRatio || 'xMidYMid meet',
       progressiveLoad: config?.progressiveLoad || false,
       runExpressions:
-        !config || config.runExpressions === undefined || config.runExpressions,
+        config?.runExpressions === undefined || config.runExpressions,
       viewBoxOnly: config?.viewBoxOnly || false,
       viewBoxSize: config?.viewBoxSize || false,
       width: config?.width,

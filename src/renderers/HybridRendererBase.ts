@@ -41,14 +41,14 @@ export class HybridRendererBase extends BaseRenderer {
     this.layers = null as unknown as LottieLayer[]
     this.renderedFrame = -1
     this.renderConfig = {
-      className: config && config.className || '',
+      className: config?.className || '',
       filterSize: {
         height: config?.filterSize?.height || '400%',
         width: config?.filterSize?.width || '400%',
         x: config?.filterSize?.x || '-100%',
         y: config?.filterSize?.y || '-100%',
       },
-      hideOnTransparent: !(config && config.hideOnTransparent === false),
+      hideOnTransparent: config?.hideOnTransparent !== false,
       imagePreserveAspectRatio:
         config?.imagePreserveAspectRatio || 'xMidYMid slice',
     }
