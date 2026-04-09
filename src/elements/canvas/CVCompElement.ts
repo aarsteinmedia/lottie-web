@@ -54,7 +54,7 @@ export class CVCompElement extends CompElement {
   includeLayers = CanvasRendererBase.prototype.includeLayers
   initItems = CanvasRendererBase.prototype.initItems
   override initRendererElement = CVBaseElement.prototype.initRendererElement
-  pendingElements: ElementInterfaceIntersect[]
+  pendingElements: ElementInterfaceIntersect[] = []
   prepareLayer = CVBaseElement.prototype.prepareLayer
   override renderFrame = CVBaseElement.prototype.renderFrame
   reset = CanvasRendererBase.prototype.reset
@@ -76,7 +76,6 @@ export class CVCompElement extends CompElement {
     super()
     this.completeLayers = false
     this.layers = data.layers as LottieLayer[]
-    this.pendingElements = []
     this.elements = createSizedArray(this.layers.length)
     this.initElement(
       data, globalData, comp

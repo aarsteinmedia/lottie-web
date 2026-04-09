@@ -177,16 +177,16 @@ const rgbToHSV = (
   }
 
 export class TextAnimatorProperty extends DynamicPropertyContainer {
-  _frameId: number
-  _isFirstFrame: boolean
+  _frameId = -1
+  _isFirstFrame = true
   defaultPropsArray: number[] = []
-  lettersChangedFlag: boolean
-  renderedLetters: LetterProps[]
+  lettersChangedFlag = false
+  renderedLetters: LetterProps[] = []
   private _animatorsData: TextAnimatorDataProperty[]
   private _elem: ElementInterfaceIntersect
-  private _hasMaskedPath: boolean
-  private _moreOptions: { alignment: MultiDimensionalProperty }
-  private _pathData: TextPathData
+  private _hasMaskedPath = false
+  private _moreOptions = { alignment: {} as MultiDimensionalProperty }
+  private _pathData = {} as TextPathData
   private _renderType: RendererType
   private _textData: TextData
   private mHelper = new Matrix()
@@ -197,17 +197,10 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
     elem: ElementInterfaceIntersect
   ) {
     super()
-    this._isFirstFrame = true
-    this._hasMaskedPath = false
-    this._frameId = -1
     this._textData = textData
     this._renderType = renderType
     this._elem = elem
     this._animatorsData = createSizedArray(Number(this._textData.a?.length))
-    this._pathData = {} as TextPathData
-    this._moreOptions = { alignment: {} as MultiDimensionalProperty }
-    this.renderedLetters = []
-    this.lettersChangedFlag = false
     this.initDynamicPropertyContainer(elem)
   }
 

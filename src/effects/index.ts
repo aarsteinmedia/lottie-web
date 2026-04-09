@@ -54,9 +54,5 @@ export class MaskIndexEffect extends EffectZero { }
 export class CheckboxEffect extends EffectZero { }
 
 export class NoValueEffect {
-  p: object
-
-  constructor() {
-    this.p = {}
-  }
+  p = {}
 }

@@ -1,67 +1,91 @@
-import { isServer, PlayMode, PreserveAspectRatio, namespaceSVG, RendererType, createElementID, PlayerEvents, download, getFilename } from '@aarsteinmedia/lottie-web/utils';
-export { PlayMode, PlayerEvents } from '@aarsteinmedia/lottie-web/utils';
-import Lottie from '@aarsteinmedia/lottie-web';
-import { convert, getAnimationData, addAnimation } from '@aarsteinmedia/lottie-web/dotlottie';
+import {
+  isServer,
+  PlayMode,
+  PreserveAspectRatio,
+  namespaceSVG,
+  RendererType,
+  createElementID,
+  PlayerEvents,
+  download,
+  getFilename,
+  clamp,
+} from '@aarsteinmedia/lottie-web/utils'
+export { PlayMode, PlayerEvents } from '@aarsteinmedia/lottie-web/utils'
+import Lottie from '@aarsteinmedia/lottie-web'
+import {
+  convert,
+  getAnimationData,
+  addAnimation,
+} from '@aarsteinmedia/lottie-web/dotlottie'
 
 /**
  * Credit to: Leonardo Favre https://github.com/leofavre/observed-properties.
- */ const updateOnConnected = Symbol('UPDATE_ON_CONNECTED');
+ */ const updateOnConnected = Symbol('UPDATE_ON_CONNECTED')
 if (isServer) {
   // Mock HTMLElement for server-side rendering
-  global.HTMLElement = // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-    class EmptyHTMLElement {
-    };
+  global.HTMLElement = class EmptyHTMLElement {} // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 }
 /**
  * HTMLElement enhanced to track property changes.
  */ class PropertyCallbackElement extends HTMLElement {
   constructor() {
-    super();
+    super()
     if (updateOnConnected in this) {
-      this[updateOnConnected] = [];
+      this[updateOnConnected] = []
     }
-    const { observedProperties = [] } = this.constructor;
-    const { length } = observedProperties;
+    const { observedProperties } = this.constructor
+    const { length } = observedProperties
     for (let i = 0; i < length; i++) {
-      const initialValue = this[observedProperties[i]], cachedValue = Symbol(observedProperties[i]);
-      this[cachedValue] = initialValue;
-      Object.defineProperty(this, observedProperties[i], {
+      const initialValue = this[observedProperties[i]],
+        cachedValue = Symbol(observedProperties[i])
+      this[cachedValue] = initialValue
+      Object.defineProperty(this, observedProperties[i] ?? '', {
         get() {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          return this[cachedValue];
+          return this[cachedValue]
         },
         set(value) {
-          const oldValue = this[cachedValue];
-          this[cachedValue] = value;
-          this.propertyChangedCallback(observedProperties[i], oldValue, value);
-        }
-      });
-      if (typeof initialValue !== 'undefined' && updateOnConnected in this && Array.isArray(this[updateOnConnected])) {
-        this[updateOnConnected].push(observedProperties[i]);
+          const oldValue = this[cachedValue]
+          this[cachedValue] = value
+          this.propertyChangedCallback(observedProperties[i], oldValue, value)
+        },
+      })
+      if (
+        typeof initialValue !== 'undefined' &&
+        updateOnConnected in this &&
+        Array.isArray(this[updateOnConnected])
+      ) {
+        this[updateOnConnected].push(observedProperties[i])
       }
     }
   }
   connectedCallback() {
-    let arr = [];
+    let arr = []
     if (updateOnConnected in this && Array.isArray(this[updateOnConnected])) {
-      arr = this[updateOnConnected];
+      arr = this[updateOnConnected]
     }
-    const { length } = arr;
+    const { length } = arr
     for (let i = 0; i < length; i++) {
-      if (!('propertyChangedCallback' in this) || typeof this.propertyChangedCallback !== 'function') {
-        continue;
+      if (
+        !('propertyChangedCallback' in this) ||
+        typeof this.propertyChangedCallback !== 'function'
+      ) {
+        continue
       }
-      if (arr[i] in this) {
-        this.propertyChangedCallback(arr[i], undefined, this[arr[i]]);
+      if (arr[i] ?? '' in this) {
+        this.propertyChangedCallback(arr[i] ?? '', undefined, this[arr[i]])
       }
     }
   }
   propertyChangedCallback(_name, _oldValue, _value) {
-    throw new Error(`${this.constructor.name}: Method propertyChangedCallback is not implemented`);
+    throw new Error(
+      `${this.constructor.name}: Method propertyChangedCallback is not implemented`
+    )
   }
 }
 
-var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -webkit-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      -moz-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -ms-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n";
+var css_248z =
+  "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -webkit-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      -moz-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -ms-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n"
 
 const boomerangIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
@@ -69,33 +93,23 @@ const boomerangIcon = /* HTML */ `
       d="m11.8 13.2-.3.3c-.5.5-1.1 1.1-1.7 1.5-.5.4-1 .6-1.5.8-.5.2-1.1.3-1.6.3s-1-.1-1.5-.3c-.6-.2-1-.5-1.4-1-.5-.6-.8-1.2-.9-1.9-.2-.9-.1-1.8.3-2.6.3-.7.8-1.2 1.3-1.6.3-.2.6-.4 1-.5.2-.2.5-.2.8-.3.3 0 .7-.1 1 0 .3 0 .6.1.9.2.9.3 1.7.9 2.4 1.5.4.4.8.7 1.1 1.1l.1.1.4-.4c.6-.6 1.2-1.2 1.9-1.6.5-.3 1-.6 1.5-.7.4-.1.7-.2 1-.2h.9c1 .1 1.9.5 2.6 1.4.4.5.7 1.1.8 1.8.2.9.1 1.7-.2 2.5-.4.9-1 1.5-1.8 2-.4.2-.7.4-1.1.4-.4.1-.8.1-1.2.1-.5 0-.9-.1-1.3-.3-.8-.3-1.5-.9-2.1-1.5-.4-.4-.8-.7-1.1-1.1h-.3zm-1.1-1.1c-.1-.1-.1-.1 0 0-.3-.3-.6-.6-.8-.9-.5-.5-1-.9-1.6-1.2-.4-.3-.8-.4-1.3-.4-.4 0-.8 0-1.1.2-.5.2-.9.6-1.1 1-.2.3-.3.7-.3 1.1 0 .3 0 .6.1.9.1.5.4.9.8 1.2.5.4 1.1.5 1.7.5.5 0 1-.2 1.5-.5.6-.4 1.1-.8 1.6-1.3.1-.3.3-.5.5-.6zM13 12c.5.5 1 1 1.5 1.4.5.5 1.1.9 1.9 1 .4.1.8 0 1.2-.1.3-.1.6-.3.9-.5.4-.4.7-.9.8-1.4.1-.5 0-.9-.1-1.4-.3-.8-.8-1.2-1.7-1.4-.4-.1-.8-.1-1.2 0-.5.1-1 .4-1.4.7-.5.4-1 .8-1.4 1.2-.2.2-.4.3-.5.5z"
     />
   </svg>
-`;
+`
 
 const convertIcon = /* HTML */ `
-  <svg
-    width="24"
-    height="24"
-    aria-hidden="true"
-    focusable="false"
-  >
+  <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path
       d="M17.016 17.016v-4.031h1.969v6h-12v3l-3.984-3.984 3.984-3.984v3h10.031zM6.984 6.984v4.031H5.015v-6h12v-3l3.984 3.984-3.984 3.984v-3H6.984z"
     />
   </svg>
-`;
+`
 
 const downloadIcon = /* HTML */ `
-  <svg
-    width="24"
-    height="24"
-    aria-hidden="true"
-    focusable="false"
-  >
+  <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path
       d="M16.8 10.8 12 15.6l-4.8-4.8h3V3.6h3.6v7.2h3zM12 15.6H3v4.8h18v-4.8h-9zm7.8 2.4h-2.4v-1.2h2.4V18z"
     />
   </svg>
-`;
+`
 
 const loopIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
@@ -103,25 +117,25 @@ const loopIcon = /* HTML */ `
       d="M17.016 17.016v-4.031h1.969v6h-12v3l-3.984-3.984 3.984-3.984v3h10.031zM6.984 6.984v4.031H5.015v-6h12v-3l3.984 3.984-3.984 3.984v-3H6.984z"
     />
   </svg>
-`;
+`
 
 const nextIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path d="m6.1 5.8 9.8 6.2-9.8 6.2V5.8zM16.4 5.8h1.5v12.4h-1.5z" />
   </svg>
-`;
+`
 
 const playIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path d="M8.016 5.016L18.985 12 8.016 18.984V5.015z" />
   </svg>
-`;
+`
 
 const prevIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path d="M17.9 18.2 8.1 12l9.8-6.2v12.4zm-10.3 0H6.1V5.8h1.5v12.4z" />
   </svg>
-`;
+`
 
 const settingsIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
@@ -129,104 +143,192 @@ const settingsIcon = /* HTML */ `
     <circle cx="12" cy="12" r="2.5" />
     <circle cx="12" cy="18.6" r="2.5" />
   </svg>
-`;
+`
 
 const stopIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
     <path d="M6 6h12v12H6V6z" />
   </svg>
-`;
+`
 
-var ObjectFit = /*#__PURE__*/ function (ObjectFit) {
-  ObjectFit["Contain"] = "contain";
-  ObjectFit["Cover"] = "cover";
-  ObjectFit["Fill"] = "fill";
-  ObjectFit["None"] = "none";
-  ObjectFit["ScaleDown"] = "scale-down";
-  return ObjectFit;
-}({});
-var PlayerState = /*#__PURE__*/ function (PlayerState) {
-  PlayerState["Completed"] = "completed";
-  PlayerState["Destroyed"] = "destroyed";
-  PlayerState["Error"] = "error";
-  PlayerState["Frozen"] = "frozen";
-  PlayerState["Loading"] = "loading";
-  PlayerState["Paused"] = "paused";
-  PlayerState["Playing"] = "playing";
-  PlayerState["Stopped"] = "stopped";
-  return PlayerState;
-}({});
-const tagName = 'dotlottie-player';
+var ObjectFit = /*#__PURE__*/ (function (ObjectFit) {
+  ObjectFit['Contain'] = 'contain'
+  ObjectFit['Cover'] = 'cover'
+  ObjectFit['Fill'] = 'fill'
+  ObjectFit['None'] = 'none'
+  ObjectFit['ScaleDown'] = 'scale-down'
+  return ObjectFit
+})({})
+var MouseOut = /*#__PURE__*/ (function (MouseOut) {
+  MouseOut['Pause'] = 'pause'
+  MouseOut['Reverse'] = 'reverse'
+  MouseOut['Stop'] = 'stop'
+  MouseOut['Void'] = 'void'
+  return MouseOut
+})({})
+var PlayerState = /*#__PURE__*/ (function (PlayerState) {
+  PlayerState['Completed'] = 'completed'
+  PlayerState['Destroyed'] = 'destroyed'
+  PlayerState['Error'] = 'error'
+  PlayerState['Frozen'] = 'frozen'
+  PlayerState['Loading'] = 'loading'
+  PlayerState['Paused'] = 'paused'
+  PlayerState['Playing'] = 'playing'
+  PlayerState['Stopped'] = 'stopped'
+  return PlayerState
+})({})
+const tagName = 'dotlottie-player'
 
 /**
  * Render Controls.
  */ function renderControls() {
   if (!this.shadow) {
-    throw new Error('No Shadow Element');
+    throw new Error('No Shadow Element')
   }
-  const slot = this.shadow.querySelector('slot[name=controls]');
+  const slot = this.shadow.querySelector('slot[name=controls]')
   if (!slot) {
-    return;
+    return
   }
   if (!this.controls) {
-    slot.innerHTML = '';
-    return;
+    slot.innerHTML = ''
+    return
   }
-  slot.innerHTML = /* HTML */ `<div class="lottie-controls toolbar ${this.playerState === PlayerState.Error ? 'has-error' : ''}" aria-label="Lottie Animation controls"><button class="togglePlay" data-active="${this.autoplay}" aria-label="Toggle Play/Pause">${playIcon}</button> <button class="stop" data-active="${!this.autoplay}" aria-label="Stop">${stopIcon}</button> <button class="prev" aria-label="Previous animation" hidden="false">${prevIcon}</button> <button class="next" aria-label="Next animation" hidden>${nextIcon}</button><form class="progress-container${this.simple ? ' simple' : ''}"><input type="range" class="seeker" min="0" max="100" step="1" value="${this._seeker.toString()}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${this._seeker.toString()}" tabindex="0" aria-label="Slider for search"><progress max="100" value="${this._seeker}"></progress></form>${this.simple ? '' : /* HTML */ `<button class="toggleLoop" data-active="${this.loop}" tabindex="0" aria-label="Toggle loop">${loopIcon}</button> <button class="toggleBoomerang" data-active="${this.mode === PlayMode.Bounce}" aria-label="Toggle boomerang" tabindex="0">${boomerangIcon}</button> <button class="toggleSettings" aria-label="Settings" aria-haspopup="true" aria-expanded="${Boolean(this._isSettingsOpen)}" aria-controls="${this._identifier}-settings">${settingsIcon}</button><div id="${this._identifier}-settings" class="popover" hidden><button class="convert" aria-label="Convert JSON animation to dotLottie format" aria-label="Convert ${this.isDotLottie ? 'dotLottie animation to JSON format' : 'JSON animation to dotLottie format'}" hidden>${convertIcon} ${this.isDotLottie ? 'Convert to JSON' : 'Convert to dotLottie'}</button> <button class="snapshot" aria-label="Download still image">${downloadIcon} Download still image</button></div>`}</div>`;
-  const togglePlay = this.shadow.querySelector('.togglePlay');
+  slot.innerHTML = /* HTML */ `<div
+    class="lottie-controls toolbar ${this.playerState === PlayerState.Error
+      ? 'has-error'
+      : ''}"
+    aria-label="Lottie Animation controls"
+  >
+    <button
+      class="togglePlay"
+      data-active="${this.autoplay}"
+      aria-label="Toggle Play/Pause"
+    >
+      ${playIcon}
+    </button>
+    <button class="stop" data-active="${!this.autoplay}" aria-label="Stop">
+      ${stopIcon}
+    </button>
+    <button class="prev" aria-label="Previous animation" hidden="false">
+      ${prevIcon}
+    </button>
+    <button class="next" aria-label="Next animation" hidden>${nextIcon}</button>
+    <form class="progress-container${this.simple ? ' simple' : ''}">
+      <input
+        type="range"
+        class="seeker"
+        min="0"
+        max="100"
+        step="1"
+        value="${this._seeker.toString()}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="${this._seeker.toString()}"
+        tabindex="0"
+        aria-label="Slider for search"
+      /><progress max="100" value="${this._seeker}"></progress>
+    </form>
+    ${this.simple
+      ? ''
+      : /* HTML */ `<button
+            class="toggleLoop"
+            data-active="${this.loop}"
+            tabindex="0"
+            aria-label="Toggle loop"
+          >
+            ${loopIcon}
+          </button>
+          <button
+            class="toggleBoomerang"
+            data-active="${this.mode === PlayMode.Bounce}"
+            aria-label="Toggle boomerang"
+            tabindex="0"
+          >
+            ${boomerangIcon}
+          </button>
+          <button
+            class="toggleSettings"
+            aria-label="Settings"
+            aria-haspopup="true"
+            aria-expanded="${this._isSettingsOpen}"
+            aria-controls="${this._identifier}-settings"
+          >
+            ${settingsIcon}
+          </button>
+          <div id="${this._identifier}-settings" class="popover" hidden>
+            <button
+              class="convert"
+              aria-label="Convert JSON animation to dotLottie format"
+              aria-label="Convert ${this.isDotLottie
+                ? 'dotLottie animation to JSON format'
+                : 'JSON animation to dotLottie format'}"
+              hidden
+            >
+              ${convertIcon}
+              ${this.isDotLottie ? 'Convert to JSON' : 'Convert to dotLottie'}
+            </button>
+            <button class="snapshot" aria-label="Download still image">
+              ${downloadIcon} Download still image
+            </button>
+          </div>`}
+  </div>`
+  const togglePlay = this.shadow.querySelector('.togglePlay')
   if (togglePlay instanceof HTMLButtonElement) {
-    togglePlay.onclick = this.togglePlay;
+    togglePlay.onclick = this.togglePlay
   }
-  const stopButton = this.shadow.querySelector('.stop');
+  const stopButton = this.shadow.querySelector('.stop')
   if (stopButton instanceof HTMLButtonElement) {
-    stopButton.onclick = this.stop;
+    stopButton.onclick = this.stop
   }
-  const prevButton = this.shadow.querySelector('.prev');
+  const prevButton = this.shadow.querySelector('.prev')
   if (prevButton instanceof HTMLButtonElement) {
     if (this.animations.length > 0 && this.currentAnimation) {
-      prevButton.hidden = false;
+      prevButton.hidden = false
     }
-    prevButton.onclick = this.prev;
+    prevButton.onclick = this.prev
   }
-  const nextButton = this.shadow.querySelector('.next');
+  const nextButton = this.shadow.querySelector('.next')
   if (nextButton instanceof HTMLButtonElement) {
-    if (this.animations.length > 0 && this.currentAnimation < this.animations.length - 1) {
-      nextButton.hidden = false;
+    if (
+      this.animations.length > 0 &&
+      this.currentAnimation < this.animations.length - 1
+    ) {
+      nextButton.hidden = false
     }
-    nextButton.onclick = this.next;
+    nextButton.onclick = this.next
   }
-  const seeker = this.shadow.querySelector('.seeker');
+  const seeker = this.shadow.querySelector('.seeker')
   if (seeker instanceof HTMLInputElement) {
-    seeker.onchange = this._handleSeekChange;
-    seeker.onmousedown = this._freeze;
+    seeker.onchange = this._handleSeekChange
+    seeker.onmousedown = this._freeze
   }
   if (!this.simple) {
-    const toggleLoop = this.shadow.querySelector('.toggleLoop');
+    const toggleLoop = this.shadow.querySelector('.toggleLoop')
     if (toggleLoop instanceof HTMLButtonElement) {
-      toggleLoop.onclick = this.toggleLoop;
+      toggleLoop.onclick = this.toggleLoop
     }
-    const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang');
+    const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang')
     if (toggleBoomerang instanceof HTMLButtonElement) {
-      toggleBoomerang.onclick = this.toggleBoomerang;
+      toggleBoomerang.onclick = this.toggleBoomerang
     }
-    const convertButton = this.shadow.querySelector('.convert');
+    const convertButton = this.shadow.querySelector('.convert')
     if (convertButton instanceof HTMLButtonElement) {
       convertButton.onclick = () => {
         void convert({
           isDotLottie: this.isDotLottie,
           manifest: this.getManifest(),
-          src: this.src || this.source
-        });
-      };
+          src: this.src || this.source,
+        })
+      }
     }
-    const snapshot = this.shadow.querySelector('.snapshot');
+    const snapshot = this.shadow.querySelector('.snapshot')
     if (snapshot instanceof HTMLButtonElement) {
-      snapshot.onclick = () => this.snapshot(true);
+      snapshot.onclick = () => this.snapshot(true)
     }
-    const toggleSettings = this.shadow.querySelector('.toggleSettings');
+    const toggleSettings = this.shadow.querySelector('.toggleSettings')
     if (toggleSettings instanceof HTMLButtonElement) {
-      toggleSettings.onclick = this._handleSettingsClick;
-      toggleSettings.onblur = this._handleBlur;
+      toggleSettings.onclick = this._handleSettingsClick
+      toggleSettings.onblur = this._handleBlur
     }
   }
 }
@@ -237,68 +339,114 @@ const pauseIcon = /* HTML */ `
       d="M14.016 5.016H18v13.969h-3.984V5.016zM6 18.984V5.015h3.984v13.969H6z"
     />
   </svg>
-`;
+`
 
 /**
  * Render Player.
  */ async function renderPlayer() {
   if (!this.shadow || !this.template) {
-    throw new Error('No Shadow Element or Template');
+    throw new Error('No Shadow Element or Template')
   }
-  this.template.innerHTML = /* HTML */ `<div class="animation-container main" data-controls="${this.controls ?? false}" lang="${this.description ? document.documentElement.lang : 'en'}" aria-label="${this.description ?? 'Lottie animation'}" data-loaded="${this._playerState.loaded}"><figure class="animation" style="background:${this.background}">${this.playerState === PlayerState.Error ? /* HTML */ `<div class="error"><svg preserveAspectRatio="${PreserveAspectRatio.Cover}" xmlns="${namespaceSVG}" width="1920" height="1080" viewBox="0 0 1920 1080" style="white-space:preserve"><path fill="#fff" d="M0 0h1920v1080H0z"/><path fill="#3a6d8b" d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"/><path fill="none" d="M718.9 807.7h645v285.4h-645z"/><text fill="#3a6d8b" style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif" x="50%" y="848.017" text-anchor="middle">${this._errorMessage}</text></svg></div>` : ''}</figure><slot name="controls"></slot></div>`;
-  this.shadow.adoptedStyleSheets = [
-    await DotLottiePlayerBase.styles()
-  ];
-  this.shadow.appendChild(this.template.content.cloneNode(true));
+  this.template.innerHTML = /* HTML */ `<div
+    class="animation-container main"
+    data-controls="${this.controls ?? false}"
+    lang="${this.description ? document.documentElement.lang : 'en'}"
+    data-loaded="${this._playerState.loaded}"
+  >
+    <figure
+      class="animation"
+      style="background:${this.background}"
+      ${this.description ? /* HTML */ ` aria-label="${this.description}" ` : ''}
+    >
+      ${this.playerState === PlayerState.Error
+        ? /* HTML */ `<div class="error">
+            <svg
+              preserveAspectRatio="${PreserveAspectRatio.Cover}"
+              xmlns="${namespaceSVG}"
+              width="1920"
+              height="1080"
+              viewBox="0 0 1920 1080"
+              style="white-space:preserve"
+            >
+              <path fill="#fff" d="M0 0h1920v1080H0z" />
+              <path
+                fill="#3a6d8b"
+                d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"
+              />
+              <path fill="none" d="M718.9 807.7h645v285.4h-645z" />
+              <text
+                fill="#3a6d8b"
+                style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif"
+                x="50%"
+                y="848.017"
+                text-anchor="middle"
+              >
+                ${this._errorMessage}
+              </text>
+            </svg>
+          </div>`
+        : ''}
+    </figure>
+    <slot name="controls"></slot>
+  </div>`
+  this.shadow.adoptedStyleSheets = [await DotLottiePlayerBase.styles()]
+  this.shadow.appendChild(this.template.content.cloneNode(true))
 }
 
 /**
  * Get extension from filename, URL or path.
  */ const aspectRatio = (objectFit) => {
-  switch (objectFit) {
-    case ObjectFit.Contain:
-    case ObjectFit.ScaleDown:
-      {
-        return PreserveAspectRatio.Contain;
+    switch (objectFit) {
+      case ObjectFit.Contain:
+      case ObjectFit.ScaleDown: {
+        return PreserveAspectRatio.Contain
       }
-    case ObjectFit.Cover:
-      {
-        return PreserveAspectRatio.Cover;
+      case ObjectFit.Cover: {
+        return PreserveAspectRatio.Cover
       }
-    case ObjectFit.Fill:
-      {
-        return PreserveAspectRatio.Initial;
+      case ObjectFit.Fill: {
+        return PreserveAspectRatio.Initial
       }
-    case ObjectFit.None:
-      {
-        return PreserveAspectRatio.None;
+      case ObjectFit.None: {
+        return PreserveAspectRatio.None
       }
-    default:
-      {
-        return PreserveAspectRatio.Contain;
+      default: {
+        return PreserveAspectRatio.Contain
       }
-  }
-}, handleErrors = (err) => {
-  const res = {
-    message: 'Unknown error',
-    status: isServer ? 500 : 400
-  };
-  if (err && typeof err === 'object') {
-    if ('message' in err && typeof err.message === 'string') {
-      res.message = err.message;
     }
-    if ('status' in err) {
-      res.status = Number(err.status);
+  },
+  handleErrors = (err) => {
+    const res = {
+      message: 'Unknown error',
+      status: isServer ? 500 : 400,
     }
-  }
-  return res;
-}, frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0');
+    if (err && typeof err === 'object') {
+      if ('message' in err && typeof err.message === 'string') {
+        res.message = err.message
+      }
+      if ('status' in err) {
+        res.status = Number(err.status)
+      }
+    }
+    return res
+  },
+  isLottie = (json) => {
+    const mandatory = ['v', 'ip', 'op', 'layers', 'fr', 'w', 'h']
+    return mandatory.every((field) => Object.hasOwn(json, field))
+  },
+  isTouch = () => 'ontouchstart' in window,
+  frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0')
 
-const notImplemented = 'Method is not implemented';
+const notImplemented = 'Method is not implemented',
+  getStyles = async () => {
+    const styleSheet = new CSSStyleSheet()
+    await styleSheet.replace(css_248z)
+    return styleSheet
+  }
 /**
  * DotLottie Player Web Component.
  */ class DotLottiePlayerBase extends PropertyCallbackElement {
-    /**
+  /**
    * Attributes to observe.
    */ static get observedAttributes() {
     return [
@@ -308,11 +456,15 @@ const notImplemented = 'Method is not implemented';
       'direction',
       'hover',
       'loop',
+      // 'mouseout',
       'mode',
+      'playOnClick',
+      'playOnVisible',
+      'selector',
       'speed',
       'src',
-      'subframe'
-    ];
+      'subframe',
+    ]
   }
   static get observedProperties() {
     return [
@@ -320,925 +472,1199 @@ const notImplemented = 'Method is not implemented';
       '_isSettingsOpen',
       '_seeker',
       '_currentAnimation',
-      '_animations'
-    ];
+      '_animations',
+    ]
   }
-    /**
+  /**
    * Return the styles for the component.
    */ static get styles() {
-    return async () => {
-      const styleSheet = new CSSStyleSheet();
-      await styleSheet.replace(css_248z);
-      return styleSheet;
-    };
+    return getStyles
   }
-    /**
+  /**
    * Whether to trigger next frame with scroll.
    */ set animateOnScroll(value) {
-    this.setAttribute('animateOnScroll', Boolean(value).toString());
+    this.setAttribute('animateOnScroll', Boolean(value).toString())
   }
   get animateOnScroll() {
-    const val = this.getAttribute('animateOnScroll');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('animateOnScroll')
+    return val === 'true' || val === '' || val === '1'
   }
   get animations() {
-    return this._animations;
+    return this._animations
   }
-    /**
+  /**
    * Autoplay.
    */ set autoplay(value) {
-    this.setAttribute('autoplay', Boolean(value).toString());
+    this.setAttribute('autoplay', Boolean(value).toString())
   }
   get autoplay() {
-    const val = this.getAttribute('autoplay');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('autoplay')
+    return val === 'true' || val === '' || val === '1'
   }
-    /**
+  /**
    * Background color.
    */ set background(value) {
-    this.setAttribute('background', value);
+    this.setAttribute('background', value)
   }
   get background() {
-    return this.getAttribute('background') || 'transparent';
+    return this.getAttribute('background') || 'transparent'
   }
-    /**
+  /**
    * Show controls.
    */ set controls(value) {
-    this.setAttribute('controls', Boolean(value).toString());
+    this.setAttribute('controls', Boolean(value).toString())
   }
   get controls() {
-    const val = this.getAttribute('controls');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('controls')
+    return val === 'true' || val === '' || val === '1'
   }
-    /**
+  /**
    * Number of times to loop.
    */ set count(value) {
-    this.setAttribute('count', value.toString());
+    this.setAttribute('count', value.toString())
   }
   get count() {
-    const val = this.getAttribute('count');
+    const val = this.getAttribute('count')
     if (val) {
-      return Number(val);
+      return Number(val)
     }
-    return 0;
+    return 0
   }
   get currentAnimation() {
-    return this._currentAnimation;
+    return this._currentAnimation
   }
-    /**
+  /**
+   * Delay playback on playOnVisible.
+   */ set delay(value) {
+    this.setAttribute('delay', value.toString())
+  }
+  get delay() {
+    const val = this.getAttribute('delay')
+    if (val) {
+      return Number(val)
+    }
+    return 0
+  }
+  /**
    * Description for screen readers.
    */ set description(value) {
     if (value) {
-      this.setAttribute('description', value);
+      this.setAttribute('description', value)
     }
   }
   get description() {
-    return this.getAttribute('description');
+    return this.getAttribute('description')
   }
-    /**
+  /**
    * Direction of animation.
    */ set direction(value) {
-    this.setAttribute('direction', value.toString());
+    this.setAttribute('direction', value.toString())
   }
   get direction() {
-    const val = Number(this.getAttribute('direction'));
+    const val = Number(this.getAttribute('direction'))
     if (val === -1) {
-      return val;
+      return val
     }
-    return 1;
+    return 1
   }
-    /**
+  /**
+   * Whether to freeze animation when window loses focus.
+   */ set dontFreezeOnBlur(value) {
+    this.setAttribute('dontFreezeOnBlur', Boolean(value).toString())
+  }
+  get dontFreezeOnBlur() {
+    const val = this.getAttribute('dontFreezeOnBlur')
+    return val === 'true' || val === '' || val === '1'
+  }
+  /**
    * Whether to play on mouseover.
    */ set hover(value) {
-    this.setAttribute('hover', value.toString());
+    this.setAttribute('hover', Boolean(value).toString())
   }
   get hover() {
-    const val = this.getAttribute('hover');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('hover')
+    return val === 'true' || val === '' || val === '1'
   }
-    /**
+  /**
    * Pause between loop intrations, in miliseconds.
    */ set intermission(value) {
-    this.setAttribute('intermission', value.toString());
+    this.setAttribute('intermission', value.toString())
   }
   get intermission() {
-    const val = Number(this.getAttribute('intermission'));
+    const val = Number(this.getAttribute('intermission'))
     if (!isNaN(val)) {
-      return val;
+      return val
     }
-    return 0;
+    return 0
   }
   get isDotLottie() {
-    return this._isDotLottie;
+    return this._isDotLottie
   }
-    /**
+  /**
    * Loop animation.
    */ set loop(value) {
-    this.setAttribute('loop', Boolean(value).toString());
+    this.setAttribute('loop', Boolean(value).toString())
   }
   get loop() {
-    const val = this.getAttribute('loop');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('loop')
+    return val === 'true' || val === '' || val === '1'
   }
-    /**
+  /**
    * Play mode.
    */ set mode(value) {
-    this.setAttribute('mode', value.toString());
+    this.setAttribute('mode', value)
   }
   get mode() {
-    const val = this.getAttribute('mode');
+    const val = this.getAttribute('mode')
     if (val === PlayMode.Bounce) {
-      return val;
+      return val
     }
-    return PlayMode.Normal;
+    return PlayMode.Normal
   }
-    /**
+  /**
+   * Action on mouseout.
+   */ set mouseout(value) {
+    this.setAttribute('mouseout', value)
+  }
+  get mouseout() {
+    const val = this.getAttribute('mouseout')
+    switch (val) {
+      case MouseOut.Void:
+      case MouseOut.Pause:
+      case MouseOut.Reverse: {
+        return val
+      }
+      default: {
+        return MouseOut.Stop
+      }
+    }
+  }
+  /**
    * Resizing to container.
    */ set objectfit(value) {
-    this.setAttribute('objectfit', value);
+    this.setAttribute('objectfit', value)
   }
   get objectfit() {
-    const val = this.getAttribute('objectfit');
+    const val = this.getAttribute('objectfit')
     if (val && Object.values(ObjectFit).includes(val)) {
-      return val;
+      return val
     }
-    return ObjectFit.Contain;
+    return ObjectFit.Contain
   }
-    /**
+  /**
+   * Whether to play once or reset,
+   * if playOnVisible is true.
+   */ set once(value) {
+    this.setAttribute('once', Boolean(value).toString())
+  }
+  get once() {
+    const val = this.getAttribute('once')
+    return val === 'true' || val === '' || val === '1'
+  }
+  /**
+   * Whether to toggle play on click.
+   */ set playOnClick(value) {
+    this.setAttribute('playOnClick', Boolean(value).toString())
+  }
+  get playOnClick() {
+    const val = this.getAttribute('playOnClick')
+    return val === 'true' || val === '' || val === '1'
+  }
+  /**
+   * Play when visible.
+   */ set playOnVisible(value) {
+    this.setAttribute('playOnVisible', Boolean(value).toString())
+  }
+  get playOnVisible() {
+    const val = this.getAttribute('playOnVisible')
+    return val === 'true' || val === '' || val === '1'
+  }
+  /**
    * Resizing to container (Deprecated).
    */ set preserveAspectRatio(value) {
-    this.setAttribute('preserveAspectRatio', value || PreserveAspectRatio.Contain);
+    this.setAttribute(
+      'preserveAspectRatio',
+      value || PreserveAspectRatio.Contain
+    )
   }
   get preserveAspectRatio() {
-    const val = this.getAttribute('preserveAspectRatio');
+    const val = this.getAttribute('preserveAspectRatio')
     if (val && Object.values(PreserveAspectRatio).includes(val)) {
-      return val;
+      return val
     }
-    return null;
+    return null
   }
-    /**
+  /**
    * Renderer to use: svg, canvas or html.
    */ set renderer(value) {
-    this.setAttribute('renderer', value);
+    this.setAttribute('renderer', value)
   }
   get renderer() {
-    const val = this.getAttribute('renderer');
+    const val = this.getAttribute('renderer')
     if (val === RendererType.Canvas || val === RendererType.HTML) {
-      return val;
+      return val
     }
-    return RendererType.SVG;
+    return RendererType.SVG
   }
-    /**
+  /**
+   * Play on clicked element by id attribute, other than animation.
+   */ set selector(value) {
+    if (value) {
+      this.setAttribute('selector', value)
+      return
+    }
+    this.removeAttribute('selector')
+  }
+  get selector() {
+    return this.getAttribute('selector')
+  }
+  /**
    * Hide advanced controls.
    */ set simple(value) {
-    this.setAttribute('simple', value.toString());
+    this.setAttribute('simple', Boolean(value).toString())
   }
   get simple() {
-    const val = this.getAttribute('simple');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('simple')
+    return val === 'true' || val === '' || val === '1'
   }
-    /**
+  /**
    * Speed.
    */ set speed(value) {
-    this.setAttribute('speed', value.toString());
+    this.setAttribute('speed', value.toString())
   }
   get speed() {
-    const val = this.getAttribute('speed');
+    const val = this.getAttribute('speed')
     if (val !== null && !isNaN(Number(val))) {
-      return Number(val);
+      return Number(val)
     }
-    return 1;
+    return 1
   }
-    /**
+  /**
    * Source, either path or JSON string.
    */ set src(value) {
-    this.setAttribute('src', value || '');
+    this.setAttribute('src', value || '')
   }
   get src() {
-    return this.getAttribute('src');
+    return this.getAttribute('src')
   }
-    /**
+  /**
    * Subframe.
    */ set subframe(value) {
-    this.setAttribute('subframe', Boolean(value).toString());
+    this.setAttribute('subframe', Boolean(value).toString())
   }
   get subframe() {
-    const val = this.getAttribute('subframe');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    const val = this.getAttribute('subframe')
+    return val === 'true' || val === '' || val === '1'
   }
   constructor() {
-    super(), this.isLight = false, /**
-   * Player state.
-   */ this.playerState = PlayerState.Loading, /**
-   * Animation Container.
-   */ this._container = null, this._errorMessage = 'Something went wrong', this._identifier = this.id || createElementID(), /**
-   * Whether settings toolbar is open.
-   */ this._isSettingsOpen = false, this._playerState = {
+    ;(super(),
+      (this.isLight = false),
+      /**
+       * Player state.
+       */ (this.playerState = PlayerState.Loading),
+      /**
+       * Animation Container.
+       */ (this._container = null),
+      (this._DOMRect = null),
+      (this._errorMessage = 'Something went wrong'),
+      (this._identifier = this.id || createElementID()),
+      /**
+       * Whether settings toolbar is open.
+       */ (this._isSettingsOpen = false),
+      (this._playerState = {
         count: 0,
         loaded: false,
         prev: PlayerState.Loading,
         scrollTimeout: null,
         scrollY: 0,
-        visible: false
-      }, this._render = renderPlayer, this._renderControls = renderControls, /**
-   * Seeker.
-   */ this._seeker = 0, /**
-   * This is included in watched properties,
-   * so that next-button will show up
-   * on load, if controls are visible.
-   */ this._animations = [], /**
-   * Which animation to show, if several.
-   */ this._currentAnimation = 0, this._isBounce = false, this._isDotLottie = false, this._lottieInstance = null, /**
-   * Multi-animation settings.
-   */ this._multiAnimationSettings = [];
-    this._complete = this._complete.bind(this);
-    this._dataFailed = this._dataFailed.bind(this);
-    this._dataReady = this._dataReady.bind(this);
-    this._DOMLoaded = this._DOMLoaded.bind(this);
-    this._enterFrame = this._enterFrame.bind(this);
-    this._freeze = this._freeze.bind(this);
-    this._handleBlur = this._handleBlur.bind(this);
-    this._handleScroll = this._handleScroll.bind(this);
-    this._handleSeekChange = this._handleSeekChange.bind(this);
-    this._handleWindowBlur = this._handleWindowBlur.bind(this);
-    this._loopComplete = this._loopComplete.bind(this);
-    this._mouseEnter = this._mouseEnter.bind(this);
-    this._mouseLeave = this._mouseLeave.bind(this);
-    this._onVisibilityChange = this._onVisibilityChange.bind(this);
-    this._switchInstance = this._switchInstance.bind(this);
-    this._handleSettingsClick = this._handleSettingsClick.bind(this);
-    this.togglePlay = this.togglePlay.bind(this);
-    this.stop = this.stop.bind(this);
-    this.prev = this.prev.bind(this);
-    this.next = this.next.bind(this);
-    this._renderControls = this._renderControls.bind(this);
-    this.snapshot = this.snapshot.bind(this);
-    this.toggleLoop = this.toggleLoop.bind(this);
-    this.toggleBoomerang = this.toggleBoomerang.bind(this);
-    this.destroy = this.destroy.bind(this);
-    this.template = document.createElement('template');
+        visible: false,
+      }),
+      (this._render = renderPlayer),
+      (this._renderControls = renderControls),
+      /**
+       * Seeker.
+       */ (this._seeker = 0),
+      /**
+       * This is included in watched properties,
+       * so that next-button will show up
+       * on load, if controls are visible.
+       */ (this._animations = []),
+      /**
+       * Which animation to show, if several.
+       */ (this._currentAnimation = 0),
+      (this._isBounce = false),
+      (this._isDotLottie = false),
+      (this._lottieInstance = null),
+      /**
+       * Multi-animation settings.
+       */ (this._multiAnimationSettings = []))
+    this._complete = this._complete.bind(this)
+    this._dataFailed = this._dataFailed.bind(this)
+    this._dataReady = this._dataReady.bind(this)
+    this._DOMLoaded = this._DOMLoaded.bind(this)
+    this._enterFrame = this._enterFrame.bind(this)
+    this._freeze = this._freeze.bind(this)
+    this._handleBlur = this._handleBlur.bind(this)
+    this._handleClick = this._handleClick.bind(this)
+    this._handleScroll = this._handleScroll.bind(this)
+    this._handleSeekChange = this._handleSeekChange.bind(this)
+    this._handleWindowBlur = this._handleWindowBlur.bind(this)
+    this._loopComplete = this._loopComplete.bind(this)
+    this._mouseEnter = this._mouseEnter.bind(this)
+    this._mouseLeave = this._mouseLeave.bind(this)
+    this._onVisibilityChange = this._onVisibilityChange.bind(this)
+    this._switchInstance = this._switchInstance.bind(this)
+    this._handleSettingsClick = this._handleSettingsClick.bind(this)
+    this.togglePlay = this.togglePlay.bind(this)
+    this.stop = this.stop.bind(this)
+    this.prev = this.prev.bind(this)
+    this.next = this.next.bind(this)
+    this._renderControls = this._renderControls.bind(this)
+    this.snapshot = this.snapshot.bind(this)
+    this.toggleLoop = this.toggleLoop.bind(this)
+    this.toggleBoomerang = this.toggleBoomerang.bind(this)
+    this.destroy = this.destroy.bind(this)
+    this.template = document.createElement('template')
     this.shadow = this.attachShadow({
-      mode: 'open'
-    });
+      mode: 'open',
+    })
   }
   addAnimation(_params) {
-    throw new Error(notImplemented);
+    throw new Error(notImplemented)
   }
-    /**
+  /**
    * Runs when the value of an attribute is changed on the component.
    */ async attributeChangedCallback(name, _oldValue, value) {
-    if (!this._lottieInstance || !this.shadow) {
-      return;
+    if (!this._lottieInstance || !this.shadow || !this._container) {
+      return
     }
-    if (name === 'animateOnScroll') {
-      if (value === '' || Boolean(value)) {
-        this._lottieInstance.autoplay = false;
-        addEventListener('scroll', this._handleScroll, {
-          capture: true,
-          passive: true
-        });
-        return;
+    switch (name) {
+      case 'animateOnScroll': {
+        if (value === '' || Boolean(value)) {
+          this._lottieInstance.autoplay = false
+          addEventListener('scroll', this._handleScroll, {
+            capture: true,
+            passive: true,
+          })
+          return
+        }
+        removeEventListener('scroll', this._handleScroll, true)
+        break
       }
-      removeEventListener('scroll', this._handleScroll, true);
-    }
-    if (name === 'autoplay') {
-      if (this.animateOnScroll) {
-        return;
+      case 'autoplay': {
+        if (this.animateOnScroll || this.playOnVisible) {
+          return
+        }
+        if (value === '' || Boolean(value)) {
+          this.play()
+          return
+        }
+        this.stop()
+        break
       }
-      if (value === '' || Boolean(value)) {
-        this.play();
-        return;
+      case 'controls': {
+        this._renderControls()
+        break
       }
-      this.stop();
-    }
-    if (name === 'controls') {
-      this._renderControls();
-    }
-    if (name === 'direction') {
-      if (Number(value) === -1) {
-        this.setDirection(-1);
-        return;
+      case 'direction': {
+        if (Number(value) === -1) {
+          this.setDirection(-1)
+          return
+        }
+        this.setDirection(1)
+        break
       }
-      this.setDirection(1);
-    }
-    if (name === 'hover' && this._container) {
-      if (value === '' || Boolean(value)) {
-        this._container.addEventListener('mouseenter', this._mouseEnter);
-        this._container.addEventListener('mouseleave', this._mouseLeave);
-        return;
+      case 'hover': {
+        if (value === '' || Boolean(value)) {
+          this._container.addEventListener('mouseenter', this._mouseEnter)
+          this._container.addEventListener('mouseleave', this._mouseLeave)
+          return
+        }
+        this._container.removeEventListener('mouseenter', this._mouseEnter)
+        this._container.removeEventListener('mouseleave', this._mouseLeave)
+        break
       }
-      this._container.removeEventListener('mouseenter', this._mouseEnter);
-      this._container.removeEventListener('mouseleave', this._mouseLeave);
-    }
-    if (name === 'loop') {
-      const toggleLoop = this.shadow.querySelector('.toggleLoop');
-      if (toggleLoop instanceof HTMLButtonElement) {
-        toggleLoop.dataset.active = value;
+      case 'loop': {
+        const toggleLoop = this.shadow.querySelector('.toggleLoop')
+        if (toggleLoop instanceof HTMLButtonElement) {
+          toggleLoop.dataset.active = value
+        }
+        this.setLoop(value === '' || Boolean(value))
+        break
       }
-      this.setLoop(value === '' || Boolean(value));
-    }
-    if (name === 'mode') {
-      const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang');
-      if (toggleBoomerang instanceof HTMLButtonElement) {
-        toggleBoomerang.dataset.active = (value === PlayMode.Bounce).toString();
+      case 'mode': {
+        const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang')
+        if (toggleBoomerang instanceof HTMLButtonElement) {
+          toggleBoomerang.dataset.active = (
+            value === PlayMode.Bounce
+          ).toString()
+        }
+        this._isBounce = value === PlayMode.Bounce
+        break
       }
-      this._isBounce = value === PlayMode.Bounce;
-    }
-    if (name === 'speed') {
-      const val = Number(value);
-      if (val && !isNaN(val)) {
-        this.setSpeed(val);
+      case 'playOnClick': {
+        if (value === '' || Boolean(value)) {
+          this._lottieInstance.autoplay = false
+          this._container.addEventListener('click', this._handleClick)
+          return
+        }
+        this._container.removeEventListener('click', this._handleClick)
+        break
       }
-    }
-    if (name === 'src') {
-      await this.load(value);
-    }
-    if (name === 'subframe') {
-      this.setSubframe(value === '' || Boolean(value));
+      case 'playOnVisible': {
+        if (value === '' || Boolean(value)) {
+          this._lottieInstance.autoplay = false
+        }
+        break
+      }
+      case 'selector': {
+        const selector = document.getElementById(this.selector ?? '')
+        selector?.addEventListener('click', this._handleClick)
+        break
+      }
+      case 'speed': {
+        const val = Number(value)
+        if (val && !isNaN(val)) {
+          this.setSpeed(val)
+        }
+        break
+      }
+      case 'src': {
+        await this.load(value)
+        break
+      }
+      case 'subframe': {
+        this.setSubframe(value === '' || Boolean(value))
+        break
+      }
     }
   }
-    /**
+  /**
    * Initialize everything on component first render.
    */ connectedCallback() {
-    super.connectedCallback();
+    super.connectedCallback()
     try {
       void (async () => {
-        await this._render();
+        await this._render()
         if (!this.shadow) {
-          throw new Error('Missing Shadow element');
+          throw new Error('Missing Shadow element')
         }
-        this._container = this.shadow.querySelector('.animation');
+        this._container = this.shadow.querySelector('.animation')
+        // Setup lottie player
+        await this.load(this.src)
         // Add listener for Visibility API's change event.
         if (typeof document.hidden !== 'undefined') {
-          document.addEventListener('visibilitychange', this._onVisibilityChange);
+          document.addEventListener(
+            'visibilitychange',
+            this._onVisibilityChange
+          )
+        }
+        if (this._container) {
+          this._DOMRect = this._container.getBoundingClientRect()
         }
         // Add intersection observer for detecting component being out-of-view.
-        this._addIntersectionObserver();
-        // Setup lottie player
-        await this.load(this.src);
-        this.dispatchEvent(new CustomEvent(PlayerEvents.Rendered));
-      })();
+        this._addIntersectionObserver()
+        this.dispatchEvent(new CustomEvent(PlayerEvents.Rendered))
+      })()
     } catch (error) {
-      console.error(error);
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      console.error(error)
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
     }
   }
   convert(_params) {
-    throw new Error(notImplemented);
+    throw new Error(notImplemented)
   }
-    /**
+  /**
    * Destroy animation and element.
    */ destroy() {
     if (!this._lottieInstance?.destroy) {
-      return;
+      return
     }
-    this.playerState = PlayerState.Destroyed;
-    this._lottieInstance.destroy();
-    this._lottieInstance = null;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Destroyed));
-    this.remove();
-    document.removeEventListener('visibilitychange', this._onVisibilityChange);
+    this.playerState = PlayerState.Destroyed
+    this._lottieInstance.destroy()
+    this._lottieInstance = null
+    this.dispatchEvent(new CustomEvent(PlayerEvents.Destroyed))
+    this.remove()
+    document.removeEventListener('visibilitychange', this._onVisibilityChange)
   }
-    /**
+  /**
    * Cleanup on component destroy.
    */ disconnectedCallback() {
     // Remove intersection observer for detecting component being out-of-view
     if (this._intersectionObserver) {
-      this._intersectionObserver.disconnect();
-      this._intersectionObserver = undefined;
+      this._intersectionObserver.disconnect()
+      this._intersectionObserver = undefined
     }
     // Remove the attached Visibility API's change event listener
-    document.removeEventListener('visibilitychange', this._onVisibilityChange);
+    document.removeEventListener('visibilitychange', this._onVisibilityChange)
     // Destroy the animation instance
-    this.destroy();
+    this.destroy()
   }
-    /**
+  /**
    * Returns the lottie-web instance used in the component.
    */ getLottie() {
-    return this._lottieInstance;
+    return this._lottieInstance
   }
-    /**
+  /**
    * Get Lottie Manifest.
    */ getManifest() {
-    return this._manifest;
+    return this._manifest
   }
-    /**
+  /**
    * Get Multi-animation settings.
    */ getMultiAnimationSettings() {
-    return this._multiAnimationSettings;
+    return this._multiAnimationSettings
   }
-    /**
+  /**
    * Get playback segment.
    */ getSegment() {
-    return this._segment;
+    return this._segment
   }
-    /**
+  /**
    * Initialize Lottie Web player.
    */ async load(src) {
     try {
       if (!this.shadowRoot || !src) {
-        return;
+        return
       }
-      this.source = src;
+      this.source = src
       // Load the resource
-      const { animations, isDotLottie, manifest } = await getAnimationData(src);
-      if (!animations || animations.some((animation) => !this._isLottie(animation))) {
-        throw new Error('Broken or corrupted file');
+      const { animations, isDotLottie, manifest } = await getAnimationData(src)
+      if (!animations || animations.some((animation) => !isLottie(animation))) {
+        throw new Error('Broken or corrupted file')
       }
-      this._isBounce = this.mode === PlayMode.Bounce;
-      if (this._multiAnimationSettings.length > 0 && this._multiAnimationSettings[this._currentAnimation]?.mode) {
-        this._isBounce = this._multiAnimationSettings[this._currentAnimation].mode === PlayMode.Bounce;
+      const ldScript = this.parentElement?.querySelector(
+        'script[type="application/ld+json"]'
+      )
+      if (ldScript) {
+        const settings = JSON.parse(ldScript.innerHTML)
+        if (settings.selector) {
+          this.selector = settings.selector
+        }
+        if (settings.segment) {
+          this.setSegment(settings.segment)
+        }
+        if (settings.multiAnimationSettings) {
+          this.setMultiAnimationSettings(settings.multiAnimationSettings)
+        }
       }
-      if (manifest?.animations.length === 1) {
-        manifest.animations[0].autoplay = this.autoplay;
-        manifest.animations[0].loop = this.loop;
+      this._isBounce = this.mode === PlayMode.Bounce
+      if (
+        this._multiAnimationSettings.length > 0 &&
+        this._multiAnimationSettings[this._currentAnimation]?.mode
+      ) {
+        this._isBounce =
+          this._multiAnimationSettings[this._currentAnimation]?.mode ===
+          PlayMode.Bounce
       }
-      this._isDotLottie = isDotLottie;
-      this._animations = animations;
+      // Relevant for dotLotties with multiple animations
+      const firstAnimation = manifest?.animations[0]
+      if (firstAnimation) {
+        firstAnimation.autoplay =
+          !this.animateOnScroll && !this.playOnVisible && this.autoplay
+        firstAnimation.loop = this.loop
+      }
+      this._isDotLottie = isDotLottie
+      this._animations = animations
       this._manifest = manifest ?? {
         animations: [
           {
-            autoplay: !this.animateOnScroll && this.autoplay,
+            autoplay:
+              !this.animateOnScroll && !this.playOnVisible && this.autoplay,
             direction: this.direction,
             id: createElementID(),
             loop: this.loop,
             mode: this.mode,
-            speed: this.speed
-          }
-        ]
-      };
+            speed: this.speed,
+          },
+        ],
+      }
       // Clear previous animation, if any
-      this._lottieInstance?.destroy();
-      this.playerState = PlayerState.Stopped;
-      if (!this.animateOnScroll && (this.autoplay || this._multiAnimationSettings[this._currentAnimation]?.autoplay)) {
-        this.playerState = PlayerState.Playing;
+      this._lottieInstance?.destroy()
+      this.playerState = PlayerState.Stopped
+      if (
+        !this.animateOnScroll && // !this.playOnVisible &&
+        (this.autoplay ||
+          this._multiAnimationSettings[this._currentAnimation]?.autoplay ||
+          this.playOnVisible)
+      ) {
+        this.playerState = PlayerState.Playing
       }
       // Initialize lottie player and load animation
       this._lottieInstance = this.loadAnimation({
         ...this._getOptions(),
-        animationData: animations[this._currentAnimation]
-      });
-      this._addEventListeners();
-      const speed = this._multiAnimationSettings[this._currentAnimation]?.speed ?? this.speed, direction = this._multiAnimationSettings[this._currentAnimation]?.direction ?? this.direction;
+        animationData: animations[this._currentAnimation],
+      })
+      this._addEventListeners()
+      const speed =
+          this._multiAnimationSettings[this._currentAnimation]?.speed ??
+          this.speed,
+        direction =
+          this._multiAnimationSettings[this._currentAnimation]?.direction ??
+          this.direction
       // Set initial playback speed and direction
-      this._lottieInstance.setSpeed(speed);
-      this._lottieInstance.setDirection(direction);
-      this._lottieInstance.setSubframe(Boolean(this.subframe));
+      this._lottieInstance.setSpeed(speed)
+      this._lottieInstance.setDirection(direction)
+      this._lottieInstance.setSubframe(Boolean(this.subframe))
       // Start playing if autoplay is enabled
-      if (this.autoplay || this.animateOnScroll) {
-        if (this.direction === -1) {
-          this.seek('99%');
-        }
-        if (!('IntersectionObserver' in window)) {
-          if (!this.animateOnScroll) {
-            this.play();
-          }
-          this._playerState.visible = true;
-        }
-        this._addIntersectionObserver();
+      if (
+        (this.autoplay || this.animateOnScroll || this.playOnVisible) &&
+        this.direction === -1
+      ) {
+        this.seek('99%')
+        // if (!('IntersectionObserver' in window)) {
+        //   if (!this.animateOnScroll) {
+        //     this.play()
+        //   }
+        //   this._playerState.visible = true
+        // }
+        // this._addIntersectionObserver()
       }
-      this._renderControls();
-      if (this.autoplay) {
-        const togglePlay = this.shadow?.querySelector('.togglePlay');
+      this._renderControls()
+      if (this.autoplay || this.playOnVisible) {
+        const togglePlay = this.shadow?.querySelector('.togglePlay')
         if (togglePlay) {
-          togglePlay.innerHTML = pauseIcon;
+          togglePlay.innerHTML = pauseIcon
         }
       }
     } catch (error) {
-      console.error(error);
-      this._errorMessage = handleErrors(error).message;
-      this.playerState = PlayerState.Error;
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      console.error(error)
+      this._errorMessage = handleErrors(error).message
+      this.playerState = PlayerState.Error
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
     }
   }
   loadAnimation(_config) {
-    throw new Error(notImplemented);
+    throw new Error(notImplemented)
   }
-    /**
+  /**
    * Skip to next animation.
    */ next() {
-    this._currentAnimation++;
-    this._switchInstance();
+    this._currentAnimation++
+    this._switchInstance()
   }
-    /**
+  /**
    * Pause.
    */ pause() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._playerState.prev = this.playerState;
+    this._playerState.prev = this.playerState
+    let hasError = false
     try {
-      this._lottieInstance.pause();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Pause));
+      this._lottieInstance.pause()
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Pause))
+    } catch (error) {
+      hasError = true
+      console.error(error)
     } finally {
-      this.playerState = PlayerState.Paused;
+      this.playerState = hasError ? PlayerState.Error : PlayerState.Paused
     }
   }
-    /**
+  /**
    * Play.
    */ play() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._playerState.prev = this.playerState;
+    this._playerState.prev = this.playerState
+    let hasError = false
     try {
-      this._lottieInstance.play();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Play));
+      this._lottieInstance.play()
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Play))
+    } catch (error) {
+      hasError = true
+      console.error(error)
     } finally {
-      this.playerState = PlayerState.Playing;
+      this.playerState = hasError ? PlayerState.Error : PlayerState.Playing
     }
   }
-    /**
+  /**
    * Skip to previous animation.
    */ prev() {
-    this._currentAnimation--;
-    this._switchInstance(true);
+    this._currentAnimation--
+    this._switchInstance(true)
   }
-    /**
+  /**
    * Name: string, oldValue: string, newValue: string.
    */ propertyChangedCallback(name, _oldValue, value) {
     if (!this.shadow) {
-      return;
+      return
     }
-    const togglePlay = this.shadow.querySelector('.togglePlay'), stopButton = this.shadow.querySelector('.stop'), prevButton = this.shadow.querySelector('.prev'), nextButton = this.shadow.querySelector('.next'), seeker = this.shadow.querySelector('.seeker'), progress = this.shadow.querySelector('progress'), popover = this.shadow.querySelector('.popover'), convertButton = this.shadow.querySelector('.convert'), snapshot = this.shadow.querySelector('.snapshot');
-    if (!(togglePlay instanceof HTMLButtonElement) || !(stopButton instanceof HTMLButtonElement) || !(nextButton instanceof HTMLButtonElement) || !(prevButton instanceof HTMLButtonElement) || !(seeker instanceof HTMLInputElement) || !(progress instanceof HTMLProgressElement)) {
-      return;
+    const togglePlay = this.shadow.querySelector('.togglePlay'),
+      stopButton = this.shadow.querySelector('.stop'),
+      prevButton = this.shadow.querySelector('.prev'),
+      nextButton = this.shadow.querySelector('.next'),
+      seeker = this.shadow.querySelector('.seeker'),
+      progress = this.shadow.querySelector('progress'),
+      popover = this.shadow.querySelector('.popover'),
+      convertButton = this.shadow.querySelector('.convert'),
+      snapshot = this.shadow.querySelector('.snapshot')
+    if (
+      !(togglePlay instanceof HTMLButtonElement) ||
+      !(stopButton instanceof HTMLButtonElement) ||
+      !(nextButton instanceof HTMLButtonElement) ||
+      !(prevButton instanceof HTMLButtonElement) ||
+      !(seeker instanceof HTMLInputElement) ||
+      !(progress instanceof HTMLProgressElement)
+    ) {
+      return
     }
     if (name === 'playerState') {
-      togglePlay.dataset.active = (value === PlayerState.Playing || value === PlayerState.Paused).toString();
-      stopButton.dataset.active = (value === PlayerState.Stopped).toString();
+      togglePlay.dataset.active = (
+        value === PlayerState.Playing || value === PlayerState.Paused
+      ).toString()
+      stopButton.dataset.active = (value === PlayerState.Stopped).toString()
       if (value === PlayerState.Playing) {
-        togglePlay.innerHTML = pauseIcon;
+        togglePlay.innerHTML = pauseIcon
       } else {
-        togglePlay.innerHTML = playIcon;
+        togglePlay.innerHTML = playIcon
       }
     }
     if (name === '_seeker' && typeof value === 'number') {
-      seeker.value = value.toString();
-      seeker.ariaValueNow = value.toString();
-      progress.value = value;
+      seeker.value = value.toString()
+      seeker.ariaValueNow = value.toString()
+      progress.value = value
     }
-    if (name === '_animations' && Array.isArray(value) && this._currentAnimation + 1 < value.length) {
-      nextButton.hidden = false;
+    if (
+      name === '_animations' &&
+      Array.isArray(value) &&
+      this._currentAnimation + 1 < value.length
+    ) {
+      nextButton.hidden = false
     }
     if (name === '_currentAnimation' && typeof value === 'number') {
-      nextButton.hidden = value + 1 >= this._animations.length;
-      prevButton.hidden = !value;
+      nextButton.hidden = value + 1 >= this._animations.length
+      prevButton.hidden = !value
     }
-    if (name === '_isSettingsOpen' && typeof value === 'boolean' && popover instanceof HTMLDivElement && convertButton instanceof HTMLButtonElement && snapshot instanceof HTMLButtonElement) {
-      popover.hidden = !value;
-      convertButton.hidden = this.isLight;
-      snapshot.hidden = this.renderer !== RendererType.SVG;
+    if (
+      name === '_isSettingsOpen' &&
+      typeof value === 'boolean' &&
+      popover instanceof HTMLDivElement &&
+      convertButton instanceof HTMLButtonElement &&
+      snapshot instanceof HTMLButtonElement
+    ) {
+      popover.hidden = !value
+      convertButton.hidden = this.isLight
+      snapshot.hidden = this.renderer !== RendererType.SVG
     }
   }
-    /**
+  /**
    * Reload animation.
    */ async reload() {
     if (!this._lottieInstance || !this.src) {
-      return;
+      return
     }
-    this._lottieInstance.destroy();
-    await this.load(this.src);
+    this._lottieInstance.destroy()
+    await this.load(this.src)
   }
-    /**
+  /**
    * Seek to a given frame.
    *
    * @param value - Frame to seek to.
    */ seek(value) {
     if (!this._lottieInstance) {
-      return;
+      return
     }
     // Extract frame number from either number or percentage value
-    const matches = value.toString().match(/^(\d+)(%?)$/);
+    const matches = value.toString().match(/^(\d+)(%?)$/)
     if (!matches) {
-      return;
+      return
     }
     // Calculate and set the frame number
-    const frame = Math.round(matches[2] === '%' ? this._lottieInstance.totalFrames * Number(matches[1]) / 100 : Number(matches[1]));
+    const frame = Math.round(
+      matches[2] === '%'
+        ? (this._lottieInstance.totalFrames * Number(matches[1])) / 100
+        : Number(matches[1])
+    )
     // Set seeker to new frame number
-    this._seeker = frame;
+    this._seeker = frame
     // Send lottie player to the new frame
-    if (this.playerState === PlayerState.Playing || this.playerState === PlayerState.Frozen && this._playerState.prev === PlayerState.Playing) {
-      this._lottieInstance.goToAndPlay(frame, true);
-      this.playerState = PlayerState.Playing;
-      return;
+    if (
+      this.playerState === PlayerState.Playing ||
+      (this.playerState === PlayerState.Frozen &&
+        this._playerState.prev === PlayerState.Playing)
+    ) {
+      this._lottieInstance.goToAndPlay(frame, true)
+      this.playerState = PlayerState.Playing
+      return
     }
-    this._lottieInstance.goToAndStop(frame, true);
-    this._lottieInstance.pause();
+    this._lottieInstance.goToAndStop(frame, true)
+    this._lottieInstance.pause()
   }
-    /**
+  /**
    * Dynamically set count for loops.
    */ setCount(value) {
-    this.count = value;
+    this.count = value
   }
-    /**
+  /**
    * Animation play direction.
    *
    * @param value - Animation direction.
    */ setDirection(value) {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._lottieInstance.setDirection(value);
+    this._lottieInstance.setDirection(value)
   }
-    /**
+  /**
    * Set loop.
    *
    */ setLoop(value) {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._lottieInstance.setLoop(value);
+    this._lottieInstance.setLoop(value)
   }
-    /**
+  /**
    * Set Multi-animation settings.
    */ setMultiAnimationSettings(settings) {
-    this._multiAnimationSettings = settings;
+    this._multiAnimationSettings = settings
   }
-    /**
+  /**
    * Set playback segment.
    */ setSegment(segment) {
-    this._segment = segment;
+    this._segment = segment
   }
-    /**
+  /**
    * Set animation playback speed.
    *
    * @param value - Playback speed.
    */ setSpeed(value = 1) {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._lottieInstance.setSpeed(value);
+    this._lottieInstance.setSpeed(value)
   }
-    /**
+  /**
    * Toggles subframe, for more smooth animations.
    *
    * @param value - Whether animation uses subframe.
    */ setSubframe(value) {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._lottieInstance.setSubframe(value);
+    this._lottieInstance.setSubframe(value)
   }
-    /**
+  /**
    * Snapshot and download the current frame as SVG.
    */ snapshot(shouldDownload = true, name = 'AM Lottie') {
     try {
       if (!this.shadowRoot) {
-        throw new Error('Unknown error');
+        throw new Error('Unknown error')
       }
       // Get SVG element and serialize markup
-      const svgElement = this.shadowRoot.querySelector('.animation svg');
+      const svgElement = this.shadowRoot.querySelector('.animation svg')
       if (!svgElement) {
-        throw new Error('Could not retrieve animation from DOM');
+        throw new Error('Could not retrieve animation from DOM')
       }
-      const data = svgElement instanceof Node ? new XMLSerializer().serializeToString(svgElement) : null;
+      const data =
+        svgElement instanceof Node
+          ? new XMLSerializer().serializeToString(svgElement)
+          : null
       if (!data) {
-        throw new Error('Could not serialize SVG element');
+        throw new Error('Could not serialize SVG element')
       }
       if (shouldDownload) {
         download(data, {
           mimeType: 'image/svg+xml',
-          name: `${getFilename(this.src || name)}-${frameOutput(this._seeker)}.svg`
-        });
+          name: `${getFilename(this.src || name)}-${frameOutput(this._seeker)}.svg`,
+        })
       }
-      return data;
+      return data
     } catch (error) {
-      console.error(error);
-      return null;
+      console.error(error)
+      return null
     }
   }
-    /**
+  /**
    * Stop.
    */ stop() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._playerState.prev = this.playerState;
-    this._playerState.count = 0;
+    this._playerState.prev = this.playerState
+    this._playerState.count = 0
     try {
-      this._lottieInstance.stop();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Stop));
+      this._lottieInstance.stop()
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Stop))
     } finally {
-      this.playerState = PlayerState.Stopped;
+      this.playerState = PlayerState.Stopped
     }
   }
-    /**
+  /**
    * Toggle Boomerang.
    */ toggleBoomerang() {
-    const curr = this._multiAnimationSettings[this._currentAnimation] ?? {};
+    const curr = this._multiAnimationSettings[this._currentAnimation] ?? {}
     if (curr.mode !== undefined) {
       if (curr.mode === PlayMode.Normal) {
-        curr.mode = PlayMode.Bounce;
-        this._isBounce = true;
-        return;
+        curr.mode = PlayMode.Bounce
+        this._isBounce = true
+        return
       }
-      curr.mode = PlayMode.Normal;
-      this._isBounce = false;
-      return;
+      curr.mode = PlayMode.Normal
+      this._isBounce = false
+      return
     }
     if (this.mode === PlayMode.Normal) {
-      this.mode = PlayMode.Bounce;
-      this._isBounce = true;
-      return;
+      this.mode = PlayMode.Bounce
+      this._isBounce = true
+      return
     }
-    this.mode = PlayMode.Normal;
-    this._isBounce = false;
+    this.mode = PlayMode.Normal
+    this._isBounce = false
   }
-    /**
+  /**
    * Toggle loop.
    */ toggleLoop() {
-    const hasLoop = !this.loop;
-    this.loop = hasLoop;
-    this.setLoop(hasLoop);
+    const hasLoop = !this.loop
+    this.loop = hasLoop
+    this.setLoop(hasLoop)
   }
-    /**
+  /**
    * Toggle playing state.
    */ togglePlay() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    const { currentFrame, playDirection, totalFrames } = this._lottieInstance;
+    const { currentFrame, playDirection, totalFrames } = this._lottieInstance
     if (this.playerState === PlayerState.Playing) {
-      this.pause();
-      return;
+      this.pause()
+      return
     }
     if (this.playerState !== PlayerState.Completed) {
-      this.play();
-      return;
+      this.play()
+      return
     }
-    this.playerState = PlayerState.Playing;
+    this.playerState = PlayerState.Playing
     if (this._isBounce) {
-      this.setDirection(playDirection * -1);
-      this._lottieInstance.goToAndPlay(currentFrame, true);
-      return;
+      this.setDirection(playDirection * -1)
+      this._lottieInstance.goToAndPlay(currentFrame, true)
+      return
     }
     if (playDirection === -1) {
-      this._lottieInstance.goToAndPlay(totalFrames, true);
-      return;
+      this._lottieInstance.goToAndPlay(totalFrames, true)
+      return
     }
-    this._lottieInstance.goToAndPlay(0, true);
+    this._lottieInstance.goToAndPlay(0, true)
   }
-    /**
+  /**
    * Freeze animation.
    * This internal state pauses animation and is used to differentiate between
    * user requested pauses and component instigated pauses.
    */ _freeze() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    this._playerState.prev = this.playerState;
+    this._playerState.prev = this.playerState
     try {
-      this._lottieInstance.pause();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Freeze));
+      this._lottieInstance.pause()
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Freeze))
     } finally {
-      this.playerState = PlayerState.Frozen;
+      this.playerState = PlayerState.Frozen
     }
   }
-    /**
+  /**
    * Handle blur.
    */ _handleBlur() {
     setTimeout(() => {
-      this._toggleSettings(false);
-    }, 200);
+      this._toggleSettings(false)
+    }, 200)
   }
-    /**
+  /**
+   * Handle click.
+   */ _handleClick() {
+    if (!this.playOnClick && !this.selector) {
+      return
+    }
+    this.togglePlay()
+  }
+  /**
    * Handles click and drag actions on the progress track.
    */ _handleSeekChange({ target }) {
-    if (!(target instanceof HTMLInputElement) || !this._lottieInstance || isNaN(Number(target.value))) {
-      return;
+    if (
+      !(target instanceof HTMLInputElement) ||
+      !this._lottieInstance ||
+      isNaN(Number(target.value))
+    ) {
+      return
     }
-    this.seek(Math.round(Number(target.value) / 100 * this._lottieInstance.totalFrames));
+    this.seek(
+      Math.round(
+        (Number(target.value) / 100) * this._lottieInstance.totalFrames
+      )
+    )
   }
-    /**
+  /**
    * Handle settings click event.
    */ _handleSettingsClick({ target }) {
-    this._toggleSettings();
+    this._toggleSettings()
     // Because Safari does not add focus on click, we need to add it manually, so the onblur event will fire
     if (target instanceof HTMLElement) {
-      target.focus();
+      target.focus()
     }
   }
   setOptions(_options) {
-    throw new Error('Method not implemented');
+    throw new Error('Method not implemented')
   }
-    /**
+  /**
    * Add event listeners.
    */ _addEventListeners() {
-    this._toggleEventListeners('add');
+    this._toggleEventListeners('add')
   }
-    /**
+  /**
    * Add IntersectionObserver.
    */ _addIntersectionObserver() {
-    if (!this._container || this._intersectionObserver || !('IntersectionObserver' in window)) {
-      return;
+    if (!this._container || this._intersectionObserver) {
+      return
+    }
+    if (!('IntersectionObserver' in window)) {
+      this._intersectionObserverFallback()
+      removeEventListener('scroll', this._intersectionObserverFallback, true)
+      addEventListener('scroll', this._intersectionObserverFallback, {
+        capture: true,
+        passive: true,
+      })
+      return
     }
     this._intersectionObserver = new IntersectionObserver((entries) => {
-      const { length } = entries;
+      const { length } = entries
       for (let i = 0; i < length; i++) {
-        if (!entries[i].isIntersecting || document.hidden) {
+        if (!entries[i]?.isIntersecting || document.hidden) {
           if (this.playerState === PlayerState.Playing) {
-            this._freeze();
+            this._freeze()
           }
-          this._playerState.visible = false;
-          continue;
+          this._playerState.visible = false
+          continue
         }
-        if (!this.animateOnScroll && this.playerState === PlayerState.Frozen) {
-          this.play();
+        if (
+          !this.animateOnScroll &&
+          !this.playOnVisible &&
+          this.playerState === PlayerState.Frozen
+        ) {
+          this.play()
         }
-        if (!this._playerState.scrollY) {
-          this._playerState.scrollY = scrollY;
+        if (this.playOnVisible) {
+          if (this.playerState === PlayerState.Completed && !this.once) {
+            this.playerState = PlayerState.Playing
+            this._lottieInstance?.goToAndPlay(
+              this.direction === 1 ? 0 : this._lottieInstance.totalFrames
+            )
+          } else {
+            setTimeout(() => {
+              this.play()
+            }, this.delay)
+          }
         }
-        this._playerState.visible = true;
+        /**
+         * If the player is a ways down the page, we need to account for this by
+         * setting _playerState.scrollY to the current scroll position. However, we
+         * also need to check that the player hasn't been scrolled past, so we check
+         * boundingClientRect as well.
+         */ if (
+          !this._playerState.scrollY &&
+          (entries[i]?.boundingClientRect.y || 0) > 0
+        ) {
+          this._playerState.scrollY = scrollY
+        }
+        this._playerState.visible = true
       }
-    });
-    this._intersectionObserver.observe(this._container);
+    })
+    this._intersectionObserver.observe(this._container)
   }
   _complete() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
     if (this._animations.length > 1) {
       if (this._multiAnimationSettings[this._currentAnimation + 1]?.autoplay) {
-        this.next();
-        return;
+        this.next()
+        return
       }
       if (this.loop && this._currentAnimation === this._animations.length - 1) {
-        this._currentAnimation = 0;
-        this._switchInstance();
-        return;
+        this._currentAnimation = 0
+        this._switchInstance()
+        return
       }
     }
-    const { currentFrame, totalFrames } = this._lottieInstance;
-    this._seeker = Math.round(currentFrame / totalFrames * 100);
-    this.playerState = PlayerState.Completed;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Complete, {
-      detail: {
-        frame: currentFrame,
-        seeker: this._seeker
-      }
-    }));
+    const { currentFrame, totalFrames } = this._lottieInstance
+    this._seeker = Math.round((currentFrame / totalFrames) * 100)
+    this.playerState = PlayerState.Completed
+    this.dispatchEvent(
+      new CustomEvent(PlayerEvents.Complete, {
+        detail: {
+          frame: currentFrame,
+          seeker: this._seeker,
+        },
+      })
+    )
   }
   _dataFailed() {
-    this.playerState = PlayerState.Error;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+    this.playerState = PlayerState.Error
+    this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
   }
   _dataReady() {
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Load));
+    this.dispatchEvent(new CustomEvent(PlayerEvents.Load))
   }
   _DOMLoaded() {
-    this._playerState.loaded = true;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Ready));
+    this._playerState.loaded = true
+    this.dispatchEvent(new CustomEvent(PlayerEvents.Ready))
   }
   _enterFrame() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    const { currentFrame, totalFrames } = this._lottieInstance;
-    this._seeker = Math.round(currentFrame / totalFrames * 100);
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Frame, {
-      detail: {
-        frame: currentFrame,
-        seeker: this._seeker
-      }
-    }));
+    const { currentFrame, totalFrames } = this._lottieInstance
+    this._seeker = Math.round((currentFrame / totalFrames) * 100)
+    this.dispatchEvent(
+      new CustomEvent(PlayerEvents.Frame, {
+        detail: {
+          frame: currentFrame,
+          seeker: this._seeker,
+        },
+      })
+    )
   }
-    /**
+  /**
    * Get options from props.
    */ _getOptions() {
     if (!this._container) {
-      throw new Error('Container not rendered');
+      throw new Error('Container not rendered')
     }
-    const preserveAspectRatio = this.preserveAspectRatio ?? aspectRatio(this.objectfit), currentAnimationSettings = this._multiAnimationSettings.length > 0 ? this._multiAnimationSettings[this._currentAnimation] : undefined, currentAnimationManifest = this._manifest?.animations[this._currentAnimation];
+    const preserveAspectRatio =
+        this.preserveAspectRatio ?? aspectRatio(this.objectfit),
+      currentAnimationSettings =
+        this._multiAnimationSettings.length > 0
+          ? this._multiAnimationSettings[this._currentAnimation]
+          : undefined,
+      currentAnimationManifest =
+        this._manifest?.animations[this._currentAnimation]
     // Loop
-    let hasLoop = Boolean(this.loop);
+    let hasLoop = Boolean(this.loop)
     if (currentAnimationManifest?.loop !== undefined) {
-      hasLoop = Boolean(currentAnimationManifest.loop);
+      hasLoop = Boolean(currentAnimationManifest.loop)
     }
     if (currentAnimationSettings?.loop !== undefined) {
-      hasLoop = Boolean(currentAnimationSettings.loop);
+      hasLoop = Boolean(currentAnimationSettings.loop)
     }
     // Autoplay
-    let hasAutoplay = Boolean(this.autoplay);
+    let hasAutoplay = Boolean(this.autoplay)
     if (currentAnimationManifest?.autoplay !== undefined) {
-      hasAutoplay = Boolean(currentAnimationManifest.autoplay);
+      hasAutoplay = Boolean(currentAnimationManifest.autoplay)
     }
     if (currentAnimationSettings?.autoplay !== undefined) {
-      hasAutoplay = Boolean(currentAnimationSettings.autoplay);
+      hasAutoplay = Boolean(currentAnimationSettings.autoplay)
     }
     if (this.animateOnScroll) {
-      hasAutoplay = false;
+      hasAutoplay = false
     }
     // Segment
-    let initialSegment = this._segment;
+    let initialSegment = this._segment
     if (this._segment?.every((val) => val > 0)) {
-      initialSegment = [
-        this._segment[0] - 1,
-        this._segment[1] - 1
-      ];
+      initialSegment = [this._segment[0] - 1, this._segment[1] - 1]
     }
     if (this._segment?.some((val) => val < 0)) {
-      initialSegment = undefined;
+      initialSegment = undefined
     }
     return this.setOptions({
       container: this._container,
@@ -1246,210 +1672,309 @@ const notImplemented = 'Method is not implemented';
       hasLoop,
       initialSegment,
       preserveAspectRatio,
-      rendererType: this.renderer
-    });
+      rendererType: this.renderer,
+    })
   }
-    /**
+  /**
    * Handle scroll.
    */ _handleScroll() {
-    if (!this.animateOnScroll || !this._lottieInstance) {
-      return;
+    if (!this.animateOnScroll || !this._DOMRect || !this._lottieInstance) {
+      return
     }
     if (isServer) {
-      console.warn('DotLottie: Scroll animations might not work properly in a Server Side Rendering context. Try to wrap this in a client component.');
-      return;
+      console.warn(
+        'DotLottie: Scroll animations might not work properly in a Server Side Rendering context. Try to wrap this in a client component.'
+      )
+      return
     }
-    if (this._playerState.visible) {
-      if (this._playerState.scrollTimeout) {
-        clearTimeout(this._playerState.scrollTimeout);
+    if (!this._playerState.visible) {
+      return
+    }
+    if (this._playerState.scrollTimeout) {
+      clearTimeout(this._playerState.scrollTimeout)
+    }
+    this._playerState.scrollTimeout = setTimeout(() => {
+      this.playerState = PlayerState.Paused
+    }, 400)
+    const { totalFrames } = this._lottieInstance
+    let scrollPosition = scrollY - this._playerState.scrollY
+    if (scrollY <= this._playerState.scrollY) {
+      scrollPosition = this._playerState.scrollY - scrollY
+    }
+    const { bottom, height, top } = this._DOMRect
+    let offset = height - bottom
+    if (top >= innerHeight) {
+      offset = height
+    }
+    const scrollProgress = scrollPosition / (innerHeight + offset),
+      currentFrame = clamp(scrollProgress * (totalFrames - 1), 0, totalFrames)
+    requestAnimationFrame(() => {
+      if (currentFrame >= totalFrames) {
+        this.playerState = PlayerState.Paused
+        return
       }
-      this._playerState.scrollTimeout = setTimeout(() => {
-        this.playerState = PlayerState.Paused;
-      }, 400);
-      const adjustedScroll = scrollY > this._playerState.scrollY ? scrollY - this._playerState.scrollY : this._playerState.scrollY - scrollY, clampedScroll = Math.min(Math.max(adjustedScroll / 3, 1), this._lottieInstance.totalFrames * 3), roundedScroll = clampedScroll / 3;
-      requestAnimationFrame(() => {
-        if (roundedScroll < (this._lottieInstance?.totalFrames ?? 0)) {
-          this.playerState = PlayerState.Playing;
-          this._lottieInstance?.goToAndStop(roundedScroll, true);
-        } else {
-          this.playerState = PlayerState.Paused;
-        }
-      });
-    }
+      this.playerState = PlayerState.Playing
+      this._lottieInstance?.goToAndStop(currentFrame, true)
+    })
   }
   _handleWindowBlur({ type }) {
+    if (this.dontFreezeOnBlur) {
+      return
+    }
     if (this.playerState === PlayerState.Playing && type === 'blur') {
-      this._freeze();
+      this._freeze()
     }
     if (this.playerState === PlayerState.Frozen && type === 'focus') {
-      this.play();
+      this.play()
     }
   }
-  _isLottie(json) {
-    const mandatory = [
-      'v',
-      'ip',
-      'op',
-      'layers',
-      'fr',
-      'w',
-      'h'
-    ];
-    return mandatory.every((field) => Object.hasOwn(json, field));
+  _intersectionObserverFallback() {
+    if (!this._container) {
+      return
+    }
+    const { bottom, left, right, top } = this._container.getBoundingClientRect()
+    this._playerState.visible =
+      top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth
+    if (
+      this.autoplay ||
+      this.playOnVisible ||
+      this.playerState === PlayerState.Playing ||
+      this.playerState === PlayerState.Frozen
+    ) {
+      if (this._playerState.visible) {
+        this.play()
+      } else {
+        this._freeze()
+      }
+    }
   }
   _loopComplete() {
     if (!this._lottieInstance) {
-      return;
+      return
     }
-    const { playDirection, // firstFrame,
-      totalFrames } = this._lottieInstance, inPoint = this._segment ? this._segment[0] : 0, outPoint = this._segment ? this._segment[0] : totalFrames;
+    const {
+        playDirection, // firstFrame,
+        totalFrames,
+      } = this._lottieInstance,
+      inPoint = this._segment ? this._segment[0] : 0,
+      outPoint = this._segment ? this._segment[0] : totalFrames
     if (this.count) {
       if (this._isBounce) {
-        this._playerState.count += 0.5;
+        this._playerState.count += 0.5
       } else {
-        this._playerState.count += 1;
+        this._playerState.count += 1
       }
       if (this._playerState.count >= this.count) {
-        this.setLoop(false);
-        this.playerState = PlayerState.Completed;
-        this.dispatchEvent(new CustomEvent(PlayerEvents.Complete));
-        return;
+        this.setLoop(false)
+        this.playerState = PlayerState.Completed
+        this.dispatchEvent(new CustomEvent(PlayerEvents.Complete))
+        return
       }
     }
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Loop));
+    this.dispatchEvent(new CustomEvent(PlayerEvents.Loop))
     if (this._isBounce) {
-      this._lottieInstance.goToAndStop(playDirection === -1 ? inPoint : outPoint * 0.99, true);
-      this._lottieInstance.setDirection(playDirection * -1);
+      this._lottieInstance.goToAndStop(
+        playDirection === -1 ? inPoint : outPoint * 0.99,
+        true
+      )
+      this._lottieInstance.setDirection(playDirection * -1)
       return setTimeout(() => {
         if (!this.animateOnScroll) {
-          this._lottieInstance?.play();
+          this._lottieInstance?.play()
         }
-      }, this.intermission);
+      }, this.intermission)
     }
-    this._lottieInstance.goToAndStop(playDirection === -1 ? outPoint * 0.99 : inPoint, true);
+    this._lottieInstance.goToAndStop(
+      playDirection === -1 ? outPoint * 0.99 : inPoint,
+      true
+    )
     return setTimeout(() => {
       if (!this.animateOnScroll) {
-        this._lottieInstance?.play();
+        this._lottieInstance?.play()
       }
-    }, this.intermission);
+    }, this.intermission)
   }
-    /**
+  /**
    * Handle MouseEnter.
    */ _mouseEnter() {
-    if (this.hover && this.playerState !== PlayerState.Playing) {
-      this.play();
+    if (!this.hover || !this._lottieInstance || isTouch()) {
+      return
+    }
+    if (this.mouseout === MouseOut.Reverse) {
+      this._lottieInstance.setDirection(1)
+    }
+    if (this.playerState === PlayerState.Completed) {
+      this._lottieInstance.goToAndPlay(0, true)
+      this.playerState = PlayerState.Playing
+      return
+    }
+    if (this.playerState !== PlayerState.Playing) {
+      this.play()
     }
   }
-    /**
+  /**
    * Handle MouseLeave.
    */ _mouseLeave() {
-    if (this.hover && this.playerState === PlayerState.Playing) {
-      this.stop();
+    if (!this.hover || !this._lottieInstance || isTouch()) {
+      return
+    }
+    switch (this.mouseout) {
+      case MouseOut.Void: {
+        break
+      }
+      case MouseOut.Pause: {
+        this.pause()
+        break
+      }
+      case MouseOut.Reverse: {
+        // const { direction = 1 } =
+        //   this._multiAnimationSettings.length > 0 ?
+        //     this._multiAnimationSettings[this._currentAnimation + 1] ?? { direction: 1 } : this,
+        //   newDirection = direction * -1 as AnimationDirection
+        this._lottieInstance.setDirection(-1)
+        this.play()
+        break
+      }
+      default: {
+        this.stop()
+      }
     }
   }
-    /**
+  /**
    * Handle visibility change events.
    */ _onVisibilityChange() {
     if (document.hidden && this.playerState === PlayerState.Playing) {
-      this._freeze();
-      return;
+      this._freeze()
+      return
     }
     if (this.playerState === PlayerState.Frozen) {
-      this.play();
+      this.play()
     }
   }
-    /**
+  /**
    * Remove event listeners.
    */ _removeEventListeners() {
-    this._toggleEventListeners('remove');
+    this._toggleEventListeners('remove')
   }
   _switchInstance(isPrevious = false) {
     // Bail early if there is not animation to play
     if (!this._animations[this._currentAnimation]) {
-      return;
+      return
     }
     try {
       // Clear previous animation
       if (this._lottieInstance) {
-        this._lottieInstance.destroy();
+        this._lottieInstance.destroy()
       }
       // Re-initialize lottie player
       this._lottieInstance = this.loadAnimation({
         ...this._getOptions(),
-        animationData: this._animations[this._currentAnimation]
-      });
+        animationData: this._animations[this._currentAnimation],
+      })
       // Check play mode for current animation
       if (this._multiAnimationSettings[this._currentAnimation]?.mode) {
-        this._isBounce = this._multiAnimationSettings[this._currentAnimation].mode === PlayMode.Bounce;
+        this._isBounce =
+          this._multiAnimationSettings[this._currentAnimation]?.mode ===
+          PlayMode.Bounce
       }
       // Remove event listeners to new Lottie instance, and add new
-      this._removeEventListeners();
-      this._addEventListeners();
-      this.dispatchEvent(new CustomEvent(isPrevious ? PlayerEvents.Previous : PlayerEvents.Next));
-      if (this._multiAnimationSettings[this._currentAnimation]?.autoplay ?? this.autoplay) {
+      this._removeEventListeners()
+      this._addEventListeners()
+      this.dispatchEvent(
+        new CustomEvent(isPrevious ? PlayerEvents.Previous : PlayerEvents.Next)
+      )
+      if (
+        this._multiAnimationSettings[this._currentAnimation]?.autoplay ??
+        this.autoplay
+      ) {
         if (this.animateOnScroll) {
-          this._lottieInstance.goToAndStop(0, true);
-          this.playerState = PlayerState.Paused;
-          return;
+          this._lottieInstance.goToAndStop(0, true)
+          this.playerState = PlayerState.Paused
+          return
         }
-        this._lottieInstance.goToAndPlay(0, true);
-        this.playerState = PlayerState.Playing;
-        return;
+        this._lottieInstance.goToAndPlay(0, true)
+        this.playerState = PlayerState.Playing
+        return
       }
-      this._lottieInstance.goToAndStop(0, true);
-      this.playerState = PlayerState.Stopped;
+      this._lottieInstance.goToAndStop(0, true)
+      this.playerState = PlayerState.Stopped
     } catch (error) {
-      this._errorMessage = handleErrors(error).message;
-      this.playerState = PlayerState.Error;
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      this._errorMessage = handleErrors(error).message
+      this.playerState = PlayerState.Error
+      this.dispatchEvent(new CustomEvent(PlayerEvents.Error))
     }
   }
-    /**
+  /**
    * Toggle event listeners.
    */ _toggleEventListeners(action) {
-    const method = action === 'add' ? 'addEventListener' : 'removeEventListener';
+    const method = action === 'add' ? 'addEventListener' : 'removeEventListener'
     if (this._lottieInstance) {
-      this._lottieInstance[method]('enterFrame', this._enterFrame);
-      this._lottieInstance[method]('complete', this._complete);
-      this._lottieInstance[method]('loopComplete', this._loopComplete);
-      this._lottieInstance[method]('DOMLoaded', this._DOMLoaded);
-      this._lottieInstance[method]('data_ready', this._dataReady);
-      this._lottieInstance[method]('data_failed', this._dataFailed);
+      this._lottieInstance[method]('enterFrame', this._enterFrame)
+      this._lottieInstance[method]('complete', this._complete)
+      this._lottieInstance[method]('loopComplete', this._loopComplete)
+      this._lottieInstance[method]('DOMLoaded', this._DOMLoaded)
+      this._lottieInstance[method]('data_ready', this._dataReady)
+      this._lottieInstance[method]('data_failed', this._dataFailed)
     }
-    if (this._container && this.hover) {
-      this._container[method]('mouseenter', this._mouseEnter);
-      this._container[method]('mouseleave', this._mouseLeave);
+    if (this.selector) {
+      const selector = document.getElementById(this.selector)
+      if (selector) {
+        if (this.hover) {
+          selector[method]('mouseenter', this._mouseEnter)
+          selector[method]('mouseleave', this._mouseLeave)
+        } else {
+          selector[method]('click', this._handleClick)
+        }
+      } else {
+        this.selector = null
+      }
+    }
+    if (this._container && !this.selector) {
+      if (this.hover) {
+        this._container[method]('mouseenter', this._mouseEnter)
+        this._container[method]('mouseleave', this._mouseLeave)
+      }
+      if (this.playOnClick) {
+        this._container[method]('click', this._handleClick)
+      }
     }
     window[method]('focus', this._handleWindowBlur, {
       capture: false,
-      passive: true
-    });
+      passive: true,
+    })
     window[method]('blur', this._handleWindowBlur, {
       capture: false,
-      passive: true
-    });
+      passive: true,
+    })
     if (this.animateOnScroll) {
       window[method]('scroll', this._handleScroll, {
         capture: true,
-        passive: true
-      });
+        passive: true,
+      })
     }
   }
-    /**
+  /**
    * Toggle show Settings.
    */ _toggleSettings(flag) {
     if (flag === undefined) {
-      this._isSettingsOpen = !this._isSettingsOpen;
-      return;
+      this._isSettingsOpen = !this._isSettingsOpen
+      return
     }
-    this._isSettingsOpen = flag;
+    this._isSettingsOpen = flag
   }
 }
 
 /**
  * DotLottie Player Web Component.
  */ class DotLottiePlayer extends DotLottiePlayerBase {
-  setOptions({ container, hasAutoplay, hasLoop, initialSegment, preserveAspectRatio, rendererType }) {
+  setOptions({
+    container,
+    hasAutoplay,
+    hasLoop,
+    initialSegment,
+    preserveAspectRatio,
+    rendererType,
+  }) {
     const options = {
       autoplay: hasAutoplay,
       container,
@@ -1457,45 +1982,46 @@ const notImplemented = 'Method is not implemented';
       loop: hasLoop,
       renderer: rendererType,
       rendererSettings: {
-        imagePreserveAspectRatio: preserveAspectRatio
-      }
-    };
+        imagePreserveAspectRatio: preserveAspectRatio,
+      },
+    }
     switch (this.renderer) {
       case RendererType.HTML:
-      case RendererType.SVG:
-        {
-          options.rendererSettings = {
-            ...options.rendererSettings,
-            hideOnTransparent: true,
-            preserveAspectRatio,
-            progressiveLoad: true
-          };
-          break;
+      case RendererType.SVG: {
+        options.rendererSettings = {
+          ...options.rendererSettings,
+          hideOnTransparent: true,
+          preserveAspectRatio,
+          progressiveLoad: true,
         }
-      case RendererType.Canvas:
-        {
-          options.rendererSettings = {
-            ...options.rendererSettings,
-            // @ts-expect-error TODO:
-            clearCanvas: true,
-            preserveAspectRatio,
-            progressiveLoad: true
-          };
-          break;
+        break
+      }
+      case RendererType.Canvas: {
+        options.rendererSettings = {
+          ...options.rendererSettings,
+          // @ts-expect-error TODO:
+          clearCanvas: true,
+          preserveAspectRatio,
+          progressiveLoad: true,
         }
+        break
+      }
     }
-    return options;
+    return options
   }
   constructor(...args) {
-    super(...args), this.addAnimation = addAnimation, this.convert = convert, this.loadAnimation = Lottie.loadAnimation;
+    ;(super(...args),
+      (this.addAnimation = addAnimation),
+      (this.convert = convert),
+      (this.loadAnimation = Lottie.loadAnimation))
   }
 }
 
 /**
  * Expose DotLottiePlayer class as global variable.
- */ globalThis.dotLottiePlayer = () => new DotLottiePlayer();
+ */ globalThis.dotLottiePlayer = () => new DotLottiePlayer()
 if (!isServer) {
-  customElements.define(tagName, DotLottiePlayer);
+  customElements.define(tagName, DotLottiePlayer)
 }
 
-export { PlayerState, DotLottiePlayer as default, tagName };
+export { MouseOut, PlayerState, DotLottiePlayer as default, tagName }

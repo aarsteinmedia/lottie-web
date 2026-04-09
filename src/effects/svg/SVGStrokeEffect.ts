@@ -10,22 +10,20 @@ import { createNS } from '@/utils/helpers/svgElements'
 export class SVGStrokeEffect {
   elem: ElementInterfaceIntersect
   filterManager: GroupEffect
-  initialized: boolean
+  initialized = false
   masker?: SVGMaskElement
   pathMasker?: SVGGElement
   paths: {
     m: number;
     p: SVGPathElement
-  }[]
+  }[] = []
   constructor(
     _fil: SVGFilterElement,
     filterManager: GroupEffect,
     elem: ElementInterfaceIntersect
   ) {
-    this.initialized = false
     this.filterManager = filterManager
     this.elem = elem
-    this.paths = []
   }
 
   initialize() {

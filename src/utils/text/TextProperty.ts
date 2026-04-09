@@ -22,23 +22,47 @@ import { initialDefaultFrame } from '@/utils/helpers/constants'
 import { BaseProperty } from '@/utils/properties/BaseProperty'
 
 export class TextProperty extends BaseProperty {
-  _frameId: number
-  canResize: boolean
-  currentData: DocumentData
-  override data: TextData
+  _frameId = initialDefaultFrame
+  canResize = false
   defaultBoxWidth: Vector2 = [0, 0]
-  override effectsSequence: TextEffectFunction[]
+  currentData = {
+    __complete: false,
+    ascent: 0,
+    boxWidth: this.defaultBoxWidth,
+    f: '',
+    fc: '',
+    fillColorAnim: false,
+    finalLineHeight: 0,
+    finalSize: 0,
+    finalText: [],
+    fStyle: '',
+    fWeight: '',
+    justifyOffset: 0,
+    l: [],
+    lh: 0,
+    lineWidths: [],
+    ls: 0,
+    of: '',
+    ps: null,
+    s: 0,
+    sc: '',
+    strokeColorAnim: false,
+    strokeWidthAnim: false,
+    sw: 0,
+    t: 0,
+    tr: 0,
+    yOffset: 0,
+  } as unknown as DocumentData
+  override data: TextData
+  override effectsSequence: TextEffectFunction[] = []
   override elem: ElementInterfaceIntersect
-  keysIndex: number
-  minimumFontSize: number
-  override pv: DocumentData | string
-  override v: DocumentData | string
+  keysIndex = 0
+  minimumFontSize = 1
+  override pv: DocumentData | string = ''
+  override v: DocumentData | string = ''
 
   constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
-    this._frameId = initialDefaultFrame
-    this.pv = ''
-    this.v = ''
     this.kf = false
     this._isFirstFrame = true
     this._mdf = false
@@ -48,38 +72,6 @@ export class TextProperty extends BaseProperty {
     this.data = data
     this.elem = elem
     this.comp = this.elem.comp
-    this.keysIndex = 0
-    this.canResize = false
-    this.minimumFontSize = 1
-    this.effectsSequence = []
-    this.currentData = {
-      __complete: false,
-      ascent: 0,
-      boxWidth: this.defaultBoxWidth,
-      f: '',
-      fc: '',
-      fillColorAnim: false,
-      finalLineHeight: 0,
-      finalSize: 0,
-      finalText: [],
-      fStyle: '',
-      fWeight: '',
-      justifyOffset: 0,
-      l: [],
-      lh: 0,
-      lineWidths: [],
-      ls: 0,
-      of: '',
-      ps: null,
-      s: 0,
-      sc: '',
-      strokeColorAnim: false,
-      strokeWidthAnim: false,
-      sw: 0,
-      t: 0,
-      tr: 0,
-      yOffset: 0,
-    } as unknown as DocumentData
 
     const newData = this.data.d?.k[0]?.s
 

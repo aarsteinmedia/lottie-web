@@ -24,14 +24,13 @@ import {
   BMEnterFrameEvent,
   BMRenderFrameErrorEvent,
   BMSegmentStartEvent,
-  type LottieEvent,
 } from '@/events'
 import {
   getRegisteredRenderer,
   getRenderer,
 } from '@/renderers'
 import { createElementID, isArray } from '@/utils'
-import audioControllerFactory, { type AudioController } from '@/utils/audio/AudioController'
+import audioControllerFactory from '@/utils/audio/AudioController'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
@@ -45,40 +44,42 @@ import { markerParser } from '@/utils/markerParser'
 export class AnimationItem extends BaseEvent {
   public __complete?: boolean
   public _isFirstFrame?: number
-  public animationData: AnimationData
-  public animationID: string
-  public assets: LottieAsset[]
-  public assetsPath: string
+  public animationData = {} as AnimationData
+  public animationID = createElementID()
+  public assets: LottieAsset[] = []
+  public assetsPath = ''
 
-  public audioController: AudioController
-  public autoplay: boolean
+  public audioController = audioControllerFactory()
+  public autoplay = false
   public container?: undefined | HTMLCanvasElement
-  public currentFrame: number
-  public currentRawFrame: number
-  public drawnFrameEvent: LottieEvent
-  public expressionsPlugin: ReturnType<typeof getExpressionsPlugin>
-  public firstFrame: number
-  public frameModifier: AnimationDirection
-  public frameMult: number
-  public frameRate: number
-  public imagePreloader: null | ImagePreloader
-  public isLoaded: boolean
-  public isPaused: boolean
-  public isSubframeEnabled: boolean
-  public loop: boolean | number
-  public markers: MarkerData[]
-  public name: string
+  public currentFrame = 0
+  public currentRawFrame = 0
+  public drawnFrameEvent = new BMEnterFrameEvent(
+    'drawnFrame', 0, 0, 0
+  )
+  public expressionsPlugin = getExpressionsPlugin()
+  public firstFrame = 0
+  public frameModifier = 1 as AnimationDirection
+  public frameMult = 0
+  public frameRate = 60
+  public imagePreloader = new ImagePreloader()
+  public isLoaded = false
+  public isPaused = false
+  public isSubframeEnabled = getSubframeEnabled()
+  public loop: boolean | number = false
+  public markers: MarkerData[] = []
+  public name = ''
   public onError?: (arg: unknown) => void
-  public path: string
-  public playCount: number
-  public playDirection: AnimationDirection
-  public playSpeed: number
-  public projectInterface: ProjectInterface
-  public renderer: SVGRenderer | CanvasRenderer | HybridRenderer
-  public segmentPos: number
-  public segments: Vector2[]
-  public timeCompleted: number
-  public totalFrames: number
+  public path = ''
+  public playCount = 0
+  public playDirection = 1 as AnimationDirection
+  public playSpeed = 1
+  public projectInterface = new ProjectInterface()
+  public renderer = null as unknown as SVGRenderer | CanvasRenderer | HybridRenderer
+  public segmentPos = 0
+  public segments: Vector2[] = []
+  public timeCompleted = 0
+  public totalFrames = 0
   public wrapper: HTMLElement | null = null
   protected animType?: undefined | RendererType
   protected autoloadSegments = false
@@ -90,49 +91,14 @@ export class AnimationItem extends BaseEvent {
   protected onEnterFrame: null | ((arg: unknown) => void) = null
   protected onLoopComplete: null | ((arg: unknown) => void) = null
   protected onSegmentStart: null | ((arg: unknown) => void) = null
-  private _completedLoop: boolean
-  private _idle: boolean
+  private _completedLoop = false
+  private _idle = true
   constructor() {
     super()
     this._cbs = {}
-    this.name = ''
-    this.path = ''
-    this.isLoaded = false
-    this.currentFrame = 0
-    this.currentRawFrame = 0
-    this.firstFrame = 0
-    this.totalFrames = 0
-    this.frameRate = 60
-    this.frameMult = 0
-    this.playSpeed = 1
-    this.playDirection = 1
-    this.frameModifier = 1
-    this.playCount = 0
-    this.animationData = {} as AnimationData
-    this.assets = []
-    this.isPaused = true
-    this.autoplay = false
-    this.loop = true
-    this.renderer = null as unknown as SVGRenderer
-    this.animationID = createElementID()
-    this.assetsPath = ''
-    this.timeCompleted = 0
-    this.segmentPos = 0
-    this.isSubframeEnabled = getSubframeEnabled()
-    this.segments = []
-    this._idle = true
-    this._completedLoop = false
-    this.projectInterface = new ProjectInterface()
-    this.imagePreloader = new ImagePreloader()
-    this.audioController = audioControllerFactory()
-    this.markers = []
     this.configAnimation = this.configAnimation.bind(this)
     this.onSetupError = this.onSetupError.bind(this)
     this.onSegmentComplete = this.onSegmentComplete.bind(this)
-    this.drawnFrameEvent = new BMEnterFrameEvent(
-      'drawnFrame', 0, 0, 0
-    )
-    this.expressionsPlugin = getExpressionsPlugin() // new Expressions(this)
   }
 
   public adjustSegment(arr: Vector2, offset: number) {
@@ -220,9 +186,9 @@ export class AnimationItem extends BaseEvent {
     if (
       this.isLoaded ||
       !this.renderer.globalData?.fontManager?.isLoaded ||
-      !this.imagePreloader?.loadedImages() &&
+      !this.imagePreloader.loadedImages() &&
       this.renderer.rendererType === RendererType.Canvas ||
-      !this.imagePreloader?.loadedFootages()
+      !this.imagePreloader.loadedFootages()
     ) {
       return
     }
@@ -294,7 +260,7 @@ export class AnimationItem extends BaseEvent {
       return
     }
     this.renderer.destroy()
-    this.imagePreloader?.destroy()
+    this.imagePreloader.destroy()
     this.trigger('destroy')
     this._cbs = {}
     this.onEnterFrame = null
@@ -304,7 +270,7 @@ export class AnimationItem extends BaseEvent {
     this.onDestroy = null
     this.renderer = null as unknown as SVGRenderer
     this.expressionsPlugin = null // as unknown as typeof Expressions
-    this.imagePreloader = null
+    this.imagePreloader = null as unknown as ImagePreloader
     this.projectInterface = null as unknown as ProjectInterface
   }
 
@@ -333,7 +299,9 @@ export class AnimationItem extends BaseEvent {
     } else if (this.assetsPath) {
       let imagePath = assetData.p
 
-      if (imagePath?.indexOf('images/') !== -1) {
+      if (
+        ['i/', 'images/'].some(_path => imagePath?.includes(_path))
+      ) {
         imagePath = imagePath?.split('/')[1]
       }
       path = this.assetsPath + (imagePath || '')
@@ -582,9 +550,6 @@ export class AnimationItem extends BaseEvent {
   }
 
   public preloadImages() {
-    if (!this.imagePreloader) {
-      return
-    }
     this.imagePreloader.setAssetsPath(this.assetsPath)
     this.imagePreloader.setPath(this.path)
     this.imagePreloader.loadAssets(this.animationData.assets,
@@ -735,7 +700,7 @@ export class AnimationItem extends BaseEvent {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.renderer = new RendererClass(this, params.rendererSettings as any)
 
-      this.imagePreloader?.setCacheType(animType,
+      this.imagePreloader.setCacheType(animType,
         this.renderer.globalData?.defs)
 
       this.renderer.setProjectInterface(this.projectInterface)
