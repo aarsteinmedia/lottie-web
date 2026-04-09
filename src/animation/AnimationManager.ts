@@ -27,6 +27,7 @@ export function destroy(animation?: string) {
     registeredAnimations[i]?.animation.destroy(animation)
   }
 }
+
 export function freeze() {
   _isFrozen = true
 }
@@ -204,13 +205,16 @@ export function unmute(animation?: string) {
     registeredAnimations[i]?.animation.unmute(animation)
   }
 }
+
 function activate() {
   if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer) {
     return
   }
+
   requestAnimationFrame(first)
   _isStopped = false
 }
+
 function addPlayingCount() {
   playingAnimationsNum++
   activate()
@@ -246,7 +250,9 @@ function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
 
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.advanceTime(elapsedTime)
+    const { animation } = registeredAnimations[i] ?? { animation: null }
+
+    animation?.advanceTime(elapsedTime)
   }
   initTime = nowTime
 
@@ -269,6 +275,7 @@ function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
   })
   len++
 }
+
 function subtractPlayingCount() {
   playingAnimationsNum--
 }

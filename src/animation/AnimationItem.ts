@@ -12,7 +12,6 @@ import type {
   MarkerData,
   Vector2,
 } from '@/types'
-// import type Expressions from '@/utils/expressions/Expressions'
 
 import {
   BaseEvent,
@@ -231,9 +230,6 @@ export class AnimationItem extends BaseEvent {
         this.firstFrame = Math.round(this.animationData.ip || 0)
       }
       this.renderer.configAnimation(animData)
-      // if (!animData.assets) {
-      //   animData.assets = []
-      // }
 
       this.assets = this.animationData.assets // ?? this.assets
       this.frameRate = this.animationData.fr // ?? this.frameRate
@@ -518,14 +514,15 @@ export class AnimationItem extends BaseEvent {
     }
 
     if (this.isPaused) {
+
       this.isPaused = false
       this.trigger('_play')
       this.audioController.resume()
       if (this._idle) {
         this._idle = false
-        this.trigger('_active')
       }
     }
+    this.trigger('_active')
   }
 
   public playSegments(arr: Vector2 | Vector2[], forceFlag?: boolean) {
