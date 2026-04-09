@@ -1,7 +1,7 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
 import type { AnimationDirection, AnimationEventName } from '@/types'
 
-export class BMEnterFrameEvent {
+export class EnterFrameEvent {
   currentTime: number
   direction: AnimationDirection
   target?: undefined | AnimationItem
@@ -20,7 +20,7 @@ export class BMEnterFrameEvent {
   }
 }
 
-export class BMCompleteEvent {
+export class CompleteEvent {
   direction: AnimationDirection
   target?: undefined | AnimationItem
   type: AnimationEventName
@@ -30,7 +30,7 @@ export class BMCompleteEvent {
   }
 }
 
-export class BMDrawnFrameEvent {
+export class DrawnFrameEvent {
   currentTime: number
   direction: AnimationDirection
   target?: undefined | AnimationItem
@@ -49,7 +49,7 @@ export class BMDrawnFrameEvent {
   }
 }
 
-export class BMCompleteLoopEvent {
+export class CompleteLoopEvent {
   currentLoop: number
   direction: AnimationDirection
   target?: undefined | AnimationItem
@@ -69,7 +69,7 @@ export class BMCompleteLoopEvent {
   }
 }
 
-export class BMSegmentStartEvent {
+export class SegmentStartEvent {
   firstFrame: number
   target?: undefined | AnimationItem
   totalFrames: number
@@ -85,7 +85,7 @@ export class BMSegmentStartEvent {
   }
 }
 
-export class BMDestroyEvent {
+export class DestroyEvent {
   target: AnimationItem
   type: AnimationEventName
   constructor(type: AnimationEventName, target: AnimationItem) {
@@ -94,7 +94,7 @@ export class BMDestroyEvent {
   }
 }
 
-export class BMRenderFrameErrorEvent {
+export class RenderFrameErrorEvent {
   currentTime: number
   nativeError: unknown
   target?: undefined | AnimationItem
@@ -106,7 +106,7 @@ export class BMRenderFrameErrorEvent {
   }
 }
 
-export class BMConfigErrorEvent {
+export class ConfigErrorEvent {
   nativeError: unknown
   target?: undefined | AnimationItem
   type: AnimationEventName
@@ -116,7 +116,7 @@ export class BMConfigErrorEvent {
   }
 }
 
-export class BMAnimationConfigErrorEvent {
+export class AnimationConfigErrorEvent {
   nativeError: unknown
   target?: undefined | AnimationItem
   type: AnimationEventName
@@ -180,12 +180,12 @@ export abstract class BaseEvent {
 }
 
 export type LottieEvent =
-  | BMAnimationConfigErrorEvent
-  | BMEnterFrameEvent
-  | BMCompleteEvent
-  | BMCompleteLoopEvent
-  | BMSegmentStartEvent
+  | AnimationConfigErrorEvent
+  | EnterFrameEvent
+  | CompleteEvent
+  | CompleteLoopEvent
+  | SegmentStartEvent
 
-  | BMConfigErrorEvent
-  | BMDestroyEvent
-  | BMDrawnFrameEvent
+  | ConfigErrorEvent
+  | DestroyEvent
+  | DrawnFrameEvent

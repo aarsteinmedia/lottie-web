@@ -1,5 +1,7 @@
-import { isServer, PlayMode, PreserveAspectRatio, namespaceSVG, RendererType, createElementID, PlayerEvents, download, getFilename } from '@aarsteinmedia/lottie-web/utils';
-export { PlayMode, PlayerEvents } from '@aarsteinmedia/lottie-web/utils';
+
+(function (l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+import { isServer, PlayMode, PreserveAspectRatio, namespaceSVG, RendererType, createElementID, PlayerEvents, download, getFilename, clamp } from '@aarsteinmedia/lottie-web/utils';
+export { PlayMode, PlayerEvents, RendererType } from '@aarsteinmedia/lottie-web/utils';
 import Lottie from '@aarsteinmedia/lottie-web';
 import { convert, getAnimationData, addAnimation } from '@aarsteinmedia/lottie-web/dotlottie';
 
@@ -20,12 +22,12 @@ if (isServer) {
     if (updateOnConnected in this) {
       this[updateOnConnected] = [];
     }
-    const { observedProperties = [] } = this.constructor;
+    const { observedProperties } = this.constructor;
     const { length } = observedProperties;
     for (let i = 0; i < length; i++) {
       const initialValue = this[observedProperties[i]], cachedValue = Symbol(observedProperties[i]);
       this[cachedValue] = initialValue;
-      Object.defineProperty(this, observedProperties[i], {
+      Object.defineProperty(this, observedProperties[i] ?? '', {
         get() {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return this[cachedValue];
@@ -51,8 +53,8 @@ if (isServer) {
       if (!('propertyChangedCallback' in this) || typeof this.propertyChangedCallback !== 'function') {
         continue;
       }
-      if (arr[i] in this) {
-        this.propertyChangedCallback(arr[i], undefined, this[arr[i]]);
+      if (arr[i] ?? '' in this) {
+        this.propertyChangedCallback(arr[i] ?? '', undefined, this[arr[i]]);
       }
     }
   }
@@ -61,7 +63,7 @@ if (isServer) {
   }
 }
 
-var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -webkit-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      -moz-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      -ms-transition: transform 0.2s ease-in-out;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n";
+var css_248z = "* {\n  box-sizing: border-box;\n}\n\n:host {\n  --lottie-player-toolbar-height: 35px;\n  --lottie-player-toolbar-background-color: #fff;\n  --lottie-player-toolbar-icon-color: #000;\n  --lottie-player-toolbar-icon-hover-color: #000;\n  --lottie-player-toolbar-icon-active-color: #4285f4;\n  --lottie-player-seeker-track-color: rgb(0 0 0 / 20%);\n  --lottie-player-seeker-thumb-color: #4285f4;\n  --lottie-player-seeker-display: block;\n\n  width: 100%;\n  height: 100%;\n\n  &:not([hidden]) {\n    display: block;\n  }\n\n  .main {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n  }\n\n  .animation {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    margin: 0;\n    padding: 0;\n  }\n\n  [data-controls='true'] .animation {\n    height: calc(100% - 35px);\n  }\n\n  .animation-container {\n    position: relative;\n  }\n\n  .popover {\n    position: absolute;\n    right: 5px;\n    bottom: 40px;\n    background-color: var(--lottie-player-toolbar-background-color);\n    border-radius: 5px;\n    padding: 10px 15px;\n    border: solid 2px var(--lottie-player-toolbar-icon-color);\n    animation: fade-in 0.2s ease-in-out;\n\n    &::before {\n      content: '';\n      right: 10px;\n      border: 7px solid transparent;\n      margin-right: -7px;\n      height: 0;\n      width: 0;\n      position: absolute;\n      pointer-events: none;\n      top: 100%;\n      border-top-color: var(--lottie-player-toolbar-icon-color);\n    }\n  }\n\n  .error {\n    display: flex;\n    margin: auto;\n    justify-content: center;\n    height: 100%;\n    align-items: center;\n\n    & svg {\n      width: 100%;\n      height: auto;\n    }\n  }\n\n  .toolbar {\n    display: flex;\n    place-items: center center;\n    background: var(--lottie-player-toolbar-background-color);\n    margin: 0;\n    height: 35px;\n    padding: 5px;\n    border-radius: 5px;\n    gap: 5px;\n\n    &.has-error {\n      pointer-events: none;\n      opacity: 0.5;\n    }\n\n    & button {\n      cursor: pointer;\n      fill: var(--lottie-player-toolbar-icon-color);\n      color: var(--lottie-player-toolbar-icon-color);\n      background: none;\n      border: 0;\n      padding: 0;\n      outline: 0;\n      height: 100%;\n      margin: 0;\n      align-items: center;\n      gap: 5px;\n      opacity: 0.9;\n\n      &:not([hidden]) {\n        display: flex;\n      }\n\n      &:hover {\n        opacity: 1;\n      }\n\n      &[data-active='true'] {\n        opacity: 1;\n        fill: var(--lottie-player-toolbar-icon-active-color);\n      }\n\n      &:disabled {\n        opacity: 0.5;\n      }\n\n      &:focus {\n        outline: 0;\n      }\n\n      & svg {\n        pointer-events: none;\n\n        & > * {\n          fill: inherit;\n        }\n      }\n\n      &.disabled svg {\n        display: none;\n      }\n    }\n  }\n\n  .progress-container {\n    position: relative;\n    width: 100%;\n\n    &.simple {\n      margin-right: 12px;\n    }\n  }\n\n  & progress {\n    appearance: none;\n    outline: none;\n    position: absolute;\n    width: 100%;\n    height: 5px;\n    border-radius: 3px;\n    border: 0;\n    top: 0;\n    left: 0;\n    margin: 7.5px 0;\n    background-color: var(--lottie-player-seeker-track-color);\n    pointer-events: none;\n\n    &::-webkit-progress-inner-element {\n      border-radius: 3px;\n      overflow: hidden;\n    }\n\n    &::-webkit-slider-runnable-track {\n      background-color: transparent;\n    }\n\n    &::-webkit-progress-value {\n      background-color: var(--lottie-player-seeker-thumb-color);\n    }\n  }\n\n  .seeker {\n    appearance: none;\n    outline: none;\n    width: 100%;\n    height: 20px;\n    border-radius: 3px;\n    border: 0;\n    cursor: pointer;\n    background-color: transparent;\n\n    display: var(--lottie-player-seeker-display);\n    color: var(--lottie-player-seeker-thumb-color);\n    margin: 0;\n    padding: 7.5px 0;\n    position: relative;\n    z-index: 1;\n\n    &::-webkit-slider-runnable-track,\n    &::-webkit-slider-thumb {\n      appearance: none;\n      outline: none;\n    }\n\n    &::-webkit-slider-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      border: 0;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-webkit-slider-thumb,\n    &:focus::-webkit-slider-thumb {\n      transform: scale(1);\n    }\n\n    &::-moz-range-progress {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      height: 5px;\n      border-radius: 3px;\n    }\n\n    &::-moz-range-thumb {\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border: 0;\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-moz-range-thumb,\n    &:focus::-moz-range-thumb {\n      transform: scale(1);\n    }\n\n    &::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n    }\n\n    &::-ms-fill-upper {\n      background: var(--lottie-player-seeker-track-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-fill-lower {\n      background-color: var(--lottie-player-seeker-thumb-color);\n      border-radius: 3px;\n    }\n\n    &::-ms-thumb {\n      border: 0;\n      height: 15px;\n      width: 15px;\n      border-radius: 50%;\n      background: var(--lottie-player-seeker-thumb-color);\n      cursor: pointer;\n      transition: transform 0.2s ease-in-out;\n      transform: scale(0);\n    }\n\n    &:hover::-ms-thumb {\n      transform: scale(1);\n    }\n\n    &:focus {\n      &::-ms-thumb {\n        transform: scale(1);\n      }\n\n      &::-ms-fill-lower,\n      &::-ms-fill-upper {\n        background: var(--lottie-player-seeker-track-color);\n      }\n    }\n  }\n\n  & *::-moz-progress-bar {\n    background-color: var(--lottie-player-seeker-thumb-color);\n  }\n}\n\n@keyframes fade-in {\n  0% {\n    opacity: 0;\n  }\n\n  100% {\n    opacity: 1;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --lottie-player-toolbar-background-color: #000;\n    --lottie-player-toolbar-icon-color: #fff;\n    --lottie-player-toolbar-icon-hover-color: #fff;\n    --lottie-player-seeker-track-color: rgb(255 255 255 / 60%);\n  }\n}\n";
 
 const boomerangIcon = /* HTML */ `
   <svg width="24" height="24" aria-hidden="true" focusable="false">
@@ -145,6 +147,13 @@ var ObjectFit = /*#__PURE__*/ function (ObjectFit) {
   ObjectFit["ScaleDown"] = "scale-down";
   return ObjectFit;
 }({});
+var MouseOut = /*#__PURE__*/ function (MouseOut) {
+  MouseOut["Pause"] = "pause";
+  MouseOut["Reverse"] = "reverse";
+  MouseOut["Stop"] = "stop";
+  MouseOut["Void"] = "void";
+  return MouseOut;
+}({});
 var PlayerState = /*#__PURE__*/ function (PlayerState) {
   PlayerState["Completed"] = "completed";
   PlayerState["Destroyed"] = "destroyed";
@@ -172,7 +181,7 @@ const tagName = 'dotlottie-player';
     slot.innerHTML = '';
     return;
   }
-  slot.innerHTML = /* HTML */ `<div class="lottie-controls toolbar ${this.playerState === PlayerState.Error ? 'has-error' : ''}" aria-label="Lottie Animation controls"><button class="togglePlay" data-active="${this.autoplay}" aria-label="Toggle Play/Pause">${playIcon}</button> <button class="stop" data-active="${!this.autoplay}" aria-label="Stop">${stopIcon}</button> <button class="prev" aria-label="Previous animation" hidden="false">${prevIcon}</button> <button class="next" aria-label="Next animation" hidden>${nextIcon}</button><form class="progress-container${this.simple ? ' simple' : ''}"><input type="range" class="seeker" min="0" max="100" step="1" value="${this._seeker.toString()}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${this._seeker.toString()}" tabindex="0" aria-label="Slider for search"><progress max="100" value="${this._seeker}"></progress></form>${this.simple ? '' : /* HTML */ `<button class="toggleLoop" data-active="${this.loop}" tabindex="0" aria-label="Toggle loop">${loopIcon}</button> <button class="toggleBoomerang" data-active="${this.mode === PlayMode.Bounce}" aria-label="Toggle boomerang" tabindex="0">${boomerangIcon}</button> <button class="toggleSettings" aria-label="Settings" aria-haspopup="true" aria-expanded="${Boolean(this._isSettingsOpen)}" aria-controls="${this._identifier}-settings">${settingsIcon}</button><div id="${this._identifier}-settings" class="popover" hidden><button class="convert" aria-label="Convert JSON animation to dotLottie format" aria-label="Convert ${this.isDotLottie ? 'dotLottie animation to JSON format' : 'JSON animation to dotLottie format'}" hidden>${convertIcon} ${this.isDotLottie ? 'Convert to JSON' : 'Convert to dotLottie'}</button> <button class="snapshot" aria-label="Download still image">${downloadIcon} Download still image</button></div>`}</div>`;
+  slot.innerHTML = /* HTML */ `<div class="lottie-controls toolbar ${this.playerState === PlayerState.Error ? 'has-error' : ''}" aria-label="Lottie Animation controls"><button class="togglePlay" data-active="${this.autoplay}" aria-label="Toggle Play/Pause">${playIcon}</button> <button class="stop" data-active="${!this.autoplay}" aria-label="Stop">${stopIcon}</button> <button class="prev" aria-label="Previous animation" hidden="false">${prevIcon}</button> <button class="next" aria-label="Next animation" hidden>${nextIcon}</button><form class="progress-container${this.simple ? ' simple' : ''}"><input type="range" class="seeker" min="0" max="100" step="1" value="${this._seeker.toString()}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${this._seeker.toString()}" tabindex="0" aria-label="Slider for search"><progress max="100" value="${this._seeker}"></progress></form>${this.simple ? '' : /* HTML */ `<button class="toggleLoop" data-active="${this.loop}" tabindex="0" aria-label="Toggle loop">${loopIcon}</button> <button class="toggleBoomerang" data-active="${this.mode === PlayMode.Bounce}" aria-label="Toggle boomerang" tabindex="0">${boomerangIcon}</button> <button class="toggleSettings" aria-label="Settings" aria-haspopup="true" aria-expanded="${this._isSettingsOpen}" aria-controls="${this._identifier}-settings">${settingsIcon}</button><div id="${this._identifier}-settings" class="popover" hidden><button class="convert" aria-label="Convert JSON animation to dotLottie format" aria-label="Convert ${this.isDotLottie ? 'dotLottie animation to JSON format' : 'JSON animation to dotLottie format'}" hidden>${convertIcon} ${this.isDotLottie ? 'Convert to JSON' : 'Convert to dotLottie'}</button> <button class="snapshot" aria-label="Download still image">${downloadIcon} Download still image</button></div>`}</div>`;
   const togglePlay = this.shadow.querySelector('.togglePlay');
   if (togglePlay instanceof HTMLButtonElement) {
     togglePlay.onclick = this.togglePlay;
@@ -245,7 +254,9 @@ const pauseIcon = /* HTML */ `
   if (!this.shadow || !this.template) {
     throw new Error('No Shadow Element or Template');
   }
-  this.template.innerHTML = /* HTML */ `<div class="animation-container main" data-controls="${this.controls ?? false}" lang="${this.description ? document.documentElement.lang : 'en'}" aria-label="${this.description ?? 'Lottie animation'}" data-loaded="${this._playerState.loaded}"><figure class="animation" style="background:${this.background}">${this.playerState === PlayerState.Error ? /* HTML */ `<div class="error"><svg preserveAspectRatio="${PreserveAspectRatio.Cover}" xmlns="${namespaceSVG}" width="1920" height="1080" viewBox="0 0 1920 1080" style="white-space:preserve"><path fill="#fff" d="M0 0h1920v1080H0z"/><path fill="#3a6d8b" d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"/><path fill="none" d="M718.9 807.7h645v285.4h-645z"/><text fill="#3a6d8b" style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif" x="50%" y="848.017" text-anchor="middle">${this._errorMessage}</text></svg></div>` : ''}</figure><slot name="controls"></slot></div>`;
+  this.template.innerHTML = /* HTML */ `<div class="animation-container main" data-controls="${this.controls ?? false}" lang="${this.description ? document.documentElement.lang : 'en'}" data-loaded="${this._playerState.loaded}"><figure class="animation" style="background:${this.background}" ${this.description ? /* HTML */ `
+            aria-label="${this.description}"
+          ` : ''}>${this.playerState === PlayerState.Error ? /* HTML */ `<div class="error"><svg preserveAspectRatio="${PreserveAspectRatio.Cover}" xmlns="${namespaceSVG}" width="1920" height="1080" viewBox="0 0 1920 1080" style="white-space:preserve"><path fill="#fff" d="M0 0h1920v1080H0z"/><path fill="#3a6d8b" d="M1190.2 531 1007 212.4c-22-38.2-77.2-38-98.8.5L729.5 531.3c-21.3 37.9 6.1 84.6 49.5 84.6l361.9.3c43.7 0 71.1-47.3 49.3-85.2zM937.3 288.7c.2-7.5 3.3-23.9 23.2-23.9 16.3 0 23 16.1 23 23.5 0 55.3-10.7 197.2-12.2 214.5-.1 1-.9 1.7-1.9 1.7h-18.3c-1 0-1.8-.7-1.9-1.7-1.4-17.5-13.4-162.9-11.9-214.1zm24.2 283.8c-13.1 0-23.7-10.6-23.7-23.7s10.6-23.7 23.7-23.7 23.7 10.6 23.7 23.7-10.6 23.7-23.7 23.7zM722.1 644h112.6v34.4h-70.4V698h58.8v31.7h-58.8v22.6h72.4v36.2H722.1V644zm162 57.1h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6zm78.9 0h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5H963v15.6zm39.5 36.2c0-31.3 22.2-54.8 56.6-54.8 34.4 0 56.2 23.5 56.2 54.8s-21.8 54.6-56.2 54.6c-34.4-.1-56.6-23.3-56.6-54.6zm74 0c0-17.4-6.1-29.1-17.8-29.1-11.7 0-17.4 11.7-17.4 29.1 0 17.4 5.7 29.1 17.4 29.1s17.8-11.8 17.8-29.1zm83.1-36.2h.6c8.3-12.9 18.2-17.8 31.3-17.8 3 0 5.1.4 6.3 1v32.6h-.8c-22.4-3.8-35.6 6.3-35.6 29.5v42.3h-38.2V685.5h36.4v15.6z"/><path fill="none" d="M718.9 807.7h645v285.4h-645z"/><text fill="#3a6d8b" style="text-align:center;position:absolute;left:100%;font-size:47px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'.SFNSText-Regular',sans-serif" x="50%" y="848.017" text-anchor="middle">${this._errorMessage}</text></svg></div>` : ''}</figure><slot name="controls"></slot></div>`;
   this.shadow.adoptedStyleSheets = [
     await DotLottiePlayerBase.styles()
   ];
@@ -292,9 +303,24 @@ const pauseIcon = /* HTML */ `
     }
   }
   return res;
-}, frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0');
+}, isLottie = (json) => {
+  const mandatory = [
+    'v',
+    'ip',
+    'op',
+    'layers',
+    'fr',
+    'w',
+    'h'
+  ];
+  return mandatory.every((field) => Object.hasOwn(json, field));
+}, isTouch = () => 'ontouchstart' in window, frameOutput = (frame) => ((frame ?? 0) + 1).toString().padStart(3, '0');
 
-const notImplemented = 'Method is not implemented';
+const notImplemented = 'Method is not implemented', getStyles = async () => {
+  const styleSheet = new CSSStyleSheet();
+  await styleSheet.replace(css_248z);
+  return styleSheet;
+};
 /**
  * DotLottie Player Web Component.
  */ class DotLottiePlayerBase extends PropertyCallbackElement {
@@ -309,6 +335,9 @@ const notImplemented = 'Method is not implemented';
       'hover',
       'loop',
       'mode',
+      'playOnClick',
+      'playOnVisible',
+      'selector',
       'speed',
       'src',
       'subframe'
@@ -326,11 +355,7 @@ const notImplemented = 'Method is not implemented';
     /**
    * Return the styles for the component.
    */ static get styles() {
-    return async () => {
-      const styleSheet = new CSSStyleSheet();
-      await styleSheet.replace(css_248z);
-      return styleSheet;
-    };
+    return getStyles;
   }
     /**
    * Whether to trigger next frame with scroll.
@@ -339,7 +364,7 @@ const notImplemented = 'Method is not implemented';
   }
   get animateOnScroll() {
     const val = this.getAttribute('animateOnScroll');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
   get animations() {
     return this._animations;
@@ -351,7 +376,7 @@ const notImplemented = 'Method is not implemented';
   }
   get autoplay() {
     const val = this.getAttribute('autoplay');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Background color.
@@ -368,7 +393,7 @@ const notImplemented = 'Method is not implemented';
   }
   get controls() {
     const val = this.getAttribute('controls');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Number of times to loop.
@@ -384,6 +409,18 @@ const notImplemented = 'Method is not implemented';
   }
   get currentAnimation() {
     return this._currentAnimation;
+  }
+    /**
+   * Delay playback on playOnVisible.
+   */ set delay(value) {
+    this.setAttribute('delay', value.toString());
+  }
+  get delay() {
+    const val = this.getAttribute('delay');
+    if (val) {
+      return Number(val);
+    }
+    return 0;
   }
     /**
    * Description for screen readers.
@@ -408,13 +445,22 @@ const notImplemented = 'Method is not implemented';
     return 1;
   }
     /**
+   * Whether to freeze animation when window loses focus.
+   */ set dontFreezeOnBlur(value) {
+    this.setAttribute('dontFreezeOnBlur', Boolean(value).toString());
+  }
+  get dontFreezeOnBlur() {
+    const val = this.getAttribute('dontFreezeOnBlur');
+    return val === 'true' || val === '' || val === '1';
+  }
+    /**
    * Whether to play on mouseover.
    */ set hover(value) {
-    this.setAttribute('hover', value.toString());
+    this.setAttribute('hover', Boolean(value).toString());
   }
   get hover() {
     const val = this.getAttribute('hover');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Pause between loop intrations, in miliseconds.
@@ -438,12 +484,12 @@ const notImplemented = 'Method is not implemented';
   }
   get loop() {
     const val = this.getAttribute('loop');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Play mode.
    */ set mode(value) {
-    this.setAttribute('mode', value.toString());
+    this.setAttribute('mode', value);
   }
   get mode() {
     const val = this.getAttribute('mode');
@@ -451,6 +497,26 @@ const notImplemented = 'Method is not implemented';
       return val;
     }
     return PlayMode.Normal;
+  }
+    /**
+   * Action on mouseout.
+   */ set mouseout(value) {
+    this.setAttribute('mouseout', value);
+  }
+  get mouseout() {
+    const val = this.getAttribute('mouseout');
+    switch (val) {
+      case MouseOut.Void:
+      case MouseOut.Pause:
+      case MouseOut.Reverse:
+        {
+          return val;
+        }
+      default:
+        {
+          return MouseOut.Stop;
+        }
+    }
   }
     /**
    * Resizing to container.
@@ -463,6 +529,34 @@ const notImplemented = 'Method is not implemented';
       return val;
     }
     return ObjectFit.Contain;
+  }
+    /**
+   * Whether to play once or reset,
+   * if playOnVisible is true.
+   */ set once(value) {
+    this.setAttribute('once', Boolean(value).toString());
+  }
+  get once() {
+    const val = this.getAttribute('once');
+    return val === 'true' || val === '' || val === '1';
+  }
+    /**
+   * Whether to toggle play on click.
+   */ set playOnClick(value) {
+    this.setAttribute('playOnClick', Boolean(value).toString());
+  }
+  get playOnClick() {
+    const val = this.getAttribute('playOnClick');
+    return val === 'true' || val === '' || val === '1';
+  }
+    /**
+   * Play when visible.
+   */ set playOnVisible(value) {
+    this.setAttribute('playOnVisible', Boolean(value).toString());
+  }
+  get playOnVisible() {
+    const val = this.getAttribute('playOnVisible');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Resizing to container (Deprecated).
@@ -489,13 +583,25 @@ const notImplemented = 'Method is not implemented';
     return RendererType.SVG;
   }
     /**
+   * Play on clicked element by id attribute, other than animation.
+   */ set selector(value) {
+    if (value) {
+      this.setAttribute('selector', value);
+      return;
+    }
+    this.removeAttribute('selector');
+  }
+  get selector() {
+    return this.getAttribute('selector');
+  }
+    /**
    * Hide advanced controls.
    */ set simple(value) {
-    this.setAttribute('simple', value.toString());
+    this.setAttribute('simple', Boolean(value).toString());
   }
   get simple() {
     const val = this.getAttribute('simple');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
     /**
    * Speed.
@@ -524,14 +630,14 @@ const notImplemented = 'Method is not implemented';
   }
   get subframe() {
     const val = this.getAttribute('subframe');
-    return Boolean(val === 'true' || val === '' || val === '1');
+    return val === 'true' || val === '' || val === '1';
   }
   constructor() {
     super(), this.isLight = false, /**
    * Player state.
    */ this.playerState = PlayerState.Loading, /**
    * Animation Container.
-   */ this._container = null, this._errorMessage = 'Something went wrong', this._identifier = this.id || createElementID(), /**
+   */ this._container = null, this._DOMRect = null, this._errorMessage = 'Something went wrong', this._identifier = this.id || createElementID(), /**
    * Whether settings toolbar is open.
    */ this._isSettingsOpen = false, this._playerState = {
         count: 0,
@@ -558,6 +664,7 @@ const notImplemented = 'Method is not implemented';
     this._enterFrame = this._enterFrame.bind(this);
     this._freeze = this._freeze.bind(this);
     this._handleBlur = this._handleBlur.bind(this);
+    this._handleClick = this._handleClick.bind(this);
     this._handleScroll = this._handleScroll.bind(this);
     this._handleSeekChange = this._handleSeekChange.bind(this);
     this._handleWindowBlur = this._handleWindowBlur.bind(this);
@@ -587,74 +694,119 @@ const notImplemented = 'Method is not implemented';
     /**
    * Runs when the value of an attribute is changed on the component.
    */ async attributeChangedCallback(name, _oldValue, value) {
-    if (!this._lottieInstance || !this.shadow) {
+    if (!this._lottieInstance || !this.shadow || !this._container) {
       return;
     }
-    if (name === 'animateOnScroll') {
-      if (value === '' || Boolean(value)) {
-        this._lottieInstance.autoplay = false;
-        addEventListener('scroll', this._handleScroll, {
-          capture: true,
-          passive: true
-        });
-        return;
-      }
-      removeEventListener('scroll', this._handleScroll, true);
-    }
-    if (name === 'autoplay') {
-      if (this.animateOnScroll) {
-        return;
-      }
-      if (value === '' || Boolean(value)) {
-        this.play();
-        return;
-      }
-      this.stop();
-    }
-    if (name === 'controls') {
-      this._renderControls();
-    }
-    if (name === 'direction') {
-      if (Number(value) === -1) {
-        this.setDirection(-1);
-        return;
-      }
-      this.setDirection(1);
-    }
-    if (name === 'hover' && this._container) {
-      if (value === '' || Boolean(value)) {
-        this._container.addEventListener('mouseenter', this._mouseEnter);
-        this._container.addEventListener('mouseleave', this._mouseLeave);
-        return;
-      }
-      this._container.removeEventListener('mouseenter', this._mouseEnter);
-      this._container.removeEventListener('mouseleave', this._mouseLeave);
-    }
-    if (name === 'loop') {
-      const toggleLoop = this.shadow.querySelector('.toggleLoop');
-      if (toggleLoop instanceof HTMLButtonElement) {
-        toggleLoop.dataset.active = value;
-      }
-      this.setLoop(value === '' || Boolean(value));
-    }
-    if (name === 'mode') {
-      const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang');
-      if (toggleBoomerang instanceof HTMLButtonElement) {
-        toggleBoomerang.dataset.active = (value === PlayMode.Bounce).toString();
-      }
-      this._isBounce = value === PlayMode.Bounce;
-    }
-    if (name === 'speed') {
-      const val = Number(value);
-      if (val && !isNaN(val)) {
-        this.setSpeed(val);
-      }
-    }
-    if (name === 'src') {
-      await this.load(value);
-    }
-    if (name === 'subframe') {
-      this.setSubframe(value === '' || Boolean(value));
+    switch (name) {
+      case 'animateOnScroll':
+        {
+          if (value === '' || Boolean(value)) {
+            this._lottieInstance.autoplay = false;
+            addEventListener('scroll', this._handleScroll, {
+              capture: true,
+              passive: true
+            });
+            return;
+          }
+          removeEventListener('scroll', this._handleScroll, true);
+          break;
+        }
+      case 'autoplay':
+        {
+          if (this.animateOnScroll || this.playOnVisible) {
+            return;
+          }
+          if (value === '' || Boolean(value)) {
+            this.play();
+            return;
+          }
+          this.stop();
+          break;
+        }
+      case 'controls':
+        {
+          this._renderControls();
+          break;
+        }
+      case 'direction':
+        {
+          if (Number(value) === -1) {
+            this.setDirection(-1);
+            return;
+          }
+          this.setDirection(1);
+          break;
+        }
+      case 'hover':
+        {
+          if (value === '' || Boolean(value)) {
+            this._container.addEventListener('mouseenter', this._mouseEnter);
+            this._container.addEventListener('mouseleave', this._mouseLeave);
+            return;
+          }
+          this._container.removeEventListener('mouseenter', this._mouseEnter);
+          this._container.removeEventListener('mouseleave', this._mouseLeave);
+          break;
+        }
+      case 'loop':
+        {
+          const toggleLoop = this.shadow.querySelector('.toggleLoop');
+          if (toggleLoop instanceof HTMLButtonElement) {
+            toggleLoop.dataset.active = value;
+          }
+          this.setLoop(value === '' || Boolean(value));
+          break;
+        }
+      case 'mode':
+        {
+          const toggleBoomerang = this.shadow.querySelector('.toggleBoomerang');
+          if (toggleBoomerang instanceof HTMLButtonElement) {
+            toggleBoomerang.dataset.active = (value === PlayMode.Bounce).toString();
+          }
+          this._isBounce = value === PlayMode.Bounce;
+          break;
+        }
+      case 'playOnClick':
+        {
+          if (value === '' || Boolean(value)) {
+            this._lottieInstance.autoplay = false;
+            this._container.addEventListener('click', this._handleClick);
+            return;
+          }
+          this._container.removeEventListener('click', this._handleClick);
+          break;
+        }
+      case 'playOnVisible':
+        {
+          if (value === '' || Boolean(value)) {
+            this._lottieInstance.autoplay = false;
+          }
+          break;
+        }
+      case 'selector':
+        {
+          const selector = document.getElementById(this.selector ?? '');
+          selector?.addEventListener('click', this._handleClick);
+          break;
+        }
+      case 'speed':
+        {
+          const val = Number(value);
+          if (val && !isNaN(val)) {
+            this.setSpeed(val);
+          }
+          break;
+        }
+      case 'src':
+        {
+          await this.load(value);
+          break;
+        }
+      case 'subframe':
+        {
+          this.setSubframe(value === '' || Boolean(value));
+          break;
+        }
     }
   }
     /**
@@ -668,14 +820,17 @@ const notImplemented = 'Method is not implemented';
           throw new Error('Missing Shadow element');
         }
         this._container = this.shadow.querySelector('.animation');
+        // Setup lottie player
+        await this.load(this.src);
         // Add listener for Visibility API's change event.
         if (typeof document.hidden !== 'undefined') {
           document.addEventListener('visibilitychange', this._onVisibilityChange);
         }
+        if (this._container) {
+          this._DOMRect = this._container.getBoundingClientRect();
+        }
         // Add intersection observer for detecting component being out-of-view.
         this._addIntersectionObserver();
-        // Setup lottie player
-        await this.load(this.src);
         this.dispatchEvent(new CustomEvent(PlayerEvents.Rendered));
       })();
     } catch (error) {
@@ -742,23 +897,38 @@ const notImplemented = 'Method is not implemented';
       this.source = src;
       // Load the resource
       const { animations, isDotLottie, manifest } = await getAnimationData(src);
-      if (!animations || animations.some((animation) => !this._isLottie(animation))) {
+      if (!animations || animations.some((animation) => !isLottie(animation))) {
         throw new Error('Broken or corrupted file');
+      }
+      const ldScript = this.parentElement?.querySelector('script[type="application/ld+json"]');
+      if (ldScript) {
+        const settings = JSON.parse(ldScript.innerHTML);
+        if (settings.selector) {
+          this.selector = settings.selector;
+        }
+        if (settings.segment) {
+          this.setSegment(settings.segment);
+        }
+        if (settings.multiAnimationSettings) {
+          this.setMultiAnimationSettings(settings.multiAnimationSettings);
+        }
       }
       this._isBounce = this.mode === PlayMode.Bounce;
       if (this._multiAnimationSettings.length > 0 && this._multiAnimationSettings[this._currentAnimation]?.mode) {
-        this._isBounce = this._multiAnimationSettings[this._currentAnimation].mode === PlayMode.Bounce;
+        this._isBounce = this._multiAnimationSettings[this._currentAnimation]?.mode === PlayMode.Bounce;
       }
-      if (manifest?.animations.length === 1) {
-        manifest.animations[0].autoplay = this.autoplay;
-        manifest.animations[0].loop = this.loop;
+      // Relevant for dotLotties with multiple animations
+      const firstAnimation = manifest?.animations[0];
+      if (firstAnimation) {
+        firstAnimation.autoplay = !this.animateOnScroll && !this.playOnVisible && this.autoplay;
+        firstAnimation.loop = this.loop;
       }
       this._isDotLottie = isDotLottie;
       this._animations = animations;
       this._manifest = manifest ?? {
         animations: [
           {
-            autoplay: !this.animateOnScroll && this.autoplay,
+            autoplay: !this.animateOnScroll && !this.playOnVisible && this.autoplay,
             direction: this.direction,
             id: createElementID(),
             loop: this.loop,
@@ -770,7 +940,8 @@ const notImplemented = 'Method is not implemented';
       // Clear previous animation, if any
       this._lottieInstance?.destroy();
       this.playerState = PlayerState.Stopped;
-      if (!this.animateOnScroll && (this.autoplay || this._multiAnimationSettings[this._currentAnimation]?.autoplay)) {
+      if (!this.animateOnScroll && // !this.playOnVisible &&
+        (this.autoplay || this._multiAnimationSettings[this._currentAnimation]?.autoplay || this.playOnVisible)) {
         this.playerState = PlayerState.Playing;
       }
       // Initialize lottie player and load animation
@@ -785,20 +956,18 @@ const notImplemented = 'Method is not implemented';
       this._lottieInstance.setDirection(direction);
       this._lottieInstance.setSubframe(Boolean(this.subframe));
       // Start playing if autoplay is enabled
-      if (this.autoplay || this.animateOnScroll) {
-        if (this.direction === -1) {
-          this.seek('99%');
-        }
-        if (!('IntersectionObserver' in window)) {
-          if (!this.animateOnScroll) {
-            this.play();
-          }
-          this._playerState.visible = true;
-        }
-        this._addIntersectionObserver();
+      if ((this.autoplay || this.animateOnScroll || this.playOnVisible) && this.direction === -1) {
+        this.seek('99%');
+        // if (!('IntersectionObserver' in window)) {
+        //   if (!this.animateOnScroll) {
+        //     this.play()
+        //   }
+        //   this._playerState.visible = true
+        // }
+        // this._addIntersectionObserver()
       }
       this._renderControls();
-      if (this.autoplay) {
+      if (this.autoplay || this.playOnVisible) {
         const togglePlay = this.shadow?.querySelector('.togglePlay');
         if (togglePlay) {
           togglePlay.innerHTML = pauseIcon;
@@ -827,11 +996,15 @@ const notImplemented = 'Method is not implemented';
       return;
     }
     this._playerState.prev = this.playerState;
+    let hasError = false;
     try {
       this._lottieInstance.pause();
       this.dispatchEvent(new CustomEvent(PlayerEvents.Pause));
+    } catch (error) {
+      hasError = true;
+      console.error(error);
     } finally {
-      this.playerState = PlayerState.Paused;
+      this.playerState = hasError ? PlayerState.Error : PlayerState.Paused;
     }
   }
     /**
@@ -841,11 +1014,15 @@ const notImplemented = 'Method is not implemented';
       return;
     }
     this._playerState.prev = this.playerState;
+    let hasError = false;
     try {
       this._lottieInstance.play();
       this.dispatchEvent(new CustomEvent(PlayerEvents.Play));
+    } catch (error) {
+      hasError = true;
+      console.error(error);
     } finally {
-      this.playerState = PlayerState.Playing;
+      this.playerState = hasError ? PlayerState.Error : PlayerState.Playing;
     }
   }
     /**
@@ -1103,6 +1280,14 @@ const notImplemented = 'Method is not implemented';
     }, 200);
   }
     /**
+   * Handle click.
+   */ _handleClick() {
+    if (!this.playOnClick && !this.selector) {
+      return;
+    }
+    this.togglePlay();
+  }
+    /**
    * Handles click and drag actions on the progress track.
    */ _handleSeekChange({ target }) {
     if (!(target instanceof HTMLInputElement) || !this._lottieInstance || isNaN(Number(target.value))) {
@@ -1130,23 +1315,47 @@ const notImplemented = 'Method is not implemented';
     /**
    * Add IntersectionObserver.
    */ _addIntersectionObserver() {
-    if (!this._container || this._intersectionObserver || !('IntersectionObserver' in window)) {
+    if (!this._container || this._intersectionObserver) {
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      this._intersectionObserverFallback();
+      removeEventListener('scroll', this._intersectionObserverFallback, true);
+      addEventListener('scroll', this._intersectionObserverFallback, {
+        capture: true,
+        passive: true
+      });
       return;
     }
     this._intersectionObserver = new IntersectionObserver((entries) => {
       const { length } = entries;
       for (let i = 0; i < length; i++) {
-        if (!entries[i].isIntersecting || document.hidden) {
+        if (!entries[i]?.isIntersecting || document.hidden) {
           if (this.playerState === PlayerState.Playing) {
             this._freeze();
           }
           this._playerState.visible = false;
           continue;
         }
-        if (!this.animateOnScroll && this.playerState === PlayerState.Frozen) {
+        if (!this.animateOnScroll && !this.playOnVisible && this.playerState === PlayerState.Frozen) {
           this.play();
         }
-        if (!this._playerState.scrollY) {
+        if (this.playOnVisible) {
+          if (this.playerState === PlayerState.Completed && !this.once) {
+            this.playerState = PlayerState.Playing;
+            this._lottieInstance?.goToAndPlay(this.direction === 1 ? 0 : this._lottieInstance.totalFrames);
+          } else {
+            setTimeout(() => {
+              this.play();
+            }, this.delay);
+          }
+        }
+                /**
+         * If the player is a ways down the page, we need to account for this by
+         * setting _playerState.scrollY to the current scroll position. However, we
+         * also need to check that the player hasn't been scrolled past, so we check
+         * boundingClientRect as well.
+         */ if (!this._playerState.scrollY && (entries[i]?.boundingClientRect.y || 0) > 0) {
           this._playerState.scrollY = scrollY;
         }
         this._playerState.visible = true;
@@ -1252,32 +1461,46 @@ const notImplemented = 'Method is not implemented';
     /**
    * Handle scroll.
    */ _handleScroll() {
-    if (!this.animateOnScroll || !this._lottieInstance) {
+    if (!this.animateOnScroll || !this._DOMRect || !this._lottieInstance) {
       return;
     }
     if (isServer) {
       console.warn('DotLottie: Scroll animations might not work properly in a Server Side Rendering context. Try to wrap this in a client component.');
       return;
     }
-    if (this._playerState.visible) {
-      if (this._playerState.scrollTimeout) {
-        clearTimeout(this._playerState.scrollTimeout);
-      }
-      this._playerState.scrollTimeout = setTimeout(() => {
-        this.playerState = PlayerState.Paused;
-      }, 400);
-      const adjustedScroll = scrollY > this._playerState.scrollY ? scrollY - this._playerState.scrollY : this._playerState.scrollY - scrollY, clampedScroll = Math.min(Math.max(adjustedScroll / 3, 1), this._lottieInstance.totalFrames * 3), roundedScroll = clampedScroll / 3;
-      requestAnimationFrame(() => {
-        if (roundedScroll < (this._lottieInstance?.totalFrames ?? 0)) {
-          this.playerState = PlayerState.Playing;
-          this._lottieInstance?.goToAndStop(roundedScroll, true);
-        } else {
-          this.playerState = PlayerState.Paused;
-        }
-      });
+    if (!this._playerState.visible) {
+      return;
     }
+    if (this._playerState.scrollTimeout) {
+      clearTimeout(this._playerState.scrollTimeout);
+    }
+    this._playerState.scrollTimeout = setTimeout(() => {
+      this.playerState = PlayerState.Paused;
+    }, 400);
+    const { totalFrames } = this._lottieInstance;
+    let scrollPosition = scrollY - this._playerState.scrollY;
+    if (scrollY <= this._playerState.scrollY) {
+      scrollPosition = this._playerState.scrollY - scrollY;
+    }
+    const { bottom, height, top } = this._DOMRect;
+    let offset = height - bottom;
+    if (top >= innerHeight) {
+      offset = height;
+    }
+    const scrollProgress = scrollPosition / (innerHeight + offset), currentFrame = clamp(scrollProgress * (totalFrames - 1), 0, totalFrames);
+    requestAnimationFrame(() => {
+      if (currentFrame >= totalFrames) {
+        this.playerState = PlayerState.Paused;
+        return;
+      }
+      this.playerState = PlayerState.Playing;
+      this._lottieInstance?.goToAndStop(currentFrame, true);
+    });
   }
   _handleWindowBlur({ type }) {
+    if (this.dontFreezeOnBlur) {
+      return;
+    }
     if (this.playerState === PlayerState.Playing && type === 'blur') {
       this._freeze();
     }
@@ -1285,17 +1508,19 @@ const notImplemented = 'Method is not implemented';
       this.play();
     }
   }
-  _isLottie(json) {
-    const mandatory = [
-      'v',
-      'ip',
-      'op',
-      'layers',
-      'fr',
-      'w',
-      'h'
-    ];
-    return mandatory.every((field) => Object.hasOwn(json, field));
+  _intersectionObserverFallback() {
+    if (!this._container) {
+      return;
+    }
+    const { bottom, left, right, top } = this._container.getBoundingClientRect();
+    this._playerState.visible = top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+    if (this.autoplay || this.playOnVisible || this.playerState === PlayerState.Playing || this.playerState === PlayerState.Frozen) {
+      if (this._playerState.visible) {
+        this.play();
+      } else {
+        this._freeze();
+      }
+    }
   }
   _loopComplete() {
     if (!this._lottieInstance) {
@@ -1336,15 +1561,51 @@ const notImplemented = 'Method is not implemented';
     /**
    * Handle MouseEnter.
    */ _mouseEnter() {
-    if (this.hover && this.playerState !== PlayerState.Playing) {
+    if (!this.hover || !this._lottieInstance || isTouch()) {
+      return;
+    }
+    if (this.mouseout === MouseOut.Reverse) {
+      this._lottieInstance.setDirection(1);
+    }
+    if (this.playerState === PlayerState.Completed) {
+      this._lottieInstance.goToAndPlay(0, true);
+      this.playerState = PlayerState.Playing;
+      return;
+    }
+    if (this.playerState !== PlayerState.Playing) {
       this.play();
     }
   }
     /**
    * Handle MouseLeave.
    */ _mouseLeave() {
-    if (this.hover && this.playerState === PlayerState.Playing) {
-      this.stop();
+    if (!this.hover || !this._lottieInstance || isTouch()) {
+      return;
+    }
+    switch (this.mouseout) {
+      case MouseOut.Void:
+        {
+          break;
+        }
+      case MouseOut.Pause:
+        {
+          this.pause();
+          break;
+        }
+      case MouseOut.Reverse:
+        {
+          // const { direction = 1 } =
+          //   this._multiAnimationSettings.length > 0 ?
+          //     this._multiAnimationSettings[this._currentAnimation + 1] ?? { direction: 1 } : this,
+          //   newDirection = direction * -1 as AnimationDirection
+          this._lottieInstance.setDirection(-1);
+          this.play();
+          break;
+        }
+      default:
+        {
+          this.stop();
+        }
     }
   }
     /**
@@ -1380,7 +1641,7 @@ const notImplemented = 'Method is not implemented';
       });
       // Check play mode for current animation
       if (this._multiAnimationSettings[this._currentAnimation]?.mode) {
-        this._isBounce = this._multiAnimationSettings[this._currentAnimation].mode === PlayMode.Bounce;
+        this._isBounce = this._multiAnimationSettings[this._currentAnimation]?.mode === PlayMode.Bounce;
       }
       // Remove event listeners to new Lottie instance, and add new
       this._removeEventListeners();
@@ -1416,9 +1677,27 @@ const notImplemented = 'Method is not implemented';
       this._lottieInstance[method]('data_ready', this._dataReady);
       this._lottieInstance[method]('data_failed', this._dataFailed);
     }
-    if (this._container && this.hover) {
-      this._container[method]('mouseenter', this._mouseEnter);
-      this._container[method]('mouseleave', this._mouseLeave);
+    if (this.selector) {
+      const selector = document.getElementById(this.selector);
+      if (selector) {
+        if (this.hover) {
+          selector[method]('mouseenter', this._mouseEnter);
+          selector[method]('mouseleave', this._mouseLeave);
+        } else {
+          selector[method]('click', this._handleClick);
+        }
+      } else {
+        this.selector = null;
+      }
+    }
+    if (this._container && !this.selector) {
+      if (this.hover) {
+        this._container[method]('mouseenter', this._mouseEnter);
+        this._container[method]('mouseleave', this._mouseLeave);
+      }
+      if (this.playOnClick) {
+        this._container[method]('click', this._handleClick);
+      }
     }
     window[method]('focus', this._handleWindowBlur, {
       capture: false,
@@ -1449,6 +1728,9 @@ const notImplemented = 'Method is not implemented';
 /**
  * DotLottie Player Web Component.
  */ class DotLottiePlayer extends DotLottiePlayerBase {
+  loadAnimation(config) {
+    return Lottie.loadAnimation(config);
+  }
   setOptions({ container, hasAutoplay, hasLoop, initialSegment, preserveAspectRatio, rendererType }) {
     const options = {
       autoplay: hasAutoplay,
@@ -1476,7 +1758,8 @@ const notImplemented = 'Method is not implemented';
         {
           options.rendererSettings = {
             ...options.rendererSettings,
-            // @ts-expect-error TODO:
+            // `clearCanvas` is canvas-only, but `rendererSettings` is typed as a
+            // renderer union, so we have to narrow/cast in this branch.
             clearCanvas: true,
             preserveAspectRatio,
             progressiveLoad: true
@@ -1487,7 +1770,7 @@ const notImplemented = 'Method is not implemented';
     return options;
   }
   constructor(...args) {
-    super(...args), this.addAnimation = addAnimation, this.convert = convert, this.loadAnimation = Lottie.loadAnimation;
+    super(...args), this.addAnimation = addAnimation, this.convert = convert;
   }
 }
 
@@ -1498,4 +1781,4 @@ if (!isServer) {
   customElements.define(tagName, DotLottiePlayer);
 }
 
-export { PlayerState, DotLottiePlayer as default, tagName };
+export { MouseOut, PlayerState, DotLottiePlayer as default, tagName };
