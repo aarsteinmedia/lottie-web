@@ -16,14 +16,14 @@ import type {
 
 import {
   BaseEvent,
-  BMCompleteEvent,
-  BMCompleteLoopEvent,
-  BMConfigErrorEvent,
-  BMDestroyEvent,
-  BMDrawnFrameEvent,
-  BMEnterFrameEvent,
-  BMRenderFrameErrorEvent,
-  BMSegmentStartEvent,
+  CompleteEvent,
+  CompleteLoopEvent,
+  ConfigErrorEvent,
+  DestroyEvent,
+  DrawnFrameEvent,
+  EnterFrameEvent,
+  RenderFrameErrorEvent,
+  SegmentStartEvent,
 } from '@/events'
 import {
   getRegisteredRenderer,
@@ -54,7 +54,7 @@ export class AnimationItem extends BaseEvent {
   public container?: undefined | HTMLCanvasElement
   public currentFrame = 0
   public currentRawFrame = 0
-  public drawnFrameEvent = new BMEnterFrameEvent(
+  public drawnFrameEvent = new EnterFrameEvent(
     'drawnFrame', 0, 0, 0
   )
   public expressionsPlugin = getExpressionsPlugin()
@@ -825,13 +825,13 @@ export class AnimationItem extends BaseEvent {
       switch (name) {
         case 'enterFrame': {
           this.triggerEvent(name,
-            new BMEnterFrameEvent(
+            new EnterFrameEvent(
               name,
               this.currentFrame,
               this.totalFrames,
               this.frameModifier
             ))
-          this.onEnterFrame?.(new BMEnterFrameEvent(
+          this.onEnterFrame?.(new EnterFrameEvent(
             name,
             this.currentFrame,
             this.totalFrames,
@@ -841,7 +841,7 @@ export class AnimationItem extends BaseEvent {
         }
         case 'drawnFrame': {
           this.triggerEvent(name,
-            new BMDrawnFrameEvent(
+            new DrawnFrameEvent(
               name,
               this.currentFrame,
               this.frameModifier,
@@ -851,13 +851,13 @@ export class AnimationItem extends BaseEvent {
         }
         case 'loopComplete': {
           this.triggerEvent(name,
-            new BMCompleteLoopEvent(
+            new CompleteLoopEvent(
               name,
               Number(this.loop),
               this.playCount,
               this.frameMult
             ))
-          this.onLoopComplete?.(new BMCompleteLoopEvent(
+          this.onLoopComplete?.(new CompleteLoopEvent(
             name,
             this.loop,
             this.playCount,
@@ -866,23 +866,23 @@ export class AnimationItem extends BaseEvent {
           break
         }
         case 'complete': {
-          this.triggerEvent(name, new BMCompleteEvent(name, this.frameMult))
-          this.onComplete?.(new BMCompleteEvent(name, this.frameMult))
+          this.triggerEvent(name, new CompleteEvent(name, this.frameMult))
+          this.onComplete?.(new CompleteEvent(name, this.frameMult))
           break
         }
         case 'segmentStart': {
           this.triggerEvent(name,
-            new BMSegmentStartEvent(
+            new SegmentStartEvent(
               name, this.firstFrame, this.totalFrames
             ))
-          this.onSegmentStart?.(new BMSegmentStartEvent(
+          this.onSegmentStart?.(new SegmentStartEvent(
             name, this.firstFrame, this.totalFrames
           ))
           break
         }
         case 'destroy': {
-          this.triggerEvent(name, new BMDestroyEvent(name, this))
-          this.onDestroy?.(new BMDestroyEvent(name, this))
+          this.triggerEvent(name, new DestroyEvent(name, this))
+          this.onDestroy?.(new DestroyEvent(name, this))
           break
         }
         default: {
@@ -895,14 +895,14 @@ export class AnimationItem extends BaseEvent {
   }
 
   public triggerConfigError(nativeError: unknown) {
-    const error = new BMConfigErrorEvent(nativeError, this.currentFrame)
+    const error = new ConfigErrorEvent(nativeError, this.currentFrame)
 
     this.triggerEvent('error', error)
     this.onError?.(error)
   }
 
   public triggerRenderFrameError(nativeError: unknown) {
-    const error = new BMRenderFrameErrorEvent(nativeError, this.currentFrame)
+    const error = new RenderFrameErrorEvent(nativeError, this.currentFrame)
 
     this.triggerEvent('error', error)
 
