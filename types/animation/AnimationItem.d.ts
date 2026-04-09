@@ -2,10 +2,8 @@ import type { CanvasRenderer } from '../renderers/CanvasRenderer';
 import type { HybridRenderer } from '../renderers/HybridRenderer';
 import type { SVGRenderer } from '../renderers/SVGRenderer';
 import type { AnimationConfiguration, AnimationData, AnimationDirection, AnimationEventName, DocumentData, LottieAsset, MarkerData, Vector2 } from '../types';
-import { BaseEvent, type LottieEvent } from '../events';
-import { type AudioController } from '../utils/audio/AudioController';
+import { BaseEvent, BMEnterFrameEvent } from '../events';
 import { RendererType } from '../utils/enums';
-import { getExpressionsPlugin } from '../utils/expressions';
 import { ProjectInterface } from '../utils/expressions/ProjectInterface';
 import { ImagePreloader } from '../utils/ImagePreloader';
 export declare class AnimationItem extends BaseEvent {
@@ -15,18 +13,21 @@ export declare class AnimationItem extends BaseEvent {
     animationID: string;
     assets: LottieAsset[];
     assetsPath: string;
-    audioController: AudioController;
+    audioController: import("../utils/audio/AudioController").AudioController;
     autoplay: boolean;
     container?: undefined | HTMLCanvasElement;
     currentFrame: number;
     currentRawFrame: number;
-    drawnFrameEvent: LottieEvent;
-    expressionsPlugin: ReturnType<typeof getExpressionsPlugin>;
+    drawnFrameEvent: BMEnterFrameEvent;
+    expressionsPlugin: {
+        initExpressions: (animation: AnimationItem) => void;
+        resetFrame: () => void;
+    } | null;
     firstFrame: number;
     frameModifier: AnimationDirection;
     frameMult: number;
     frameRate: number;
-    imagePreloader: null | ImagePreloader;
+    imagePreloader: ImagePreloader;
     isLoaded: boolean;
     isPaused: boolean;
     isSubframeEnabled: boolean;

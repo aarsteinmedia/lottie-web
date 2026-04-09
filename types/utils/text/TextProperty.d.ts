@@ -4,9 +4,9 @@ import { BaseProperty } from '../../utils/properties/BaseProperty';
 export declare class TextProperty extends BaseProperty {
     _frameId: number;
     canResize: boolean;
+    defaultBoxWidth: Vector2;
     currentData: DocumentData;
     data: TextData;
-    defaultBoxWidth: Vector2;
     effectsSequence: TextEffectFunction[];
     elem: ElementInterfaceIntersect;
     keysIndex: number;

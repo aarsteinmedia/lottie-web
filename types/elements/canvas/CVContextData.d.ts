@@ -9,7 +9,6 @@ declare class CanvasContext {
     opacity: number;
     strokeStyle: string;
     transform: number[];
-    constructor();
 }
 export declare class CVContextData {
     _length: number;
@@ -28,7 +27,7 @@ export declare class CVContextData {
     currentMiterLimit: string | number;
     currentOpacity: number;
     currentStrokeStyle: string;
-    nativeContext?: undefined | null | CanvasRenderingContext2D;
+    nativeContext: null | CanvasRenderingContext2D;
     stack: CanvasContext[];
     transformMat: Matrix;
     constructor();

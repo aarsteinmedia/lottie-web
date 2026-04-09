@@ -8,7 +8,7 @@ export declare class AudioElement extends RenderableElement {
     _isPlaying: boolean;
     _previousVolume: number | null;
     _volume: number;
-    _volumeMultiplier?: number;
+    _volumeMultiplier: number;
     assetData: null | LottieAsset;
     audio: Audio;
     lv: MultiDimensionalProperty;

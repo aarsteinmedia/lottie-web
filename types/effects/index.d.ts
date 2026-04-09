@@ -24,7 +24,6 @@ export declare class MaskIndexEffect extends EffectZero {
 export declare class CheckboxEffect extends EffectZero {
 }
 export declare class NoValueEffect {
-    p: object;
-    constructor();
+    p: {};
 }
 export {};
