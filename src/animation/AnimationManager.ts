@@ -185,6 +185,7 @@ export function stop(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i]?.animation.stop(animation)
   }
+  _isStopped = true
 }
 
 export function togglePause(animation?: string) {
@@ -192,6 +193,7 @@ export function togglePause(animation?: string) {
     registeredAnimations[i]?.animation.togglePause(animation)
   }
 }
+
 export function unfreeze() {
   _isFrozen = false
   activate()
@@ -247,7 +249,8 @@ function resume(nowTime: number) {
     registeredAnimations[i]?.animation.advanceTime(elapsedTime)
   }
   initTime = nowTime
-  if (playingAnimationsNum && !_isFrozen) {
+
+  if (playingAnimationsNum && !_isFrozen && !_isStopped) {
     if (!isServer) {
       requestAnimationFrame(resume)
     }

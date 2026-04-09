@@ -135,8 +135,8 @@ export class AnimationItem extends BaseEvent {
     if (this.isPaused || !this.isLoaded) {
       return
     }
-    let nextValue = this.currentRawFrame + value * this.frameModifier
-    let _isComplete = false
+    let nextValue = this.currentRawFrame + value * this.frameModifier,
+      _isComplete = false
 
     // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.
     // If animation won't loop, it should stop at totalFrames - 1. If it will loop it should complete the last frame and then loop.

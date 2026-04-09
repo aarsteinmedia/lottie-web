@@ -10,7 +10,11 @@ import {
   getFilename,
   clamp,
 } from '@aarsteinmedia/lottie-web/utils'
-export { PlayMode, PlayerEvents } from '@aarsteinmedia/lottie-web/utils'
+export {
+  PlayMode,
+  PlayerEvents,
+  RendererType,
+} from '@aarsteinmedia/lottie-web/utils'
 import Lottie from '@aarsteinmedia/lottie-web'
 import {
   convert,
@@ -456,7 +460,6 @@ const notImplemented = 'Method is not implemented',
       'direction',
       'hover',
       'loop',
-      // 'mouseout',
       'mode',
       'playOnClick',
       'playOnVisible',
