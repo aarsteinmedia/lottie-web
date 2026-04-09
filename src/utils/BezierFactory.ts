@@ -36,7 +36,7 @@ export function getBezierEasing(
 class BezierEasing {
   private _mSampleValues: Float32Array | unknown[]
   private _p: number[]
-  private _precomputed: boolean
+  private _precomputed = false
 
   private float32ArraySupported = typeof Float32Array === 'function'
   private kSplineTableSize = 11
@@ -56,7 +56,6 @@ class BezierEasing {
     this._mSampleValues = this.float32ArraySupported
       ? new Float32Array(this.kSplineTableSize)
       : Array.from({ length: this.kSplineTableSize })
-    this._precomputed = false
 
     this.get = this.get.bind(this)
   }

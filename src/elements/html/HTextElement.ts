@@ -20,20 +20,20 @@ export class HTextElement extends TextElement {
   compH?: undefined | number
   compW?: undefined | number
 
-  currentBBox?: {
-    w: number
-    h: number
-    x: number
-    y: number
+  currentBBox = {
+    h: 0,
+    w: 0,
+    x: 999999,
+    y: -999999,
   }
-  isMasked?: boolean
+  isMasked = false
   maskedElement?: SVGGElement | HTMLElement
   renderedLetters: string[] = []
   svgElement?: SVGSVGElement
 
-  textPaths: SVGPathElement[]
+  textPaths: SVGPathElement[] = []
 
-  textSpans: HTMLElement[]
+  textSpans: HTMLElement[] = []
 
   constructor(
     data: LottieLayer,
@@ -41,16 +41,7 @@ export class HTextElement extends TextElement {
     comp: ElementInterfaceIntersect
   ) {
     super()
-    this.textSpans = []
-    this.textPaths = []
-    this.currentBBox = {
-      h: 0,
-      w: 0,
-      x: 999999,
-      y: -999999,
-    }
     this.renderType = RendererType.SVG
-    this.isMasked = false
     this.initElement(
       data, globalData, comp
     )
@@ -326,11 +317,11 @@ export class HTextElement extends TextElement {
     ) {
       const boundingBox = (this.innerElem as SVGGraphicsElement).getBBox()
 
-      if (this.currentBBox && this.currentBBox.w !== boundingBox.width) {
+      if (this.currentBBox.w !== boundingBox.width) {
         this.currentBBox.w = boundingBox.width
         this.svgElement?.setAttribute('width', `${boundingBox.width}`)
       }
-      if (this.currentBBox && this.currentBBox.h !== boundingBox.height) {
+      if (this.currentBBox.h !== boundingBox.height) {
         this.currentBBox.h = boundingBox.height
         this.svgElement?.setAttribute('height', `${boundingBox.height}`)
       }
@@ -338,11 +329,10 @@ export class HTextElement extends TextElement {
       const margin = 1
 
       if (
-        this.currentBBox &&
-        (this.currentBBox.w !== boundingBox.width + margin * 2 ||
-          this.currentBBox.h !== boundingBox.height + margin * 2 ||
-          this.currentBBox.x !== boundingBox.x - margin ||
-          this.currentBBox.y !== boundingBox.y - margin)
+        this.currentBBox.w !== boundingBox.width + margin * 2 ||
+        this.currentBBox.h !== boundingBox.height + margin * 2 ||
+        this.currentBBox.x !== boundingBox.x - margin ||
+        this.currentBBox.y !== boundingBox.y - margin
       ) {
         this.currentBBox.w = boundingBox.width + margin * 2
         this.currentBBox.h = boundingBox.height + margin * 2

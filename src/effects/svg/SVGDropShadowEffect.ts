@@ -24,15 +24,15 @@ export class SVGDropShadowEffect extends SVGComposableEffect {
   ) {
     super()
     const globalFilterSize = (
-      filterManager.container?.globalData?.renderConfig as SVGRendererConfig
-    ).filterSize
-    const filterSize = filterManager.data?.fs ??
-      globalFilterSize ?? {
-      height: '100%',
-      width: '100%',
-      x: '0%',
-      y: '0%',
-    }
+        filterManager.container?.globalData?.renderConfig as SVGRendererConfig
+      ).filterSize,
+      filterSize = filterManager.data?.fs ??
+        globalFilterSize ?? {
+        height: '100%',
+        width: '100%',
+        x: '0%',
+        y: '0%',
+      }
 
     filter.setAttribute('x', filterSize.x)
     filter.setAttribute('y', filterSize.y)

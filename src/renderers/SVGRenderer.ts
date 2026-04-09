@@ -13,7 +13,7 @@ import { RendererType } from '@/utils/enums'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SVGRenderer extends SVGRendererBase {
-  rendererType: RendererType
+  rendererType = RendererType.SVG
 
   constructor(animationItem: AnimationItem, config?: SVGRendererConfig) {
     super()
@@ -85,7 +85,6 @@ export class SVGRenderer extends SVGRendererBase {
     this.elements = []
     this.pendingElements = []
     this.destroyed = false
-    this.rendererType = RendererType.SVG
   }
 
   override createComp(data: LottieLayer) {

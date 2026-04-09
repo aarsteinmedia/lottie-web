@@ -45,16 +45,16 @@ export class CVShapeElement extends ShapeElement {
   override hide = CVBaseElement.prototype.hide
   override initRendererElement = CVBaseElement.prototype.initRendererElement
   prepareLayer = CVBaseElement.prototype.prepareLayer
-  prevViewData: ShapeGroupData[]
+  prevViewData: ShapeGroupData[] = []
   override renderFrame = CVBaseElement.prototype.renderFrame
   override setBlendMode = CVBaseElement.prototype.setBlendMode
   override show = CVBaseElement.prototype.show
-  stylesList: CVStyleElement[]
+  stylesList: CVStyleElement[] = []
   transformHelper = {
     _opMdf: false,
     opacity: 1,
   } as Transformer
-  transformsManager: ShapeTransformManager
+  transformsManager = new ShapeTransformManager()
 
   constructor(
     data: LottieLayer, globalData: GlobalData, comp: CompElementInterface
@@ -62,12 +62,9 @@ export class CVShapeElement extends ShapeElement {
     super()
     this.shapes = []
     this.shapesData = data.shapes
-    this.stylesList = []
     this.itemsData = []
-    this.prevViewData = []
     this.shapeModifiers = []
     this.processedElements = []
-    this.transformsManager = new ShapeTransformManager()
     this.initElement(
       data, globalData, comp
     )

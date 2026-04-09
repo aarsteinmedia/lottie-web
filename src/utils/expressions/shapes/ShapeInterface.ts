@@ -35,7 +35,7 @@ import { TrimInterface } from '@/utils/expressions/shapes/TrimInterface'
 
 
 export class ShapeExpressionInterface {
-  _name: string
+  _name = 'Contents'
   arr = []
   interfaces: ShapePathInterface[]
   numProperties: number
@@ -50,7 +50,6 @@ export class ShapeExpressionInterface {
       shapes, view, this.propertyGroup
     )
     this.numProperties = this.interfaces.length
-    this._name = 'Contents'
   }
 
   contentsInterfaceFactory(

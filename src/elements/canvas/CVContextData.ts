@@ -3,54 +3,43 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 import { Matrix } from '@/utils/Matrix'
 
 class CanvasContext {
-  fillStyle: string
+  fillStyle = ''
   id: number
-  lineCap: string
-  lineJoin: string
-  lineWidth: number | string
-  miterLimit: number | string
-  opacity: number
-  strokeStyle: string
-  transform: number[]
+  lineCap = ''
+  lineJoin = ''
+  lineWidth: number | string = ''
+  miterLimit: number | string = ''
+  opacity = -1
+  strokeStyle = ''
+  transform = createTypedArray(ArrayType.Float32, 16) as number[]
   constructor() {
-    this.opacity = -1
-    this.transform = createTypedArray(ArrayType.Float32, 16) as number[]
-    this.fillStyle = ''
-    this.strokeStyle = ''
-    this.lineWidth = ''
-    this.lineCap = ''
-    this.lineJoin = ''
-    this.miterLimit = ''
     this.id = Math.random()
   }
 }
 
 export class CVContextData {
   _length: number
-  appliedFillStyle: string
-  appliedLineCap: string
-  appliedLineJoin: string
-  appliedLineWidth: string | number
-  appliedMiterLimit: string | number
-  appliedStrokeStyle: string
-  cArrPos: number
-  cTr: Matrix
-  currentFillStyle: string
-  currentLineCap: string
-  currentLineJoin: string
-  currentLineWidth: string | number
-  currentMiterLimit: string | number
-  currentOpacity: number
-  currentStrokeStyle: string
-  nativeContext?: undefined | null | CanvasRenderingContext2D
+  appliedFillStyle = ''
+  appliedLineCap = ''
+  appliedLineJoin = ''
+  appliedLineWidth: string | number = ''
+  appliedMiterLimit: string | number = ''
+  appliedStrokeStyle = ''
+  cArrPos = 0
+  cTr = new Matrix()
+  currentFillStyle = ''
+  currentLineCap = ''
+  currentLineJoin = ''
+  currentLineWidth: string | number = ''
+  currentMiterLimit: string | number = ''
+  currentOpacity = 1
+  currentStrokeStyle = ''
+  nativeContext: null | CanvasRenderingContext2D = null
   stack: CanvasContext[] = []
 
-  transformMat: Matrix
+  transformMat = new Matrix()
 
   constructor() {
-    this.stack = []
-    this.cArrPos = 0
-    this.cTr = new Matrix()
     const len = 15
 
     for (let i = 0; i < len; i++) {
@@ -59,27 +48,6 @@ export class CVContextData {
       this.stack[i] = canvasContext
     }
     this._length = len
-    this.nativeContext = null as unknown as CanvasRenderingContext2D
-    this.transformMat = new Matrix()
-    this.currentOpacity = 1
-    //
-    this.currentFillStyle = ''
-    this.appliedFillStyle = ''
-    //
-    this.currentStrokeStyle = ''
-    this.appliedStrokeStyle = ''
-    //
-    this.currentLineWidth = ''
-    this.appliedLineWidth = ''
-    //
-    this.currentLineCap = ''
-    this.appliedLineCap = ''
-    //
-    this.currentLineJoin = ''
-    this.appliedLineJoin = ''
-    //
-    this.appliedMiterLimit = ''
-    this.currentMiterLimit = ''
   }
 
   duplicate() {
@@ -285,7 +253,7 @@ export class CVContextData {
     newStack.miterLimit = currentStack.miterLimit
   }
 
-  setContext(value?: null | CanvasRenderingContext2D) {
+  setContext(value: null | CanvasRenderingContext2D = null) {
     this.nativeContext = value
   }
 

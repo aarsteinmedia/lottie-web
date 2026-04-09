@@ -13,12 +13,12 @@ import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export class AudioElement extends RenderableElement {
-  _canPlay: boolean
-  _currentTime: number
-  _isPlaying: boolean
-  _previousVolume: number | null
-  _volume: number
-  _volumeMultiplier?: number
+  _canPlay = false
+  _currentTime = 0
+  _isPlaying = false
+  _previousVolume: number | null = null
+  _volume = 1
+  _volumeMultiplier = 1
   assetData: null | LottieAsset
   audio: Audio
   lv: MultiDimensionalProperty
@@ -36,16 +36,10 @@ export class AudioElement extends RenderableElement {
     this.initBaseData(
       data, globalData, comp
     )
-    this._isPlaying = false
-    this._canPlay = false
     const assetPath = this.globalData?.getAssetsPath(this.assetData)
 
     this.audio = this.globalData?.audioController?.createAudio(assetPath)
-    this._currentTime = 0
     this.globalData?.audioController?.addAudio(this)
-    this._volumeMultiplier = 1
-    this._volume = 1
-    this._previousVolume = null
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
@@ -99,7 +93,7 @@ export class AudioElement extends RenderableElement {
       this._currentTime = this.tm.v
     }
     this._volume = this.lv.v[0]
-    const totalVolume = this._volume * Number(this._volumeMultiplier)
+    const totalVolume = this._volume * this._volumeMultiplier
 
     if (this._previousVolume !== totalVolume) {
       this._previousVolume = totalVolume

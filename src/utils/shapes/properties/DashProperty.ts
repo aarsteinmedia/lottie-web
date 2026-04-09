@@ -7,12 +7,12 @@ import PropertyFactory from '@/utils/PropertyFactory'
 
 export class DashProperty extends DynamicPropertyContainer {
   dashArray: Float32Array
-  dashoffset: Float32Array
-  dashStr: string
+  dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
+  dashStr = ''
   dataProps: StrokeData[]
   elem: ElementInterfaceIntersect
-  frameId: number
-  k: boolean
+  frameId = -1
+  k = false
   renderer: RendererType
   constructor(
     elem: ElementInterfaceIntersect,
@@ -22,14 +22,10 @@ export class DashProperty extends DynamicPropertyContainer {
   ) {
     super()
     this.elem = elem
-    this.frameId = -1
     this.dataProps = createSizedArray(data.length)
     this.renderer = renderer
-    this.k = false
-    this.dashStr = ''
     this.dashArray = createTypedArray(ArrayType.Float32,
       data.length > 0 ? data.length - 1 : 0) as Float32Array
-    this.dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
     this.initDynamicPropertyContainer(container)
     const len = data.length || 0
     let prop

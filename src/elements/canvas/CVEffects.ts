@@ -11,11 +11,10 @@ interface RegisteredEffects {
 const registeredEffects: RegisteredEffects = {}
 
 export class CVEffects {
-  filters: GroupEffect[]
+  filters: GroupEffect[] = []
   constructor(elem: ElementInterfaceIntersect) {
     const { length } = elem.data.ef ?? []
 
-    this.filters = []
     let filterManager
 
     for (let i = 0; i < length; i++) {

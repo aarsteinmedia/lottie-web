@@ -10,7 +10,7 @@ import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 export class SVGTransformData {
   _isAnimated: boolean
-  elements: ElementInterfaceIntersect[]
+  elements: ElementInterfaceIntersect[] = []
   gr?: SVGGElement
   it?: ShapeDataInterface[]
   prevViewData?: SVGElementInterface[]
@@ -26,7 +26,6 @@ export class SVGTransformData {
       mProps,
       op,
     } as Transformer
-    this.elements = []
     this._isAnimated = this.transform.mProps.dynamicProperties.length > 0 ||
       this.transform.op.effectsSequence.length > 0
   }

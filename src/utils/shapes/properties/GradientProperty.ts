@@ -12,10 +12,10 @@ import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContain
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export class GradientProperty extends DynamicPropertyContainer {
-  _cmdf: boolean
+  _cmdf = false
   _collapsable: boolean
   _hasOpacity: number
-  _omdf: boolean
+  _omdf = false
   c: Uint8ClampedArray
   override data: GradientColor
   k?: boolean | undefined
@@ -34,8 +34,6 @@ export class GradientProperty extends DynamicPropertyContainer {
       : data.k.k.length - data.p * 4
 
     this.o = createTypedArray(ArrayType.Float32, cLength) as Float32Array
-    this._cmdf = false
-    this._omdf = false
     this._collapsable = this.checkCollapsable()
     this._hasOpacity = cLength
     this.initDynamicPropertyContainer(container)

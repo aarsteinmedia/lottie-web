@@ -20,10 +20,10 @@ export class MaskElement {
   data: LottieLayer
   element: ElementInterfaceIntersect
   globalData: GlobalData
-  maskElement: SVGElement | null
+  maskElement: SVGElement | null = null
   masksProperties: Shape[] = []
-  solidPath: string
-  storedData: StoredData[]
+  solidPath = ''
+  storedData: StoredData[] = []
   viewData: ViewData[]
   constructor(
     data: LottieLayer,
@@ -33,14 +33,11 @@ export class MaskElement {
     this.data = data
     this.element = element
     this.globalData = globalData
-    this.storedData = []
     this.masksProperties = this.data.masksProperties ?? []
-    this.maskElement = null
     const { defs } = this.globalData,
       { length } = this.masksProperties
 
     this.viewData = createSizedArray(length)
-    this.solidPath = ''
 
     const properties = this.masksProperties
     let count = 0

@@ -24,7 +24,7 @@ export class TransformProperty extends BaseProperty {
   _opMdf?: boolean
   _transformCachingAtTime?: { v: Matrix }
   a?: MultiDimensionalProperty<number[]>
-  appliedTransformations: number
+  appliedTransformations = 0
   autoOriented?: boolean
   override data: Shape
   override elem: ElementInterfaceIntersect
@@ -35,7 +35,10 @@ export class TransformProperty extends BaseProperty {
   opacity?: number
   or?: MultiDimensionalProperty<Vector3>
   p?: MultiDimensionalProperty<Vector3>
-  pre: Matrix
+  /**
+   * Precalculated matrix with non animated properties.
+   */
+  pre = new Matrix()
   px?: ValueProperty
   py?: ValueProperty
   pz?: ValueProperty
@@ -59,9 +62,6 @@ export class TransformProperty extends BaseProperty {
     this.propType = PropType.Transform
     this.data = data
     this.v = new Matrix()
-    // Precalculated matrix with non animated properties
-    this.pre = new Matrix()
-    this.appliedTransformations = 0
     this.initDynamicPropertyContainer(container ?? elem)
     if (data.p && 's' in data.p) {
       this.px = PropertyFactory.getProp(

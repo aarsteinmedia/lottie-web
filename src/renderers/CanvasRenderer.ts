@@ -13,8 +13,8 @@ import { PreserveAspectRatio, RendererType } from '@/utils/enums'
 import { Matrix } from '@/utils/Matrix'
 
 export class CanvasRenderer extends CanvasRendererBase {
-  rendererType: RendererType
-  transformMat: Matrix
+  rendererType = RendererType.Canvas
+  transformMat = new Matrix()
 
   constructor(animationItem: AnimationItem, config?: CanvasRendererConfig) {
     super()
@@ -46,9 +46,7 @@ export class CanvasRenderer extends CanvasRendererBase {
     this.contextData = new CVContextData()
     this.elements = []
     this.pendingElements = []
-    this.transformMat = new Matrix()
     this.completeLayers = false
-    this.rendererType = RendererType.Canvas
     if (this.renderConfig.clearCanvas) {
       this.ctxTransform = this.contextData.transform.bind(this.contextData)
       this.ctxOpacity = this.contextData.opacity.bind(this.contextData)

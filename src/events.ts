@@ -98,9 +98,8 @@ export class RenderFrameErrorEvent {
   currentTime: number
   nativeError: unknown
   target?: undefined | AnimationItem
-  type: AnimationEventName
+  type: AnimationEventName = 'renderFrameError'
   constructor(nativeError: unknown, currentTime: number) {
-    this.type = 'renderFrameError'
     this.nativeError = nativeError
     this.currentTime = currentTime
   }
@@ -109,9 +108,8 @@ export class RenderFrameErrorEvent {
 export class ConfigErrorEvent {
   nativeError: unknown
   target?: undefined | AnimationItem
-  type: AnimationEventName
+  type: AnimationEventName = 'configError'
   constructor(nativeError: unknown, _: number) {
-    this.type = 'configError'
     this.nativeError = nativeError
   }
 }

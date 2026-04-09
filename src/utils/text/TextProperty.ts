@@ -23,22 +23,20 @@ import { BaseProperty } from '@/utils/properties/BaseProperty'
 
 export class TextProperty extends BaseProperty {
   _frameId: number
-  canResize: boolean
+  canResize = false
   currentData: DocumentData
   override data: TextData
   defaultBoxWidth: Vector2 = [0, 0]
-  override effectsSequence: TextEffectFunction[]
+  override effectsSequence: TextEffectFunction[] = []
   override elem: ElementInterfaceIntersect
-  keysIndex: number
-  minimumFontSize: number
-  override pv: DocumentData | string
-  override v: DocumentData | string
+  keysIndex = 0
+  minimumFontSize = 1
+  override pv: DocumentData | string = ''
+  override v: DocumentData | string = ''
 
   constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
     this._frameId = initialDefaultFrame
-    this.pv = ''
-    this.v = ''
     this.kf = false
     this._isFirstFrame = true
     this._mdf = false
@@ -48,10 +46,6 @@ export class TextProperty extends BaseProperty {
     this.data = data
     this.elem = elem
     this.comp = this.elem.comp
-    this.keysIndex = 0
-    this.canResize = false
-    this.minimumFontSize = 1
-    this.effectsSequence = []
     this.currentData = {
       __complete: false,
       ascent: 0,

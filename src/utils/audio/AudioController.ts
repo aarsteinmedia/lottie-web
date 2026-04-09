@@ -6,16 +6,13 @@ import { isServer } from '@/utils/helpers/constants'
 export class AudioController {
   public audioFactory?: undefined | AudioFactory
 
-  public audios: AudioElement[]
+  public audios: AudioElement[] = []
   isPlaying?: boolean
-  private _isMuted: boolean
-  private _volume: number
+  private _isMuted = false
+  private _volume = 1
 
   constructor(audioFactory?: AudioFactory) {
-    this.audios = []
     this.audioFactory = audioFactory
-    this._volume = 1
-    this._isMuted = false
   }
 
   public addAudio(audio: AudioElement) {

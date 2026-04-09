@@ -15,9 +15,23 @@ import { ShapeElement } from '@/elements/ShapeElement'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class HShapeElement extends ShapeElement {
-  animatedContents: unknown[]
-  currentBBox: BoundingBox
-  prevViewData: HShapeElement[]
+  /**
+   * List of animated components.
+   */
+  animatedContents: unknown[] = []
+  /**
+   * Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
+   */
+  currentBBox = {
+    h: 0,
+    w: 0,
+    x: 999999,
+    y: -999999,
+  } as BoundingBox
+  /**
+   * List of elements that have been created.
+   */
+  prevViewData: HShapeElement[] = []
   shapeBoundingBox = {
     bottom: 0,
     left: 0,
@@ -25,8 +39,11 @@ export class HShapeElement extends ShapeElement {
     top: 0,
   }
   shapeCont?: undefined | SVGElement
-  shapesContainer: SVGGElement
-  stylesList: CSSStyleDeclaration[]
+  shapesContainer = createNS<SVGGElement>('g')
+  /**
+   * List of styles that will be applied to shapes.
+   */
+  stylesList: CSSStyleDeclaration[] = []
   svgElement?: SVGSVGElement
   tempBoundingBox = {
     height: 0,
@@ -47,30 +64,15 @@ export class HShapeElement extends ShapeElement {
     this.shapes = []
     // Full shape data
     this.shapesData = data.shapes
-    // List of styles that will be applied to shapes
-    this.stylesList = []
     // List of modifiers that will be applied to shapes
     this.shapeModifiers = []
     // List of items in shape tree
     this.itemsData = []
     // List of items in previous shape tree
     this.processedElements = []
-    // List of animated components
-    this.animatedContents = []
-    this.shapesContainer = createNS('g')
     this.initElement(
       data, globalData, comp
     )
-    // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
-    // List of elements that have been created
-    this.prevViewData = []
-    this.currentBBox = {
-      h: 0,
-      w: 0,
-      x: 999999,
-      y: -999999,
-    } as BoundingBox
-
     this._renderShapeFrame = this.renderInnerContent
   }
 

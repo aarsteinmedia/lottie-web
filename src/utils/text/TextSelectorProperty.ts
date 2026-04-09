@@ -6,14 +6,14 @@ import { BaseProperty } from '@/utils/properties/BaseProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export class TextSelectorProperty extends BaseProperty {
-  _currentTextLength: number
+  _currentTextLength = -1
   a: ValueProperty
   b?: ValueProperty
   override data: TextRangeValue
   override e: ValueProperty | { v: number }
   override elem: ElementInterfaceIntersect
-  finalE: number
-  finalS: number
+  finalE = 0
+  finalS = 0
   ne: ValueProperty
   o: ValueProperty
   rn?: number
@@ -22,13 +22,10 @@ export class TextSelectorProperty extends BaseProperty {
   xe: ValueProperty
   constructor(elem: ElementInterfaceIntersect, data: TextRangeValue) {
     super()
-    this._currentTextLength = -1
     this.k = false
     this.data = data
     this.elem = elem
     this.comp = elem.comp
-    this.finalS = 0
-    this.finalE = 0
     this.initDynamicPropertyContainer(elem)
     this.s = PropertyFactory.getProp(
       elem,

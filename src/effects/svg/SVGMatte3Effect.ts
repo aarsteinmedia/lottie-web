@@ -10,14 +10,13 @@ export class SVGMatte3Effect {
   elem: ElementInterfaceIntersect
   filterElem: SVGFilterElement
   filterManager: GroupEffect
-  initialized?: boolean
+  initialized = false
 
   constructor(
     filterElem: SVGFilterElement,
     filterManager: GroupEffect,
     elem: ElementInterfaceIntersect
   ) {
-    this.initialized = false
     this.filterManager = filterManager
     this.filterElem = filterElem
     this.elem = elem

@@ -4,9 +4,9 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import { pointPool } from '@/utils/pooling/pointPool'
 
 export class ShapePath {
-  _length: number
-  _maxLength: number
-  c: boolean
+  _length = 0
+  _maxLength = 8
+  c = false
   e?: ShapePath[]
   i: Vector2[]
   lengths: BezierLength[] = []
@@ -18,9 +18,6 @@ export class ShapePath {
   }
 
   constructor() {
-    this.c = false
-    this._length = 0
-    this._maxLength = 8
     this.v = createSizedArray(this._maxLength)
     this.o = createSizedArray(this._maxLength)
     this.i = createSizedArray(this._maxLength)

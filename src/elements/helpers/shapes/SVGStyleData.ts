@@ -10,10 +10,10 @@ import type { ShapeType } from '@/utils/enums'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SVGStyleData {
-  _mdf: boolean
+  _mdf = false
   closed: boolean
   coOp?: undefined | number
-  d: string
+  d = ''
   data: Shape
   finalTransform?: undefined | Transformer
   gr?: undefined | SVGGElement
@@ -21,8 +21,8 @@ export class SVGStyleData {
   hd?: undefined | boolean
   it?: undefined | ShapeDataInterface[]
   lvl: number
-  msElem: null | SVGMaskElement | SVGPathElement
-  pElem: SVGPathElement
+  msElem: null | SVGMaskElement | SVGPathElement = null
+  pElem = createNS<SVGPathElement>('path')
   prevViewData?: undefined | SVGElementInterface[]
   pt?: undefined | VectorProperty
   style?: undefined | SVGStyleData
@@ -33,12 +33,8 @@ export class SVGStyleData {
   constructor(data: Shape, level: number) {
     this.data = data
     this.type = data.ty
-    this.d = ''
     this.lvl = level
-    this._mdf = false
     this.closed = data.hd === true
-    this.pElem = createNS<SVGPathElement>('path')
-    this.msElem = null
   }
 
   reset() {

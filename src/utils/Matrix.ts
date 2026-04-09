@@ -20,14 +20,11 @@ import { createTypedArray } from '@/utils/helpers/arrays'
  * All values are handled as floating point values.
  */
 export class Matrix {
-  props: Float32Array
-  private _identity: boolean
-  private _identityCalculated: boolean
+  props = createTypedArray(ArrayType.Float32, 16) as Float32Array
+  private _identity = true
+  private _identityCalculated = false
 
   constructor() {
-    this.props = createTypedArray(ArrayType.Float32, 16) as Float32Array
-    this._identity = true
-    this._identityCalculated = false
     this.reset()
   }
 

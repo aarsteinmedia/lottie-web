@@ -3,12 +3,12 @@ import type { CompElementInterface } from '@/types'
 export class CompExpressionInterface {
   _name?: undefined | string
   comp: CompElementInterface
-  displayStartTime: number
+  displayStartTime = 0
   frameDuration: number
   height?: undefined | number
   layer: CompExpressionInterface
   numLayers?: undefined | number
-  pixelAspect: number
+  pixelAspect = 1
   width?: undefined | number
   constructor(comp: CompElementInterface) {
     this.comp = comp
@@ -17,9 +17,7 @@ export class CompExpressionInterface {
 
     this.height = comp.data?.h || comp.globalData?.compSize?.h
     this.width = comp.data?.w || comp.globalData?.compSize?.w
-    this.pixelAspect = 1
     this.frameDuration = 1 / (comp.globalData?.frameRate ?? 60)
-    this.displayStartTime = 0
     this.numLayers = comp.layers?.length
   }
 

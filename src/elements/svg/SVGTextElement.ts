@@ -38,7 +38,7 @@ export class SVGTextLottieElement extends TextElement {
   override renderElement = SVGBaseElement.prototype.renderElement
   setMatte = SVGBaseElement.prototype.setMatte
   textContainer?: SVGTextElement
-  textSpans: TextSpan[]
+  textSpans: TextSpan[] = []
 
   constructor(
     data: LottieLayer,
@@ -46,7 +46,6 @@ export class SVGTextLottieElement extends TextElement {
     comp: ElementInterfaceIntersect
   ) {
     super()
-    this.textSpans = []
     this.renderType = RendererType.SVG
 
     this.initElement(
