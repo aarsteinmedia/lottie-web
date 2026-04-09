@@ -4,7 +4,7 @@
     "swc": true
   },
   "compilerOptions": {
-    "baseUrl": ".",
+    "rootDir": ".",
     "declaration": true,
     "declarationDir": "types",
     "emitDeclarationOnly": true,
@@ -16,6 +16,7 @@
       "DOM.Iterable",
       "ES2023"
     ],
+    "types": ["node"],
     "module": "preserve",
     "moduleResolution": "Bundler",
     "noEmit": false,
@@ -60,6 +61,7 @@
   "exclude": [
     "**/node_modules",
     "**/dist",
+    "**/types",
     "**/preview"
   ]
 }

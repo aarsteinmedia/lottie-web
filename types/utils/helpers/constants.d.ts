@@ -1,2 +1,0 @@
-declare const degToRads: number, initialDefaultFrame = -999999, roundCorner = 0.5519, namespaceXlink = "http://www.w3.org/1999/xlink", namespaceSVG = "http://www.w3.org/2000/svg", namespaceXML = "http://www.w3.org/XML/1998/namespace", isServer: boolean, inBrowser: boolean, isSafari: boolean;
-export { degToRads, inBrowser, initialDefaultFrame, isSafari, isServer, namespaceSVG, namespaceXlink, namespaceXML, roundCorner };
