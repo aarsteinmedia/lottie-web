@@ -33,11 +33,16 @@ export function freeze() {
 }
 
 export function getRegisteredAnimations() {
-  const lenAnims = registeredAnimations.length,
+  const { length } = registeredAnimations,
     animations = []
 
-  for (let i = 0; i < lenAnims; i++) {
-    animations.push(registeredAnimations[i]?.animation)
+  for (let i = 0; i < length; i++) {
+    const registeredAnimation = registeredAnimations[i]
+
+    if (!registeredAnimation) {
+      continue
+    }
+    animations.push(registeredAnimation.animation)
   }
 
   return animations

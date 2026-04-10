@@ -15,15 +15,13 @@ import { createNS } from '@/utils/helpers/svgElements'
 export class SVGRenderer extends SVGRendererBase {
   rendererType = RendererType.SVG
 
-  constructor(animationItem: AnimationItem, config?: SVGRendererConfig) {
+  constructor(animationItem: AnimationItem, config: SVGRendererConfig = {}) {
     super()
     this.animationItem = animationItem
-    this.layers = []
-    this.renderedFrame = -1
     this.svgElement = createNS<SVGSVGElement>('svg')
     let ariaLabel = ''
 
-    if (config?.title) {
+    if (config.title) {
       const titleElement = createNS<SVGTitleElement>('title'),
         titleId = createElementID()
 
@@ -32,7 +30,7 @@ export class SVGRenderer extends SVGRendererBase {
       this.svgElement.appendChild(titleElement)
       ariaLabel += titleId
     }
-    if (config?.description) {
+    if (config.description) {
       const descElement = createNS<SVGDescElement>('desc'),
         descId = createElementID()
 
@@ -47,32 +45,33 @@ export class SVGRenderer extends SVGRendererBase {
     const defs = createNS<SVGDefsElement>('defs')
 
     this.svgElement.appendChild(defs)
+
     const maskElement = createNS<SVGGElement>('g')
 
     this.svgElement.appendChild(maskElement)
     this.layerElement = maskElement
     this.renderConfig = {
-      className: config?.className || '',
-      contentVisibility: config?.contentVisibility || 'visible',
+      className: config.className || '',
+      contentVisibility: config.contentVisibility || 'visible',
       filterSize: {
-        height: config?.filterSize?.height || '100%',
-        width: config?.filterSize?.width || '100%',
-        x: config?.filterSize?.x || '0%',
-        y: config?.filterSize?.y || '0%',
+        height: config.filterSize?.height || '100%',
+        width: config.filterSize?.width || '100%',
+        x: config.filterSize?.x || '0%',
+        y: config.filterSize?.y || '0%',
       },
-      focusable: config?.focusable,
-      height: config?.height,
-      hideOnTransparent: config?.hideOnTransparent !== false,
-      id: config?.id || '',
+      focusable: config.focusable,
+      height: config.height,
+      hideOnTransparent: config.hideOnTransparent !== false,
+      id: config.id || '',
       imagePreserveAspectRatio:
-        config?.imagePreserveAspectRatio || 'xMidYMid slice',
-      preserveAspectRatio: config?.preserveAspectRatio || 'xMidYMid meet',
-      progressiveLoad: config?.progressiveLoad || false,
+        config.imagePreserveAspectRatio || 'xMidYMid slice',
+      preserveAspectRatio: config.preserveAspectRatio || 'xMidYMid meet',
+      progressiveLoad: config.progressiveLoad || false,
       runExpressions:
-        config?.runExpressions === undefined || config.runExpressions,
-      viewBoxOnly: config?.viewBoxOnly || false,
-      viewBoxSize: config?.viewBoxSize || false,
-      width: config?.width,
+        config.runExpressions === undefined || config.runExpressions,
+      viewBoxOnly: config.viewBoxOnly || false,
+      viewBoxSize: config.viewBoxSize || false,
+      width: config.width,
     }
 
     this.globalData = {
@@ -82,9 +81,6 @@ export class SVGRenderer extends SVGRendererBase {
       frameRate: 60,
       renderConfig: this.renderConfig,
     } as GlobalData
-    this.elements = []
-    this.pendingElements = []
-    this.destroyed = false
   }
 
   override createComp(data: LottieLayer) {

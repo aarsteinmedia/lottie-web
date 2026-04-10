@@ -11,11 +11,9 @@ import { namespaceXlink } from '@/utils/helpers/constants'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class ImageElement extends SVGBaseElement {
-  assetData?: undefined | LottieAsset | null
-
-  layers: LottieLayer[] = []
-
-  sourceRect: SourceRect | null
+  public assetData?: undefined | LottieAsset | null
+  public layers: LottieLayer[] = []
+  public sourceRect: SourceRect | null
 
   constructor(
     data: LottieLayer,

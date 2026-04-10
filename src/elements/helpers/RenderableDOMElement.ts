@@ -7,7 +7,7 @@ import type {
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
 
 export abstract class RenderableDOMElement extends RenderableElement {
-  innerElem?: undefined | SVGGraphicsElement | HTMLElement | null
+  innerElem: SVGGraphicsElement | HTMLElement | null = null
 
   createContainerElements() {
     throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)

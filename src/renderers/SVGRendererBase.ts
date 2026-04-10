@@ -20,7 +20,7 @@ import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export abstract class SVGRendererBase extends BaseRenderer {
-  destroyed?: boolean
+  destroyed = false
   renderConfig?: SVGRendererConfig
   svgElement?: SVGSVGElement
 

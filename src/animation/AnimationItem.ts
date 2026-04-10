@@ -241,7 +241,7 @@ export class AnimationItem extends BaseEvent {
       this.trigger('config_ready')
       this.preloadImages()
       this.loadSegments()
-      this.updaFrameModifier()
+      this.updateFrameModifier()
       this.waitForFontsLoaded()
       if (this.isPaused) {
         this.audioController.pause()
@@ -553,13 +553,16 @@ export class AnimationItem extends BaseEvent {
       this.imagesLoaded.bind(this))
   }
 
-  public renderFrame(_num?: number | null) {
+  public renderFrame(num?: number | null) {
     if (!this.isLoaded) {
       return
     }
+
+    const frameToRender = num ?? this.currentFrame + this.firstFrame
+
     try {
       this.expressionsPlugin?.resetFrame()
-      this.renderer.renderFrame(this.currentFrame + this.firstFrame)
+      this.renderer.renderFrame(frameToRender)
     } catch (error) {
       this.triggerRenderFrameError(error)
     }
@@ -589,9 +592,9 @@ export class AnimationItem extends BaseEvent {
     this.gotoFrame()
   }
 
-  public setData(wrapper: HTMLElement, animationDatFromProps?: AnimationData) {
+  public setData(wrapper: HTMLElement, animationDataFromProps?: AnimationData) {
     try {
-      let animationData = animationDatFromProps
+      let animationData = animationDataFromProps
 
       if (animationData && typeof animationData !== 'object') {
         animationData = JSON.parse(animationData)
@@ -601,7 +604,7 @@ export class AnimationItem extends BaseEvent {
         animationData,
         wrapper,
       }
-      const wrapperAttributes = wrapper.attributes
+      const { attributes: wrapperAttributes } = wrapper
 
       params.path =
         wrapperAttributes.getNamedItem('data-animation-path')?.value ??
@@ -673,7 +676,7 @@ export class AnimationItem extends BaseEvent {
       return
     }
     this.playDirection = val < 0 ? -1 : 1
-    this.updaFrameModifier()
+    this.updateFrameModifier()
   }
 
   public setLoop(isLooping: boolean) {
@@ -727,20 +730,25 @@ export class AnimationItem extends BaseEvent {
       }
       if (params.animationData) {
         this.setupAnimation(params.animationData)
-      } else if (params.path) {
-        if (params.path.includes('\\')) {
-          this.path = params.path.slice(0,
-            Math.max(0, params.path.lastIndexOf('\\') + 1))
-        } else {
-          this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
-        }
-        this.fileName = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
-        this.fileName = this.fileName.slice(0,
-          Math.max(0, this.fileName.lastIndexOf('.json')))
-        loadAnimation(
-          params.path, this.configAnimation, this.onSetupError
-        )
+
+        return
       }
+
+      if (!params.path) {
+        return
+      }
+      if (params.path.includes('\\')) {
+        this.path = params.path.slice(0,
+          Math.max(0, params.path.lastIndexOf('\\') + 1))
+      } else {
+        this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
+      }
+      this.fileName = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
+      this.fileName = this.fileName.slice(0,
+        Math.max(0, this.fileName.lastIndexOf('.json')))
+      loadAnimation(
+        params.path, this.configAnimation, this.onSetupError
+      )
     } catch (error) {
       console.error(`${this.constructor.name}:\n`, error)
       throw new Error(`${this.constructor.name}: Could not set params`)
@@ -771,7 +779,7 @@ export class AnimationItem extends BaseEvent {
       return
     }
     this.playSpeed = val
-    this.updaFrameModifier()
+    this.updateFrameModifier()
   }
 
   public setSubframe(flag = false) {
@@ -913,13 +921,6 @@ export class AnimationItem extends BaseEvent {
     this.audioController.unmute()
   }
 
-  public updaFrameModifier() {
-    this.frameModifier = (this.frameMult *
-      this.playSpeed *
-      this.playDirection) as AnimationDirection
-    this.audioController.setRate(this.playSpeed * this.playDirection)
-  }
-
   public updateDocumentData(
     path: unknown[],
     documentData: DocumentData,
@@ -934,6 +935,13 @@ export class AnimationItem extends BaseEvent {
     } catch (error) {
       console.error(this.constructor.name, error)
     }
+  }
+
+  public updateFrameModifier() {
+    this.frameModifier = (this.frameMult *
+      this.playSpeed *
+      this.playDirection) as AnimationDirection
+    this.audioController.setRate(this.playSpeed * this.playDirection)
   }
 
   public waitForFontsLoaded() {

@@ -7,9 +7,9 @@ import type {
 import { FrameElement } from '@/elements/helpers/FrameElement'
 
 export abstract class RenderableElement extends FrameElement {
-  hidden?: boolean
-  isInRange?: boolean
-  isTransparent?: boolean
+  hidden = false
+  isInRange = false
+  isTransparent = false
   renderableComponents: RenderableComponent[] = []
 
   addRenderableComponent(component: RenderableComponent) {
@@ -26,13 +26,17 @@ export abstract class RenderableElement extends FrameElement {
       this.data.ip - this.data.st <= num &&
       this.data.op - this.data.st > num
     ) {
-      if (this.isInRange !== true) {
+      if (!this.isInRange) {
         this.globalData._mdf = true
         this._mdf = true
         this.isInRange = true
         this.show()
       }
-    } else if (this.isInRange !== false) {
+
+      return
+    }
+
+    if (this.isInRange) {
       this.globalData._mdf = true
       this.isInRange = false
       this.hide()

@@ -13,16 +13,17 @@ import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import PropertyFactory from '@/utils/PropertyFactory'
 
 export class AudioElement extends RenderableElement {
-  _canPlay = false
-  _currentTime = 0
-  _isPlaying = false
-  _previousVolume: number | null = null
-  _volume = 1
-  _volumeMultiplier = 1
-  assetData: null | LottieAsset
-  audio: Audio
-  lv: MultiDimensionalProperty
-  tm: ValueProperty
+  public assetData: null | LottieAsset
+  public audio: Audio
+  public lv: MultiDimensionalProperty
+  public tm: ValueProperty
+
+  private _canPlay = false
+  private _currentTime = 0
+  private _isPlaying = false
+  private _previousVolume: number | null = null
+  private _volume = 1
+  private _volumeMultiplier = 1
 
   constructor(
     data: LottieLayer,
