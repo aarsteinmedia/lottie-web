@@ -24,7 +24,7 @@ import { getExpressionInterfaces } from '@/utils/expressions'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
 export abstract class BaseElement {
-  baseElement?: HTMLElement | SVGGElement
+  baseElement: null | HTMLElement | SVGGElement = null
   comp?: CompElementInterface
   compInterface?: CompExpressionInterface
   data?: LottieLayer
@@ -33,7 +33,7 @@ export abstract class BaseElement {
   frameDuration = 1
   globalData?: GlobalData
   itemsData: ShapeGroupData[] = []
-  layerElement?: SVGGElement | HTMLElement
+  layerElement: null | SVGGElement | HTMLElement = null
   layerId?: string
   layerInterface?: null | LayerExpressionInterface = null
   maskManager?: MaskElement | CVMaskElement

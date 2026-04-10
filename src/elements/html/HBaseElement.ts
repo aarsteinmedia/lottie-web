@@ -10,10 +10,10 @@ import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class HBaseElement extends RenderableElement {
-  maskedElement?: undefined | SVGGElement | HTMLElement
-  matteElement?: SVGGElement | HTMLElement
-  svgElement?: SVGSVGElement
-  transformedElement?: undefined | SVGGElement | HTMLElement
+  maskedElement: null | SVGGElement | HTMLElement = null
+  matteElement: null | SVGGElement | HTMLElement = null
+  svgElement: null | SVGSVGElement = null
+  transformedElement: null | SVGGElement | HTMLElement = null
   constructor() {
     super()
     const { getBaseElement } = SVGBaseElement.prototype,
