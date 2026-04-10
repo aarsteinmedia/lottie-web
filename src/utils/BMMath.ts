@@ -59,8 +59,14 @@ const BMMath = {} as unknown as BMMathType
   const { length } = propertyNames
 
   for (let i = 0; i < length; i += 1) {
-    // @ts-expect-error assign to read only
-    BMMath[propertyNames[i]] = Math[propertyNames[i]]
+    const propertyName = propertyNames[i]
+
+    if (!propertyName) {
+      continue
+    }
+
+    // @ts-expect-error: ts(2540)
+    BMMath[propertyName] = Math[propertyName]
   }
 })()
 

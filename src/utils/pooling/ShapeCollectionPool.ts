@@ -32,8 +32,8 @@ export function releaseShape(shapeCollection: ShapeCollection) {
     pool = double(pool)
     _maxLength *= 2
   }
-  // @ts-expect-error: TODO:
-  pool[_length] = shapeCollection
+
+  pool[_length] = shapeCollection as unknown as PoolElement
 
   _length++
 }

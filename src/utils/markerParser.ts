@@ -10,8 +10,13 @@ const parsePayloadLines = (payload: string) => {
     const line = lines[i]?.split(':') ?? []
 
     if (line.length === 2) {
-      // @ts-expect-error: TODO:
-      keys[line[0]] = line[1]?.trim()
+      const [lineOne, lineTwo] = line
+
+      if (!lineOne || !lineTwo) {
+        continue
+      }
+
+      keys[lineOne] = lineTwo.trim()
       keysCount++
     }
   }

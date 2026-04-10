@@ -86,7 +86,7 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
       lastFrame: initialDefaultFrame,
       lastIndex: 0
     } as Caching
-    // @ts-expect-error
+
     this.effectsSequence = [this.interpolateShapeCurrentTime.bind(this)]
     this.getValue = this.processEffectsSequence
   }

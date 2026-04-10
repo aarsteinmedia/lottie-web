@@ -22,7 +22,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   _cachingAtTime?: Caching
   public comp?: CompElementInterface | undefined
   public override data?: Shape = undefined
-  public effectsSequence: ((arg: unknown) => ShapePath)[] = []
+  public effectsSequence: ((arg: unknown) => ShapePath | undefined)[] = []
   public elem?: SVGShapeElement | CVShapeElement | HShapeElement
   frameId?: number
   public k?: boolean
