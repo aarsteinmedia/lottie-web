@@ -4,7 +4,7 @@ import { Matrix } from '@/utils/Matrix'
 
 class CanvasContext {
   fillStyle = ''
-  id = Math.random()
+  id: number
   lineCap = ''
   lineJoin = ''
   lineWidth: number | string = ''
@@ -12,6 +12,9 @@ class CanvasContext {
   opacity = -1
   strokeStyle = ''
   transform = createTypedArray(ArrayType.Float32, 16) as number[]
+  constructor() {
+    this.id = Math.random()
+  }
 }
 
 export class CVContextData {
@@ -31,10 +34,10 @@ export class CVContextData {
   currentMiterLimit: string | number = ''
   currentOpacity = 1
   currentStrokeStyle = ''
-  nativeContext = null as unknown as null | CanvasRenderingContext2D
+  nativeContext: null | CanvasRenderingContext2D = null
   stack: CanvasContext[] = []
 
-  transformMat: Matrix
+  transformMat = new Matrix()
 
   constructor() {
     const len = 15
@@ -45,7 +48,6 @@ export class CVContextData {
       this.stack[i] = canvasContext
     }
     this._length = len
-    this.transformMat = new Matrix()
   }
 
   duplicate() {

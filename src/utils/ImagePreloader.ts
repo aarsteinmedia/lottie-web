@@ -9,14 +9,14 @@ import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class ImagePreloader {
-  assetsPath: string
-  images: ImageData[]
-  imagesLoadedCb: null | ((images: ImageData[] | null) => void)
-  loadedAssets: number
-  loadedFootagesCount: number
-  path: string
-  totalFootages: number
-  totalImages: number
+  assetsPath = ''
+  images: ImageData[] = []
+  imagesLoadedCb: null | ((images: ImageData[] | null) => void) = null
+  loadedAssets = 0
+  loadedFootagesCount = 0
+  path = ''
+  totalFootages = 0
+  totalImages = 0
   private _createImageData?: (assetData: LottieAsset) => ImageData | undefined
   private _elementHelper?: undefined | SVGElement
   private _footageLoaded
@@ -27,14 +27,6 @@ export class ImagePreloader {
     this._footageLoaded = this.footageLoaded.bind(this)
     this.testImageLoaded = this.testImageLoaded.bind(this)
     this.createFootageData = this.createFootageData.bind(this)
-    this.assetsPath = ''
-    this.path = ''
-    this.totalImages = 0
-    this.totalFootages = 0
-    this.loadedAssets = 0
-    this.loadedFootagesCount = 0
-    this.imagesLoadedCb = null
-    this.images = []
     this.proxyImage = this._createProxyImage()
   }
 

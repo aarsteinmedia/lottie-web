@@ -3,15 +3,10 @@ import type { Transformer, TransformSequence } from '@/types'
 import { Matrix } from '@/utils/Matrix'
 
 export class ShapeTransformManager {
-  sequenceList: TransformSequence[]
-  sequences: TransformSequence
+  sequenceList: TransformSequence[] = []
+  sequences: TransformSequence = {}
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  transform_key_count: number
-  constructor() {
-    this.sequences = {}
-    this.sequenceList = []
-    this.transform_key_count = 0
-  }
+  transform_key_count = 0
 
   addTransformSequence(transforms: { transform: Transformer }[]) {
     const { length } = transforms

@@ -27,11 +27,11 @@ import { createNS } from '@/utils/helpers/svgElements'
 
 export class HybridRendererBase extends BaseRenderer {
   camera?: HCameraElement
-  destroyed: boolean
+  destroyed = false
   renderConfig: HTMLRendererConfig
-  rendererType: RendererType
+  rendererType = RendererType.HTML
   resizerElem?: HTMLDivElement
-  supports3d: boolean
+  supports3d = true
 
   threeDElements: ThreeDElements[]
 
@@ -60,10 +60,7 @@ export class HybridRendererBase extends BaseRenderer {
     this.pendingElements = []
     this.elements = []
     this.threeDElements = []
-    this.destroyed = false
     this.camera = null as unknown as HCameraElement
-    this.supports3d = true
-    this.rendererType = RendererType.HTML
 
     const {
       buildItem, createNull, renderFrame

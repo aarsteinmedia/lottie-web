@@ -360,9 +360,8 @@ function getDistancePerc(perc: number,
 
 export class BezierData {
   points: BezierPoint[]
-  segmentLength: number
+  segmentLength = 0
   constructor(length: number) {
-    this.segmentLength = 0
     this.points = Array.from({ length })
   }
 }

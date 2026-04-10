@@ -58,20 +58,20 @@ export class AnimationItem extends BaseEvent {
   )
   public expressionsPlugin = getExpressionsPlugin()
   public firstFrame = 0
-  public frameModifier = 1 as AnimationDirection
+  public frameModifier: AnimationDirection = 1
   public frameMult = 0
   public frameRate = 60
   public imagePreloader = new ImagePreloader()
   public isLoaded = false
-  public isPaused = false
+  public isPaused = true
   public isSubframeEnabled = getSubframeEnabled()
-  public loop: boolean | number = false
+  public loop: boolean | number = true
   public markers: MarkerData[] = []
   public name = ''
   public onError?: (arg: unknown) => void
   public path = ''
   public playCount = 0
-  public playDirection = 1 as AnimationDirection
+  public playDirection: AnimationDirection = 1
   public playSpeed = 1
   public projectInterface = new ProjectInterface()
   public renderer = null as unknown as SVGRenderer | CanvasRenderer | HybridRenderer

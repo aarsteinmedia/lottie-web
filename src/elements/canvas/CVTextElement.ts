@@ -25,15 +25,15 @@ export class CVTextElement extends TextElement {
   override createContent = CVBaseElement.prototype.createContent
   createElements = CVBaseElement.prototype.createElements
   override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
-  currentRender: unknown
+  currentRender: unknown = null
   override destroy = CVBaseElement.prototype.destroy
   exitLayer = CVBaseElement.prototype.exitLayer
-  fill?: boolean
-  fillColorAnim: boolean
+  fill = false
+  fillColorAnim = false
   override hide = CVBaseElement.prototype.hide
   hideElement = CVBaseElement.prototype.hideElement
   override initRendererElement = CVBaseElement.prototype.initRendererElement
-  justifyOffset: number
+  justifyOffset = 0
   prepareLayer = CVBaseElement.prototype.prepareLayer
   renderedLetters: LetterProps[] = []
   override renderFrame = CVBaseElement.prototype.renderFrame
@@ -43,18 +43,18 @@ export class CVTextElement extends TextElement {
   override setBlendMode = CVBaseElement.prototype.setBlendMode
   override show = CVBaseElement.prototype.show
   showElement = CVBaseElement.prototype.showElement
-  stroke?: boolean
-  strokeColorAnim: boolean
-  strokeWidthAnim: boolean
-  textSpans: TextSpan[]
+  stroke = false
+  strokeColorAnim = false
+  strokeWidthAnim = false
+  textSpans: TextSpan[] = []
   tHelper = createTag<HTMLCanvasElement>('canvas').getContext('2d')
-  values: {
-    fill: string
-    fValue: string
-    stroke: string
-    sWidth: number
+  values = {
+    fill: transparent,
+    fValue: '',
+    stroke: transparent,
+    sWidth: 0,
   }
-  yOffset: number
+  yOffset = 0
 
   constructor(
     data: LottieLayer,
@@ -62,22 +62,7 @@ export class CVTextElement extends TextElement {
     comp: ElementInterfaceIntersect
   ) {
     super()
-    this.textSpans = []
-    this.yOffset = 0
-    this.fillColorAnim = false
-    this.strokeColorAnim = false
-    this.strokeWidthAnim = false
-    this.stroke = false
-    this.fill = false
-    this.justifyOffset = 0
-    this.currentRender = null
     this.renderType = RendererType.Canvas
-    this.values = {
-      fill: transparent,
-      fValue: '',
-      stroke: transparent,
-      sWidth: 0,
-    }
 
     this.initElement(
       data, globalData, comp

@@ -56,7 +56,7 @@ export class ShapeProperty extends ShapeBaseProperty {
 }
 
 export class KeyframedShapeProperty extends ShapeBaseProperty {
-  public lastFrame
+  public lastFrame = initialDefaultFrame
   constructor(
     elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {
@@ -82,7 +82,6 @@ export class KeyframedShapeProperty extends ShapeBaseProperty {
     this.localShapeCollection = newShapeCollection()
     this.paths = this.localShapeCollection
     this.paths.addShape(this.v)
-    this.lastFrame = initialDefaultFrame
     this._caching = {
       lastFrame: initialDefaultFrame,
       lastIndex: 0

@@ -19,17 +19,16 @@ const idPrefix = 'filter_result_',
   registeredEffects: RegisteredEffects = {}
 
 export class SVGEffects {
-  filters: GroupEffect[]
+  filters: GroupEffect[] = []
   constructor(elem: ElementInterfaceIntersect) {
     let source = 'SourceGraphic'
 
     const filId = createElementID(),
       fil = FiltersFactory.createFilter(filId, true)
 
-    let count = 0
+    let count = 0,
+      filterManager: null | GroupEffect
 
-    this.filters = []
-    let filterManager: null | GroupEffect
     const { length } = elem.data.ef ?? []
 
     for (let i = 0; i < length; i++) {

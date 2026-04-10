@@ -19,7 +19,6 @@ export class CVSolidElement extends CVBaseElement {
     comp: ElementInterfaceIntersect
   ) {
     super()
-    // console.log(this.initRendererElement)
     this.initElement(
       data, globalData, comp
     )

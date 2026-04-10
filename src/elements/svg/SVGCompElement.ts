@@ -21,7 +21,7 @@ export class SVGCompElement extends SVGBaseElement {
   buildItem = SVGRendererBase.prototype.buildItem
   override checkLayers = SVGRendererBase.prototype.checkLayers
   checkPendingElements = SVGRendererBase.prototype.checkPendingElements
-  completeLayers: boolean
+  completeLayers = false
   configAnimation = SVGRendererBase.prototype.configAnimation
   createAudio = SVGRendererBase.prototype.createAudio
   createCamera = SVGRendererBase.prototype.createCamera
@@ -45,7 +45,7 @@ export class SVGCompElement extends SVGBaseElement {
   override initElement = CompElement.prototype.initElement
   initItems = SVGRendererBase.prototype.initItems
   layers?: undefined | LottieLayer[]
-  pendingElements: ElementInterfaceIntersect[]
+  pendingElements: ElementInterfaceIntersect[] = []
   override prepareFrame = CompElement.prototype.prepareFrame
   renderedFrame = -1
   override renderFrame = CompElement.prototype.renderFrame
@@ -55,7 +55,7 @@ export class SVGCompElement extends SVGBaseElement {
   setProjectInterface = SVGRendererBase.prototype.setProjectInterface
   setupGlobalData = SVGRendererBase.prototype.setupGlobalData
   override show = CompElement.prototype.show
-  supports3d: boolean
+  supports3d = true
   tm?: KeyframedValueProperty
   updateContainerSize = SVGRendererBase.prototype.updateContainerSize
 
@@ -66,9 +66,6 @@ export class SVGCompElement extends SVGBaseElement {
   ) {
     super()
     this.layers = data.layers as LottieLayer[] | undefined
-    this.supports3d = true
-    this.completeLayers = false
-    this.pendingElements = []
     this.elements = this.layers ? createSizedArray(this.layers.length) : []
 
     this.initElement(

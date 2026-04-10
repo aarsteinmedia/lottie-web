@@ -19,14 +19,12 @@ import { GroupEffect } from '@/effects/GroupEffect'
 
 export class EffectsManager {
   _mdf?: boolean
-  effectElements: EffectInterface[]
+  effectElements: EffectInterface[] = []
   constructor(
     data: LottieLayer, element: ElementInterfaceIntersect, _dynamicProperties?: DynamicPropertyContainer[]
   ) {
-    const effects = data.ef ?? []
-
-    this.effectElements = []
-    const { length } = effects
+    const effects = data.ef ?? [],
+      { length } = effects
 
     for (let i = 0; i < length; i++) {
       const effectItem = new GroupEffect(

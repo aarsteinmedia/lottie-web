@@ -5,12 +5,10 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import { release } from '@/utils/pooling/ShapePool'
 
 export class ShapeCollection {
-  public _length: number
-  public _maxLength: number
+  public _length = 0
+  public _maxLength = 4
   public shapes: ShapePath[]
   constructor() {
-    this._length = 0
-    this._maxLength = 4
     this.shapes = createSizedArray(this._maxLength)
   }
 

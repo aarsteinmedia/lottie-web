@@ -22,38 +22,11 @@ import { initialDefaultFrame } from '@/utils/helpers/constants'
 import { BaseProperty } from '@/utils/properties/BaseProperty'
 
 export class TextProperty extends BaseProperty {
-  _frameId = initialDefaultFrame
+  _frameId: number
   canResize = false
-  defaultBoxWidth: Vector2 = [0, 0]
-  currentData = {
-    __complete: false,
-    ascent: 0,
-    boxWidth: this.defaultBoxWidth,
-    f: '',
-    fc: '',
-    fillColorAnim: false,
-    finalLineHeight: 0,
-    finalSize: 0,
-    finalText: [],
-    fStyle: '',
-    fWeight: '',
-    justifyOffset: 0,
-    l: [],
-    lh: 0,
-    lineWidths: [],
-    ls: 0,
-    of: '',
-    ps: null,
-    s: 0,
-    sc: '',
-    strokeColorAnim: false,
-    strokeWidthAnim: false,
-    sw: 0,
-    t: 0,
-    tr: 0,
-    yOffset: 0,
-  } as unknown as DocumentData
+  currentData: DocumentData
   override data: TextData
+  defaultBoxWidth: Vector2 = [0, 0]
   override effectsSequence: TextEffectFunction[] = []
   override elem: ElementInterfaceIntersect
   keysIndex = 0
@@ -63,6 +36,7 @@ export class TextProperty extends BaseProperty {
 
   constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
+    this._frameId = initialDefaultFrame
     this.kf = false
     this._isFirstFrame = true
     this._mdf = false
@@ -72,6 +46,34 @@ export class TextProperty extends BaseProperty {
     this.data = data
     this.elem = elem
     this.comp = this.elem.comp
+    this.currentData = {
+      __complete: false,
+      ascent: 0,
+      boxWidth: this.defaultBoxWidth,
+      f: '',
+      fc: '',
+      fillColorAnim: false,
+      finalLineHeight: 0,
+      finalSize: 0,
+      finalText: [],
+      fStyle: '',
+      fWeight: '',
+      justifyOffset: 0,
+      l: [],
+      lh: 0,
+      lineWidths: [],
+      ls: 0,
+      of: '',
+      ps: null,
+      s: 0,
+      sc: '',
+      strokeColorAnim: false,
+      strokeWidthAnim: false,
+      sw: 0,
+      t: 0,
+      tr: 0,
+      yOffset: 0,
+    } as unknown as DocumentData
 
     const newData = this.data.d?.k[0]?.s
 
