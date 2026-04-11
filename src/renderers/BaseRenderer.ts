@@ -31,7 +31,7 @@ import { slotFactory } from '@/utils/SlotManager'
 
 export abstract class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
-  completeLayers?: boolean
+  completeLayers = false
   currentFrame = 0
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
