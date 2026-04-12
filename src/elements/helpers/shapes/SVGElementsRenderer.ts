@@ -51,7 +51,7 @@ export function createRenderFunction(data: Shape) {
 function renderContentTransform(
   _: Shape,
   itemData?: SVGTransformData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderContetTransform is missing data')
@@ -69,7 +69,7 @@ function renderContentTransform(
 function renderFill(
   _: Shape,
   itemData?: SVGFillStyleData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderFill is missing data')
@@ -88,7 +88,7 @@ function renderFill(
 function renderGradient(
   styleData: Shape,
   itemData?: SVGGradientFillStyleData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderGradient is missing data')
@@ -201,7 +201,7 @@ function renderGradient(
 function renderGradientStroke(
   styleData: Shape,
   itemData?: SVGGradientStrokeStyleData | SVGGradientFillStyleData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   renderGradient(
     styleData, itemData, isFirstFrame
@@ -218,7 +218,7 @@ function renderNoop(_: Shape) {
 function renderPath(
   styleData: Shape,
   itemData?: SVGShapeData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   if (!itemData) {
     throw new Error('SVGElementsRenderer: Method renderPath is missing data')
@@ -290,7 +290,7 @@ function renderPath(
 function renderStroke(
   _: Shape,
   itemData?: SVGStrokeStyleData | SVGGradientStrokeStyleData,
-  isFirstFrame?: boolean
+  isFirstFrame?: number | boolean
 ) {
   if (!itemData?.style) {
     throw new Error('SVGElementsRenderer: Method renderStroke is missing data')

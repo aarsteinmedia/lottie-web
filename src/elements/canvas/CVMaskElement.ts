@@ -10,7 +10,7 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
 export class CVMaskElement {
-  _isFirstFrame?: boolean
+  _isFirstFrame: number | boolean = false
   data: LottieLayer
   element: CVShapeElement | CVBaseElement
   hasMasks: boolean

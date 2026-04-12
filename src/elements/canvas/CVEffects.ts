@@ -56,7 +56,7 @@ export class CVEffects {
     return effects
   }
 
-  renderFrame(_isFirstFrame?: number) {
+  renderFrame(_isFirstFrame?: number | boolean) {
     const { length } = this.filters
 
     for (let i = 0; i < length; i++) {

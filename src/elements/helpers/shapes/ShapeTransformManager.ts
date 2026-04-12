@@ -37,10 +37,10 @@ export class ShapeTransformManager {
     return `_${this.transform_key_count}`
   }
 
-  processSequence(sequence: TransformSequence, isFirstFrame?: boolean) {
+  processSequence(sequence: TransformSequence, isFirstFrame?: number | boolean) {
     let i = 0
     const { length } = sequence.transforms ?? []
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     let _mdf = isFirstFrame
 
     if (!isFirstFrame) {
@@ -66,7 +66,7 @@ export class ShapeTransformManager {
     sequence._mdf = Boolean(_mdf)
   }
 
-  processSequences(isFirstFrame?: boolean) {
+  processSequences(isFirstFrame?: number | boolean) {
     const { length } = this.sequenceList
 
     for (let i = 0; i < length; i++) {

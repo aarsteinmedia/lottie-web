@@ -278,7 +278,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     this.animationItem.container.style.display = 'none'
   }
 
-  renderFrame(num: number, forceRender?: boolean) {
+  renderFrame(num: number | false, forceRender?: boolean) {
     try {
       if (!this.globalData) {
         throw new Error('globalData is not implemented')
@@ -288,6 +288,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       }
 
       if (
+        num === false ||
         this.renderedFrame === num &&
         this.renderConfig?.clearCanvas === true &&
         !forceRender ||

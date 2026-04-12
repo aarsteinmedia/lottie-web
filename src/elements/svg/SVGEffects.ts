@@ -78,7 +78,7 @@ export class SVGEffects {
     return effects
   }
 
-  renderFrame(frame?: number | null) {
+  renderFrame(frame?: number | boolean) {
     const { length } = this.filters
 
     for (let i = 0; i < length; i++) {

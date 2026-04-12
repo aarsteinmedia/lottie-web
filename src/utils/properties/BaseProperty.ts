@@ -119,7 +119,7 @@ const quaternionToEuler = (out: Vector3, quat: Vector4) => {
 export abstract class BaseProperty extends DynamicPropertyContainer {
   _caching?: Caching
   _cachingAtTime?: Caching
-  _isFirstFrame?: boolean
+  _isFirstFrame: number | boolean = false
   _name?: string
   _placeholder?: boolean
   comp?: undefined | CompElementInterface

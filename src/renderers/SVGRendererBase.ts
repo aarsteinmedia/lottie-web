@@ -317,7 +317,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
     this.layerElement.style.display = 'none'
   }
 
-  renderFrame(numFromProps?: number | null) {
+  renderFrame(numFromProps?: number | false) {
     try {
       if (
         !this.globalData ||
@@ -328,7 +328,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
       }
       let num = numFromProps
 
-      if (num === null) {
+      if (num === false) {
         num = this.renderedFrame
       } else {
         this.renderedFrame = Number(num)
