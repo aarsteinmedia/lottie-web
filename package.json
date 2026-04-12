@@ -65,7 +65,7 @@
     "eslint-config-sheriff": "^31.3.0",
     "eslint-plugin-perfectionist": "^5.8.0",
     "fflate": "^0.8.2",
-    "globals": "^17.4.0",
+    "globals": "^17.5.0",
     "jiti": "^2.6.1",
     "prettier": "^3.8.2",
     "rimraf": "^6.1.3",

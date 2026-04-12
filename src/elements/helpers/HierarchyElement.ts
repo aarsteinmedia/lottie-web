@@ -8,7 +8,7 @@ import type { ElementInterfaceIntersect } from '@/types'
 import { TransformElement } from '@/elements/helpers/TransformElement'
 
 export abstract class HierarchyElement extends TransformElement {
-  _isParent?: boolean
+  _isParent = false
 
   checkParenting() {
     if (!this.data) {

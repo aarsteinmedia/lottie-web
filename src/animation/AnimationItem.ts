@@ -42,7 +42,7 @@ import { markerParser } from '@/utils/markerParser'
 
 export class AnimationItem extends BaseEvent {
   public __complete?: boolean
-  public _isFirstFrame?: number
+  public _isFirstFrame: boolean | number = false
   public animationData = {} as AnimationData
   public animationID = createElementID()
   public assets: LottieAsset[] = []

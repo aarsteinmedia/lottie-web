@@ -9,10 +9,10 @@ import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 
 export abstract class TransformElement extends BaseElement {
-  _isFirstFrame?: boolean
+  _isFirstFrame: boolean | number = false
   finalTransform?: Transformer
-  hierarchy?: ElementInterfaceIntersect[]
-  localTransforms?: Transformer[]
+  hierarchy: ElementInterfaceIntersect[] = []
+  localTransforms: null | Transformer[] = null
   mHelper = new Matrix()
   renderableEffectsManager?: SVGEffects
 
@@ -137,35 +137,34 @@ export abstract class TransformElement extends BaseElement {
     this.finalTransform._opMdf = Boolean(this.finalTransform.mProp.o?._mdf || this._isFirstFrame)
     this.finalTransform._matMdf = Boolean(this.finalTransform.mProp._mdf || this._isFirstFrame)
 
-    if (this.hierarchy) {
-      const finalMat = this.finalTransform.mat
-      let i = 0
-      const { length } = this.hierarchy
+    const finalMat = this.finalTransform.mat,
+      { length } = this.hierarchy
 
-      // Checking if any of the transformation matrices in the hierarchy chain has changed.
-      if (!this.finalTransform._matMdf) {
-        while (i < length) {
-          if (this.hierarchy[i]?.finalTransform?.mProp._mdf) {
-            this.finalTransform._matMdf = true
-            break
-          }
-          i++
+    let i = 0
+
+    // Checking if any of the transformation matrices in the hierarchy chain has changed.
+    if (!this.finalTransform._matMdf) {
+      while (i < length) {
+        if (this.hierarchy[i]?.finalTransform?.mProp._mdf) {
+          this.finalTransform._matMdf = true
+          break
         }
+        i++
       }
+    }
 
-      if (this.finalTransform._matMdf) {
-        const mat = this.finalTransform.mProp.v.props
+    if (this.finalTransform._matMdf) {
+      const mat = this.finalTransform.mProp.v.props
 
-        finalMat.cloneFromProps(mat)
-        for (i = 0; i < length; i++) {
-          if (this.hierarchy[i]?.finalTransform?.mProp.v) {
-            const { v: matrix } = this.hierarchy[i]?.finalTransform?.mProp ?? { v: null }
+      finalMat.cloneFromProps(mat)
+      for (i = 0; i < length; i++) {
+        if (this.hierarchy[i]?.finalTransform?.mProp.v) {
+          const { v: matrix } = this.hierarchy[i]?.finalTransform?.mProp ?? { v: null }
 
-            if (matrix) {
-              finalMat.multiply(matrix)
-            }
-
+          if (matrix) {
+            finalMat.multiply(matrix)
           }
+
         }
       }
     }

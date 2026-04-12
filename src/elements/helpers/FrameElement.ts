@@ -10,7 +10,7 @@ import { PropType } from '@/utils/enums'
  */
 
 export abstract class FrameElement extends HierarchyElement {
-  _mdf?: boolean
+  _mdf = false
   displayStartTime = 0
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
