@@ -232,16 +232,36 @@ export class MaskElement {
     pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData
   ) {
     let i,
-      pathString = ` M${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
+      oVector,
+      iVector,
+      vVector = pathNodes.v[0]?.join(','),
+      pathString = ` M${vVector}`
+
     const len = pathNodes._length || 0
 
     for (i = 1; i < len; i++) {
-      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${pathNodes.i[i]?.[0]
-      },${pathNodes.i[i]?.[1]} ${pathNodes.v[i]?.[0]},${pathNodes.v[i]?.[1]}`
+      oVector = pathNodes.o[i - 1]?.join(',')
+      iVector = pathNodes.v[i]?.join(',')
+      vVector = pathNodes.v[i]?.join(',')
+
+      if (!oVector || !iVector) {
+        continue
+      }
+
+      pathString += ` C${oVector} ${iVector} ${vVector}`
     }
-    if (pathNodes.c && len > 1) {
-      pathString += ` C${pathNodes.o[i - 1]?.[0]},${pathNodes.o[i - 1]?.[1]} ${pathNodes.i[0]?.[0]
-      },${pathNodes.i[0]?.[1]} ${pathNodes.v[0]?.[0]},${pathNodes.v[0]?.[1]}`
+
+    oVector = pathNodes.o[i - 1]?.join(',')
+    iVector = pathNodes.v[i]?.join(',')
+    vVector = pathNodes.v[i]?.join(',')
+
+    if (
+      pathNodes.c &&
+      len > 1 &&
+      oVector &&
+      iVector
+    ) {
+      pathString += ` C${oVector} ${iVector} ${vVector}`
     }
 
     if (viewData.lastPath !== pathString) {
