@@ -81,17 +81,17 @@ class BezierEasing {
       mX2 = this._p[2],
       mSampleValues = this._mSampleValues
 
-    let intervalStart = 0.0
-    let currentSample = 1
+    let intervalStart = 0.0,
+      currentSample = 1
     const lastSample = this.kSplineTableSize - 1
 
-    for (
-      ;
+    while (
       currentSample !== lastSample &&
-      Number(mSampleValues[currentSample]) <= aX;
-      ++currentSample
+      Number(mSampleValues[currentSample]) <= aX
     ) {
       intervalStart += this.kSampleStepSize
+
+      ++currentSample
     }
     --currentSample
 
