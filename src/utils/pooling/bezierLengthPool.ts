@@ -6,6 +6,7 @@ import { PoolFactory } from '@/utils/pooling/PoolFactory'
 export const bezierLengthPool = (() =>
   new PoolFactory(8, () => ({
     addedLength: 0,
+    /** These arrays neeed to be initiated individually to avoid reference errors. */
     lengths: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()) as number[],
     percents: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()) as number[],
   })))()
