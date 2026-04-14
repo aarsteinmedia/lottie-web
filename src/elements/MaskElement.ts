@@ -240,27 +240,18 @@ export class MaskElement {
     const len = pathNodes._length || 0
 
     for (i = 1; i < len; i++) {
-      oVector = pathNodes.o[i - 1]?.join(',')
-      iVector = pathNodes.v[i]?.join(',')
-      vVector = pathNodes.v[i]?.join(',')
-
-      if (!oVector || !iVector) {
-        continue
-      }
+      oVector = pathNodes.o[i - 1]?.join(',') ?? ''
+      iVector = pathNodes.i[i]?.join(',') ?? ''
+      vVector = pathNodes.v[i]?.join(',') ?? ''
 
       pathString += ` C${oVector} ${iVector} ${vVector}`
     }
 
-    oVector = pathNodes.o[i - 1]?.join(',')
-    iVector = pathNodes.v[i]?.join(',')
-    vVector = pathNodes.v[i]?.join(',')
+    if (pathNodes.c && len > 1) {
+      oVector = pathNodes.o[i - 1]?.join(',') ?? ''
+      iVector = pathNodes.i[0]?.join(',') ?? ''
+      vVector = pathNodes.v[0]?.join(',') ?? ''
 
-    if (
-      pathNodes.c &&
-      len > 1 &&
-      oVector &&
-      iVector
-    ) {
       pathString += ` C${oVector} ${iVector} ${vVector}`
     }
 
