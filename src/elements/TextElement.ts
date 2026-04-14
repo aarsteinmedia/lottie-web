@@ -72,7 +72,13 @@ export abstract class TextElement extends RenderableDOMElement {
   }
 
   buildColor(colorData: Vector3) {
-    return `rgb(${Math.round(colorData[0] * 255)},${Math.round(colorData[1] * 255)},${Math.round(colorData[2] * 255)})`
+    const rgb = [
+      Math.round(colorData[0] * 255),
+      Math.round(colorData[1] * 255),
+      Math.round(colorData[2] * 255)
+    ].join(',')
+
+    return `rgb(${rgb})`
   }
 
   buildNewText() {
