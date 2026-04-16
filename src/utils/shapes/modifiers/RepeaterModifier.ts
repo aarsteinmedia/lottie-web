@@ -1,41 +1,41 @@
-import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
-import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData';
+import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData';
 import type {
   ElementInterfaceIntersect,
   Shape,
   ShapeDataInterface,
   VectorProperty,
-} from '@/types'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
+} from '@/types';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
 
-import { isArray } from '@/utils'
-import { ShapeType } from '@/utils/enums'
-import { Matrix } from '@/utils/Matrix'
-import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
-import PropertyFactory from '@/utils/PropertyFactory'
-import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
+import { isArray } from '@/utils';
+import { ShapeType } from '@/utils/enums';
+import { Matrix } from '@/utils/Matrix';
+import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty';
+import PropertyFactory from '@/utils/PropertyFactory';
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier';
 
 export class RepeaterModifier extends ShapeModifier {
-  arr: Shape[] = []
-  c?: ValueProperty
-  override data?: Shape = undefined
-  elemsData: ShapeGroupData[] = []
-  eo?: ValueProperty
-  matrix?: Matrix
-  o?: ValueProperty
-  pMatrix?: Matrix
-  pos?: number
-  rMatrix?: Matrix
-  sMatrix?: Matrix
-  so?: ValueProperty
-  tMatrix?: Matrix
-  tr?: TransformProperty
-  private _currentCopies?: number
-  private _elements: Shape[] = []
-  private _groups: Shape[] = []
+  arr: Shape[] = [];
+  c?: ValueProperty;
+  override data?: Shape = undefined;
+  elemsData: ShapeGroupData[] = [];
+  eo?: ValueProperty;
+  matrix?: Matrix;
+  o?: ValueProperty;
+  pMatrix?: Matrix;
+  pos?: number;
+  rMatrix?: Matrix;
+  sMatrix?: Matrix;
+  so?: ValueProperty;
+  tMatrix?: Matrix;
+  tr?: TransformProperty;
+  private _currentCopies?: number;
+  private _elements: Shape[] = [];
+  private _groups: Shape[] = [];
 
   override addShapeToModifier(shapeData: SVGShapeData) {
-    shapeData.pathsData = []
+    shapeData.pathsData = [];
   }
 
   applyTransforms(
@@ -47,50 +47,50 @@ export class RepeaterModifier extends ShapeModifier {
     inv?: boolean
   ) {
     if (!transform.s || !transform.p || !transform.a || !transform.r) {
-      throw new Error(`${this.constructor.name}: Missing required data from Transform`)
+      throw new Error(`${this.constructor.name}: Missing required data from Transform`);
     }
-    const dir = inv ? -1 : 1,
-      scaleX = transform.s.v[0] + (1 - transform.s.v[0]) * (1 - perc),
-      scaleY = transform.s.v[1] + (1 - transform.s.v[1]) * (1 - perc)
+    const dir = inv ? -1 : 1;
+    const scaleX = transform.s.v[0] + (1 - transform.s.v[0]) * (1 - perc);
+    const scaleY = transform.s.v[1] + (1 - transform.s.v[1]) * (1 - perc);
 
     pMatrix.translate(
       transform.p.v[0] * dir * perc,
       transform.p.v[1] * dir * perc,
       transform.p.v[2]
-    )
+    );
     rMatrix.translate(
       -(transform.a.v[0] as number), -(transform.a.v[1] as number), transform.a.v[2]
-    )
-    rMatrix.rotate(-transform.r.v * dir * perc)
+    );
+    rMatrix.rotate(-transform.r.v * dir * perc);
     rMatrix.translate(
       transform.a.v[0] ?? 0, transform.a.v[1] ?? 0, transform.a.v[2]
-    )
+    );
     sMatrix.translate(
       -(transform.a.v[0] ?? 0), -(transform.a.v[1] ?? 0), transform.a.v[2]
-    )
-    sMatrix.scale(inv ? 1 / scaleX : scaleX, inv ? 1 / scaleY : scaleY)
+    );
+    sMatrix.scale(inv ? 1 / scaleX : scaleX, inv ? 1 / scaleY : scaleY);
     sMatrix.translate(
       transform.a.v[0] ?? 0, transform.a.v[1] ?? 0, transform.a.v[2]
-    )
+    );
   }
 
   changeGroupRender(elements: Shape[], renderFlag = false) {
-    const { length } = elements
+    const { length } = elements;
 
     for (let i = 0; i < length; i++) {
-      ; (elements[i] as Shape)._shouldRender = renderFlag
+      ; (elements[i] as Shape)._shouldRender = renderFlag;
       if (elements[i]?.ty === ShapeType.Group) {
-        this.changeGroupRender(elements[i]?.it as Shape[], renderFlag)
+        this.changeGroupRender(elements[i]?.it as Shape[], renderFlag);
       }
     }
   }
 
   cloneElements(elements: Shape[]): Shape[] {
-    const newElements = JSON.parse(JSON.stringify(elements)) as Shape[]
+    const newElements = JSON.parse(JSON.stringify(elements)) as Shape[];
 
-    this.resetElements(newElements)
+    this.resetElements(newElements);
 
-    return newElements
+    return newElements;
   }
 
   override init(
@@ -100,100 +100,100 @@ export class RepeaterModifier extends ShapeModifier {
     elemsData: ShapeGroupData[] = []
   ) {
     if (!isArray(arr)) {
-      throw new TypeError(`${this.constructor.name}: Method init, param arr must be array`)
+      throw new TypeError(`${this.constructor.name}: Method init, param arr must be array`);
     }
-    let pos = Number(posFromProps)
+    let pos = Number(posFromProps);
 
-    this.elem = elem
-    this.arr = arr
-    this.pos = pos
-    this.elemsData = elemsData
-    this._currentCopies = 0
-    this._elements = []
-    this._groups = []
-    this.frameId = -1
-    this.initDynamicPropertyContainer(elem)
-    this.initModifierProperties(elem, arr[pos] as Shape)
+    this.elem = elem;
+    this.arr = arr;
+    this.pos = pos;
+    this.elemsData = elemsData;
+    this._currentCopies = 0;
+    this._elements = [];
+    this._groups = [];
+    this.frameId = -1;
+    this.initDynamicPropertyContainer(elem);
+    this.initModifierProperties(elem, arr[pos] as Shape);
     while (pos > 0) {
-      pos--
-      this._elements.unshift(arr[pos] as Shape)
+      pos--;
+      this._elements.unshift(arr[pos] as Shape);
     }
     if (this.dynamicProperties.length > 0) {
-      this.k = true
+      this.k = true;
 
-      return
+      return;
     }
-    this.getValue(true)
+    this.getValue(true);
   }
 
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {
 
-    this.getValue = this.processKeys
+    this.getValue = this.processKeys;
     this.c = PropertyFactory.getProp(
       elem,
       data.c as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
+    ) as ValueProperty;
     this.o = PropertyFactory.getProp(
       elem,
       data.o,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
+    ) as ValueProperty;
     if (data.tr) {
       this.tr = TransformPropertyFactory.getTransformProperty(
         elem,
         data.tr,
         this as unknown as ElementInterfaceIntersect
-      )
+      );
       this.so = PropertyFactory.getProp(
         elem,
         data.tr.so,
         0,
         0.01,
         this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      ) as ValueProperty;
       this.eo = PropertyFactory.getProp(
         elem,
         data.tr.eo,
         0,
         0.01,
         this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      ) as ValueProperty;
     }
 
-    this.data = data
+    this.data = data;
     if (this.dynamicProperties.length === 0) {
-      this.getValue(true)
+      this.getValue(true);
     }
-    this._isAnimated = this.dynamicProperties.length > 0
-    this.pMatrix = new Matrix()
-    this.rMatrix = new Matrix()
-    this.sMatrix = new Matrix()
-    this.tMatrix = new Matrix()
-    this.matrix = new Matrix()
+    this._isAnimated = this.dynamicProperties.length > 0;
+    this.pMatrix = new Matrix();
+    this.rMatrix = new Matrix();
+    this.sMatrix = new Matrix();
+    this.tMatrix = new Matrix();
+    this.matrix = new Matrix();
   }
 
   processShapes(_isFirstFrame: boolean) {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (Shape) is not implemented`);
     }
 
-    let items,
-      itemsTransform,
-      i,
-      dir,
-      cont: number,
-      hasReloaded = false
+    let items;
+    let itemsTransform;
+    let i;
+    let dir;
+    let cont: number;
+    let hasReloaded = false;
 
     if (!this._mdf && !_isFirstFrame) {
-      cont = Number(this._currentCopies)
-      i = 0
-      dir = 1
+      cont = Number(this._currentCopies);
+      i = 0;
+      dir = 1;
       while (cont) {
         items = this.elemsData[i]?.it ?? []
         // if (!items) {
@@ -201,22 +201,22 @@ export class RepeaterModifier extends ShapeModifier {
         // }
         // itemsTransform = items[items.length - 1].transform.mProps.v.props
         ; (items[items.length - 1] as ShapeDataInterface).transform.mProps._mdf = false
-        ; (items[items.length - 1] as ShapeDataInterface).transform.op._mdf = false
-        cont--
-        i += dir
+        ; (items[items.length - 1] as ShapeDataInterface).transform.op._mdf = false;
+        cont--;
+        i += dir;
       }
 
-      return hasReloaded
+      return hasReloaded;
     }
 
-    const copies = Math.ceil(Number(this.c?.v))
+    const copies = Math.ceil(Number(this.c?.v));
 
     if (this._groups.length < copies) {
       while (this._groups.length < copies) {
         const group = {
           it: this.cloneElements(this._elements),
           ty: 'gr',
-        } as Shape
+        } as Shape;
 
         group.it?.push({
           a: {
@@ -266,53 +266,53 @@ export class RepeaterModifier extends ShapeModifier {
             k: 0
           },
           ty: ShapeType.Transform,
-        } as Shape)
+        } as Shape);
 
         this.arr.splice(
           0, 0, group
-        )
+        );
         this._groups.splice(
           0, 0, group
-        )
+        );
 
         if (this._currentCopies) {
-          this._currentCopies++
+          this._currentCopies++;
         } else {
-          this._currentCopies = 1
+          this._currentCopies = 1;
         }
       }
-      this.elem?.reloadShapes()
-      hasReloaded = true
+      this.elem?.reloadShapes();
+      hasReloaded = true;
     }
-    cont = 0
-    let shouldRender
-    const length = this._groups.length - 1
+    cont = 0;
+    let shouldRender;
+    const length = this._groups.length - 1;
 
     for (i = 0; i <= length - 1; i++) {
-      shouldRender = cont < copies
+      shouldRender = cont < copies;
       if (this._groups[i]) {
-        ; (this._groups[i] as Shape)._shouldRender = shouldRender
+        ; (this._groups[i] as Shape)._shouldRender = shouldRender;
       }
 
-      this.changeGroupRender(this._groups[i]?.it ?? [], shouldRender)
+      this.changeGroupRender(this._groups[i]?.it ?? [], shouldRender);
       if (!shouldRender) {
-        const elems = this.elemsData[i]?.it ?? [],
-          transformData = elems[elems.length - 1]
+        const elems = this.elemsData[i]?.it ?? [];
+        const transformData = elems[elems.length - 1];
 
         if (transformData) {
           if (transformData.transform.op.v === 0) {
-            transformData.transform.op._mdf = false
+            transformData.transform.op._mdf = false;
           } else {
-            transformData.transform.op._mdf = true
-            transformData.transform.op.v = 0
+            transformData.transform.op._mdf = true;
+            transformData.transform.op.v = 0;
           }
         }
 
       }
-      cont++
+      cont++;
     }
 
-    this._currentCopies = copies
+    this._currentCopies = copies;
 
     if (
       !this.matrix ||
@@ -321,26 +321,26 @@ export class RepeaterModifier extends ShapeModifier {
       !this.sMatrix ||
       !this.tMatrix
     ) {
-      throw new Error(`${this.constructor.name}: Could not set Matrix`)
+      throw new Error(`${this.constructor.name}: Could not set Matrix`);
     }
 
     if (!this.tr) {
-      throw new Error(`${this.constructor.name}: Transformproperty is not set`)
+      throw new Error(`${this.constructor.name}: Transformproperty is not set`);
     }
 
-    const offset = Number(this.o?.v),
-      offsetModulo = offset % 1,
-      roundOffset = offset > 0 ? Math.floor(offset) : Math.ceil(offset),
-      pProps = this.pMatrix.props,
-      rProps = this.rMatrix.props,
-      sProps = this.sMatrix.props
+    const offset = Number(this.o?.v);
+    const offsetModulo = offset % 1;
+    const roundOffset = offset > 0 ? Math.floor(offset) : Math.ceil(offset);
+    const pProps = this.pMatrix.props;
+    const rProps = this.rMatrix.props;
+    const sProps = this.sMatrix.props;
 
-    this.pMatrix.reset()
-    this.rMatrix.reset()
-    this.sMatrix.reset()
-    this.tMatrix.reset()
-    this.matrix.reset()
-    let iteration = 0
+    this.pMatrix.reset();
+    this.rMatrix.reset();
+    this.sMatrix.reset();
+    this.tMatrix.reset();
+    this.matrix.reset();
+    let iteration = 0;
 
     if (offset > 0) {
       while (iteration < roundOffset) {
@@ -351,8 +351,8 @@ export class RepeaterModifier extends ShapeModifier {
           this.tr,
           1,
           false
-        )
-        iteration++
+        );
+        iteration++;
       }
       if (offsetModulo) {
         this.applyTransforms(
@@ -362,8 +362,8 @@ export class RepeaterModifier extends ShapeModifier {
           this.tr,
           offsetModulo,
           false
-        )
-        iteration += offsetModulo
+        );
+        iteration += offsetModulo;
       }
     } else if (offset < 0) {
       while (iteration > roundOffset) {
@@ -374,8 +374,8 @@ export class RepeaterModifier extends ShapeModifier {
           this.tr,
           1,
           true
-        )
-        iteration--
+        );
+        iteration--;
       }
       if (offsetModulo) {
         this.applyTransforms(
@@ -385,19 +385,19 @@ export class RepeaterModifier extends ShapeModifier {
           this.tr,
           -offsetModulo,
           true
-        )
-        iteration -= offsetModulo
+        );
+        iteration -= offsetModulo;
       }
     }
-    i = this.data.m === 1 ? 0 : this._currentCopies - 1
-    dir = this.data.m === 1 ? 1 : -1
-    cont = this._currentCopies
-    let j
+    i = this.data.m === 1 ? 0 : this._currentCopies - 1;
+    dir = this.data.m === 1 ? 1 : -1;
+    cont = this._currentCopies;
+    let j;
 
     while (cont) {
-      items = this.elemsData[i]?.it ?? []
-      itemsTransform = items[items.length - 1]?.transform.mProps.v.props ?? []
-      const { length: jLen } = itemsTransform
+      items = this.elemsData[i]?.it ?? [];
+      itemsTransform = items[items.length - 1]?.transform.mProps.v.props ?? [];
+      const { length: jLen } = itemsTransform;
 
       if (items[items.length - 1]) {
         ; (items[items.length - 1] as ShapeDataInterface).transform.mProps._mdf = true
@@ -407,13 +407,13 @@ export class RepeaterModifier extends ShapeModifier {
               ? Number(this.so?.v)
               : Number(this.so?.v) +
                 (Number(this.eo?.v) - Number(this.so?.v)) *
-                (i / (this._currentCopies - 1))
+                (i / (this._currentCopies - 1));
       }
 
       if (iteration === 0) {
-        this.matrix.reset()
+        this.matrix.reset();
         for (j = 0; j < jLen; j++) {
-          itemsTransform[j] = this.matrix.props[j] ?? 0
+          itemsTransform[j] = this.matrix.props[j] ?? 0;
         }
       } else {
         if (
@@ -427,7 +427,7 @@ export class RepeaterModifier extends ShapeModifier {
             this.tr,
             1,
             false
-          )
+          );
         }
         this.matrix.transform(
           rProps[0] ?? 0,
@@ -446,7 +446,7 @@ export class RepeaterModifier extends ShapeModifier {
           rProps[13] ?? 0,
           rProps[14] ?? 0,
           rProps[15] ?? 0
-        )
+        );
         this.matrix.transform(
           sProps[0] ?? 0,
           sProps[1] ?? 0,
@@ -464,7 +464,7 @@ export class RepeaterModifier extends ShapeModifier {
           sProps[13] ?? 0,
           sProps[14] ?? 0,
           sProps[15] ?? 0
-        )
+        );
         this.matrix.transform(
           pProps[0] ?? 0,
           pProps[1] ?? 0,
@@ -482,31 +482,31 @@ export class RepeaterModifier extends ShapeModifier {
           pProps[13] ?? 0,
           pProps[14] ?? 0,
           pProps[15] ?? 0
-        )
+        );
 
         for (j = 0; j < jLen; j++) {
-          itemsTransform[j] = this.matrix.props[j] ?? 0
+          itemsTransform[j] = this.matrix.props[j] ?? 0;
         }
-        this.matrix.reset()
+        this.matrix.reset();
       }
-      iteration++
-      cont--
-      i += dir
+      iteration++;
+      cont--;
+      i += dir;
     }
 
-    return hasReloaded
+    return hasReloaded;
   }
 
   resetElements(elements: Shape[]) {
-    const { length } = elements
+    const { length } = elements;
 
     for (let i = 0; i < length; i++) {
-      ; (elements[i] as Shape)._processed = false
+      ; (elements[i] as Shape)._processed = false;
 
-      const { it } = elements[i] ?? {}
+      const { it } = elements[i] ?? {};
 
       if (elements[i]?.ty === ShapeType.Group && it) {
-        this.resetElements(it)
+        this.resetElements(it);
       }
     }
   }

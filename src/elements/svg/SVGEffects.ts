@@ -1,12 +1,12 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
+import type { GroupEffect } from '@/effects/GroupEffect';
 import type {
   EffectElement, EffectValue, ElementInterfaceIntersect
-} from '@/types'
-import type { EffectTypes } from '@/utils/enums'
+} from '@/types';
+import type { EffectTypes } from '@/utils/enums';
 
-import { createElementID } from '@/utils'
-import FiltersFactory from '@/utils/FiltersFactory'
-import { getLocationHref } from '@/utils/helpers/locationHref'
+import { createElementID } from '@/utils';
+import FiltersFactory from '@/utils/FiltersFactory';
+import { getLocationHref } from '@/utils/helpers/locationHref';
 
 interface RegisteredEffects {
   [id: string]: {
@@ -15,27 +15,27 @@ interface RegisteredEffects {
   } | undefined
 }
 
-const idPrefix = 'filter_result_',
-  registeredEffects: RegisteredEffects = {}
+const idPrefix = 'filter_result_';
+const registeredEffects: RegisteredEffects = {};
 
 export class SVGEffects {
-  filters: GroupEffect[] = []
+  filters: GroupEffect[] = [];
   constructor(elem: ElementInterfaceIntersect) {
-    let source = 'SourceGraphic'
+    let source = 'SourceGraphic';
 
-    const filId = createElementID(),
-      fil = FiltersFactory.createFilter(filId, true)
+    const filId = createElementID();
+    const fil = FiltersFactory.createFilter(filId, true);
 
-    let count = 0,
-      filterManager: null | GroupEffect
+    let count = 0;
+    let filterManager: null | GroupEffect;
 
-    const { length } = elem.data.ef ?? []
+    const { length } = elem.data.ef ?? [];
 
     for (let i = 0; i < length; i++) {
-      filterManager = null
+      filterManager = null;
 
-      const { ty } = elem.data.ef?.[i] ?? { ty: null },
-        Effect = ty === null || !registeredEffects[ty] ? null : registeredEffects[ty].effect
+      const { ty } = elem.data.ef?.[i] ?? { ty: null };
+      const Effect = ty === null || !registeredEffects[ty] ? null : registeredEffects[ty].effect;
 
       if (Effect && ty && elem.effectsManager) {
         filterManager = new Effect(
@@ -45,44 +45,44 @@ export class SVGEffects {
           elem,
           `${idPrefix}${count}`,
           source
-        ) as GroupEffect
-        source = `${idPrefix}${count}`
+        ) as GroupEffect;
+        source = `${idPrefix}${count}`;
         if (registeredEffects[ty]?.countsAsEffect) {
-          count++
+          count++;
         }
       }
       if (filterManager) {
-        this.filters.push(filterManager)
+        this.filters.push(filterManager);
       }
     }
     if (count) {
-      elem.globalData?.defs.appendChild(fil)
+      elem.globalData?.defs.appendChild(fil);
       elem.layerElement?.setAttribute('filter',
-        `url(${getLocationHref()}#${filId})`)
+        `url(${getLocationHref()}#${filId})`);
     }
     if (this.filters.length > 0) {
-      elem.addRenderableComponent(this)
+      elem.addRenderableComponent(this);
     }
   }
 
   getEffects(type: EffectTypes) {
-    const { length } = this.filters,
-      effects = []
+    const { length } = this.filters;
+    const effects = [];
 
     for (let i = 0; i < length; i++) {
       if (this.filters[i]?.type === type) {
-        effects.push(this.filters[i])
+        effects.push(this.filters[i]);
       }
     }
 
-    return effects
+    return effects;
   }
 
   renderFrame(frame?: number | boolean) {
-    const { length } = this.filters
+    const { length } = this.filters;
 
     for (let i = 0; i < length; i++) {
-      this.filters[i]?.renderFrame(frame)
+      this.filters[i]?.renderFrame(frame);
     }
   }
 }
@@ -95,5 +95,5 @@ export const registerEffect = (
   registeredEffects[id] = {
     countsAsEffect,
     effect,
-  }
-}
+  };
+};

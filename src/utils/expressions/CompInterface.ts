@@ -1,38 +1,38 @@
-import type { CompElementInterface } from '@/types'
+import type { CompElementInterface } from '@/types';
 
 export class CompExpressionInterface {
-  _name?: undefined | string
-  comp: CompElementInterface
-  displayStartTime = 0
-  frameDuration: number
-  height?: undefined | number
-  layer: CompExpressionInterface
-  numLayers?: undefined | number
-  pixelAspect = 1
-  width?: undefined | number
+  _name?: undefined | string;
+  comp: CompElementInterface;
+  displayStartTime = 0;
+  frameDuration: number;
+  height?: undefined | number;
+  layer: CompExpressionInterface;
+  numLayers?: undefined | number;
+  pixelAspect = 1;
+  width?: undefined | number;
   constructor(comp: CompElementInterface) {
-    this.comp = comp
-    this._name = comp.data?.nm
-    this.layer = this
+    this.comp = comp;
+    this._name = comp.data?.nm;
+    this.layer = this;
 
-    this.height = comp.data?.h || comp.globalData?.compSize?.h
-    this.width = comp.data?.w || comp.globalData?.compSize?.w
-    this.frameDuration = 1 / (comp.globalData?.frameRate ?? 60)
-    this.numLayers = comp.layers?.length
+    this.height = comp.data?.h || comp.globalData?.compSize?.h;
+    this.width = comp.data?.w || comp.globalData?.compSize?.w;
+    this.frameDuration = 1 / (comp.globalData?.frameRate ?? 60);
+    this.numLayers = comp.layers?.length;
   }
 
   getInterface(name?: string | number | number[]) {
-    let i = 0
+    let i = 0;
 
-    const { length } = this.comp.layers ?? []
+    const { length } = this.comp.layers ?? [];
 
     while (i < length) {
       if (this.comp.layers?.[i]?.nm === name || this.comp.layers?.[i]?.ind === name) {
-        return this.comp.elements[i]?.layerInterface ?? null
+        return this.comp.elements[i]?.layerInterface ?? null;
       }
-      i++
+      i++;
     }
 
-    return null
+    return null;
   }
 }

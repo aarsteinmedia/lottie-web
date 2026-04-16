@@ -1,40 +1,40 @@
-import type { CVContextData } from '@/elements/canvas/CVContextData'
-import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { CVContextData } from '@/elements/canvas/CVContextData';
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer';
 import type {
   AnimationData,
   CanvasRendererConfig,
   ElementInterfaceIntersect,
   LottieLayer,
   TransformCanvas,
-} from '@/types'
+} from '@/types';
 
-import { CVImageElement } from '@/elements/canvas/CVImageElement'
-import { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
-import { CVTextElement } from '@/elements/canvas/CVTextElement'
-import { BaseRenderer } from '@/renderers/BaseRenderer'
-import { SVGRenderer } from '@/renderers/SVGRenderer'
-import { PreserveAspectRatio } from '@/utils/enums'
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { createTag } from '@/utils/helpers/htmlElements'
+import { CVImageElement } from '@/elements/canvas/CVImageElement';
+import { CVShapeElement } from '@/elements/canvas/CVShapeElement';
+import { CVSolidElement } from '@/elements/canvas/CVSolidElement';
+import { CVTextElement } from '@/elements/canvas/CVTextElement';
+import { BaseRenderer } from '@/renderers/BaseRenderer';
+import { SVGRenderer } from '@/renderers/SVGRenderer';
+import { PreserveAspectRatio } from '@/utils/enums';
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { createTag } from '@/utils/helpers/htmlElements';
 
 export abstract class CanvasRendererBase extends BaseRenderer {
-  canvasContext?: undefined | null | CanvasRenderingContext2D
-  contextData?: CVContextData
-  destroyed?: boolean
-  renderConfig?: CanvasRendererConfig
-  transformCanvas?: TransformCanvas
+  canvasContext?: undefined | null | CanvasRenderingContext2D;
+  contextData?: CVContextData;
+  destroyed?: boolean;
+  renderConfig?: CanvasRendererConfig;
+  transformCanvas?: TransformCanvas;
 
   override buildItem(pos: number) {
-    const { elements, layers } = this
+    const { elements, layers } = this;
 
     if (elements[pos] || layers[pos]?.ty === 99) {
-      return
+      return;
     }
-    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect;
 
-    elements[pos] = element
-    element.initExpressions()
+    elements[pos] = element;
+    element.initExpressions();
     /* if(this.layers[pos].ty === 0){
         element.resize(this.globalData.transformCanvas);
     } */
@@ -42,47 +42,47 @@ export abstract class CanvasRendererBase extends BaseRenderer {
 
   override checkPendingElements() {
     while (this.pendingElements.length > 0) {
-      const element = this.pendingElements.pop()
+      const element = this.pendingElements.pop();
 
-      element?.checkParenting()
+      element?.checkParenting();
     }
   }
 
   configAnimation(animData: AnimationData) {
     if (!this.animationItem) {
-      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`);
     }
     if (!this.renderConfig) {
-      throw new Error(`${this.constructor.name}: renderConfig is not implemented`)
+      throw new Error(`${this.constructor.name}: renderConfig is not implemented`);
     }
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     if (this.animationItem.wrapper) {
-      this.animationItem.container = createTag<HTMLCanvasElement>('canvas')
-      const { style: containerStyle } = this.animationItem.container
+      this.animationItem.container = createTag<HTMLCanvasElement>('canvas');
+      const { style: containerStyle } = this.animationItem.container;
 
-      containerStyle.width = '100%'
-      containerStyle.height = '100%'
-      const origin = '0px 0px 0px'
+      containerStyle.width = '100%';
+      containerStyle.height = '100%';
+      const origin = '0px 0px 0px';
 
-      containerStyle.transformOrigin = origin
-      containerStyle.contentVisibility = this.renderConfig.contentVisibility
-      this.animationItem.wrapper.appendChild(this.animationItem.container)
-      this.canvasContext = this.animationItem.container.getContext('2d')
+      containerStyle.transformOrigin = origin;
+      containerStyle.contentVisibility = this.renderConfig.contentVisibility;
+      this.animationItem.wrapper.appendChild(this.animationItem.container);
+      this.canvasContext = this.animationItem.container.getContext('2d');
       if (this.renderConfig.className) {
-        this.animationItem.container.className = this.renderConfig.className
+        this.animationItem.container.className = this.renderConfig.className;
       }
       if (this.renderConfig.id) {
-        this.animationItem.container.id = this.renderConfig.id
+        this.animationItem.container.id = this.renderConfig.id;
       }
     } else {
-      this.canvasContext = this.renderConfig.context
+      this.canvasContext = this.renderConfig.context;
     }
-    this.contextData?.setContext(this.canvasContext)
-    this.data = animData as unknown as LottieLayer
-    this.layers = animData.layers
+    this.contextData?.setContext(this.canvasContext);
+    this.data = animData as unknown as LottieLayer;
+    this.layers = animData.layers;
 
     this.transformCanvas = {
       h: animData.h,
@@ -91,143 +91,143 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       tx: 0,
       ty: 0,
       w: animData.w,
-    }
-    this.setupGlobalData(animData, document.body)
-    this.globalData.canvasContext = this.canvasContext
-    this.globalData.renderer = this as unknown as CanvasRenderer
-    this.globalData.isDashed = false
-    this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
-    this.globalData.transformCanvas = this.transformCanvas
-    this.elements = createSizedArray(animData.layers.length)
+    };
+    this.setupGlobalData(animData, document.body);
+    this.globalData.canvasContext = this.canvasContext;
+    this.globalData.renderer = this as unknown as CanvasRenderer;
+    this.globalData.isDashed = false;
+    this.globalData.progressiveLoad = this.renderConfig.progressiveLoad;
+    this.globalData.transformCanvas = this.transformCanvas;
+    this.elements = createSizedArray(animData.layers.length);
 
-    this.updateContainerSize()
+    this.updateContainerSize();
   }
 
   override createImage(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     return new CVImageElement(
       data,
       this.globalData,
       this as unknown as ElementInterfaceIntersect
-    )
+    );
   }
 
   override createShape(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     return new CVShapeElement(
       data,
       this.globalData,
       this as unknown as ElementInterfaceIntersect
-    )
+    );
   }
 
   override createSolid(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     return new CVSolidElement(
       data,
       this.globalData,
       this as unknown as ElementInterfaceIntersect
-    )
+    );
   }
 
   override createText(data: LottieLayer) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     return new CVTextElement(
       data,
       this.globalData,
       this as unknown as ElementInterfaceIntersect
-    )
+    );
   }
 
   ctxFill(rule?: CanvasFillRule) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.fill(rule)
+    this.canvasContext.fill(rule);
   }
 
   ctxFillRect(
     x: number, y: number, w: number, h: number
   ) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
     this.canvasContext.fillRect(
       x, y, w, h
-    )
+    );
   }
 
   ctxFillStyle(value = '') {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.fillStyle = value
+    this.canvasContext.fillStyle = value;
   }
 
   ctxLineCap(value: CanvasLineCap) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.lineCap = value
+    this.canvasContext.lineCap = value;
   }
 
   ctxLineJoin(value: CanvasLineJoin) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.lineJoin = value
+    this.canvasContext.lineJoin = value;
   }
 
   ctxLineWidth(value: number) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.lineWidth = value
+    this.canvasContext.lineWidth = value;
   }
 
   ctxMiterLimit(value: number) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.miterLimit = value
+    this.canvasContext.miterLimit = value;
   }
 
   ctxOpacity(op = 1) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.globalAlpha *= op < 0 ? 0 : op
+    this.canvasContext.globalAlpha *= op < 0 ? 0 : op;
   }
 
   ctxStroke() {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.stroke()
+    this.canvasContext.stroke();
   }
 
   ctxStrokeStyle(value = '') {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
-    this.canvasContext.strokeStyle = value
+    this.canvasContext.strokeStyle = value;
   }
 
   ctxTransform(props: Float32Array) {
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
     if (
       props[0] === 1 &&
@@ -237,7 +237,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       props[12] === 0 &&
       props[13] === 0
     ) {
-      return
+      return;
     }
     this.canvasContext.transform(
       props[0] ?? 0,
@@ -246,45 +246,45 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       props[5] ?? 0,
       props[12] ?? 0,
       props[13] ?? 0
-    )
+    );
   }
 
   override destroy() {
     if (!this.animationItem) {
-      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`);
     }
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     if (this.renderConfig?.clearCanvas && this.animationItem.wrapper) {
-      this.animationItem.wrapper.innerText = ''
+      this.animationItem.wrapper.innerText = '';
     }
-    const { length } = this.layers
+    const { length } = this.layers;
 
     for (let i = length - 1; i >= 0; i -= 1) {
-      this.elements[i]?.destroy()
+      this.elements[i]?.destroy();
     }
-    this.elements.length = 0
-    this.globalData.canvasContext = null
-    this.animationItem.container = null as unknown as HTMLCanvasElement
-    this.destroyed = true
+    this.elements.length = 0;
+    this.globalData.canvasContext = null;
+    this.animationItem.container = null as unknown as HTMLCanvasElement;
+    this.destroyed = true;
   }
 
   hide() {
     if (!this.animationItem?.container) {
-      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`)
+      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`);
     }
-    this.animationItem.container.style.display = 'none'
+    this.animationItem.container.style.display = 'none';
   }
 
   renderFrame(num: number | false, forceRender?: boolean) {
     try {
       if (!this.globalData) {
-        throw new Error('globalData is not implemented')
+        throw new Error('globalData is not implemented');
       }
       if (!this.animationItem) {
-        throw new Error('animationItem is not implemented')
+        throw new Error('animationItem is not implemented');
       }
 
       if (
@@ -295,23 +295,23 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         this.destroyed ||
         num === -1
       ) {
-        return
+        return;
       }
-      this.renderedFrame = num
-      this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame)
-      this.globalData.frameId++
-      this.globalData._mdf = Boolean(!this.renderConfig?.clearCanvas || forceRender)
-      this.globalData.projectInterface.currentFrame = num
+      this.renderedFrame = num;
+      this.globalData.frameNum = num - Number(this.animationItem._isFirstFrame);
+      this.globalData.frameId++;
+      this.globalData._mdf = Boolean(!this.renderConfig?.clearCanvas || forceRender);
+      this.globalData.projectInterface.currentFrame = num;
 
-      const { length } = this.layers
+      const { length } = this.layers;
 
       if (!this.completeLayers) {
-        this.checkLayers(num)
+        this.checkLayers(num);
       }
 
       for (let i = length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
-          this.elements[i]?.prepareFrame(num - (this.layers[i]?.st ?? 0))
+          this.elements[i]?.prepareFrame(num - (this.layers[i]?.st ?? 0));
         }
       }
 
@@ -322,121 +322,121 @@ export abstract class CanvasRendererBase extends BaseRenderer {
             0,
             this.transformCanvas?.w || 0,
             this.transformCanvas?.h || 0
-          )
+          );
         } else {
-          this.save()
+          this.save();
         }
         for (let i = length - 1; i >= 0; i--) {
           if (this.completeLayers || this.elements[i]) {
-            this.elements[i]?.renderFrame()
+            this.elements[i]?.renderFrame();
           }
         }
         if (this.renderConfig?.clearCanvas !== true) {
-          this.restore()
+          this.restore();
         }
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      console.error(this.constructor.name, error);
     }
 
   }
 
   reset() {
     if (!this.renderConfig?.clearCanvas) {
-      this.canvasContext?.restore()
+      this.canvasContext?.restore();
 
-      return
+      return;
     }
-    this.contextData?.reset()
+    this.contextData?.reset();
   }
 
   restore(actionFlag?: boolean) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
     if (!this.renderConfig?.clearCanvas) {
-      this.canvasContext?.restore()
+      this.canvasContext?.restore();
 
-      return
+      return;
     }
     if (actionFlag) {
-      this.globalData.blendMode = 'source-over'
+      this.globalData.blendMode = 'source-over';
     }
-    this.contextData?.restore(actionFlag)
+    this.contextData?.restore(actionFlag);
   }
 
   save(_flag?: boolean) {
-    this.canvasContext?.save()
+    this.canvasContext?.save();
   }
 
   show() {
     if (!this.animationItem?.container) {
-      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`)
+      throw new Error(`${this.constructor.name}: animationItem -> container is not implemented`);
     }
-    this.animationItem.container.style.display = 'block'
+    this.animationItem.container.style.display = 'block';
   }
 
   updateContainerSize(width?: number, height?: number) {
     if (!this.animationItem) {
-      throw new Error(`${this.constructor.name}: animationItem is not implemented`)
+      throw new Error(`${this.constructor.name}: animationItem is not implemented`);
     }
     if (!this.canvasContext) {
-      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`);
     }
     if (!this.renderConfig?.dpr) {
-      throw new Error(`${this.constructor.name}: renderConfig -> dpr is not implemented`)
+      throw new Error(`${this.constructor.name}: renderConfig -> dpr is not implemented`);
     }
     if (!this.transformCanvas) {
-      throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
+      throw new Error(`${this.constructor.name}: transformCanvas is not implemented`);
     }
 
-    this.reset()
-    let elementWidth, elementHeight
+    this.reset();
+    let elementWidth; let elementHeight;
 
     if (width && height) {
-      elementWidth = width
-      elementHeight = height
-      this.canvasContext.canvas.width = elementWidth
-      this.canvasContext.canvas.height = elementHeight
+      elementWidth = width;
+      elementHeight = height;
+      this.canvasContext.canvas.width = elementWidth;
+      this.canvasContext.canvas.height = elementHeight;
     } else {
       if (this.animationItem.wrapper && this.animationItem.container) {
-        elementWidth = this.animationItem.wrapper.offsetWidth
-        elementHeight = this.animationItem.wrapper.offsetHeight
+        elementWidth = this.animationItem.wrapper.offsetWidth;
+        elementHeight = this.animationItem.wrapper.offsetHeight;
       } else {
-        elementWidth = this.canvasContext.canvas.width
-        elementHeight = this.canvasContext.canvas.height
+        elementWidth = this.canvasContext.canvas.width;
+        elementHeight = this.canvasContext.canvas.height;
       }
-      this.canvasContext.canvas.width = elementWidth * this.renderConfig.dpr
-      this.canvasContext.canvas.height = elementHeight * this.renderConfig.dpr
+      this.canvasContext.canvas.width = elementWidth * this.renderConfig.dpr;
+      this.canvasContext.canvas.height = elementHeight * this.renderConfig.dpr;
     }
 
-    let elementRel, animationRel
+    let elementRel; let animationRel;
 
     if (
       this.renderConfig.preserveAspectRatio.includes('meet') ||
       this.renderConfig.preserveAspectRatio.includes('slice')
     ) {
-      const par = this.renderConfig.preserveAspectRatio.split(' '),
-        fillType = par[1] || 'meet',
-        pos = par[0] || 'xMidYMid',
-        xPos = pos.slice(0, 4),
-        yPos = pos.slice(4)
+      const par = this.renderConfig.preserveAspectRatio.split(' ');
+      const fillType = par[1] || 'meet';
+      const pos = par[0] || 'xMidYMid';
+      const xPos = pos.slice(0, 4);
+      const yPos = pos.slice(4);
 
-      elementRel = elementWidth / elementHeight
-      animationRel = this.transformCanvas.w / this.transformCanvas.h
+      elementRel = elementWidth / elementHeight;
+      animationRel = this.transformCanvas.w / this.transformCanvas.h;
       if (
         animationRel > elementRel && fillType === 'meet' ||
         animationRel < elementRel && fillType === 'slice'
       ) {
         this.transformCanvas.sx =
-          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr);
         this.transformCanvas.sy =
-          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr);
       } else {
         this.transformCanvas.sx =
-          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
+          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr);
         this.transformCanvas.sy =
-          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
+          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr);
       }
 
       if (
@@ -448,7 +448,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
             2 *
-            this.renderConfig.dpr
+            this.renderConfig.dpr;
       } else if (
         xPos === 'xMax' &&
         (animationRel < elementRel && fillType === 'meet' ||
@@ -457,9 +457,9 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.tx =
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) *
-            this.renderConfig.dpr
+            this.renderConfig.dpr;
       } else {
-        this.transformCanvas.tx = 0
+        this.transformCanvas.tx = 0;
       }
       if (
         yPos === 'YMid' &&
@@ -470,7 +470,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
             2 *
-            this.renderConfig.dpr
+            this.renderConfig.dpr;
       } else if (
         yPos === 'YMax' &&
         (animationRel > elementRel && fillType === 'meet' ||
@@ -479,22 +479,22 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.ty =
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) *
-            this.renderConfig.dpr
+            this.renderConfig.dpr;
       } else {
-        this.transformCanvas.ty = 0
+        this.transformCanvas.ty = 0;
       }
     } else if (this.renderConfig.preserveAspectRatio === PreserveAspectRatio.Initial) {
       this.transformCanvas.sx =
-        elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+        elementWidth / (this.transformCanvas.w / this.renderConfig.dpr);
       this.transformCanvas.sy =
-        elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
-      this.transformCanvas.tx = 0
-      this.transformCanvas.ty = 0
+        elementHeight / (this.transformCanvas.h / this.renderConfig.dpr);
+      this.transformCanvas.tx = 0;
+      this.transformCanvas.ty = 0;
     } else {
-      this.transformCanvas.sx = this.renderConfig.dpr
-      this.transformCanvas.sy = this.renderConfig.dpr
-      this.transformCanvas.tx = 0
-      this.transformCanvas.ty = 0
+      this.transformCanvas.sx = this.renderConfig.dpr;
+      this.transformCanvas.sy = this.renderConfig.dpr;
+      this.transformCanvas.tx = 0;
+      this.transformCanvas.ty = 0;
     }
     this.transformCanvas.props = [
       this.transformCanvas.sx,
@@ -513,21 +513,21 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       this.transformCanvas.ty,
       0,
       1,
-    ] as unknown as Float32Array
+    ] as unknown as Float32Array;
 
-    this.ctxTransform(this.transformCanvas.props)
-    this.canvasContext.beginPath()
+    this.ctxTransform(this.transformCanvas.props);
+    this.canvasContext.beginPath();
     this.canvasContext.rect(
       0,
       0,
       this.transformCanvas.w,
       this.transformCanvas.h
-    )
-    this.canvasContext.closePath()
-    this.canvasContext.clip()
+    );
+    this.canvasContext.closePath();
+    this.canvasContext.clip();
 
-    this.renderFrame(this.renderedFrame, true)
+    this.renderFrame(this.renderedFrame, true);
   }
 }
 
-CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull
+CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull;

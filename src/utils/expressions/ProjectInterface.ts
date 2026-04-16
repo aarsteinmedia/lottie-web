@@ -1,29 +1,29 @@
-import type { CompElementInterface } from '@/types'
+import type { CompElementInterface } from '@/types';
 
 export class ProjectInterface {
-  compositions: CompElementInterface[] = []
-  currentFrame = 0
+  compositions: CompElementInterface[] = [];
+  currentFrame = 0;
   getComposition(name?: string) {
-    let i = 0
+    let i = 0;
 
-    const { length } = this.compositions
+    const { length } = this.compositions;
 
     while (i < length) {
       if (this.compositions[i]?.data && this.compositions[i]?.data?.nm === name) {
         if (this.compositions[i]?.data?.xt) {
-          this.compositions[i]?.prepareFrame(this.currentFrame)
+          this.compositions[i]?.prepareFrame(this.currentFrame);
         }
 
-        return this.compositions[i]?.compInterface
+        return this.compositions[i]?.compInterface;
       }
-      i++
+      i++;
     }
 
-    return null
+    return null;
 
   }
 
   registerComposition(comp: CompElementInterface) {
-    this.compositions.push(comp)
+    this.compositions.push(comp);
   }
 }

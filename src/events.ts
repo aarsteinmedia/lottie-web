@@ -1,178 +1,178 @@
-import type { AnimationItem } from '@/animation/AnimationItem'
-import type { AnimationDirection, AnimationEventName } from '@/types'
+import type { AnimationItem } from '@/animation/AnimationItem';
+import type { AnimationDirection, AnimationEventName } from '@/types';
 
 export class EnterFrameEvent {
-  currentTime: number
-  direction: AnimationDirection
-  target?: undefined | AnimationItem
-  totalTime: number
-  type: AnimationEventName
+  currentTime: number;
+  direction: AnimationDirection;
+  target?: undefined | AnimationItem;
+  totalTime: number;
+  type: AnimationEventName;
   constructor(
     type: AnimationEventName,
     currentTime: number,
     totalTime: number,
     frameMultiplier: number
   ) {
-    this.type = type
-    this.currentTime = currentTime
-    this.totalTime = totalTime
-    this.direction = frameMultiplier < 0 ? -1 : 1
+    this.type = type;
+    this.currentTime = currentTime;
+    this.totalTime = totalTime;
+    this.direction = frameMultiplier < 0 ? -1 : 1;
   }
 }
 
 export class CompleteEvent {
-  direction: AnimationDirection
-  target?: undefined | AnimationItem
-  type: AnimationEventName
+  direction: AnimationDirection;
+  target?: undefined | AnimationItem;
+  type: AnimationEventName;
   constructor(type: AnimationEventName, frameMultiplier: number) {
-    this.type = type
-    this.direction = frameMultiplier < 0 ? -1 : 1
+    this.type = type;
+    this.direction = frameMultiplier < 0 ? -1 : 1;
   }
 }
 
 export class DrawnFrameEvent {
-  currentTime: number
-  direction: AnimationDirection
-  target?: undefined | AnimationItem
-  totalTime: number
-  type: AnimationEventName
+  currentTime: number;
+  direction: AnimationDirection;
+  target?: undefined | AnimationItem;
+  totalTime: number;
+  type: AnimationEventName;
   constructor(
     type: AnimationEventName,
     currentTime: number,
     direction: AnimationDirection,
     totalTime: number
   ) {
-    this.type = type
-    this.direction = direction
-    this.currentTime = currentTime
-    this.totalTime = totalTime
+    this.type = type;
+    this.direction = direction;
+    this.currentTime = currentTime;
+    this.totalTime = totalTime;
   }
 }
 
 export class CompleteLoopEvent {
-  currentLoop: number
-  direction: AnimationDirection
-  target?: undefined | AnimationItem
-  totalLoops: number | boolean
-  type: AnimationEventName
+  currentLoop: number;
+  direction: AnimationDirection;
+  target?: undefined | AnimationItem;
+  totalLoops: number | boolean;
+  type: AnimationEventName;
   constructor(
     type: AnimationEventName,
     totalLoops: number | boolean,
     currentLoop: number,
     frameMultiplier: number
   ) {
-    this.type = type
-    this.currentLoop = currentLoop
-    this.totalLoops = totalLoops
-    this.direction = frameMultiplier < 0 ? -1 : 1
+    this.type = type;
+    this.currentLoop = currentLoop;
+    this.totalLoops = totalLoops;
+    this.direction = frameMultiplier < 0 ? -1 : 1;
 
   }
 }
 
 export class SegmentStartEvent {
-  firstFrame: number
-  target?: undefined | AnimationItem
-  totalFrames: number
-  type: AnimationEventName
+  firstFrame: number;
+  target?: undefined | AnimationItem;
+  totalFrames: number;
+  type: AnimationEventName;
   constructor(
     type: AnimationEventName,
     firstFrame: number,
     totalFrames: number
   ) {
-    this.type = type
-    this.firstFrame = firstFrame
-    this.totalFrames = totalFrames
+    this.type = type;
+    this.firstFrame = firstFrame;
+    this.totalFrames = totalFrames;
   }
 }
 
 export class DestroyEvent {
-  target: AnimationItem
-  type: AnimationEventName
+  target: AnimationItem;
+  type: AnimationEventName;
   constructor(type: AnimationEventName, target: AnimationItem) {
-    this.type = type
-    this.target = target
+    this.type = type;
+    this.target = target;
   }
 }
 
 export class RenderFrameErrorEvent {
-  currentTime: number
-  nativeError: unknown
-  target?: undefined | AnimationItem
-  type: AnimationEventName = 'renderFrameError'
+  currentTime: number;
+  nativeError: unknown;
+  target?: undefined | AnimationItem;
+  type: AnimationEventName = 'renderFrameError';
   constructor(nativeError: unknown, currentTime: number) {
-    this.nativeError = nativeError
-    this.currentTime = currentTime
+    this.nativeError = nativeError;
+    this.currentTime = currentTime;
   }
 }
 
 export class ConfigErrorEvent {
-  nativeError: unknown
-  target?: undefined | AnimationItem
-  type: AnimationEventName = 'configError'
+  nativeError: unknown;
+  target?: undefined | AnimationItem;
+  type: AnimationEventName = 'configError';
   constructor(nativeError: unknown, _: number) {
-    this.nativeError = nativeError
+    this.nativeError = nativeError;
   }
 }
 
 export class AnimationConfigErrorEvent {
-  nativeError: unknown
-  target?: undefined | AnimationItem
-  type: AnimationEventName
+  nativeError: unknown;
+  target?: undefined | AnimationItem;
+  type: AnimationEventName;
   constructor(type: AnimationEventName, nativeError: unknown) {
-    this.type = type
-    this.nativeError = nativeError
+    this.type = type;
+    this.nativeError = nativeError;
   }
 }
 
 export abstract class BaseEvent {
   _cbs: Partial<
     Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>
-  > = {}
+  > = {};
 
   addEventListener(eventName: AnimationEventName,
     callback: (ev?: LottieEvent) => unknown): () => void {
-    this._cbs[eventName] = this._cbs[eventName] ?? []
-    this._cbs[eventName].push(callback)
+    this._cbs[eventName] = this._cbs[eventName] ?? [];
+    this._cbs[eventName].push(callback);
 
     return () => {
-      this.removeEventListener(eventName, callback)
-    }
+      this.removeEventListener(eventName, callback);
+    };
   }
 
   removeEventListener(eventName: AnimationEventName,
     callback?: (ev: LottieEvent) => unknown): void {
     if (!callback) {
-      this._cbs[eventName] = null
+      this._cbs[eventName] = null;
 
-      return
+      return;
     }
 
     if (this._cbs[eventName]) {
-      let i = 0,
-        { length: len } = this._cbs[eventName]
+      let i = 0;
+      let { length: len } = this._cbs[eventName];
 
       while (i < len) {
         if (this._cbs[eventName][i] === callback) {
-          this._cbs[eventName].splice(i, 1)
-          i--
-          len--
+          this._cbs[eventName].splice(i, 1);
+          i--;
+          len--;
         }
-        i++
+        i++;
       }
       if (this._cbs[eventName].length === 0) {
-        this._cbs[eventName] = null
+        this._cbs[eventName] = null;
       }
     }
   }
 
   triggerEvent(eventName: AnimationEventName, ev?: LottieEvent): void {
     if (!this._cbs[eventName]) {
-      return
+      return;
     }
-    const { length } = this._cbs[eventName]
+    const { length } = this._cbs[eventName];
 
     for (let i = 0; i < length; i++) {
-      this._cbs[eventName][i]?.(ev)
+      this._cbs[eventName][i]?.(ev);
     }
   }
 }
@@ -186,4 +186,4 @@ export type LottieEvent =
 
   | ConfigErrorEvent
   | DestroyEvent
-  | DrawnFrameEvent
+  | DrawnFrameEvent;

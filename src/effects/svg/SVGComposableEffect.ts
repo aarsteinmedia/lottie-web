@@ -1,20 +1,20 @@
-import { createNS } from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements';
 
 export abstract class SVGComposableEffect {
   createMergeNode(resultId: string, ins: string[]) {
-    const feMerge = createNS<SVGFEMergeElement>('feMerge')
+    const feMerge = createNS<SVGFEMergeElement>('feMerge');
 
-    feMerge.setAttribute('result', resultId)
-    let feMergeNode
-    const { length } = ins
+    feMerge.setAttribute('result', resultId);
+    let feMergeNode;
+    const { length } = ins;
 
     for (let i = 0; i < length; i++) {
-      feMergeNode = createNS<SVGFEMergeNodeElement>('feMergeNode')
-      feMergeNode.setAttribute('in', ins[i] as string)
-      feMerge.appendChild(feMergeNode)
-      feMerge.appendChild(feMergeNode)
+      feMergeNode = createNS<SVGFEMergeNodeElement>('feMergeNode');
+      feMergeNode.setAttribute('in', ins[i] as string);
+      feMerge.appendChild(feMergeNode);
+      feMerge.appendChild(feMergeNode);
     }
 
-    return feMerge
+    return feMerge;
   }
 }

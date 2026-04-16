@@ -1,5 +1,5 @@
-import type Expressions from '@/utils/expressions/Expressions'
-import type { getInterface } from '@/utils/expressions/InterfacesProvider'
+import type Expressions from '@/utils/expressions/Expressions';
+import type { getInterface } from '@/utils/expressions/InterfacesProvider';
 
 interface Expression {
   interface: null | typeof getInterface
@@ -9,13 +9,13 @@ interface Expression {
 const expressions: Expression = {
   interface: null,
   plugin: null
-}
+};
 
 export const setExpressionsPlugin = (value: typeof Expressions) => {
-    expressions.plugin = value
-  },
-  getExpressionsPlugin = () => expressions.plugin,
-  setExpressionInterfaces = (value: typeof getInterface) => {
-    expressions.interface = value
-  },
-  getExpressionInterfaces = () => expressions.interface
+  expressions.plugin = value;
+};
+export const getExpressionsPlugin = () => expressions.plugin;
+export const setExpressionInterfaces = (value: typeof getInterface) => {
+  expressions.interface = value;
+};
+export const getExpressionInterfaces = () => expressions.interface;

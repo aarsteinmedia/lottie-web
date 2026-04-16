@@ -1,118 +1,118 @@
-import type { Unzipped } from 'fflate'
+import type { Unzipped } from 'fflate';
 
-import type { LottieAsset } from '@/types'
+import type { LottieAsset } from '@/types';
 
 import {
   getExt, isAudio, isImage,
   parseBase64
-} from '@/utils'
-import { isServer } from '@/utils/helpers/constants'
+} from '@/utils';
+import { isServer } from '@/utils/helpers/constants';
 
 const getMimeFromExt = (ext?: string) => {
-    switch (ext) {
-      case 'svg':
-      case 'svg+xml': {
-        return 'image/svg+xml'
-      }
-      case 'jpg':
-      case 'jpeg': {
-        return 'image/jpeg'
-      }
-      case 'png':
-      case 'gif':
-      case 'webp':
-      case 'avif': {
-        return `image/${ext}`
-      }
-      case 'mp3':
-      case 'mpeg':
-      case 'wav': {
-        return `audio/${ext}`
-      }
-      default: {
-        return ''
-      }
+  switch (ext) {
+    case 'svg':
+    case 'svg+xml': {
+      return 'image/svg+xml';
     }
-  },
-
-  isBase64 = (str?: string) => {
-    if (!str) {
-      return false
+    case 'jpg':
+    case 'jpeg': {
+      return 'image/jpeg';
     }
-    const regex =
-      /^(?:[0-9a-z+/]{4})*(?:[0-9a-z+/]{2}==|[0-9a-z+/]{3}=)?$/i
-
-    return regex.test(parseBase64(str))
+    case 'png':
+    case 'gif':
+    case 'webp':
+    case 'avif': {
+      return `image/${ext}`;
+    }
+    case 'mp3':
+    case 'mpeg':
+    case 'wav': {
+      return `audio/${ext}`;
+    }
+    default: {
+      return '';
+    }
   }
+};
+
+const isBase64 = (str?: string) => {
+  if (!str) {
+    return false;
+  }
+  const regex =
+      /^(?:[0-9a-z+/]{4})*(?:[0-9a-z+/]{2}==|[0-9a-z+/]{3}=)?$/i;
+
+  return regex.test(parseBase64(str));
+};
 
 export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[]) {
   if (!Array.isArray(assets)) {
-    return
+    return;
   }
 
-  const toResolve: Promise<void>[] = [],
-    { length } = assets
+  const toResolve: Promise<void>[] = [];
+  const { length } = assets;
 
   for (let i = 0; i < length; i++) {
-    const asset = assets[i]
+    const asset = assets[i];
 
     if (!asset) {
-      continue
+      continue;
     }
 
     if (!isAudio(asset) && !isImage(asset)) {
-      continue
+      continue;
     }
 
-    const _isImage = isImage(asset),
-      type = _isImage ? 'images' : 'audio'
+    const _isImage = isImage(asset);
+    const type = _isImage ? 'images' : 'audio';
 
-    let u8: Uint8Array | undefined
+    let u8: Uint8Array | undefined;
 
-    const assetPath = asset.u?.replace(/^\/+/, '')
+    const assetPath = asset.u?.replace(/^\/+/, '');
 
     /**
      * Check whether dotLottie is v.1.0 or v.2.0: if images folder is abbreviated.
      */
     if (assetPath && assetPath !== '') {
-      u8 = unzipped?.[`${assetPath}${asset.p}`]
+      u8 = unzipped?.[`${assetPath}${asset.p}`];
     } else if (_isImage) {
-      u8 = unzipped?.[`i/${asset.p}`]
+      u8 = unzipped?.[`i/${asset.p}`];
     }
 
-    u8 = u8 ?? unzipped?.[`${type}/${asset.p}`]
+    u8 = u8 ?? unzipped?.[`${type}/${asset.p}`];
 
 
     if (!u8) {
-      continue
+      continue;
     }
 
     toResolve.push(new Promise<void>((resolveAsset) => {
-      let assetB64: string
+      let assetB64: string;
 
       if (isServer) {
-        assetB64 = Buffer.from(u8).toString('base64')
+        assetB64 = Buffer.from(u8).toString('base64');
       } else {
-        let result = ''
-        const { length: jLen } = u8
+        let result = '';
+        const { length: jLen } = u8;
 
         for (let j = 0; j < jLen; j++) {
-          result += String.fromCharCode(u8[j] as number)
+          result += String.fromCharCode(u8[j] as number);
         }
 
-        assetB64 = btoa(result)
+        assetB64 = btoa(result);
       }
 
       asset.p =
         asset.p?.startsWith('data:') || isBase64(asset.p)
           ? asset.p
-          : `data:${getMimeFromExt(getExt(asset.p))};base64,${assetB64}`
-      asset.e = 1
-      asset.u = ''
+          : `data:${getMimeFromExt(getExt(asset.p))};base64,${assetB64}`;
+      asset.e = 1;
+      asset.u = '';
 
-      resolveAsset()
-    }))
+      resolveAsset();
+    }));
   }
 
-  await Promise.all(toResolve)
+  await Promise.all(toResolve);
 }

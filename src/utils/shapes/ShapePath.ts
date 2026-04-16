@@ -1,56 +1,56 @@
-import type { BezierLength, Vector2 } from '@/types'
+import type { BezierLength, Vector2 } from '@/types';
 
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { pointPool } from '@/utils/pooling/pointPool'
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { pointPool } from '@/utils/pooling/pointPool';
 
 export class ShapePath {
-  _length = 0
-  _maxLength = 8
-  c = false
-  e?: ShapePath[]
-  i: Vector2[]
-  lengths: BezierLength[] = []
-  o: Vector2[]
-  s?: ShapePath[]
-  v: Vector2[]
+  _length = 0;
+  _maxLength = 8;
+  c = false;
+  e?: ShapePath[];
+  i: Vector2[];
+  lengths: BezierLength[] = [];
+  o: Vector2[];
+  s?: ShapePath[];
+  v: Vector2[];
   get _type() {
-    return 'ShapePath'
+    return 'ShapePath';
   }
 
   constructor() {
-    this.v = createSizedArray(this._maxLength)
-    this.o = createSizedArray(this._maxLength)
-    this.i = createSizedArray(this._maxLength)
+    this.v = createSizedArray(this._maxLength);
+    this.o = createSizedArray(this._maxLength);
+    this.i = createSizedArray(this._maxLength);
   }
 
   doubleArrayLength() {
-    this.v = [...this.v, ...createSizedArray(this._maxLength)] as Vector2[]
-    this.i = [...this.i, ...createSizedArray(this._maxLength)] as Vector2[]
-    this.o = [...this.o, ...createSizedArray(this._maxLength)] as Vector2[]
-    this._maxLength *= 2
+    this.v = [...this.v, ...createSizedArray(this._maxLength)] as Vector2[];
+    this.i = [...this.i, ...createSizedArray(this._maxLength)] as Vector2[];
+    this.o = [...this.o, ...createSizedArray(this._maxLength)] as Vector2[];
+    this._maxLength *= 2;
   }
 
   length() {
-    return this._length
+    return this._length;
   }
 
   setLength(len: number) {
     while (this._maxLength < len) {
-      this.doubleArrayLength()
+      this.doubleArrayLength();
     }
-    this._length = len
+    this._length = len;
   }
 
   setPathData(closed: boolean, len: number) {
-    this.c = closed
-    this.setLength(len)
-    let i = 0
+    this.c = closed;
+    this.setLength(len);
+    let i = 0;
 
     while (i < len) {
-      this.v[i] = pointPool.newElement() as Vector2
-      this.o[i] = pointPool.newElement() as Vector2
-      this.i[i] = pointPool.newElement() as Vector2
-      i++
+      this.v[i] = pointPool.newElement() as Vector2;
+      this.o[i] = pointPool.newElement() as Vector2;
+      this.i[i] = pointPool.newElement() as Vector2;
+      i++;
     }
   }
 
@@ -66,57 +66,57 @@ export class ShapePath {
   ) {
     this.setXYAt(
       vX, vY, 'v', pos, replace
-    )
+    );
     this.setXYAt(
       oX, oY, 'o', pos, replace
-    )
+    );
     this.setXYAt(
       iX, iY, 'i', pos, replace
-    )
+    );
   }
 
   setXYAt(
     x: number, y: number, type: string, pos: number, replace?: boolean
   ) {
-    let arr: number[][]
+    let arr: number[][];
 
-    this._length = Math.max(this._length, pos + 1)
+    this._length = Math.max(this._length, pos + 1);
     if (this._length >= this._maxLength) {
-      this.doubleArrayLength()
+      this.doubleArrayLength();
     }
     switch (type) {
       case 'v': {
-        arr = this.v
-        break
+        arr = this.v;
+        break;
       }
       case 'i': {
-        arr = this.i
-        break
+        arr = this.i;
+        break;
       }
       case 'o': {
-        arr = this.o
-        break
+        arr = this.o;
+        break;
       }
       default: {
-        arr = []
-        break
+        arr = [];
+        break;
       }
     }
     if (!arr[pos] || !replace) {
-      arr[pos] = pointPool.newElement() as Vector2
+      arr[pos] = pointPool.newElement() as Vector2;
     }
-    arr[pos][0] = x
-    arr[pos][1] = y
+    arr[pos][0] = x;
+    arr[pos][1] = y;
   }
 
   toReversed() {
-    const newPath = new ShapePath()
+    const newPath = new ShapePath();
 
-    newPath.setPathData(this.c, this._length)
-    const vertices = this.v,
-      outPoints = this.o,
-      inPoints = this.i
-    let init = 0
+    newPath.setPathData(this.c, this._length);
+    const vertices = this.v;
+    const outPoints = this.o;
+    const inPoints = this.i;
+    let init = 0;
 
     if (this.c) {
       newPath.setTripleAt(
@@ -128,11 +128,11 @@ export class ShapePath {
         outPoints[0]?.[1] ?? 0,
         0,
         false
-      )
-      init = 1
+      );
+      init = 1;
     }
-    const { _length } = this
-    let cnt = _length - 1
+    const { _length } = this;
+    let cnt = _length - 1;
 
     for (let i = init; i < _length; i++) {
       newPath.setTripleAt(
@@ -144,10 +144,10 @@ export class ShapePath {
         outPoints[cnt]?.[1] ?? 0,
         i,
         false
-      )
-      cnt -= 1
+      );
+      cnt -= 1;
     }
 
-    return newPath
+    return newPath;
   }
 }

@@ -1,8 +1,8 @@
 // @ts-nocheck
-import type { TransformEffect } from '@/effects/TransformEffect'
-import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
-import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
-import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { TransformEffect } from '@/effects/TransformEffect';
+import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData';
+import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData';
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer';
 import type {
   CanvasItem,
   CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
@@ -12,79 +12,79 @@ import type {
   TransformSequence,
   Vector3,
   VectorProperty
-} from '@/types'
-import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
+} from '@/types';
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
+import type { ShapeCollection } from '@/utils/shapes/ShapeCollection';
 
-import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
-import { CVShapeData } from '@/elements/helpers/shapes/CVShapeData'
-import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
-import { ShapeElement } from '@/elements/ShapeElement'
+import { CVBaseElement } from '@/elements/canvas/CVBaseElement';
+import { CVShapeData } from '@/elements/helpers/shapes/CVShapeData';
+import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager';
+import { ShapeElement } from '@/elements/ShapeElement';
 import {
   lineCapEnum,
   lineJoinEnum,
   RendererType,
   ShapeType,
-} from '@/utils/enums'
-import { degToRads } from '@/utils/helpers/constants'
-import TransformPropertyFactory from '@/utils/properties/TransformProperty'
-import PropertyFactory from '@/utils/PropertyFactory'
-import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
-import { DashProperty } from '@/utils/shapes/properties/DashProperty'
-import { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
+} from '@/utils/enums';
+import { degToRads } from '@/utils/helpers/constants';
+import TransformPropertyFactory from '@/utils/properties/TransformProperty';
+import PropertyFactory from '@/utils/PropertyFactory';
+import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers';
+import { DashProperty } from '@/utils/shapes/properties/DashProperty';
+import { GradientProperty } from '@/utils/shapes/properties/GradientProperty';
 
 export class CVShapeElement extends ShapeElement {
-  canvasContext?: CanvasRenderingContext2D
-  clearCanvas = CVBaseElement.prototype.clearCanvas
-  override createContainerElements = CVBaseElement.prototype.createContainerElements
-  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
-  dashResetter: number[] = []
-  exitLayer = CVBaseElement.prototype.exitLayer
-  override hide = CVBaseElement.prototype.hide
-  override initRendererElement = CVBaseElement.prototype.initRendererElement
-  prepareLayer = CVBaseElement.prototype.prepareLayer
-  prevViewData: ShapeGroupData[] = []
-  override renderFrame = CVBaseElement.prototype.renderFrame
-  override setBlendMode = CVBaseElement.prototype.setBlendMode
-  override show = CVBaseElement.prototype.show
-  stylesList: CVStyleElement[] = []
+  canvasContext?: CanvasRenderingContext2D;
+  clearCanvas = CVBaseElement.prototype.clearCanvas;
+  override createContainerElements = CVBaseElement.prototype.createContainerElements;
+  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents;
+  dashResetter: number[] = [];
+  exitLayer = CVBaseElement.prototype.exitLayer;
+  override hide = CVBaseElement.prototype.hide;
+  override initRendererElement = CVBaseElement.prototype.initRendererElement;
+  prepareLayer = CVBaseElement.prototype.prepareLayer;
+  prevViewData: ShapeGroupData[] = [];
+  override renderFrame = CVBaseElement.prototype.renderFrame;
+  override setBlendMode = CVBaseElement.prototype.setBlendMode;
+  override show = CVBaseElement.prototype.show;
+  stylesList: CVStyleElement[] = [];
   transformHelper = {
     _opMdf: false,
     opacity: 1,
-  } as Transformer
-  transformsManager = new ShapeTransformManager()
+  } as Transformer;
+  transformsManager = new ShapeTransformManager();
 
   constructor(
     data: LottieLayer, globalData: GlobalData, comp: CompElementInterface
   ) {
-    super()
-    this.shapes = []
-    this.shapesData = data.shapes
-    this.itemsData = []
-    this.shapeModifiers = []
-    this.processedElements = []
+    super();
+    this.shapes = [];
+    this.shapesData = data.shapes;
+    this.itemsData = [];
+    this.shapeModifiers = [];
+    this.processedElements = [];
     this.initElement(
       data, globalData, comp
-    )
+    );
   }
 
   addTransformToStyleList(transform: Transformer) {
-    const { length } = this.stylesList
+    const { length } = this.stylesList;
 
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
-        this.stylesList[i].transforms.push(transform)
+        this.stylesList[i].transforms.push(transform);
       }
     }
   }
 
   closeStyles(styles: CVStyleElement[]) {
-    const { length } = styles
+    const { length } = styles;
 
     for (let i = 0; i < length; i++) {
-      styles[i].closed = true
+      styles[i].closed = true;
     }
   }
 
@@ -95,16 +95,16 @@ export class CVShapeElement extends ShapeElement {
       this.prevViewData as unknown as CVShapeElement[],
       true,
       []
-    )
+    );
   }
 
   createGroupElement(_data?: Shape) {
     const elementData = {
       it: [],
       prevViewData: [],
-    }
+    };
 
-    return elementData
+    return elementData;
   }
 
   createShapeElement(data: Shape) {
@@ -113,25 +113,25 @@ export class CVShapeElement extends ShapeElement {
       data,
       this.stylesList,
       this.transformsManager
-    )
+    );
 
-    this.shapes.push(elementData)
-    this.addShapeToModifiers(elementData)
+    this.shapes.push(elementData);
+    this.addShapeToModifiers(elementData);
 
-    return elementData
+    return elementData;
   }
 
   createStyleElement(data: Shape, transforms: { transform: Transformer }[]) {
     try {
       const styleElem: CVStyleElement = {
-          closed: data.hd === true,
-          data,
-          elements: [],
-          preTransforms: this.transformsManager.addTransformSequence(transforms) as unknown as TransformSequence,
-          transforms: [],
-          type: data.ty,
-        },
-        elementData = {} as unknown as CVElement
+        closed: data.hd === true,
+        data,
+        elements: [],
+        preTransforms: this.transformsManager.addTransformSequence(transforms) as unknown as TransformSequence,
+        transforms: [],
+        type: data.ty,
+      };
+      const elementData = {} as unknown as CVElement;
 
       switch (data.ty) {
         case ShapeType.Fill:
@@ -142,13 +142,13 @@ export class CVShapeElement extends ShapeElement {
             1,
             255,
             this as unknown as ElementInterfaceIntersect
-          ) as MultiDimensionalProperty<number[]>
+          ) as MultiDimensionalProperty<number[]>;
           if (!elementData.c.k) {
-            const rgb = elementData.c.v.map(c => Math.round(c * 255)).join(',')
+            const rgb = elementData.c.v.map(c => Math.round(c * 255)).join(',');
 
-            styleElem.co = `rgb(${rgb})`
+            styleElem.co = `rgb(${rgb})`;
           }
-          break
+          break;
         }
         case ShapeType.GradientFill:
         case ShapeType.GradientStroke: {
@@ -158,37 +158,37 @@ export class CVShapeElement extends ShapeElement {
             1,
             null,
             this as unknown as ElementInterfaceIntersect
-          ) as MultiDimensionalProperty
+          ) as MultiDimensionalProperty;
           elementData.e = PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             data.e,
             1,
             null,
             this as unknown as ElementInterfaceIntersect
-          ) as MultiDimensionalProperty
+          ) as MultiDimensionalProperty;
           elementData.h = PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             (data.h ?? { k: 0 }) as VectorProperty,
             0,
             0.01,
             this as unknown as ElementInterfaceIntersect
-          ) as ValueProperty
+          ) as ValueProperty;
           elementData.a = PropertyFactory.getProp(
             this as unknown as ElementInterfaceIntersect,
             (data.a ?? { k: 0 }) as VectorProperty,
             0,
             degToRads,
             this as unknown as ElementInterfaceIntersect
-          ) as ValueProperty
+          ) as ValueProperty;
           if (data.g) {
             elementData.g = new GradientProperty(
               this as unknown as ElementInterfaceIntersect,
               data.g,
               this as unknown as ElementInterfaceIntersect
-            )
+            );
           }
 
-          break
+          break;
         }
         default:
       }
@@ -199,13 +199,13 @@ export class CVShapeElement extends ShapeElement {
         0,
         0.01,
         this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      ) as ValueProperty;
 
       if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
-        styleElem.lc = lineCapEnum[data.lc || 2]
-        styleElem.lj = lineJoinEnum[data.lj || 2]
+        styleElem.lc = lineCapEnum[data.lc || 2];
+        styleElem.lj = lineJoinEnum[data.lj || 2];
         if (data.lj === 1) {
-          styleElem.ml = data.ml
+          styleElem.ml = data.ml;
         }
         elementData.w = PropertyFactory.getProp(
           this as unknown as ElementInterfaceIntersect,
@@ -213,9 +213,9 @@ export class CVShapeElement extends ShapeElement {
           0,
           null,
           this as unknown as ElementInterfaceIntersect
-        ) as ValueProperty
+        ) as ValueProperty;
         if (!elementData.w.k) {
-          styleElem.wi = elementData.w.v
+          styleElem.wi = elementData.w.v;
         }
         if (data.d && typeof data.d === 'object') {
           const d = new DashProperty(
@@ -223,30 +223,30 @@ export class CVShapeElement extends ShapeElement {
             data.d,
             RendererType.Canvas,
             this as unknown as ElementInterfaceIntersect
-          )
+          );
 
-          elementData.d = d
+          elementData.d = d;
           if (!elementData.d.k) {
-            styleElem.da = elementData.d.dashArray
-            styleElem.do = elementData.d.dashoffset[0]
+            styleElem.da = elementData.d.dashArray;
+            styleElem.do = elementData.d.dashoffset[0];
           }
         }
       } else {
-        styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero'
+        styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero';
       }
-      this.stylesList.push(styleElem)
-      elementData.style = styleElem
+      this.stylesList.push(styleElem);
+      elementData.style = styleElem;
 
       // if (data.ty === ShapeType.GradientFill) {
       //   console.log(elementData)
       // }
 
-      return elementData
+      return elementData;
 
     } catch (error) {
-      console.error(this.constructor.name, error)
+      console.error(this.constructor.name, error);
 
-      return null
+      return null;
     }
   }
 
@@ -269,40 +269,40 @@ export class CVShapeElement extends ShapeElement {
         ),
         opacity: 1,
       } as Transformer,
-    }
+    };
 
-    return elementData
+    return elementData;
   }
 
   override destroy() {
-    this.shapesData = null as unknown as Shape[]
-    this.globalData = null as unknown as GlobalData
-    this.canvasContext = null as unknown as CanvasRenderingContext2D
-    this.stylesList.length = 0
-    this.itemsData.length = 0
+    this.shapesData = null as unknown as Shape[];
+    this.globalData = null as unknown as GlobalData;
+    this.canvasContext = null as unknown as CanvasRenderingContext2D;
+    this.stylesList.length = 0;
+    this.itemsData.length = 0;
   }
 
   drawLayer() {
     try {
       if (!this.globalData) {
-        throw new Error(`${this.constructor.name} globalData is not implemented`)
+        throw new Error(`${this.constructor.name} globalData is not implemented`);
       }
       if (!this.globalData.renderer) {
-        throw new Error(`${this.constructor.name} renderer is not implemented`)
+        throw new Error(`${this.constructor.name} renderer is not implemented`);
       }
 
-      const { length } = this.stylesList,
-        { renderer } = this.globalData as { renderer: CanvasRenderer },
-        ctx = this.globalData.canvasContext
-      let currentStyle
+      const { length } = this.stylesList;
+      const { renderer } = this.globalData as { renderer: CanvasRenderer };
+      const ctx = this.globalData.canvasContext;
+      let currentStyle;
 
       for (let i = 0; i < length; i++) {
-        currentStyle = this.stylesList[i] as CVStyleElement
+        currentStyle = this.stylesList[i] as CVStyleElement;
         const {
-            co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
-          } = currentStyle,
-          isStroke =
-          type === ShapeType.Stroke || type === ShapeType.GradientStroke
+          co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
+        } = currentStyle;
+        const isStroke =
+          type === ShapeType.Stroke || type === ShapeType.GradientStroke;
 
         // Skipping style when
         // Stroke width equals 0
@@ -315,52 +315,52 @@ export class CVShapeElement extends ShapeElement {
           coOp === 0 ||
           this.globalData.currentGlobalAlpha === 0
         ) {
-          continue
+          continue;
         }
-        renderer.save()
-        const elems = elements
+        renderer.save();
+        const elems = elements;
 
         if (isStroke) {
-          renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
-          renderer.ctxLineWidth(wi || 0)
+          renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd);
+          renderer.ctxLineWidth(wi || 0);
 
           if (lc) {
-            renderer.ctxLineCap(lc)
+            renderer.ctxLineCap(lc);
           }
 
           if (lj) {
-            renderer.ctxLineJoin(lj)
+            renderer.ctxLineJoin(lj);
           }
 
-          renderer.ctxMiterLimit(ml || 0)
+          renderer.ctxMiterLimit(ml || 0);
         } else {
-          renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
+          renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd);
         // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
         }
-        renderer.ctxOpacity(coOp)
+        renderer.ctxOpacity(coOp);
         if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
-          ctx?.beginPath()
+          ctx?.beginPath();
         }
 
-        renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
-        const { length: jLen } = elems
+        renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array);
+        const { length: jLen } = elems;
 
         for (let j = 0; j < jLen; j++) {
           if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
-            ctx?.beginPath()
+            ctx?.beginPath();
             if (ctx && da) {
-              ctx.setLineDash(da)
-              ctx.lineDashOffset = currentStyle.do || 0
+              ctx.setLineDash(da);
+              ctx.lineDashOffset = currentStyle.do || 0;
             }
           }
-          const nodes = elems[j].trNodes,
-            { length: kLen } = nodes
+          const nodes = elems[j].trNodes;
+          const { length: kLen } = nodes;
 
           for (let k = 0; k < kLen; k++) {
-            const { p: point = [], pts: points = [] } = nodes[k] as TransformNode
+            const { p: point = [], pts: points = [] } = nodes[k] as TransformNode;
 
             if (nodes[k].t === 'm') {
-              ctx?.moveTo(point[0], point[1])
+              ctx?.moveTo(point[0], point[1]);
             } else if (nodes[k].t === 'c') {
               ctx?.bezierCurveTo(
                 points[0],
@@ -369,36 +369,36 @@ export class CVShapeElement extends ShapeElement {
                 points[3],
                 points[4],
                 points[5]
-              )
+              );
             } else {
-              ctx?.closePath()
+              ctx?.closePath();
             }
           }
           if (isStroke) {
           // ctx.stroke();
-            renderer.ctxStroke()
+            renderer.ctxStroke();
             if (da) {
-              ctx?.setLineDash(this.dashResetter)
+              ctx?.setLineDash(this.dashResetter);
             }
           }
         }
         if (!isStroke) {
         // ctx.fill(currentStyle.r);
-          ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
+          ; (this.globalData.renderer as CanvasRenderer).ctxFill(r);
         }
-        renderer.restore()
+        renderer.restore();
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      console.error(this.constructor.name, error);
     }
   }
 
   reloadShapes() {
-    this._isFirstFrame = true
-    const { length } = this.itemsData
+    this._isFirstFrame = true;
+    const { length } = this.itemsData;
 
     for (let i = 0; i < length; i++) {
-      this.prevViewData[i] = this.itemsData[i]
+      this.prevViewData[i] = this.itemsData[i];
     }
     this.searchShapes(
       this.shapesData,
@@ -406,22 +406,22 @@ export class CVShapeElement extends ShapeElement {
       this.prevViewData as unknown as CVShapeElement[],
       true,
       []
-    )
-    const { length: len } = this.dynamicProperties
+    );
+    const { length: len } = this.dynamicProperties;
 
     for (let i = 0; i < len; i++) {
-      this.dynamicProperties[i].getValue()
+      this.dynamicProperties[i].getValue();
     }
-    this.renderModifiers()
-    this.transformsManager.processSequences(this._isFirstFrame)
+    this.renderModifiers();
+    this.transformsManager.processSequences(this._isFirstFrame);
   }
 
   removeTransformFromStyleList() {
-    const { length } = this.stylesList
+    const { length } = this.stylesList;
 
     for (let i = 0; i < length; i++) {
       if (!this.stylesList[i].closed) {
-        this.stylesList[i].transforms.pop()
+        this.stylesList[i].transforms.pop();
       }
     }
   }
@@ -429,15 +429,15 @@ export class CVShapeElement extends ShapeElement {
   renderFill(
     _styleData: any, itemData: CanvasItem, groupTransform: TransformEffect
   ) {
-    const styleElem = itemData.style
+    const styleElem = itemData.style;
 
     if (itemData.c._mdf || this._isFirstFrame) {
-      const rgb = itemData.c.v.map(c => Math.round(c * 255)).join(',')
+      const rgb = itemData.c.v.map(c => Math.round(c * 255)).join(',');
 
-      styleElem.co = `rgb(${rgb})`
+      styleElem.co = `rgb(${rgb})`;
     }
     if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
-      styleElem.coOp = itemData.o.v * groupTransform.opacity
+      styleElem.coOp = itemData.o.v * groupTransform.opacity;
     }
   }
 
@@ -447,10 +447,10 @@ export class CVShapeElement extends ShapeElement {
     groupTransform: TransformEffect
   ) {
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
-    const styleElem = itemData.style
-    let grd: CanvasGradient | undefined
+    const styleElem = itemData.style;
+    let grd: CanvasGradient | undefined;
 
     if (
       !styleElem?.grd ||
@@ -459,78 +459,78 @@ export class CVShapeElement extends ShapeElement {
       itemData.e?._mdf ||
       styleData.t !== 1 && (itemData.h?._mdf || itemData.a?._mdf)
     ) {
-      const ctx = this.globalData.canvasContext,
-        pt1 = itemData.s?.v ?? [0, 0],
-        pt2 = itemData.e?.v ?? [0, 0]
+      const ctx = this.globalData.canvasContext;
+      const pt1 = itemData.s?.v ?? [0, 0];
+      const pt2 = itemData.e?.v ?? [0, 0];
 
       if (styleData.t === 1) {
         grd = ctx?.createLinearGradient(
           pt1[0], pt1[1], pt2[0], pt2[1]
-        )
+        );
       } else {
-        const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2)),
-          ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
+        const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2));
+        const ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0]);
 
-        let percent = itemData.h?.v ?? 0
+        let percent = itemData.h?.v ?? 0;
 
         if (percent >= 1) {
-          percent = 0.99
+          percent = 0.99;
         } else if (percent <= -1) {
-          percent = -0.99
+          percent = -0.99;
         }
-        const dist = rad * percent,
-          aValue = itemData.a?.v ?? 0,
-          x = Math.cos(ang + aValue) * dist + pt1[0],
-          y = Math.sin(ang + aValue) * dist + pt1[1]
+        const dist = rad * percent;
+        const aValue = itemData.a?.v ?? 0;
+        const x = Math.cos(ang + aValue) * dist + pt1[0];
+        const y = Math.sin(ang + aValue) * dist + pt1[1];
 
         grd = ctx?.createRadialGradient(
           x, y, 0, pt1[0], pt1[1], rad
-        )
+        );
       }
 
-      const len = styleData.g?.p ?? 0,
-        cValues = itemData.g?.c ?? []
-      let opacity = 1
+      const len = styleData.g?.p ?? 0;
+      const cValues = itemData.g?.c ?? [];
+      let opacity = 1;
 
       for (let i = 0; i < len; i++) {
         if (itemData.g?._hasOpacity && itemData.g._collapsable) {
-          opacity = itemData.g.o[i * 2 + 1]
+          opacity = itemData.g.o[i * 2 + 1];
         }
         grd?.addColorStop(cValues[i * 4] / 100,
           `rgba(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${cValues[i * 4 + 3]
-          },${opacity})`)
+          },${opacity})`);
       }
       if (styleElem) {
-        styleElem.grd = grd
+        styleElem.grd = grd;
       }
 
     }
     if (styleElem) {
-      styleElem.coOp = (itemData.o?.v ?? 0) * groupTransform.opacity
+      styleElem.coOp = (itemData.o?.v ?? 0) * groupTransform.opacity;
     }
   }
 
   override renderInnerContent() {
-    this.transformHelper.opacity = 1
-    this.transformHelper._opMdf = false
-    this.renderModifiers()
-    this.transformsManager.processSequences(this._isFirstFrame)
+    this.transformHelper.opacity = 1;
+    this.transformHelper._opMdf = false;
+    this.renderModifiers();
+    this.transformsManager.processSequences(this._isFirstFrame);
     this.renderShape(
       this.transformHelper,
       this.shapesData,
       this.itemsData,
       true
-    )
+    );
   }
 
   renderPath(pathData: Shape, itemData: CVShapeData) {
     if (pathData.hd === true || !pathData._shouldRender || !itemData.sh) {
-      return
+      return;
     }
-    const { length } = itemData.styledShapes
+    const { length } = itemData.styledShapes;
 
     for (let i = 0; i < length; i++) {
-      this.renderStyledShape(itemData.styledShapes[i], itemData.sh)
+      this.renderStyledShape(itemData.styledShapes[i], itemData.sh);
     }
   }
 
@@ -541,39 +541,39 @@ export class CVShapeElement extends ShapeElement {
     isMain?: boolean
   ) {
     try {
-      const len = items.length - 1
-      let groupTransform: undefined | Transformer
+      const len = items.length - 1;
+      let groupTransform: undefined | Transformer;
 
-      groupTransform = parentTransform
+      groupTransform = parentTransform;
       for (let i = len; i >= 0; i--) {
         switch (items[i].ty) {
           case ShapeType.Transform: {
-            groupTransform = data[i].transform
+            groupTransform = data[i].transform;
             if (groupTransform) {
               this.renderShapeTransform(parentTransform,
-                groupTransform)
+                groupTransform);
             }
 
-            break
+            break;
           }
           case ShapeType.Path:
           case ShapeType.Ellipse:
           case ShapeType.Rectangle:
           case ShapeType.PolygonStar: {
-            this.renderPath(items[i], data[i] as CVShapeData)
-            break
+            this.renderPath(items[i], data[i] as CVShapeData);
+            break;
           }
           case ShapeType.Fill: {
             this.renderFill(
               items[i], data[i], groupTransform
-            )
-            break
+            );
+            break;
           }
           case ShapeType.Stroke: {
             this.renderStroke(
               items[i], data[i], groupTransform
-            )
-            break
+            );
+            break;
           }
           case ShapeType.GradientFill:
           case ShapeType.GradientStroke: {
@@ -581,14 +581,14 @@ export class CVShapeElement extends ShapeElement {
               items[i],
               data[i],
               groupTransform
-            )
-            break
+            );
+            break;
           }
           case ShapeType.Group: {
             this.renderShape(
               groupTransform, items[i].it ?? [], data[i].it
-            )
-            break
+            );
+            break;
           }
           case ShapeType.Trim:
           default:
@@ -596,10 +596,10 @@ export class CVShapeElement extends ShapeElement {
         }
       }
       if (isMain) {
-        this.drawLayer()
+        this.drawLayer();
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      console.error(this.constructor.name, error);
     }
   }
 
@@ -610,11 +610,11 @@ export class CVShapeElement extends ShapeElement {
       !groupTransform.op._mdf &&
       !this._isFirstFrame
     ) {
-      return
+      return;
     }
-    groupTransform.opacity = parentTransform.opacity
-    groupTransform.opacity *= groupTransform.op.v
-    groupTransform._opMdf = true
+    groupTransform.opacity = parentTransform.opacity;
+    groupTransform.opacity *= groupTransform.op.v;
+    groupTransform._opMdf = true;
   }
 
   renderStroke(
@@ -622,50 +622,50 @@ export class CVShapeElement extends ShapeElement {
     itemData: CanvasItem,
     groupTransform: TransformEffect
   ) {
-    const styleElem = itemData.style,
-      {
-        c, d, o, w
-      } = itemData
+    const styleElem = itemData.style;
+    const {
+      c, d, o, w
+    } = itemData;
 
     if (d && (d._mdf || this._isFirstFrame)) {
-      styleElem.da = d.dashArray
-      styleElem.do = d.dashoffset[0]
+      styleElem.da = d.dashArray;
+      styleElem.do = d.dashoffset[0];
     }
     if (c._mdf || this._isFirstFrame) {
-      const rgb = c.v.map(color => Math.floor(color)).join(',')
+      const rgb = c.v.map(color => Math.floor(color)).join(',');
 
-      styleElem.co = `rgb(${rgb})`
+      styleElem.co = `rgb(${rgb})`;
     }
     if (o._mdf || groupTransform._opMdf || this._isFirstFrame) {
-      styleElem.coOp = o.v * groupTransform.opacity
+      styleElem.coOp = o.v * groupTransform.opacity;
     }
     if (w._mdf || this._isFirstFrame) {
-      styleElem.wi = w.v
+      styleElem.wi = w.v;
     }
   }
 
   renderStyledShape(styledShape: CVShapeData, shape: ShapeProperty) {
     if (!this._isFirstFrame && !shape._mdf && !styledShape.transforms._mdf) {
-      return
+      return;
     }
 
-    const { transforms, trNodes: shapeNodes } = styledShape,
-      { paths } = shape as { paths?: ShapeCollection }
-    let i,
-      len,
-      j
-    const jLen = paths?._length || 0
+    const { transforms, trNodes: shapeNodes } = styledShape;
+    const { paths } = shape as { paths?: ShapeCollection };
+    let i;
+    let len;
+    let j;
+    const jLen = paths?._length || 0;
 
-    shapeNodes.length = 0
-    const groupTransformMat = transforms?.finalTransform
+    shapeNodes.length = 0;
+    const groupTransformMat = transforms?.finalTransform;
 
     for (j = 0; j < jLen; j++) {
-      const pathNodes = paths?.shapes[j]
+      const pathNodes = paths?.shapes[j];
 
       if (!pathNodes?.v) {
-        continue
+        continue;
       }
-      len = pathNodes._length
+      len = pathNodes._length;
       for (i = 1; i < len; i++) {
         if (i === 1) {
           shapeNodes.push({
@@ -675,7 +675,7 @@ export class CVShapeElement extends ShapeElement {
               0
             ),
             t: 'm',
-          })
+          });
         }
         shapeNodes.push({
           pts: groupTransformMat?.applyToTriplePoints(
@@ -684,7 +684,7 @@ export class CVShapeElement extends ShapeElement {
             pathNodes.v[i]
           ) as unknown as number[],
           t: 'c',
-        })
+        });
       }
       if (len === 1) {
         shapeNodes.push({
@@ -694,7 +694,7 @@ export class CVShapeElement extends ShapeElement {
             0
           ),
           t: 'm',
-        })
+        });
       }
       if (pathNodes.c && len) {
         shapeNodes.push({
@@ -704,10 +704,10 @@ export class CVShapeElement extends ShapeElement {
             pathNodes.v[0]
           ) as unknown as number[],
           t: 'c',
-        }, { t: 'z' })
+        }, { t: 'z' });
       }
     }
-    styledShape.trNodes = shapeNodes
+    styledShape.trNodes = shapeNodes;
   }
 
   searchShapes(
@@ -717,20 +717,20 @@ export class CVShapeElement extends ShapeElement {
     shouldRenderFromProps: boolean,
     transforms: Transformer[]
   ) {
-    let shouldRender = shouldRenderFromProps
-    const len = arr.length - 1,
-      ownStyles: CVStyleElement[] = [],
-      ownModifiers: ShapeModifierInterface[] = []
-    let modifier, currentTransform
-    const ownTransforms = [...transforms]
+    let shouldRender = shouldRenderFromProps;
+    const len = arr.length - 1;
+    const ownStyles: CVStyleElement[] = [];
+    const ownModifiers: ShapeModifierInterface[] = [];
+    let modifier; let currentTransform;
+    const ownTransforms = [...transforms];
 
     for (let i = len; i >= 0; i--) {
-      const processedPos = this.searchProcessedElement(arr[i])
+      const processedPos = this.searchProcessedElement(arr[i]);
 
       if (processedPos) {
-        itemsData[i] = prevViewData[processedPos - 1]
+        itemsData[i] = prevViewData[processedPos - 1];
       } else {
-        arr[i]._shouldRender = shouldRender
+        arr[i]._shouldRender = shouldRender;
       }
 
       switch (arr[i].ty) {
@@ -739,23 +739,23 @@ export class CVShapeElement extends ShapeElement {
         case ShapeType.GradientFill:
         case ShapeType.GradientStroke: {
           if (processedPos) {
-            itemsData[i].style.closed = false
+            itemsData[i].style.closed = false;
           } else {
-            itemsData[i] = this.createStyleElement(arr[i], ownTransforms)
+            itemsData[i] = this.createStyleElement(arr[i], ownTransforms);
           }
 
-          ownStyles.push(itemsData[i].style)
-          break
+          ownStyles.push(itemsData[i].style);
+          break;
         }
         case ShapeType.Group: {
           if (processedPos) {
-            const { length: jLen } = itemsData[i].it
+            const { length: jLen } = itemsData[i].it;
 
             for (let j = 0; j < jLen; j++) {
-              itemsData[i].prevViewData[j] = itemsData[i].it[j]
+              itemsData[i].prevViewData[j] = itemsData[i].it[j];
             }
           } else {
-            itemsData[i] = this.createGroupElement(arr[i])
+            itemsData[i] = this.createGroupElement(arr[i]);
           }
           this.searchShapes(
             arr[i].it ?? [],
@@ -763,26 +763,26 @@ export class CVShapeElement extends ShapeElement {
             itemsData[i].prevViewData,
             shouldRender,
             ownTransforms
-          )
-          break
+          );
+          break;
         }
         case ShapeType.Transform: {
           if (!processedPos) {
-            currentTransform = this.createTransformElement(arr[i])
-            itemsData[i] = currentTransform as unknown as CVElement
+            currentTransform = this.createTransformElement(arr[i]);
+            itemsData[i] = currentTransform as unknown as CVElement;
           }
-          ownTransforms.push(itemsData[i])
-          this.addTransformToStyleList(itemsData[i])
-          break
+          ownTransforms.push(itemsData[i]);
+          this.addTransformToStyleList(itemsData[i]);
+          break;
         }
         case ShapeType.Path:
         case ShapeType.Rectangle:
         case ShapeType.Ellipse:
         case ShapeType.PolygonStar: {
           if (!processedPos) {
-            itemsData[i] = this.createShapeElement(arr[i])
+            itemsData[i] = this.createShapeElement(arr[i]);
           }
-          break
+          break;
         }
         case ShapeType.Trim:
         case ShapeType.RoundedCorners:
@@ -790,48 +790,48 @@ export class CVShapeElement extends ShapeElement {
         case ShapeType.ZigZag:
         case ShapeType.OffsetPath: {
           if (processedPos) {
-            modifier = itemsData[i]
-            modifier.closed = false
+            modifier = itemsData[i];
+            modifier.closed = false;
           } else {
-            modifier = getModifier(arr[i].ty)
-            modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
-            itemsData[i] = modifier
-            this.shapeModifiers.push(modifier)
+            modifier = getModifier(arr[i].ty);
+            modifier.init(this as unknown as ElementInterfaceIntersect, arr[i]);
+            itemsData[i] = modifier;
+            this.shapeModifiers.push(modifier);
           }
-          ownModifiers.push(modifier)
-          break
+          ownModifiers.push(modifier);
+          break;
         }
         case ShapeType.Repeater: {
           if (processedPos) {
-            modifier = itemsData[i]
-            modifier.closed = true
+            modifier = itemsData[i];
+            modifier.closed = true;
           } else {
-            modifier = getModifier(arr[i].ty)
-            itemsData[i] = modifier
+            modifier = getModifier(arr[i].ty);
+            itemsData[i] = modifier;
             modifier.init(
               this as unknown as ElementInterfaceIntersect,
               arr,
               i,
               itemsData
-            )
-            this.shapeModifiers.push(modifier)
-            shouldRender = false
+            );
+            this.shapeModifiers.push(modifier);
+            shouldRender = false;
           }
-          ownModifiers.push(modifier)
-          break
+          ownModifiers.push(modifier);
+          break;
         }
         default:
       }
       this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
-        i + 1)
+        i + 1);
     }
 
-    this.removeTransformFromStyleList()
-    this.closeStyles(ownStyles)
-    const { length } = ownModifiers
+    this.removeTransformFromStyleList();
+    this.closeStyles(ownStyles);
+    const { length } = ownModifiers;
 
     for (let i = 0; i < length; i++) {
-      ownModifiers[i].closed = true
+      ownModifiers[i].closed = true;
     }
   }
 }

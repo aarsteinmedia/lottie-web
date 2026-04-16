@@ -7,31 +7,31 @@ import type {
   NoValueEffect,
   PointEffect,
   SliderEffect,
-} from '@/effects'
+} from '@/effects';
 import type {
   Effect,
   ElementInterfaceIntersect,
   LottieLayer,
-} from '@/types'
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+} from '@/types';
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
 
-import { GroupEffect } from '@/effects/GroupEffect'
+import { GroupEffect } from '@/effects/GroupEffect';
 
 export class EffectsManager {
-  _mdf?: boolean
-  effectElements: EffectInterface[] = []
+  _mdf?: boolean;
+  effectElements: EffectInterface[] = [];
   constructor(
     data: LottieLayer, element: ElementInterfaceIntersect, _dynamicProperties?: DynamicPropertyContainer[]
   ) {
-    const effects = data.ef ?? [],
-      { length } = effects
+    const effects = data.ef ?? [];
+    const { length } = effects;
 
     for (let i = 0; i < length; i++) {
       const effectItem = new GroupEffect(
         effects[i] as Effect, element, data
-      )
+      );
 
-      this.effectElements.push(effectItem)
+      this.effectElements.push(effectItem);
     }
   }
 }
@@ -46,4 +46,4 @@ export type EffectInterface =
   | CheckboxEffect
   | LayerIndexEffect
   | MaskIndexEffect
-  | NoValueEffect
+  | NoValueEffect;

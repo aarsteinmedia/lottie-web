@@ -1,91 +1,91 @@
-import type { CVBaseElement } from '@/elements/canvas/CVBaseElement'
-import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { CVBaseElement } from '@/elements/canvas/CVBaseElement';
+import type { CVShapeElement } from '@/elements/canvas/CVShapeElement';
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer';
 import type {
   LottieLayer, Shape, Vector2
-} from '@/types'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+} from '@/types';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
 
-import { createSizedArray } from '@/utils/helpers/arrays'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { createSizedArray } from '@/utils/helpers/arrays';
+import ShapePropertyFactory from '@/utils/shapes/properties';
 
 export class CVMaskElement {
-  _isFirstFrame: number | boolean = false
-  data: LottieLayer
-  element: CVShapeElement | CVBaseElement
-  hasMasks: boolean
+  _isFirstFrame: number | boolean = false;
+  data: LottieLayer;
+  element: CVShapeElement | CVBaseElement;
+  hasMasks: boolean;
 
-  masksProperties: Shape[]
-  viewData: ShapeProperty[]
+  masksProperties: Shape[];
+  viewData: ShapeProperty[];
   constructor(data: LottieLayer, element: CVShapeElement | CVBaseElement) {
-    this.data = data
-    this.element = element
-    this.masksProperties = this.data.masksProperties ?? []
-    this.viewData = createSizedArray(this.masksProperties.length)
-    const { length } = this.masksProperties
-    let hasMasks = false
+    this.data = data;
+    this.element = element;
+    this.masksProperties = this.data.masksProperties ?? [];
+    this.viewData = createSizedArray(this.masksProperties.length);
+    const { length } = this.masksProperties;
+    let hasMasks = false;
 
     for (let i = 0; i < length; i++) {
       if (this.masksProperties[i]?.mode !== 'n') {
-        hasMasks = true
+        hasMasks = true;
       }
       this.viewData[i] = ShapePropertyFactory.getShapeProp(
         this.element as CVShapeElement,
         this.masksProperties[i] as Shape,
         3
-      ) as ShapeProperty
+      ) as ShapeProperty;
     }
-    this.hasMasks = hasMasks
+    this.hasMasks = hasMasks;
     if (hasMasks) {
-      ; (this.element as CVShapeElement).addRenderableComponent(this)
+      ; (this.element as CVShapeElement).addRenderableComponent(this);
     }
   }
 
   destroy() {
-    this.element = null as unknown as CVShapeElement
+    this.element = null as unknown as CVShapeElement;
   }
 
   getMaskProperty(pos: number) {
 
-    return this.viewData[pos]
+    return this.viewData[pos];
   }
 
   renderFrame(_num?: number) {
     if (!this.element.globalData?.compSize) {
-      throw new Error(`${this.constructor.name}: element->globalData->compSize is not implemented`)
+      throw new Error(`${this.constructor.name}: element->globalData->compSize is not implemented`);
     }
     if (!this.hasMasks) {
-      return
+      return;
     }
-    const transform = this.element.finalTransform?.mat,
-      ctx = this.element.canvasContext
-    let j
-    const { length } = this.masksProperties
-    let pts
+    const transform = this.element.finalTransform?.mat;
+    const ctx = this.element.canvasContext;
+    let j;
+    const { length } = this.masksProperties;
+    let pts;
 
-    ctx?.beginPath()
+    ctx?.beginPath();
     for (let i = 0; i < length; i++) {
       if (this.masksProperties[i]?.mode !== 'n') {
         if (this.masksProperties[i]?.inv) {
-          ctx?.moveTo(0, 0)
-          ctx?.lineTo(this.element.globalData.compSize.w, 0)
+          ctx?.moveTo(0, 0);
+          ctx?.lineTo(this.element.globalData.compSize.w, 0);
           ctx?.lineTo(this.element.globalData.compSize.w,
-            this.element.globalData.compSize.h)
-          ctx?.lineTo(0, this.element.globalData.compSize.h)
-          ctx?.lineTo(0, 0)
+            this.element.globalData.compSize.h);
+          ctx?.lineTo(0, this.element.globalData.compSize.h);
+          ctx?.lineTo(0, 0);
         }
-        const data = this.viewData[i]?.v
+        const data = this.viewData[i]?.v;
 
         if (!data) {
-          throw new Error(`${this.constructor.name}: Could not access ShapePath`)
+          throw new Error(`${this.constructor.name}: Could not access ShapePath`);
         }
         const pt =
           transform?.applyToPointArray(
             data.v[0]?.[0] ?? 0, data.v[0]?.[1] ?? 0, 0
-          ) ?? []
+          ) ?? [];
 
-        ctx?.moveTo(pt[0] ?? 0, pt[1] ?? 0)
-        const jLen = data._length
+        ctx?.moveTo(pt[0] ?? 0, pt[1] ?? 0);
+        const jLen = data._length;
 
         for (j = 1; j < jLen; j++) {
           pts =
@@ -93,22 +93,22 @@ export class CVMaskElement {
               data.o[j - 1] as number[],
               data.i[j] as number[],
               data.v[j] as number[]
-            ) ?? []
+            ) ?? [];
           ctx?.bezierCurveTo(
             pts[0] ?? 0, pts[1] ?? 0, pts[2] ?? 0, pts[3] ?? 0, pts[4] ?? 0, pts[5] ?? 0
-          )
+          );
         }
         pts =
           transform?.applyToTriplePoints(
             data.o[j - 1] as Vector2, data.i[0] as Vector2, data.v[0] as Vector2
           ) ??
-          []
+          [];
         ctx?.bezierCurveTo(
           pts[0] ?? 0, pts[1] ?? 0, pts[2] ?? 0, pts[3] ?? 0, pts[4] ?? 0, pts[5] ?? 0
-        )
+        );
       }
     }
-    ; (this.element.globalData.renderer as CanvasRenderer).save(true)
-    ctx?.clip()
+    ; (this.element.globalData.renderer as CanvasRenderer).save(true);
+    ctx?.clip();
   }
 }

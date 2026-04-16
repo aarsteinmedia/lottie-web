@@ -1,16 +1,16 @@
-import type { BMMath as BMMathType } from '@/types'
+import type { BMMath as BMMathType } from '@/types';
 
-import { isArrayOfNum } from '@/utils'
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { getShouldRoundValues } from '@/utils/helpers/resolution'
+import { isArrayOfNum } from '@/utils';
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { getShouldRoundValues } from '@/utils/helpers/resolution';
 
-const bmPow = Math.pow,
-  bmSqrt = Math.sqrt,
-  bmFloor = Math.floor,
-  bmMax = Math.max,
-  bmMin = Math.min
+const bmPow = Math.pow;
+const bmSqrt = Math.sqrt;
+const bmFloor = Math.floor;
+const bmMax = Math.max;
+const bmMin = Math.min;
 
-const BMMath = {} as unknown as BMMathType
+const BMMath = {} as unknown as BMMathType;
 
 (() => {
   const propertyNames: (keyof Math)[] = ['abs',
@@ -55,47 +55,47 @@ const BMMath = {} as unknown as BMMathType
     'LOG2E',
     'PI',
     'SQRT1_2',
-    'SQRT2']
-  const { length } = propertyNames
+    'SQRT2'];
+  const { length } = propertyNames;
 
   for (let i = 0; i < length; i += 1) {
-    const propertyName = propertyNames[i]
+    const propertyName = propertyNames[i];
 
     if (!propertyName) {
-      continue
+      continue;
     }
 
     // @ts-expect-error: ts(2540)
-    BMMath[propertyName] = Math[propertyName]
+    BMMath[propertyName] = Math[propertyName];
   }
-})()
+})();
 
-BMMath.random = Math.random
+BMMath.random = Math.random;
 BMMath.abs = (val: number | number[]) => {
   if (isArrayOfNum(val)) {
-    const absArr = createSizedArray<number>(val.length),
-      { length } = val
+    const absArr = createSizedArray<number>(val.length);
+    const { length } = val;
 
     for (let i = 0; i < length; i++) {
-      absArr[i] = Math.abs(val[i] ?? 0)
+      absArr[i] = Math.abs(val[i] ?? 0);
     }
 
-    return absArr
+    return absArr;
   }
 
-  return Math.abs(val)
-}
+  return Math.abs(val);
+};
 
 function bmRnd(value: number) {
   if (getShouldRoundValues()) {
-    return Math.round(value)
+    return Math.round(value);
   }
 
-  return value
+  return value;
 }
 
 // eslint-disable-next-line import/no-default-export
-export default BMMath
+export default BMMath;
 
 export {
   bmFloor,
@@ -104,4 +104,4 @@ export {
   bmPow,
   bmRnd,
   bmSqrt,
-}
+};

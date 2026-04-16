@@ -1,100 +1,100 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
-import type { ElementInterfaceIntersect } from '@/types'
+import type { GroupEffect } from '@/effects/GroupEffect';
+import type { ElementInterfaceIntersect } from '@/types';
 
-import { createElementID } from '@/utils'
-import { createNS } from '@/utils/helpers/svgElements'
+import { createElementID } from '@/utils';
+import { createNS } from '@/utils/helpers/svgElements';
 
-const _svgMatteSymbols: ElementInterfaceIntersect[] = []
+const _svgMatteSymbols: ElementInterfaceIntersect[] = [];
 
 export class SVGMatte3Effect {
-  elem: ElementInterfaceIntersect
-  filterElem: SVGFilterElement
-  filterManager: GroupEffect
-  initialized = false
+  elem: ElementInterfaceIntersect;
+  filterElem: SVGFilterElement;
+  filterManager: GroupEffect;
+  initialized = false;
 
   constructor(
     filterElem: SVGFilterElement,
     filterManager: GroupEffect,
     elem: ElementInterfaceIntersect
   ) {
-    this.filterManager = filterManager
-    this.filterElem = filterElem
-    this.elem = elem
-    elem.matteElement = createNS<SVGGElement>('g')
+    this.filterManager = filterManager;
+    this.filterElem = filterElem;
+    this.elem = elem;
+    elem.matteElement = createNS<SVGGElement>('g');
     if (elem.layerElement) {
-      elem.matteElement.appendChild(elem.layerElement)
+      elem.matteElement.appendChild(elem.layerElement);
     }
     if (elem.transformedElement) {
-      elem.matteElement.appendChild(elem.transformedElement)
+      elem.matteElement.appendChild(elem.transformedElement);
     }
-    elem.baseElement = elem.matteElement
+    elem.baseElement = elem.matteElement;
   }
 
   findSymbol(mask: ElementInterfaceIntersect) {
-    let i = 0
-    const { length } = _svgMatteSymbols
+    let i = 0;
+    const { length } = _svgMatteSymbols;
 
     while (i < length) {
       if (_svgMatteSymbols[i] === mask) {
-        return _svgMatteSymbols[i]
+        return _svgMatteSymbols[i];
       }
-      i++
+      i++;
     }
 
-    return null
+    return null;
   }
 
   initialize() {
-    const ind = this.filterManager.effectElements[0]?.p.v
-    const elements = this.elem.comp?.elements ?? []
-    let i = 0
-    const { length } = elements
+    const ind = this.filterManager.effectElements[0]?.p.v;
+    const elements = this.elem.comp?.elements ?? [];
+    let i = 0;
+    const { length } = elements;
 
     while (i < length) {
-      const element = elements[i]
+      const element = elements[i];
 
       if (element && element.data.ind === ind) {
-        this.setElementAsMask(this.elem, element)
+        this.setElementAsMask(this.elem, element);
       }
-      i++
+      i++;
     }
-    this.initialized = true
+    this.initialized = true;
   }
 
   renderFrame(_val?: number) {
     if (!this.initialized) {
-      this.initialize()
+      this.initialize();
     }
   }
 
   replaceInParent(mask: ElementInterfaceIntersect, symbolId: string) {
-    const parentNode = mask.layerElement?.parentNode
+    const parentNode = mask.layerElement?.parentNode;
 
     if (!parentNode) {
-      return
+      return;
     }
-    const { children } = parentNode
-    let i = 0
-    const { length } = children
+    const { children } = parentNode;
+    let i = 0;
+    const { length } = children;
 
     while (i < length) {
       if (children[i] === mask.layerElement) {
-        break
+        break;
       }
-      i++
+      i++;
     }
-    let nextChild
+    let nextChild;
 
     if (i <= length - 2) {
-      nextChild = children[i + 1]
+      nextChild = children[i + 1];
     }
-    const useElem = createNS<SVGUseElement>('use')
+    const useElem = createNS<SVGUseElement>('use');
 
-    useElem.setAttribute('href', `#${symbolId}`)
+    useElem.setAttribute('href', `#${symbolId}`);
     if (nextChild) {
-      parentNode.insertBefore(useElem, nextChild)
+      parentNode.insertBefore(useElem, nextChild);
     } else {
-      parentNode.appendChild(useElem)
+      parentNode.appendChild(useElem);
     }
   }
 
@@ -102,35 +102,35 @@ export class SVGMatte3Effect {
     mask: ElementInterfaceIntersect) {
 
     if (!this.findSymbol(mask)) {
-      const symbolId = createElementID(),
-        masker = createNS<SVGMaskElement>('mask')
+      const symbolId = createElementID();
+      const masker = createNS<SVGMaskElement>('mask');
 
       if (mask.layerId) {
-        masker.id = mask.layerId
+        masker.id = mask.layerId;
       }
 
-      masker.setAttribute('mask-type', 'alpha')
-      _svgMatteSymbols.push(mask)
-      const { defs } = elem.globalData ?? { defs: null }
+      masker.setAttribute('mask-type', 'alpha');
+      _svgMatteSymbols.push(mask);
+      const { defs } = elem.globalData ?? { defs: null };
 
-      defs?.appendChild(masker)
-      const symbol = createNS<SVGSymbolElement>('symbol')
+      defs?.appendChild(masker);
+      const symbol = createNS<SVGSymbolElement>('symbol');
 
-      symbol.id = symbolId
-      this.replaceInParent(mask, symbolId)
+      symbol.id = symbolId;
+      this.replaceInParent(mask, symbolId);
       if (mask.layerElement) {
-        symbol.appendChild(mask.layerElement)
+        symbol.appendChild(mask.layerElement);
       }
 
-      defs?.appendChild(symbol)
-      const useElem = createNS<SVGUseElement>('use')
+      defs?.appendChild(symbol);
+      const useElem = createNS<SVGUseElement>('use');
 
-      useElem.href.baseVal = `#${symbolId}`
-      masker.appendChild(useElem)
-      mask.data.hd = false
+      useElem.href.baseVal = `#${symbolId}`;
+      masker.appendChild(useElem);
+      mask.data.hd = false;
 
-      mask.show()
+      mask.show();
     }
-    elem.setMatte(mask.layerId || '')
+    elem.setMatte(mask.layerId || '');
   }
 }

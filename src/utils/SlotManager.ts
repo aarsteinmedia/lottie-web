@@ -1,15 +1,15 @@
 import type {
   DocumentData, LottieAsset, LottieLayer
-} from '@/types'
+} from '@/types';
 
 export class SlotManager {
-  animationData: LottieLayer
+  animationData: LottieLayer;
   constructor(animationData: LottieLayer) {
-    this.animationData = animationData
+    this.animationData = animationData;
   }
 
   getProp(data: DocumentData | LottieLayer | LottieAsset) {
-    const { sid } = data as LottieAsset
+    const { sid } = data as LottieAsset;
 
     if (
       sid &&
@@ -18,13 +18,13 @@ export class SlotManager {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return Object.assign(data,
-        this.animationData.slots[sid].p)
+        this.animationData.slots[sid].p);
     }
 
-    return data
+    return data;
   }
 }
 
 export function slotFactory(animationData: LottieLayer) {
-  return new SlotManager(animationData)
+  return new SlotManager(animationData);
 }

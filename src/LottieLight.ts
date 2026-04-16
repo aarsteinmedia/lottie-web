@@ -17,29 +17,29 @@ import {
   getRegisteredAnimations,
   searchAnimations,
   loadAnimation,
-} from '@/animation/AnimationManager'
-import { registerRenderer } from '@/renderers'
-import { SVGRenderer } from '@/renderers/SVGRenderer'
-import { Modifier, RendererType } from '@/utils/enums'
-import { isServer } from '@/utils/helpers/constants'
-import { setLocationHref } from '@/utils/helpers/locationHref'
-import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
-import { setQuality } from '@/utils/helpers/resolution'
-import { setSubframeEnabled } from '@/utils/helpers/subframe'
-import { setWebWorker } from '@/utils/helpers/worker'
-import { registerModifier } from '@/utils/shapes/modifiers'
-import { OffsetPathModifier } from '@/utils/shapes/modifiers/OffsetPathModifier'
-import { PuckerAndBloatModifier } from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
-import { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier'
-import { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCornersModifier'
-import { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
-import { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
+} from '@/animation/AnimationManager';
+import { registerRenderer } from '@/renderers';
+import { SVGRenderer } from '@/renderers/SVGRenderer';
+import { Modifier, RendererType } from '@/utils/enums';
+import { isServer } from '@/utils/helpers/constants';
+import { setLocationHref } from '@/utils/helpers/locationHref';
+import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix';
+import { setQuality } from '@/utils/helpers/resolution';
+import { setSubframeEnabled } from '@/utils/helpers/subframe';
+import { setWebWorker } from '@/utils/helpers/worker';
+import { registerModifier } from '@/utils/shapes/modifiers';
+import { OffsetPathModifier } from '@/utils/shapes/modifiers/OffsetPathModifier';
+import { PuckerAndBloatModifier } from '@/utils/shapes/modifiers/PuckerAndBloatModifier';
+import { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier';
+import { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCornersModifier';
+import { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier';
+import { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier';
 
-const version = '[[BM_VERSION]]'
+const version = '[[BM_VERSION]]';
 
 export const setSubframeRendering = (flag: boolean) => {
-  setSubframeEnabled(flag)
-}
+  setSubframeEnabled(flag);
+};
 
 const Lottie = {
   destroy,
@@ -65,32 +65,32 @@ const Lottie = {
   unmute,
   useWebWorker: setWebWorker,
   version,
-}
+};
 
 const checkReady = () => {
-    if (isServer) {
-      return
-    }
-    if (document.readyState === 'complete') {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      clearInterval(readyStateCheckInterval)
-      searchAnimations()
-    }
-  },
-  readyStateCheckInterval = setInterval(checkReady, 100)
+  if (isServer) {
+    return;
+  }
+  if (document.readyState === 'complete') {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    clearInterval(readyStateCheckInterval);
+    searchAnimations();
+  }
+};
+const readyStateCheckInterval = setInterval(checkReady, 100);
 
 // Registering renderers
-registerRenderer(RendererType.SVG, SVGRenderer)
+registerRenderer(RendererType.SVG, SVGRenderer);
 
 // Registering shape modifiers
-registerModifier(Modifier.TrimModifier, TrimModifier)
-registerModifier(Modifier.PuckerAndBloatModifier, PuckerAndBloatModifier)
-registerModifier(Modifier.RepeaterModifier, RepeaterModifier)
-registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
-registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
-registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
+registerModifier(Modifier.TrimModifier, TrimModifier);
+registerModifier(Modifier.PuckerAndBloatModifier, PuckerAndBloatModifier);
+registerModifier(Modifier.RepeaterModifier, RepeaterModifier);
+registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier);
+registerModifier(Modifier.ZigZagModifier, ZigZagModifier);
+registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier);
 
-export { loadAnimation }
+export { loadAnimation };
 
 // eslint-disable-next-line import/no-default-export
-export default Lottie
+export default Lottie;

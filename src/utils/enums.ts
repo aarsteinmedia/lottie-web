@@ -90,12 +90,12 @@ interface LineCapEnum { [key: number]: CanvasLineCap }
 interface LineJoinEnum { [key: number]: CanvasLineJoin }
 
 export const lineCapEnum: LineCapEnum = {
-    1: 'butt',
-    2: 'round',
-    3: 'square',
-  },
-  lineJoinEnum: LineJoinEnum = {
-    1: 'miter',
-    2: 'round',
-    3: 'bevel',
-  }
+  1: 'butt',
+  2: 'round',
+  3: 'square',
+};
+export const lineJoinEnum: LineJoinEnum = {
+  1: 'miter',
+  2: 'round',
+  3: 'bevel',
+};

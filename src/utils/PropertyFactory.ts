@@ -4,14 +4,14 @@ import type {
   Keyframe,
   LottieLayer,
   VectorProperty,
-} from '@/types'
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+} from '@/types';
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
 
-import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty'
-import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
-import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
-import { NoProperty } from '@/utils/properties/NoProperty'
-import { ValueProperty } from '@/utils/properties/ValueProperty'
+import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty';
+import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty';
+import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty';
+import { NoProperty } from '@/utils/properties/NoProperty';
+import { ValueProperty } from '@/utils/properties/ValueProperty';
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
@@ -20,13 +20,13 @@ function getProp<T = number | number[]>(
   mult?: null | number,
   container?: ElementInterfaceIntersect
 ) {
-  let data = dataFromProps
+  let data = dataFromProps;
 
   // console.log(data)
   if (data && 'sid' in data && data.sid) {
-    data = elem.globalData?.slotManager?.getProp(data as unknown as LottieLayer)
+    data = elem.globalData?.slotManager?.getProp(data as unknown as LottieLayer);
   }
-  let p
+  let p;
 
   if (!(data?.k as number[] | undefined)?.length) {
     p = new ValueProperty(
@@ -34,14 +34,14 @@ function getProp<T = number | number[]>(
       data as VectorProperty,
       mult,
       container as ElementInterfaceIntersect
-    )
+    );
   } else if (typeof (data?.k as number[])[0] === 'number') {
     p = new MultiDimensionalProperty(
       elem,
       data as VectorProperty<number[]>,
       mult,
       container as ElementInterfaceIntersect
-    )
+    );
   } else {
     switch (type) {
       case 0: {
@@ -50,8 +50,8 @@ function getProp<T = number | number[]>(
           data as VectorProperty<Keyframe[]>,
           mult,
           container as ElementInterfaceIntersect
-        )
-        break
+        );
+        break;
       }
       case 1: {
         p = new KeyframedMultidimensionalProperty(
@@ -59,24 +59,24 @@ function getProp<T = number | number[]>(
           data as VectorProperty<Keyframe[]>,
           mult,
           container as ElementInterfaceIntersect
-        )
-        break
+        );
+        break;
       }
       case undefined:
       default: {
-        break
+        break;
       }
     }
   }
-  p = p ?? new NoProperty()
+  p = p ?? new NoProperty();
   if (p.effectsSequence.length > 0) {
-    container?.addDynamicProperty(p as DynamicPropertyContainer)
+    container?.addDynamicProperty(p as DynamicPropertyContainer);
   }
 
-  return p
+  return p;
 }
 
-const PropertyFactory = { getProp }
+const PropertyFactory = { getProp };
 
 // eslint-disable-next-line import/no-default-export
-export default PropertyFactory
+export default PropertyFactory;

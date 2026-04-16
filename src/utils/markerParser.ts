@@ -1,58 +1,58 @@
-import type { Marker, MarkerData } from '@/types'
+import type { Marker, MarkerData } from '@/types';
 
 const parsePayloadLines = (payload: string) => {
-  const lines = payload.split('\r\n'),
-    keys: Record<string, string> = {},
-    { length } = lines
-  let keysCount = 0
+  const lines = payload.split('\r\n');
+  const keys: Record<string, string> = {};
+  const { length } = lines;
+  let keysCount = 0;
 
   for (let i = 0; i < length; i++) {
-    const line = lines[i]?.split(':') ?? []
+    const line = lines[i]?.split(':') ?? [];
 
     if (line.length === 2) {
-      const [lineOne, lineTwo] = line
+      const [lineOne, lineTwo] = line;
 
       if (!lineOne || !lineTwo) {
-        continue
+        continue;
       }
 
-      keys[lineOne] = lineTwo.trim()
-      keysCount++
+      keys[lineOne] = lineTwo.trim();
+      keysCount++;
     }
   }
   if (keysCount === 0) {
-    throw new Error('Could not parse markers')
+    throw new Error('Could not parse markers');
   }
 
-  return keys
-}
+  return keys;
+};
 
 export function markerParser(markersFromProps: (MarkerData | Marker)[]) {
-  const markers = [],
-    { length } = markersFromProps
+  const markers = [];
+  const { length } = markersFromProps;
 
   for (let i = 0; i < length; i++) {
     if ('duration' in (markersFromProps[i] ?? {})) {
-      markers.push(markersFromProps[i])
-      continue
+      markers.push(markersFromProps[i]);
+      continue;
     }
 
     const markerData: MarkerData = {
       duration: (markersFromProps[i] as Marker).dr,
       time: (markersFromProps[i] as Marker).tm,
-    }
+    };
 
     try {
-      markerData.payload = JSON.parse((markersFromProps[i] as Marker).cm)
+      markerData.payload = JSON.parse((markersFromProps[i] as Marker).cm);
     } catch (_) {
       try {
-        markerData.payload = parsePayloadLines((markersFromProps[i] as Marker).cm)
+        markerData.payload = parsePayloadLines((markersFromProps[i] as Marker).cm);
       } catch (error) {
-        markerData.payload = { name: (markersFromProps[i] as Marker).cm }
+        markerData.payload = { name: (markersFromProps[i] as Marker).cm };
       }
     }
-    markers.push(markerData)
+    markers.push(markerData);
   }
 
-  return markers
+  return markers;
 }

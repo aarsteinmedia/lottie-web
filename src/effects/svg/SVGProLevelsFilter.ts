@@ -1,32 +1,32 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
-import type { ElementInterfaceIntersect } from '@/types'
+import type { GroupEffect } from '@/effects/GroupEffect';
+import type { ElementInterfaceIntersect } from '@/types';
 
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { createNS } from '@/utils/helpers/svgElements'
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { createNS } from '@/utils/helpers/svgElements';
 
 export class SVGProLevelsFilter {
-  feFuncA?: SVGFEFuncAElement
-  feFuncB?: SVGFEFuncBElement
-  feFuncBComposed?: SVGFEFuncBElement
-  feFuncG?: SVGFEFuncGElement
-  feFuncGComposed?: SVGFEFuncGElement
-  feFuncR?: SVGFEFuncRElement
-  feFuncRComposed?: SVGFEFuncRElement
-  filterManager: GroupEffect
+  feFuncA?: SVGFEFuncAElement;
+  feFuncB?: SVGFEFuncBElement;
+  feFuncBComposed?: SVGFEFuncBElement;
+  feFuncG?: SVGFEFuncGElement;
+  feFuncGComposed?: SVGFEFuncGElement;
+  feFuncR?: SVGFEFuncRElement;
+  feFuncRComposed?: SVGFEFuncRElement;
+  filterManager: GroupEffect;
   constructor(
     filter: SVGFilterElement,
     filterManager: GroupEffect,
     _elem: ElementInterfaceIntersect,
     id: string
   ) {
-    this.filterManager = filterManager
-    const { effectElements } = this.filterManager
+    this.filterManager = filterManager;
+    const { effectElements } = this.filterManager;
 
     // if (!effectElements) {
     //   throw new Error(`${this.constructor.name}: Missing Effect Elements`)
     // }
 
-    let feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
+    let feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer');
 
     // Red
     if (
@@ -41,7 +41,7 @@ export class SVGProLevelsFilter {
       effectElements[14]?.p.k ||
       effectElements[14]?.p.v !== 1
     ) {
-      this.feFuncR = this.createFeFunc('feFuncR', feComponentTransfer)
+      this.feFuncR = this.createFeFunc('feFuncR', feComponentTransfer);
     }
     // Green
     if (
@@ -56,7 +56,7 @@ export class SVGProLevelsFilter {
       effectElements[21]?.p.k ||
       effectElements[21]?.p.v !== 1
     ) {
-      this.feFuncG = this.createFeFunc('feFuncG', feComponentTransfer)
+      this.feFuncG = this.createFeFunc('feFuncG', feComponentTransfer);
     }
     // Blue
     if (
@@ -71,7 +71,7 @@ export class SVGProLevelsFilter {
       effectElements[28]?.p.k ||
       effectElements[28]?.p.v !== 1
     ) {
-      this.feFuncB = this.createFeFunc('feFuncB', feComponentTransfer)
+      this.feFuncB = this.createFeFunc('feFuncB', feComponentTransfer);
     }
     // Alpha
     if (
@@ -86,12 +86,12 @@ export class SVGProLevelsFilter {
       effectElements[35]?.p.k ||
       effectElements[35]?.p.v !== 1
     ) {
-      this.feFuncA = this.createFeFunc('feFuncA', feComponentTransfer)
+      this.feFuncA = this.createFeFunc('feFuncA', feComponentTransfer);
     }
     // RGB
     if (this.feFuncR || this.feFuncG || this.feFuncB || this.feFuncA) {
-      feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB')
-      filter.appendChild(feComponentTransfer)
+      feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB');
+      filter.appendChild(feComponentTransfer);
     }
 
     if (
@@ -106,25 +106,25 @@ export class SVGProLevelsFilter {
       effectElements[7]?.p.k ||
       effectElements[7]?.p.v !== 1
     ) {
-      feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
-      feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB')
-      feComponentTransfer.setAttribute('result', id)
-      filter.appendChild(feComponentTransfer)
-      this.feFuncRComposed = this.createFeFunc('feFuncR', feComponentTransfer)
-      this.feFuncGComposed = this.createFeFunc('feFuncG', feComponentTransfer)
-      this.feFuncBComposed = this.createFeFunc('feFuncB', feComponentTransfer)
+      feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer');
+      feComponentTransfer.setAttribute('color-interpolation-filters', 'sRGB');
+      feComponentTransfer.setAttribute('result', id);
+      filter.appendChild(feComponentTransfer);
+      this.feFuncRComposed = this.createFeFunc('feFuncR', feComponentTransfer);
+      this.feFuncGComposed = this.createFeFunc('feFuncG', feComponentTransfer);
+      this.feFuncBComposed = this.createFeFunc('feFuncB', feComponentTransfer);
     }
   }
 
 
   createFeFunc<T extends SVGElement>(type: string,
     feComponentTransfer: SVGFEComponentTransferElement) {
-    const feFunc = createNS<T>(type)
+    const feFunc = createNS<T>(type);
 
-    feFunc.setAttribute('type', 'table')
-    feComponentTransfer.appendChild(feFunc)
+    feFunc.setAttribute('type', 'table');
+    feComponentTransfer.appendChild(feFunc);
 
-    return feFunc
+    return feFunc;
   }
 
   getTableValue(
@@ -134,44 +134,44 @@ export class SVGProLevelsFilter {
     outputBlack: number,
     outputWhite: number
   ) {
-    let cnt = 0
-    const segments = 256
-    let perc
-    const min = Math.min(inputBlack, inputWhite),
-      max = Math.max(inputBlack, inputWhite),
-      table = createSizedArray(segments)
-    let colorValue,
-      pos = 0
-    const outputDelta = outputWhite - outputBlack,
-      inputDelta = inputWhite - inputBlack
+    let cnt = 0;
+    const segments = 256;
+    let perc;
+    const min = Math.min(inputBlack, inputWhite);
+    const max = Math.max(inputBlack, inputWhite);
+    const table = createSizedArray(segments);
+    let colorValue;
+    let pos = 0;
+    const outputDelta = outputWhite - outputBlack;
+    const inputDelta = inputWhite - inputBlack;
 
     while (cnt <= 256) {
-      perc = cnt / 256
+      perc = cnt / 256;
       if (perc <= min) {
-        colorValue = inputDelta < 0 ? outputWhite : outputBlack
+        colorValue = inputDelta < 0 ? outputWhite : outputBlack;
       } else if (perc >= max) {
-        colorValue = inputDelta < 0 ? outputBlack : outputWhite
+        colorValue = inputDelta < 0 ? outputBlack : outputWhite;
       } else {
         colorValue =
           outputBlack +
-          outputDelta * Math.pow((perc - inputBlack) / inputDelta, 1 / gamma)
+          outputDelta * Math.pow((perc - inputBlack) / inputDelta, 1 / gamma);
       }
-      table[pos] = colorValue
-      pos++
-      cnt += 256 / (segments - 1)
+      table[pos] = colorValue;
+      pos++;
+      cnt += 256 / (segments - 1);
     }
 
-    return table.join(' ')
+    return table.join(' ');
   }
 
   renderFrame(forceRender?: boolean) {
     if (
       !forceRender && !this.filterManager._mdf
     ) {
-      return
+      return;
     }
-    let val
-    const { effectElements } = this.filterManager
+    let val;
+    const { effectElements } = this.filterManager;
 
     if (
       this.feFuncRComposed &&
@@ -188,10 +188,10 @@ export class SVGProLevelsFilter {
         effectElements[5]?.p.v as number,
         effectElements[6]?.p.v as number,
         effectElements[7]?.p.v as number
-      )
-      this.feFuncRComposed.setAttribute('tableValues', val)
-      this.feFuncGComposed?.setAttribute('tableValues', val)
-      this.feFuncBComposed?.setAttribute('tableValues', val)
+      );
+      this.feFuncRComposed.setAttribute('tableValues', val);
+      this.feFuncGComposed?.setAttribute('tableValues', val);
+      this.feFuncBComposed?.setAttribute('tableValues', val);
     }
 
     if (
@@ -209,8 +209,8 @@ export class SVGProLevelsFilter {
         effectElements[12]?.p.v as number,
         effectElements[13]?.p.v as number,
         effectElements[14]?.p.v as number
-      )
-      this.feFuncR.setAttribute('tableValues', val)
+      );
+      this.feFuncR.setAttribute('tableValues', val);
     }
 
     if (
@@ -228,8 +228,8 @@ export class SVGProLevelsFilter {
         effectElements[19]?.p.v as number,
         effectElements[20]?.p.v as number,
         effectElements[21]?.p.v as number
-      )
-      this.feFuncG.setAttribute('tableValues', val)
+      );
+      this.feFuncG.setAttribute('tableValues', val);
     }
 
     if (
@@ -247,8 +247,8 @@ export class SVGProLevelsFilter {
         effectElements[26]?.p.v as number,
         effectElements[27]?.p.v as number,
         effectElements[28]?.p.v as number
-      )
-      this.feFuncB.setAttribute('tableValues', val)
+      );
+      this.feFuncB.setAttribute('tableValues', val);
     }
 
     if (
@@ -266,8 +266,8 @@ export class SVGProLevelsFilter {
         effectElements[33]?.p.v as number,
         effectElements[34]?.p.v as number,
         effectElements[35]?.p.v as number
-      )
-      this.feFuncA.setAttribute('tableValues', val)
+      );
+      this.feFuncA.setAttribute('tableValues', val);
     }
   }
 }

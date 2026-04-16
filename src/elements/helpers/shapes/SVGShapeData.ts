@@ -1,7 +1,7 @@
-import type { Transformer } from '@/types'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+import type { Transformer } from '@/types';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
 
-import { ShapeData } from '@/elements/helpers/shapes/ShapeData'
+import { ShapeData } from '@/elements/helpers/shapes/ShapeData';
 
 export class SVGShapeData extends ShapeData {
   constructor(
@@ -9,27 +9,27 @@ export class SVGShapeData extends ShapeData {
     level: number,
     shape: ShapeProperty
   ) {
-    super()
-    this.caches = []
-    this.styles = []
-    this.transformers = transformers
-    this.lStr = ''
-    this.sh = shape
-    this.lvl = level
+    super();
+    this.caches = [];
+    this.styles = [];
+    this.transformers = transformers;
+    this.lStr = '';
+    this.sh = shape;
+    this.lvl = level;
     // TODO: find if there are some cases where _isAnimated can be false.
     // For now, since shapes add up with other shapes. They have to be calculated every time.
     // One way of finding out is checking if all styles associated to this shape depend only of this shape
-    this._isAnimated = Boolean(shape.k)
+    this._isAnimated = Boolean(shape.k);
     // TODO: commenting this for now since all shapes are animated
-    let i = 0
-    const { length } = transformers
+    let i = 0;
+    const { length } = transformers;
 
     while (i < length) {
       if ((transformers[i]?.mProps.dynamicProperties.length ?? 0) > 0) {
-        this._isAnimated = true
-        break
+        this._isAnimated = true;
+        break;
       }
-      i++
+      i++;
     }
   }
 }

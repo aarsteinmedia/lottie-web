@@ -1,11 +1,11 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
-import type { EffectValue, ElementInterfaceIntersect } from '@/types'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { GroupEffect } from '@/effects/GroupEffect';
+import type { EffectValue, ElementInterfaceIntersect } from '@/types';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
 
-import PropertyFactory from '@/utils/PropertyFactory'
+import PropertyFactory from '@/utils/PropertyFactory';
 
 abstract class EffectZero {
-  p?: ValueProperty
+  p?: ValueProperty;
   constructor(
     data: EffectValue,
     elem: ElementInterfaceIntersect,
@@ -17,12 +17,12 @@ abstract class EffectZero {
       0,
       0,
       container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
+    ) as ValueProperty;
   }
 }
 
 abstract class EffectOne {
-  p?: ValueProperty
+  p?: ValueProperty;
 
   constructor(
     data: EffectValue,
@@ -35,7 +35,7 @@ abstract class EffectOne {
       1,
       0,
       container as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
+    ) as ValueProperty;
   }
 }
 
@@ -54,5 +54,5 @@ export class MaskIndexEffect extends EffectZero { }
 export class CheckboxEffect extends EffectZero { }
 
 export class NoValueEffect {
-  p = {}
+  p = {};
 }

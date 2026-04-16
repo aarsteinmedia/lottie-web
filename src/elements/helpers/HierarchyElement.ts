@@ -3,44 +3,44 @@
  *
  */
 
-import type { ElementInterfaceIntersect } from '@/types'
+import type { ElementInterfaceIntersect } from '@/types';
 
-import { TransformElement } from '@/elements/helpers/TransformElement'
+import { TransformElement } from '@/elements/helpers/TransformElement';
 
 export abstract class HierarchyElement extends TransformElement {
-  _isParent = false
+  _isParent = false;
 
   checkParenting() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
     if (!this.comp) {
-      throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`)
+      throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`);
     }
     if (this.data.parent === undefined) {
-      return
+      return;
     }
 
     this.comp.buildElementParenting(
       this as unknown as ElementInterfaceIntersect,
       this.data.parent,
       []
-    )
+    );
   }
 
   initHierarchy() {
     // element's parent list
-    this.hierarchy = []
+    this.hierarchy = [];
     // if element is parent of another layer _isParent will be true
-    this._isParent = false
-    this.checkParenting()
+    this._isParent = false;
+    this.checkParenting();
   }
 
   setAsParent() {
-    this._isParent = true
+    this._isParent = true;
   }
 
   setHierarchy(hierarchy: ElementInterfaceIntersect[]) {
-    this.hierarchy = hierarchy
+    this.hierarchy = hierarchy;
   }
 }

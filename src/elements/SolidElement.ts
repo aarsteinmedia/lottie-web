@@ -2,10 +2,10 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
-} from '@/types'
+} from '@/types';
 
-import { ImageElement } from '@/elements/ImageElement'
-import { createNS } from '@/utils/helpers/svgElements'
+import { ImageElement } from '@/elements/ImageElement';
+import { createNS } from '@/utils/helpers/svgElements';
 
 export class SolidElement extends ImageElement {
   constructor(
@@ -15,23 +15,23 @@ export class SolidElement extends ImageElement {
   ) {
     super(
       data, globalData, comp
-    )
+    );
     this.initElement(
       data, globalData, comp
-    )
+    );
   }
 
   override createContent() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
-    const rect = createNS<SVGRectElement>('rect')
+    const rect = createNS<SVGRectElement>('rect');
 
-    rect.width.baseVal.value = this.data.sw || 0
-    rect.height.baseVal.value = this.data.sh || 0
+    rect.width.baseVal.value = this.data.sw || 0;
+    rect.height.baseVal.value = this.data.sh || 0;
     if (this.data.sc) {
-      rect.setAttribute('fill', this.data.sc)
+      rect.setAttribute('fill', this.data.sc);
     }
-    this.layerElement?.appendChild(rect)
+    this.layerElement?.appendChild(rect);
   }
 }

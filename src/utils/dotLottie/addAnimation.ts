@@ -1,9 +1,9 @@
 import type {
   AddAnimationParams, LottieManifest, Result
-} from '@/types'
+} from '@/types';
 
-import { createDotLottie } from '@/utils/dotLottie/createDotLottie'
-import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
+import { createDotLottie } from '@/utils/dotLottie/createDotLottie';
+import { getAnimationData } from '@/utils/dotLottie/getAnimationData';
 
 /**
  * Creates a new dotLottie file, by combinig several animations.
@@ -31,29 +31,29 @@ export async function addAnimation ({
         ]
         : [],
     } as LottieManifest,
-  } = src ? await getAnimationData(src) : {}
+  } = src ? await getAnimationData(src) : {};
 
   try {
     if (!manifest) {
-      throw new Error('Manifest is not set')
+      throw new Error('Manifest is not set');
     }
-    manifest.generator = generator
-    const { length } = configs
+    manifest.generator = generator;
+    const { length } = configs;
 
     for (let i = 0; i < length; i++) {
-      const { url } = configs[i] ?? {},
-        { animations: animationsToAdd } = await getAnimationData(url)
+      const { url } = configs[i] ?? {};
+      const { animations: animationsToAdd } = await getAnimationData(url);
 
       if (!animationsToAdd) {
-        throw new Error('No animation loaded')
+        throw new Error('No animation loaded');
       }
       if (manifest.animations.some((anim) => anim.id === configs[i]?.id)) {
-        throw new Error('Duplicate id for animation')
+        throw new Error('Duplicate id for animation');
       }
 
-      manifest.animations = [...manifest.animations, { id: configs[i]?.id ?? '' }]
+      manifest.animations = [...manifest.animations, { id: configs[i]?.id ?? '' }];
 
-      animations.push(...animationsToAdd)
+      animations.push(...animationsToAdd);
     }
 
     return {
@@ -64,11 +64,11 @@ export async function addAnimation ({
         shouldDownload,
       }),
       success: true,
-    }
+    };
   } catch (error) {
     return {
       error: (error as Error).message,
       success: false,
-    }
+    };
   }
 }

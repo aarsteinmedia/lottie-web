@@ -1,17 +1,17 @@
-import type { ElementInterfaceIntersect } from '@/types'
-import type { MouseModifier } from '@/utils/shapes/modifiers/MouseModifier'
-import type { OffsetPathModifier } from '@/utils/shapes/modifiers/OffsetPathModifier'
-import type { PuckerAndBloatModifier } from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
-import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier'
-import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
-import type { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
+import type { ElementInterfaceIntersect } from '@/types';
+import type { MouseModifier } from '@/utils/shapes/modifiers/MouseModifier';
+import type { OffsetPathModifier } from '@/utils/shapes/modifiers/OffsetPathModifier';
+import type { PuckerAndBloatModifier } from '@/utils/shapes/modifiers/PuckerAndBloatModifier';
+import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier';
+import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier';
+import type { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier';
 
 export type ShapeModifierInterface =
   | TrimModifier
   | PuckerAndBloatModifier
   | RepeaterModifier
   | ZigZagModifier
-  | OffsetPathModifier
+  | OffsetPathModifier;
 
 type Modifier =
   | typeof TrimModifier
@@ -19,11 +19,11 @@ type Modifier =
   | typeof RepeaterModifier
   | typeof ZigZagModifier
   | typeof OffsetPathModifier
-  | typeof MouseModifier
+  | typeof MouseModifier;
 
 interface Modifiers {[key: string]: Modifier | undefined}
 
-const Modifiers: Modifiers = {}
+const Modifiers: Modifiers = {};
 
 
 export function getModifier<T extends ShapeModifierInterface>(
@@ -32,20 +32,20 @@ export function getModifier<T extends ShapeModifierInterface>(
   _data?: unknown
 ) {
   if (!Modifiers[nm]) {
-    throw new Error('Invalid modifier')
+    throw new Error('Invalid modifier');
   }
 
-  return new Modifiers[nm]() as T
+  return new Modifiers[nm]() as T;
 }
 
 export function registerModifier(nm: string, factory: Modifier) {
-  Modifiers[nm] = Modifiers[nm] ?? factory
+  Modifiers[nm] = Modifiers[nm] ?? factory;
 }
 
 const ShapeModifiers = {
   getModifier,
   registerModifier
-}
+};
 
 // eslint-disable-next-line import/no-default-export
-export default ShapeModifiers
+export default ShapeModifiers;

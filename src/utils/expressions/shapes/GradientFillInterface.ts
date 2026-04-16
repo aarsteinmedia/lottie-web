@@ -1,38 +1,38 @@
-import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
+import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData';
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
+import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory';
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface';
 
 export class GradientFillInterface extends BaseInterface {
-  override prop?: SVGGradientFillStyleData = undefined
+  override prop?: SVGGradientFillStyleData = undefined;
 
   get endPoint() {
-    return expressionPropertyFactory(this.prop?.e)
+    return expressionPropertyFactory(this.prop?.e);
   }
 
   get opacity() {
-    return expressionPropertyFactory(this.prop?.o)
+    return expressionPropertyFactory(this.prop?.o);
   }
 
   get startPoint() {
-    return expressionPropertyFactory(this.prop?.s)
+    return expressionPropertyFactory(this.prop?.s);
   }
 
   get type() {
-    return 'a'
+    return 'a';
   }
 
   override getInterface(val: string | number) {
     if (val === 'Start Point' || val === 'start point') {
-      return this.startPoint
+      return this.startPoint;
     }
     if (val === 'End Point' || val === 'end point') {
-      return this.endPoint
+      return this.endPoint;
     }
     if (val === 'Opacity' || val === 'opacity') {
-      return this.opacity
+      return this.opacity;
     }
 
-    return null
+    return null;
   }
 }

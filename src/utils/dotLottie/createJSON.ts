@@ -1,8 +1,8 @@
-import type { AnimationData } from '@/types'
+import type { AnimationData } from '@/types';
 
 import {
   addExt, createElementID, download
-} from '@/utils'
+} from '@/utils';
 
 interface CreateJSONProps {
   animation?: undefined | AnimationData
@@ -17,25 +17,25 @@ export function createJSON({
 }: CreateJSONProps) {
   try {
     if (!animation) {
-      throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'')
+      throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'');
     }
 
-    const name = addExt('json', fileName) || `${createElementID()}.json`,
-      jsonString = JSON.stringify(animation)
+    const name = addExt('json', fileName) || `${createElementID()}.json`;
+    const jsonString = JSON.stringify(animation);
 
     if (shouldDownload) {
       download(jsonString, {
         mimeType: 'application/json',
         name,
-      })
+      });
 
-      return null
+      return null;
     }
 
-    return jsonString
+    return jsonString;
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
-    return null
+    return null;
   }
 }

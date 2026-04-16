@@ -1,99 +1,99 @@
-import type { AudioElement } from '@/elements/AudioElement'
-import type { AudioFactory } from '@/types'
+import type { AudioElement } from '@/elements/AudioElement';
+import type { AudioFactory } from '@/types';
 
-import { isServer } from '@/utils/helpers/constants'
+import { isServer } from '@/utils/helpers/constants';
 
 export class AudioController {
-  public audioFactory?: undefined | AudioFactory
+  public audioFactory?: undefined | AudioFactory;
 
-  public audios: AudioElement[] = []
-  isPlaying?: boolean
-  private _isMuted = false
-  private _volume = 1
+  public audios: AudioElement[] = [];
+  isPlaying?: boolean;
+  private _isMuted = false;
+  private _volume = 1;
 
   constructor(audioFactory?: AudioFactory) {
-    this.audioFactory = audioFactory
+    this.audioFactory = audioFactory;
   }
 
   public addAudio(audio: AudioElement) {
-    this.audios.push(audio)
+    this.audios.push(audio);
   }
 
   public createAudio(assetPath?: string) {
     if (this.audioFactory) {
-      return this.audioFactory(assetPath)
+      return this.audioFactory(assetPath);
     }
     if (!isServer && 'Howl' in window) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      return new (window.Howl as any)({ src: [assetPath] })
+      return new (window.Howl as any)({ src: [assetPath] });
     }
 
     return {
       isPlaying: false,
       play: () => {
-        this.isPlaying = true
+        this.isPlaying = true;
       },
       playing: () => {
-        throw new Error(`${this.constructor.name}: Method playing is not implemented`)
+        throw new Error(`${this.constructor.name}: Method playing is not implemented`);
       },
       rate: () => {
-        throw new Error(`${this.constructor.name}: Method rate is not implemented`)
+        throw new Error(`${this.constructor.name}: Method rate is not implemented`);
       },
       seek: () => {
-        this.isPlaying = false
+        this.isPlaying = false;
       },
       setVolume: () => {
-        throw new Error(`${this.constructor.name}: Method setVolume is not implemented`)
+        throw new Error(`${this.constructor.name}: Method setVolume is not implemented`);
       },
-    }
+    };
   }
 
   public getVolume() {
-    return this._volume
+    return this._volume;
   }
 
   public mute() {
-    this._isMuted = true
-    this._updateVolume()
+    this._isMuted = true;
+    this._updateVolume();
   }
 
   public pause() {
     for (const audio of this.audios) {
-      audio.pause()
+      audio.pause();
     }
   }
 
   public resume() {
     for (const audio of this.audios) {
-      audio.resume()
+      audio.resume();
     }
   }
 
   public setAudioFactory(audioFactory: AudioFactory) {
-    this.audioFactory = audioFactory
+    this.audioFactory = audioFactory;
   }
 
   public setRate(rateValue: number) {
     for (const audio of this.audios) {
-      audio.setRate(rateValue)
+      audio.setRate(rateValue);
     }
   }
 
   public setVolume(value: number) {
-    this._volume = value
-    this._updateVolume()
+    this._volume = value;
+    this._updateVolume();
   }
 
   public unmute() {
-    this._isMuted = false
-    this._updateVolume()
+    this._isMuted = false;
+    this._updateVolume();
   }
 
   private _updateVolume() {
-    const { length } = this.audios
+    const { length } = this.audios;
 
     for (let i = 0; i < length; i++) {
-      this.audios[i]?.volume(this._volume * (this._isMuted ? 0 : 1))
+      this.audios[i]?.volume(this._volume * (this._isMuted ? 0 : 1));
     }
   }
 }
@@ -101,5 +101,5 @@ export class AudioController {
 
 // eslint-disable-next-line import/no-default-export
 export default function audioControllerFactory(factory?: AudioFactory) {
-  return new AudioController(factory)
+  return new AudioController(factory);
 }

@@ -1,11 +1,11 @@
-import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import type { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
-import type { CVStyleElement, Shape } from '@/types'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+import type { CVShapeElement } from '@/elements/canvas/CVShapeElement';
+import type { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager';
+import type { CVStyleElement, Shape } from '@/types';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
 
-import { ShapeData } from '@/elements/helpers/shapes/ShapeData'
-import { ShapeType } from '@/utils/enums'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapeData } from '@/elements/helpers/shapes/ShapeData';
+import { ShapeType } from '@/utils/enums';
+import ShapePropertyFactory from '@/utils/shapes/properties';
 
 export class CVShapeData extends ShapeData {
   constructor(
@@ -14,40 +14,40 @@ export class CVShapeData extends ShapeData {
     styles: CVStyleElement[],
     transformsManager: ShapeTransformManager
   ) {
-    super()
-    this.styledShapes = []
+    super();
+    this.styledShapes = [];
     this.tr = [0,
       0,
       0,
       0,
       0,
-      0]
-    let ty
+      0];
+    let ty;
 
     switch (data.ty) {
       case ShapeType.Rectangle: {
-        ty = 5
-        break
+        ty = 5;
+        break;
       }
       case ShapeType.Ellipse: {
-        ty = 6
-        break
+        ty = 6;
+        break;
       }
       case ShapeType.PolygonStar: {
-        ty = 7
-        break
+        ty = 7;
+        break;
       }
       default: {
-        ty = 4
+        ty = 4;
       }
     }
     this.sh = ShapePropertyFactory.getShapeProp(
       element,
       data,
       ty
-    ) as ShapeProperty
-    const { length } = styles
-    let styledShape
+    ) as ShapeProperty;
+    const { length } = styles;
+    let styledShape;
 
     for (let i = 0; i < length; i++) {
       if (!styles[i]?.closed) {
@@ -55,9 +55,9 @@ export class CVShapeData extends ShapeData {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           transforms: transformsManager.addTransformSequence(styles[i]?.transforms as any),
           trNodes: [],
-        } as unknown as CVShapeData
-        this.styledShapes.push(styledShape)
-        styles[i]?.elements.push(styledShape)
+        } as unknown as CVShapeData;
+        this.styledShapes.push(styledShape);
+        styles[i]?.elements.push(styledShape);
       }
     }
   }

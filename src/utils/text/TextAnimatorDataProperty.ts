@@ -1,14 +1,14 @@
 import type {
   ElementInterfaceIntersect,
   VectorProperty,
-} from '@/types'
-import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
-import type { NoProperty } from '@/utils/properties/NoProperty'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
+} from '@/types';
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty';
+import type { NoProperty } from '@/utils/properties/NoProperty';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
 
-import { degToRads } from '@/utils/helpers/constants'
-import PropertyFactory from '@/utils/PropertyFactory'
-import { TextSelectorProperty } from '@/utils/text/TextSelectorProperty'
+import { degToRads } from '@/utils/helpers/constants';
+import PropertyFactory from '@/utils/PropertyFactory';
+import { TextSelectorProperty } from '@/utils/text/TextSelectorProperty';
 
 export class TextAnimatorDataProperty {
   a?: {
@@ -28,15 +28,15 @@ export class TextAnimatorDataProperty {
     sk: ValueProperty | NoProperty
     sw: ValueProperty | NoProperty
     t: ValueProperty | NoProperty
-  }
-  s?: TextSelectorProperty
+  };
+  s?: TextSelectorProperty;
   constructor(
     elem: ElementInterfaceIntersect,
     animatorProps?: TextAnimatorDataProperty,
     container?: ElementInterfaceIntersect
   ) {
-    const defaultData = { propType: false } as NoProperty,
-      textAnimatorAnimatables = animatorProps?.a
+    const defaultData = { propType: false } as NoProperty;
+    const textAnimatorAnimatables = animatorProps?.a;
 
     this.a = {
       a: textAnimatorAnimatables?.a
@@ -183,11 +183,11 @@ export class TextAnimatorDataProperty {
           container
         ) as ValueProperty)
         : defaultData,
-    }
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     this.s = new TextSelectorProperty(elem, animatorProps?.s as any)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ; (this.s as any).t = (animatorProps as any)?.s?.t
+    ; (this.s as any).t = (animatorProps as any)?.s?.t;
   }
 }

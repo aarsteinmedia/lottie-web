@@ -2,9 +2,9 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
-} from '@/types'
+} from '@/types';
 
-import { FrameElement } from '@/elements/helpers/FrameElement'
+import { FrameElement } from '@/elements/helpers/FrameElement';
 
 export class NullElement extends FrameElement {
   constructor(
@@ -12,24 +12,24 @@ export class NullElement extends FrameElement {
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super()
-    this.initFrame()
+    super();
+    this.initFrame();
     this.initBaseData(
       data, globalData, comp
-    )
-    this.initTransform()
-    this.initHierarchy()
+    );
+    this.initTransform();
+    this.initHierarchy();
   }
 
   override getBaseElement() {
-    return null
+    return null;
   }
 
   prepareFrame(num: number) {
-    this.prepareProperties(num, true)
+    this.prepareProperties(num, true);
   }
 
   renderFrame(_frame?: number | null) {
-    return null
+    return null;
   }
 }

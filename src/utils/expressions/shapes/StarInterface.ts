@@ -1,63 +1,63 @@
-import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
+import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty';
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
-import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
+import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory';
+import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface';
 
 
 export class StarInterface extends BaseInterface {
-  override prop?: StarShapeProperty = undefined
+  override prop?: StarShapeProperty = undefined;
 
   get innerRadius() {
-    return expressionPropertyFactory(this.prop?.ir)
+    return expressionPropertyFactory(this.prop?.ir);
   }
 
   get innerRoundness() {
-    return expressionPropertyFactory(this.prop?.is)
+    return expressionPropertyFactory(this.prop?.is);
   }
 
   get outerRadius() {
-    return expressionPropertyFactory(this.prop?.or)
+    return expressionPropertyFactory(this.prop?.or);
   }
 
   get outerRoundness() {
-    return expressionPropertyFactory(this.prop?.os)
+    return expressionPropertyFactory(this.prop?.os);
   }
 
   get points() {
-    return expressionPropertyFactory(this.prop?.pt)
+    return expressionPropertyFactory(this.prop?.pt);
   }
 
   get position() {
-    return expressionPropertyFactory(this.prop?.p)
+    return expressionPropertyFactory(this.prop?.p);
   }
 
   get rotation() {
-    return expressionPropertyFactory(this.prop?.r)
+    return expressionPropertyFactory(this.prop?.r);
   }
 
   override getInterface(value: string | number) {
     if (this.shape?.p?.ix === value) {
-      return this.position
+      return this.position;
     }
     if (this.shape?.r?.ix === value) {
-      return this.rotation
+      return this.rotation;
     }
     if (this.shape?.pt?.ix === value) {
-      return this.points
+      return this.points;
     }
     if (this.shape?.or?.ix === value || value === 'ADBE Vector Star Outer Radius') {
-      return this.outerRadius
+      return this.outerRadius;
     }
     if (this.shape?.os?.ix === value) {
-      return this.outerRoundness
+      return this.outerRoundness;
     }
     if (this.shape?.ir?.ix === value || value === 'ADBE Vector Star Inner Radius') {
-      return this.innerRadius
+      return this.innerRadius;
     }
     if (this.shape?.is?.ix === value) {
-      return this.innerRoundness
+      return this.innerRoundness;
     }
 
-    return null
+    return null;
   }
 }

@@ -1,11 +1,11 @@
-const locationHref = { current: '' }
+const locationHref = { current: '' };
 
 const setLocationHref = (value: string) => {
-    locationHref.current = value
-  },
-  getLocationHref = () => locationHref.current
+  locationHref.current = value;
+};
+const getLocationHref = () => locationHref.current;
 
 export {
   getLocationHref,
   setLocationHref
-}
+};

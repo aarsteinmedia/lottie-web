@@ -1,76 +1,76 @@
-import type { Transformer, TransformSequence } from '@/types'
+import type { Transformer, TransformSequence } from '@/types';
 
-import { Matrix } from '@/utils/Matrix'
+import { Matrix } from '@/utils/Matrix';
 
 export class ShapeTransformManager {
-  sequenceList: TransformSequence[] = []
-  sequences: TransformSequence = {}
+  sequenceList: TransformSequence[] = [];
+  sequences: TransformSequence = {};
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  transform_key_count = 0
+  transform_key_count = 0;
 
   addTransformSequence(transforms: { transform: Transformer }[]) {
-    const { length } = transforms
-    let key = '_'
+    const { length } = transforms;
+    let key = '_';
 
     for (let i = 0; i < length; i++) {
 
-      key += `${transforms[i]?.transform.key}_`
+      key += `${transforms[i]?.transform.key}_`;
     }
-    let sequence = this.sequences[key]
+    let sequence = this.sequences[key];
 
     if (!sequence) {
       sequence = {
         _mdf: false,
         finalTransform: new Matrix(),
         transforms: [...transforms],
-      }
-      this.sequences[key] = sequence
-      this.sequenceList.push(sequence as TransformSequence)
+      };
+      this.sequences[key] = sequence;
+      this.sequenceList.push(sequence as TransformSequence);
     }
 
-    return sequence as Transformer
+    return sequence as Transformer;
   }
 
   getNewKey() {
-    this.transform_key_count++
+    this.transform_key_count++;
 
-    return `_${this.transform_key_count}`
+    return `_${this.transform_key_count}`;
   }
 
   processSequence(sequence: TransformSequence, isFirstFrame?: number | boolean) {
-    let i = 0
-    const { length } = sequence.transforms ?? []
+    let i = 0;
+    const { length } = sequence.transforms ?? [];
 
-    let _mdf = isFirstFrame
+    let _mdf = isFirstFrame;
 
     if (!isFirstFrame) {
       while (i < length) {
         if (sequence.transforms?.[i]?.transform.mProps._mdf) {
-          _mdf = true
-          break
+          _mdf = true;
+          break;
         }
-        i++
+        i++;
       }
     }
 
     if (_mdf) {
-      sequence.finalTransform?.reset()
+      sequence.finalTransform?.reset();
       for (i = length - 1; i >= 0; i -= 1) {
-        const { v: matrix } = sequence.transforms?.[i]?.transform.mProps ?? { v: null }
+        const { v: matrix } = sequence.transforms?.[i]?.transform.mProps ?? { v: null };
 
         if (matrix) {
-          sequence.finalTransform?.multiply(matrix)
+          sequence.finalTransform?.multiply(matrix);
         }
       }
     }
-    sequence._mdf = Boolean(_mdf)
+    sequence._mdf = Boolean(_mdf);
   }
 
   processSequences(isFirstFrame?: number | boolean) {
-    const { length } = this.sequenceList
+    const { length } = this.sequenceList;
 
     for (let i = 0; i < length; i++) {
-      this.processSequence(this.sequenceList[i] as TransformSequence, isFirstFrame)
+      this.processSequence(this.sequenceList[i] as TransformSequence, isFirstFrame);
     }
   }
 }

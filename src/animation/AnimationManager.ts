@@ -1,51 +1,51 @@
-import type { LottieEvent } from '@/events'
+import type { LottieEvent } from '@/events';
 import type {
   AnimationConfiguration,
   AnimationData,
   AnimationDirection,
-} from '@/types'
+} from '@/types';
 
-import { AnimationItem } from '@/animation/AnimationItem'
-import { RendererType } from '@/utils/enums'
-import { isServer } from '@/utils/helpers/constants'
-import { createTag } from '@/utils/helpers/htmlElements'
+import { AnimationItem } from '@/animation/AnimationItem';
+import { RendererType } from '@/utils/enums';
+import { isServer } from '@/utils/helpers/constants';
+import { createTag } from '@/utils/helpers/htmlElements';
 
 interface RegisteredAnimation {
   animation: AnimationItem
   elem: HTMLElement | null
 }
 
-let _isFrozen = false,
-  _isStopped = true,
-  initTime = 0,
-  len = 0,
-  playingAnimationsNum = 0
-const registeredAnimations: RegisteredAnimation[] = []
+let _isFrozen = false;
+let _isStopped = true;
+let initTime = 0;
+let len = 0;
+let playingAnimationsNum = 0;
+const registeredAnimations: RegisteredAnimation[] = [];
 
 export function destroy(animation?: string) {
   for (let i = len - 1; i >= 0; i--) {
-    registeredAnimations[i]?.animation.destroy(animation)
+    registeredAnimations[i]?.animation.destroy(animation);
   }
 }
 
 export function freeze() {
-  _isFrozen = true
+  _isFrozen = true;
 }
 
 export function getRegisteredAnimations() {
-  const { length } = registeredAnimations,
-    animations = []
+  const { length } = registeredAnimations;
+  const animations = [];
 
   for (let i = 0; i < length; i++) {
-    const registeredAnimation = registeredAnimations[i]
+    const registeredAnimation = registeredAnimations[i];
 
     if (!registeredAnimation) {
-      continue
+      continue;
     }
-    animations.push(registeredAnimation.animation)
+    animations.push(registeredAnimation.animation);
   }
 
-  return animations
+  return animations;
 }
 
 export function goToAndStop(
@@ -56,39 +56,39 @@ export function goToAndStop(
   for (let i = 0; i < len; i++) {
     registeredAnimations[i]?.animation.goToAndStop(
       value, isFrame, animation
-    )
+    );
   }
 }
 
 export function loadAnimation(params: AnimationConfiguration) {
   try {
-    const animItem = new AnimationItem()
+    const animItem = new AnimationItem();
 
-    setupAnimation(animItem, null)
-    animItem.setParams(params)
+    setupAnimation(animItem, null);
+    animItem.setParams(params);
 
-    return animItem
+    return animItem;
   } catch (error) {
-    console.error('AnimationManager:\n', error)
-    throw new Error('Could not load animation')
+    console.error('AnimationManager:\n', error);
+    throw new Error('Could not load animation');
   }
 }
 
 export function mute(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.mute(animation)
+    registeredAnimations[i]?.animation.mute(animation);
   }
 }
 
 export function pause(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.pause(animation)
+    registeredAnimations[i]?.animation.pause(animation);
   }
 }
 
 export function play(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.play(animation)
+    registeredAnimations[i]?.animation.play(animation);
   }
 }
 
@@ -96,33 +96,33 @@ export function registerAnimation(element: HTMLElement | null,
   animationData?: AnimationData) {
   try {
     if (!element) {
-      return null
+      return null;
     }
-    let i = 0
+    let i = 0;
 
     while (i < len) {
       if (
         registeredAnimations[i]?.elem === element &&
         registeredAnimations[i]?.elem !== null
       ) {
-        return registeredAnimations[i]?.animation
+        return registeredAnimations[i]?.animation;
       }
-      i++
+      i++;
     }
-    const animItem = new AnimationItem()
+    const animItem = new AnimationItem();
 
-    setupAnimation(animItem, element)
-    animItem.setData(element, animationData)
+    setupAnimation(animItem, element);
+    animItem.setData(element, animationData);
 
-    return animItem
+    return animItem;
   } catch (error) {
-    console.error('AnimationManager:\n', error)
-    throw new Error('Could not register animation')
+    console.error('AnimationManager:\n', error);
+    throw new Error('Could not register animation');
   }
 }
 export function resize() {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.resize()
+    registeredAnimations[i]?.animation.resize();
   }
 }
 
@@ -132,157 +132,157 @@ export function searchAnimations(
   rendererFromProps?: RendererType
 ) {
   if (isServer) {
-    return
+    return;
   }
-  let renderer = rendererFromProps
+  let renderer = rendererFromProps;
   const animElements = [
-      ...document.getElementsByClassName('lottie'), ...document.getElementsByClassName('bodymovin')
-    ] as HTMLElement[],
-    { length } = animElements
+    ...document.getElementsByClassName('lottie'), ...document.getElementsByClassName('bodymovin')
+  ] as HTMLElement[];
+  const { length } = animElements;
 
   for (let i = 0; i < length; i++) {
-    const animElement = animElements[i]
+    const animElement = animElements[i];
 
     if (!animElement) {
-      continue
+      continue;
     }
 
     if (renderer) {
-      animElement.dataset.bmType = renderer
+      animElement.dataset.bmType = renderer;
     }
-    registerAnimation(animElement, animationData)
+    registerAnimation(animElement, animationData);
   }
   if (standalone && length === 0) {
     if (!renderer) {
-      renderer = RendererType.SVG
+      renderer = RendererType.SVG;
     }
-    const { body } = document
+    const { body } = document;
 
-    body.innerText = ''
-    const div = createTag('div')
+    body.innerText = '';
+    const div = createTag('div');
 
-    div.style.width = '100%'
-    div.style.height = '100%'
-    div.dataset.bmType = renderer
-    body.appendChild(div)
-    registerAnimation(div, animationData)
+    div.style.width = '100%';
+    div.style.height = '100%';
+    div.dataset.bmType = renderer;
+    body.appendChild(div);
+    registerAnimation(div, animationData);
   }
 }
 
 export function setDirection(val: AnimationDirection, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.setDirection(val, animation)
+    registeredAnimations[i]?.animation.setDirection(val, animation);
   }
 }
 
 export function setSpeed(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.setSpeed(val, animation)
+    registeredAnimations[i]?.animation.setSpeed(val, animation);
   }
 }
 
 export function setVolume(val: number, animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.setVolume(val, animation)
+    registeredAnimations[i]?.animation.setVolume(val, animation);
   }
 }
 
 export function stop(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.stop(animation)
+    registeredAnimations[i]?.animation.stop(animation);
   }
-  _isStopped = true
+  _isStopped = true;
 }
 
 export function togglePause(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.togglePause(animation)
+    registeredAnimations[i]?.animation.togglePause(animation);
   }
 }
 
 export function unfreeze() {
-  _isFrozen = false
-  activate()
+  _isFrozen = false;
+  activate();
 }
 
 export function unmute(animation?: string) {
   for (let i = 0; i < len; i++) {
-    registeredAnimations[i]?.animation.unmute(animation)
+    registeredAnimations[i]?.animation.unmute(animation);
   }
 }
 
 function activate() {
   if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer) {
-    return
+    return;
   }
 
-  requestAnimationFrame(first)
-  _isStopped = false
+  requestAnimationFrame(first);
+  _isStopped = false;
 }
 
 function addPlayingCount() {
-  playingAnimationsNum++
-  activate()
+  playingAnimationsNum++;
+  activate();
 }
 
 function first(nowTime: number) {
-  initTime = nowTime
+  initTime = nowTime;
   if (!isServer) {
-    requestAnimationFrame(resume)
+    requestAnimationFrame(resume);
   }
 }
 
 function removeElement({ target: animItem }: LottieEvent) {
-  let i = 0
+  let i = 0;
 
   if (!animItem) {
-    throw new Error('No animation to remove')
+    throw new Error('No animation to remove');
   }
   while (i < len) {
     if (registeredAnimations[i]?.animation === animItem) {
-      registeredAnimations.splice(i, 1)
-      i--
-      len -= 1
+      registeredAnimations.splice(i, 1);
+      i--;
+      len -= 1;
       if (!animItem.isPaused) {
-        subtractPlayingCount()
+        subtractPlayingCount();
       }
     }
-    i++
+    i++;
   }
 }
 
 function resume(nowTime: number) {
-  const elapsedTime = nowTime - initTime
+  const elapsedTime = nowTime - initTime;
 
   for (let i = 0; i < len; i++) {
-    const { animation } = registeredAnimations[i] ?? { animation: null }
+    const { animation } = registeredAnimations[i] ?? { animation: null };
 
-    animation?.advanceTime(elapsedTime)
+    animation?.advanceTime(elapsedTime);
   }
-  initTime = nowTime
+  initTime = nowTime;
 
   if (playingAnimationsNum && !_isFrozen && !_isStopped) {
     if (!isServer) {
-      requestAnimationFrame(resume)
+      requestAnimationFrame(resume);
     }
   } else {
-    _isStopped = true
+    _isStopped = true;
   }
 }
 
 function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
-  animItem.addEventListener('destroy', removeElement as () => void)
-  animItem.addEventListener('_active', addPlayingCount)
-  animItem.addEventListener('_idle', subtractPlayingCount)
+  animItem.addEventListener('destroy', removeElement as () => void);
+  animItem.addEventListener('_active', addPlayingCount);
+  animItem.addEventListener('_idle', subtractPlayingCount);
   registeredAnimations.push({
     animation: animItem,
     elem: element
-  })
-  len++
+  });
+  len++;
 }
 
 function subtractPlayingCount() {
-  playingAnimationsNum--
+  playingAnimationsNum--;
 }
 
 const AnimationManager = {
@@ -304,7 +304,7 @@ const AnimationManager = {
   togglePause,
   unfreeze,
   unmute,
-}
+};
 
 // eslint-disable-next-line import/no-default-export
-export default AnimationManager
+export default AnimationManager;

@@ -1,7 +1,7 @@
-import { ArrayType } from '@/utils/enums'
-import { createTypedArray } from '@/utils/helpers/arrays'
-import { getDefaultCurveSegments } from '@/utils/helpers/resolution'
-import { PoolFactory } from '@/utils/pooling/PoolFactory'
+import { ArrayType } from '@/utils/enums';
+import { createTypedArray } from '@/utils/helpers/arrays';
+import { getDefaultCurveSegments } from '@/utils/helpers/resolution';
+import { PoolFactory } from '@/utils/pooling/PoolFactory';
 
 export const bezierLengthPool = (() =>
   new PoolFactory(8, () => ({
@@ -9,4 +9,4 @@ export const bezierLengthPool = (() =>
     /** These arrays neeed to be initiated individually to avoid reference errors. */
     lengths: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()) as number[],
     percents: createTypedArray(ArrayType.Float32, getDefaultCurveSegments()) as number[],
-  })))()
+  })))();

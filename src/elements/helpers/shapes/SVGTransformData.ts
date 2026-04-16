@@ -1,21 +1,21 @@
-import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
+import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData';
 import type {
   ElementInterfaceIntersect,
   ShapeDataInterface,
   SVGElementInterface,
   Transformer,
-} from '@/types'
-import type { TransformProperty } from '@/utils/properties/TransformProperty'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
+} from '@/types';
+import type { TransformProperty } from '@/utils/properties/TransformProperty';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
 
 export class SVGTransformData {
-  _isAnimated: boolean
-  elements: ElementInterfaceIntersect[] = []
-  gr?: SVGGElement
-  it?: ShapeDataInterface[]
-  prevViewData?: SVGElementInterface[]
-  style?: SVGStyleData
-  transform: Transformer
+  _isAnimated: boolean;
+  elements: ElementInterfaceIntersect[] = [];
+  gr?: SVGGElement;
+  it?: ShapeDataInterface[];
+  prevViewData?: SVGElementInterface[];
+  style?: SVGStyleData;
+  transform: Transformer;
   constructor(
     mProps: TransformProperty,
     op: ValueProperty,
@@ -25,8 +25,8 @@ export class SVGTransformData {
       container,
       mProps,
       op,
-    } as Transformer
+    } as Transformer;
     this._isAnimated = this.transform.mProps.dynamicProperties.length > 0 ||
-      this.transform.op.effectsSequence.length > 0
+      this.transform.op.effectsSequence.length > 0;
   }
 }

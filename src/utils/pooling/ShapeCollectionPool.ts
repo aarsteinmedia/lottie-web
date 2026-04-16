@@ -1,47 +1,47 @@
-import type { PoolElement } from '@/types'
+import type { PoolElement } from '@/types';
 
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { double } from '@/utils/pooling/double'
-import { release } from '@/utils/pooling/ShapePool'
-import { ShapeCollection } from '@/utils/shapes/ShapeCollection'
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { double } from '@/utils/pooling/double';
+import { release } from '@/utils/pooling/ShapePool';
+import { ShapeCollection } from '@/utils/shapes/ShapeCollection';
 
-let _length = 0,
-  _maxLength = 4,
-  pool: PoolElement[] = createSizedArray(_maxLength)
+let _length = 0;
+let _maxLength = 4;
+let pool: PoolElement[] = createSizedArray(_maxLength);
 
 export function newShapeCollection() {
-  let shapeCollection
+  let shapeCollection;
 
   if (_length) {
-    _length -= 1
-    shapeCollection = pool[_length]
+    _length -= 1;
+    shapeCollection = pool[_length];
   } else {
-    shapeCollection = new ShapeCollection()
+    shapeCollection = new ShapeCollection();
   }
 
-  return shapeCollection as ShapeCollection
+  return shapeCollection as ShapeCollection;
 }
 
 export function releaseShape(shapeCollection: ShapeCollection) {
   for (let i = 0; i < shapeCollection._length; i++) {
-    release(shapeCollection.shapes[i] as PoolElement)
+    release(shapeCollection.shapes[i] as PoolElement);
   }
-  shapeCollection._length = 0
+  shapeCollection._length = 0;
 
   if (_length === _maxLength) {
-    pool = double(pool)
-    _maxLength *= 2
+    pool = double(pool);
+    _maxLength *= 2;
   }
 
-  pool[_length] = shapeCollection as unknown as PoolElement
+  pool[_length] = shapeCollection as unknown as PoolElement;
 
-  _length++
+  _length++;
 }
 
 const ShapeCollectionPool = {
   newShapeCollection,
   releaseShape
-}
+};
 
 // eslint-disable-next-line import/no-default-export
-export default ShapeCollectionPool
+export default ShapeCollectionPool;

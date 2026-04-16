@@ -1,5 +1,5 @@
-import { ArrayType } from '@/utils/enums'
-import { createTypedArray } from '@/utils/helpers/arrays'
+import { ArrayType } from '@/utils/enums';
+import { createTypedArray } from '@/utils/helpers/arrays';
 
 /* !
  Transformation Matrix v2.0
@@ -20,12 +20,12 @@ import { createTypedArray } from '@/utils/helpers/arrays'
  * All values are handled as floating point values.
  */
 export class Matrix {
-  props = createTypedArray(ArrayType.Float32, 16) as Float32Array
-  private _identity = true
-  private _identityCalculated = false
+  props = createTypedArray(ArrayType.Float32, 16) as Float32Array;
+  private _identity = true;
+  private _identityCalculated = false;
 
   constructor() {
-    this.reset()
+    this.reset();
   }
 
   applyToPoint(
@@ -53,7 +53,7 @@ export class Matrix {
         y * (this.props[6] ?? 0) +
         z * (this.props[10] ?? 0) +
         (this.props[14] ?? 0),
-    }
+    };
   }
 
   applyToPointArray(
@@ -62,7 +62,7 @@ export class Matrix {
     if (this.isIdentity()) {
       return [x,
         y,
-        z]
+        z];
     }
 
     return [
@@ -78,17 +78,17 @@ export class Matrix {
       y * (this.props[6] ?? 0) +
       z * (this.props[10] ?? 0) +
       (this.props[14] ?? 0),
-    ]
+    ];
   }
 
   applyToPointStringified(x: number, y: number): string {
     if (this.isIdentity()) {
-      return `${x},${y}`
+      return `${x},${y}`;
     }
-    const _p = this.props
+    const _p = this.props;
 
     return `${Math.round((x * (_p[0] ?? 0) + y * (_p[4] ?? 0) + (_p[12] ?? 0)) * 100) / 100},${Math.round((x * (_p[1] ?? 0) + y * (_p[5] ?? 0) + (_p[13] ?? 0)) * 100) / 100
-    }`
+    }`;
   }
 
   applyToTriplePoints(
@@ -96,7 +96,7 @@ export class Matrix {
     pt2: number[],
     pt3: number[]
   ): Float32Array {
-    const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array
+    const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array;
 
     if (this.isIdentity()) {
       arr.set([pt1[0] ?? 0,
@@ -104,14 +104,14 @@ export class Matrix {
         pt2[0] ?? 0,
         pt2[1] ?? 0,
         pt3[0] ?? 0,
-        pt3[1] ?? 0])
+        pt3[1] ?? 0]);
     } else {
-      const p0 = this.props[0] ?? 0,
-        p1 = this.props[1] ?? 0,
-        p4 = this.props[4] ?? 0,
-        p5 = this.props[5] ?? 0,
-        p12 = this.props[12] ?? 0,
-        p13 = this.props[13] ?? 0
+      const p0 = this.props[0] ?? 0;
+      const p1 = this.props[1] ?? 0;
+      const p4 = this.props[4] ?? 0;
+      const p5 = this.props[5] ?? 0;
+      const p12 = this.props[12] ?? 0;
+      const p13 = this.props[13] ?? 0;
 
       arr.set([
         (pt1[0] ?? 0) * p0 + (pt1[1] ?? 0) * p4 + p12,
@@ -120,10 +120,10 @@ export class Matrix {
         (pt2[0] ?? 0) * p1 + (pt2[1] ?? 0) * p5 + p13,
         (pt3[0] ?? 0) * p0 + (pt3[1] ?? 0) * p4 + p12,
         (pt3[0] ?? 0) * p1 + (pt3[1] ?? 0) * p5 + p13,
-      ])
+      ]);
     }
 
-    return arr
+    return arr;
   }
 
   applyToX(
@@ -131,7 +131,7 @@ export class Matrix {
   ): number {
     return (
       x * (this.props[0] ?? 0) + y * (this.props[4] ?? 0) + z * (this.props[8] ?? 0) + (this.props[12] ?? 0)
-    )
+    );
   }
 
   applyToY(
@@ -139,7 +139,7 @@ export class Matrix {
   ): number {
     return (
       x * (this.props[1] ?? 0) + y * (this.props[5] ?? 0) + z * (this.props[9] ?? 0) + (this.props[13] ?? 0)
-    )
+    );
   }
 
   applyToZ(
@@ -150,46 +150,46 @@ export class Matrix {
       y * (this.props[6] as number) +
       z * (this.props[10] as number) +
       (this.props[14] as number)
-    )
+    );
   }
 
   clone(matr: Matrix): Matrix {
-    matr.props.set(this.props)
+    matr.props.set(this.props);
 
-    return matr
+    return matr;
   }
 
   cloneFromProps(props: Float32Array): this {
-    this.props.set(props)
+    this.props.set(props);
 
-    return this
+    return this;
   }
 
   equals(matr?: Matrix): boolean {
-    return this.props.every((val, i) => val === matr?.props[i])
+    return this.props.every((val, i) => val === matr?.props[i]);
   }
 
   getInverseMatrix(): Matrix {
     const determinant =
-      (this.props[0] ?? 0) * (this.props[5] ?? 0) - (this.props[1] ?? 0) * (this.props[4] ?? 0)
-    const a = this.props[5] as number / determinant
-    const b = -(this.props[1] as number) / determinant
-    const c = -(this.props[4] as number) / determinant
-    const d = this.props[0] as number / determinant
+      (this.props[0] ?? 0) * (this.props[5] ?? 0) - (this.props[1] ?? 0) * (this.props[4] ?? 0);
+    const a = this.props[5] as number / determinant;
+    const b = -(this.props[1] as number) / determinant;
+    const c = -(this.props[4] as number) / determinant;
+    const d = this.props[0] as number / determinant;
     const e =
       ((this.props[4] as number) * (this.props[13] as number) - (this.props[5] as number) * (this.props[12] as number)) /
-      determinant
+      determinant;
     const f =
       -((this.props[0] as number) * (this.props[13] as number) - (this.props[1] as number) * (this.props[12] as number)) /
-      determinant
+      determinant;
 
-    const inverseMatrix = new Matrix()
+    const inverseMatrix = new Matrix();
 
     inverseMatrix.setTransform(
       a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, e, f, 0, 1
-    )
+    );
 
-    return inverseMatrix
+    return inverseMatrix;
   }
 
   inversePoint(pt: number[]): {
@@ -197,11 +197,11 @@ export class Matrix {
     y: number;
     z: number
   } {
-    const inverseMatrix = this.getInverseMatrix()
+    const inverseMatrix = this.getInverseMatrix();
 
     return inverseMatrix.applyToPoint(
       pt[0] ?? 0, pt[1] ?? 0, pt[2] ?? 0
-    )
+    );
   }
 
   inversePoints(pts: number[][]): {
@@ -209,7 +209,7 @@ export class Matrix {
     y: number;
     z: number
   }[] {
-    return pts.map((pt) => this.inversePoint(pt))
+    return pts.map((pt) => this.inversePoint(pt));
   }
 
   isIdentity(): boolean {
@@ -231,16 +231,16 @@ export class Matrix {
         this.props[13] !== 0 ||
         this.props[14] !== 0 ||
         this.props[15] !== 1
-      )
-      this._identityCalculated = true
+      );
+      this._identityCalculated = true;
     }
 
-    return this._identity
+    return this._identity;
   }
 
   multiply(matrix: Matrix): this {
     // @ts-expect-error: spread
-    return this.transform(...matrix.props)
+    return this.transform(...matrix.props);
   }
 
   reset(): this {
@@ -259,61 +259,61 @@ export class Matrix {
       0,
       0,
       0,
-      1])
+      1]);
 
-    return this
+    return this;
   }
 
   rotate(angle?: number): this {
     if (!angle) {
-      return this
+      return this;
     }
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
+    const mCos = Math.cos(angle);
+    const mSin = Math.sin(angle);
 
     return this._t(
       mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
-    )
+    );
   }
 
   rotateX(angle?: number): this {
     if (!angle) {
-      return this
+      return this;
     }
-    const mCos = Math.cos(angle),
-      mSin = Math.sin(angle)
+    const mCos = Math.cos(angle);
+    const mSin = Math.sin(angle);
 
     return this._t(
       1, 0, 0, 0, 0, mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1
-    )
+    );
   }
 
   rotateY(angle?: number): this {
     if (!angle) {
-      return this
+      return this;
     }
-    const mCos = Math.cos(angle),
-      mSin = Math.sin(angle)
+    const mCos = Math.cos(angle);
+    const mSin = Math.sin(angle);
 
     return this._t(
       mCos, 0, mSin, 0, 0, 1, 0, 0, -mSin, 0, mCos, 0, 0, 0, 0, 1
-    )
+    );
   }
 
   rotateZ(angle?: number): this {
-    return this.rotate(angle)
+    return this.rotate(angle);
   }
 
   scale(
     sx: number, sy: number, sz = 1
   ): this {
     if (sx === 1 && sy === 1 && sz === 1) {
-      return this
+      return this;
     }
 
     return this._t(
       sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1
-    )
+    );
   }
 
   setTransform(
@@ -349,24 +349,24 @@ export class Matrix {
       m,
       n,
       o,
-      p])
+      p]);
 
-    return this
+    return this;
   }
 
   shear(sx: number, sy: number): this {
     return this._t(
       1, sy, sx, 1, 0, 0
-    )
+    );
   }
 
   skew(ax: number, ay: number): this {
-    return this.shear(Math.tan(ax), Math.tan(ay))
+    return this.shear(Math.tan(ax), Math.tan(ay));
   }
 
   skewFromAxis(ax: number, angle: number): this {
-    const mCos = Math.cos(angle),
-      mSin = Math.sin(angle)
+    const mCos = Math.cos(angle);
+    const mSin = Math.sin(angle);
 
     return this._t(
       mCos, mSin, 0, 0, -mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
@@ -376,30 +376,30 @@ export class Matrix {
       )
       ._t(
         mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
-      )
+      );
   }
 
   to2dCSS(): string {
-    const _a = this.roundMatrixProperty(this.props[0] ?? 0),
-      _b = this.roundMatrixProperty(this.props[1] ?? 0),
-      _c = this.roundMatrixProperty(this.props[4] ?? 0),
-      _d = this.roundMatrixProperty(this.props[5] ?? 0),
-      _e = this.roundMatrixProperty(this.props[12] ?? 0),
-      _f = this.roundMatrixProperty(this.props[13] ?? 0)
+    const _a = this.roundMatrixProperty(this.props[0] ?? 0);
+    const _b = this.roundMatrixProperty(this.props[1] ?? 0);
+    const _c = this.roundMatrixProperty(this.props[4] ?? 0);
+    const _d = this.roundMatrixProperty(this.props[5] ?? 0);
+    const _e = this.roundMatrixProperty(this.props[12] ?? 0);
+    const _f = this.roundMatrixProperty(this.props[13] ?? 0);
 
-    return `matrix(${_a},${_b},${_c},${_d},${_e},${_f})`
+    return `matrix(${_a},${_b},${_c},${_d},${_e},${_f})`;
   }
 
   toCSS(): string {
-    let cssValue = 'matrix3d('
-    const v = 10000
+    let cssValue = 'matrix3d(';
+    const v = 10000;
 
     for (let i = 0; i < 16; i++) {
-      cssValue += `${Math.round((this.props[i] ?? 0) * v) / v}`
-      cssValue += i === 15 ? ')' : ','
+      cssValue += `${Math.round((this.props[i] ?? 0) * v) / v}`;
+      cssValue += i === 15 ? ')' : ',';
     }
 
-    return cssValue
+    return cssValue;
   }
 
   transform(
@@ -420,7 +420,7 @@ export class Matrix {
     o2: number,
     p2: number
   ): this {
-    const _p = this.props
+    const _p = this.props;
 
     if (
       a2 === 1 &&
@@ -436,56 +436,56 @@ export class Matrix {
       k2 === 1 &&
       l2 === 0
     ) {
-      _p[12] = (_p[12] ?? 0) * a2 + (_p[15] ?? 0) * m2
-      _p[13] = (_p[13] ?? 0) * f2 + (_p[15] ?? 0) * n2
-      _p[14] = (_p[14] ?? 0) * k2 + (_p[15] ?? 0) * o2
+      _p[12] = (_p[12] ?? 0) * a2 + (_p[15] ?? 0) * m2;
+      _p[13] = (_p[13] ?? 0) * f2 + (_p[15] ?? 0) * n2;
+      _p[14] = (_p[14] ?? 0) * k2 + (_p[15] ?? 0) * o2;
       // @ts-expect-error: TODO
-      _p[15] *= p2
-      this._identityCalculated = false
+      _p[15] *= p2;
+      this._identityCalculated = false;
 
-      return this
+      return this;
     }
 
-    const a1 = _p[0] ?? 0,
-      b1 = _p[1] ?? 0,
-      c1 = _p[2] ?? 0,
-      d1 = _p[3] ?? 0,
-      e1 = _p[4] ?? 0,
-      f1 = _p[5] ?? 0,
-      g1 = _p[6] ?? 0,
-      h1 = _p[7] ?? 0,
-      i1 = _p[8] ?? 0,
-      j1 = _p[9] ?? 0,
-      k1 = _p[10] ?? 0,
-      l1 = _p[11] ?? 0,
-      m1 = _p[12] ?? 0,
-      n1 = _p[13] ?? 0,
-      o1 = _p[14] ?? 0,
-      p1 = _p[15] ?? 0
+    const a1 = _p[0] ?? 0;
+    const b1 = _p[1] ?? 0;
+    const c1 = _p[2] ?? 0;
+    const d1 = _p[3] ?? 0;
+    const e1 = _p[4] ?? 0;
+    const f1 = _p[5] ?? 0;
+    const g1 = _p[6] ?? 0;
+    const h1 = _p[7] ?? 0;
+    const i1 = _p[8] ?? 0;
+    const j1 = _p[9] ?? 0;
+    const k1 = _p[10] ?? 0;
+    const l1 = _p[11] ?? 0;
+    const m1 = _p[12] ?? 0;
+    const n1 = _p[13] ?? 0;
+    const o1 = _p[14] ?? 0;
+    const p1 = _p[15] ?? 0;
 
-    _p[0] = a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2
-    _p[1] = a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2
-    _p[2] = a1 * c2 + b1 * g2 + c1 * k2 + d1 * o2
-    _p[3] = a1 * d2 + b1 * h2 + c1 * l2 + d1 * p2
+    _p[0] = a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2;
+    _p[1] = a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2;
+    _p[2] = a1 * c2 + b1 * g2 + c1 * k2 + d1 * o2;
+    _p[3] = a1 * d2 + b1 * h2 + c1 * l2 + d1 * p2;
 
-    _p[4] = e1 * a2 + f1 * e2 + g1 * i2 + h1 * m2
-    _p[5] = e1 * b2 + f1 * f2 + g1 * j2 + h1 * n2
-    _p[6] = e1 * c2 + f1 * g2 + g1 * k2 + h1 * o2
-    _p[7] = e1 * d2 + f1 * h2 + g1 * l2 + h1 * p2
+    _p[4] = e1 * a2 + f1 * e2 + g1 * i2 + h1 * m2;
+    _p[5] = e1 * b2 + f1 * f2 + g1 * j2 + h1 * n2;
+    _p[6] = e1 * c2 + f1 * g2 + g1 * k2 + h1 * o2;
+    _p[7] = e1 * d2 + f1 * h2 + g1 * l2 + h1 * p2;
 
-    _p[8] = i1 * a2 + j1 * e2 + k1 * i2 + l1 * m2
-    _p[9] = i1 * b2 + j1 * f2 + k1 * j2 + l1 * n2
-    _p[10] = i1 * c2 + j1 * g2 + k1 * k2 + l1 * o2
-    _p[11] = i1 * d2 + j1 * h2 + k1 * l2 + l1 * p2
+    _p[8] = i1 * a2 + j1 * e2 + k1 * i2 + l1 * m2;
+    _p[9] = i1 * b2 + j1 * f2 + k1 * j2 + l1 * n2;
+    _p[10] = i1 * c2 + j1 * g2 + k1 * k2 + l1 * o2;
+    _p[11] = i1 * d2 + j1 * h2 + k1 * l2 + l1 * p2;
 
-    _p[12] = m1 * a2 + n1 * e2 + o1 * i2 + p1 * m2
-    _p[13] = m1 * b2 + n1 * f2 + o1 * j2 + p1 * n2
-    _p[14] = m1 * c2 + n1 * g2 + o1 * k2 + p1 * o2
-    _p[15] = m1 * d2 + n1 * h2 + o1 * l2 + p1 * p2
+    _p[12] = m1 * a2 + n1 * e2 + o1 * i2 + p1 * m2;
+    _p[13] = m1 * b2 + n1 * f2 + o1 * j2 + p1 * n2;
+    _p[14] = m1 * c2 + n1 * g2 + o1 * k2 + p1 * o2;
+    _p[15] = m1 * d2 + n1 * h2 + o1 * l2 + p1 * p2;
 
-    this._identityCalculated = false
+    this._identityCalculated = false;
 
-    return this
+    return this;
   }
 
   translate(
@@ -493,29 +493,29 @@ export class Matrix {
   ) {
     // Reassign instead of default parameter, to normalize negative and catch NaN values
     // eslint-disable-next-line unicorn/prefer-default-parameters
-    const tz = tzFromProps || 0
+    const tz = tzFromProps || 0;
 
     if (tx !== 0 || ty !== 0 || tz !== 0) {
       return this._t(
         1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1
-      )
+      );
     }
 
-    return this
+    return this;
   }
 
   private _t(...args: number[]): this {
     // @ts-expect-error: spread
-    return this.transform(...args)
+    return this.transform(...args);
   }
 
   private roundMatrixProperty(val: number): number {
-    const v = 10000
+    const v = 10000;
 
     if (val < 0.000001 && val > 0 || val > -0.000001 && val < 0) {
-      return Math.round(val * v) / v
+      return Math.round(val * v) / v;
     }
 
-    return val
+    return val;
   }
 }

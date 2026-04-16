@@ -1,12 +1,12 @@
-const isSubframeEnabled = { current: true },
+const isSubframeEnabled = { current: true };
 
-  setSubframeEnabled = (flag: boolean) => {
-    isSubframeEnabled.current = flag
-  },
-  getSubframeEnabled = () => isSubframeEnabled.current
+const setSubframeEnabled = (flag: boolean) => {
+  isSubframeEnabled.current = flag;
+};
+const getSubframeEnabled = () => isSubframeEnabled.current;
 
 
 export {
   getSubframeEnabled,
   setSubframeEnabled
-}
+};

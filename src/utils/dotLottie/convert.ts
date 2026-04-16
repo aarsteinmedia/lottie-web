@@ -1,11 +1,11 @@
 import type {
   ConvertParams, LottieManifest, Result
-} from '@/types'
+} from '@/types';
 
-import { getFilename } from '@/utils'
-import { createDotLottie } from '@/utils/dotLottie/createDotLottie'
-import { createJSON } from '@/utils/dotLottie/createJSON'
-import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
+import { getFilename } from '@/utils';
+import { createDotLottie } from '@/utils/dotLottie/createDotLottie';
+import { createJSON } from '@/utils/dotLottie/createJSON';
+import { getAnimationData } from '@/utils/dotLottie/getAnimationData';
 
 export async function convert ({
   animations: animationsFromProps,
@@ -19,29 +19,29 @@ export async function convert ({
   typeCheck
 }: ConvertParams): Promise<Result> {
   try {
-    const toConvert = src
+    const toConvert = src;
 
     if (!toConvert && !animationsFromProps?.length) {
-      throw new Error('No animation to convert')
+      throw new Error('No animation to convert');
     }
 
-    let animations = animationsFromProps
+    let animations = animationsFromProps;
 
     if (!animations) {
-      const animationData = await getAnimationData(toConvert)
+      const animationData = await getAnimationData(toConvert);
 
-      animations = animationData.animations ?? []
+      animations = animationData.animations ?? [];
     }
 
     if (typeCheck || isDotLottie) {
 
-      let fileName = getFilename(fileNameFromProps || toConvert || 'converted')
+      let fileName = getFilename(fileNameFromProps || toConvert || 'converted');
 
       if (animations.length > 1) {
-        fileName += `-${currentAnimation + 1}`
+        fileName += `-${currentAnimation + 1}`;
       }
 
-      fileName += '.json'
+      fileName += '.json';
 
       return {
         result: createJSON({
@@ -50,7 +50,7 @@ export async function convert ({
           shouldDownload,
         }),
         success: true
-      }
+      };
     }
 
     return {
@@ -65,11 +65,11 @@ export async function convert ({
         shouldDownload,
       }),
       success: true
-    }
+    };
   } catch (error) {
     return {
       error: (error as Error).message,
       success: false,
-    }
+    };
   }
 }

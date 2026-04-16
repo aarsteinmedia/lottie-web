@@ -1,11 +1,11 @@
-const idPrefix = { current: '' },
+const idPrefix = { current: '' };
 
-  setIDPrefix = (value: string) => {
-    idPrefix.current = value
-  },
-  getIDPrefix = () => idPrefix.current
+const setIDPrefix = (value: string) => {
+  idPrefix.current = value;
+};
+const getIDPrefix = () => idPrefix.current;
 
 export {
   getIDPrefix,
   setIDPrefix
-}
+};

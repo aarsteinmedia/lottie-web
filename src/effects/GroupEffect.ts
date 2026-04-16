@@ -1,38 +1,38 @@
 import type {
   Effect, EffectValue, EFXElement, ElementInterfaceIntersect, LottieLayer
-} from '@/types'
+} from '@/types';
 
 import {
   AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect
-} from '@/effects'
-import { EffectsManager } from '@/effects/EffectsManager'
-import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+} from '@/effects';
+import { EffectsManager } from '@/effects/EffectsManager';
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
 
 export class GroupEffect extends DynamicPropertyContainer {
-  override data?: Effect = undefined
-  effectElements: EFXElement[] = []
-  override getValue = this.iterateDynamicProperties
-  type?: string
+  override data?: Effect = undefined;
+  effectElements: EFXElement[] = [];
+  override getValue = this.iterateDynamicProperties;
+  type?: string;
   constructor(
     data: Effect,
     element: ElementInterfaceIntersect,
     layer: LottieLayer
   ) {
-    super()
+    super();
     this.init(
       data, element, layer
-    )
+    );
   }
 
   init(
     data: Effect, element: ElementInterfaceIntersect, layer: LottieLayer
   ) {
-    this.data = data
-    this.effectElements = []
-    this.initDynamicPropertyContainer(element)
-    let eff
-    const effects = this.data.ef,
-      { length } = effects
+    this.data = data;
+    this.effectElements = [];
+    this.initDynamicPropertyContainer(element);
+    let eff;
+    const effects = this.data.ef;
+    const { length } = effects;
 
     for (let i = 0; i < length; i++) {
       // eff = null
@@ -40,60 +40,60 @@ export class GroupEffect extends DynamicPropertyContainer {
         case 0: {
           eff = new SliderEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 1: {
           eff = new AngleEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 2: {
           eff = new ColorEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 3: {
           eff = new PointEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 4:
         case 7: {
           eff = new CheckboxEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 10: {
           eff = new LayerIndexEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 11: {
           eff = new MaskIndexEffect(
             effects[i] as EffectValue, element, this
-          )
-          break
+          );
+          break;
         }
         case 5: {
-          eff = new EffectsManager(layer, element)
-          break
+          eff = new EffectsManager(layer, element);
+          break;
         }
         default: {
-          eff = new NoValueEffect()
-          break
+          eff = new NoValueEffect();
+          break;
         }
       }
-      this.effectElements.push(eff as EFXElement)
+      this.effectElements.push(eff as EFXElement);
     }
   }
 
   renderFrame(_frame?: number | boolean) {
-    throw new Error(`${this.constructor.name}: Method renderFrame is not implemented yet`)
+    throw new Error(`${this.constructor.name}: Method renderFrame is not implemented yet`);
   }
 }

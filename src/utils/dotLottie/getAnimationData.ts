@@ -1,7 +1,7 @@
-import type { AnimationData, LottieManifest } from '@/types'
+import type { AnimationData, LottieManifest } from '@/types';
 
-import { getExt } from '@/utils'
-import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON'
+import { getExt } from '@/utils';
+import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON';
 
 export async function getAnimationData(input: unknown): Promise<{
   animations?: undefined | AnimationData[]
@@ -10,25 +10,25 @@ export async function getAnimationData(input: unknown): Promise<{
 }> {
   try {
     if (!input || typeof input !== 'string' && typeof input !== 'object') {
-      throw new Error('Broken file or invalid file format')
+      throw new Error('Broken file or invalid file format');
     }
 
     if (typeof input !== 'string') {
-      const animations = Array.isArray(input) ? input : [input]
+      const animations = Array.isArray(input) ? input : [input];
 
       return {
         animations,
         isDotLottie: false,
         manifest: null,
-      }
+      };
     }
 
-    const result = await fetch(input, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } })
+    const result = await fetch(input, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
 
     if (!result.ok) {
-      const error = new Error(result.statusText)
+      const error = new Error(result.statusText);
 
-      throw error
+      throw error;
     }
 
     /**
@@ -36,55 +36,55 @@ export async function getAnimationData(input: unknown): Promise<{
      * than by parsing filename, then – if filename has no extension – by
      * cloning the response and parsing response for content.
      */
-    let isJSON = true
-    const contentType = result.headers.get('content-type')
+    let isJSON = true;
+    const contentType = result.headers.get('content-type');
 
     if (contentType === 'application/zip+dotlottie') {
-      isJSON = false
+      isJSON = false;
     }
 
     if (isJSON) {
-      const ext = getExt(input)
+      const ext = getExt(input);
 
       if (ext === 'json') {
-        const lottie = await result.json()
+        const lottie = await result.json();
 
         return {
           animations: [lottie],
           isDotLottie: false,
           manifest: null,
-        }
+        };
       }
-      const text = await result.clone().text()
+      const text = await result.clone().text();
 
       try {
-        const lottie = JSON.parse(text)
+        const lottie = JSON.parse(text);
 
         return {
           animations: [lottie],
           isDotLottie: false,
           manifest: null,
-        }
+        };
 
       } catch (error) {
         /* empty */
       }
     }
 
-    const { data, manifest } = await getLottieJSON(result)
+    const { data, manifest } = await getLottieJSON(result);
 
     return {
       animations: data,
       isDotLottie: true,
       manifest,
-    }
+    };
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     return {
       animations: undefined,
       isDotLottie: false,
       manifest: null,
-    }
+    };
   }
 }

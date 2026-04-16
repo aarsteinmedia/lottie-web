@@ -2,41 +2,41 @@ import type {
   CompElementInterface,
   GlobalData,
   LottieLayer,
-} from '@/types'
+} from '@/types';
 
-import { RenderableElement } from '@/elements/helpers/RenderableElement'
+import { RenderableElement } from '@/elements/helpers/RenderableElement';
 
 export abstract class RenderableDOMElement extends RenderableElement {
-  innerElem: SVGGraphicsElement | HTMLElement | null = null
+  innerElem: SVGGraphicsElement | HTMLElement | null = null;
 
   createContainerElements() {
-    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
+    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`);
   }
 
   createContent() {
-    throw new Error(`${this.constructor.name}: Method createContent is not implemented`)
+    throw new Error(`${this.constructor.name}: Method createContent is not implemented`);
   }
 
   createRenderableComponents() {
-    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
+    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`);
   }
 
   override destroy() {
-    this.innerElem = null
-    this.destroyBaseElement()
+    this.innerElem = null;
+    this.destroyBaseElement();
   }
 
   override hide() {
     if (this.hidden || this.isInRange && !this.isTransparent) {
-      return
+      return;
     }
-    const elem = this.baseElement ?? this.layerElement
+    const elem = this.baseElement ?? this.layerElement;
 
     if (elem) {
-      elem.style.display = 'none'
+      elem.style.display = 'none';
     }
 
-    this.hidden = true
+    this.hidden = true;
   }
 
   initElement(
@@ -44,75 +44,75 @@ export abstract class RenderableDOMElement extends RenderableElement {
     globalData: GlobalData,
     comp: CompElementInterface
   ) {
-    this.initFrame()
+    this.initFrame();
     this.initBaseData(
       data, globalData, comp
-    )
-    this.initTransform()
-    this.initHierarchy()
-    this.initRenderable()
-    this.initRendererElement()
-    this.createContainerElements()
-    this.createRenderableComponents()
-    this.createContent()
-    this.hide()
+    );
+    this.initTransform();
+    this.initHierarchy();
+    this.initRenderable();
+    this.initRendererElement();
+    this.createContainerElements();
+    this.createRenderableComponents();
+    this.createContent();
+    this.hide();
   }
 
   initRendererElement() {
-    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
+    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`);
   }
 
   prepareFrame(num: number) {
-    this._mdf = false
-    this.prepareRenderableFrame(num)
-    this.prepareProperties(num, this.isInRange)
-    this.checkTransparency()
+    this._mdf = false;
+    this.prepareRenderableFrame(num);
+    this.prepareProperties(num, this.isInRange);
+    this.checkTransparency();
   }
 
   renderElement() {
-    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
+    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`);
   }
 
   renderFrame(_val?: number) {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
     // If it is exported as hidden (data.hd === true) no need to render
     // If it is not visible no need to render
     if (this.data.hd || this.hidden) {
-      return
+      return;
     }
-    this.renderTransform()
-    this.renderRenderable()
-    this.renderLocalTransform()
-    this.renderElement()
-    this.renderInnerContent()
+    this.renderTransform();
+    this.renderRenderable();
+    this.renderLocalTransform();
+    this.renderElement();
+    this.renderInnerContent();
     if (this._isFirstFrame) {
-      this._isFirstFrame = false
+      this._isFirstFrame = false;
     }
   }
 
   renderInnerContent() {
     // TODO: Pass through?
-    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
+    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`);
   }
 
   override show() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
     if (!this.isInRange && this.isTransparent) {
-      return
+      return;
     }
     if (!this.data.hd) {
-      const elem = this.baseElement ?? this.layerElement
+      const elem = this.baseElement ?? this.layerElement;
 
       if (!elem) {
-        throw new Error(`${this.constructor.name}: Neither baseElement or layerElement is implemented`)
+        throw new Error(`${this.constructor.name}: Neither baseElement or layerElement is implemented`);
       }
-      elem.style.display = 'block'
+      elem.style.display = 'block';
     }
-    this.hidden = false
-    this._isFirstFrame = true
+    this.hidden = false;
+    this._isFirstFrame = true;
   }
 }

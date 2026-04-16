@@ -2,15 +2,15 @@ import type {
   ShapeDataInterface,
   SVGElementInterface,
   Transformer,
-} from '@/types'
+} from '@/types';
 
-import { createNS } from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements';
 
 export class ShapeGroupData {
-  _shouldRender?: boolean
-  closed?: boolean
-  gr = createNS<SVGGElement>('g')
-  it: ShapeDataInterface[] = []
-  prevViewData: SVGElementInterface[] = []
-  transform?: Transformer
+  _shouldRender?: boolean;
+  closed?: boolean;
+  gr = createNS<SVGGElement>('g');
+  it: ShapeDataInterface[] = [];
+  prevViewData: SVGElementInterface[] = [];
+  transform?: Transformer;
 }

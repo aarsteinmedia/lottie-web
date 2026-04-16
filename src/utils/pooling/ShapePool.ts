@@ -1,24 +1,24 @@
-import type { PoolElement, Vector2 } from '@/types'
+import type { PoolElement, Vector2 } from '@/types';
 
-import { isShapePath } from '@/utils'
-import { pointPool } from '@/utils/pooling/pointPool'
-import { PoolFactory } from '@/utils/pooling/PoolFactory'
-import { ShapePath } from '@/utils/shapes/ShapePath'
+import { isShapePath } from '@/utils';
+import { pointPool } from '@/utils/pooling/pointPool';
+import { PoolFactory } from '@/utils/pooling/PoolFactory';
+import { ShapePath } from '@/utils/shapes/ShapePath';
 
 const _factory = new PoolFactory(
   4, _create, _release
-)
+);
 
-export const { newElement } = _factory,
-  { release } = _factory
+export const { newElement } = _factory;
+export const { release } = _factory;
 
 export function clone(shape: ShapePath) {
-  const cloned = newElement() as ShapePath,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    len = shape._length ?? shape.v.length
+  const cloned = newElement() as ShapePath;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const len = shape._length ?? shape.v.length;
 
-  cloned.setLength(len)
-  cloned.c = shape.c
+  cloned.setLength(len);
+  cloned.c = shape.c;
 
   for (let i = 0; i < len; i++) {
     cloned.setTripleAt(
@@ -29,40 +29,40 @@ export function clone(shape: ShapePath) {
       shape.i[i]?.[0] ?? 0,
       shape.i[i]?.[1] ?? 0,
       i
-    )
+    );
   }
 
-  return cloned
+  return cloned;
 }
 
 function _create() {
-  return new ShapePath()
+  return new ShapePath();
 }
 
 function _release(shapePath: PoolElement) {
 
   if (!isShapePath(shapePath)) {
-    return
+    return;
   }
 
-  const len = shapePath._length
+  const len = shapePath._length;
 
   for (let i = 0; i < len; i++) {
-    pointPool.release(shapePath.v[i] as PoolElement)
-    pointPool.release(shapePath.i[i] as PoolElement)
-    pointPool.release(shapePath.o[i] as PoolElement)
-    shapePath.v[i] = null as unknown as Vector2
-    shapePath.i[i] = null as unknown as Vector2
-    shapePath.o[i] = null as unknown as Vector2
+    pointPool.release(shapePath.v[i] as PoolElement);
+    pointPool.release(shapePath.i[i] as PoolElement);
+    pointPool.release(shapePath.o[i] as PoolElement);
+    shapePath.v[i] = null as unknown as Vector2;
+    shapePath.i[i] = null as unknown as Vector2;
+    shapePath.o[i] = null as unknown as Vector2;
   }
-  shapePath._length = 0
-  shapePath.c = false
+  shapePath._length = 0;
+  shapePath.c = false;
 }
 
 const ShapePool = {
   clone,
   newElement
-}
+};
 
 // eslint-disable-next-line import/no-default-export
-export default ShapePool
+export default ShapePool;

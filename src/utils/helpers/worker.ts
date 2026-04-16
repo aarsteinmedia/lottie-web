@@ -1,11 +1,11 @@
-const isWebWorkerActive = { current: false },
+const isWebWorkerActive = { current: false };
 
-  setWebWorker = (flag: boolean) => {
-    isWebWorkerActive.current = flag
-  },
-  getWebWorker = () => isWebWorkerActive.current
+const setWebWorker = (flag: boolean) => {
+  isWebWorkerActive.current = flag;
+};
+const getWebWorker = () => isWebWorkerActive.current;
 
 export {
   getWebWorker,
   setWebWorker
-}
+};

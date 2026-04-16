@@ -18,7 +18,7 @@ export function getBlendMode(mode = 16) {
     7: 'color-burn',
     8: 'hard-light',
     9: 'soft-light',
-  }
+  };
 
-  return blendModeEnums[mode] || ''
+  return blendModeEnums[mode] || '';
 }

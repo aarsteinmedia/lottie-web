@@ -3,53 +3,53 @@ import type {
   GlobalData,
   LottieAsset,
   LottieLayer,
-} from '@/types'
+} from '@/types';
 
-import { RenderableElement } from '@/elements/helpers/RenderableElement'
-import { getExpressionInterfaces } from '@/utils/expressions'
+import { RenderableElement } from '@/elements/helpers/RenderableElement';
+import { getExpressionInterfaces } from '@/utils/expressions';
 
 export class FootageElement extends RenderableElement {
-  assetData: null | LottieAsset = null
-  footageData: null | SVGElement
+  assetData: null | LottieAsset = null;
+  footageData: null | SVGElement;
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super()
-    this.initFrame()
-    this.initRenderable()
+    super();
+    this.initFrame();
+    this.initRenderable();
     if (data.refId) {
-      this.assetData = globalData.getAssetData(data.refId) ?? null
+      this.assetData = globalData.getAssetData(data.refId) ?? null;
     }
     if (!globalData.imageLoader) {
-      throw new Error(`${this.constructor.name}: imageLoader is not implemented in globalData`)
+      throw new Error(`${this.constructor.name}: imageLoader is not implemented in globalData`);
     }
-    this.footageData = globalData.imageLoader.getAsset(this.assetData) as SVGElement
+    this.footageData = globalData.imageLoader.getAsset(this.assetData) as SVGElement;
     this.initBaseData(
       data, globalData, comp
-    )
+    );
   }
 
   override getBaseElement() {
-    return null
+    return null;
   }
 
   getFootageData() {
-    return this.footageData
+    return this.footageData;
   }
 
   override initExpressions() {
-    const expressionsInterfaces = getExpressionInterfaces()
+    const expressionsInterfaces = getExpressionInterfaces();
 
     if (!expressionsInterfaces) {
-      return
+      return;
     }
 
-    const footageInterface = expressionsInterfaces('footage')
+    const footageInterface = expressionsInterfaces('footage');
 
     // @ts-expect-error TODO: see if typing can be stronger
-    this.layerInterface = new footageInterface(this)
+    this.layerInterface = new footageInterface(this);
   }
 
   prepareFrame() {

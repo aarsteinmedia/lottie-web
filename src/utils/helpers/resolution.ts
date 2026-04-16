@@ -1,41 +1,41 @@
-const curveSegments = { default: 150 },
+const curveSegments = { default: 150 };
 
-  setDefaultCurveSegments = (value: number) => {
-    curveSegments.default = value
-  },
-  getDefaultCurveSegments = () => curveSegments.default,
-  shouldRoundValues = { current: false },
+const setDefaultCurveSegments = (value: number) => {
+  curveSegments.default = value;
+};
+const getDefaultCurveSegments = () => curveSegments.default;
+const shouldRoundValues = { current: false };
 
-  getShouldRoundValues = () => shouldRoundValues.current,
-  setShouldRoundValues = (value: boolean) => {
-    shouldRoundValues.current = value
-  },
-  setQuality = (value: string | number) => {
-    if (typeof value === 'string') {
-      switch (value) {
-        case 'high': {
-          setDefaultCurveSegments(200)
-          break
-        }
-        default:
-        case 'medium': {
-          setDefaultCurveSegments(50)
-          break
-        }
-        case 'low': {
-          setDefaultCurveSegments(10)
-          break
-        }
+const getShouldRoundValues = () => shouldRoundValues.current;
+const setShouldRoundValues = (value: boolean) => {
+  shouldRoundValues.current = value;
+};
+const setQuality = (value: string | number) => {
+  if (typeof value === 'string') {
+    switch (value) {
+      case 'high': {
+        setDefaultCurveSegments(200);
+        break;
       }
-    } else if (!isNaN(value) && value > 1) {
-      setDefaultCurveSegments(value)
+      default:
+      case 'medium': {
+        setDefaultCurveSegments(50);
+        break;
+      }
+      case 'low': {
+        setDefaultCurveSegments(10);
+        break;
+      }
     }
-
-    setShouldRoundValues(getDefaultCurveSegments() < 50)
+  } else if (!isNaN(value) && value > 1) {
+    setDefaultCurveSegments(value);
   }
+
+  setShouldRoundValues(getDefaultCurveSegments() < 50);
+};
 
 export {
   getDefaultCurveSegments,
   getShouldRoundValues,
   setQuality
-}
+};

@@ -5,42 +5,42 @@ import type {
   LottieAsset,
   LottieLayer,
   VectorProperty,
-} from '@/types'
-import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
+} from '@/types';
+import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
 
-import { RenderableElement } from '@/elements/helpers/RenderableElement'
-import PropertyFactory from '@/utils/PropertyFactory'
+import { RenderableElement } from '@/elements/helpers/RenderableElement';
+import PropertyFactory from '@/utils/PropertyFactory';
 
 export class AudioElement extends RenderableElement {
-  public assetData: null | LottieAsset
-  public audio: Audio
-  public lv: MultiDimensionalProperty
-  public tm: ValueProperty
+  public assetData: null | LottieAsset;
+  public audio: Audio;
+  public lv: MultiDimensionalProperty;
+  public tm: ValueProperty;
 
-  private _canPlay = false
-  private _currentTime = 0
-  private _isPlaying = false
-  private _previousVolume: number | null = null
-  private _volume = 1
-  private _volumeMultiplier = 1
+  private _canPlay = false;
+  private _currentTime = 0;
+  private _isPlaying = false;
+  private _previousVolume: number | null = null;
+  private _volume = 1;
+  private _volumeMultiplier = 1;
 
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super()
-    this.initFrame()
-    this.initRenderable()
-    this.assetData = globalData.getAssetData(data.refId) ?? null
+    super();
+    this.initFrame();
+    this.initRenderable();
+    this.assetData = globalData.getAssetData(data.refId) ?? null;
     this.initBaseData(
       data, globalData, comp
-    )
-    const assetPath = this.globalData?.getAssetsPath(this.assetData)
+    );
+    const assetPath = this.globalData?.getAssetsPath(this.assetData);
 
-    this.audio = this.globalData?.audioController?.createAudio(assetPath)
-    this.globalData?.audioController?.addAudio(this)
+    this.audio = this.globalData?.audioController?.createAudio(assetPath);
+    this.globalData?.audioController?.addAudio(this);
     this.tm = (
       data.tm
         ? PropertyFactory.getProp(
@@ -51,7 +51,7 @@ export class AudioElement extends RenderableElement {
           this as unknown as ElementInterfaceIntersect
         )
         : { _placeholder: true }
-    ) as ValueProperty
+    ) as ValueProperty;
     this.lv = PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect,
       (data.au?.lv ?? { k: [100] }) as VectorProperty<
@@ -60,16 +60,16 @@ export class AudioElement extends RenderableElement {
       1,
       0.01,
       this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty
+    ) as MultiDimensionalProperty;
   }
 
   override getBaseElement() {
-    return null
+    return null;
   }
 
   override hide() {
-    this.audio.pause()
-    this._isPlaying = false
+    this.audio.pause();
+    this._isPlaying = false;
   }
 
   override initExpressions() {
@@ -77,41 +77,41 @@ export class AudioElement extends RenderableElement {
   }
 
   pause() {
-    this.audio.pause()
-    this._isPlaying = false
-    this._canPlay = false
+    this.audio.pause();
+    this._isPlaying = false;
+    this._canPlay = false;
   }
 
   prepareFrame(num: number) {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
-    this.prepareRenderableFrame(num, true)
-    this.prepareProperties(num, true)
+    this.prepareRenderableFrame(num, true);
+    this.prepareProperties(num, true);
     if (this.tm._placeholder) {
-      this._currentTime = num / Number(this.data.sr)
+      this._currentTime = num / Number(this.data.sr);
     } else {
-      this._currentTime = this.tm.v
+      this._currentTime = this.tm.v;
     }
-    this._volume = this.lv.v[0]
-    const totalVolume = this._volume * this._volumeMultiplier
+    this._volume = this.lv.v[0];
+    const totalVolume = this._volume * this._volumeMultiplier;
 
     if (this._previousVolume !== totalVolume) {
-      this._previousVolume = totalVolume
-      this.audio.volume(totalVolume)
+      this._previousVolume = totalVolume;
+      this.audio.volume(totalVolume);
     }
   }
 
   renderFrame(_val?: number) {
     if (!this.isInRange || !this._canPlay) {
-      return
+      return;
     }
     if (!this._isPlaying) {
-      this.audio.play()
-      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
-      this._isPlaying = true
+      this.audio.play();
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate));
+      this._isPlaying = true;
 
-      return
+      return;
     }
 
     if (
@@ -119,16 +119,16 @@ export class AudioElement extends RenderableElement {
       Math.abs(this._currentTime / Number(this.globalData?.frameRate) -
         this.audio.seek()) > 0.1
     ) {
-      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
+      this.audio.seek(this._currentTime / Number(this.globalData?.frameRate));
     }
   }
 
   resume() {
-    this._canPlay = true
+    this._canPlay = true;
   }
 
   setRate(rateValue: number) {
-    this.audio.rate(rateValue)
+    this.audio.rate(rateValue);
   }
 
   override show() {
@@ -137,12 +137,12 @@ export class AudioElement extends RenderableElement {
   }
 
   override sourceRectAtTime() {
-    return null
+    return null;
   }
 
   volume(volumeValue: number) {
-    this._volumeMultiplier = volumeValue
-    this._previousVolume = volumeValue * this._volume
-    this.audio.volume(this._previousVolume)
+    this._volumeMultiplier = volumeValue;
+    this._previousVolume = volumeValue * this._volume;
+    this.audio.volume(this._previousVolume);
   }
 }

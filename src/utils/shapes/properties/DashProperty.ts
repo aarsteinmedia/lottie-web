@@ -1,34 +1,34 @@
-import type { ElementInterfaceIntersect, StrokeData } from '@/types'
+import type { ElementInterfaceIntersect, StrokeData } from '@/types';
 
-import { ArrayType, RendererType } from '@/utils/enums'
-import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
-import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
-import PropertyFactory from '@/utils/PropertyFactory'
+import { ArrayType, RendererType } from '@/utils/enums';
+import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays';
+import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
+import PropertyFactory from '@/utils/PropertyFactory';
 
 export class DashProperty extends DynamicPropertyContainer {
-  dashArray: Float32Array
-  dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
-  dashStr = ''
-  dataProps: StrokeData[]
-  elem: ElementInterfaceIntersect
-  frameId = -1
-  k = false
-  renderer: RendererType
+  dashArray: Float32Array;
+  dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array;
+  dashStr = '';
+  dataProps: StrokeData[];
+  elem: ElementInterfaceIntersect;
+  frameId = -1;
+  k = false;
+  renderer: RendererType;
   constructor(
     elem: ElementInterfaceIntersect,
     data: StrokeData[],
     renderer: RendererType,
     container: ElementInterfaceIntersect
   ) {
-    super()
-    this.elem = elem
-    this.dataProps = createSizedArray(data.length)
-    this.renderer = renderer
+    super();
+    this.elem = elem;
+    this.dataProps = createSizedArray(data.length);
+    this.renderer = renderer;
     this.dashArray = createTypedArray(ArrayType.Float32,
-      data.length > 0 ? data.length - 1 : 0) as Float32Array
-    this.initDynamicPropertyContainer(container)
-    const len = data.length || 0
-    let prop
+      data.length > 0 ? data.length - 1 : 0) as Float32Array;
+    this.initDynamicPropertyContainer(container);
+    const len = data.length || 0;
+    let prop;
 
     for (let i = 0; i < len; i++) {
       prop = PropertyFactory.getProp(
@@ -37,52 +37,52 @@ export class DashProperty extends DynamicPropertyContainer {
         0,
         0,
         this as unknown as ElementInterfaceIntersect
-      )
-      this.k = prop.k || this.k
+      );
+      this.k = prop.k || this.k;
       this.dataProps[i] = {
         n: data[i]?.n ?? 'd', // TODO: Check what this is
         p: prop
-      }
+      };
     }
     if (!this.k) {
-      this.getValue(true)
+      this.getValue(true);
     }
-    this._isAnimated = this.k
+    this._isAnimated = this.k;
   }
 
   override getValue(forceRender?: boolean) {
     if (this.elem.globalData?.frameId === this.frameId && !forceRender) {
-      return 0
+      return 0;
     }
     if (this.elem.globalData?.frameId) {
-      this.frameId = this.elem.globalData.frameId
+      this.frameId = this.elem.globalData.frameId;
     }
 
-    this.iterateDynamicProperties()
-    this._mdf = this._mdf || Boolean(forceRender)
+    this.iterateDynamicProperties();
+    this._mdf = this._mdf || Boolean(forceRender);
     if (!this._mdf) {
-      return 0
+      return 0;
     }
-    const len = this.dataProps.length
+    const len = this.dataProps.length;
 
     if (this.renderer === RendererType.SVG) {
-      this.dashStr = ''
+      this.dashStr = '';
     }
     for (let i = 0; i < len; i++) {
       if (this.dataProps[i]?.n === 'o') {
 
-        this.dashoffset[0] = this.dataProps[i]?.p.v as number
-        continue
+        this.dashoffset[0] = this.dataProps[i]?.p.v as number;
+        continue;
       }
       if (this.renderer === RendererType.SVG) {
 
-        this.dashStr += ` ${this.dataProps[i]?.p.v as string}`
-        continue
+        this.dashStr += ` ${this.dataProps[i]?.p.v as string}`;
+        continue;
       }
 
-      this.dashArray[i] = this.dataProps[i]?.p.v as number
+      this.dashArray[i] = this.dataProps[i]?.p.v as number;
     }
 
-    return 0
+    return 0;
   }
 }

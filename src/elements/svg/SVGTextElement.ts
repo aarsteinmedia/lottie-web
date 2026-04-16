@@ -6,221 +6,221 @@ import type {
   SourceRect,
   TextSpan,
   Vector3,
-} from '@/types'
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+} from '@/types';
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
 
-import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
-import { SVGCompElement } from '@/elements/svg/SVGCompElement'
-import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
-import { TextElement } from '@/elements/TextElement'
-import { RendererType } from '@/utils/enums'
-import { createSizedArray } from '@/utils/helpers/arrays'
-import { createNS } from '@/utils/helpers/svgElements'
+import { SVGBaseElement } from '@/elements/svg/SVGBaseElement';
+import { SVGCompElement } from '@/elements/svg/SVGCompElement';
+import { SVGShapeElement } from '@/elements/svg/SVGShapeElement';
+import { TextElement } from '@/elements/TextElement';
+import { RendererType } from '@/utils/enums';
+import { createSizedArray } from '@/utils/helpers/arrays';
+import { createNS } from '@/utils/helpers/svgElements';
 
-const emptyShapeData = { shapes: [] } as unknown as LottieLayer
+const emptyShapeData = { shapes: [] } as unknown as LottieLayer;
 
 export class SVGTextLottieElement extends TextElement {
-  _sizeChanged?: boolean
+  _sizeChanged?: boolean;
   bbox?: {
     height: number
     left: number
     top: number
     width: number
-  }
-  override createContainerElements = SVGBaseElement.prototype.createContainerElements
-  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
-  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
-  override getBaseElement = SVGBaseElement.prototype.getBaseElement
-  getMatte = SVGBaseElement.prototype.getMatte
-  override initRendererElement = SVGBaseElement.prototype.initRendererElement
-  renderedFrame?: undefined | number
-  renderedLetters: string[] = []
-  override renderElement = SVGBaseElement.prototype.renderElement
-  setMatte = SVGBaseElement.prototype.setMatte
-  textContainer?: SVGTextElement
-  textSpans: TextSpan[] = []
+  };
+  override createContainerElements = SVGBaseElement.prototype.createContainerElements;
+  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents;
+  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement;
+  override getBaseElement = SVGBaseElement.prototype.getBaseElement;
+  getMatte = SVGBaseElement.prototype.getMatte;
+  override initRendererElement = SVGBaseElement.prototype.initRendererElement;
+  renderedFrame?: undefined | number;
+  renderedLetters: string[] = [];
+  override renderElement = SVGBaseElement.prototype.renderElement;
+  setMatte = SVGBaseElement.prototype.setMatte;
+  textContainer?: SVGTextElement;
+  textSpans: TextSpan[] = [];
 
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
     comp: ElementInterfaceIntersect
   ) {
-    super()
-    this.renderType = RendererType.SVG
+    super();
+    this.renderType = RendererType.SVG;
 
     this.initElement(
       data, globalData, comp
-    )
+    );
   }
 
   override buildNewText() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
 
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
 
     if (!this.layerElement) {
-      throw new Error(`${this.constructor.name}: layerElement is not implemented`)
+      throw new Error(`${this.constructor.name}: layerElement is not implemented`);
     }
 
     if (!this.textProperty?.currentData) {
-      throw new Error(`${this.constructor.name}: DocumentData is not implemented`)
+      throw new Error(`${this.constructor.name}: DocumentData is not implemented`);
     }
 
-    this.addDynamicProperty(this as unknown as DynamicPropertyContainer)
-    let i, len
+    this.addDynamicProperty(this as unknown as DynamicPropertyContainer);
+    let i; let len;
 
-    const documentData = this.textProperty.currentData
+    const documentData = this.textProperty.currentData;
 
-    this.renderedLetters = createSizedArray(documentData.l.length || 0)
+    this.renderedLetters = createSizedArray(documentData.l.length || 0);
     if (documentData.fc) {
       this.layerElement.setAttribute('fill',
-        this.buildColor(documentData.fc as Vector3))
+        this.buildColor(documentData.fc as Vector3));
     } else {
-      this.layerElement.setAttribute('fill', 'rgba(0,0,0,0)')
+      this.layerElement.setAttribute('fill', 'rgba(0,0,0,0)');
     }
     if (documentData.sc) {
-      this.layerElement.setAttribute('stroke', this.buildColor(documentData.sc))
-      this.layerElement.setAttribute('stroke-width', `${documentData.sw || 0}`)
+      this.layerElement.setAttribute('stroke', this.buildColor(documentData.sc));
+      this.layerElement.setAttribute('stroke-width', `${documentData.sw || 0}`);
     }
     this.layerElement.setAttribute('font-size',
-      `${documentData.finalSize || 0}`)
-    const fontData = this.globalData.fontManager?.getFontByName(documentData.f)
+      `${documentData.finalSize || 0}`);
+    const fontData = this.globalData.fontManager?.getFontByName(documentData.f);
 
     if (fontData?.fClass) {
-      this.layerElement.classList.add(fontData.fClass)
+      this.layerElement.classList.add(fontData.fClass);
     } else {
       if (fontData?.fFamily) {
-        this.layerElement.setAttribute('font-family', fontData.fFamily)
+        this.layerElement.setAttribute('font-family', fontData.fFamily);
       }
-      const { fWeight } = documentData,
-        { fStyle } = documentData
+      const { fWeight } = documentData;
+      const { fStyle } = documentData;
 
-      this.layerElement.setAttribute('font-style', fStyle)
-      this.layerElement.setAttribute('font-weight', fWeight)
+      this.layerElement.setAttribute('font-style', fStyle);
+      this.layerElement.setAttribute('font-weight', fWeight);
     }
-    this.layerElement.ariaLabel = `${documentData.t}`
+    this.layerElement.ariaLabel = `${documentData.t}`;
 
-    const letters = documentData.l,
-      hasGlyphs = Boolean(this.globalData.fontManager?.chars)
+    const letters = documentData.l;
+    const hasGlyphs = Boolean(this.globalData.fontManager?.chars);
 
-    len = letters.length
+    len = letters.length;
 
-    let tSpan: SVGTextElement | SVGGElement | null = null
-    const matrixHelper = this.mHelper,
-      shapeStr = '',
+    let tSpan: SVGTextElement | SVGGElement | null = null;
+    const matrixHelper = this.mHelper;
+    const shapeStr = '';
 
-      { singleShape: isSingleShape } = this.data
-    let xPos = 0,
-      yPos = 0,
-      isFirstLine = true
+    const { singleShape: isSingleShape } = this.data;
+    let xPos = 0;
+    let yPos = 0;
+    let isFirstLine = true;
     const trackingOffset =
-      documentData.tr * 0.001 * Number(documentData.finalSize)
+      documentData.tr * 0.001 * Number(documentData.finalSize);
 
     if (isSingleShape && !hasGlyphs && !documentData.sz) {
-      const tElement = this.textContainer
+      const tElement = this.textContainer;
 
-      let justify
+      let justify;
 
       switch (documentData.j) {
         case 1: {
-          justify = 'end'
-          break
+          justify = 'end';
+          break;
         }
         case 2: {
-          justify = 'middle'
-          break
+          justify = 'middle';
+          break;
         }
         default: {
-          justify = 'start'
-          break
+          justify = 'start';
+          break;
         }
       }
-      tElement?.setAttribute('text-anchor', justify)
-      tElement?.setAttribute('letter-spacing', `${trackingOffset}`)
-      const textContent = this.buildTextContents(documentData.finalText)
+      tElement?.setAttribute('text-anchor', justify);
+      tElement?.setAttribute('letter-spacing', `${trackingOffset}`);
+      const textContent = this.buildTextContents(documentData.finalText);
 
-      len = textContent.length
+      len = textContent.length;
       yPos = documentData.ps
         ? documentData.ps[1] + Number(documentData.ascent)
-        : 0
+        : 0;
       for (i = 0; i < len; i++) {
 
-        tSpan = this.textSpans[i]?.span ?? createNS<SVGTSpanElement>('tspan')
-        tSpan.textContent = textContent[i] ?? ''
-        tSpan.setAttribute('x', '0')
-        tSpan.setAttribute('y', `${yPos}`)
-        tSpan.style.display = 'inherit'
-        tElement?.appendChild(tSpan)
+        tSpan = this.textSpans[i]?.span ?? createNS<SVGTSpanElement>('tspan');
+        tSpan.textContent = textContent[i] ?? '';
+        tSpan.setAttribute('x', '0');
+        tSpan.setAttribute('y', `${yPos}`);
+        tSpan.style.display = 'inherit';
+        tElement?.appendChild(tSpan);
         this.textSpans[i] = this.textSpans[i] ?? ({
           glyph: null,
           span: null,
         } as any)
-        ; (this.textSpans[i] as TextSpan).span = tSpan
-        yPos += Number(documentData.finalLineHeight)
+        ; (this.textSpans[i] as TextSpan).span = tSpan;
+        yPos += Number(documentData.finalLineHeight);
       }
 
       if (tElement) {
-        this.layerElement.appendChild(tElement)
+        this.layerElement.appendChild(tElement);
       }
     } else {
-      const cachedSpansLength = this.textSpans.length
-      let charData
+      const cachedSpansLength = this.textSpans.length;
+      let charData;
 
       for (i = 0; i < len; i++) {
         this.textSpans[i] = this.textSpans[i] ?? ({
           childSpan: null,
           glyph: null,
           span: null,
-        } as any)
+        } as any);
         if (!hasGlyphs || !isSingleShape || i === 0) {
           tSpan =
             (cachedSpansLength > i
               ? this.textSpans[i]?.span
-              : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')) ?? null
+              : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')) ?? null;
 
           if (!tSpan) {
-            throw new Error('Could not create tSpan')
+            throw new Error('Could not create tSpan');
           }
 
           if (cachedSpansLength <= i) {
-            tSpan.setAttribute('stroke-linecap', 'butt')
-            tSpan.setAttribute('stroke-linejoin', 'round')
-            tSpan.setAttribute('stroke-miterlimit', '4')
+            tSpan.setAttribute('stroke-linecap', 'butt');
+            tSpan.setAttribute('stroke-linejoin', 'round');
+            tSpan.setAttribute('stroke-miterlimit', '4');
             if (this.textSpans[i]) {
-              ; (this.textSpans[i] as TextSpan).span = tSpan
+              ; (this.textSpans[i] as TextSpan).span = tSpan;
             }
 
             if (hasGlyphs) {
-              const childSpan = createNS<SVGGElement>('g')
+              const childSpan = createNS<SVGGElement>('g');
 
-              tSpan.appendChild(childSpan)
+              tSpan.appendChild(childSpan);
 
               if (this.textSpans[i]) {
-                ; (this.textSpans[i] as TextSpan).childSpan = childSpan
+                ; (this.textSpans[i] as TextSpan).childSpan = childSpan;
               }
 
             }
 
             if (this.textSpans[i]) {
-              ; (this.textSpans[i] as TextSpan).span = tSpan
+              ; (this.textSpans[i] as TextSpan).span = tSpan;
             }
 
-            this.layerElement.appendChild(tSpan)
+            this.layerElement.appendChild(tSpan);
           }
-          tSpan.style.display = 'inherit'
+          tSpan.style.display = 'inherit';
         }
 
-        matrixHelper.reset()
+        matrixHelper.reset();
         if (isSingleShape) {
           if (letters[i]?.n) {
-            xPos = -trackingOffset
-            yPos += Number(documentData.yOffset)
-            yPos += isFirstLine ? 1 : 0
-            isFirstLine = false
+            xPos = -trackingOffset;
+            yPos += Number(documentData.yOffset);
+            yPos += isFirstLine ? 1 : 0;
+            isFirstLine = false;
           }
           this.applyTextPropertiesToMatrix(
             documentData,
@@ -228,18 +228,18 @@ export class SVGTextLottieElement extends TextElement {
             letters[i]?.line ?? 0,
             xPos,
             yPos
-          )
-          xPos += letters[i]?.l || 0
+          );
+          xPos += letters[i]?.l || 0;
           // xPos += letters[i].val === ' ' ? 0 : trackingOffset;
-          xPos += trackingOffset
+          xPos += trackingOffset;
         }
         if (hasGlyphs) {
           charData = this.globalData.fontManager?.getCharData(
             documentData.finalText[i] ?? '',
             fontData?.fStyle,
             this.globalData.fontManager.getFontByName(documentData.f).fFamily
-          )
-          let glyphElement: SVGCompElement | SVGShapeElement
+          );
+          let glyphElement: SVGCompElement | SVGShapeElement;
 
           // t === 1 means the character has been replaced with an animated shaped
           if (charData?.t === 1) {
@@ -247,39 +247,39 @@ export class SVGTextLottieElement extends TextElement {
               charData.data as LottieLayer,
               this.globalData,
               this as unknown as ElementInterfaceIntersect
-            )
+            );
           } else {
-            let data = emptyShapeData
+            let data = emptyShapeData;
 
             if (charData?.data?.shapes) {
               data = this.buildShapeData(charData.data,
-                Number(documentData.finalSize))
+                Number(documentData.finalSize));
             }
             glyphElement = new SVGShapeElement(
               data,
               this.globalData,
               this as unknown as ElementInterfaceIntersect
-            )
+            );
           }
           if (this.textSpans[i]) {
-            const { glyph } = this.textSpans[i] ?? {}
+            const { glyph } = this.textSpans[i] ?? {};
 
             if (glyph) {
               if (glyph.layerElement) {
-                this.textSpans[i]?.childSpan?.removeChild(glyph.layerElement)
+                this.textSpans[i]?.childSpan?.removeChild(glyph.layerElement);
               }
 
-              glyph.destroy()
+              glyph.destroy();
             }
 
 
-            ; (this.textSpans[i] as TextSpan).glyph = glyphElement
+            ; (this.textSpans[i] as TextSpan).glyph = glyphElement;
           }
-          glyphElement._debug = true
-          glyphElement.prepareFrame(0)
-          glyphElement.renderFrame()
+          glyphElement._debug = true;
+          glyphElement.prepareFrame(0);
+          glyphElement.renderFrame();
           if (glyphElement.layerElement) {
-            this.textSpans[i]?.childSpan?.appendChild(glyphElement.layerElement)
+            this.textSpans[i]?.childSpan?.appendChild(glyphElement.layerElement);
           }
 
 
@@ -288,19 +288,19 @@ export class SVGTextLottieElement extends TextElement {
           if (charData?.t === 1) {
             this.textSpans[i]?.childSpan?.setAttribute('transform',
               `scale(${Number(documentData.finalSize) / 100},${Number(documentData.finalSize) / 100
-              })`)
+              })`);
           }
 
-          continue
+          continue;
         }
         if (tSpan) {
           if (isSingleShape) {
             tSpan.setAttribute('transform',
-              `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`)
+              `translate(${matrixHelper.props[12]},${matrixHelper.props[13]})`);
           }
 
-          tSpan.textContent = letters[i]?.val ?? ''
-          tSpan.style.whiteSpace = 'preserve'
+          tSpan.textContent = letters[i]?.val ?? '';
+          tSpan.style.whiteSpace = 'preserve';
 
           // tSpan.setAttributeNS(
           //   namespaceXML,
@@ -310,21 +310,21 @@ export class SVGTextLottieElement extends TextElement {
         }
       }
       if (isSingleShape) {
-        tSpan?.setAttribute('d', shapeStr)
+        tSpan?.setAttribute('d', shapeStr);
       }
     }
-    const span = this.textSpans[i]?.span
+    const span = this.textSpans[i]?.span;
 
     if (span) {
       while (i < this.textSpans.length) {
-        span.style.display = 'none'
+        span.style.display = 'none';
 
-        i++
+        i++;
       }
     }
 
 
-    this._sizeChanged = true
+    this._sizeChanged = true;
   }
 
   buildShapeData(data: LottieLayer, scale: number) {
@@ -333,70 +333,70 @@ export class SVGTextLottieElement extends TextElement {
     // it's probably safe not to clone data and reuse always the same instance even if the object is mutated.
     // Avoiding cloning is preferred since cloning each character shape data is expensive
     if (data.shapes.length > 0) {
-      const shape = data.shapes[0]
+      const shape = data.shapes[0];
 
       if (shape?.it) {
-        const shapeItem = shape.it[shape.it.length - 1]
+        const shapeItem = shape.it[shape.it.length - 1];
 
         if (shapeItem?.s) {
-          shapeItem.s.k[0] = scale
-          shapeItem.s.k[1] = scale
+          shapeItem.s.k[0] = scale;
+          shapeItem.s.k[1] = scale;
         }
       }
     }
 
-    return data
+    return data;
   }
 
   buildTextContents(textArray: string[]) {
-    let i = 0
-    const { length } = textArray,
-      textContents = []
-    let currentTextContent = ''
+    let i = 0;
+    const { length } = textArray;
+    const textContents = [];
+    let currentTextContent = '';
 
     while (i < length) {
       if (
         textArray[i] === String.fromCharCode(13) ||
         textArray[i] === String.fromCharCode(3)
       ) {
-        textContents.push(currentTextContent)
-        currentTextContent = ''
+        textContents.push(currentTextContent);
+        currentTextContent = '';
       } else {
-        currentTextContent += textArray[i] ?? ''
+        currentTextContent += textArray[i] ?? '';
       }
-      i++
+      i++;
     }
-    textContents.push(currentTextContent)
+    textContents.push(currentTextContent);
 
-    return textContents
+    return textContents;
   }
 
   override createContent() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
     if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: globalData is not implemented`)
+      throw new Error(`${this.constructor.name}: globalData is not implemented`);
     }
     if (this.data.singleShape && !this.globalData.fontManager?.chars) {
-      this.textContainer = createNS<SVGTextElement>('text')
+      this.textContainer = createNS<SVGTextElement>('text');
     }
   }
 
   getValue() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
-    const { length } = this.textSpans
-    let glyphElement
+    const { length } = this.textSpans;
+    let glyphElement;
 
-    this.renderedFrame = this.comp?.renderedFrame
+    this.renderedFrame = this.comp?.renderedFrame;
     for (let i = 0; i < length; i++) {
-      glyphElement = this.textSpans[i]?.glyph
+      glyphElement = this.textSpans[i]?.glyph;
       if (glyphElement) {
-        glyphElement.prepareFrame(Number(this.comp?.renderedFrame) - this.data.st)
+        glyphElement.prepareFrame(Number(this.comp?.renderedFrame) - this.data.st);
         if (glyphElement._mdf) {
-          this._mdf = true
+          this._mdf = true;
         }
       }
     }
@@ -404,48 +404,48 @@ export class SVGTextLottieElement extends TextElement {
 
   override renderInnerContent() {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
-    this.validateText()
+    this.validateText();
     if (this.data.singleShape && !this._mdf) {
-      return
+      return;
     }
     if (!this.textProperty) {
-      throw new Error(`${this.constructor.name}: textProperty is not initialized`)
+      throw new Error(`${this.constructor.name}: textProperty is not initialized`);
     }
     this.textAnimator?.getMeasures(this.textProperty.currentData,
-      this.lettersChangedFlag)
+      this.lettersChangedFlag);
     if (this.lettersChangedFlag || this.textAnimator?.lettersChangedFlag) {
-      this._sizeChanged = true
-      const renderedLetters = this.textAnimator?.renderedLetters,
-        letters = this.textProperty.currentData.l,
-        { length } = letters
-      let renderedLetter, textSpan, glyphElement
+      this._sizeChanged = true;
+      const renderedLetters = this.textAnimator?.renderedLetters;
+      const letters = this.textProperty.currentData.l;
+      const { length } = letters;
+      let renderedLetter; let textSpan; let glyphElement;
 
       for (let i = 0; i < length; i++) {
         if (letters[i]?.n) {
-          continue
+          continue;
         }
-        renderedLetter = renderedLetters?.[i]
-        textSpan = this.textSpans[i]?.span
-        glyphElement = this.textSpans[i]?.glyph
+        renderedLetter = renderedLetters?.[i];
+        textSpan = this.textSpans[i]?.span;
+        glyphElement = this.textSpans[i]?.glyph;
         if (glyphElement) {
-          glyphElement.renderFrame()
+          glyphElement.renderFrame();
         }
         if (renderedLetter?._mdf.m) {
-          textSpan?.setAttribute('transform', renderedLetter.m as string)
+          textSpan?.setAttribute('transform', renderedLetter.m as string);
         }
         if (renderedLetter?._mdf.o) {
-          textSpan?.setAttribute('opacity', `${renderedLetter.o ?? 1}`)
+          textSpan?.setAttribute('opacity', `${renderedLetter.o ?? 1}`);
         }
         if (renderedLetter?._mdf.sw) {
-          textSpan?.setAttribute('stroke-width', `${renderedLetter.sw || 0}`)
+          textSpan?.setAttribute('stroke-width', `${renderedLetter.sw || 0}`);
         }
         if (renderedLetter?._mdf.sc) {
-          textSpan?.setAttribute('stroke', renderedLetter.sc as string)
+          textSpan?.setAttribute('stroke', renderedLetter.sc as string);
         }
         if (renderedLetter?._mdf.fc) {
-          textSpan?.setAttribute('fill', renderedLetter.fc as string)
+          textSpan?.setAttribute('fill', renderedLetter.fc as string);
         }
       }
     }
@@ -453,30 +453,30 @@ export class SVGTextLottieElement extends TextElement {
 
   override sourceRectAtTime(): SourceRect | null {
     if (!this.data) {
-      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`);
     }
     if (!this.comp) {
-      throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`)
+      throw new Error(`${this.constructor.name}: comp (ElementInterface) is not implemented`);
     }
     if (!this.layerElement) {
-      throw new Error(`${this.constructor.name}: layerElement is not implemented`)
+      throw new Error(`${this.constructor.name}: layerElement is not implemented`);
     }
-    this.prepareFrame(Number(this.comp.renderedFrame) - this.data.st)
-    this.renderInnerContent()
+    this.prepareFrame(Number(this.comp.renderedFrame) - this.data.st);
+    this.renderInnerContent();
     if (this._sizeChanged) {
-      this._sizeChanged = false
-      const textBox = (this.layerElement as SVGGElement).getBBox()
+      this._sizeChanged = false;
+      const textBox = (this.layerElement as SVGGElement).getBBox();
 
       this.bbox = {
         height: textBox.height,
         left: textBox.x,
         top: textBox.y,
         width: textBox.width,
-      }
+      };
 
-      return this.bbox
+      return this.bbox;
     }
 
-    return null
+    return null;
   }
 }

@@ -1,8 +1,8 @@
-import type { PoolElement } from '@/types'
+import type { PoolElement } from '@/types';
 
-import { isShapePath } from '@/utils'
-import { bezierLengthPool } from '@/utils/pooling/bezierLengthPool'
-import { PoolFactory } from '@/utils/pooling/PoolFactory'
+import { isShapePath } from '@/utils';
+import { bezierLengthPool } from '@/utils/pooling/bezierLengthPool';
+import { PoolFactory } from '@/utils/pooling/PoolFactory';
 
 export const segmentsLengthPool = (() =>
   new PoolFactory(
@@ -14,14 +14,14 @@ export const segmentsLengthPool = (() =>
     (element: PoolElement) => {
 
       if (!isShapePath(element)) {
-        return
+        return;
       }
 
-      const { length } = element.lengths
+      const { length } = element.lengths;
 
       for (let i = 0; i < length; i++) {
-        bezierLengthPool.release(element.lengths[i] as PoolElement)
+        bezierLengthPool.release(element.lengths[i] as PoolElement);
       }
-      element.lengths.length = 0
+      element.lengths.length = 0;
     }
-  ))()
+  ))();

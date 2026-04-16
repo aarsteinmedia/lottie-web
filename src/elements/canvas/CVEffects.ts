@@ -1,5 +1,5 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
-import type { EffectElement, ElementInterfaceIntersect } from '@/types'
+import type { GroupEffect } from '@/effects/GroupEffect';
+import type { EffectElement, ElementInterfaceIntersect } from '@/types';
 
 interface RegisteredEffects {
   [id: string]: {
@@ -8,59 +8,59 @@ interface RegisteredEffects {
   } | undefined
 }
 
-const registeredEffects: RegisteredEffects = {}
+const registeredEffects: RegisteredEffects = {};
 
 export class CVEffects {
-  filters: GroupEffect[] = []
+  filters: GroupEffect[] = [];
   constructor(elem: ElementInterfaceIntersect) {
-    const { length } = elem.data.ef ?? []
+    const { length } = elem.data.ef ?? [];
 
-    let filterManager
+    let filterManager;
 
     for (let i = 0; i < length; i++) {
-      filterManager = null
-      const type = elem.data.ef?.[i]?.ty
+      filterManager = null;
+      const type = elem.data.ef?.[i]?.ty;
 
       if (type && registeredEffects[type]) {
         /**
          * TODO:.
          */
-        const Effect = registeredEffects[type].effect
+        const Effect = registeredEffects[type].effect;
 
         // @ts-expect-error: missing container
-        filterManager = new Effect(elem.effectsManager?.effectElements[i], elem) as GroupEffect
+        filterManager = new Effect(elem.effectsManager?.effectElements[i], elem) as GroupEffect;
       }
       if (filterManager) {
-        this.filters.push(filterManager)
+        this.filters.push(filterManager);
       }
     }
     if (this.filters.length > 0) {
-      elem.addRenderableComponent(this)
+      elem.addRenderableComponent(this);
     }
   }
 
   getEffects(type: string): GroupEffect[] {
-    const { length } = this.filters,
-      effects = []
+    const { length } = this.filters;
+    const effects = [];
 
     for (let i = 0; i < length; i++) {
-      const filter = this.filters[i]
+      const filter = this.filters[i];
 
       if (filter?.type !== type) {
-        continue
+        continue;
       }
 
-      effects.push(filter)
+      effects.push(filter);
     }
 
-    return effects
+    return effects;
   }
 
   renderFrame(_isFirstFrame?: number | boolean) {
-    const { length } = this.filters
+    const { length } = this.filters;
 
     for (let i = 0; i < length; i++) {
-      this.filters[i]?.renderFrame(_isFirstFrame)
+      this.filters[i]?.renderFrame(_isFirstFrame);
     }
   }
 }
@@ -73,5 +73,5 @@ export const registerEffect = (
   registeredEffects[id] = {
     countsAsEffect,
     effect,
-  }
-}
+  };
+};

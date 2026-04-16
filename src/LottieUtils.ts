@@ -11,10 +11,10 @@ export {
   isAudio,
   isImage,
   parseBase64
-} from '@/utils'
+} from '@/utils';
 export {
   ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
-} from '@/utils/enums'
+} from '@/utils/enums';
 export {
   degToRads, inBrowser, isSafari, isServer, namespaceSVG
-} from '@/utils/helpers/constants'
+} from '@/utils/helpers/constants';

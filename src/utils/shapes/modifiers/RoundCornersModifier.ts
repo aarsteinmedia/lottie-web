@@ -3,54 +3,54 @@ import type {
   Shape,
   Vector2,
   VectorProperty,
-} from '@/types'
-import type { ValueProperty } from '@/utils/properties/ValueProperty'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
-import type { ShapePath } from '@/utils/shapes/ShapePath'
+} from '@/types';
+import type { ValueProperty } from '@/utils/properties/ValueProperty';
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty';
+import type { ShapePath } from '@/utils/shapes/ShapePath';
 
-import { roundCorner } from '@/utils/helpers/constants'
-import { newElement } from '@/utils/pooling/ShapePool'
-import PropertyFactory from '@/utils/PropertyFactory'
-import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
+import { roundCorner } from '@/utils/helpers/constants';
+import { newElement } from '@/utils/pooling/ShapePool';
+import PropertyFactory from '@/utils/PropertyFactory';
+import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier';
 
 export class RoundCornersModifier extends ShapeModifier {
-  rd?: ValueProperty
+  rd?: ValueProperty;
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {
-    this.getValue = this.processKeys
+    this.getValue = this.processKeys;
     this.rd = PropertyFactory.getProp(
       elem,
       data.r as unknown as VectorProperty, // TODO: Find out if typing is wrong
       0,
       null,
       this as unknown as ElementInterfaceIntersect
-    ) as ValueProperty
-    this._isAnimated = this.rd.effectsSequence.length > 0
+    ) as ValueProperty;
+    this._isAnimated = this.rd.effectsSequence.length > 0;
   }
 
   processPath(path: ShapePath, round: number) {
-    const clonedPath = newElement() as ShapePath
+    const clonedPath = newElement() as ShapePath;
 
-    clonedPath.c = path.c
-    const len = path._length
-    let currentV,
-      currentI: Vector2,
-      currentO: Vector2,
-      closerV: Vector2,
-      distance,
-      newPosPerc,
-      index = 0,
-      vX,
-      vY,
-      oX,
-      oY,
-      iX,
-      iY
+    clonedPath.c = path.c;
+    const len = path._length;
+    let currentV;
+    let currentI: Vector2;
+    let currentO: Vector2;
+    let closerV: Vector2;
+    let distance;
+    let newPosPerc;
+    let index = 0;
+    let vX;
+    let vY;
+    let oX;
+    let oY;
+    let iX;
+    let iY;
 
     for (let i = 0; i < len; i++) {
-      currentV = path.v[i]
-      currentO = path.o[i] as Vector2
-      currentI = path.i[i] as Vector2
+      currentV = path.v[i];
+      currentO = path.o[i] as Vector2;
+      currentI = path.i[i] as Vector2;
       if (
         currentV?.[0] === currentO[0] &&
         currentV[1] === currentO[1] &&
@@ -66,49 +66,49 @@ export class RoundCornersModifier extends ShapeModifier {
             currentI[0],
             currentI[1],
             index
-          )
+          );
           /* clonedPath.v[index] = currentV;
                 clonedPath.o[index] = currentO;
                 clonedPath.i[index] = currentI; */
-          index++
+          index++;
         } else {
           if (i === 0) {
-            closerV = path.v[len - 1] as Vector2
+            closerV = path.v[len - 1] as Vector2;
           } else {
-            closerV = path.v[i - 1] as Vector2
+            closerV = path.v[i - 1] as Vector2;
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
-            Math.pow(currentV[1] - closerV[1], 2))
-          newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
-          iX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
-          vX = iX
-          iY = currentV[1] - (currentV[1] - closerV[1]) * newPosPerc
-          vY = iY
-          oX = vX - (vX - currentV[0]) * roundCorner
-          oY = vY - (vY - currentV[1]) * roundCorner
+            Math.pow(currentV[1] - closerV[1], 2));
+          newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0;
+          iX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc;
+          vX = iX;
+          iY = currentV[1] - (currentV[1] - closerV[1]) * newPosPerc;
+          vY = iY;
+          oX = vX - (vX - currentV[0]) * roundCorner;
+          oY = vY - (vY - currentV[1]) * roundCorner;
           clonedPath.setTripleAt(
             vX, vY, oX, oY, iX, iY, index
-          )
-          index++
+          );
+          index++;
 
           if (i === len - 1) {
-            closerV = path.v[0] as Vector2
+            closerV = path.v[0] as Vector2;
           } else {
-            closerV = path.v[i + 1] as Vector2
+            closerV = path.v[i + 1] as Vector2;
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
-            Math.pow(currentV[1] - closerV[1], 2))
-          newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
-          oX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
-          vX = oX
-          oY = currentV[1] + (closerV[1] - currentV[1]) * newPosPerc
-          vY = oY
-          iX = vX - (vX - currentV[0]) * roundCorner
-          iY = vY - (vY - currentV[1]) * roundCorner
+            Math.pow(currentV[1] - closerV[1], 2));
+          newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0;
+          oX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc;
+          vX = oX;
+          oY = currentV[1] + (closerV[1] - currentV[1]) * newPosPerc;
+          vY = oY;
+          iX = vX - (vX - currentV[0]) * roundCorner;
+          iY = vY - (vY - currentV[1]) * roundCorner;
           clonedPath.setTripleAt(
             vX, vY, oX, oY, iX, iY, index
-          )
-          index++
+          );
+          index++;
         }
       } else {
         clonedPath.setTripleAt(
@@ -119,45 +119,45 @@ export class RoundCornersModifier extends ShapeModifier {
           path.i[i]?.[0] ?? 0,
           path.i[i]?.[1] ?? 0,
           index
-        )
-        index++
+        );
+        index++;
       }
     }
 
-    return clonedPath
+    return clonedPath;
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes,
-      rd = this.rd?.v
+    const { length } = this.shapes;
+    const rd = this.rd?.v;
 
     if (rd !== 0) {
-      let shapeData, shapePaths, localShapeCollection
+      let shapeData; let shapePaths; let localShapeCollection;
 
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes[i] as unknown as ShapeProperty
-        localShapeCollection = shapeData.localShapeCollection
+        shapeData = this.shapes[i] as unknown as ShapeProperty;
+        localShapeCollection = shapeData.localShapeCollection;
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
-          localShapeCollection?.releaseShapes()
+          localShapeCollection?.releaseShapes();
           if (shapeData.shape) {
-            shapeData.shape._mdf = true
+            shapeData.shape._mdf = true;
           }
 
-          shapePaths = shapeData.shape?.paths?.shapes ?? []
-          const jLen = shapeData.shape?.paths?._length || 0
+          shapePaths = shapeData.shape?.paths?.shapes ?? [];
+          const jLen = shapeData.shape?.paths?._length || 0;
 
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(this.processPath(shapePaths[j] as ShapePath, rd as number))
+            localShapeCollection?.addShape(this.processPath(shapePaths[j] as ShapePath, rd as number));
           }
         }
         if (shapeData.shape) {
-          shapeData.shape.paths = shapeData.localShapeCollection
+          shapeData.shape.paths = shapeData.localShapeCollection;
         }
 
       }
     }
     if (this.dynamicProperties.length === 0) {
-      this._mdf = false
+      this._mdf = false;
     }
   }
 }

@@ -1,5 +1,5 @@
 export class LetterProps {
-  __complete?: boolean
+  __complete?: boolean;
   _mdf: {
     fc: boolean
     m: boolean
@@ -7,14 +7,14 @@ export class LetterProps {
     p: boolean
     sc: boolean
     sw: boolean
-  }
-  fc?: string | number[] | undefined
-  m?: number | string | undefined
-  o?: number | undefined
-  p?: number | number[] | undefined
-  sc?: string | number[] | undefined
-  sw?: number | undefined
-  t?: string | undefined
+  };
+  fc?: string | number[] | undefined;
+  m?: number | string | undefined;
+  o?: number | undefined;
+  p?: number | number[] | undefined;
+  sc?: string | number[] | undefined;
+  sw?: number | undefined;
+  t?: string | undefined;
 
   constructor(
     o?: number,
@@ -24,12 +24,12 @@ export class LetterProps {
     m?: number | string,
     p?: number | number[]
   ) {
-    this.o = o
-    this.sw = sw
-    this.sc = sc
-    this.fc = fc
-    this.m = m
-    this.p = p
+    this.o = o;
+    this.sw = sw;
+    this.sc = sc;
+    this.fc = fc;
+    this.m = m;
+    this.p = p;
     this._mdf = {
       fc: Boolean(fc),
       m: true,
@@ -37,7 +37,7 @@ export class LetterProps {
       p: true,
       sc: Boolean(sc),
       sw: Boolean(sw),
-    }
+    };
   }
 
   update(
@@ -49,38 +49,38 @@ export class LetterProps {
     p?: number[]
   ) {
     // console.log('bar', sc)
-    this._mdf.o = false
-    this._mdf.sw = false
-    this._mdf.sc = false
-    this._mdf.fc = false
-    this._mdf.m = false
-    this._mdf.p = false
-    let isUpdated = false
+    this._mdf.o = false;
+    this._mdf.sw = false;
+    this._mdf.sc = false;
+    this._mdf.fc = false;
+    this._mdf.m = false;
+    this._mdf.p = false;
+    let isUpdated = false;
 
     if (this.o !== o) {
-      this.o = o
-      this._mdf.o = true
-      isUpdated = true
+      this.o = o;
+      this._mdf.o = true;
+      isUpdated = true;
     }
     if (this.sw !== sw) {
-      this.sw = sw
-      this._mdf.sw = true
-      isUpdated = true
+      this.sw = sw;
+      this._mdf.sw = true;
+      isUpdated = true;
     }
     if (this.sc !== sc) {
-      this.sc = sc
-      this._mdf.sc = true
-      isUpdated = true
+      this.sc = sc;
+      this._mdf.sc = true;
+      isUpdated = true;
     }
     if (this.fc !== fc) {
-      this.fc = fc
-      this._mdf.fc = true
-      isUpdated = true
+      this.fc = fc;
+      this._mdf.fc = true;
+      isUpdated = true;
     }
     if (this.m !== m) {
-      this.m = m
-      this._mdf.m = true
-      isUpdated = true
+      this.m = m;
+      this._mdf.m = true;
+      isUpdated = true;
     }
     if (
       p &&
@@ -92,11 +92,11 @@ export class LetterProps {
         (this.p as number[])[12] !== p[12] ||
         (this.p as number[])[13] !== p[13])
     ) {
-      this.p = p
-      this._mdf.p = true
-      isUpdated = true
+      this.p = p;
+      this._mdf.p = true;
+      isUpdated = true;
     }
 
-    return isUpdated
+    return isUpdated;
   }
 }

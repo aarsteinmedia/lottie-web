@@ -1,11 +1,11 @@
-import type { GroupEffect } from '@/effects/GroupEffect'
-import type { ElementInterfaceIntersect } from '@/types'
+import type { GroupEffect } from '@/effects/GroupEffect';
+import type { ElementInterfaceIntersect } from '@/types';
 
-import { createNS } from '@/utils/helpers/svgElements'
+import { createNS } from '@/utils/helpers/svgElements';
 
 export class SVGGaussianBlurEffect {
-  feGaussianBlur: SVGFEGaussianBlurElement
-  filterManager: GroupEffect
+  feGaussianBlur: SVGFEGaussianBlurElement;
+  filterManager: GroupEffect;
   constructor(
     filter: SVGFilterElement,
     filterManager: GroupEffect,
@@ -13,17 +13,17 @@ export class SVGGaussianBlurEffect {
     id: string
   ) {
     // Outset the filter region by 100% on all sides to accommodate blur expansion.
-    filter.setAttribute('x', '-100%')
-    filter.setAttribute('y', '-100%')
-    filter.setAttribute('width', '300%')
-    filter.setAttribute('height', '300%')
+    filter.setAttribute('x', '-100%');
+    filter.setAttribute('y', '-100%');
+    filter.setAttribute('width', '300%');
+    filter.setAttribute('height', '300%');
 
-    this.filterManager = filterManager
-    const feGaussianBlur = createNS<SVGFEGaussianBlurElement>('feGaussianBlur')
+    this.filterManager = filterManager;
+    const feGaussianBlur = createNS<SVGFEGaussianBlurElement>('feGaussianBlur');
 
-    feGaussianBlur.setAttribute('result', id)
-    filter.appendChild(feGaussianBlur)
-    this.feGaussianBlur = feGaussianBlur
+    feGaussianBlur.setAttribute('result', id);
+    filter.appendChild(feGaussianBlur);
+    this.feGaussianBlur = feGaussianBlur;
   }
 
   renderFrame(forceRender?: boolean) {
@@ -31,13 +31,13 @@ export class SVGGaussianBlurEffect {
       !forceRender && !this.filterManager._mdf
       // !this.filterManager.effectElements
     ) {
-      return
+      return;
     }
     // Empirical value, matching AE's blur appearance.
-    const kBlurrinessToSigma = 0.3,
-      sigma =
+    const kBlurrinessToSigma = 0.3;
+    const sigma =
         (this.filterManager.effectElements[0]?.p.v as number) *
-        kBlurrinessToSigma,
+        kBlurrinessToSigma;
       // Dimensions mapping:
       //
       //   1 -> horizontal & vertical
@@ -46,11 +46,11 @@ export class SVGGaussianBlurEffect {
       /**
        *
        */
-      dimensions = Number(this.filterManager.effectElements[1]?.p.v),
-      sigmaX = dimensions === 3 ? 0 : sigma,
-      sigmaY = dimensions === 2 ? 0 : sigma
+    const dimensions = Number(this.filterManager.effectElements[1]?.p.v);
+    const sigmaX = dimensions === 3 ? 0 : sigma;
+    const sigmaY = dimensions === 2 ? 0 : sigma;
 
-    this.feGaussianBlur.setAttribute('stdDeviation', `${sigmaX} ${sigmaY}`)
+    this.feGaussianBlur.setAttribute('stdDeviation', `${sigmaX} ${sigmaY}`);
 
     // Repeat edges mapping:
     //
@@ -59,8 +59,8 @@ export class SVGGaussianBlurEffect {
     const edgeMode =
       Number(this.filterManager.effectElements[2]?.p.v) === 1
         ? 'wrap'
-        : 'duplicate'
+        : 'duplicate';
 
-    this.feGaussianBlur.setAttribute('edgeMode', edgeMode)
+    this.feGaussianBlur.setAttribute('edgeMode', edgeMode);
   }
 }

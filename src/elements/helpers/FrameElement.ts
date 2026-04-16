@@ -1,7 +1,7 @@
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
+import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer';
 
-import { HierarchyElement } from '@/elements/helpers/HierarchyElement'
-import { PropType } from '@/utils/enums'
+import { HierarchyElement } from '@/elements/helpers/HierarchyElement';
+import { PropType } from '@/utils/enums';
 
 /**
  * Handles element's layer frame update.
@@ -10,40 +10,40 @@ import { PropType } from '@/utils/enums'
  */
 
 export abstract class FrameElement extends HierarchyElement {
-  _mdf = false
-  displayStartTime = 0
+  _mdf = false;
+  displayStartTime = 0;
 
   addDynamicProperty(prop: DynamicPropertyContainer) {
     if (!this.dynamicProperties.includes(prop)) {
-      this.dynamicProperties.push(prop)
+      this.dynamicProperties.push(prop);
     }
   }
 
   initFrame() {
     // set to true when inpoint is rendered
-    this._isFirstFrame = false
+    this._isFirstFrame = false;
     // list of animated properties
-    this.dynamicProperties = []
+    this.dynamicProperties = [];
     // If layer has been modified in current tick this will be true
-    this._mdf = false
+    this._mdf = false;
   }
 
   prepareProperties(_number: number, isVisible?: boolean) {
-    const { length } = this.dynamicProperties
+    const { length } = this.dynamicProperties;
 
     for (let i = 0; i < length; i++) {
       if (
         !isVisible &&
         !(this._isParent && this.dynamicProperties[i]?.propType === PropType.Transform)
       ) {
-        continue
+        continue;
       }
-      this.dynamicProperties[i]?.getValue()
+      this.dynamicProperties[i]?.getValue();
       if (!this.globalData || !this.dynamicProperties[i]?._mdf) {
-        continue
+        continue;
       }
-      this.globalData._mdf = true
-      this._mdf = true
+      this.globalData._mdf = true;
+      this._mdf = true;
     }
   }
 }
