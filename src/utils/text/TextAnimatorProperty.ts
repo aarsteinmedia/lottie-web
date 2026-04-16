@@ -838,10 +838,14 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             letterSw = sw < 0 ? 0 : sw
           }
           if (documentData.strokeColorAnim) {
-            letterSc = `rgb(${Math.round(sc[0] * 255)},${Math.round(sc[1] * 255)},${Math.round(sc[2] * 255)})`
+            const rgb = sc.map(c => Math.round(c * 255)).join(',')
+
+            letterSc = `rgb(${rgb})`
           }
           if (documentData.fillColorAnim && documentData.fc) {
-            letterFc = `rgb(${Math.round(fc[0] * 255)},${Math.round(fc[1] * 255)},${Math.round(fc[2] * 255)})`
+            const rgb = fc.map(c => Math.round(c * 255)).join(',')
+
+            letterFc = `rgb(${rgb})`
           }
 
           if (this._hasMaskedPath) {

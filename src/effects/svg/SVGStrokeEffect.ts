@@ -179,11 +179,11 @@ export class SVGStrokeEffect {
       this.filterManager.effectElements[10]?.p.v === 2) &&
       (forceRender || this.filterManager.effectElements[3]?.p._mdf)
     ) {
-      const color = this.filterManager.effectElements[3]?.p.v as Vector3
+      const color = this.filterManager.effectElements[3]?.p.v as Vector3,
+        rgb = color.map(c => Math.round(c * 255)).join(',')
 
       this.pathMasker?.setAttribute('stroke',
-        `rgb(${Math.floor(color[0] * 255)},${Math.floor(color[1] * 255)},${color[2] * 255
-        })`)
+        `rgb(${rgb})`)
     }
   }
 }

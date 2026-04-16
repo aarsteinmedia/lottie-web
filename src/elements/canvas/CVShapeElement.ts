@@ -144,7 +144,9 @@ export class CVShapeElement extends ShapeElement {
             this as unknown as ElementInterfaceIntersect
           ) as MultiDimensionalProperty<number[]>
           if (!elementData.c.k) {
-            styleElem.co = `rgb(${Math.floor(elementData.c.v[0])},${Math.floor(elementData.c.v[1])},${Math.floor(elementData.c.v[2])})`
+            const rgb = elementData.c.v.map(c => Math.round(c * 255)).join(',')
+
+            styleElem.co = `rgb(${rgb})`
           }
           break
         }
@@ -430,7 +432,9 @@ export class CVShapeElement extends ShapeElement {
     const styleElem = itemData.style
 
     if (itemData.c._mdf || this._isFirstFrame) {
-      styleElem.co = `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(itemData.c.v[1])},${Math.floor(itemData.c.v[2])})`
+      const rgb = itemData.c.v.map(c => Math.round(c * 255)).join(',')
+
+      styleElem.co = `rgb(${rgb})`
     }
     if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = itemData.o.v * groupTransform.opacity
@@ -628,7 +632,9 @@ export class CVShapeElement extends ShapeElement {
       styleElem.do = d.dashoffset[0]
     }
     if (c._mdf || this._isFirstFrame) {
-      styleElem.co = `rgb(${Math.floor(c.v[0])},${Math.floor(c.v[1])},${Math.floor(c.v[2])})`
+      const rgb = c.v.map(color => Math.floor(color)).join(',')
+
+      styleElem.co = `rgb(${rgb})`
     }
     if (o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = o.v * groupTransform.opacity

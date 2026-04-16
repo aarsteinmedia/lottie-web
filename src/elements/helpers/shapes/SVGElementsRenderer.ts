@@ -77,8 +77,10 @@ function renderFill(
   const styleElem = itemData.style
 
   if (itemData.c?.v && (itemData.c._mdf || isFirstFrame)) {
+    const rgb = itemData.c.v.map(color => Math.floor(color)).join(',')
+
     styleElem.pElem.setAttribute('fill',
-      `rgb(${Math.floor(itemData.c.v[0])},${Math.floor(itemData.c.v[1])},${itemData.c.v[2]})`)
+      `rgb(${rgb})`)
   }
   if (itemData.o?._mdf || isFirstFrame) {
     styleElem.pElem.setAttribute('fill-opacity', `${itemData.o?.v}`)
@@ -305,7 +307,9 @@ function renderStroke(
     pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
   if (c && (c._mdf || isFirstFrame)) {
-    pElem.setAttribute('stroke', `rgb(${Math.floor(c.v[0])},${Math.floor(c.v[1])},${Math.floor(c.v[2])})`)
+    const rgb = c.v.map(color => Math.floor(color)).join(',')
+
+    pElem.setAttribute('stroke', `rgb(${rgb})`)
   }
   if (o?._mdf || isFirstFrame) {
     pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)
