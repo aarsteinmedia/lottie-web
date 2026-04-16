@@ -1,6 +1,6 @@
 import type {
   AnimationData,
-  Characacter, DocumentData, LottieLayer, Shape,
+  Character, DocumentData, LottieLayer, Shape,
   ShapeColorValue,
   Vector3
 } from '@/types';
@@ -77,7 +77,7 @@ function completeLayers(layers: LottieLayer[],
   }
 }
 
-function completeChars(chars: Characacter[] | null,
+function completeChars(chars: Character[] | null,
   assets: LottieLayer[]) {
   if (!chars) {
     return;

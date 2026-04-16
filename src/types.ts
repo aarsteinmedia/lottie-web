@@ -1072,8 +1072,8 @@ export interface FontList {
   }
 }
 
-export interface Characacter {
-  ch?: undefined | Characacter
+export interface Character {
+  ch?: undefined | Character
   data?: undefined | LottieLayer
   fFamily?: undefined | string
   shapes: Shape[]
@@ -1089,7 +1089,7 @@ export interface AnimationData {
   ao?: undefined | boolean | 0 | 1
   assets: LottieAsset[]
   /** Characters. */
-  chars: Characacter[] | null
+  chars: Character[] | null
   /** Is three dimensional. */
   ddd: 0 | 1
   fonts?: undefined | { list: DocumentData[] }
@@ -1128,7 +1128,7 @@ export interface LottieLayer {
   au?: undefined | { lv?: { k: number[] } }
   /** Blend Mode. */
   bm?: undefined | number
-  chars?: undefined | Characacter[]
+  chars?: undefined | Character[]
   cl?: undefined | string
   completed?: undefined | boolean
   /** Whether transforms should be applied before or after masks. */
