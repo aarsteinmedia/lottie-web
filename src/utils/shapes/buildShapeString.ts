@@ -1,3 +1,4 @@
+import type { Vector2 } from '@/Lottie';
 import type { Matrix } from '@/utils/Matrix';
 import type { ShapePath } from '@/utils/shapes/ShapePath';
 
@@ -14,18 +15,33 @@ export function buildShapeString(
   const _i = pathNodes.i;
   const _v = pathNodes.v;
   let i;
-  let shapeString = ` M${mat.applyToPointStringified(_v[0]?.[0] ?? 0, _v[0]?.[1] ?? 0)}`;
+  let vVector: Vector2 = [_v[0]?.[0] ?? 0, _v[0]?.[1] ?? 0];
+  let vString = mat.applyToPointStringified(...vVector);
+  let iVector: Vector2;
+  let iString: string;
+  let oVector: Vector2;
+  let oString: string;
+  let shapeString = ` M${vString}`;
 
   for (i = 1; i < length; i++) {
-    shapeString += ` C${mat.applyToPointStringified(_o[i - 1]?.[0] ?? 0,
-      _o[i - 1]?.[1] ?? 0)} ${mat.applyToPointStringified(_i[i]?.[0] ?? 0,
-      _i[i]?.[1] ?? 0)} ${mat.applyToPointStringified(_v[i]?.[0] ?? 0, _v[i]?.[1] ?? 0)}`;
+    oVector = [_o[i - 1]?.[0] ?? 0, _o[i - 1]?.[1] ?? 0];
+    oString = mat.applyToPointStringified(...oVector);
+    iVector = [_i[i]?.[0] ?? 0, _i[i]?.[1] ?? 0];
+    iString = mat.applyToPointStringified(...iVector);
+    vVector = [_v[i]?.[0] ?? 0, _v[i]?.[1] ?? 0];
+    vString = mat.applyToPointStringified(...vVector);
+
+    shapeString += ` C${oString} ${iString} ${vString}`;
   }
-  if (closed && length) {
-    shapeString += ` C${mat.applyToPointStringified(_o[i - 1]?.[0] ?? 0,
-      _o[i - 1]?.[1] ?? 0)} ${mat.applyToPointStringified(_i[0]?.[0] ?? 0,
-      _i[0]?.[1] ?? 0)} ${mat.applyToPointStringified(_v[0]?.[0] ?? 0, _v[0]?.[1] ?? 0)}`;
-    shapeString += 'z';
+  if (closed) {
+    oVector = [_o[i - 1]?.[0] ?? 0, _o[i - 1]?.[1] ?? 0];
+    oString = mat.applyToPointStringified(...oVector);
+    iVector = [_i[0]?.[0] ?? 0, _i[0]?.[1] ?? 0];
+    iString = mat.applyToPointStringified(...iVector);
+    vVector = [_v[0]?.[0] ?? 0, _v[0]?.[1] ?? 0];
+    vString = mat.applyToPointStringified(...vVector);
+
+    shapeString += ` C${oString} ${iString} ${vString}z`;
   }
 
   return shapeString;
