@@ -143,7 +143,7 @@ function seedRandom(pool: number[], math: Math) {
 
     prng.int32 = () => arc4.g(4) | 0;
     prng.quick = () => arc4.g(4) / 0x100000000;
-    prng.double = prng;
+    prng['double'] = prng;
 
     // Mix the randomness into accumulated entropy.
     mixkey(tostring(arc4.S), pool);

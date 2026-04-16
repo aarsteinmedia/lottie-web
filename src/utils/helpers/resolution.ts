@@ -1,9 +1,9 @@
 const curveSegments = { default: 150 };
 
 const setDefaultCurveSegments = (value: number) => {
-  curveSegments.default = value;
+  curveSegments['default'] = value;
 };
-const getDefaultCurveSegments = () => curveSegments.default;
+const getDefaultCurveSegments = () => curveSegments['default'];
 const shouldRoundValues = { current: false };
 
 const getShouldRoundValues = () => shouldRoundValues.current;

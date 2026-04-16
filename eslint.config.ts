@@ -63,6 +63,7 @@ const config = defineConfig(
       '@stylistic/space-in-parens': 'warn',
       '@stylistic/type-annotation-spacing': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
+      '@typescript-eslint/dot-notation': ['warn', { allowKeywords: false }],
       '@typescript-eslint/explicit-module-boundary-types': 0,
       '@typescript-eslint/naming-convention': [
         'error',
@@ -138,9 +139,15 @@ const config = defineConfig(
       '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
       '@typescript-eslint/unbound-method': 0,
       'arrow-return-style/arrow-return-style': 0,
+      'consistent-return': 'warn',
+      'curly': ['error', 'all'],
+      'eqeqeq': ['error', 'always'],
       'fsecond/prefer-destructured-optionals': 0,
       'func-style': 0,
       'import/no-default-export': 'warn',
+      'no-else-return': 'warn',
+      'no-implicit-coercion': 'warn',
+      'no-nested-ternary': 'warn',
       'no-plusplus': 0,
       'no-restricted-globals': ['error',
         'event',
@@ -159,7 +166,7 @@ const config = defineConfig(
       'simple-import-sort/imports': 0,
       'unicorn/no-array-reduce': ['error', { allowSimpleOperations: true }],
       'unicorn/prefer-query-selector': 0,
-      'unicorn/template-indent': 'warn'
+      'unicorn/template-indent': 'warn',
     },
   },
   {

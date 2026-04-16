@@ -228,7 +228,7 @@ export class CVShapeElement extends ShapeElement {
           elementData.d = d;
           if (!elementData.d.k) {
             styleElem.da = elementData.d.dashArray;
-            styleElem.do = elementData.d.dashoffset[0];
+            styleElem['do'] = elementData.d.dashoffset[0];
           }
         }
       } else {
@@ -350,7 +350,7 @@ export class CVShapeElement extends ShapeElement {
             ctx?.beginPath();
             if (ctx && da) {
               ctx.setLineDash(da);
-              ctx.lineDashOffset = currentStyle.do || 0;
+              ctx.lineDashOffset = currentStyle['do'] || 0;
             }
           }
           const nodes = elems[j].trNodes;
@@ -629,7 +629,7 @@ export class CVShapeElement extends ShapeElement {
 
     if (d && (d._mdf || this._isFirstFrame)) {
       styleElem.da = d.dashArray;
-      styleElem.do = d.dashoffset[0];
+      styleElem['do'] = d.dashoffset[0];
     }
     if (c._mdf || this._isFirstFrame) {
       const rgb = c.v.map(color => Math.floor(color)).join(',');

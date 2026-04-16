@@ -16,6 +16,6 @@ export const setExpressionsPlugin = (value: typeof Expressions) => {
 };
 export const getExpressionsPlugin = () => expressions.plugin;
 export const setExpressionInterfaces = (value: typeof getInterface) => {
-  expressions.interface = value;
+  expressions['interface'] = value;
 };
-export const getExpressionInterfaces = () => expressions.interface;
+export const getExpressionInterfaces = () => expressions['interface'];
