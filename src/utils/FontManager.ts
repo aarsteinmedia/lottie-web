@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
-  Characacter, DocumentData, FontList, LottieLayer
+  Character, DocumentData, FontList, LottieLayer
 } from '@/types'
 
 import { RendererType } from '@/utils/enums'
@@ -53,7 +53,7 @@ const A_TAG_CODE_POINT = 917601,
     shapes: [],
     size: 0,
     w: 0,
-  } as unknown as Characacter,
+  } as unknown as Character,
   maxWaitingTime = 5000,
   REGIONAL_CHARACTER_A_CODE_POINT = 127462,
   REGIONAL_CHARACTER_Z_CODE_POINT = 127487,
@@ -195,7 +195,7 @@ function trimFontOptions(font: string): string {
 }
 
 export class FontManager {
-  public chars: Characacter[] | null = null
+  public chars: Character[] | null = null
   public fonts: DocumentData[] = []
   public isLoaded = false
   public typekitLoaded = 0
@@ -209,7 +209,7 @@ export class FontManager {
     this.checkLoadedFontsBinded = this.checkLoadedFonts.bind(this)
   }
 
-  public addChars(chars?: null | Characacter[]): void {
+  public addChars(chars?: null | Character[]): void {
     if (!chars) {
       return
     }
@@ -233,7 +233,7 @@ export class FontManager {
         j++
       }
       if (!found) {
-        this.chars.push(chars[i] as Characacter)
+        this.chars.push(chars[i] as Character)
         jLen++
       }
     }
@@ -368,10 +368,10 @@ export class FontManager {
   }
 
   public getCharData(
-    char: Characacter | string,
+    char: Character | string,
     style?: string,
     font?: string
-  ): Characacter {
+  ): Character {
     let i = 0
     const { length } = this.chars ?? []
 
@@ -381,7 +381,7 @@ export class FontManager {
         this.chars[i]?.style === style &&
         this.chars[i]?.fFamily === font
       ) {
-        return this.chars[i] as Characacter
+        return this.chars[i] as Character
       }
       i++
     }
