@@ -33,7 +33,7 @@ export function buildShapeString(
 
     shapeString += ` C${oString} ${iString} ${vString}`
   }
-  if (closed && length) {
+  if (closed) {
     oVector = [_o[i - 1]?.[0] ?? 0, _o[i - 1]?.[1] ?? 0]
     oString = mat.applyToPointStringified(...oVector)
     iVector = [_i[0]?.[0] ?? 0, _i[0]?.[1] ?? 0]
