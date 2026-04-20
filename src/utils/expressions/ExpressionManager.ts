@@ -672,7 +672,7 @@ function initiateExpression(
   }
 
   const index = elem.data.ind
-  let hasParent = Boolean(elem.hierarchy?.length),
+  let hasParent = elem.hierarchy.length > 0,
     parent: null | LayerExpressionInterface = null
 
   randSeed = Math.floor(Math.random() * 1000000)
@@ -722,9 +722,9 @@ function initiateExpression(
       content = thisLayer?.getInterface('ADBE Root Vectors Group') as ShapeExpressionInterface
     }
     effect = effect ?? thisLayer?.getInterface(4) as GroupEffectInterface
-    hasParent = Boolean(elem.hierarchy?.length)
+    hasParent = elem.hierarchy.length > 0
     if (hasParent && !parent) {
-      parent = elem.hierarchy?.[0]?.layerInterface ?? null
+      parent = elem.hierarchy[0]?.layerInterface ?? null
     }
     time = (this.comp?.renderedFrame ?? 0) / (this.comp?.globalData?.frameRate ?? 60)
     if (_needsRandom) {

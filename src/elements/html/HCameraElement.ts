@@ -168,12 +168,10 @@ export class HCameraElement extends FrameElement {
     }
     let isFirst = this._isFirstFrame
 
-    if (this.hierarchy) {
-      const { length } = this.hierarchy
+    const { length } = this.hierarchy
 
-      for (let i = 0; i < length; i++) {
-        isFirst = this.hierarchy[i]?.finalTransform?.mProp._mdf || isFirst
-      }
+    for (let i = 0; i < length; i++) {
+      isFirst = this.hierarchy[i]?.finalTransform?.mProp._mdf || isFirst
     }
     if (
       isFirst ||
@@ -188,43 +186,41 @@ export class HCameraElement extends FrameElement {
     ) {
       this.mat?.reset()
 
-      if (this.hierarchy) {
-        const len = this.hierarchy.length - 1
+      const len = length - 1
 
-        for (let i = len; i >= 0; i--) {
-          const mTransf = this.hierarchy[i]?.finalTransform?.mProp
+      for (let i = len; i >= 0; i--) {
+        const mTransf = this.hierarchy[i]?.finalTransform?.mProp
 
-          if (
-            !mTransf?.p ||
-            !mTransf.or ||
-            !mTransf.rx ||
-            !mTransf.ry ||
-            !mTransf.rz ||
-            !mTransf.s ||
-            !mTransf.a
-          ) {
-            continue
-          }
-          this.mat?.translate(
-            -mTransf.p.v[0], -mTransf.p.v[1], mTransf.p.v[2]
-          )
-          this.mat
-            ?.rotateX(-mTransf.or.v[0])
-            .rotateY(-mTransf.or.v[1])
-            .rotateZ(mTransf.or.v[2])
-          this.mat
-            ?.rotateX(-mTransf.rx.v)
-            .rotateY(-mTransf.ry.v)
-            .rotateZ(mTransf.rz.v)
-          this.mat?.scale(
-            1 / mTransf.s.v[0],
-            1 / mTransf.s.v[1],
-            1 / mTransf.s.v[2]
-          )
-          this.mat?.translate(
-            mTransf.a.v[0] ?? 0, mTransf.a.v[1] ?? 0, mTransf.a.v[2]
-          )
+        if (
+          !mTransf?.p ||
+          !mTransf.or ||
+          !mTransf.rx ||
+          !mTransf.ry ||
+          !mTransf.rz ||
+          !mTransf.s ||
+          !mTransf.a
+        ) {
+          continue
         }
+        this.mat?.translate(
+          -mTransf.p.v[0], -mTransf.p.v[1], mTransf.p.v[2]
+        )
+        this.mat
+          ?.rotateX(-mTransf.or.v[0])
+          .rotateY(-mTransf.or.v[1])
+          .rotateZ(mTransf.or.v[2])
+        this.mat
+          ?.rotateX(-mTransf.rx.v)
+          .rotateY(-mTransf.ry.v)
+          .rotateZ(mTransf.rz.v)
+        this.mat?.scale(
+          1 / mTransf.s.v[0],
+          1 / mTransf.s.v[1],
+          1 / mTransf.s.v[2]
+        )
+        this.mat?.translate(
+          mTransf.a.v[0] ?? 0, mTransf.a.v[1] ?? 0, mTransf.a.v[2]
+        )
       }
       if (this.p) {
         this.mat?.translate(
@@ -291,12 +287,12 @@ export class HCameraElement extends FrameElement {
         (hasMatrixChanged || this.pe?._mdf) &&
         this.comp?.threeDElements
       ) {
-        const { length: len } = this.comp.threeDElements
+        const { length: iLen } = this.comp.threeDElements
         let comp
         let perspectiveStyle
         let containerStyle: CSSStyleDeclaration
 
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < iLen; i++) {
           comp = this.comp.threeDElements[i]
           if (comp?.type !== '3d') {
             continue

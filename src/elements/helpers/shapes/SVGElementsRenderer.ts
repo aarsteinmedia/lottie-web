@@ -16,6 +16,15 @@ import { buildShapeString } from '@/utils/shapes/buildShapeString'
 const _identityMatrix = new Matrix(),
   _matrixHelper = new Matrix()
 
+function toRGBString(v: number[]) {
+  // v is already scaled to 0..255 by property factory; keep it fast and allocation-light.
+  const r = (v[0] ?? 0) | 0
+  const g = (v[1] ?? 0) | 0
+  const b = (v[2] ?? 0) | 0
+
+  return `rgb(${r},${g},${b})`
+}
+
 export function createRenderFunction(data: Shape) {
   switch (data.ty) {
     case ShapeType.Fill: {
@@ -77,10 +86,7 @@ function renderFill(
   const styleElem = itemData.style
 
   if (itemData.c?.v && (itemData.c._mdf || isFirstFrame)) {
-    const rgb = itemData.c.v.map(color => Math.floor(color)).join(',')
-
-    styleElem.pElem.setAttribute('fill',
-      `rgb(${rgb})`)
+    styleElem.pElem.setAttribute('fill', toRGBString(itemData.c.v))
   }
   if (itemData.o?._mdf || isFirstFrame) {
     styleElem.pElem.setAttribute('fill-opacity', `${itemData.o?.v}`)
@@ -307,9 +313,7 @@ function renderStroke(
     pElem.setAttribute('stroke-dashoffset', `${d.dashoffset[0]}`)
   }
   if (c && (c._mdf || isFirstFrame)) {
-    const rgb = c.v.map(color => Math.floor(color)).join(',')
-
-    pElem.setAttribute('stroke', `rgb(${rgb})`)
+    pElem.setAttribute('stroke', toRGBString(c.v))
   }
   if (o?._mdf || isFirstFrame) {
     pElem.setAttribute('stroke-opacity', `${o?.v ?? 1}`)

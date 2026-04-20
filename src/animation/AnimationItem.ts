@@ -53,8 +53,23 @@ export class AnimationItem extends BaseEvent {
   public container?: undefined | HTMLCanvasElement
   public currentFrame = 0
   public currentRawFrame = 0
-  public drawnFrameEvent = new EnterFrameEvent(
-    'drawnFrame', 0, 0, 0
+  public drawnFrameEvent = new DrawnFrameEvent(
+    'drawnFrame',
+    0,
+    1,
+    0
+  )
+  public enterFrameEvent = new EnterFrameEvent(
+    'enterFrame',
+    0,
+    0,
+    1
+  )
+  public enterFrameLegacyEvent = new EnterFrameEvent(
+    'enterFrame',
+    0,
+    0,
+    1
   )
   public expressionsPlugin = getExpressionsPlugin()
   public firstFrame = 0
@@ -829,29 +844,32 @@ export class AnimationItem extends BaseEvent {
       }
       switch (name) {
         case 'enterFrame': {
-          this.triggerEvent(name,
-            new EnterFrameEvent(
-              name,
-              this.currentFrame,
-              this.totalFrames,
-              this.frameModifier
-            ))
-          this.onEnterFrame?.(new EnterFrameEvent(
-            name,
-            this.currentFrame,
-            this.totalFrames,
-            this.frameMult
-          ))
+          const ev = this.enterFrameEvent
+
+          ev.type = name
+          ev.currentTime = this.currentFrame
+          ev.totalTime = this.totalFrames
+          ev.direction = this.frameModifier < 0 ? -1 : 1
+          this.triggerEvent(name, ev)
+
+          // Preserve legacy callback semantics (it previously used `frameMult`, not `frameModifier`).
+          const legacyEv = this.enterFrameLegacyEvent
+
+          legacyEv.type = name
+          legacyEv.currentTime = this.currentFrame
+          legacyEv.totalTime = this.totalFrames
+          legacyEv.direction = this.frameMult < 0 ? -1 : 1
+          this.onEnterFrame?.(legacyEv)
           break
         }
         case 'drawnFrame': {
-          this.triggerEvent(name,
-            new DrawnFrameEvent(
-              name,
-              this.currentFrame,
-              this.frameModifier,
-              this.totalFrames
-            ))
+          const ev = this.drawnFrameEvent
+
+          ev.type = name
+          ev.currentTime = this.currentFrame
+          ev.direction = this.frameModifier < 0 ? -1 : 1
+          ev.totalTime = this.totalFrames
+          this.triggerEvent(name, ev)
           break
         }
         case 'loopComplete': {

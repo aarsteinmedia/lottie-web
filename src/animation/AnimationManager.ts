@@ -255,9 +255,12 @@ function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
 
   for (let i = 0; i < len; i++) {
-    const { animation } = registeredAnimations[i] ?? { animation: null }
+    const registeredAnimation = registeredAnimations[i]
 
-    animation?.advanceTime(elapsedTime)
+    if (!registeredAnimation) {
+      continue
+    }
+    registeredAnimation.animation.advanceTime(elapsedTime)
   }
   initTime = nowTime
 

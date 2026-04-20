@@ -42,11 +42,11 @@ export class LayerExpressionInterface {
   }
 
   get hasParent() {
-    return Boolean(this._elem.hierarchy?.length)
+    return this._elem.hierarchy.length > 0
   }
 
   get parent(): LayerExpressionInterface | null {
-    return this._elem.hierarchy?.[0]?.layerInterface ?? null
+    return this._elem.hierarchy[0]?.layerInterface ?? null
   }
 
   get transform() {
@@ -88,7 +88,7 @@ export class LayerExpressionInterface {
   }
 
   applyPoint(matrix: Matrix, arr: number[]) {
-    if (this._elem.hierarchy?.length) {
+    if (this._elem.hierarchy.length > 0) {
 
       const { length } = this._elem.hierarchy
 
@@ -107,7 +107,7 @@ export class LayerExpressionInterface {
 
     toWorldMat.reset()
     this._elem.finalTransform?.mProp.applyToMatrix(toWorldMat)
-    if (this._elem.hierarchy?.length) {
+    if (this._elem.hierarchy.length > 0) {
       let i
 
       const len = this._elem.hierarchy.length
@@ -185,7 +185,7 @@ export class LayerExpressionInterface {
   }
 
   invertPoint(matrix: Matrix, arr: number[]) {
-    if (this._elem.hierarchy?.length) {
+    if (this._elem.hierarchy.length > 0) {
 
       const { length } = this._elem.hierarchy
 
