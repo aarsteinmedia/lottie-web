@@ -49,6 +49,7 @@ const isProd = process.env.NODE_ENV !== 'development',
     }),
     livereload()
   ])(),
+
   inputs = [
     {
       file: resolve(
@@ -87,12 +88,14 @@ const isProd = process.env.NODE_ENV !== 'development',
       name: 'dotlottie'
     },
   ],
+
   jsInput = Object.fromEntries(inputs.map((i) => [i.name, i.file])),
   dtsInput = Object.fromEntries(inputs.map((i) => [
     i.name, resolve(
       __dirname, 'types', `${toPascalCase(i.name)}.d.ts`
     ),
   ])),
+
   onwarn: RollupOptions['onwarn'] = (warning, warn) => {
     if (warning.code === 'CIRCULAR_DEPENDENCY') {
       return
