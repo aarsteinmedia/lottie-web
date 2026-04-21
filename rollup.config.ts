@@ -27,7 +27,7 @@ const isProd = process.env.NODE_ENV !== 'development',
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join('')
   },
-  plugins = (): Plugin[] => isProd ? [
+  plugins = ((): Plugin[] => isProd ? [
     typescriptPaths(),
     nodeResolve({
       extensions: ['.ts'],
@@ -48,7 +48,7 @@ const isProd = process.env.NODE_ENV !== 'development',
       port: 1002
     }),
     livereload()
-  ],
+  ])(),
   inputs = [
     {
       file: resolve(
@@ -60,67 +60,72 @@ const isProd = process.env.NODE_ENV !== 'development',
       file: resolve(
         __dirname, 'src', 'LottieLight.ts'
       ),
-      name: 'lottie-light',
+      name: 'lottie-light'
     },
     {
       file: resolve(
         __dirname, 'src', 'LottieSVG.ts'
       ),
-      name: 'lottie-svg',
+      name: 'lottie-svg'
     },
     {
       file: resolve(
         __dirname, 'src', 'LottieCanvas.ts'
       ),
-      name: 'lottie-canvas',
+      name: 'lottie-canvas'
     },
     {
       file: resolve(
         __dirname, 'src', 'LottieUtils.ts'
       ),
-      name: 'lottie-utils',
+      name: 'lottie-utils'
     },
     {
       file: resolve(
         __dirname, 'src', 'Dotlottie.ts'
       ),
       name: 'dotlottie'
-    }
+    },
   ],
-  types: RollupOptions[] = inputs.map((input) => ({
-    input: resolve(
-      __dirname, 'types', `${toPascalCase(input.name)}.d.ts`
+  jsInput = Object.fromEntries(inputs.map((i) => [i.name, i.file])),
+  dtsInput = Object.fromEntries(inputs.map((i) => [
+    i.name, resolve(
+      __dirname, 'types', `${toPascalCase(i.name)}.d.ts`
     ),
-    output: {
-      file: resolve(
-        __dirname, 'dist', `${input.name}.d.ts`
-      ),
-      format: 'esm',
+  ])),
+  onwarn: RollupOptions['onwarn'] = (warning, warn) => {
+    if (warning.code === 'CIRCULAR_DEPENDENCY') {
+      return
+    }
+    warn(warning)
+  },
+  output: RollupOptions[] = [
+    // Build all JS entrypoints together so shared modules (e.g. enums) become shared chunks.
+    {
+      external: ['fflate'],
+      input: jsInput,
+      onwarn,
+      output: {
+        chunkFileNames: 'chunks/[name]-[hash].js',
+        dir: resolve(__dirname, 'dist'),
+        entryFileNames: '[name].js',
+        exports: 'named',
+        format: 'esm',
+      },
+      plugins,
+    }, {
+      // Build all d.ts entrypoints together so shared declarations are de-duplicated.
+      input: dtsInput,
+      onwarn,
+      output: {
+        chunkFileNames: 'chunks/[name]-[hash].d.ts',
+        dir: resolve(__dirname, 'dist'),
+        entryFileNames: '[name].d.ts',
+        format: 'esm',
+      },
+      plugins: [dts()],
     },
-    plugins: [dts()],
-  })),
-  outputs: RollupOptions[] = inputs.map((input) => ({
-    external: [
-      'fflate'
-    ],
-    input: input.file,
-    onwarn(warning, warn) {
-      if (warning.code === 'CIRCULAR_DEPENDENCY') {
-        return
-      }
-      warn(warning)
-    },
-    output: {
-      exports: 'named',
-      file: resolve(
-        __dirname, 'dist', `${input.name}.js`
-      ),
-      format: 'esm',
-    },
-
-    plugins: plugins(),
-  })),
-  output = [...outputs, ...types]
+  ]
 
 // eslint-disable-next-line import/no-default-export
 export default isProd ? output : output[0]
