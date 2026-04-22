@@ -5,7 +5,6 @@ import type {
   LottieLayer,
   VectorProperty,
 } from '@/types'
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty'
 import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
@@ -33,14 +32,14 @@ function getProp<T = number | number[]>(
       elem,
       data as VectorProperty,
       mult,
-      container as ElementInterfaceIntersect
+      container
     )
   } else if (typeof (data?.k as number[])[0] === 'number') {
     p = new MultiDimensionalProperty(
       elem,
       data as VectorProperty<number[]>,
       mult,
-      container as ElementInterfaceIntersect
+      container
     )
   } else {
     switch (type) {
@@ -49,7 +48,7 @@ function getProp<T = number | number[]>(
           elem,
           data as VectorProperty<Keyframe[]>,
           mult,
-          container as ElementInterfaceIntersect
+          container
         )
         break
       }
@@ -58,7 +57,7 @@ function getProp<T = number | number[]>(
           elem,
           data as VectorProperty<Keyframe[]>,
           mult,
-          container as ElementInterfaceIntersect
+          container
         )
         break
       }
@@ -70,7 +69,7 @@ function getProp<T = number | number[]>(
   }
   p = p ?? new NoProperty()
   if (p.effectsSequence.length > 0) {
-    container?.addDynamicProperty(p as DynamicPropertyContainer)
+    container?.addDynamicProperty(p)
   }
 
   return p

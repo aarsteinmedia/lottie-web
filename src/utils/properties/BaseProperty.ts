@@ -152,7 +152,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   x?: boolean
   addEffect(effectFunction: EffectFunction) {
     this.effectsSequence.push(effectFunction)
-    this.container?.addDynamicProperty(this as DynamicPropertyContainer)
+    this.container?.addDynamicProperty(this)
   }
 
   getSpeedAtTime(_frameNum: number) {
@@ -376,7 +376,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           newValue[2] = keyData.s[2] as unknown as number
         } else {
           const quatStart = createQuaternion(keyData.s as unknown as Vector3),
-            quatEnd = createQuaternion(endValue as unknown as Vector3),
+            quatEnd = createQuaternion(endValue),
             time = (frameNum - keyTime) / (nextKeyTime - keyTime)
 
           quaternionToEuler(newValue, slerp(

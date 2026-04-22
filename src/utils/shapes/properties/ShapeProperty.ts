@@ -17,17 +17,16 @@ import { clone, newElement } from '@/utils/pooling/ShapePool'
 import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
 export class ShapeProperty extends ShapeBaseProperty {
-  ix?: number
-  pathsData?: ShapePath[] | ShapePath
-  shape?: {
+  public ix?: number
+  public shape?: {
     _mdf?: boolean
     paths?: undefined | {
       shapes: ShapePath[]
       _length: number
     }
   }
-  totalShapeLength?: number
-  x?: boolean
+  public totalShapeLength?: number
+  public x?: boolean
   constructor(
     elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
   ) {

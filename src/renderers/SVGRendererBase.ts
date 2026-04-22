@@ -286,7 +286,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
     if (this.animationItem.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
-    this.layerElement = null as unknown as SVGGElement
+    this.layerElement = null
     this.globalData.defs = null as unknown as SVGDefsElement
     const { length } = this.layers
 

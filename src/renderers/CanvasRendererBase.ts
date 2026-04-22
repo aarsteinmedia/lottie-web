@@ -123,7 +123,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     return new CVShapeElement(
       data,
       this.globalData,
-      this as unknown as ElementInterfaceIntersect
+      this
     )
   }
 

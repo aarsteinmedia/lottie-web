@@ -1,5 +1,4 @@
 import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
-import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   ElementInterfaceIntersect,
   Shape,
@@ -7,6 +6,7 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { isArray } from '@/utils'
 import { ShapeType } from '@/utils/enums'
@@ -34,7 +34,7 @@ export class RepeaterModifier extends ShapeModifier {
   private _elements: Shape[] = []
   private _groups: Shape[] = []
 
-  override addShapeToModifier(shapeData: SVGShapeData) {
+  override addShapeToModifier(shapeData: ShapeProperty) {
     shapeData.pathsData = []
   }
 

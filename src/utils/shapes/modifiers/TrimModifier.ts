@@ -1,4 +1,3 @@
-import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type {
   BezierLength,
   ElementInterfaceIntersect, PoolElement, Shape, Vector2
@@ -82,7 +81,7 @@ export class TrimModifier extends ShapeModifier {
   }
 
   addShapes(
-    shapeData: SVGShapeData,
+    shapeData: ShapeProperty,
     shapeSegment: {
       e: number
       s: number
@@ -237,7 +236,7 @@ export class TrimModifier extends ShapeModifier {
     return shapes
   }
 
-  override addShapeToModifier(shapeData: SVGShapeData) {
+  override addShapeToModifier(shapeData: ShapeProperty) {
     shapeData.pathsData = []
   }
 
@@ -387,17 +386,23 @@ export class TrimModifier extends ShapeModifier {
 
     if (e === s) {
       for (let i = 0; i < length; i++) {
-        this.shapes[i]?.localShapeCollection?.releaseShapes()
+        const currentShape = this.shapes[i]
 
-        const { shape } = this.shapes[i] ?? {}
+        if (!currentShape) {
+          continue
+        }
+
+        currentShape.localShapeCollection?.releaseShapes()
+
+        const { localShapeCollection, shape } = currentShape
 
         if (shape) {
           shape._mdf = true
-          shape.paths = this.shapes[i]?.localShapeCollection
+          shape.paths = localShapeCollection
         }
 
         if (this._mdf) {
-          ; (this.shapes[i] as SVGShapeData).pathsData.length = 0
+          currentShape.pathsData.length = 0
         }
       }
     } else if (!(e === 1 && s === 0 || e === 0 && s === 1)) {
@@ -408,7 +413,12 @@ export class TrimModifier extends ShapeModifier {
       let shapeData, localShapeCollection
 
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i]
+
+        if (!shapeData) {
+          continue
+        }
+
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
           !shapeData.shape?._mdf &&
@@ -421,13 +431,13 @@ export class TrimModifier extends ShapeModifier {
           }
 
         } else {
-          shapePaths = shapeData.shape?.paths
+          shapePaths = shapeData.shape?.paths as ShapeCollection | undefined
           jLen = shapePaths?._length || 0
           totalShapeLength = 0
-          if (!shapeData.shape?._mdf && shapeData.pathsData?.length) {
+          if (!shapeData.shape?._mdf && shapeData.pathsData.length > 0) {
             totalShapeLength = shapeData.totalShapeLength
           } else {
-            pathsData = this.releasePathsData(shapeData.pathsData as ShapePath[])
+            pathsData = this.releasePathsData(shapeData.pathsData)
             for (j = 0; j < jLen; j++) {
               if (!shapePaths) {
                 continue
@@ -454,7 +464,12 @@ export class TrimModifier extends ShapeModifier {
         edges
 
       for (let i = length - 1; i >= 0; i--) {
-        shapeData = this.shapes[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i]
+
+        if (!shapeData) {
+          continue
+        }
+
         if (shapeData.shape?._mdf) {
           localShapeCollection = shapeData.localShapeCollection
           if (!localShapeCollection) {
@@ -505,7 +520,7 @@ export class TrimModifier extends ShapeModifier {
               s: 0
             }
 
-            let newShapesData = this.addShapes(shapeData as unknown as SVGShapeData, segments[0] ?? emptySegment)
+            let newShapesData = this.addShapes(shapeData, segments[0] ?? emptySegment)
 
             if (segments[0]?.s !== segments[0]?.e) {
               if (segments.length > 1) {
@@ -519,13 +534,13 @@ export class TrimModifier extends ShapeModifier {
 
                   this.addPaths(newShapesData, localShapeCollection)
                   newShapesData = this.addShapes(
-                    shapeData as unknown as SVGShapeData,
+                    shapeData,
                     segments[1] ?? emptySegment,
                     lastShape
                   )
                 } else {
                   this.addPaths(newShapesData, localShapeCollection)
-                  newShapesData = this.addShapes(shapeData as unknown as SVGShapeData, segments[1] ?? emptySegment)
+                  newShapesData = this.addShapes(shapeData, segments[1] ?? emptySegment)
                 }
               }
               this.addPaths(newShapesData, localShapeCollection)
@@ -538,9 +553,15 @@ export class TrimModifier extends ShapeModifier {
       for (let i = 0; i < length; i++) {
         // Releasign Trim Cached paths data when no trim applied in case shapes are modified inbetween.
         // Don't remove this even if it's losing cached info.
-        ; (this.shapes[i] as SVGShapeData).pathsData.length = 0
+        const currentShape = this.shapes[i]
 
-        const { shape } = this.shapes[i] ?? {}
+        if (!currentShape) {
+          continue
+        }
+
+        currentShape.pathsData.length = 0
+
+        const { shape } = currentShape
 
         if (shape) {
           shape._mdf = true

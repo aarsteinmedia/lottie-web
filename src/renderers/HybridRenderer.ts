@@ -16,7 +16,7 @@ export class HybridRenderer extends HybridRendererBase {
       return new SVGCompElement(
         data,
         this.globalData,
-        this as unknown as ElementInterfaceIntersect
+        this
       )
     }
 

@@ -5,7 +5,6 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { roundCorner } from '@/utils/helpers/constants'
@@ -135,7 +134,12 @@ export class RoundCornersModifier extends ShapeModifier {
       let shapeData, shapePaths, localShapeCollection
 
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes[i] as unknown as ShapeProperty
+        shapeData = this.shapes[i]
+
+        if (!shapeData) {
+          continue
+        }
+
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()

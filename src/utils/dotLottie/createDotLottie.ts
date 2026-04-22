@@ -52,7 +52,10 @@ const getArrayBuffer = async (zippable: Zippable) => {
         }
         reader.readAsDataURL(blob)
       } catch (error) {
-        reject(error as Error)
+
+        if (error instanceof Error) {
+          reject(error)
+        }
       }
     })
   },

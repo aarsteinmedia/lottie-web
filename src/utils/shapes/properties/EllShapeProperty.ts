@@ -9,9 +9,9 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
 export class EllShapeProperty extends ShapeBaseProperty {
-  _cPoint = roundCorner
-  d?: number
-  s: MultiDimensionalProperty
+  public _cPoint = roundCorner
+  public d?: number
+  public s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()

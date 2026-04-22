@@ -241,7 +241,7 @@ export class ZigZagModifier extends ShapeModifier {
       const { length } = this.shapes
 
       for (let i = 0; i < length; i++) {
-        shapeData = (this.shapes as unknown as ShapeProperty[])[i] as ShapeProperty
+        shapeData = this.shapes[i] as ShapeProperty
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()

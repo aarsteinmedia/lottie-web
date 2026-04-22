@@ -11,6 +11,7 @@ import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier
 import type { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCornersModifier'
 import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 import type { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
+import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { initialDefaultFrame } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
@@ -29,18 +30,18 @@ export class ShapeModifier extends DynamicPropertyContainer {
   elem?: ElementInterfaceIntersect
   frameId?: number | undefined
   k?: boolean
-  shapes: SVGShapeData[] = []
+  shapes: ShapeProperty[] = []
   addShape(data: SVGShapeData | CVShapeData) {
     if (this.closed) {
       return
     }
     // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
-    data.sh?.container?.addDynamicProperty(data.sh as DynamicPropertyContainer)
+    data.sh?.container?.addDynamicProperty(data.sh)
     const shapeData = {
       data,
       localShapeCollection: newShapeCollection(),
       shape: data.sh,
-    } as unknown as SVGShapeData
+    } as unknown as ShapeProperty
 
     this.shapes.push(shapeData)
     this.addShapeToModifier(shapeData)
@@ -49,7 +50,7 @@ export class ShapeModifier extends DynamicPropertyContainer {
     }
   }
 
-  addShapeToModifier(_shapeData: SVGShapeData) {
+  addShapeToModifier(_shapeData: ShapeProperty) {
     // Pass through
   }
 

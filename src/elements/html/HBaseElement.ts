@@ -65,10 +65,10 @@ export class HBaseElement extends RenderableElement {
   }
 
   override destroy() {
-    this.layerElement = null as unknown as SVGGElement
-    this.transformedElement = null as unknown as SVGGElement
+    this.layerElement = null
+    this.transformedElement = null
     if (this.matteElement) {
-      this.matteElement = null as unknown as SVGGElement
+      this.matteElement = null
     }
     if (this.maskManager) {
       this.maskManager.destroy()

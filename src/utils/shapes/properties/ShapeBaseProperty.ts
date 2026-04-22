@@ -18,23 +18,24 @@ import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContain
 import { clone } from '@/utils/pooling/ShapePool'
 
 export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
-  _caching?: Caching
-  _cachingAtTime?: Caching
+  public _caching?: Caching
+  public _cachingAtTime?: Caching
   public comp?: CompElementInterface | undefined
   public override data?: Shape = undefined
   public effectsSequence: ((arg: unknown) => ShapePath | undefined)[] = []
   public elem?: SVGShapeElement | CVShapeElement | HShapeElement
-  frameId?: number
+  public frameId?: number
   public k?: boolean
-  keyframesMetadata: KeyframesMetadata[] = []
+  public keyframesMetadata: KeyframesMetadata[] = []
   public kf?: boolean
   public localShapeCollection?: ShapeCollection
-  lock?: boolean
-  offsetTime = 0
-  p?: MultiDimensionalProperty
+  public lock?: boolean
+  public offsetTime = 0
+  public p?: MultiDimensionalProperty
   public paths?: ShapePath[] | ShapeCollection | undefined
+  public pathsData: ShapePath[] = []
   public pv?: ShapePath
-  ty?: ShapeType
+  public ty?: ShapeType
   public v?: ShapePath
   getValueAtTime(_frameNumFromProps: number, _num?: number): ShapePath | null {
     throw new Error(`${this.constructor.name}: Method getShapeValueAtTime is not implemented`)

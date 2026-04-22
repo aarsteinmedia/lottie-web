@@ -1,7 +1,6 @@
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
 import type { CVStyleElement, Shape } from '@/types'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { ShapeData } from '@/elements/helpers/shapes/ShapeData'
 import { ShapeType } from '@/utils/enums'
@@ -45,7 +44,7 @@ export class CVShapeData extends ShapeData {
       element,
       data,
       ty
-    ) as ShapeProperty
+    )
     const { length } = styles
     let styledShape
 
@@ -55,9 +54,9 @@ export class CVShapeData extends ShapeData {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           transforms: transformsManager.addTransformSequence(styles[i]?.transforms as any),
           trNodes: [],
-        } as unknown as CVShapeData
-        this.styledShapes.push(styledShape)
-        styles[i]?.elements.push(styledShape)
+        }
+        this.styledShapes.push(styledShape as unknown as CVShapeData)
+        styles[i]?.elements.push(styledShape as unknown as CVShapeData)
       }
     }
   }

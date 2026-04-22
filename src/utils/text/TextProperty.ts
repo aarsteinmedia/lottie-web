@@ -6,7 +6,6 @@ import type {
   ElementInterfaceIntersect,
   TextEffectFunction,
 } from '@/types'
-import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import type { LetterProps } from '@/utils/text/LetterProps'
 
 import {
@@ -89,7 +88,7 @@ export class TextProperty extends BaseProperty {
 
   override addEffect(effectFunction: TextEffectFunction) {
     this.effectsSequence.push(effectFunction)
-    this.elem.addDynamicProperty(this as unknown as DynamicPropertyContainer)
+    this.elem.addDynamicProperty(this)
   }
 
   buildFinalText(text: string) {
@@ -156,7 +155,7 @@ export class TextProperty extends BaseProperty {
   canResizeFont(_canResize: boolean) {
     this.canResize = _canResize
     this.recalculate(this.keysIndex)
-    this.elem.addDynamicProperty(this as unknown as DynamicPropertyContainer)
+    this.elem.addDynamicProperty(this)
   }
 
   completeTextData(documentData: DocumentData) {

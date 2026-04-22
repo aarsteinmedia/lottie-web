@@ -118,7 +118,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
   }
 
   override destroyBaseElement() {
-    this.layerElement = null as unknown as SVGGElement
+    this.layerElement = null
     this.matteElement = null as unknown as SVGGElement
     this.maskManager?.destroy()
   }

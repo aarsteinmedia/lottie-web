@@ -163,7 +163,7 @@ export class HCompElement extends CompElement {
       return new SVGCompElement(
         data,
         this.globalData,
-        this as unknown as ElementInterfaceIntersect
+        this
       )
     }
 

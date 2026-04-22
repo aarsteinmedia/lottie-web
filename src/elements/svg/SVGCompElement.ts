@@ -65,7 +65,7 @@ export class SVGCompElement extends SVGBaseElement {
     comp: CompElementInterface
   ) {
     super()
-    this.layers = data.layers as LottieLayer[] | undefined
+    this.layers = data.layers
     this.elements = this.layers ? createSizedArray(this.layers.length) : []
 
     this.initElement(
@@ -84,7 +84,7 @@ export class SVGCompElement extends SVGBaseElement {
     return new SVGCompElement(
       data,
       this.globalData,
-      this as unknown as ElementInterfaceIntersect
+      this
     )
   }
 }

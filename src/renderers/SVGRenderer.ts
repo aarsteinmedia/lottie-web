@@ -1,6 +1,5 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
-  ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
   SVGRendererConfig,
@@ -91,7 +90,7 @@ export class SVGRenderer extends SVGRendererBase {
     return new SVGCompElement(
       data,
       this.globalData,
-      this as unknown as ElementInterfaceIntersect
+      this
     )
   }
 }

@@ -1,7 +1,6 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
   CanvasRendererConfig,
-  ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
 } from '@/types'
@@ -71,7 +70,7 @@ export class CanvasRenderer extends CanvasRendererBase {
     return new CVCompElement(
       data,
       this.globalData,
-      this as unknown as ElementInterfaceIntersect
+      this
     )
   }
 }

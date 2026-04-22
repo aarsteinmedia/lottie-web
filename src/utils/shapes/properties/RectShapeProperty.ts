@@ -12,14 +12,14 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
 export class RectShapeProperty extends ShapeBaseProperty {
-  d?: number
-  ir?: ValueProperty
-  is?: ValueProperty
-  or?: ValueProperty
-  os?: ValueProperty
-  pt?: ValueProperty
-  r: ValueProperty
-  s: MultiDimensionalProperty
+  public d?: number
+  public ir?: ValueProperty
+  public is?: ValueProperty
+  public or?: ValueProperty
+  public os?: ValueProperty
+  public pt?: ValueProperty
+  public r: ValueProperty
+  public s: MultiDimensionalProperty
 
   constructor(elem: ElementInterfaceIntersect, data: Shape) {
     super()

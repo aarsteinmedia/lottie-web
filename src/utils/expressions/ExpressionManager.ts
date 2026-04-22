@@ -176,13 +176,13 @@ function $bm_neg(a: unknown) {
   if (tOfA === 'number' || a instanceof Number || tOfA === 'boolean') {
     return -(a as number)
   }
-  if ($bm_isInstanceOfArray(a as number[])) {
+  if ($bm_isInstanceOfArray(a)) {
 
-    const { length: lenA } = a as number[],
+    const { length: lenA } = a,
       retArr: number[] = []
 
     for (let i = 0; i < lenA; i++) {
-      retArr[i] = -Number((a as number[])[i])
+      retArr[i] = -Number(a[i])
     }
 
     return retArr

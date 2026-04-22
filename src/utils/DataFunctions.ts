@@ -57,7 +57,7 @@ function completeLayers(layers: LottieLayer[],
     switch (layerData.ty) {
       case 0: { // Precomposition Layer
         layerData.layers = findCompLayers(layerData.refId, comps) as LottieLayer[]
-        completeLayers(layerData.layers as LottieLayer[], comps)
+        completeLayers(layerData.layers, comps)
 
         break
       }
