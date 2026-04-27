@@ -268,8 +268,8 @@ export class Matrix {
     if (!angle) {
       return this
     }
-    const mCos = Math.cos(angle)
-    const mSin = Math.sin(angle)
+    const mCos = Math.cos(angle),
+      mSin = Math.sin(angle)
 
     return this._t(
       mCos, -mSin, 0, 0, mSin, mCos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
@@ -505,8 +505,45 @@ export class Matrix {
   }
 
   private _t(...args: number[]): this {
-    // @ts-expect-error: spread
-    return this.transform(...args)
+    // Support both the 2D (a,b,c,d,e,f) and 3D (16 values) call shapes.
+    // Using tuple types here fixes TS "spread argument must either have a tuple type..."
+    type Transform2D = readonly [number, number, number, number, number, number]
+    type Transform3D = Parameters<Matrix['transform']>
+    type TransformArgs = Transform2D | Transform3D
+
+    const tArgs = args as unknown as TransformArgs
+
+    if (tArgs.length === 6) {
+      const [
+        a2,
+        b2,
+        c2,
+        d2,
+        e2,
+        f2,
+      ] = tArgs
+
+      return this.transform(
+        a2,
+        b2,
+        0,
+        0,
+        c2,
+        d2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        e2,
+        f2,
+        0,
+        1
+      )
+    }
+
+    return this.transform(...tArgs)
   }
 
   private roundMatrixProperty(val: number): number {

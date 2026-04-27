@@ -12,6 +12,8 @@ import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalPro
 import { NoProperty } from '@/utils/properties/NoProperty'
 import { ValueProperty } from '@/utils/properties/ValueProperty'
 
+import { isArrayOfNum } from '.'
+
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
   dataFromProps?: VectorProperty<T> | ExpressionProperty,
@@ -21,20 +23,23 @@ function getProp<T = number | number[]>(
 ) {
   let data = dataFromProps
 
-  // console.log(data)
   if (data && 'sid' in data && data.sid) {
     data = elem.globalData?.slotManager?.getProp(data as unknown as LottieLayer)
   }
   let p
 
-  if (!(data?.k as number[] | undefined)?.length) {
+  if (!data) {
+    return
+  }
+
+  if (typeof data.k === 'number') {
     p = new ValueProperty(
       elem,
       data as VectorProperty,
       mult,
       container
     )
-  } else if (typeof (data?.k as number[])[0] === 'number') {
+  } else if (isArrayOfNum(data.k)) {
     p = new MultiDimensionalProperty(
       elem,
       data as VectorProperty<number[]>,

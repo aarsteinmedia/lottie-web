@@ -447,6 +447,7 @@ export class TransformProperty extends BaseProperty {
       throw new Error(`${this.constructor.name}: Cannot read 's' value`)
     }
 
+
     this.pre.scale(
       this.s.v[0], this.s.v[1], this.s.v[2]
     )

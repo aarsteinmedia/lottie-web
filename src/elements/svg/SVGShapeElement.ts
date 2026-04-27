@@ -78,9 +78,6 @@ export class SVGShapeElement extends ShapeElement {
     this.initElement(
       data, globalData, comp
     )
-
-    // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
-    // Moving any property that doesn't get too much access after initialization because of v8 way of handling more than 10 properties.
   }
 
   addToAnimatedContents(data: Shape, element: SVGElementInterface) {
@@ -253,6 +250,7 @@ export class SVGShapeElement extends ShapeElement {
     this.stylesList.push(styleOb)
     if (elementData) {
       this.addToAnimatedContents(data, elementData)
+
     }
 
     // if (data.ty === ShapeType.GradientFill) {
