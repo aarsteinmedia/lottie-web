@@ -22,6 +22,7 @@ import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import { CVShapeData } from '@/elements/helpers/shapes/CVShapeData'
 import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
 import { ShapeElement } from '@/elements/ShapeElement'
+import { toRGBString } from '@/utils'
 import {
   lineCapEnum,
   lineJoinEnum,
@@ -144,9 +145,7 @@ export class CVShapeElement extends ShapeElement {
             this as unknown as ElementInterfaceIntersect
           ) as MultiDimensionalProperty<number[]>
           if (!elementData.c.k) {
-            const rgb = elementData.c.v.map(c => Math.round(c * 255)).join(',')
-
-            styleElem.co = `rgb(${rgb})`
+            styleElem.co = toRGBString(elementData.c.v)
           }
           break
         }
@@ -432,9 +431,7 @@ export class CVShapeElement extends ShapeElement {
     const styleElem = itemData.style
 
     if (itemData.c._mdf || this._isFirstFrame) {
-      const rgb = itemData.c.v.map(c => Math.round(c * 255)).join(',')
-
-      styleElem.co = `rgb(${rgb})`
+      styleElem.co = toRGBString(itemData.c.v)
     }
     if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = itemData.o.v * groupTransform.opacity
@@ -632,9 +629,7 @@ export class CVShapeElement extends ShapeElement {
       styleElem.do = d.dashoffset[0]
     }
     if (c._mdf || this._isFirstFrame) {
-      const rgb = c.v.map(color => Math.floor(color)).join(',')
-
-      styleElem.co = `rgb(${rgb})`
+      styleElem.co = toRGBString(c.v)
     }
     if (o._mdf || groupTransform._opMdf || this._isFirstFrame) {
       styleElem.coOp = o.v * groupTransform.opacity

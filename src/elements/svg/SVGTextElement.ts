@@ -33,7 +33,6 @@ export class SVGTextLottieElement extends TextElement {
   override getBaseElement = SVGBaseElement.prototype.getBaseElement
   getMatte = SVGBaseElement.prototype.getMatte
   override initRendererElement = SVGBaseElement.prototype.initRendererElement
-  renderedFrame?: undefined | number
   renderedLetters: string[] = []
   override renderElement = SVGBaseElement.prototype.renderElement
   setMatte = SVGBaseElement.prototype.setMatte
@@ -390,7 +389,7 @@ export class SVGTextLottieElement extends TextElement {
     const { length } = this.textSpans
     let glyphElement
 
-    this.renderedFrame = this.comp?.renderedFrame
+    this.renderedFrame = this.comp?.renderedFrame ?? -1
     for (let i = 0; i < length; i++) {
       glyphElement = this.textSpans[i]?.glyph
       if (glyphElement) {
@@ -461,7 +460,7 @@ export class SVGTextLottieElement extends TextElement {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: layerElement is not implemented`)
     }
-    this.prepareFrame(Number(this.comp.renderedFrame) - this.data.st)
+    this.prepareFrame(this.comp.renderedFrame - this.data.st)
     this.renderInnerContent()
     if (this._sizeChanged) {
       this._sizeChanged = false

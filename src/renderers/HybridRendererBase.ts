@@ -39,7 +39,6 @@ export class HybridRendererBase extends BaseRenderer {
     super()
     this.animationItem = animationItem
     this.layers = null as unknown as LottieLayer[]
-    this.renderedFrame = -1
     this.renderConfig = {
       className: config?.className || '',
       filterSize: {

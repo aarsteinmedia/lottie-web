@@ -4,15 +4,12 @@ import type { MaskElement } from '@/elements/MaskElement'
 import type {
   CompElementInterface,
   ElementInterfaceIntersect,
-  // ExpressionInterface,
   GlobalData,
   LottieLayer,
   Shape,
-  // SVGElementInterface,
 } from '@/types'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import type { EffectsExpressionInterface } from '@/utils/expressions/EffectInterface'
-// import EffectsExpressionInterface from '@/utils/expressions/EffectInterface'
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
 import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
@@ -37,6 +34,7 @@ export abstract class BaseElement {
   layerId?: string
   layerInterface?: null | LayerExpressionInterface = null
   maskManager?: MaskElement | CVMaskElement
+  renderedFrame = -1
   shapesData: Shape[] = []
   type?: unknown
 

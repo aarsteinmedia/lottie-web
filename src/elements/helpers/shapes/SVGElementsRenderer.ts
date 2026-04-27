@@ -9,21 +9,13 @@ import type { Shape } from '@/types'
 import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
+import { toRGBString } from '@/utils'
 import { ShapeType } from '@/utils/enums'
 import { Matrix } from '@/utils/Matrix'
 import { buildShapeString } from '@/utils/shapes/buildShapeString'
 
 const _identityMatrix = new Matrix(),
   _matrixHelper = new Matrix()
-
-function toRGBString(v: number[]) {
-  // v is already scaled to 0..255 by property factory; keep it fast and allocation-light.
-  const r = (v[0] ?? 0) | 0
-  const g = (v[1] ?? 0) | 0
-  const b = (v[2] ?? 0) | 0
-
-  return `rgb(${r},${g},${b})`
-}
 
 export function createRenderFunction(data: Shape) {
   switch (data.ty) {

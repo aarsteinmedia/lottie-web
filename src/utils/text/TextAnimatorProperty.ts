@@ -16,7 +16,7 @@ import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapePrope
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
-import { isArray } from '@/utils'
+import { isArray, toRGBString } from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -838,14 +838,10 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             letterSw = sw < 0 ? 0 : sw
           }
           if (documentData.strokeColorAnim) {
-            const rgb = sc.map(c => Math.round(c * 255)).join(',')
-
-            letterSc = `rgb(${rgb})`
+            letterSc = toRGBString(sc)
           }
           if (documentData.fillColorAnim && documentData.fc) {
-            const rgb = fc.map(c => Math.round(c * 255)).join(',')
-
-            letterFc = `rgb(${rgb})`
+            letterFc = toRGBString(fc)
           }
 
           if (this._hasMaskedPath) {

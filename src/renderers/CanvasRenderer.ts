@@ -35,7 +35,6 @@ export class CanvasRenderer extends CanvasRendererBase {
     if (this.animationItem.wrapper) {
       this.renderConfig.dpr = config?.dpr || window.devicePixelRatio || 1
     }
-    this.renderedFrame = -1
     this.globalData = {
       _mdf: false,
       currentGlobalAlpha: -1,

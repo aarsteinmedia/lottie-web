@@ -3,7 +3,7 @@ import type {
   ElementInterfaceIntersect, Vector3, ViewData
 } from '@/types'
 
-import { createElementID } from '@/utils'
+import { createElementID, toRGBString } from '@/utils'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -179,11 +179,8 @@ export class SVGStrokeEffect {
       this.filterManager.effectElements[10]?.p.v === 2) &&
       (forceRender || this.filterManager.effectElements[3]?.p._mdf)
     ) {
-      const color = this.filterManager.effectElements[3]?.p.v as Vector3,
-        rgb = color.map(c => Math.round(c * 255)).join(',')
-
       this.pathMasker?.setAttribute('stroke',
-        `rgb(${rgb})`)
+        toRGBString(this.filterManager.effectElements[3]?.p.v as Vector3))
     }
   }
 }

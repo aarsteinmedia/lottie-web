@@ -36,7 +36,6 @@ export abstract class BaseRenderer extends FrameElement {
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
   pendingElements: ElementInterfaceIntersect[] = []
-  renderedFrame = -1
 
   addPendingElement(element: ElementInterfaceIntersect) {
     this.pendingElements.push(element)

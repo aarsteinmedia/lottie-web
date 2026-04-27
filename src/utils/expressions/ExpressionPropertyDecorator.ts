@@ -41,7 +41,7 @@ function loopOut(
   }
 
   const type = typeFromProps ? typeFromProps.toLowerCase() : '',
-    currentFrame = comp.renderedFrame ?? 0,
+    currentFrame = comp.renderedFrame,
     lastKeyFrame = keyframes[keyframes.length - 1]?.t ?? 0,
     { frameRate } = elem.comp.globalData ?? { frameRate: 60 }
 
@@ -149,7 +149,7 @@ function loopIn(
 
   const { frameRate } = elem.comp.globalData ?? { frameRate: 60 },
     type = typeFromProps ? typeFromProps.toLowerCase() : '',
-    currentFrame = comp.renderedFrame ?? 0,
+    currentFrame = comp.renderedFrame,
     firstKeyFrame = keyframes[0]?.t ?? 0
 
   if (currentFrame >= firstKeyFrame) {
@@ -243,7 +243,7 @@ function smooth(
     return pv
   }
 
-  const { renderedFrame = 0 } = comp ?? { renderedFrame: 0 },
+  const { renderedFrame } = comp ?? { renderedFrame: 0 },
     { frameRate } = comp?.globalData ?? { frameRate: 60 }
 
   const width = (widthFromProps || 0.4) * 0.5,

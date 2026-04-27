@@ -13,7 +13,6 @@ export abstract class CompElement extends RenderableDOMElement {
   currentFrame = 0
   elements: ElementInterfaceIntersect[] = []
   layers: LottieLayer[] = []
-  renderedFrame?: number
   tm?: ValueProperty
 
   override destroy() {

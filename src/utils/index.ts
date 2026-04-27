@@ -203,4 +203,18 @@ export const floatEqual = (a: number, b: number) =>
     element.style.transformOrigin = '0 0'
     element.style.backfaceVisibility = 'visible'
     element.style.transformStyle = 'preserve-3d'
+  },
+
+  toRGBString = (v?: number[]) => {
+    if (!v) {
+      return 'rgb(0,0,0)'
+    }
+
+    // v is already scaled to 0..255 by property factory; keep it fast and allocation-light.
+    const r = (v[0] ?? 0) | 0,
+      g = (v[1] ?? 0) | 0,
+      b = (v[2] ?? 0) | 0
+
+    return `rgb(${r},${g},${b})`
   }
+
