@@ -20,6 +20,7 @@ const files = [
   '6558.json',
   '6561.json',
   '1729.json',
+  'blackCat.json',
   'blackCat.lottie',
   'ux.lottie',
   'menuAnimation.json',
@@ -49,7 +50,7 @@ const files = [
   'Network-Encryption.lottie',
   'road-trip.lottie',
   'card-stack.lottie',
-  'apple-tv.lottie'
+  'apple-tv.lottie',
 ]
 
 export default files

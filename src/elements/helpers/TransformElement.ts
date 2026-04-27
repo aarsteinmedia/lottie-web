@@ -10,7 +10,6 @@ import TransformPropertyFactory, { type TransformProperty } from '@/utils/proper
 
 export abstract class TransformElement extends BaseElement {
   _isFirstFrame: boolean | number = false
-  finalTransform?: Transformer
   hierarchy: ElementInterfaceIntersect[] = []
   localTransforms: null | Transformer[] = null
   mHelper = new Matrix()
@@ -18,7 +17,7 @@ export abstract class TransformElement extends BaseElement {
 
   globalToLocal(point: Vector3) {
     let pt = point
-    const transforms = [ this.finalTransform]
+    const transforms = [this.finalTransform]
 
     let shouldTransform = true,
       { comp } = this

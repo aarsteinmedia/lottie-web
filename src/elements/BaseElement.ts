@@ -7,6 +7,7 @@ import type {
   GlobalData,
   LottieLayer,
   Shape,
+  Transformer
 } from '@/types'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import type { EffectsExpressionInterface } from '@/utils/expressions/EffectInterface'
@@ -27,6 +28,7 @@ export abstract class BaseElement {
   data?: LottieLayer
   dynamicProperties: DynamicPropertyContainer[] = []
   effectsManager?: EffectsManager
+  finalTransform?: Transformer
   frameDuration = 1
   globalData?: GlobalData
   itemsData: ShapeGroupData[] = []

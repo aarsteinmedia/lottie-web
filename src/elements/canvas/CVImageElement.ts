@@ -25,6 +25,7 @@ export class CVImageElement extends CVBaseElement {
     if (!globalData.imageLoader) {
       throw new Error(`${this.constructor.name} imageLoader is not implemented in globalData`)
     }
+
     this.img = globalData.imageLoader.getAsset(this.assetData) as HTMLCanvasElement
     this.initElement(
       data, globalData, comp
