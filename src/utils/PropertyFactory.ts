@@ -29,7 +29,7 @@ function getProp<T = number | number[]>(
   let p
 
   if (!data) {
-    return
+    return new NoProperty()
   }
 
   if (typeof data.k === 'number') {
