@@ -13,7 +13,9 @@ import { createElementID } from '@/utils'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
+import { Matrix } from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
+import { buildShapeString } from '@/utils/shapes/buildShapeString'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
 export class MaskElement {
@@ -25,6 +27,8 @@ export class MaskElement {
   solidPath = ''
   storedData: StoredData[] = []
   viewData: ViewData[]
+
+  private _identityMat = new Matrix()
   constructor(
     data: LottieLayer,
     element: ElementInterfaceIntersect,
@@ -232,42 +236,21 @@ export class MaskElement {
   drawPath(
     pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData
   ) {
-    let i,
-      oVector,
-      iVector,
-      vVector = pathNodes.v[0]?.join(','),
-      pathString = ` M${vVector}`
 
-    const len = pathNodes._length || 0
-
-    for (i = 1; i < len; i++) {
-      oVector = pathNodes.o[i - 1]?.join(',') ?? ''
-      iVector = pathNodes.i[i]?.join(',') ?? ''
-      vVector = pathNodes.v[i]?.join(',') ?? ''
-
-      pathString += ` C${oVector} ${iVector} ${vVector}`
-    }
-
-    if (pathNodes.c && len > 1) {
-      oVector = pathNodes.o[i - 1]?.join(',') ?? ''
-      iVector = pathNodes.i[0]?.join(',') ?? ''
-      vVector = pathNodes.v[0]?.join(',') ?? ''
-
-      pathString += ` C${oVector} ${iVector} ${vVector}`
-    }
+    const len = pathNodes._length,
+      pathString = buildShapeString(
+        pathNodes, len, pathNodes.c, this._identityMat
+      )
 
     if (viewData.lastPath !== pathString) {
       let pathShapeValue = ''
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (viewData.elem) {
-        if (pathNodes.c) {
-          pathShapeValue = pathData?.inv
-            ? this.solidPath + pathString
-            : pathString
-        }
-        viewData.elem.setAttribute('d', pathShapeValue)
+      if (pathNodes.c) {
+        pathShapeValue = pathData?.inv
+          ? this.solidPath + pathString
+          : pathString
       }
+      viewData.elem.setAttribute('d', pathShapeValue)
       viewData.lastPath = pathString
     }
   }
@@ -304,9 +287,10 @@ export class MaskElement {
       if (
         this.viewData[i]?.invRect &&
         (this.element.finalTransform?.mProp._mdf || frame)
+        && finalMat
       ) {
         this.viewData[i]?.invRect?.setAttribute('transform',
-          `${finalMat?.getInverseMatrix().to2dCSS()}`)
+          finalMat.getInverseMatrix().to2dCSS())
       }
       const storedData = this.storedData[i]
 
