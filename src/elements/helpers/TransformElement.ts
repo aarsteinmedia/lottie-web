@@ -133,6 +133,7 @@ export abstract class TransformElement extends BaseElement {
     if (!this.finalTransform) {
       throw new Error(`${this.constructor.name}: finalTransform is not initialized`)
     }
+
     this.finalTransform._opMdf = Boolean(this.finalTransform.mProp.o?._mdf || this._isFirstFrame)
     this.finalTransform._matMdf = Boolean(this.finalTransform.mProp._mdf || this._isFirstFrame)
 

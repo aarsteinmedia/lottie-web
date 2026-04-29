@@ -50,6 +50,7 @@ export class SVGGaussianBlurEffect {
       sigmaX = dimensions === 3 ? 0 : sigma,
       sigmaY = dimensions === 2 ? 0 : sigma
 
+
     this.feGaussianBlur.setAttribute('stdDeviation', `${sigmaX} ${sigmaY}`)
 
     // Repeat edges mapping:

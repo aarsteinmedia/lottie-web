@@ -149,7 +149,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
       case 1:
       case 3: {
         {
-          const masker = createNS('mask')
+          const masker = createNS<SVGMaskElement>('mask')
 
           masker.id = id
           masker.setAttribute('mask-type',
