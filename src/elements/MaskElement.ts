@@ -179,6 +179,7 @@ export class MaskElement {
           this.element, properties[i] as Shape, 3
         ),
       }
+
       const shapePath = this.viewData[i]?.prop?.v
 
       if (!this.viewData[i]?.prop?.k && shapePath) {
