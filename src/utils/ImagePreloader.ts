@@ -100,6 +100,7 @@ export class ImagePreloader {
 
   public destroy() {
     this.imagesLoadedCb = null
+    this.cleanupElementHelper()
     this.images.length = 0
   }
 
@@ -110,6 +111,7 @@ export class ImagePreloader {
       this.loadedFootagesCount === this.totalFootages &&
       this.imagesLoadedCb
     ) {
+      this.cleanupElementHelper()
       this.imagesLoadedCb(null)
     }
   }
@@ -135,6 +137,7 @@ export class ImagePreloader {
       this.loadedFootagesCount === this.totalFootages &&
       this.imagesLoadedCb
     ) {
+      this.cleanupElementHelper()
       this.imagesLoadedCb(null)
     }
   }
@@ -212,6 +215,33 @@ export class ImagePreloader {
     }
 
     return canvas
+  }
+
+  /**
+   * For SVG renderer we append temporary <image> nodes into `_elementHelper`
+   * so the browser starts fetching and fires load/error events (and Safari can
+   * be polled via getBBox). These must be removed once preloading finishes to
+   * avoid duplicating large `data:` URLs in the live SVG output.
+   */
+  private cleanupElementHelper() {
+    const helper = this._elementHelper
+
+    if (!helper) {
+      return
+    }
+
+    for (let i = 0; i < this.images.length; i++) {
+      const img = this.images[i]?.img
+
+      if (
+        img &&
+        typeof SVGImageElement !== 'undefined' &&
+        img instanceof SVGImageElement &&
+        img.parentNode === helper
+      ) {
+        helper.removeChild(img)
+      }
+    }
   }
 
   private createImgData(assetData: LottieAsset) {
