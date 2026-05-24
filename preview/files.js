@@ -22,6 +22,7 @@ const files = [
   '1729.json',
   'blackCat.json',
   'blackCat.lottie',
+  'ux.json',
   'ux.lottie',
   'menuAnimation.json',
   'optimized_m2acyje2.lottie',
