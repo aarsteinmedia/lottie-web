@@ -1,5 +1,5 @@
 import type {
-  ElementInterfaceIntersect, Shape, StrokeData, VectorProperty
+  ElementInterfaceIntersect, Shape, StrokeData, Vector2, VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
@@ -119,13 +119,14 @@ export class StarShapeProperty extends ShapeBaseProperty {
     }
 
     for (let i = 0; i < numPts; i++) {
-      let x = rad * Math.cos(currentAng)
-      let y = rad * Math.sin(currentAng)
-      const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y)
-      const oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
+      let x = rad * Math.cos(currentAng),
+        y = rad * Math.sin(currentAng)
+      const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
+        oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y),
+        pVal: Vector2 = Array.isArray(this.p.v) ? this.p.v : [0, 0]
 
-      x += this.p.v[0]
-      y += this.p.v[1]
+      x += pVal[0]
+      y += pVal[1]
       this.v?.setTripleAt(
         x,
         y,
@@ -179,10 +180,11 @@ export class StarShapeProperty extends ShapeBaseProperty {
       let x = rad * Math.cos(currentAng),
         y = rad * Math.sin(currentAng)
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
-        oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y)
+        oy = x === 0 && y === 0 ? 0 : -x / Math.sqrt(x * x + y * y),
+        pVal: Vector2 = Array.isArray(this.p?.v) ? this.p.v : [0, 0]
 
-      x += Number(this.p?.v[0])
-      y += Number(this.p?.v[1])
+      x += pVal[0]
+      y += pVal[1]
       this.v.setTripleAt(
         x,
         y,
@@ -194,10 +196,6 @@ export class StarShapeProperty extends ShapeBaseProperty {
         true
       )
 
-      /* this.v.v[i] = [x,y];
-                  this.v.i[i] = [x+ox*perimSegment*roundness*dir,y+oy*perimSegment*roundness*dir];
-                  this.v.o[i] = [x-ox*perimSegment*roundness*dir,y-oy*perimSegment*roundness*dir];
-                  this.v._length = numPts; */
       isLong = !isLong
       currentAng += angle * dir
     }

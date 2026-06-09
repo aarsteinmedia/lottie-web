@@ -48,7 +48,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
   }
 
   convertEllToPath() {
-    if (!this.p) {
+    if (typeof this.p?.v !== 'object') {
       return
     }
 

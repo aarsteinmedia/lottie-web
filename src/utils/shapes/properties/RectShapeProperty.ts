@@ -63,8 +63,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
   }
 
   convertRectToPath() {
-    if (!this.p) {
-      throw new Error(`${this.constructor.name}: p value is not implemented`)
+    if (typeof this.p?.v !== 'object') {
+      throw new TypeError(`${this.constructor.name}: p value is not implemented`)
     }
 
     const p0 = this.p.v[0],

@@ -1,6 +1,8 @@
 import type NodeCrypto from 'node:crypto'
 
 import type { BMMath } from '@/types'
+
+import { ARC4 } from '@/utils/ARC4'
 /*
  Copyright 2014 David Bau.
 
@@ -25,22 +27,32 @@ import type { BMMath } from '@/types'
 
  */
 
-interface ARC4Key {
-  g: (count: number) => number
-  i: number
-  j: unknown
-  S: unknown[]
+interface SeedRandomOptions {
+  entropy?: boolean
+  global?: boolean
+  pass?: PassHandler
+  state?: ARC4
 }
 
-interface SeedRandomOptions {
-  entropy?: boolean;
-  pass?: boolean
+type PassHandler = (
+  returnPRGN: PRNG,
+  returnSeed: string,
+  isMathCall: boolean,
+  state?: ARC4
+) => unknown
+
+interface PRNG {
+  double: PRNG
+  (): number
+  init32: () => number
+  quick: () => number
+  state?: () => ARC4
 }
 
 /**
  * Copies internal state of ARC4 to or from a plain object.
  */
-function copy(f: ARC4Key, t: ARC4Key) {
+function copy(f: ARC4, t: ARC4) {
   t.i = f.i
   t.j = f.j
   t.S = [...f.S]
@@ -117,7 +129,7 @@ function seedRandom(pool: number[], math: BMMath) {
   function seedrandom(
     seedFromProps: string | null,
     optionsFromProps?: SeedRandomOptions | boolean,
-    callback?: () => void
+    callback?: PassHandler
   ) {
     let options = optionsFromProps
     const key: number[] = []
@@ -133,13 +145,15 @@ function seedRandom(pool: number[], math: BMMath) {
     const shortseed = mixkey(flatten(seed, 3) as number, key)
 
     // Use the seed to initialize an ARC4 generator.
-    const arc4 = new ARC4(key)
+    const arc4 = new ARC4(
+      key, width, mask
+    )
 
-    // This function returns a random double in [0, 1) that contains
     /**
+     * This function returns a random double in [0, 1) that contains
      * Randomness in every bit of the mantissa of the IEEE 754 value.
      */
-    const prng = function () {
+    const prng = () => {
       /**
        * And no 'extra last byte'.
        */
@@ -167,112 +181,51 @@ function seedRandom(pool: number[], math: BMMath) {
       return (n + x) / d // Form the number within [0, 1).
     }
 
-    prng.int32 = function () { return arc4.g(4) | 0 }
-    prng.quick = function () { return arc4.g(4) / 0x100000000 }
+    prng.int32 = () => arc4.g(4) | 0
+    prng.quick = () => arc4.g(4) / 0x100000000
     prng.double = prng
 
     // Mix the randomness into accumulated entropy.
     mixkey(tostring(arc4.S), pool)
 
+    const defaultHandler: PassHandler = (
+      returnPRGN, returnSeed, isMathCall, state
+    ) => {
+      if (state) {
+        copy(state, arc4)
+        returnPRGN.state = () => copy(arc4, {} as ARC4)
+      }
+      if (isMathCall) {
+        math[rngname] = prng
+
+        return returnSeed
+      }
+
+      return returnPRGN
+    }
+
+    let handler = defaultHandler
+
+    if (options && options.pass) {
+      handler = options.pass
+    } else if (callback) {
+      handler = callback
+    }
+
     /**
      * Calling convention: what to return as a function of prng, seed, is_math.
      */
-    return (options.pass || callback ||
-      function (
-        prng, seed, isMathCall: boolean, state
-      ) {
-        if (state) {
-          // Load the arc4 state from the given state if it has an S array.
-          if (state.S) {
-            copy(state, arc4)
-          }
-          /**
-           * Only provide the .state method if requested via options.state.
-           */
-          prng.state = () => copy(arc4, {})
-        }
-
-        // If called as a method of Math (Math.seedrandom()), mutate
-        // Math.random because that is how seedrandom.js has worked since v1.0.
-        if (isMathCall) {
-          math[rngname] = prng
-
-          return seed
-        }
-
-        // Otherwise, it is a newer calling convention, so return the
-        // prng directly.
-        return prng
-      })(
-      prng,
+    return handler(
+      prng as unknown as PRNG,
       shortseed,
-      'global' in options ? options.global : this == math,
-      options.state
+      // @ts-expect-error: this is any
+      options && 'global' in options ? options.global : this === math,
+      options ? options.state : undefined
     )
   }
+
+  // @ts-expect-error: string number confusion
   math[`seed${rngname}`] = seedrandom
-
-  //
-  // ARC4
-  //
-  // An ARC4 implementation.  The constructor takes a key in the form of
-  // an array of at most (width) integers that should be 0 <= x < (width).
-  //
-  // The g(count) method returns a pseudorandom integer that concatenates
-  // the next (count) outputs from ARC4.  Its return value is a number x
-  // that is in the range 0 <= x < (width ^ count).
-
-  class ARC4 {
-    public i = 0
-    public j = 0
-    public S: number [] = []
-
-    constructor(keyFromProps: number[]) {
-      let key = keyFromProps,
-        { length: keyLen } = key,
-        i = 0,
-        j = 0,
-        t
-
-      const s = this.S
-
-      if (!keyLen) {
-        key = [keyLen++]
-      }
-
-      while (i < width) {
-        s[i] = i++
-      }
-
-      for (i = 0; i < width; i++) {
-        s[i] = s[j = mask & j + (key[i % keyLen] ?? 0) + (t = s[i] ?? 0)] ?? 0
-        s[j] = t
-      }
-    }
-
-    /**
-     * The "g" method returns the next (count) outputs as one number.
-     */
-    public g(countFromProps: number) {
-      let count = countFromProps,
-        /**
-         * Using instance members instead of closure state nearly doubles speed.
-         */
-        t,
-        r = 0
-      const s = this.S
-
-      while (count--) {
-        t = s[this.i = mask & this.i + 1] ?? 0
-        r = r * width + (s[mask & (s[this.i] = s[this.j = mask & this.j + t] ?? 0) + (s[this.j] = t)] ?? 0)
-      }
-
-      return r
-      // For robust unpredictability, the function call below automatically
-      // discards an initial batch of values.  This is called RC4-drop[256].
-      // See http://google.com/search?q=rsa+fluhrer+response&btnI
-    }
-  }
 
   /**
    * Mixes a string seed into a key that is an array of integers, and Returns a shortened string seed that is equivalent to the result key.
