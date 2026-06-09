@@ -1,6 +1,6 @@
 import type NodeCrypto from 'node:crypto'
 
-import type { BMMath as BMMathType } from '@/types'
+import type { BMMath } from '@/types'
 /*
  Copyright 2014 David Bau.
 
@@ -38,8 +38,8 @@ interface SeedRandomOptions {
 }
 
 /**
-   * Copies internal state of ARC4 to or from a plain object.
-   */
+ * Copies internal state of ARC4 to or from a plain object.
+ */
 function copy(f: ARC4Key, t: ARC4Key) {
   t.i = f.i
   t.j = f.j
@@ -49,8 +49,8 @@ function copy(f: ARC4Key, t: ARC4Key) {
 }
 
 /**
-   * Converts an object tree to nested arrays of strings.
-   */
+ * Converts an object tree to nested arrays of strings.
+ */
 function flatten(obj: unknown, depth = 0) {
   const result: (string | number)[] = [],
     typ = typeof obj
@@ -62,7 +62,7 @@ function flatten(obj: unknown, depth = 0) {
 
     for (let i = 0; i < length; i++) {
       try {
-        result.push(flatten((obj as string[])[keys[i]]) as number, depth - 1)
+        result.push(flatten((obj as string[])[keys[i] as keyof typeof obj]) as number, depth - 1)
       } catch (error) {
         //
       }
@@ -83,7 +83,7 @@ function tostring(a: number[]) {
   return String.fromCharCode.apply(0, a)
 }
 
-function seedRandom(pool: number[], math: BMMathType) {
+function seedRandom(pool: number[], math: BMMath) {
   //
   // The following constants are related to IEEE 754 limits.
   //
@@ -141,13 +141,15 @@ function seedRandom(pool: number[], math: BMMathType) {
      */
     const prng = function () {
       /**
-       *   And no 'extra last byte'.
+       * And no 'extra last byte'.
        */
-      let n = arc4.g(chunks), /**
-         * Start with a numerator n < 2 ^ 48.
+      let n = arc4.g(chunks),
+        /**
+         * Start with a numerator n \< 2 ^ 48.
          */
-        d = startdenom, /**
-         *   And denominator d = 2 ^ 48.
+        d = startdenom,
+        /**
+         * And denominator d = 2 ^ 48.
          */
         x = 0
 
@@ -177,22 +179,26 @@ function seedRandom(pool: number[], math: BMMathType) {
      */
     return (options.pass || callback ||
       function (
-        prng, seed, is_math_call, state
+        prng, seed, isMathCall: boolean, state
       ) {
         if (state) {
           // Load the arc4 state from the given state if it has an S array.
-          if (state.S) { copy(state, arc4) }
+          if (state.S) {
+            copy(state, arc4)
+          }
           /**
            * Only provide the .state method if requested via options.state.
            */
-          prng.state = function () { return copy(arc4, {}) }
+          prng.state = () => copy(arc4, {})
         }
 
         // If called as a method of Math (Math.seedrandom()), mutate
         // Math.random because that is how seedrandom.js has worked since v1.0.
-        if (is_math_call) { math[rngname] = prng
+        if (isMathCall) {
+          math[rngname] = prng
 
-          return seed }
+          return seed
+        }
 
         // Otherwise, it is a newer calling convention, so return the
         // prng directly.
@@ -216,44 +222,50 @@ function seedRandom(pool: number[], math: BMMathType) {
   // the next (count) outputs from ARC4.  Its return value is a number x
   // that is in the range 0 <= x < (width ^ count).
 
-  function ARC4(this: ARC4Key, keyFromProps: number[]): number {
-    let key = keyFromProps,
-      t,
-      keylen = key.length,
-      me = this,
-      i = 0,
-      j = me.i = me.j = 0,
-      s = me.S = []
+  class ARC4 {
+    public i = 0
+    public j = 0
+    public S: number [] = []
 
-    // The empty key [] is treated as [0].
-    if (!keylen) { key = [keylen++] }
+    constructor(keyFromProps: number[]) {
+      let key = keyFromProps,
+        { length: keyLen } = key,
+        i = 0,
+        j = 0,
+        t
 
-    // Set up S using the standard key scheduling algorithm.
-    while (i < width) {
-      s[i] = i++
-    }
-    for (i = 0; i < width; i++) {
-      s[i] = s[j = mask & j + key[i % keylen] + (t = s[i])]
-      s[j] = t
+      const s = this.S
+
+      if (!keyLen) {
+        key = [keyLen++]
+      }
+
+      while (i < width) {
+        s[i] = i++
+      }
+
+      for (i = 0; i < width; i++) {
+        s[i] = s[j = mask & j + (key[i % keyLen] ?? 0) + (t = s[i] ?? 0)] ?? 0
+        s[j] = t
+      }
     }
 
     /**
      * The "g" method returns the next (count) outputs as one number.
      */
-    me.g = function (countFromProps) {
-      let count = countFromProps
-      // Using instance members instead of closure state nearly doubles speed.
-      let t,
-        r = 0,
-        { i } = me,
-        { j } = me,
-        s = me.S
+    public g(countFromProps: number) {
+      let count = countFromProps,
+        /**
+         * Using instance members instead of closure state nearly doubles speed.
+         */
+        t,
+        r = 0
+      const s = this.S
 
       while (count--) {
-        t = s[i = mask & i + 1]
-        r = r * width + s[mask & (s[i] = s[j = mask & j + t]) + (s[j] = t)]
+        t = s[this.i = mask & this.i + 1] ?? 0
+        r = r * width + (s[mask & (s[this.i] = s[this.j = mask & this.j + t] ?? 0) + (s[this.j] = t)] ?? 0)
       }
-      me.i = i; me.j = j
 
       return r
       // For robust unpredictability, the function call below automatically
@@ -265,7 +277,7 @@ function seedRandom(pool: number[], math: BMMathType) {
   /**
    * Mixes a string seed into a key that is an array of integers, and Returns a shortened string seed that is equivalent to the result key.
    */
-  function mixkey(seed: number, key: number[]) {
+  function mixkey(seed: string | number, key: number[]) {
     const stringseed = `${seed}`
     let smear = 0,
       j = 0
@@ -321,8 +333,6 @@ function seedRandom(pool: number[], math: BMMathType) {
   // End anonymous scope, and pass initial values.
 }
 
-function initialize(BMMath: BMMathType) {
+export default function initialize(BMMath: BMMath) {
   seedRandom([], BMMath)
 }
-
-export default initialize
