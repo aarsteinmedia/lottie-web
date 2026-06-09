@@ -51,18 +51,18 @@ function copy(f: ARC4Key, t: ARC4Key) {
 /**
    * Converts an object tree to nested arrays of strings.
    */
-function flatten(obj: object | string, depth = 0): string | string[] {
-  const result: string[] = [],
-    isObj = typeof obj === 'object'
+function flatten(obj: unknown, depth = 0) {
+  const result: (string | number)[] = [],
+    typ = typeof obj
 
-  if (depth && isObj) {
+  if (depth && typ === 'object') {
 
-    const keys = Object.keys(obj),
+    const keys = Object.keys(obj as number[]),
       { length } = keys
 
     for (let i = 0; i < length; i++) {
       try {
-        result.push(flatten(obj[keys[i]]), depth - 1)
+        result.push(flatten((obj as string[])[keys[i]]) as number, depth - 1)
       } catch (error) {
         //
       }
@@ -73,7 +73,7 @@ function flatten(obj: object | string, depth = 0): string | string[] {
     return result
   }
 
-  return isObj ? `${obj}\0` : obj
+  return typ === 'string' ? obj : `${obj as number}\0`
 }
 
 /**
@@ -90,8 +90,8 @@ function seedRandom(pool: number[], math: BMMathType) {
   /**
      * Node.js crypto module, initialized at the bottom.
      */
-  const global = this,
-    width = 256, /**
+  const width = 256,
+    /**
      * Each RC4 output is 0 \<= x \< 256.
      */
     chunks = 6, /**
@@ -115,7 +115,7 @@ function seedRandom(pool: number[], math: BMMathType) {
    * This is the seedrandom function described above.
    */
   function seedrandom(
-    seed: string | null,
+    seedFromProps: string | null,
     optionsFromProps?: SeedRandomOptions | boolean,
     callback?: () => void
   ) {
@@ -125,8 +125,12 @@ function seedRandom(pool: number[], math: BMMathType) {
     options = options === true ? { entropy: true } : options ?? {}
 
     // Flatten the seed string or build one from local entropy if needed.
-    const shortseed = mixkey(flatten(options.entropy ? [seed, tostring(pool)] :
-      seed === null ? autoseed() : seed, 3), key)
+    let seed: null | ReturnType<typeof autoseed> = seedFromProps
+
+    if (options && options.entropy) {
+      seed = [seedFromProps ?? '', tostring(pool)]
+    } else {seed = seed ?? autoseed()}
+    const shortseed = mixkey(flatten(seed, 3) as number, key)
 
     // Use the seed to initialize an ARC4 generator.
     const arc4 = new ARC4(key)
@@ -137,8 +141,8 @@ function seedRandom(pool: number[], math: BMMathType) {
      */
     const prng = function () {
       /**
-         *   And no 'extra last byte'.
-         */
+       *   And no 'extra last byte'.
+       */
       let n = arc4.g(chunks), /**
          * Start with a numerator n < 2 ^ 48.
          */
@@ -200,7 +204,7 @@ function seedRandom(pool: number[], math: BMMathType) {
       options.state
     )
   }
-  math[`seed${ rngname}`] = seedrandom
+  math[`seed${rngname}`] = seedrandom
 
   //
   // ARC4
@@ -214,8 +218,12 @@ function seedRandom(pool: number[], math: BMMathType) {
 
   function ARC4(this: ARC4Key, keyFromProps: number[]): number {
     let key = keyFromProps,
-      t, keylen = key.length,
-      me = this, i = 0, j = me.i = me.j = 0, s = me.S = []
+      t,
+      keylen = key.length,
+      me = this,
+      i = 0,
+      j = me.i = me.j = 0,
+      s = me.S = []
 
     // The empty key [] is treated as [0].
     if (!keylen) { key = [keylen++] }
@@ -232,10 +240,14 @@ function seedRandom(pool: number[], math: BMMathType) {
     /**
      * The "g" method returns the next (count) outputs as one number.
      */
-    me.g = function (count) {
+    me.g = function (countFromProps) {
+      let count = countFromProps
       // Using instance members instead of closure state nearly doubles speed.
-      let t, r = 0,
-        { i } = me, { j } = me, s = me.S
+      let t,
+        r = 0,
+        { i } = me,
+        { j } = me,
+        s = me.S
 
       while (count--) {
         t = s[i = mask & i + 1]
@@ -250,57 +262,47 @@ function seedRandom(pool: number[], math: BMMathType) {
     }
   }
 
-  //
-  // copy()
-
-  //
-  // flatten()
-
-  //
-  // mixkey()
-  // Mixes a string seed into a key that is an array of integers, and
   /**
-   * Returns a shortened string seed that is equivalent to the result key.
+   * Mixes a string seed into a key that is an array of integers, and Returns a shortened string seed that is equivalent to the result key.
    */
-  function mixkey(seed, key) {
-    let stringseed = `${seed }`, smear, j = 0
+  function mixkey(seed: number, key: number[]) {
+    const stringseed = `${seed}`
+    let smear = 0,
+      j = 0
 
     while (j < stringseed.length) {
       key[mask & j] =
-        mask & (smear ^= key[mask & j] * 19) + stringseed.charCodeAt(j++)
+        mask & (smear ^= (key[mask & j] ?? 0) * 19) + stringseed.charCodeAt(j++)
     }
 
     return tostring(key)
   }
 
-  //
-  // autoseed()
-  // Returns an object for autoseeding, using window.crypto and Node crypto
   /**
-   * Module if available.
+   * Returns an object for autoseeding, using window.crypto and Node crypto Module if available.
    */
   function autoseed() {
     try {
-      if (nodecrypto) { return tostring(nodecrypto.randomBytes(width)) }
-      const out = new Uint8Array(width);
+      if (nodecrypto) {
+        return tostring(nodecrypto.randomBytes(width) as unknown as number[])
+      }
+      const out = new Uint8Array(width)
 
-      (global.crypto || global.msCrypto).getRandomValues(out)
+      global.crypto.getRandomValues(out)
 
-      return tostring(out)
+      return tostring(out as unknown as number[])
     } catch (error) {
-      const browser = global.navigator,
-        plugins = browser?.plugins
+      const { navigator: { plugins }, screen } = global
 
-      return [Date.now(),
+      return [
+        Date.now(),
         global,
         plugins,
-        global.screen,
-        tostring(pool)]
+        screen,
+        tostring(pool)
+      ]
     }
   }
-
-  //
-  // tostring()
 
   //
   // When seedrandom.js is loaded, we immediately mix a few bits
