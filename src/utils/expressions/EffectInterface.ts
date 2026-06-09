@@ -161,7 +161,9 @@ export class EffectsExpressionInterface {
       return expressionProperty()
     }
 
-    element.p?.setGroupProperty(new PropertyInterface('', propertyGroup))
+    if (element.p?.setGroupProperty) {
+      element.p.setGroupProperty(new PropertyInterface('', propertyGroup))
+    }
 
     return interfaceFunction
   }

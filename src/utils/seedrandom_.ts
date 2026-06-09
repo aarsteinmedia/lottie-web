@@ -1,3 +1,4 @@
+//@ts-nocheck eslint-disable
 import type NodeCrypto from 'node:crypto'
 
 import type { BMMath as BMMathType } from '@/types'
@@ -33,13 +34,10 @@ interface ARC4Key {
 }
 
 interface SeedRandomOptions {
-  entropy?: boolean;
-  pass?: boolean
+  entropy: boolean;
+  pass: boolean
 }
 
-/**
-   * Copies internal state of ARC4 to or from a plain object.
-   */
 function copy(f: ARC4Key, t: ARC4Key) {
   t.i = f.i
   t.j = f.j
@@ -48,14 +46,11 @@ function copy(f: ARC4Key, t: ARC4Key) {
   return t
 }
 
-/**
-   * Converts an object tree to nested arrays of strings.
-   */
-function flatten(obj: object | string, depth = 0): string | string[] {
-  const result: string[] = [],
-    isObj = typeof obj === 'object'
+function flatten(obj: unknown, depth = 0): string[] {
+  const result = [],
+    typ = typeof obj
 
-  if (depth && isObj) {
+  if (depth && typ === 'object') {
 
     const keys = Object.keys(obj),
       { length } = keys
@@ -73,47 +68,33 @@ function flatten(obj: object | string, depth = 0): string | string[] {
     return result
   }
 
-  return isObj ? `${obj}\0` : obj
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  return typ === 'string' ? obj : `${obj}\0`
 }
 
-/**
- * Converts an array of charcodes to a string.
- */
-function tostring(a: number[]) {
+function tostring(a: Buffer | Uint8Array) {
   return String.fromCharCode.apply(0, a)
 }
 
-function seedRandom(pool: number[], math: BMMathType) {
-  //
-  // The following constants are related to IEEE 754 limits.
-  //
+function seedRandom(pool: number[], math: Math) {
+//
+// The following constants are related to IEEE 754 limits.
+//
   /**
-     * Node.js crypto module, initialized at the bottom.
-     */
+   * Node.js crypto module, initialized at the bottom.
+   */
   const global = this,
-    width = 256, /**
-     * Each RC4 output is 0 \<= x \< 256.
-     */
-    chunks = 6, /**
-     * At least six RC4 outputs for each double.
-     */
-    digits = 52, /**
-     * There are 52 significant digits in a double.
-     */
-    rngname = 'random', /**
-     * Rngname: name for Math.random and Math.seedrandom.
-     */
+    width = 256,
+    chunks = 6,
+    digits = 52,
+    rngname = 'random',
     startdenom = math.pow(width, chunks),
     significance = math.pow(2, digits),
     overflow = significance * 2,
     mask = width - 1
   let nodecrypto: undefined | typeof NodeCrypto
 
-  //
-  // seedrandom()
-  /**
-   * This is the seedrandom function described above.
-   */
+
   function seedrandom(
     seed: string | null,
     optionsFromProps?: SeedRandomOptions | boolean,
@@ -125,26 +106,25 @@ function seedRandom(pool: number[], math: BMMathType) {
     options = options === true ? { entropy: true } : options ?? {}
 
     // Flatten the seed string or build one from local entropy if needed.
-    const shortseed = mixkey(flatten(options.entropy ? [seed, tostring(pool)] :
-      seed === null ? autoseed() : seed, 3), key)
+    let toFlatten: string | string[]
+
+    if (options.entropy) {
+      toFlatten = [seed, tostring(pool)]
+    } else {
+      toFlatten = seed ?? autoseed()
+    }
+    const shortseed = mixkey(flatten(toFlatten, 3), key)
 
     // Use the seed to initialize an ARC4 generator.
-    const arc4 = new ARC4(key)
+    const arc4: ARC4Key = new ARC4(key)
 
-    // This function returns a random double in [0, 1) that contains
+
+    const prng = function() {
     /**
-     * Randomness in every bit of the mantissa of the IEEE 754 value.
+     * And no 'extra last byte'.
      */
-    const prng = function () {
-      /**
-         *   And no 'extra last byte'.
-         */
-      let n = arc4.g(chunks), /**
-         * Start with a numerator n < 2 ^ 48.
-         */
-        d = startdenom, /**
-         *   And denominator d = 2 ^ 48.
-         */
+      let n: number = arc4.g(chunks),
+        d = startdenom,
         x = 0
 
       while (n < significance) { // Fill up all significant digits by
@@ -161,8 +141,8 @@ function seedRandom(pool: number[], math: BMMathType) {
       return (n + x) / d // Form the number within [0, 1).
     }
 
-    prng.int32 = function () { return arc4.g(4) | 0 }
-    prng.quick = function () { return arc4.g(4) / 0x100000000 }
+    prng.int32 = () => arc4.g(4) | 0
+    prng.quick = () => arc4.g(4) / 0x100000000
     prng.double = prng
 
     // Mix the randomness into accumulated entropy.
@@ -172,8 +152,8 @@ function seedRandom(pool: number[], math: BMMathType) {
      * Calling convention: what to return as a function of prng, seed, is_math.
      */
     return (options.pass || callback ||
-      function (
-        prng, seed, is_math_call, state
+      function(
+        prng, seed: string, is_math_call: boolean, state: ARC4Key
       ) {
         if (state) {
           // Load the arc4 state from the given state if it has an S array.
@@ -181,7 +161,7 @@ function seedRandom(pool: number[], math: BMMathType) {
           /**
            * Only provide the .state method if requested via options.state.
            */
-          prng.state = function () { return copy(arc4, {}) }
+          prng.state = () => copy(arc4, {})
         }
 
         // If called as a method of Math (Math.seedrandom()), mutate
@@ -214,32 +194,47 @@ function seedRandom(pool: number[], math: BMMathType) {
 
   function ARC4(this: ARC4Key, keyFromProps: number[]): number {
     let key = keyFromProps,
-      t, keylen = key.length,
-      me = this, i = 0, j = me.i = me.j = 0, s = me.S = []
+      t,
+      keylen = key.length,
+      me = this,
+      i = 0,
+      j = 0
+
+    const s = []
+
+    me.i = 0
+    me.j = 0
+    me.S = []
 
     // The empty key [] is treated as [0].
-    if (!keylen) { key = [keylen++] }
+    if (!keylen) {
+      key = [keylen++]
+    }
 
     // Set up S using the standard key scheduling algorithm.
     while (i < width) {
       s[i] = i++
     }
     for (i = 0; i < width; i++) {
-      s[i] = s[j = mask & j + key[i % keylen] + (t = s[i])]
+      s[i] = s[j = mask & j + (key[i % keylen] ?? 0) + (t = s[i] ?? 0)]
       s[j] = t
     }
 
     /**
      * The "g" method returns the next (count) outputs as one number.
      */
-    me.g = function (count) {
+    me.g = function(countFromProps: number) {
       // Using instance members instead of closure state nearly doubles speed.
-      let t, r = 0,
-        { i } = me, { j } = me, s = me.S
+      let count = countFromProps,
+        t,
+        r = 0,
+        {
+          i, j, S
+        } = me
 
       while (count--) {
-        t = s[i = mask & i + 1]
-        r = r * width + s[mask & (s[i] = s[j = mask & j + t]) + (s[j] = t)]
+        t = S[i = mask & i + 1]
+        r = r * width + S[mask & (S[i] = S[j = mask & j + t]) + (S[j] = t)]
       }
       me.i = i; me.j = j
 
@@ -250,38 +245,25 @@ function seedRandom(pool: number[], math: BMMathType) {
     }
   }
 
-  //
-  // copy()
 
-  //
-  // flatten()
-
-  //
-  // mixkey()
-  // Mixes a string seed into a key that is an array of integers, and
-  /**
-   * Returns a shortened string seed that is equivalent to the result key.
-   */
-  function mixkey(seed, key) {
-    let stringseed = `${seed }`, smear, j = 0
+  function mixkey(seed: number, key: Buffer) {
+    const stringseed = `${seed}`
+    let smear,
+      j = 0
 
     while (j < stringseed.length) {
       key[mask & j] =
-        mask & (smear ^= key[mask & j] * 19) + stringseed.charCodeAt(j++)
+                mask & (smear ^= key[mask & j] * 19) + stringseed.charCodeAt(j++)
     }
 
     return tostring(key)
   }
 
-  //
-  // autoseed()
-  // Returns an object for autoseeding, using window.crypto and Node crypto
-  /**
-   * Module if available.
-   */
   function autoseed() {
     try {
-      if (nodecrypto) { return tostring(nodecrypto.randomBytes(width)) }
+      if (nodecrypto) {
+        return tostring(nodecrypto.randomBytes(width))
+      }
       const out = new Uint8Array(width);
 
       (global.crypto || global.msCrypto).getRandomValues(out)
@@ -300,9 +282,6 @@ function seedRandom(pool: number[], math: BMMathType) {
   }
 
   //
-  // tostring()
-
-  //
   // When seedrandom.js is loaded, we immediately mix a few bits
   // from the built-in RNG into the entropy pool.  Because we do
   // not want to interfere with deterministic PRNG state later,
@@ -316,7 +295,7 @@ function seedRandom(pool: number[], math: BMMathType) {
   // either convention.
   //
 
-  // End anonymous scope, and pass initial values.
+// End anonymous scope, and pass initial values.
 }
 
 function initialize(BMMath: BMMathType) {

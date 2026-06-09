@@ -8,6 +8,7 @@ import type {
 import type { ShapeType } from '@/utils/enums'
 import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
+import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
@@ -31,7 +32,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public localShapeCollection?: ShapeCollection
   public lock?: boolean
   public offsetTime = 0
-  public p?: MultiDimensionalProperty
+  public p?: MultiDimensionalProperty | ValueProperty
   public paths?: ShapePath[] | ShapeCollection | undefined
   public pathsData: ShapePath[] = []
   public pv?: ShapePath

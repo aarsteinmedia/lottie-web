@@ -71,6 +71,7 @@ const BMMath = {} as unknown as BMMathType
 })()
 
 BMMath.random = Math.random
+
 BMMath.abs = (val: number | number[]) => {
   if (isArrayOfNum(val)) {
     const absArr = createSizedArray<number>(val.length),

@@ -459,41 +459,33 @@ function initiateExpression(
     propertyIndex = data.ix,
     active = !this.data || (this.data as Shape).hd !== true,
 
-    wiggle = (_freqFromProps: number, amp: number) => {
-      // let freq: number
+    wiggle = (freq = 5, amp = 20) => {
       const { pv: prop } = this,
         lenWiggle = isArrayOfNum(prop) ? prop.length : 1,
-        addedAmps = createTypedArray(ArrayType.Float32, lenWiggle),
-
-        freq = 5,
+        addedAmps = createTypedArray(ArrayType.Float32, lenWiggle) as number[],
         iterations = Math.floor(time * freq)
 
       let iWiggle = 0
 
       while (iWiggle < iterations) {
-        // var rnd = BMMath.random();
         for (let j = 0; j < lenWiggle; j++) {
-          ; (addedAmps[j] as number) += -amp + amp * 2 * BMMath.random()
-          // addedAmps[j] += -amp + amp*2*rnd;
+          addedAmps[j] = (addedAmps[j] ?? 0) + -amp + amp * 2 * Math.random()
         }
         iWiggle++
       }
-      // var rnd2 = BMMath.random();
       const periods = time * freq,
         perc = periods - Math.floor(periods),
         arr = createTypedArray(ArrayType.Float32, lenWiggle)
 
       if (lenWiggle > 1) {
         for (let j = 0; j < lenWiggle; j++) {
-          arr[j] = (prop as number[])[j] as number + (addedAmps[j] as number) + (-amp + amp * 2 * BMMath.random()) * perc
-          // arr[j] = this.pv[j] + addedAmps[j] + (-amp + amp*2*rnd)*perc;
-          // arr[i] = this.pv[i] + addedAmp + amp1*perc + amp2*(1-perc);
+          arr[j] = (prop as number[])[j] as number + (addedAmps[j] as number) + (-amp + amp * 2 * Math.random()) * perc
         }
 
         return arr
       }
 
-      return prop as number + (addedAmps[0] as number) + (-amp + amp * 2 * BMMath.random()) * perc
+      return prop as number + (addedAmps[0] as number) + (-amp + amp * 2 * Math.random()) * perc
     }
 
   if (thisProperty.loopIn) {
@@ -640,7 +632,7 @@ function initiateExpression(
   }
 
   function seedRandom(seed: number) {
-    BMMath.seedrandom(randSeed + seed)
+    Math.seedrandom(randSeed + seed)
   }
 
   function sourceRectAtTime() {
@@ -910,7 +902,7 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
       min = createTypedArray(ArrayType.Float32, len) as number[]
     }
     const arr = createTypedArray(ArrayType.Float32, len) as number[],
-      rnd = BMMath.random()
+      rnd = Math.random()
 
     for (let i = 0; i < len; i += 1) {
       arr[i] = (min as number[])[i] ?? 0 + rnd * (max[i] ?? 0 - ((min as number[])[i] ?? 0))
@@ -920,7 +912,7 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
   }
 
   min = min ?? 0
-  const rndm = BMMath.random()
+  const rndm = Math.random()
 
   return min as number + rndm * (max - (min as number))
 }
