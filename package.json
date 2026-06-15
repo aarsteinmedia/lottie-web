@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -55,6 +55,9 @@
     "lint:fix": "eslint ./src --fix",
     "deploy": "npm publish"
   },
+  "peerDependencies": {
+    "fflate": "^0.8.3"
+  },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -64,6 +67,7 @@
     "eslint": "^9.39.4",
     "eslint-config-sheriff": "^31.3.0",
     "eslint-plugin-perfectionist": "^5.9.0",
+    "fflate": "^0.8.3",
     "globals": "^17.6.0",
     "jiti": "^2.7.0",
     "prettier": "^3.8.4",
@@ -113,8 +117,5 @@
     "type": "paypal",
     "url": "https://www.paypal.com/donate/?hosted_button_id=E7C7DMN8KSQ6A"
   },
-  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
-  "dependencies": {
-    "fflate": "^0.8.3"
-  }
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
 }
