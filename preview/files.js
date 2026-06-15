@@ -52,7 +52,9 @@ const files = [
   'road-trip.lottie',
   'card-stack.lottie',
   'apple-tv.lottie',
-  'seedRandom.json'
+  'seedRandom.json',
+  'think.json',
+  'think.lottie'
 ]
 
 export default files
