@@ -17,7 +17,9 @@
       "DOM.Iterable",
       "ES2023"
     ],
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "module": "preserve",
     "moduleResolution": "Bundler",
     "noEmit": false,
