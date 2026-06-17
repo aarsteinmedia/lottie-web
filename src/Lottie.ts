@@ -171,11 +171,14 @@ export type {
   AnimationDirection,
   Vector2 as AnimationSegment,
   AnimationSettings,
+  CanvasRendererConfig,
   ConvertParams,
   HTMLBooleanAttribute,
+  HTMLRendererConfig,
   LottieAnimation,
   LottieAsset,
   LottieManifest,
   Result,
+  SVGRendererConfig,
   Vector2
 } from '@/types'

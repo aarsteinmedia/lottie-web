@@ -54,7 +54,7 @@ const files = [
   'apple-tv.lottie',
   'seedRandom.json',
   'think.json',
-  'think.lottie'
+  'think.lottie',
 ]
 
 export default files
