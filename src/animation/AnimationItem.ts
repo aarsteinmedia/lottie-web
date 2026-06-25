@@ -5,7 +5,6 @@ import type {
   AnimationConfiguration,
   AnimationData,
   AnimationDirection,
-  AnimationEventName,
   DocumentData,
   LottieAsset,
   LottieLayer,
@@ -33,7 +32,7 @@ import audioControllerFactory from '@/utils/audio/AudioController'
 import {
   completeAnimation, loadAnimation, loadData
 } from '@/utils/DataManager'
-import { RendererType } from '@/utils/enums'
+import { PlayerEvent, RendererType } from '@/utils/enums'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 import { getSubframeEnabled } from '@/utils/helpers/subframe'
@@ -54,19 +53,19 @@ export class AnimationItem extends BaseEvent {
   public currentFrame = 0
   public currentRawFrame = 0
   public drawnFrameEvent = new DrawnFrameEvent(
-    'drawnFrame',
+    PlayerEvent.DrawnFrame,
     0,
     1,
     0
   )
   public enterFrameEvent = new EnterFrameEvent(
-    'enterFrame',
+    PlayerEvent.EnterFrame,
     0,
     0,
     1
   )
   public enterFrameLegacyEvent = new EnterFrameEvent(
-    'enterFrame',
+    PlayerEvent.EnterFrame,
     0,
     0,
     1
@@ -142,7 +141,7 @@ export class AnimationItem extends BaseEvent {
       this.firstFrame = arr[0]
       this.setCurrentRawFrameValue(0.001 + offset)
     }
-    this.trigger('segmentStart')
+    this.trigger(PlayerEvent.SegmentStart)
   }
 
   public advanceTime(value: number) {
@@ -167,7 +166,7 @@ export class AnimationItem extends BaseEvent {
         if (!this.checkSegments(nextValue % this.totalFrames)) {
           this.setCurrentRawFrameValue(nextValue % this.totalFrames)
           this._completedLoop = true
-          this.trigger('loopComplete')
+          this.trigger(PlayerEvent.LoopComplete)
         }
       } else {
         this.setCurrentRawFrameValue(nextValue)
@@ -177,7 +176,7 @@ export class AnimationItem extends BaseEvent {
         if (this.loop && !(this.playCount-- <= 0 && this.loop !== true)) {
           this.setCurrentRawFrameValue(this.totalFrames + nextValue % this.totalFrames)
           if (this._completedLoop) {
-            this.trigger('loopComplete')
+            this.trigger(PlayerEvent.LoopComplete)
           } else {
             this._completedLoop = true
           }
@@ -192,7 +191,7 @@ export class AnimationItem extends BaseEvent {
     if (_isComplete) {
       this.setCurrentRawFrameValue(nextValue)
       this.pause()
-      this.trigger('complete')
+      this.trigger(PlayerEvent.Complete)
     }
   }
 
@@ -213,7 +212,7 @@ export class AnimationItem extends BaseEvent {
 
     this.renderer.initItems()
     setTimeout(() => {
-      this.trigger('DOMLoaded')
+      this.trigger(PlayerEvent.DOMLoaded)
     }, 0)
     this.gotoFrame()
     if (this.autoplay) {
@@ -253,7 +252,7 @@ export class AnimationItem extends BaseEvent {
       }
       this.renderer.searchExtraCompositions(animData.assets as unknown as LottieLayer[])
       this.markers = markerParser(animData.markers ?? []) as MarkerData[]
-      this.trigger('config_ready')
+      this.trigger(PlayerEvent.ConfigReady)
       this.preloadImages()
       this.loadSegments()
       this.updateFrameModifier()
@@ -272,7 +271,7 @@ export class AnimationItem extends BaseEvent {
     }
     this.renderer.destroy()
     this.imagePreloader.destroy()
-    this.trigger('destroy')
+    this.trigger(PlayerEvent.Destroy)
     this._cbs = {}
     this.onEnterFrame = null
     this.onLoopComplete = null
@@ -407,9 +406,9 @@ export class AnimationItem extends BaseEvent {
     ) {
       this.currentFrame = this.timeCompleted
     }
-    this.trigger('enterFrame')
+    this.trigger(PlayerEvent.EnterFrame)
     this.renderFrame()
-    this.trigger('drawnFrame')
+    this.trigger(PlayerEvent.DrawnFrame)
   }
 
   public hide() {
@@ -417,7 +416,7 @@ export class AnimationItem extends BaseEvent {
   }
 
   public imagesLoaded() {
-    this.trigger('loaded_images')
+    this.trigger(PlayerEvent.LoadedImages)
     this.checkLoaded()
   }
 
@@ -463,7 +462,7 @@ export class AnimationItem extends BaseEvent {
     const { segments } = this.animationData
 
     if (!segments || segments.length === 0 || !this.autoloadSegments) {
-      this.trigger('data_ready')
+      this.trigger(PlayerEvent.DataReady)
       this.timeCompleted = this.totalFrames
 
       return
@@ -476,7 +475,7 @@ export class AnimationItem extends BaseEvent {
     this.segmentPos++
     loadData(
       segmentPath, this.includeLayers.bind(this), () => {
-        this.trigger('data_failed')
+        this.trigger(PlayerEvent.DataFailed)
       }
     )
   }
@@ -507,7 +506,7 @@ export class AnimationItem extends BaseEvent {
   }
 
   public onSetupError() {
-    this.trigger('data_failed')
+    this.trigger(PlayerEvent.DataFailed)
   }
 
   public pause(name?: string) {
@@ -516,9 +515,9 @@ export class AnimationItem extends BaseEvent {
     }
     if (!this.isPaused) {
       this.isPaused = true
-      this.trigger('_pause')
+      this.trigger(PlayerEvent.Pause)
       this._idle = true
-      this.trigger('_idle')
+      this.trigger(PlayerEvent.Idle)
       this.audioController.pause()
     }
   }
@@ -531,13 +530,13 @@ export class AnimationItem extends BaseEvent {
     if (this.isPaused) {
 
       this.isPaused = false
-      this.trigger('_play')
+      this.trigger(PlayerEvent.Play)
       this.audioController.resume()
       if (this._idle) {
         this._idle = false
       }
     }
-    this.trigger('_active')
+    this.trigger(PlayerEvent.Active)
   }
 
   public playSegments(arr: Vector2 | Vector2[], forceFlag?: boolean) {
@@ -678,7 +677,7 @@ export class AnimationItem extends BaseEvent {
       if (params.path) {
         this.setParams(params)
       } else {
-        this.trigger('destroy')
+        this.trigger(PlayerEvent.Destroy)
       }
     } catch (error) {
       console.error(`${this.constructor.name}:\n`, error)
@@ -837,13 +836,13 @@ export class AnimationItem extends BaseEvent {
     }
   }
 
-  public trigger(name: AnimationEventName) {
+  public trigger(name: PlayerEvent) {
     try {
       if (!this._cbs[name]) {
         return
       }
       switch (name) {
-        case 'enterFrame': {
+        case PlayerEvent.EnterFrame: {
           const ev = this.enterFrameEvent
 
           ev.type = name
@@ -862,7 +861,7 @@ export class AnimationItem extends BaseEvent {
           this.onEnterFrame?.(legacyEv)
           break
         }
-        case 'drawnFrame': {
+        case PlayerEvent.DrawnFrame: {
           const ev = this.drawnFrameEvent
 
           ev.type = name
@@ -872,7 +871,7 @@ export class AnimationItem extends BaseEvent {
           this.triggerEvent(name, ev)
           break
         }
-        case 'loopComplete': {
+        case PlayerEvent.LoopComplete: {
           this.triggerEvent(name,
             new CompleteLoopEvent(
               name,
@@ -888,12 +887,12 @@ export class AnimationItem extends BaseEvent {
           ))
           break
         }
-        case 'complete': {
+        case PlayerEvent.Complete: {
           this.triggerEvent(name, new CompleteEvent(name, this.frameMult))
           this.onComplete?.(new CompleteEvent(name, this.frameMult))
           break
         }
-        case 'segmentStart': {
+        case PlayerEvent.SegmentStart: {
           this.triggerEvent(name,
             new SegmentStartEvent(
               name, this.firstFrame, this.totalFrames
@@ -903,7 +902,7 @@ export class AnimationItem extends BaseEvent {
           ))
           break
         }
-        case 'destroy': {
+        case PlayerEvent.Destroy: {
           this.triggerEvent(name, new DestroyEvent(name, this))
           this.onDestroy?.(new DestroyEvent(name, this))
           break
@@ -920,14 +919,14 @@ export class AnimationItem extends BaseEvent {
   public triggerConfigError(nativeError: unknown) {
     const error = new ConfigErrorEvent(nativeError, this.currentFrame)
 
-    this.triggerEvent('error', error)
+    this.triggerEvent(PlayerEvent.Error, error)
     this.onError?.(error)
   }
 
   public triggerRenderFrameError(nativeError: unknown) {
     const error = new RenderFrameErrorEvent(nativeError, this.currentFrame)
 
-    this.triggerEvent('error', error)
+    this.triggerEvent(PlayerEvent.Error, error)
 
     this.onError?.(error)
   }

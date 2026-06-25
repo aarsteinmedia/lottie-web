@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 
 import { AnimationItem } from '@/animation/AnimationItem'
-import { RendererType } from '@/utils/enums'
+import { PlayerEvent, RendererType } from '@/utils/enums'
 import { isServer } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 
@@ -274,9 +274,9 @@ function resume(nowTime: number) {
 }
 
 function setupAnimation(animItem: AnimationItem, element: HTMLElement | null) {
-  animItem.addEventListener('destroy', removeElement as () => void)
-  animItem.addEventListener('_active', addPlayingCount)
-  animItem.addEventListener('_idle', subtractPlayingCount)
+  animItem.addEventListener(PlayerEvent.Destroy, removeElement as () => void)
+  animItem.addEventListener(PlayerEvent.Active, addPlayingCount)
+  animItem.addEventListener(PlayerEvent.Idle, subtractPlayingCount)
   registeredAnimations.push({
     animation: animItem,
     elem: element

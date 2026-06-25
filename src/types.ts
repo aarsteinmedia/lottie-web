@@ -87,25 +87,6 @@ import type { TextAnimatorDataProperty } from '@/utils/text/TextAnimatorDataProp
 import type { TextProperty } from '@/utils/text/TextProperty'
 
 export type AnimationDirection = 1 | -1
-export type AnimationEventName =
-  | 'drawnFrame'
-  | 'enterFrame'
-  | 'loopComplete'
-  | 'complete'
-  | 'segmentStart'
-  | 'destroy'
-  | 'config_ready'
-  | 'data_ready'
-  | 'DOMLoaded'
-  | 'error'
-  | 'data_failed'
-  | 'loaded_images'
-  | '_play'
-  | '_pause'
-  | '_idle'
-  | '_active'
-  | 'configError'
-  | 'renderFrameError'
 
 export interface SVGGeometry {
   cx: number

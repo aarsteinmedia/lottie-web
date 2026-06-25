@@ -1,14 +1,15 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
-import type { AnimationDirection, AnimationEventName } from '@/types'
+import type { AnimationDirection } from '@/types'
+import { PlayerEvent } from '@/utils/enums'
 
 export class EnterFrameEvent {
   currentTime: number
   direction: AnimationDirection
   target?: undefined | AnimationItem
   totalTime: number
-  type: AnimationEventName
+  type: PlayerEvent
   constructor(
-    type: AnimationEventName,
+    type: PlayerEvent,
     currentTime: number,
     totalTime: number,
     frameMultiplier: number
@@ -23,8 +24,8 @@ export class EnterFrameEvent {
 export class CompleteEvent {
   direction: AnimationDirection
   target?: undefined | AnimationItem
-  type: AnimationEventName
-  constructor(type: AnimationEventName, frameMultiplier: number) {
+  type: PlayerEvent
+  constructor(type: PlayerEvent, frameMultiplier: number) {
     this.type = type
     this.direction = frameMultiplier < 0 ? -1 : 1
   }
@@ -35,9 +36,9 @@ export class DrawnFrameEvent {
   direction: AnimationDirection
   target?: undefined | AnimationItem
   totalTime: number
-  type: AnimationEventName
+  type: PlayerEvent
   constructor(
-    type: AnimationEventName,
+    type: PlayerEvent,
     currentTime: number,
     direction: AnimationDirection,
     totalTime: number
@@ -54,9 +55,9 @@ export class CompleteLoopEvent {
   direction: AnimationDirection
   target?: undefined | AnimationItem
   totalLoops: number | boolean
-  type: AnimationEventName
+  type: PlayerEvent
   constructor(
-    type: AnimationEventName,
+    type: PlayerEvent,
     totalLoops: number | boolean,
     currentLoop: number,
     frameMultiplier: number
@@ -73,9 +74,9 @@ export class SegmentStartEvent {
   firstFrame: number
   target?: undefined | AnimationItem
   totalFrames: number
-  type: AnimationEventName
+  type: PlayerEvent
   constructor(
-    type: AnimationEventName,
+    type: PlayerEvent,
     firstFrame: number,
     totalFrames: number
   ) {
@@ -87,8 +88,8 @@ export class SegmentStartEvent {
 
 export class DestroyEvent {
   target: AnimationItem
-  type: AnimationEventName
-  constructor(type: AnimationEventName, target: AnimationItem) {
+  type: PlayerEvent
+  constructor(type: PlayerEvent, target: AnimationItem) {
     this.type = type
     this.target = target
   }
@@ -98,7 +99,7 @@ export class RenderFrameErrorEvent {
   currentTime: number
   nativeError: unknown
   target?: undefined | AnimationItem
-  type: AnimationEventName = 'renderFrameError'
+  type = PlayerEvent.RenderFrameError
   constructor(nativeError: unknown, currentTime: number) {
     this.nativeError = nativeError
     this.currentTime = currentTime
@@ -108,7 +109,7 @@ export class RenderFrameErrorEvent {
 export class ConfigErrorEvent {
   nativeError: unknown
   target?: undefined | AnimationItem
-  type: AnimationEventName = 'configError'
+  type = PlayerEvent.ConfigError
   constructor(nativeError: unknown, _: number) {
     this.nativeError = nativeError
   }
@@ -117,8 +118,8 @@ export class ConfigErrorEvent {
 export class AnimationConfigErrorEvent {
   nativeError: unknown
   target?: undefined | AnimationItem
-  type: AnimationEventName
-  constructor(type: AnimationEventName, nativeError: unknown) {
+  type: PlayerEvent
+  constructor(type: PlayerEvent, nativeError: unknown) {
     this.type = type
     this.nativeError = nativeError
   }
@@ -126,10 +127,10 @@ export class AnimationConfigErrorEvent {
 
 export abstract class BaseEvent {
   _cbs: Partial<
-    Record<AnimationEventName, ((ev?: LottieEvent) => unknown)[] | null>
+    Record<PlayerEvent, ((ev?: LottieEvent) => unknown)[] | null>
   > = {}
 
-  addEventListener(eventName: AnimationEventName,
+  addEventListener(eventName: PlayerEvent,
     callback: (ev?: LottieEvent) => unknown): () => void {
     this._cbs[eventName] = this._cbs[eventName] ?? []
     this._cbs[eventName].push(callback)
@@ -139,7 +140,7 @@ export abstract class BaseEvent {
     }
   }
 
-  removeEventListener(eventName: AnimationEventName,
+  removeEventListener(eventName: PlayerEvent,
     callback?: (ev: LottieEvent) => unknown): void {
     if (!callback) {
       this._cbs[eventName] = null
@@ -165,7 +166,7 @@ export abstract class BaseEvent {
     }
   }
 
-  triggerEvent(eventName: AnimationEventName, ev?: LottieEvent): void {
+  triggerEvent(eventName: PlayerEvent, ev?: LottieEvent): void {
     if (!this._cbs[eventName]) {
       return
     }
