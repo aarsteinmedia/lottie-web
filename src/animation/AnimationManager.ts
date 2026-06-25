@@ -70,7 +70,7 @@ export function loadAnimation(params: AnimationConfiguration) {
     return animItem
   } catch (error) {
     console.error('AnimationManager:\n', error)
-    throw new Error('Could not load animation')
+    throw new Error('Could not load animation', { cause: error })
   }
 }
 

@@ -1,28 +1,7 @@
-import {
-  play,
-  pause,
-  togglePause,
-  setSpeed,
-  setDirection,
-  stop,
-  registerAnimation,
-  resize,
-  goToAndStop,
-  destroy,
-  freeze,
-  unfreeze,
-  setVolume,
-  mute,
-  unmute,
-  getRegisteredAnimations,
-  searchAnimations,
-  loadAnimation,
-} from '@/animation/AnimationManager'
 import { CVTransformEffect } from '@/effects/canvas/CVTransformEffect'
-import { registerEffect } from '@/elements/canvas/CVEffects'
-import { registerRenderer } from '@/renderers'
 import { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import { Modifier, RendererType } from '@/utils/enums'
+import { createLottie } from '@/utils/createLottie'
+import { RendererType } from '@/utils/enums'
 import {
   setExpressionInterfaces,
   setExpressionsPlugin,
@@ -31,98 +10,43 @@ import addPropertyDecorator from '@/utils/expressions/ExpressionPropertyDecorato
 import Expressions from '@/utils/expressions/Expressions'
 import addTextDecorator from '@/utils/expressions/ExpressionTextPropertyDecorator'
 import { getInterface } from '@/utils/expressions/InterfacesProvider'
-import { isServer } from '@/utils/helpers/constants'
-import { setLocationHref } from '@/utils/helpers/locationHref'
-import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
-import { setQuality } from '@/utils/helpers/resolution'
-import { setSubframeEnabled } from '@/utils/helpers/subframe'
-import { setWebWorker } from '@/utils/helpers/worker'
-import { registerModifier } from '@/utils/shapes/modifiers'
-import { OffsetPathModifier } from '@/utils/shapes/modifiers/OffsetPathModifier'
-import { PuckerAndBloatModifier } from '@/utils/shapes/modifiers/PuckerAndBloatModifier'
-import { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier'
-import { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCornersModifier'
-import { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
-import { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
-
-const version = '[[BM_VERSION]]'
 
 export const installPlugin = (type: string, plugin: typeof Expressions) => {
-    if (type === 'expressions') {
-      setExpressionsPlugin(plugin)
+  if (type === 'expressions') {
+    setExpressionsPlugin(plugin)
+  }
+}
+
+const { Lottie, setSubframeRendering } = createLottie({
+  effects: [
+    {
+      effect: CVTransformEffect,
+      id: 35,
+      isCanvas: true
+    }
+  ],
+  expressions: {
+    installPlugin,
+    registerExpressions: () => {
+      setExpressionsPlugin(Expressions)
+      setExpressionInterfaces(getInterface)
+      addPropertyDecorator()
+      addTextDecorator()
     }
   },
-
-  setSubframeRendering = (flag: boolean) => {
-    setSubframeEnabled(flag)
+  renderers: [{
+    renderer: CanvasRenderer,
+    rendererType: RendererType.Canvas
   }
-
-const Lottie = {
-  destroy,
-  freeze,
-  getRegisteredAnimations,
-  goToAndStop,
-  installPlugin,
-  loadAnimation,
-  mute,
-  pause,
-  play,
-  registerAnimation,
-  resize,
-  setDirection,
-  setLocationHref,
-  setPrefix,
-  setQuality,
-  setSpeed,
-  setSubframeRendering,
-  setVolume,
-  stop,
-  togglePause,
-  unfreeze,
-  unmute,
-  useWebWorker: setWebWorker,
-  version,
-}
-
-const readyStateCheckInterval = setInterval(checkReady, 100)
-
-function checkReady() {
-  if (isServer) {
-    return
-  }
-  if (document.readyState === 'complete') {
-
-    clearInterval(readyStateCheckInterval)
-    searchAnimations()
-  }
-}
-
-// Registering renderers
-registerRenderer(RendererType.Canvas, CanvasRenderer)
-
-// Registering shape modifiers
-registerModifier(Modifier.TrimModifier, TrimModifier)
-registerModifier(Modifier.PuckerAndBloatModifier, PuckerAndBloatModifier)
-registerModifier(Modifier.RepeaterModifier, RepeaterModifier)
-registerModifier(Modifier.RoundCornersModifier, RoundCornersModifier)
-registerModifier(Modifier.ZigZagModifier, ZigZagModifier)
-registerModifier(Modifier.OffsetPathModifier, OffsetPathModifier)
-
-// Registering expression plugin
-setExpressionsPlugin(Expressions)
-setExpressionInterfaces(getInterface)
-addPropertyDecorator()
-addTextDecorator()
-
-// Registering effects
-registerEffect(35, CVTransformEffect)
-
-export { loadAnimation }
+  ]
+})
 
 // eslint-disable-next-line import/no-default-export
 export default Lottie
 
+export { setSubframeRendering }
 export { type AnimationItem } from '@/animation/AnimationItem'
+export { loadAnimation } from '@/animation/AnimationManager'
 export type {
   AddAnimationParams,
   AnimationConfiguration,
@@ -130,7 +54,10 @@ export type {
   AnimationDirection,
   Vector2 as AnimationSegment,
   AnimationSettings,
+  CanvasRendererConfig,
   ConvertParams,
+  HTMLBooleanAttribute,
+  HTMLRendererConfig,
   LottieAnimation,
   LottieAsset,
   LottieManifest,

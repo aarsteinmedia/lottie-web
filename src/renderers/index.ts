@@ -4,7 +4,7 @@ import type { SVGRenderer } from '@/renderers/SVGRenderer'
 
 import { RendererType } from '@/utils/enums'
 
-type Renderer =
+export type Renderer =
   | typeof SVGRenderer
   | typeof CanvasRenderer
   | typeof HybridRenderer

@@ -1,6 +1,8 @@
 import type { Plugin, RollupOptions } from 'rollup'
 
 import { nodeResolve } from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dts } from 'rollup-plugin-dts'
@@ -9,6 +11,8 @@ import { serve } from 'rollup-plugin-opener'
 import pluginSummary from 'rollup-plugin-summary'
 import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
+
+import type PackageJSON from './package.json'
 
 const isProd = process.env.NODE_ENV !== 'development',
   { url } = import.meta,
@@ -27,12 +31,16 @@ const isProd = process.env.NODE_ENV !== 'development',
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join('')
   },
+
+  pkg = JSON.parse(readFileSync(new URL('./package.json', url), 'utf-8')) as typeof PackageJSON,
+
   plugins = ((): Plugin[] => isProd ? [
     typescriptPaths(),
     nodeResolve({
       extensions: ['.ts'],
       preferBuiltins: true,
     }),
+    replace({ '[[BM_VERSION]]': pkg.version }),
     swc(),
     pluginSummary(),
   ] : [
@@ -65,7 +73,7 @@ const isProd = process.env.NODE_ENV !== 'development',
     },
     {
       file: resolve(
-        __dirname, 'src', 'LottieSVG.ts'
+        __dirname, 'src', 'LottieSvg.ts'
       ),
       name: 'lottie-svg'
     },
