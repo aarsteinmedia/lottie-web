@@ -13,7 +13,7 @@ const sheriffOptions: SheriffSettings = {
   'react': false,
   'remeda': false,
   'storybook': false,
-  'vitest': false
+  'vitest': true
 }
 
 const ignores = [

@@ -1,32 +1,32 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
     ".": {
-      "default": "./dist/lottie.js",
-      "types": "./dist/lottie.d.ts"
+      "types": "./dist/lottie.d.ts",
+      "default": "./dist/lottie.js"
     },
     "./light": {
-      "default": "./dist/lottie-light.js",
-      "types": "./dist/lottie-light.d.ts"
+      "types": "./dist/lottie-light.d.ts",
+      "default": "./dist/lottie-light.js"
     },
     "./svg": {
-      "default": "./dist/lottie-svg.js",
-      "types": "./dist/lottie-svg.d.ts"
+      "types": "./dist/lottie-svg.d.ts",
+      "default": "./dist/lottie-svg.js"
     },
     "./canvas": {
-      "default": "./dist/lottie-canvas.js",
-      "types": "./dist/lottie-canvas.d.ts"
+      "types": "./dist/lottie-canvas.d.ts",
+      "default": "./dist/lottie-canvas.js"
     },
     "./utils": {
-      "default": "./dist/lottie-utils.js",
-      "types": "./dist/lottie-utils.d.ts"
+      "types": "./dist/lottie-utils.d.ts",
+      "default": "./dist/lottie-utils.js"
     },
     "./dotlottie": {
-      "default": "./dist/dotlottie.js",
-      "types": "./dist/dotlottie.d.ts"
+      "types": "./dist/dotlottie.d.ts",
+      "default": "./dist/dotlottie.js"
     }
   },
   "main": "./dist/lottie.js",
@@ -46,13 +46,17 @@
   "license": "GPL-2.0-or-later",
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "rollup -c --configPlugin typescript",
+    "build": "rollup -c --configPlugin @rollup/plugin-typescript",
     "prebuild:types": "rimraf ./types ",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
-    "dev": "rollup -cw --configPlugin typescript --environment NODE_ENV:development",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "dev": "rollup -cw --configPlugin @rollup/plugin-typescript --environment NODE_ENV:development",
+    "lint": "eslint ./src ./tests",
+    "lint:fix": "eslint ./src ./tests --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:build": "vitest run tests/build.test.ts",
+    "check": "pnpm lint && pnpm test && pnpm prod && pnpm test:build",
     "deploy": "npm publish"
   },
   "peerDependencies": {
@@ -71,6 +75,7 @@
     "fflate": "^0.8.3",
     "globals": "^17.7.0",
     "jiti": "^2.7.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.8.4",
     "rimraf": "^6.1.3",
     "rollup": "^4.62.2",
@@ -82,7 +87,8 @@
     "rollup-plugin-typescript-paths": "^1.5.0",
     "tsc-alias": "^1.8.17",
     "tslib": "^2.8.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   },
   "browserslist": {
     "production": [
