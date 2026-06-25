@@ -719,12 +719,13 @@ export class AnimationItem extends BaseEvent {
 
       this.renderer.setProjectInterface(this.projectInterface)
       this.animType = animType
-      if (
-        params.loop === '' ||
-        params.loop === null ||
-        params.loop === undefined ||
-        params.loop === true
-      ) {
+
+      if ([
+        '',
+        null,
+        undefined,
+        true
+      ].includes(params.loop as string)) {
         this.loop = true
       } else if (params.loop === false) {
         this.loop = false
