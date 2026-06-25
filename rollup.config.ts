@@ -40,7 +40,10 @@ const isProd = process.env.NODE_ENV !== 'development',
       extensions: ['.ts'],
       preferBuiltins: true,
     }),
-    replace({ '[[BM_VERSION]]': pkg.version }),
+    replace({
+      '[[BM_VERSION]]': pkg.version,
+      preventAssignment: true
+    }),
     swc(),
     pluginSummary(),
   ] : [
