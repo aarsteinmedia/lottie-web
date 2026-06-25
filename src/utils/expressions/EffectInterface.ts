@@ -29,7 +29,11 @@ export class GroupEffectInterface {
     const { length } = this.effects
 
     while (i < length) {
-      if (name === this.effects[i].nm || name === this.effects[i].mn || name === this.effects[i].ix) {
+      if ([
+        this.effects[i].nm,
+        this.effects[i].mn,
+        this.effects[i].ix
+      ].includes(name)) {
         return this.effectElements[i]
       }
       i++
@@ -67,35 +71,17 @@ export class EffectsExpressionInterface {
     data: LottieLayer, elements: EffectsManager, propertyGroup: (val: number | string) => BaseProperty, elem: ElementInterfaceIntersect
   ) {
 
-
-    // class GroupInterface {
-    //   getInterface(name: string) {
-    //     const effects = data.ef ?? []
-    //     let i = 0
-    //     const { length: jLen } = effects
-
-    //     while (i < jLen) {
-    //       if (name === effects[i].nm || name === effects[i].mn || name === effects[i].ix) {
-    //         if (effects[i].ty === 5) {
-    //           return effectElements[i]
-    //         }
-
-    //         return effectElements[i]()
-    //       }
-    //       i++
-    //     }
-    //     throw new Error()
-    //   }
-    // }
-
-
     const groupInterface = (name: string | number) => {
       const effects = data.ef ?? []
       let i = 0
       const { length: jLen } = effects
 
       while (i < jLen) {
-        if (name === effects[i].nm || name === effects[i].mn || name === effects[i].ix) {
+        if ([
+          effects[i].nm,
+          effects[i].mn,
+          effects[i].ix
+        ].includes(name)) {
           if (effects[i].ty === 5) {
             return this.effectElements[i]
           }
@@ -105,7 +91,7 @@ export class EffectsExpressionInterface {
         }
         i++
       }
-      throw new Error()
+      throw new Error('Could not create Group Interface')
     }
     const _propertyGroup = new PropertyGroupFactory(groupInterface, propertyGroup),
       { length } = data.ef ?? []

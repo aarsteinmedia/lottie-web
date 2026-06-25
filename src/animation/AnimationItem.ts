@@ -724,8 +724,9 @@ export class AnimationItem extends BaseEvent {
         '',
         null,
         undefined,
-        true
-      ].includes(params.loop as string)) {
+        true,
+        1
+      ].includes(params.loop)) {
         this.loop = true
       } else if (params.loop === false) {
         this.loop = false

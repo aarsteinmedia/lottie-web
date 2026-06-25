@@ -46,7 +46,14 @@ export class ShapePathInterface {
   }
 
   getInterface(val: string | number) {
-    if (val === 'Shape' || val === 'shape' || val === 'Path' || val === 'path' || val === 'ADBE Vector Shape' || val === 2) {
+    if ([
+      'Shape',
+      'shape',
+      'Path',
+      'path',
+      'ADBE Vector Shape',
+      2
+    ].includes(val)) {
       return this.path
     }
 

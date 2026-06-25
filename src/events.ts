@@ -1,5 +1,6 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
 import type { AnimationDirection } from '@/types'
+
 import { PlayerEvent } from '@/utils/enums'
 
 export class EnterFrameEvent {

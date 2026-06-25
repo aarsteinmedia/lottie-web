@@ -152,7 +152,11 @@ export const floatEqual = (a: number, b: number) =>
     'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset,
 
   isDeclaration = (str: string) => {
-    return str === 'var' || str === 'let' || str === 'const'
+    return [
+      'var',
+      'let',
+      'const'
+    ].includes(str)
   },
 
   isShapePath = (el?: PoolElement): el is ShapePath => {

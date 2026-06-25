@@ -1,5 +1,5 @@
-import { isServer, PlayMode, PreserveAspectRatio, namespaceSVG, RendererType, createElementID, PlayerEvents, download, getFilename, clamp } from '@aarsteinmedia/lottie-web/utils';
-export { PlayMode, PlayerEvents, RendererType } from '@aarsteinmedia/lottie-web/utils';
+import { isServer, PlayMode, PreserveAspectRatio, namespaceSVG, RendererType, createElementID, PlayerEvent, download, getFilename, clamp } from '@aarsteinmedia/lottie-web/utils';
+export { PlayMode, PlayerEvent, RendererType } from '@aarsteinmedia/lottie-web/utils';
 import Lottie from '@aarsteinmedia/lottie-web/light';
 import { convert, getAnimationData } from '@aarsteinmedia/lottie-web/dotlottie';
 
@@ -829,11 +829,11 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
         }
         // Add intersection observer for detecting component being out-of-view.
         this._addIntersectionObserver();
-        this.dispatchEvent(new CustomEvent(PlayerEvents.Rendered));
+        this.dispatchEvent(new CustomEvent(PlayerEvent.Rendered));
       })();
     } catch (error) {
       console.error(error);
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Error));
     }
   }
   convert(_params) {
@@ -848,7 +848,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     this.playerState = PlayerState.Destroyed;
     this._lottieInstance.destroy();
     this._lottieInstance = null;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Destroyed));
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Destroyed));
     this.remove();
     document.removeEventListener('visibilitychange', this._onVisibilityChange);
   }
@@ -975,7 +975,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
       console.error(error);
       this._errorMessage = handleErrors(error).message;
       this.playerState = PlayerState.Error;
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Error));
     }
   }
   loadAnimation(_config) {
@@ -997,7 +997,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     let hasError = false;
     try {
       this._lottieInstance.pause();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Pause));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Pause));
     } catch (error) {
       hasError = true;
       console.error(error);
@@ -1015,7 +1015,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     let hasError = false;
     try {
       this._lottieInstance.play();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Play));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Play));
     } catch (error) {
       hasError = true;
       console.error(error);
@@ -1193,7 +1193,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     this._playerState.count = 0;
     try {
       this._lottieInstance.stop();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Stop));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Stop));
     } finally {
       this.playerState = PlayerState.Stopped;
     }
@@ -1265,7 +1265,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     this._playerState.prev = this.playerState;
     try {
       this._lottieInstance.pause();
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Freeze));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Freeze));
     } finally {
       this.playerState = PlayerState.Frozen;
     }
@@ -1379,7 +1379,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     const { currentFrame, totalFrames } = this._lottieInstance;
     this._seeker = Math.round(currentFrame / totalFrames * 100);
     this.playerState = PlayerState.Completed;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Complete, {
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Complete, {
       detail: {
         frame: currentFrame,
         seeker: this._seeker
@@ -1388,14 +1388,14 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
   }
   _dataFailed() {
     this.playerState = PlayerState.Error;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Error));
   }
   _dataReady() {
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Load));
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Load));
   }
   _DOMLoaded() {
     this._playerState.loaded = true;
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Ready));
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Ready));
   }
   _enterFrame() {
     if (!this._lottieInstance) {
@@ -1403,7 +1403,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     }
     const { currentFrame, totalFrames } = this._lottieInstance;
     this._seeker = Math.round(currentFrame / totalFrames * 100);
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Frame, {
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Frame, {
       detail: {
         frame: currentFrame,
         seeker: this._seeker
@@ -1535,11 +1535,11 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
       if (this._playerState.count >= this.count) {
         this.setLoop(false);
         this.playerState = PlayerState.Completed;
-        this.dispatchEvent(new CustomEvent(PlayerEvents.Complete));
+        this.dispatchEvent(new CustomEvent(PlayerEvent.Complete));
         return;
       }
     }
-    this.dispatchEvent(new CustomEvent(PlayerEvents.Loop));
+    this.dispatchEvent(new CustomEvent(PlayerEvent.Loop));
     if (this._isBounce) {
       this._lottieInstance.goToAndStop(playDirection === -1 ? inPoint : outPoint * 0.99, true);
       this._lottieInstance.setDirection(playDirection * -1);
@@ -1644,7 +1644,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
       // Remove event listeners to new Lottie instance, and add new
       this._removeEventListeners();
       this._addEventListeners();
-      this.dispatchEvent(new CustomEvent(isPrevious ? PlayerEvents.Previous : PlayerEvents.Next));
+      this.dispatchEvent(new CustomEvent(isPrevious ? PlayerEvent.Previous : PlayerEvent.Next));
       if (this._multiAnimationSettings[this._currentAnimation]?.autoplay ?? this.autoplay) {
         if (this.animateOnScroll) {
           this._lottieInstance.goToAndStop(0, true);
@@ -1660,7 +1660,7 @@ const notImplemented = 'Method is not implemented', getStyles = async () => {
     } catch (error) {
       this._errorMessage = handleErrors(error).message;
       this.playerState = PlayerState.Error;
-      this.dispatchEvent(new CustomEvent(PlayerEvents.Error));
+      this.dispatchEvent(new CustomEvent(PlayerEvent.Error));
     }
   }
     /**

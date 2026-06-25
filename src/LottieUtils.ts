@@ -13,7 +13,7 @@ export {
   parseBase64
 } from '@/utils'
 export {
-  ArrayType, PlayerEvents, PlayMode, PreserveAspectRatio, RendererType, ShapeType
+  ArrayType, PlayerEvent, PlayMode, PreserveAspectRatio, RendererType, ShapeType
 } from '@/utils/enums'
 export {
   degToRads, inBrowser, isSafari, isServer, namespaceSVG
