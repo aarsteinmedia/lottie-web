@@ -39,12 +39,12 @@ export class PuckerAndBloatModifier extends ShapeModifier {
     let vX, vY, oX, oY, iX, iY
 
     for (i = 0; i < pathLength; i++) {
-      vX = path.v[i]?.[0] ?? 0 + (centerPoint[0] ?? 0 - (path.v[i]?.[0] ?? 0)) * percent
-      vY = path.v[i]?.[1] ?? 0 + (centerPoint[1] ?? 0 - (path.v[i]?.[1] ?? 0)) * percent
-      oX = path.o[i]?.[0] ?? 0 + (centerPoint[0] ?? 0 - (path.o[i]?.[0] ?? 0)) * -percent
-      oY = path.o[i]?.[1] ?? 0 + (centerPoint[1] ?? 0 - (path.o[i]?.[1] ?? 0)) * -percent
-      iX = path.i[i]?.[0] ?? 0 + (centerPoint[0] ?? 0 - (path.i[i]?.[0] ?? 0)) * -percent
-      iY = path.i[i]?.[1] ?? 0 + (centerPoint[1] ?? 0 - (path.i[i]?.[1] ?? 0)) * -percent
+      vX = (path.v[i]?.[0] ?? 0) + ((centerPoint[0] ?? 0) - (path.v[i]?.[0] ?? 0)) * percent
+      vY = (path.v[i]?.[1] ?? 0) + ((centerPoint[1] ?? 0) - (path.v[i]?.[1] ?? 0)) * percent
+      oX = (path.o[i]?.[0] ?? 0) + ((centerPoint[0] ?? 0) - (path.o[i]?.[0] ?? 0)) * -percent
+      oY = (path.o[i]?.[1] ?? 0) + ((centerPoint[1] ?? 0) - (path.o[i]?.[1] ?? 0)) * -percent
+      iX = (path.i[i]?.[0] ?? 0) + ((centerPoint[0] ?? 0) - (path.i[i]?.[0] ?? 0)) * -percent
+      iY = (path.i[i]?.[1] ?? 0) + ((centerPoint[1] ?? 0) - (path.i[i]?.[1] ?? 0)) * -percent
       clonedPath.setTripleAt(
         vX, vY, oX, oY, iX, iY, i
       )

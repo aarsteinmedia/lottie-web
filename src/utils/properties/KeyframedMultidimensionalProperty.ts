@@ -36,15 +36,15 @@ export class KeyframedMultidimensionalProperty<
           s.length === 2 &&
           !(s[0] === e[0] && s[1] === e[1]) &&
           pointOnLine2D(
-            s[0] ?? 0, s[1] ?? 0, e[0] ?? 0, e[1] ?? 0, s[0] ?? 0 + (to[0] ?? 0), s[1] ?? 0 + (to[1] ?? 0)
+            s[0] ?? 0, s[1] ?? 0, e[0] ?? 0, e[1] ?? 0, (s[0] ?? 0) + (to[0] ?? 0), (s[1] ?? 0) + (to[1] ?? 0)
           ) &&
           pointOnLine2D(
             s[0] ?? 0,
             s[1] ?? 0,
             e[0] ?? 0,
             e[1] ?? 0,
-            e[0] ?? 0 + (ti[0] ?? 0),
-            e[1] ?? 0 + (ti[1] ?? 0)
+            (e[0] ?? 0) + (ti[0] ?? 0),
+            (e[1] ?? 0) + (ti[1] ?? 0)
           ) ||
           s.length === 3 &&
           !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]) &&
@@ -55,9 +55,9 @@ export class KeyframedMultidimensionalProperty<
             e[0] ?? 0,
             e[1] ?? 0,
             e[2] ?? 0,
-            s[0] ?? 0 + (to[0] ?? 0),
-            s[1] ?? 0 + (to[1] ?? 0),
-            s[2] ?? 0 + (to[2] ?? 0)
+            (s[0] ?? 0) + (to[0] ?? 0),
+            (s[1] ?? 0) + (to[1] ?? 0),
+            (s[2] ?? 0) + (to[2] ?? 0)
           ) &&
           pointOnLine3D(
             s[0] ?? 0,
@@ -66,9 +66,9 @@ export class KeyframedMultidimensionalProperty<
             e[0] ?? 0,
             e[1] ?? 0,
             e[2] ?? 0,
-            e[0] ?? 0 + (ti[0] ?? 0),
-            e[1] ?? 0 + (ti[1] ?? 0),
-            e[2] ?? 0 + (ti[2] ?? 0)
+            (e[0] ?? 0) + (ti[0] ?? 0),
+            (e[1] ?? 0) + (ti[1] ?? 0),
+            (e[2] ?? 0) + (ti[2] ?? 0)
           )
         ) {
           ; (data.k[i] as Keyframe).to = null

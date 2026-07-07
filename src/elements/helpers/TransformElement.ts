@@ -123,7 +123,7 @@ export abstract class TransformElement extends BaseElement {
       let localOp = this.finalTransform.localOpacity
 
       for (i = 0; i < length; i++) {
-        localOp *= this.localTransforms[i]?.opacity ?? 1 * 0.01
+        localOp *= (this.localTransforms[i]?.opacity ?? 1) * 0.01
       }
       this.finalTransform.localOpacity = localOp
     }

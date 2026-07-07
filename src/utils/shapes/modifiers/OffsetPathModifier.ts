@@ -22,9 +22,9 @@ import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 interface Segment { points: Vector2[] }
 
 const crossProduct = (a: number[], b: number[]) => [
-    a[1] ?? 0 * (b[2] ?? 0) - (a[2] ?? 0) * (b[1] ?? 0),
-    a[2] ?? 0 * (b[0] ?? 0) - (a[0] ?? 0) * (b[2] ?? 0),
-    a[0] ?? 0 * (b[1] ?? 0) - (a[1] ?? 0) * (b[0] ?? 0),
+    (a[1] ?? 0) * (b[2] ?? 0) - (a[2] ?? 0) * (b[1] ?? 0),
+    (a[2] ?? 0) * (b[0] ?? 0) - (a[0] ?? 0) * (b[2] ?? 0),
+    (a[0] ?? 0) * (b[1] ?? 0) - (a[1] ?? 0) * (b[0] ?? 0),
   ],
 
   polarOffset = (
@@ -72,7 +72,7 @@ const crossProduct = (a: number[], b: number[]) => [
       return null
     }
 
-    return [r[0] ?? 0 / (r[2] ?? 0), r[1] ?? 0 / (r[2] ?? 0)]
+    return [(r[0] ?? 0) / (r[2] ?? 0), (r[1] ?? 0) / (r[2] ?? 0)]
   },
 
   pointDistance = (p1: Vector2, p2: Vector2) =>
@@ -231,7 +231,7 @@ const crossProduct = (a: number[], b: number[]) => [
 
     split = segment.split(flex[0] ?? 0)
     left = split[0] as PolynomialBezier
-    const t = (flex[1] ?? 0 - (flex[0] ?? 0)) / (1 - (flex[0] ?? 0))
+    const t = ((flex[1] ?? 0) - (flex[0] ?? 0)) / (1 - (flex[0] ?? 0))
 
     split = split[1]?.split(t) as PolynomialBezier[]
     const mid = split[0] as PolynomialBezier
