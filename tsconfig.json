@@ -65,7 +65,6 @@
     "**/node_modules",
     "**/dist",
     "**/types",
-    "**/preview",
-    "vitest.config.ts"
+    "**/preview"
   ]
 }

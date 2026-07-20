@@ -17,6 +17,7 @@ describe('loadAnimation', () => {
     document.body.appendChild(container)
 
     const animation = loadAnimation({
+      // @ts-expect-error: Missing keys
       animationData,
       autoplay: false,
       container,
@@ -35,6 +36,7 @@ describe('loadAnimation', () => {
       })
       animation.addEventListener(PlayerEvent.ConfigError, (event) => {
         clearTimeout(timeout)
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         reject(event)
       })
     })
