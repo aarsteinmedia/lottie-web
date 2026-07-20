@@ -868,7 +868,7 @@ function linear(
       arr = createTypedArray(ArrayType.Float32, len)
 
     for (let i = 0; i < len; i += 1) {
-      arr[i] = value1[i] ?? 0 + (value2[i] ?? 0 - (value1[i] ?? 0)) * perc
+      arr[i] = (value1[i] ?? 0) + ((value2[i] ?? 0) - (value1[i] ?? 0)) * perc
     }
 
     return arr
@@ -905,7 +905,7 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
       rnd = Math.random()
 
     for (let i = 0; i < len; i += 1) {
-      arr[i] = (min as number[])[i] ?? 0 + rnd * (max[i] ?? 0 - ((min as number[])[i] ?? 0))
+      arr[i] = ((min as number[])[i] ?? 0) + rnd * ((max[i] ?? 0) - ((min as number[])[i] ?? 0))
     }
 
     return arr
@@ -1130,7 +1130,7 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
 
     while (i < lenA || i < lenB) {
       if ((typeof a[i] === 'number' || (a as unknown[])[i] instanceof Number) && (typeof b[i] === 'number' || (b as unknown[])[i] instanceof Number)) {
-        retArr[i] = a[i] ?? 0 + (b[i] ?? 0)
+        retArr[i] = (a[i] ?? 0) + (b[i] ?? 0)
         i++
         continue
       }

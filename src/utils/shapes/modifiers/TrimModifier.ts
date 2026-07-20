@@ -281,17 +281,17 @@ export class TrimModifier extends ShapeModifier {
         let shapeS
         let shapeE
 
-        if (segments[i]?.s ?? 0 * totalModifierLength <= addedLength) {
+        if ((segments[i]?.s ?? 0) * totalModifierLength <= addedLength) {
           shapeS = 0
         } else {
           shapeS =
-            (segments[i]?.s ?? 0 * totalModifierLength - addedLength) / shapeLength
+            ((segments[i]?.s ?? 0) * totalModifierLength - addedLength) / shapeLength
         }
-        if (segments[i]?.e ?? 0 * totalModifierLength >= addedLength + shapeLength) {
+        if ((segments[i]?.e ?? 0) * totalModifierLength >= addedLength + shapeLength) {
           shapeE = 1
         } else {
           shapeE =
-            (segments[i]?.e ?? 0 * totalModifierLength - addedLength) / shapeLength
+            ((segments[i]?.e ?? 0) * totalModifierLength - addedLength) / shapeLength
         }
         shapeSegments.push([shapeS, shapeE])
       }
