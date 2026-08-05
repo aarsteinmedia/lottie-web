@@ -32,7 +32,7 @@
       "e": 1
     },
     {
-      "id": "image_2",
+      "id": "red_plane",
       "w": 118,
       "h": 148,
       "u": "",
@@ -292,7 +292,7 @@
           "ind": 1,
           "ty": 2,
           "nm": "Plan",
-          "refId": "image_2",
+          "refId": "red_plane",
           "sr": 1,
           "ks": {
             "o": {

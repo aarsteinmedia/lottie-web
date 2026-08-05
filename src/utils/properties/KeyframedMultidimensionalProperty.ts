@@ -80,7 +80,12 @@ export class KeyframedMultidimensionalProperty<
           to[0] === 0 &&
           to[1] === 0 &&
           ti[0] === 0 &&
-          ti[1] === 0 && s.length === 2 || s[2] === e[2] && to[2] === 0 && ti[2] === 0
+          ti[1] === 0 && (
+            s.length === 2 ||
+            s[2] === e[2] &&
+            to[2] === 0 &&
+            ti[2] === 0
+          )
         ) {
           ; (data.k[i] as Keyframe).to = null
           ; (data.k[i] as Keyframe).ti = null
