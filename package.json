@@ -57,6 +57,8 @@
     "prebuild:types": "rimraf ./types ",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
+    "assets": "node preview/writeFiles.js",
+    "predev": "pnpm assets",
     "dev": "rollup -cw --configPlugin @rollup/plugin-typescript --environment NODE_ENV:development",
     "lint": "eslint ./src ./tests",
     "lint:fix": "eslint ./src ./tests --fix",
