@@ -1,0 +1,20 @@
+export {
+  destroy,
+  freeze,
+  getRegisteredAnimations,
+  goToAndStop,
+  loadAnimation,
+  mute,
+  pause,
+  play,
+  registerAnimation,
+  resize,
+  setDirection,
+  setSpeed,
+  setVolume,
+  stop,
+  togglePause,
+  unfreeze,
+  unmute,
+} from '@/animation/AnimationManager'
+export type { default as Expressions } from '@/utils/expressions/Expressions'

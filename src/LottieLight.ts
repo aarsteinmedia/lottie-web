@@ -11,7 +11,25 @@ const { Lottie, setSubframeRendering } = createLottie({
 })
 
 export { setSubframeRendering }
-export { loadAnimation } from '@/animation/AnimationManager'
+export {
+  destroy,
+  freeze,
+  getRegisteredAnimations,
+  goToAndStop,
+  loadAnimation,
+  mute,
+  pause,
+  play,
+  registerAnimation,
+  resize,
+  setDirection,
+  setSpeed,
+  setVolume,
+  stop,
+  togglePause,
+  unfreeze,
+  unmute,
+} from '@/lottiePublicExports'
 
 // eslint-disable-next-line import/no-default-export
 export default Lottie

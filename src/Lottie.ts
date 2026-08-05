@@ -101,7 +101,26 @@ export default Lottie
 
 export { setSubframeRendering }
 export { type AnimationItem } from '@/animation/AnimationItem'
-export { loadAnimation } from '@/animation/AnimationManager'
+export type { Expressions } from '@/lottiePublicExports'
+export {
+  destroy,
+  freeze,
+  getRegisteredAnimations,
+  goToAndStop,
+  loadAnimation,
+  mute,
+  pause,
+  play,
+  registerAnimation,
+  resize,
+  setDirection,
+  setSpeed,
+  setVolume,
+  stop,
+  togglePause,
+  unfreeze,
+  unmute,
+} from '@/lottiePublicExports'
 export type {
   AddAnimationParams,
   AnimationConfiguration,

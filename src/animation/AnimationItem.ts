@@ -1,10 +1,8 @@
-import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import type { HybridRenderer } from '@/renderers/HybridRenderer'
-import type { SVGRenderer } from '@/renderers/SVGRenderer'
 import type {
   AnimationConfiguration,
   AnimationData,
   AnimationDirection,
+  CanvasRendererConfig,
   DocumentData,
   LottieAsset,
   LottieLayer,
@@ -23,10 +21,10 @@ import {
   RenderFrameErrorEvent,
   SegmentStartEvent,
 } from '@/events'
-import {
-  getRegisteredRenderer,
-  getRenderer,
-} from '@/renderers'
+import { getRegisteredRenderer } from '@/renderers'
+import { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import { HybridRenderer } from '@/renderers/HybridRenderer'
+import { SVGRenderer } from '@/renderers/SVGRenderer'
 import { createElementID, isArray } from '@/utils'
 import audioControllerFactory from '@/utils/audio/AudioController'
 import {
@@ -709,10 +707,25 @@ export class AnimationItem extends BaseEvent {
       } else if (params.renderer) {
         animType = params.renderer
       }
-      const RendererClass = getRenderer(animType)
+      // const RendererClass = getRenderer(animType)
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      this.renderer = new RendererClass(this, params.rendererSettings as any)
+      switch (animType) {
+        case RendererType.SVG: {
+          this.renderer = new SVGRenderer(this, params.rendererSettings)
+          break
+        }
+        case RendererType.Canvas: {
+          this.renderer = new CanvasRenderer(this, params.rendererSettings as CanvasRendererConfig)
+          break
+        }
+        case RendererType.HTML: {
+          this.renderer = new HybridRenderer(this, params.rendererSettings)
+          break
+        }
+        default: {
+          throw new Error(`Unknown renderer type: ${animType as string}`)
+        }
+      }
 
       this.imagePreloader.setCacheType(animType,
         this.renderer.globalData?.defs)

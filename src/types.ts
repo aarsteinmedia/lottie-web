@@ -938,7 +938,7 @@ export interface TextData {
       k: Vector2
       ix?: number
     }
-    v: any
+    v: string
   }
   n?: any
   of: string

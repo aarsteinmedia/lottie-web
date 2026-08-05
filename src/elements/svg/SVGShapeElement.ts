@@ -284,7 +284,7 @@ export class SVGShapeElement extends ShapeElement {
   override destroy() {
     this.destroyBaseElement()
     this.shapesData = null as unknown as Shape[]
-    this.itemsData = null as any
+    this.itemsData = null as unknown as ShapeGroupData[]
   }
 
   /**
