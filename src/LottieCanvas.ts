@@ -46,7 +46,6 @@ export default Lottie
 
 export { setSubframeRendering }
 export { type AnimationItem } from '@/animation/AnimationItem'
-export type { Expressions } from '@/lottiePublicExports'
 export {
   destroy,
   freeze,
@@ -65,7 +64,7 @@ export {
   togglePause,
   unfreeze,
   unmute,
-} from '@/lottiePublicExports'
+} from '@/animation/AnimationManager'
 export type {
   AddAnimationParams,
   AnimationConfiguration,
@@ -83,3 +82,4 @@ export type {
   Result,
   Vector2
 } from '@/types'
+export type { default as Expressions } from '@/utils/expressions/Expressions'

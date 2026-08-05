@@ -29,7 +29,7 @@ export {
   togglePause,
   unfreeze,
   unmute,
-} from '@/lottiePublicExports'
+} from '@/animation/AnimationManager'
 
 // eslint-disable-next-line import/no-default-export
 export default Lottie
