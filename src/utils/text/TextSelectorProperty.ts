@@ -18,6 +18,7 @@ export class TextSelectorProperty extends BaseProperty {
   o: ValueProperty
   rn?: number
   sm: ValueProperty
+  t?: string | undefined
   totalChars?: number
   xe: ValueProperty
   constructor(elem: ElementInterfaceIntersect, data: TextRangeValue) {
