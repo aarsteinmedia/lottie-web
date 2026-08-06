@@ -64,6 +64,7 @@ export async function getLottieJSON(resp: Response) {
    */
   let animationsFolder = 'animations'
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (manifest.version === '2' || unzipped[`a/${manifest.animations[0]?.id}.json`]) {
     animationsFolder = 'a'
   }
@@ -81,7 +82,7 @@ export async function getLottieJSON(resp: Response) {
         { length: pLen } = props
 
       for (let p = 0; p < pLen; p++) {
-        const { e: isEncoded, x: expression } = shape?.[props[p]] as {
+        const { e: isEncoded, x: expression } = shape[props[p]] as {
           x?: string;
           e?: 0 | 1
         }

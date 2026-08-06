@@ -409,7 +409,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
                   inY =
                     keyData.i.y[i] ?? keyData.i.y[0]
                   fnc = getBezierEasing(
-                    outX ?? 0, outY ?? 0, inX ?? 0, inY ?? 0
+                    outX, outY, inX, inY
                   ).get
                   ; (keyframeMetadata.__fnct as any)[i] = fnc
                 }

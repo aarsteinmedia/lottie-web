@@ -21,7 +21,7 @@ export abstract class ShapeElement extends RenderableDOMElement {
       i--
       const processedElement = processedElements[i]
 
-      if (processedElement?.elem === elem) {
+      if (processedElement.elem === elem) {
         processedElement.pos = pos
 
         return

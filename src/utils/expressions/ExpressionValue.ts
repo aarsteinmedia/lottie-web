@@ -46,7 +46,7 @@ export class ExpressionValue extends BaseProperty {
       expressionValue = createTypedArray(ArrayType.Float32, length)
       arrValue = createTypedArray(ArrayType.Float32, length) as number[]
       for (let i = 0; i < length; i++) {
-        arrValue[i] = Number((elementProp.v as number[])[i]) * mult
+        arrValue[i] = (elementProp.v as number[])[i] * mult
         expressionValue[i] = arrValue[i] ?? 0
       }
       this.value = arrValue

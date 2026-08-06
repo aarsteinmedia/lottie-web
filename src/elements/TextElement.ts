@@ -45,7 +45,7 @@ export abstract class TextElement extends RenderableDOMElement {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
           (Number(documentData.boxWidth) -
-            Number(documentData.lineWidths[lineNumber])),
+            documentData.lineWidths[lineNumber]),
           0,
           0
         )
@@ -55,7 +55,7 @@ export abstract class TextElement extends RenderableDOMElement {
         matrixHelper.translate(
           Number(documentData.justifyOffset) +
           (Number(documentData.boxWidth) -
-            Number(documentData.lineWidths[lineNumber])) /
+            documentData.lineWidths[lineNumber]) /
             2,
           0,
           0

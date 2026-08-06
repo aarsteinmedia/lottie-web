@@ -295,7 +295,7 @@ export class MaskElement {
       const storedData = this.storedData[i]
 
       if (
-        !storedData?.x ||
+        !storedData.x ||
         !(storedData.x._mdf || frame)
       ) {
         continue

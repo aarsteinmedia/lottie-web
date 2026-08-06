@@ -87,7 +87,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       while (shouldInterpolate) {
         keyData = kf[i]
         nextKeyData = kf[i + 1]
-        if ((nextKeyData?.t ?? 0) - this.offsetTime > frameNum) {
+        if (nextKeyData.t - this.offsetTime > frameNum) {
           break
         }
         if (i < len - 1) {
@@ -152,20 +152,17 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     for (let j = 0; j < jLen; j++) {
       for (let k = 0; k < kLen; k++) {
-        vertexValue = (isHold
+        vertexValue = isHold
           ? keyPropS.i[j]?.[k]
-          : (keyPropS.i[j]?.[k] ?? 0) + ((keyPropE?.i[j]?.[k] ?? 0) - (keyPropS.i[j]?.[k] ?? 0)) * perc) ?? 0
-        // @ts-expect-error: TODO:
+          : (keyPropS.i[j]?.[k] ?? 0) + ((keyPropE?.i[j]?.[k] ?? 0) - (keyPropS.i[j]?.[k] ?? 0)) * perc
         previousValue.i[j][k] = vertexValue
-        vertexValue = (isHold
+        vertexValue = isHold
           ? keyPropS.o[j]?.[k]
-          : (keyPropS.o[j]?.[k] ?? 0) + ((keyPropE?.o[j]?.[k] ?? 0) - (keyPropS.o[j]?.[k] ?? 0)) * perc) ?? 0
-        // @ts-expect-error: TODO:
+          : (keyPropS.o[j]?.[k] ?? 0) + ((keyPropE?.o[j]?.[k] ?? 0) - (keyPropS.o[j]?.[k] ?? 0)) * perc
         previousValue.o[j][k] = vertexValue
-        vertexValue = (isHold
+        vertexValue = isHold
           ? keyPropS.v[j]?.[k]
-          : (keyPropS.v[j]?.[k] ?? 0) + ((keyPropE?.v[j]?.[k] ?? 0) - (keyPropS.v[j]?.[k] ?? 0)) * perc) ?? 0
-        // @ts-expect-error: TODO:
+          : (keyPropS.v[j]?.[k] ?? 0) + ((keyPropE?.v[j]?.[k] ?? 0) - (keyPropS.v[j]?.[k] ?? 0)) * perc
         previousValue.v[j][k] = vertexValue
       }
     }

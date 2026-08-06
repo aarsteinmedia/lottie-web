@@ -61,10 +61,6 @@ const BMMath = {} as unknown as BMMathType
   for (let i = 0; i < length; i += 1) {
     const propertyName = propertyNames[i]
 
-    if (!propertyName) {
-      continue
-    }
-
     // @ts-expect-error: ts(2540)
     BMMath[propertyName] = Math[propertyName]
   }

@@ -112,7 +112,7 @@ export class GradientProperty extends DynamicPropertyContainer {
 
       for (let i = this.data.p * 4; i < length; i++) {
         // mult = i % 2 === 0 ? 100 : 1
-        val = (i % 2 === 0 ? Math.round((this.prop.v[i] ?? 0) * 100) : this.prop.v[i]) ?? 0
+        val = i % 2 === 0 ? Math.round((this.prop.v[i] ?? 0) * 100) : this.prop.v[i]
         if (this.o[i - this.data.p * 4] !== val) {
           this.o[i - this.data.p * 4] = val
           this._omdf = !forceRender

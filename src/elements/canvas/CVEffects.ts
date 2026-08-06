@@ -46,7 +46,7 @@ export class CVEffects {
     for (let i = 0; i < length; i++) {
       const filter = this.filters[i]
 
-      if (filter?.type !== type) {
+      if (filter.type !== type) {
         continue
       }
 

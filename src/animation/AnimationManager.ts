@@ -38,12 +38,7 @@ export function getRegisteredAnimations() {
     animations = []
 
   for (let i = 0; i < length; i++) {
-    const registeredAnimation = registeredAnimations[i]
-
-    if (!registeredAnimation) {
-      continue
-    }
-    animations.push(registeredAnimation.animation)
+    animations.push(registeredAnimations[i].animation)
   }
 
   return animations
@@ -143,10 +138,6 @@ export function searchAnimations(
 
   for (let i = 0; i < length; i++) {
     const animElement = animElements[i]
-
-    if (!animElement) {
-      continue
-    }
 
     if (renderer) {
       animElement.dataset.bmType = renderer
@@ -256,12 +247,7 @@ function resume(nowTime: number) {
   const elapsedTime = nowTime - initTime
 
   for (let i = 0; i < len; i++) {
-    const registeredAnimation = registeredAnimations[i]
-
-    if (!registeredAnimation) {
-      continue
-    }
-    registeredAnimation.animation.advanceTime(elapsedTime)
+    registeredAnimations[i].animation.advanceTime(elapsedTime)
   }
   initTime = nowTime
 
