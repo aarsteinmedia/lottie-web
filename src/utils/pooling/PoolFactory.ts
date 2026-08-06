@@ -29,7 +29,7 @@ export class PoolFactory {
 
     if (this._length) {
       this._length -= 1
-      element = this.pool[this._length] as PoolElement
+      element = this.pool[this._length]
     } else {
       element = this._create()
     }

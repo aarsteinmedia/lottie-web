@@ -5,10 +5,14 @@ import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGrad
 import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   CanvasItem,
-  CompElementInterface, CVElement, CVStyleElement, ElementInterfaceIntersect, GlobalData, LottieLayer,
+  CompElementInterface,
+  CVElement,
+  CVStyleElement,
+  ElementInterfaceIntersect,
+  GlobalData,
+  LottieLayer,
   Shape,
   Transformer,
-  TransformNode,
   TransformSequence,
   Vector3,
   VectorProperty
@@ -296,7 +300,7 @@ export class CVShapeElement extends ShapeElement {
       let currentStyle
 
       for (let i = 0; i < length; i++) {
-        currentStyle = this.stylesList[i] as CVStyleElement
+        currentStyle = this.stylesList[i]
         const {
             co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
           } = currentStyle,
@@ -356,7 +360,7 @@ export class CVShapeElement extends ShapeElement {
             { length: kLen } = nodes
 
           for (let k = 0; k < kLen; k++) {
-            const { p: point = [], pts: points = [] } = nodes[k] as TransformNode
+            const { p: point = [], pts: points = [] } = nodes[k]
 
             if (nodes[k].t === 'm') {
               ctx?.moveTo(point[0], point[1])

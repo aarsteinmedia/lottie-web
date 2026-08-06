@@ -83,7 +83,7 @@ export class SVGStrokeEffect {
         this.elem.layerElement?.childNodes ??
         []]
         while (elemChildren.length > 0) {
-          this.elem.layerElement?.removeChild(elemChildren[0] as Node)
+          this.elem.layerElement?.removeChild(elemChildren[0])
         }
       }
       this.elem.layerElement?.appendChild(groupPath)
@@ -114,7 +114,7 @@ export class SVGStrokeEffect {
         mask &&
         (forceRender || this.filterManager._mdf || mask.prop?._mdf)
       ) {
-        path?.setAttribute('d', mask.lastPath)
+        path.setAttribute('d', mask.lastPath)
       }
       if (
         forceRender ||
@@ -136,7 +136,7 @@ export class SVGStrokeEffect {
           const e =
             Math.max(this.filterManager.effectElements[7]?.p.v as number,
               this.filterManager.effectElements[8]?.p.v as number) * 0.01
-          const l = path?.getTotalLength() ?? 0
+          const l = path.getTotalLength()
 
           dasharrayValue = `0 0 0 ${l * s} `
           const lineLength = l * (e - s),
@@ -163,7 +163,7 @@ export class SVGStrokeEffect {
           0.01
           }`
         }
-        path?.setAttribute('stroke-dasharray', dasharrayValue)
+        path.setAttribute('stroke-dasharray', dasharrayValue)
       }
     }
     if (forceRender || this.filterManager.effectElements[4]?.p._mdf) {

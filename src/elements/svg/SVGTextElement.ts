@@ -158,7 +158,7 @@ export class SVGTextLottieElement extends TextElement {
           glyph: null,
           span: null,
         } as any)
-        ; (this.textSpans[i] as TextSpan).span = tSpan
+        this.textSpans[i].span = tSpan
         yPos += Number(documentData.finalLineHeight)
       }
 
@@ -190,7 +190,7 @@ export class SVGTextLottieElement extends TextElement {
             tSpan.setAttribute('stroke-linejoin', 'round')
             tSpan.setAttribute('stroke-miterlimit', '4')
             if (this.textSpans[i]) {
-              ; (this.textSpans[i] as TextSpan).span = tSpan
+              ; this.textSpans[i].span = tSpan
             }
 
             if (hasGlyphs) {
@@ -199,13 +199,13 @@ export class SVGTextLottieElement extends TextElement {
               tSpan.appendChild(childSpan)
 
               if (this.textSpans[i]) {
-                ; (this.textSpans[i] as TextSpan).childSpan = childSpan
+                ; this.textSpans[i].childSpan = childSpan
               }
 
             }
 
             if (this.textSpans[i]) {
-              ; (this.textSpans[i] as TextSpan).span = tSpan
+              ; this.textSpans[i].span = tSpan
             }
 
             this.layerElement.appendChild(tSpan)
@@ -272,7 +272,7 @@ export class SVGTextLottieElement extends TextElement {
             }
 
 
-            ; (this.textSpans[i] as TextSpan).glyph = glyphElement
+            ; this.textSpans[i].glyph = glyphElement
           }
           glyphElement._debug = true
           glyphElement.prepareFrame(0)
@@ -334,10 +334,10 @@ export class SVGTextLottieElement extends TextElement {
     if (data.shapes.length > 0) {
       const shape = data.shapes[0]
 
-      if (shape?.it) {
+      if (shape.it) {
         const shapeItem = shape.it[shape.it.length - 1]
 
-        if (shapeItem?.s) {
+        if (shapeItem.s) {
           shapeItem.s.k[0] = scale
           shapeItem.s.k[1] = scale
         }

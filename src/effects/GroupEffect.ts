@@ -1,5 +1,5 @@
 import type {
-  Effect, EffectValue, EFXElement, ElementInterfaceIntersect, LottieLayer
+  Effect, EFXElement, ElementInterfaceIntersect, LottieLayer
 } from '@/types'
 
 import {
@@ -39,44 +39,44 @@ export class GroupEffect extends DynamicPropertyContainer {
       switch (effects[i]?.ty) {
         case 0: {
           eff = new SliderEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 1: {
           eff = new AngleEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 2: {
           eff = new ColorEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 3: {
           eff = new PointEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 4:
         case 7: {
           eff = new CheckboxEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 10: {
           eff = new LayerIndexEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }
         case 11: {
           eff = new MaskIndexEffect(
-            effects[i] as EffectValue, element, this
+            effects[i], element, this
           )
           break
         }

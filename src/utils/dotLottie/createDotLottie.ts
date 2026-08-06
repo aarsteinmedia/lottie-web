@@ -119,7 +119,7 @@ export async function createDotLottie({
         const asset = animations[i]?.assets[j]
 
         if (
-          !asset?.p ||
+          !asset.p ||
           !isImage(asset) &&
           !isAudio(asset)
         ) {
@@ -149,12 +149,10 @@ export async function createDotLottie({
 
         const thisAsset = animations[i]?.assets[j]
 
-        if (thisAsset) {
-          thisAsset.e = 1
-          thisAsset.p = `${assetId}.${ext}`
-          // Asset is embedded, so path empty string
-          thisAsset.u = ''
-        }
+        thisAsset.e = 1
+        thisAsset.p = `${assetId}.${ext}`
+        // Asset is embedded, so path empty string
+        thisAsset.u = ''
 
         dotlottie[
           `${isAudio(asset) ? 'audio' : 'i'}/${assetId}.${ext}`
@@ -166,17 +164,17 @@ export async function createDotLottie({
 
       for (let k = 0; k < kLen; k++) {
         const { ks: shape } = animations[i]?.layers[k] ?? {},
-          props = Object.keys(shape ?? {}) as (keyof Shape)[],
+          props = Object.keys(shape) as (keyof Shape)[],
           { length: pLen } = props
 
         for (let p = 0; p < pLen; p++) {
-          const { x: expression } = shape?.[props[p] as keyof Shape] as { x?: string }
+          const { x: expression } = shape[props[p]] as { x?: string }
 
           if (!expression) {
             continue
           }
 
-          const thisShape = animations[i]?.layers[k]?.ks[props[p] as keyof Shape] as keyof Shape
+          const thisShape = animations[i]?.layers[k]?.ks[props[p]] as keyof Shape
 
           // Base64 Encode to handle compression
           // @ts-expect-error: TODO:

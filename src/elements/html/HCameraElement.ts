@@ -101,10 +101,6 @@ export class HCameraElement extends FrameElement {
       for (let i = 0; i < length; i++) {
         const thisK = data.ks.or.k[i]
 
-        if (!thisK) {
-          continue
-        }
-
         thisK.to = null
         thisK.ti = null
       }
@@ -247,18 +243,18 @@ export class HCameraElement extends FrameElement {
             this.pz.v - this.a.v[2],
           ]
         }
-        const mag = Math.sqrt(Math.pow(diffVector[0] as number, 2) +
-          Math.pow(diffVector[1] as number, 2) +
-          Math.pow(diffVector[2] as number, 2))
+        const mag = Math.sqrt(Math.pow(diffVector[0], 2) +
+          Math.pow(diffVector[1], 2) +
+          Math.pow(diffVector[2], 2))
         // var lookDir = getNormalizedPoint(getDiffVector(this.a.v,this.p.v));
         const lookDir = [
-          diffVector[0] as number / mag,
-          diffVector[1] as number / mag,
-          diffVector[2] as number / mag,
+          diffVector[0] / mag,
+          diffVector[1] / mag,
+          diffVector[2] / mag,
         ]
-        const lookLengthOnXZ = Math.sqrt(lookDir[2] as number * (lookDir[2] as number) + (lookDir[0] as number) * (lookDir[0] as number)),
-          mRotationX = Math.atan2(lookDir[1] as number, lookLengthOnXZ),
-          mRotationY = Math.atan2(lookDir[0] as number, -(lookDir[2] as number))
+        const lookLengthOnXZ = Math.sqrt(lookDir[2] * lookDir[2] + lookDir[0] * lookDir[0]),
+          mRotationX = Math.atan2(lookDir[1], lookLengthOnXZ),
+          mRotationY = Math.atan2(lookDir[0], -lookDir[2])
 
         this.mat?.rotateY(mRotationY).rotateX(-mRotationX)
       }
@@ -294,7 +290,7 @@ export class HCameraElement extends FrameElement {
 
         for (let i = 0; i < iLen; i++) {
           comp = this.comp.threeDElements[i]
-          if (comp?.type !== '3d') {
+          if (comp.type !== '3d') {
             continue
           }
           if (hasMatrixChanged) {

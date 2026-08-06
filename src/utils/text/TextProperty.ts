@@ -137,7 +137,7 @@ export class TextProperty extends BaseProperty {
         shouldCombineNext = true
       }
       if (shouldCombine) {
-        (charactersArray[charactersArray.length - 1] as string) += currentChars
+        charactersArray[charactersArray.length - 1] += currentChars
         // shouldCombine = false
       } else {
         charactersArray.push(currentChars)
@@ -332,11 +332,9 @@ export class TextProperty extends BaseProperty {
           while (currentPos <= i) {
             const letter = letters[currentPos]
 
-            if (letter) {
-              letter.an = currentSize
-              letter.ind = index
-              letter.extra = cLength
-            }
+            letter.an = currentSize
+            letter.ind = index
+            letter.extra = cLength
             currentPos++
           }
           index++
@@ -351,11 +349,9 @@ export class TextProperty extends BaseProperty {
           const letter = letters[currentPos]
 
           while (currentPos <= i) {
-            if (letter) {
-              letter.an = currentSize
-              letter.ind = index
-              letter.extra = cLength
-            }
+            letter.an = currentSize
+            letter.ind = index
+            letter.extra = cLength
             currentPos++
           }
           currentSize = 0
@@ -364,10 +360,8 @@ export class TextProperty extends BaseProperty {
       } else {
         const letter = letters[index]
 
-        if (letter) {
-          letter.ind = index
-          letter.extra = 0
-        }
+        letter.ind = index
+        letter.extra = 0
         index++
       }
     }
@@ -450,7 +444,7 @@ export class TextProperty extends BaseProperty {
       if (animatorData.s?.rn === 1) {
         for (let i = 0; i < len; i++) {
           letterData = letters[i] ?? {} as Letter
-          if (currentInd !== Number(letterData.anIndexes[j])) {
+          if (currentInd !== letterData.anIndexes[j]) {
             currentInd = letterData.anIndexes[j] ?? 0
             newInd = indexes.splice(Math.floor(Math.random() * indexes.length),
               1)[0]
@@ -497,7 +491,7 @@ export class TextProperty extends BaseProperty {
     const len = textKeys.length
 
     while (i <= len - 1) {
-      if (i === len - 1 || Number(textKeys[i + 1]?.t) > frameNum) {
+      if (i === len - 1 || textKeys[i + 1]?.t > frameNum) {
         break
       }
       i++
@@ -568,9 +562,7 @@ export class TextProperty extends BaseProperty {
 
     const dData = this.data.d.k[index]?.s
 
-    if (dData) {
-      dData.__complete = false
-    }
+    dData.__complete = false
 
     this.keysIndex = 0
     this._isFirstFrame = true

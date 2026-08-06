@@ -20,7 +20,7 @@ export const segmentsLengthPool = (() =>
       const { length } = element.lengths
 
       for (let i = 0; i < length; i++) {
-        bezierLengthPool.release(element.lengths[i] as PoolElement)
+        bezierLengthPool.release(element.lengths[i])
       }
       element.lengths.length = 0
     }

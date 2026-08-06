@@ -70,7 +70,7 @@ export class ShapeTransformManager {
     const { length } = this.sequenceList
 
     for (let i = 0; i < length; i++) {
-      this.processSequence(this.sequenceList[i] as TransformSequence, isFirstFrame)
+      this.processSequence(this.sequenceList[i], isFirstFrame)
     }
   }
 }

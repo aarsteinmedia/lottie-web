@@ -93,7 +93,7 @@ export class MaskElement {
           ) as ValueProperty,
           prop: ShapePropertyFactory.getShapeProp(
             this.element,
-            properties[i] as Shape,
+            properties[i],
             3
           ),
         }
@@ -149,7 +149,7 @@ export class MaskElement {
           g = createNS<SVGGElement>('g')
 
         for (let j = 0; j < jLen; j++) {
-          g.appendChild(currentMasks[j] as SVGElement)
+          g.appendChild(currentMasks[j])
         }
         const mask = createNS<SVGMaskElement>('mask')
 
@@ -180,7 +180,7 @@ export class MaskElement {
           this.element
         ) as ValueProperty,
         prop: ShapePropertyFactory.getShapeProp(
-          this.element, properties[i] as Shape, 3
+          this.element, properties[i], 3
         ),
       }
 
@@ -190,7 +190,7 @@ export class MaskElement {
         this.drawPath(
           properties[i] ?? null,
           shapePath,
-          this.viewData[i] as ViewData
+          this.viewData[i]
         )
       }
     }
@@ -200,7 +200,7 @@ export class MaskElement {
     const { length: cLen } = currentMasks
 
     for (let i = 0; i < cLen; i++) {
-      this.maskElement.appendChild(currentMasks[i] as SVGElement)
+      this.maskElement.appendChild(currentMasks[i])
     }
 
     if (count > 0) {
@@ -274,7 +274,7 @@ export class MaskElement {
         this.drawPath(
           this.masksProperties[i] ?? null,
           shapePath,
-          this.viewData[i] as ViewData
+          this.viewData[i]
         )
       }
       if (this.viewData[i]?.op._mdf || frame) {

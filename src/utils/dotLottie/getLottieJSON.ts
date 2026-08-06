@@ -24,7 +24,7 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
   },
 
   getManifest = (unzipped: Unzipped) => {
-    const file = strFromU8(unzipped['manifest.json'] as Uint8Array, false),
+    const file = strFromU8(unzipped['manifest.json'], false),
       manifest: LottieManifest = JSON.parse(file)
 
     if (!('animations' in manifest)) {
@@ -69,7 +69,7 @@ export async function getLottieJSON(resp: Response) {
   }
 
   for (let i = 0; i < length; i++) {
-    const str = strFromU8(unzipped[`${animationsFolder}/${manifest.animations[i]?.id}.json`] as Uint8Array),
+    const str = strFromU8(unzipped[`${animationsFolder}/${manifest.animations[i]?.id}.json`]),
       lottie: AnimationData = JSON.parse(prepareString(str))
 
     // Handle Expressions
@@ -77,11 +77,11 @@ export async function getLottieJSON(resp: Response) {
 
     for (let j = 0; j < jLen; j++) {
       const { ks: shape } = lottie.layers[j] ?? {},
-        props = Object.keys(shape as Shape) as (keyof Shape)[],
+        props = Object.keys(shape) as (keyof Shape)[],
         { length: pLen } = props
 
       for (let p = 0; p < pLen; p++) {
-        const { e: isEncoded, x: expression } = shape?.[props[p] as keyof Shape] as {
+        const { e: isEncoded, x: expression } = shape?.[props[p]] as {
           x?: string;
           e?: 0 | 1
         }
@@ -90,7 +90,7 @@ export async function getLottieJSON(resp: Response) {
           continue
         }
 
-        const keyofShape = lottie.layers[j]?.ks[props[p] as keyof Shape]
+        const keyofShape = lottie.layers[j]?.ks[props[p]]
 
         // Base64 Decode to handle compression
         if (keyofShape) {

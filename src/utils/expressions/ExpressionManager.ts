@@ -182,7 +182,7 @@ function $bm_neg(a: unknown) {
       retArr: number[] = []
 
     for (let i = 0; i < lenA; i++) {
-      retArr[i] = -Number(a[i])
+      retArr[i] = -a[i]
     }
 
     return retArr
@@ -210,7 +210,7 @@ function createPath(
     inVertexPoint = inTangents[i] ?? arrPlaceholder
     outVertexPoint = outTangents[i] ?? arrPlaceholder
     path.setTripleAt(
-      points[i]?.[0] ?? 0, points[i]?.[1] ?? 0, (outVertexPoint[0] ?? 0) + (points[i]?.[0] ?? 0), (outVertexPoint[1] ?? 0) + (points[i]?.[1] ?? 0), (inVertexPoint[0] ?? 0) + (points[i]?.[0] ?? 0), (inVertexPoint[1] ?? 0) + (points[i]?.[1] ?? 0), i, true
+      points[i]?.[0] ?? 0, points[i]?.[1] ?? 0, outVertexPoint[0] + (points[i]?.[0] ?? 0), outVertexPoint[1] + (points[i]?.[1] ?? 0), inVertexPoint[0] + (points[i]?.[0] ?? 0), inVertexPoint[1] + (points[i]?.[1] ?? 0), i, true
     )
   }
 
@@ -244,7 +244,7 @@ function applyEase(
       arr = createTypedArray(ArrayType.Float32, lenKey) as number[]
 
     for (iKey = 0; iKey < lenKey; iKey += 1) {
-      arr[iKey] = (val2[iKey] as number - (val1[iKey] as number)) * mult + (val1[iKey] as number)
+      arr[iKey] = (val2[iKey] - val1[iKey]) * mult + val1[iKey]
     }
 
     return arr
@@ -479,13 +479,13 @@ function initiateExpression(
 
       if (lenWiggle > 1) {
         for (let j = 0; j < lenWiggle; j++) {
-          arr[j] = (prop as number[])[j] as number + (addedAmps[j] as number) + (-amp + amp * 2 * Math.random()) * perc
+          arr[j] = (prop as number[])[j] + addedAmps[j] + (-amp + amp * 2 * Math.random()) * perc
         }
 
         return arr
       }
 
-      return prop as number + (addedAmps[0] as number) + (-amp + amp * 2 * Math.random()) * perc
+      return prop as number + addedAmps[0] + (-amp + amp * 2 * Math.random()) * perc
     }
 
   if (thisProperty.loopIn) {
@@ -1066,13 +1066,13 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    ; ((a as number[])[0] as number) -= Number(b)
+    ; (a as number[])[0] -= Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    ; (b as number[])[0] = Number(a) - ((b as number[])[0] as number)
+    ; (b as number[])[0] = Number(a) - (b as number[])[0]
 
     return b
   }
@@ -1089,7 +1089,7 @@ function sub(aFromProps: unknown, bFromProps: unknown) {
         i++
         continue
       }
-      retArr[i] = ((b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]) ?? 0
+      retArr[i] = (b as unknown[])[i] === undefined ? a[i] : a[i] || b[i]
       i++
     }
 
@@ -1111,13 +1111,13 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {
     a = [...a]
-    ; ((a as number[])[0] as number) += Number(b)
+    ; (a as number[])[0] += Number(b)
 
     return a
   }
   if (isNumerable(tOfA, a) && $bm_isInstanceOfArray(b)) {
     b = [...b]
-    ; (b as number[])[0] = a as number + ((b as number[])[0] as number)
+    ; (b as number[])[0] = a as number + (b as number[])[0]
 
     return b
   }

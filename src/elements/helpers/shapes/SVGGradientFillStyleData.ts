@@ -167,8 +167,8 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     maskElement.setAttribute(data.ty === ShapeType.GradientFill ? 'fill' : 'stroke',
       `url(${getLocationHref()}#${opacityId})`)
     if (data.ty === ShapeType.GradientStroke) {
-      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2] as string)
-      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2] as string)
+      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
+      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
       if (data.lj === 1) {
         maskElement.setAttribute('stroke-miterlimit', `${Number(data.ml)}`)
       }

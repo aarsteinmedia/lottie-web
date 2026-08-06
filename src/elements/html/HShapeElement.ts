@@ -87,11 +87,12 @@ export class HShapeElement extends ShapeElement {
     const { length } = itemsData
 
     for (let i = 0; i < length; i++) {
-      this.calculateShapeBoundingBox(itemsData[i] as ShapeDataInterface, boundingBox)
+      this.calculateShapeBoundingBox(itemsData[i], boundingBox)
       // continue
 
 
-      if (itemsData[i]?.it) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (itemsData[i].it) {
         this.calculateBoundingBox(itemsData[i]?.it ?? [], boundingBox)
         continue
       }
@@ -110,10 +111,10 @@ export class HShapeElement extends ShapeElement {
     i: number
   ) {
     return (
-      Math.pow(1 - t, 3) * (p0[i] as number) +
-      3 * Math.pow(1 - t, 2) * t * (p1[i] as number) +
-      3 * (1 - t) * Math.pow(t, 2) * (p2[i] as number) +
-      Math.pow(t, 3) * (p3[i] as number)
+      Math.pow(1 - t, 3) * p0[i] +
+      3 * Math.pow(1 - t, 2) * t * p1[i] +
+      3 * (1 - t) * Math.pow(t, 2) * p2[i] +
+      Math.pow(t, 3) * p3[i]
     )
   }
 
@@ -248,9 +249,9 @@ export class HShapeElement extends ShapeElement {
     ]
 
     for (let a, b, c, t, b2ac, t1, t2, i = 0; i < 2; ++i) {
-      b = 6 * (p0[i] as number) - 12 * (p1[i] as number) + 6 * (p2[i] as number)
-      a = -3 * (p0[i] as number) + 9 * (p1[i] as number) - 9 * (p2[i] as number) + 3 * (p3[i] as number)
-      c = 3 * (p1[i] as number) - 3 * (p0[i] as number)
+      b = 6 * p0[i] - 12 * p1[i] + 6 * p2[i]
+      a = -3 * p0[i] + 9 * p1[i] - 9 * p2[i] + 3 * p3[i]
+      c = 3 * p1[i] - 3 * p0[i]
 
       b |= 0
       a |= 0

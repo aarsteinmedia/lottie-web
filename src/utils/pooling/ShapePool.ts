@@ -48,9 +48,9 @@ function _release(shapePath: PoolElement) {
   const len = shapePath._length
 
   for (let i = 0; i < len; i++) {
-    pointPool.release(shapePath.v[i] as PoolElement)
-    pointPool.release(shapePath.i[i] as PoolElement)
-    pointPool.release(shapePath.o[i] as PoolElement)
+    pointPool.release(shapePath.v[i])
+    pointPool.release(shapePath.i[i])
+    pointPool.release(shapePath.o[i])
     shapePath.v[i] = null as unknown as Vector2
     shapePath.i[i] = null as unknown as Vector2
     shapePath.o[i] = null as unknown as Vector2

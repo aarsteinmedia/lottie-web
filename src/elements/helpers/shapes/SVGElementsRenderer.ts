@@ -122,7 +122,7 @@ function renderGradient(
       { length } = stops
 
     for (let i = 0; i < length; i++) {
-      stop = stops[i] as SVGStopElement
+      stop = stops[i]
       stop.setAttribute('offset', `${cValues[i * 4]}%`)
       stop.setAttribute('stop-color',
         `rgb(${cValues[i * 4 + 1]},${cValues[i * 4 + 2]},${cValues[i * 4 + 3]})`)
@@ -139,7 +139,7 @@ function renderGradient(
     const { length: sLen } = stops
 
     for (let i = 0; i < sLen; i++) {
-      stop = stops[i] as SVGStopElement
+      stop = stops[i]
       if (!itemData.g._collapsable) {
         stop.setAttribute('offset', `${oValues[i * 2]}%`)
       }
@@ -236,7 +236,8 @@ function renderPath(
   for (let i = 0; i < length; i++) {
     shouldRedraw = sh?._mdf || Boolean(isFirstFrame)
     const style = styles[i],
-      { lvl: styleLevel } = style ?? { lvl: 0 }
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      { _mdf, lvl: styleLevel } = style
 
     if (styleLevel < lvl) {
       mat = _matrixHelper.reset()
@@ -251,7 +252,7 @@ function renderPath(
         iterations = lvl - styleLevel
         k = transformers.length - 1
         while (iterations > 0) {
-          mat.multiply(transformers[k]?.mProps.v as Matrix)
+          mat.multiply(transformers[k]?.mProps.v)
           iterations--
           k--
         }
@@ -279,10 +280,8 @@ function renderPath(
     } else {
       pathStringTransformed = caches[i]
     }
-    if (style) {
-      style.d += styleData.hd === true ? '' : pathStringTransformed ?? ''
-      style._mdf = shouldRedraw || style._mdf
-    }
+    style.d += styleData.hd === true ? '' : pathStringTransformed
+    style._mdf = shouldRedraw || _mdf
   }
 }
 

@@ -17,7 +17,7 @@ function completeLayers(layers: LottieLayer[],
   const { length } = layers
 
   for (let i = 0; i < length; i++) {
-    layerData = layers[i] as LottieLayer
+    layerData = layers[i]
     if (!('ks' in layerData) || layerData.completed) {
       continue
     }
@@ -171,13 +171,9 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
   const { length } = path.i
 
   for (let i = 0; i < length; i++) {
-    // @ts-expect-error: TODO:
     path.i[i][0] += path.v[i]?.[0] ?? 0
-    // @ts-expect-error: TODO:
     path.i[i][1] += path.v[i]?.[1] ?? 0
-    // @ts-expect-error: TODO:
     path.o[i][0] += path.v[i]?.[0] ?? 0
-    // @ts-expect-error: TODO:
     path.o[i][1] += path.v[i]?.[1] ?? 0
   }
 }
@@ -218,7 +214,7 @@ const iterateLayers = (
 
   for (let i = 0; i < length; i++) {
     if (layers[i]?.ty === type) {
-      updateData(layers[i] as LottieLayer)
+      updateData(layers[i])
     }
   }
 }
@@ -277,7 +273,7 @@ const checkChars = (() => {
     for (let i = 0; i < length; i++) {
       const charData = animationData.chars[i]
 
-      if (!charData?.data?.shapes) {
+      if (!charData.data?.shapes) {
         continue
 
       }
@@ -424,10 +420,10 @@ const checkColors = (() => {
         }
 
         if (isArrayOfNum(shapeColorValue) && shapeColorValue.length >= 4) {
-          ; (shapeColorValue[0] as number) /= 255
-          ; (shapeColorValue[1] as number) /= 255
-          ; (shapeColorValue[2] as number) /= 255
-          ; (shapeColorValue[3] as number) /= 255
+          ; shapeColorValue[0] /= 255
+          shapeColorValue[1] /= 255
+          shapeColorValue[2] /= 255
+          shapeColorValue[3] /= 255
 
           continue
         }
@@ -515,10 +511,10 @@ const checkShapes = (() => {
             sPaths = shapePath[j]?.s ?? []
 
           if (ePaths.length > 0) {
-            ;(ePaths[0] as ShapePath).c = isClosed
+            ;ePaths[0].c = isClosed
           }
           if (sPaths.length > 0) {
-            ;(sPaths[0] as ShapePath).c = isClosed
+            ;sPaths[0].c = isClosed
           }
         }
       }
@@ -531,7 +527,7 @@ const checkShapes = (() => {
 
       for (let i = 0; i < length; i++) {
         layerData = layers[i]
-        if (layerData?.hasMask) {
+        if (layerData.hasMask) {
           const maskProps = layerData.masksProperties,
 
             { length: jLen } = maskProps ?? []
@@ -558,15 +554,15 @@ const checkShapes = (() => {
                 sPaths = shapePath[k]?.s ?? []
 
               if (ePaths.length > 0) {
-                ;(ePaths[0] as ShapePath).c = isClosed
+                ;ePaths[0].c = isClosed
               }
               if (sPaths.length > 0) {
-                ;(sPaths[0] as ShapePath).c = isClosed
+                ;sPaths[0].c = isClosed
               }
             }
           }
         }
-        if (layerData?.ty === 4) {
+        if (layerData.ty === 4) {
           completeClosingShapes(layerData.shapes)
         }
       }

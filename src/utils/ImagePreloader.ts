@@ -153,7 +153,7 @@ export class ImagePreloader {
       }
       if ((!assets[i]?.t || assets[i]?.t === 'seq') && this._createImageData) {
         this.totalImages++
-        const imageData = this._createImageData(assets[i] as LottieAsset)
+        const imageData = this._createImageData(assets[i])
 
         if (imageData) {
           this.images.push(imageData)
@@ -164,7 +164,7 @@ export class ImagePreloader {
 
       if (Number(assets[i]?.t) === 3) {
         this.totalFootages++
-        this.images.push(this.createFootageData(assets[i] as LottieAsset))
+        this.images.push(this.createFootageData(assets[i]))
       }
     }
   }

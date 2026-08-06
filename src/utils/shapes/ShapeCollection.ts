@@ -1,4 +1,3 @@
-import type { PoolElement } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -23,7 +22,7 @@ export class ShapeCollection {
 
   releaseShapes() {
     for (let i = 0; i < this._length; i++) {
-      release(this.shapes[i] as PoolElement)
+      release(this.shapes[i])
     }
     this._length = 0
   }

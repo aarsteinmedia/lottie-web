@@ -63,7 +63,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = true as unknown as ElementInterfaceIntersect
 
-    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
 
     elements[pos] = element
     if (getExpressionsPlugin()) {

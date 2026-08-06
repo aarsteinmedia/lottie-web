@@ -2,7 +2,6 @@ import type {
   DocumentData,
   ElementInterfaceIntersect,
   GlobalData,
-  Letter,
   LottieLayer,
   Vector3,
 } from '@/types'
@@ -101,16 +100,16 @@ export class HTextElement extends TextElement {
     for (let i = 0; i < length; i++) {
       if (this.globalData?.fontManager?.chars) {
         if (this.textPaths[cnt]) {
-          tSpan = this.textPaths[cnt] as SVGPathElement
+          tSpan = this.textPaths[cnt]
         } else {
           tSpan = createNS('path')
-          tSpan.setAttribute('stroke-linecap', lineCapEnum[1] as string)
-          tSpan.setAttribute('stroke-linejoin', lineJoinEnum[2] as string)
+          tSpan.setAttribute('stroke-linecap', lineCapEnum[1])
+          tSpan.setAttribute('stroke-linejoin', lineJoinEnum[2])
           tSpan.setAttribute('stroke-miterlimit', '4')
         }
         if (!this.isMasked) {
           if (this.textSpans[cnt]) {
-            tParent = this.textSpans[cnt] as HTMLElement
+            tParent = this.textSpans[cnt]
             tCont = tParent.children[0] as HTMLElement
           } else {
             tParent = createTag('div')
@@ -123,8 +122,8 @@ export class HTextElement extends TextElement {
       } else if (this.isMasked) {
         tSpan = this.textPaths[cnt] ?? createNS<SVGTextElement>('text')
       } else if (this.textSpans[cnt]) {
-        tParent = this.textSpans[cnt] as HTMLElement
-        tSpan = this.textPaths[cnt] as SVGPathElement
+        tParent = this.textSpans[cnt]
+        tSpan = this.textPaths[cnt]
       } else {
         tParent = createTag('span')
         styleDiv(tParent)
@@ -178,7 +177,7 @@ export class HTextElement extends TextElement {
 
             tContStyle.transform = tContTranslation
 
-            ;(letters[i] as Letter).yOffset = boundingBox.y - 1
+            letters[i].yOffset = boundingBox.y - 1
           } else {
             tCont.setAttribute('width', '1')
             tCont.setAttribute('height', '1')
@@ -212,12 +211,12 @@ export class HTextElement extends TextElement {
       } else {
         this.textSpans[cnt] = tParent as HTMLElement
       }
-      ;(this.textSpans[cnt] as HTMLElement).style.display = 'block'
+      ;this.textSpans[cnt].style.display = 'block'
       this.textPaths[cnt] = tSpan as SVGPathElement
       cnt++
     }
     while (cnt < this.textSpans.length) {
-      ;(this.textSpans[cnt] as HTMLElement).style.display = 'none'
+      ;this.textSpans[cnt].style.display = 'none'
       cnt++
     }
   }
@@ -285,11 +284,11 @@ export class HTextElement extends TextElement {
         count++
         continue
       }
-      textSpan = this.textSpans[i] as HTMLElement
-      textPath = this.textPaths[i] as SVGPathElement
+      textSpan = this.textSpans[i]
+      textPath = this.textPaths[i]
       renderedLetter = renderedLetters[count]
       count++
-      if (renderedLetter?._mdf.m) {
+      if (renderedLetter._mdf.m) {
         if (this.isMasked) {
           textSpan.setAttribute('transform', renderedLetter.m as string)
         } else {
@@ -297,14 +296,14 @@ export class HTextElement extends TextElement {
         }
       }
       // / /textSpan.setAttribute('opacity',renderedLetter.o);
-      textSpan.style.opacity = `${renderedLetter?.o ?? 1}`
-      if (renderedLetter?.sw && renderedLetter._mdf.sw) {
+      textSpan.style.opacity = `${renderedLetter.o ?? 1}`
+      if (renderedLetter.sw && renderedLetter._mdf.sw) {
         textPath.setAttribute('stroke-width', `${renderedLetter.sw}`)
       }
-      if (renderedLetter?.sc && renderedLetter._mdf.sc) {
+      if (renderedLetter.sc && renderedLetter._mdf.sc) {
         textPath.setAttribute('stroke', renderedLetter.sc as string)
       }
-      if (renderedLetter?.fc && renderedLetter._mdf.fc) {
+      if (renderedLetter.fc && renderedLetter._mdf.fc) {
         textPath.setAttribute('fill', renderedLetter.fc as string)
         textPath.style.color = renderedLetter.fc as string
       }

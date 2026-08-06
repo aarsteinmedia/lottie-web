@@ -233,7 +233,7 @@ export class FontManager {
         j++
       }
       if (!found) {
-        this.chars.push(chars[i] as Character)
+        this.chars.push(chars[i])
         jLen++
       }
     }
@@ -260,10 +260,6 @@ export class FontManager {
       for (let i = 0; i < length; i++) {
         const fontList = fontData.list[i]
 
-        if (!fontList) {
-          continue
-        }
-
         fontList.helper = this.createHelper(fontList)
         fontList.cache = {}
       }
@@ -279,10 +275,6 @@ export class FontManager {
         loadedSelector
 
       const fontList = fontData.list[i]
-
-      if (!fontList) {
-        continue
-      }
 
       fontList.loaded = false
       fontList.monoCase = setUpNode(fontList.fFamily,
@@ -318,7 +310,7 @@ export class FontManager {
         const { length: len } = loadedSelector
 
         for (i = 0; i < len; i++) {
-          if (loadedSelector[i]?.href.includes(fontList.fPath)) {
+          if (loadedSelector[i].href.includes(fontList.fPath)) {
             shouldLoadFont = false
           }
         }
@@ -341,7 +333,7 @@ export class FontManager {
         const { length: len } = loadedSelector
 
         for (i = 0; i < len; i++) {
-          if (fontList.fPath === loadedSelector[i]?.src) {
+          if (fontList.fPath === loadedSelector[i].src) {
             shouldLoadFont = false
           }
         }
@@ -381,7 +373,7 @@ export class FontManager {
         this.chars[i]?.style === style &&
         this.chars[i]?.fFamily === font
       ) {
-        return this.chars[i] as Character
+        return this.chars[i]
       }
       i++
     }
@@ -407,12 +399,12 @@ export class FontManager {
 
     while (i < length) {
       if (this.fonts[i]?.fName === name) {
-        return this.fonts[i] as DocumentData
+        return this.fonts[i]
       }
       i++
     }
 
-    return this.fonts[0] as DocumentData
+    return this.fonts[0]
   }
 
   public measureText(
@@ -445,10 +437,6 @@ export class FontManager {
     for (let i = 0; i < loadedCount; i++) {
 
       const font = this.fonts[i]
-
-      if (!font) {
-        continue
-      }
 
       if (font.loaded) {
         loadedCount -= 1

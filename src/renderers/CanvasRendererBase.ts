@@ -32,7 +32,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     if (elements[pos] || layers[pos]?.ty === 99) {
       return
     }
-    const element = this.createItem(layers[pos] as LottieLayer) as ElementInterfaceIntersect
+    const element = this.createItem(layers[pos]) as ElementInterfaceIntersect
 
     elements[pos] = element
     element.initExpressions()
@@ -241,12 +241,12 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       return
     }
     this.canvasContext.transform(
-      props[0] ?? 0,
-      props[1] ?? 0,
-      props[4] ?? 0,
-      props[5] ?? 0,
-      props[12] ?? 0,
-      props[13] ?? 0
+      props[0],
+      props[1],
+      props[4],
+      props[5],
+      props[12],
+      props[13]
     )
   }
 

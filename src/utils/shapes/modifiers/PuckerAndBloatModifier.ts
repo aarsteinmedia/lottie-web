@@ -28,11 +28,11 @@ export class PuckerAndBloatModifier extends ShapeModifier {
     let i
 
     for (i = 0; i < pathLength; i++) {
-      ; (centerPoint[0] as number) += path.v[i]?.[0] ?? 0
-      ; (centerPoint[1] as number) += path.v[i]?.[1] ?? 0
+      ; centerPoint[0] += path.v[i]?.[0] ?? 0
+      centerPoint[1] += path.v[i]?.[1] ?? 0
     }
-    ; (centerPoint[0] as number) /= pathLength
-    ; (centerPoint[1] as number) /= pathLength
+    ; centerPoint[0] /= pathLength
+    centerPoint[1] /= pathLength
     const clonedPath = newElement() as ShapePath
 
     clonedPath.c = path.c
@@ -62,10 +62,6 @@ export class PuckerAndBloatModifier extends ShapeModifier {
 
       for (let i = 0; i < length; i++) {
         shapeData = this.shapes[i]
-
-        if (!shapeData) {
-          continue
-        }
 
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {

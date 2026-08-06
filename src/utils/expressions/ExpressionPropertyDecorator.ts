@@ -94,7 +94,7 @@ function loopOut(
         ret = Array.from({ length: initV.length })
         len = ret.length
         for (i = 0; i < len; i++) {
-          ret[i] = (endV[i] as number - (initV[i] as number)) * repeats + (current[i] as number)
+          ret[i] = (endV[i] - initV[i]) * repeats + current[i]
         }
 
         return ret as number[]
@@ -111,7 +111,7 @@ function loopOut(
         ret = Array.from({ length: lastValue.length })
         len = ret.length
         for (i = 0; i < len; i += 1) {
-          ret[i] = lastValue[i] as number + (lastValue[i] as number - (nextLastValue[i] as number)) * ((currentFrame - lastKeyFrame) / frameRate) / 0.0005
+          ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / frameRate) / 0.0005
         }
 
         return ret as number[]
@@ -198,7 +198,7 @@ function loopIn(
         ret = Array.from({ length: initV.length })
         len = ret.length
         for (i = 0; i < len; i += 1) {
-          ret[i] = current[i] as number - (endV[i] as number - (initV[i] as number)) * repeats
+          ret[i] = current[i] - (endV[i] - initV[i]) * repeats
         }
 
         return ret as number[]
@@ -215,7 +215,7 @@ function loopIn(
         ret = Array.from({ length: firstValue.length })
         len = ret.length
         for (i = 0; i < len; i += 1) {
-          ret[i] = firstValue[i] as number + (firstValue[i] as number - (nextFirstValue[i] as number)) * (firstKeyFrame - currentFrame) / 0.001
+          ret[i] = firstValue[i] + (firstValue[i] - nextFirstValue[i]) * (firstKeyFrame - currentFrame) / 0.001
         }
 
         return ret
@@ -271,7 +271,7 @@ function smooth(
     sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
     if (isArrayOfNum(pv) && isArrayOfNum(value) && isArrayOfNum(sampleValue)) {
       for (j = 0; j < pv.length; j++) {
-        ; (value[j] as number) += (sampleValue[j] as number)
+        ; value[j] += sampleValue[j]
       }
       i++
       continue
@@ -281,7 +281,7 @@ function smooth(
   }
   if (isArrayOfNum(pv) && isArrayOfNum(value)) {
     for (j = 0; j < pv.length; j += 1) {
-      ; (value[j] as number) /= samples
+      ; value[j] /= samples
     }
 
     return value
@@ -341,9 +341,9 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
     matrix.rotateZ(-rotationZ * (this.rz?.mult ?? 1))
       .rotateY(rotationY * (this.ry?.mult ?? 1))
       .rotateX(rotationX * (this.rx?.mult ?? 1))
-      .rotateZ(-(orientation[2] as number) * (this.or?.mult ?? 1))
-      .rotateY(orientation[1] as number * (this.or?.mult ?? 1))
-      .rotateX(orientation[0] as number * (this.or?.mult ?? 1))
+      .rotateZ(-orientation[2] * (this.or?.mult ?? 1))
+      .rotateY(orientation[1] * (this.or?.mult ?? 1))
+      .rotateX(orientation[0] * (this.or?.mult ?? 1))
   }
   if (this.data.p?.s) {
     const positionX = this.px?.getValueAtTime(time) as number,
@@ -457,7 +457,7 @@ function addPropertyDecorator() {
 
     if (type !== 0) {
       value = createTypedArray(ArrayType.Float32,
-        (data?.a === 1 ? (data.k as unknown as { s: number[] }[])[0]?.s.length : (data?.k as number[]).length) ?? 0) as number[]
+        data?.a === 1 ? (data.k as unknown as { s: number[] }[])[0]?.s.length : (data?.k as number[]).length) as number[]
     }
     prop._cachingAtTime = {
       lastFrame: initialDefaultFrame,

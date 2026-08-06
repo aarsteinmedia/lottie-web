@@ -1,9 +1,7 @@
 import type { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import type {
-  LottieLayer, Shape, Vector2
-} from '@/types'
+import type { LottieLayer, Shape } from '@/types'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -31,7 +29,7 @@ export class CVMaskElement {
       }
       this.viewData[i] = ShapePropertyFactory.getShapeProp(
         this.element as CVShapeElement,
-        this.masksProperties[i] as Shape,
+        this.masksProperties[i],
         3
       ) as ShapeProperty
     }
@@ -90,9 +88,9 @@ export class CVMaskElement {
         for (j = 1; j < jLen; j++) {
           pts =
             transform?.applyToTriplePoints(
-              data.o[j - 1] as number[],
-              data.i[j] as number[],
-              data.v[j] as number[]
+              data.o[j - 1],
+              data.i[j],
+              data.v[j]
             ) ?? []
           ctx?.bezierCurveTo(
             pts[0] ?? 0, pts[1] ?? 0, pts[2] ?? 0, pts[3] ?? 0, pts[4] ?? 0, pts[5] ?? 0
@@ -100,7 +98,7 @@ export class CVMaskElement {
         }
         pts =
           transform?.applyToTriplePoints(
-            data.o[j - 1] as Vector2, data.i[0] as Vector2, data.v[0] as Vector2
+            data.o[j - 1], data.i[0], data.v[0]
           ) ??
           []
         ctx?.bezierCurveTo(

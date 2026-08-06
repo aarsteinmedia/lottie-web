@@ -71,8 +71,8 @@ export class KeyframedMultidimensionalProperty<
             (e[2] ?? 0) + (ti[2] ?? 0)
           )
         ) {
-          ; (data.k[i] as Keyframe).to = null
-          ; (data.k[i] as Keyframe).ti = null
+          ; data.k[i].to = null
+          data.k[i].ti = null
         }
         if (
           s[0] === e[0] &&
@@ -87,8 +87,8 @@ export class KeyframedMultidimensionalProperty<
             ti[2] === 0
           )
         ) {
-          ; (data.k[i] as Keyframe).to = null
-          ; (data.k[i] as Keyframe).ti = null
+          ; data.k[i].to = null
+          data.k[i].ti = null
         }
       }
     }

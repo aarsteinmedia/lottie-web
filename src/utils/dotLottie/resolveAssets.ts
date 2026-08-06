@@ -56,10 +56,6 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
   for (let i = 0; i < length; i++) {
     const asset = assets[i]
 
-    if (!asset) {
-      continue
-    }
-
     if (!isAudio(asset) && !isImage(asset)) {
       continue
     }
@@ -97,7 +93,7 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
         const { length: jLen } = u8
 
         for (let j = 0; j < jLen; j++) {
-          result += String.fromCharCode(u8[j] as number)
+          result += String.fromCharCode(u8[j])
         }
 
         assetB64 = btoa(result)

@@ -39,20 +39,20 @@ export class Matrix {
     } {
     return {
       x:
-        x * (this.props[0] ?? 0) +
-        y * (this.props[4] ?? 0) +
-        z * (this.props[8] ?? 0) +
-        (this.props[12] ?? 0),
+        x * this.props[0] +
+        y * this.props[4] +
+        z * this.props[8] +
+        this.props[12],
       y:
-        x * (this.props[1] ?? 0) +
-        y * (this.props[5] ?? 0) +
-        z * (this.props[9] ?? 0) +
-        (this.props[13] ?? 0),
+        x * this.props[1] +
+        y * this.props[5] +
+        z * this.props[9] +
+        this.props[13],
       z:
-        x * (this.props[2] ?? 0) +
-        y * (this.props[6] ?? 0) +
-        z * (this.props[10] ?? 0) +
-        (this.props[14] ?? 0),
+        x * this.props[2] +
+        y * this.props[6] +
+        z * this.props[10] +
+        this.props[14],
     }
   }
 
@@ -66,18 +66,18 @@ export class Matrix {
     }
 
     return [
-      x * (this.props[0] ?? 0) +
-      y * (this.props[4] ?? 0) +
-      z * (this.props[8] ?? 0) +
-      (this.props[12] ?? 0),
-      x * (this.props[1] ?? 0) +
-      y * (this.props[5] ?? 0) +
-      z * (this.props[9] ?? 0) +
-      (this.props[13] ?? 0),
-      x * (this.props[2] ?? 0) +
-      y * (this.props[6] ?? 0) +
-      z * (this.props[10] ?? 0) +
-      (this.props[14] ?? 0),
+      x * this.props[0] +
+      y * this.props[4] +
+      z * this.props[8] +
+      this.props[12],
+      x * this.props[1] +
+      y * this.props[5] +
+      z * this.props[9] +
+      this.props[13],
+      x * this.props[2] +
+      y * this.props[6] +
+      z * this.props[10] +
+      this.props[14],
     ]
   }
 
@@ -87,7 +87,7 @@ export class Matrix {
     }
     const _p = this.props
 
-    return `${Math.round((x * (_p[0] ?? 0) + y * (_p[4] ?? 0) + (_p[12] ?? 0)) * 100) / 100},${Math.round((x * (_p[1] ?? 0) + y * (_p[5] ?? 0) + (_p[13] ?? 0)) * 100) / 100
+    return `${Math.round((x * _p[0] + y * _p[4] + _p[12]) * 100) / 100},${Math.round((x * _p[1] + y * _p[5] + _p[13]) * 100) / 100
     }`
   }
 
@@ -99,27 +99,29 @@ export class Matrix {
     const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array & { length: 6 }
 
     if (this.isIdentity()) {
-      arr.set([pt1[0] ?? 0,
-        pt1[1] ?? 0,
-        pt2[0] ?? 0,
-        pt2[1] ?? 0,
-        pt3[0] ?? 0,
-        pt3[1] ?? 0])
+      arr.set([
+        pt1[0],
+        pt1[1],
+        pt2[0],
+        pt2[1],
+        pt3[0],
+        pt3[1]
+      ])
     } else {
-      const p0 = this.props[0] ?? 0,
-        p1 = this.props[1] ?? 0,
-        p4 = this.props[4] ?? 0,
-        p5 = this.props[5] ?? 0,
-        p12 = this.props[12] ?? 0,
-        p13 = this.props[13] ?? 0
+      const p0 = this.props[0],
+        p1 = this.props[1],
+        p4 = this.props[4],
+        p5 = this.props[5],
+        p12 = this.props[12],
+        p13 = this.props[13]
 
       arr.set([
-        (pt1[0] ?? 0) * p0 + (pt1[1] ?? 0) * p4 + p12,
-        (pt1[0] ?? 0) * p1 + (pt1[1] ?? 0) * p5 + p13,
-        (pt2[0] ?? 0) * p0 + (pt2[1] ?? 0) * p4 + p12,
-        (pt2[0] ?? 0) * p1 + (pt2[1] ?? 0) * p5 + p13,
-        (pt3[0] ?? 0) * p0 + (pt3[1] ?? 0) * p4 + p12,
-        (pt3[0] ?? 0) * p1 + (pt3[1] ?? 0) * p5 + p13,
+        pt1[0] * p0 + pt1[1] * p4 + p12,
+        pt1[0] * p1 + pt1[1] * p5 + p13,
+        pt2[0] * p0 + pt2[1] * p4 + p12,
+        pt2[0] * p1 + pt2[1] * p5 + p13,
+        pt3[0] * p0 + pt3[1] * p4 + p12,
+        pt3[0] * p1 + pt3[1] * p5 + p13,
       ])
     }
 
@@ -130,7 +132,7 @@ export class Matrix {
     x: number, y: number, z: number
   ): number {
     return (
-      x * (this.props[0] ?? 0) + y * (this.props[4] ?? 0) + z * (this.props[8] ?? 0) + (this.props[12] ?? 0)
+      x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12]
     )
   }
 
@@ -138,7 +140,7 @@ export class Matrix {
     x: number, y: number, z: number
   ): number {
     return (
-      x * (this.props[1] ?? 0) + y * (this.props[5] ?? 0) + z * (this.props[9] ?? 0) + (this.props[13] ?? 0)
+      x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13]
     )
   }
 
@@ -146,10 +148,10 @@ export class Matrix {
     x: number, y: number, z: number
   ): number {
     return (
-      x * (this.props[2] as number) +
-      y * (this.props[6] as number) +
-      z * (this.props[10] as number) +
-      (this.props[14] as number)
+      x * this.props[2] +
+      y * this.props[6] +
+      z * this.props[10] +
+      this.props[14]
     )
   }
 
@@ -171,16 +173,16 @@ export class Matrix {
 
   getInverseMatrix(): Matrix {
     const determinant =
-      (this.props[0] ?? 0) * (this.props[5] ?? 0) - (this.props[1] ?? 0) * (this.props[4] ?? 0)
-    const a = this.props[5] as number / determinant
-    const b = -(this.props[1] as number) / determinant
-    const c = -(this.props[4] as number) / determinant
-    const d = this.props[0] as number / determinant
+      this.props[0] * this.props[5] - this.props[1] * this.props[4]
+    const a = this.props[5] / determinant
+    const b = -this.props[1] / determinant
+    const c = -this.props[4] / determinant
+    const d = this.props[0] / determinant
     const e =
-      ((this.props[4] as number) * (this.props[13] as number) - (this.props[5] as number) * (this.props[12] as number)) /
+      (this.props[4] * this.props[13] - this.props[5] * this.props[12]) /
       determinant
     const f =
-      -((this.props[0] as number) * (this.props[13] as number) - (this.props[1] as number) * (this.props[12] as number)) /
+      -(this.props[0] * this.props[13] - this.props[1] * this.props[12]) /
       determinant
 
     const inverseMatrix = new Matrix()
@@ -200,7 +202,7 @@ export class Matrix {
     const inverseMatrix = this.getInverseMatrix()
 
     return inverseMatrix.applyToPoint(
-      pt[0] ?? 0, pt[1] ?? 0, pt[2] ?? 0
+      pt[0], pt[1], pt[2] ?? 0
     )
   }
 
@@ -380,12 +382,12 @@ export class Matrix {
   }
 
   to2dCSS(): string {
-    const _a = this.roundMatrixProperty(this.props[0] ?? 0),
-      _b = this.roundMatrixProperty(this.props[1] ?? 0),
-      _c = this.roundMatrixProperty(this.props[4] ?? 0),
-      _d = this.roundMatrixProperty(this.props[5] ?? 0),
-      _e = this.roundMatrixProperty(this.props[12] ?? 0),
-      _f = this.roundMatrixProperty(this.props[13] ?? 0)
+    const _a = this.roundMatrixProperty(this.props[0]),
+      _b = this.roundMatrixProperty(this.props[1]),
+      _c = this.roundMatrixProperty(this.props[4]),
+      _d = this.roundMatrixProperty(this.props[5]),
+      _e = this.roundMatrixProperty(this.props[12]),
+      _f = this.roundMatrixProperty(this.props[13])
 
     return `matrix(${_a},${_b},${_c},${_d},${_e},${_f})`
   }
@@ -395,7 +397,7 @@ export class Matrix {
     const v = 10000
 
     for (let i = 0; i < 16; i++) {
-      cssValue += `${Math.round((this.props[i] ?? 0) * v) / v}`
+      cssValue += `${Math.round(this.props[i] * v) / v}`
       cssValue += i === 15 ? ')' : ','
     }
 
@@ -436,32 +438,31 @@ export class Matrix {
       k2 === 1 &&
       l2 === 0
     ) {
-      _p[12] = (_p[12] ?? 0) * a2 + (_p[15] ?? 0) * m2
-      _p[13] = (_p[13] ?? 0) * f2 + (_p[15] ?? 0) * n2
-      _p[14] = (_p[14] ?? 0) * k2 + (_p[15] ?? 0) * o2
-      // @ts-expect-error: TODO
+      _p[12] = _p[12] * a2 + _p[15] * m2
+      _p[13] = _p[13] * f2 + _p[15] * n2
+      _p[14] = _p[14] * k2 + _p[15] * o2
       _p[15] *= p2
       this._identityCalculated = false
 
       return this
     }
 
-    const a1 = _p[0] ?? 0,
-      b1 = _p[1] ?? 0,
-      c1 = _p[2] ?? 0,
-      d1 = _p[3] ?? 0,
-      e1 = _p[4] ?? 0,
-      f1 = _p[5] ?? 0,
-      g1 = _p[6] ?? 0,
-      h1 = _p[7] ?? 0,
-      i1 = _p[8] ?? 0,
-      j1 = _p[9] ?? 0,
-      k1 = _p[10] ?? 0,
-      l1 = _p[11] ?? 0,
-      m1 = _p[12] ?? 0,
-      n1 = _p[13] ?? 0,
-      o1 = _p[14] ?? 0,
-      p1 = _p[15] ?? 0
+    const a1 = _p[0],
+      b1 = _p[1],
+      c1 = _p[2],
+      d1 = _p[3],
+      e1 = _p[4],
+      f1 = _p[5],
+      g1 = _p[6],
+      h1 = _p[7],
+      i1 = _p[8],
+      j1 = _p[9],
+      k1 = _p[10],
+      l1 = _p[11],
+      m1 = _p[12],
+      n1 = _p[13],
+      o1 = _p[14],
+      p1 = _p[15]
 
     _p[0] = a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2
     _p[1] = a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2

@@ -84,36 +84,28 @@ export class CVContextData {
   fillStyle(value: string) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (thisStack?.fillStyle === value) {
+    if (thisStack.fillStyle === value) {
       return
     }
     this.currentFillStyle = value
 
-    if (thisStack) {
-      thisStack.fillStyle = value
-    }
+    thisStack.fillStyle = value
 
   }
 
   lineCap(value: string) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (thisStack?.lineCap === value) {
+    if (thisStack.lineCap === value) {
       return
     }
     this.currentLineCap = value
 
-    if (thisStack) {
-      thisStack.lineCap = value
-    }
+    thisStack.lineCap = value
   }
 
   lineJoin(value: string) {
     const thisStack = this.stack[this.cArrPos]
-
-    if (!thisStack) {
-      return
-    }
 
     if (thisStack.lineJoin === value) {
       return
@@ -125,10 +117,6 @@ export class CVContextData {
   lineWidth(value: number) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (!thisStack) {
-      return
-    }
-
     if (thisStack.lineWidth === value) {
       return
     }
@@ -139,10 +127,6 @@ export class CVContextData {
   miterLimit(value: number) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (!thisStack) {
-      return
-    }
-
     if (thisStack.miterLimit === value) {
       return
     }
@@ -152,10 +136,6 @@ export class CVContextData {
 
   opacity(op: number) {
     const thisStack = this.stack[this.cArrPos]
-
-    if (!thisStack) {
-      return
-    }
 
     let currentOpacity = thisStack.opacity
 
@@ -175,9 +155,7 @@ export class CVContextData {
     this.cArrPos = 0
     this.cTr.reset()
 
-    if (thisStack) {
-      thisStack.opacity = 1
-    }
+    thisStack.opacity = 1
   }
 
   restore(forceRestore?: boolean) {
@@ -185,7 +163,7 @@ export class CVContextData {
     const currentContext = this.stack[this.cArrPos],
       {
         fillStyle, lineCap, lineJoin, lineWidth, miterLimit, opacity, strokeStyle, transform
-      } = currentContext as CanvasContext,
+      } = currentContext,
       arr = this.cTr.props
 
     for (let i = 0; i < 16; i++) {
@@ -193,7 +171,7 @@ export class CVContextData {
     }
     if (forceRestore) {
       this.nativeContext?.restore()
-      const prevStack = this.stack[this.cArrPos + 1] as CanvasContext
+      const prevStack = this.stack[this.cArrPos + 1]
 
       this.appliedFillStyle = prevStack.fillStyle
       this.appliedStrokeStyle = prevStack.strokeStyle
@@ -237,14 +215,14 @@ export class CVContextData {
       this.duplicate()
     }
 
-    const currentStack = this.stack[this.cArrPos] as CanvasContext
+    const currentStack = this.stack[this.cArrPos]
     let i
 
     for (i = 0; i < 16; i++) {
       currentStack.transform[i] = props[i] ?? 0
     }
     this.cArrPos++
-    const newStack = this.stack[this.cArrPos] as CanvasContext
+    const newStack = this.stack[this.cArrPos]
 
     newStack.opacity = currentStack.opacity
     newStack.fillStyle = currentStack.fillStyle
@@ -262,9 +240,7 @@ export class CVContextData {
   setOpacity(value: number) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (thisStack) {
-      thisStack.opacity = value
-    }
+    thisStack.opacity = value
   }
 
   stroke() {
@@ -298,14 +274,12 @@ export class CVContextData {
   strokeStyle(value: string) {
     const thisStack = this.stack[this.cArrPos]
 
-    if (thisStack?.strokeStyle === value) {
+    if (thisStack.strokeStyle === value) {
       return
     }
     this.currentStrokeStyle = value
 
-    if (thisStack) {
-      thisStack.strokeStyle = value
-    }
+    thisStack.strokeStyle = value
   }
 
   transform(props: Float32Array) {
@@ -321,12 +295,12 @@ export class CVContextData {
 
     // Applying the new transform to the canvas
     this.nativeContext?.setTransform(
-      trProps[0] as number,
-      trProps[1] as number,
-      trProps[4] as number,
-      trProps[5] as number,
-      trProps[12] as number,
-      trProps[13] as number
+      trProps[0],
+      trProps[1],
+      trProps[4],
+      trProps[5],
+      trProps[12],
+      trProps[13]
     )
   }
 }

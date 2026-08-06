@@ -71,7 +71,7 @@ export function buildBezierData(
           Math.pow(perc, 3) * (pt2[i] ?? 0)
         point[i] = ptCoord
         if (lastPoint !== null) {
-          ptDistance += Math.pow(Number(point[i]) - Number(lastPoint[i]), 2)
+          ptDistance += Math.pow(point[i] - lastPoint[i], 2)
         }
       }
       ptDistance = Math.sqrt(ptDistance)
@@ -103,10 +103,10 @@ export function getNewSegment(
   } else if (startPerc > 1) {
     startPerc = 1
   }
-  const t0 = getDistancePerc(startPerc, bezierData) ?? 0
+  const t0 = getDistancePerc(startPerc, bezierData)
 
   endPerc = endPerc > 1 ? 1 : endPerc
-  const t1 = getDistancePerc(endPerc, bezierData) ?? 0,
+  const t1 = getDistancePerc(endPerc, bezierData),
     u0 = 1 - t0,
     u1 = 1 - t1,
     u0u0u0 = u0 * u0 * u0,
@@ -174,7 +174,7 @@ export function getPointInSegment(
   percent: number,
   bezierData: ReturnType<typeof getBezierLength>
 ): Vector2 {
-  const t1 = getDistancePerc(percent, bezierData) ?? 0,
+  const t1 = getDistancePerc(percent, bezierData),
     u1 = 1 - t1,
     ptX =
       Math.round((u1 * u1 * u1 * pt1[0] +
@@ -205,19 +205,19 @@ export function getSegmentsLength(shapeData: ShapePath): SegmentLength {
 
   for (i = 0; i < len - 1; i++) {
     lengths[i] = getBezierLength(
-      pathV[i] as Vector2,
-      pathV[i + 1] as Vector2,
-      pathO[i] as Vector2,
-      pathI[i + 1] as Vector2
+      pathV[i],
+      pathV[i + 1],
+      pathO[i],
+      pathI[i + 1]
     )
     totalLength += lengths[i]?.addedLength ?? 0
   }
   if (isClosed && len) {
     lengths[i] = getBezierLength(
-      pathV[i] as Vector2,
-      pathV[0] as Vector2,
-      pathO[i] as Vector2,
-      pathI[0] as Vector2
+      pathV[i],
+      pathV[0],
+      pathO[i],
+      pathI[0]
     )
     totalLength += lengths[i]?.addedLength ?? 0
   }

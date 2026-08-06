@@ -33,7 +33,7 @@ export abstract class BaseRenderer extends FrameElement {
   animationItem?: AnimationItem
   completeLayers = false
   currentFrame = 0
-  elements: ElementInterfaceIntersect[] = []
+  elements: (ElementInterfaceIntersect | undefined)[] = []
   layers: LottieLayer[] = []
   pendingElements: ElementInterfaceIntersect[] = []
 
@@ -69,7 +69,7 @@ export abstract class BaseRenderer extends FrameElement {
 
       if (
         !el ||
-        el === (true as unknown as ElementInterfaceIntersect)
+        el === true as any
       ) {
         this.buildItem(i)
 
@@ -102,7 +102,7 @@ export abstract class BaseRenderer extends FrameElement {
     for (let i = length - 1; i >= 0; i--) {
       const layer = this.layers[i]
 
-      if (!this.elements[i] && layer &&
+      if (!this.elements[i] &&
         (layer.ip - layer.st <=
           Number(val) - layer.st &&
           layer.op - layer.st >
@@ -256,7 +256,7 @@ export abstract class BaseRenderer extends FrameElement {
 
       while (j < jLen) {
         if (this.layers[j]?.id === newLayers[i]?.id) {
-          this.layers[j] = newLayers[i] as LottieLayer
+          this.layers[j] = newLayers[i]
           break
         }
         j++
@@ -279,7 +279,7 @@ export abstract class BaseRenderer extends FrameElement {
 
     for (let i = 0; i < length; i++) {
       if (assets[i]?.xt) {
-        const comp = this.createComp(assets[i] as LottieLayer)
+        const comp = this.createComp(assets[i])
 
         comp.initExpressions()
         this.globalData?.projectInterface.registerComposition(comp)

@@ -1,6 +1,5 @@
 import type {
-  BezierLength,
-  ElementInterfaceIntersect, PoolElement, Shape, Vector2
+  ElementInterfaceIntersect, Shape, Vector2
 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
@@ -29,7 +28,7 @@ export class TrimModifier extends ShapeModifier {
     const { length } = newPaths
 
     for (let i = 0; i < length; i++) {
-      localShapeCollection.addShape(newPaths[i] as ShapePath)
+      localShapeCollection.addShape(newPaths[i])
     }
   }
 
@@ -118,10 +117,10 @@ export class TrimModifier extends ShapeModifier {
       // }
       const { lengths } = pathsData[i] ?? { lengths: [] }
 
-      shapePath.c = Boolean(shapePaths[i]?.c)
+      shapePath.c = shapePaths[i]?.c
       jLen = shapePaths[i]?.c ? lengths.length : lengths.length + 1
       for (j = 1; j < jLen; j++) {
-        currentLengthData = lengths[j - 1] as BezierLength
+        currentLengthData = lengths[j - 1]
         if (addedLength + currentLengthData.addedLength < shapeSegment.s) {
           addedLength += currentLengthData.addedLength
           shapePath.c = false
@@ -136,10 +135,10 @@ export class TrimModifier extends ShapeModifier {
           shapeSegment.e >= addedLength + currentLengthData.addedLength
         ) {
           this.addSegment(
-            shapePaths[i]?.v[j - 1] as unknown as Vector2,
-            shapePaths[i]?.o[j - 1] as unknown as Vector2,
-            shapePaths[i]?.i[j] as unknown as Vector2,
-            shapePaths[i]?.v[j] as unknown as Vector2,
+            shapePaths[i]?.v[j - 1],
+            shapePaths[i]?.o[j - 1],
+            shapePaths[i]?.i[j],
+            shapePaths[i]?.v[j],
             shapePath,
             segmentCount,
             isNewShape
@@ -147,13 +146,13 @@ export class TrimModifier extends ShapeModifier {
           isNewShape = false
         } else {
           segment = getNewSegment(
-            shapePaths[i]?.v[j - 1] as unknown as Vector2,
-            shapePaths[i]?.v[j] as unknown as Vector2,
-            shapePaths[i]?.o[j - 1] as unknown as Vector2,
-            shapePaths[i]?.i[j] as unknown as Vector2,
+            shapePaths[i]?.v[j - 1],
+            shapePaths[i]?.v[j],
+            shapePaths[i]?.o[j - 1],
+            shapePaths[i]?.i[j],
             (shapeSegment.s - addedLength) / currentLengthData.addedLength,
             (shapeSegment.e - addedLength) / currentLengthData.addedLength,
-            lengths[j - 1] as BezierLength
+            lengths[j - 1]
           )
           this.addSegmentFromArray(
             segment, shapePath, segmentCount, isNewShape
@@ -174,10 +173,10 @@ export class TrimModifier extends ShapeModifier {
             shapeSegment.e >= addedLength + segmentLength
           ) {
             this.addSegment(
-              shapePaths[i]?.v[j - 1] as unknown as Vector2,
-              shapePaths[i]?.o[j - 1] as unknown as Vector2,
-              shapePaths[i]?.i[0] as unknown as Vector2,
-              shapePaths[i]?.v[0] as unknown as Vector2,
+              shapePaths[i]?.v[j - 1],
+              shapePaths[i]?.o[j - 1],
+              shapePaths[i]?.i[0],
+              shapePaths[i]?.v[0],
               shapePath,
               segmentCount,
               isNewShape
@@ -185,13 +184,13 @@ export class TrimModifier extends ShapeModifier {
             isNewShape = false
           } else {
             segment = getNewSegment(
-              shapePaths[i]?.v[j - 1] as unknown as Vector2,
-              shapePaths[i]?.v[0] as unknown as Vector2,
-              shapePaths[i]?.o[j - 1] as unknown as Vector2,
-              shapePaths[i]?.i[0] as unknown as Vector2,
+              shapePaths[i]?.v[j - 1],
+              shapePaths[i]?.v[0],
+              shapePaths[i]?.o[j - 1],
+              shapePaths[i]?.i[0],
               (shapeSegment.s - addedLength) / segmentLength,
               (shapeSegment.e - addedLength) / segmentLength,
-              lengths[j - 1] as BezierLength
+              lengths[j - 1]
             )
             this.addSegmentFromArray(
               segment, shapePath, segmentCount, isNewShape
@@ -202,7 +201,7 @@ export class TrimModifier extends ShapeModifier {
         } else {
           shapePath.c = false
         }
-        addedLength += currentLengthData?.addedLength ?? 0
+        addedLength += currentLengthData.addedLength
         segmentCount++
       }
       if (shapePath._length) {
@@ -388,10 +387,6 @@ export class TrimModifier extends ShapeModifier {
       for (let i = 0; i < length; i++) {
         const currentShape = this.shapes[i]
 
-        if (!currentShape) {
-          continue
-        }
-
         currentShape.localShapeCollection?.releaseShapes()
 
         const { localShapeCollection, shape } = currentShape
@@ -414,10 +409,6 @@ export class TrimModifier extends ShapeModifier {
 
       for (let i = 0; i < length; i++) {
         shapeData = this.shapes[i]
-
-        if (!shapeData) {
-          continue
-        }
 
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
@@ -442,7 +433,7 @@ export class TrimModifier extends ShapeModifier {
               if (!shapePaths) {
                 continue
               }
-              pathData = getSegmentsLength(shapePaths.shapes[j] as ShapePath)
+              pathData = getSegmentsLength(shapePaths.shapes[j])
               pathsData.push(pathData as unknown as ShapePath)
               totalShapeLength += pathData.totalLength
             }
@@ -465,10 +456,6 @@ export class TrimModifier extends ShapeModifier {
 
       for (let i = length - 1; i >= 0; i--) {
         shapeData = this.shapes[i]
-
-        if (!shapeData) {
-          continue
-        }
 
         if (shapeData.shape?._mdf) {
           localShapeCollection = shapeData.localShapeCollection
@@ -555,10 +542,6 @@ export class TrimModifier extends ShapeModifier {
         // Don't remove this even if it's losing cached info.
         const currentShape = this.shapes[i]
 
-        if (!currentShape) {
-          continue
-        }
-
         currentShape.pathsData.length = 0
 
         const { shape } = currentShape
@@ -575,7 +558,7 @@ export class TrimModifier extends ShapeModifier {
     const { length } = pathsData
 
     for (let i = 0; i < length; i++) {
-      segmentsLengthPool.release(pathsData[i] as PoolElement)
+      segmentsLengthPool.release(pathsData[i])
     }
     pathsData.length = 0
 

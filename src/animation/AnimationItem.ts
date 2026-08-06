@@ -438,7 +438,7 @@ export class AnimationItem extends BaseEvent {
       i = 0
       while (i < len) {
         if (layers[i]?.id === newLayers[j]?.id) {
-          layers[i] = newLayers[j] as LottieLayer
+          layers[i] = newLayers[j]
           break
         }
         i++
@@ -451,7 +451,7 @@ export class AnimationItem extends BaseEvent {
     }
     len = data.assets.length
     for (i = 0; i < len; i++) {
-      assets.push(data.assets[i] as LottieAsset)
+      assets.push(data.assets[i])
     }
     this.animationData.__complete = false
     completeAnimation(this.animationData,

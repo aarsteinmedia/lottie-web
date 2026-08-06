@@ -6,7 +6,6 @@ import type {
   VectorProperty,
 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
-import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { type PolynomialBezier, shapeSegment } from '@/utils/PolynomialBezier'
@@ -27,8 +26,8 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
   getProjectingAngle = (path: ShapePath, cur: number) => {
     const prevIndex = cur === 0 ? path.length() - 1 : cur - 1,
       nextIndex = (cur + 1) % path.length(),
-      prevPoint = path.v[prevIndex] as Vector2,
-      nextPoint = path.v[nextIndex] as Vector2,
+      prevPoint = path.v[prevIndex],
+      nextPoint = path.v[nextIndex],
       pVector = getPerpendicularVector(prevPoint, nextPoint) as Vector2
 
     return Math.atan2(0, 1) - Math.atan2(pVector[1], pVector[0])
@@ -69,9 +68,9 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     direction: AnimationDirection
   ) => {
     const angle = getProjectingAngle(path, cur),
-      point = path.v[cur % path._length] as Vector2,
-      prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1] as Vector2,
-      nextPoint = path.v[(cur + 1) % path._length] as Vector2,
+      point = path.v[cur % path._length],
+      prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1],
+      nextPoint = path.v[(cur + 1) % path._length],
       prevDist =
         pointType === 2
           ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2) +
@@ -241,7 +240,7 @@ export class ZigZagModifier extends ShapeModifier {
       const { length } = this.shapes
 
       for (let i = 0; i < length; i++) {
-        shapeData = this.shapes[i] as ShapeProperty
+        shapeData = this.shapes[i]
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
@@ -254,7 +253,7 @@ export class ZigZagModifier extends ShapeModifier {
 
           for (let j = 0; j < _length; j++) {
             localShapeCollection?.addShape(this.processPath(
-              shapePaths[j] as ShapePath, amplitude, frequency, pointType
+              shapePaths[j], amplitude, frequency, pointType
             ))
           }
         }

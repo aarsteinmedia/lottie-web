@@ -123,7 +123,7 @@ export class CVTextElement extends TextElement {
 
     for (let i = 0; i < length; i++) {
       const charData = this.globalData.fontManager.getCharData(
-        documentData.finalText[i] as string,
+        documentData.finalText[i],
         fontData.fStyle,
         this.globalData.fontManager.getFontByName(documentData.f).fFamily
       )
@@ -227,7 +227,7 @@ export class CVTextElement extends TextElement {
         xPos += trackingOffset
       }
       if (this.textSpans[cnt]) {
-        (this.textSpans[cnt] as TextSpan).elem = commands as number[][]
+        this.textSpans[cnt].elem = commands as number[][]
       } else {
         this.textSpans[cnt] = { elem: commands } as TextSpan
       }
@@ -291,10 +291,10 @@ export class CVTextElement extends TextElement {
       }
       renderedLetter = renderedLetters[i]
       renderer.save()
-      renderer.ctxTransform(renderedLetter?.p as unknown as Float32Array)
-      renderer.ctxOpacity(renderedLetter?.o)
+      renderer.ctxTransform(renderedLetter.p as unknown as Float32Array)
+      renderer.ctxOpacity(renderedLetter.o)
       if (this.fill) {
-        if (renderedLetter?.fc) {
+        if (renderedLetter.fc) {
           if (lastFill !== renderedLetter.fc) {
             renderer.ctxFillStyle(renderedLetter.fc as string)
             lastFill = renderedLetter.fc
@@ -331,7 +331,7 @@ export class CVTextElement extends TextElement {
         // / ctx.fillText(this.textSpans[i].val,0,0);
       }
       if (this.stroke) {
-        if (renderedLetter?.sw) {
+        if (renderedLetter.sw) {
           if (lastStrokeW !== renderedLetter.sw) {
             lastStrokeW = renderedLetter.sw
             renderer.ctxLineWidth(renderedLetter.sw)
@@ -342,7 +342,7 @@ export class CVTextElement extends TextElement {
           renderer.ctxLineWidth(this.values.sWidth)
           // ctx.lineWidth = this.values.sWidth;
         }
-        if (renderedLetter?.sc) {
+        if (renderedLetter.sc) {
           if (lastStroke !== renderedLetter.sc) {
             lastStroke = renderedLetter.sc
             renderer.ctxStrokeStyle(renderedLetter.sc as string)

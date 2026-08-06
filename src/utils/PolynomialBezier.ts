@@ -195,10 +195,10 @@ export class PolynomialBezier {
         p0[1], p1[1], p2[1], p3[1]
       )
 
-    this.a = [coeffx[0] as number, coeffy[0] as number]
-    this.b = [coeffx[1] as number, coeffy[1] as number]
-    this.c = [coeffx[2] as number, coeffy[2] as number]
-    this.d = [coeffx[3] as number, coeffy[3] as number]
+    this.a = [coeffx[0], coeffy[0]]
+    this.b = [coeffx[1], coeffy[1]]
+    this.c = [coeffx[2], coeffy[2]]
+    this.d = [coeffx[3], coeffy[3]]
     this.points = [p0,
       p1,
       p2,
@@ -306,7 +306,7 @@ export class PolynomialBezier {
       return [singlePoint(this.points[0]), this]
     }
     if (t >= 1) {
-      return [this, singlePoint(this.points[this.points.length - 1] as Vector2)]
+      return [this, singlePoint(this.points[this.points.length - 1])]
     }
     const p10 = lerpPoint(
         this.points[0], this.points[1], t
@@ -385,10 +385,10 @@ export function shapeSegment(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
 
   return new PolynomialBezier(
-    shapePath.v[index] as Vector2,
-    shapePath.o[index] as Vector2,
-    shapePath.i[nextIndex] as Vector2,
-    shapePath.v[nextIndex] as Vector2,
+    shapePath.v[index],
+    shapePath.o[index],
+    shapePath.i[nextIndex],
+    shapePath.v[nextIndex],
     true
   )
 }
@@ -397,10 +397,10 @@ export function shapeSegmentInverted(shapePath: ShapePath, index: number) {
   const nextIndex = (index + 1) % shapePath.length()
 
   return new PolynomialBezier(
-    shapePath.v[nextIndex] as Vector2,
-    shapePath.i[nextIndex] as Vector2,
-    shapePath.o[index] as Vector2,
-    shapePath.v[index] as Vector2,
+    shapePath.v[nextIndex],
+    shapePath.i[nextIndex],
+    shapePath.o[index],
+    shapePath.v[index],
     true
   )
 }

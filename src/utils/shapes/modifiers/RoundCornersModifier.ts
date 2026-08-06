@@ -48,10 +48,10 @@ export class RoundCornersModifier extends ShapeModifier {
 
     for (let i = 0; i < len; i++) {
       currentV = path.v[i]
-      currentO = path.o[i] as Vector2
-      currentI = path.i[i] as Vector2
+      currentO = path.o[i]
+      currentI = path.i[i]
       if (
-        currentV?.[0] === currentO[0] &&
+        currentV[0] === currentO[0] &&
         currentV[1] === currentO[1] &&
         currentV[0] === currentI[0] &&
         currentV[1] === currentI[1]
@@ -72,9 +72,9 @@ export class RoundCornersModifier extends ShapeModifier {
           index++
         } else {
           if (i === 0) {
-            closerV = path.v[len - 1] as Vector2
+            closerV = path.v[len - 1]
           } else {
-            closerV = path.v[i - 1] as Vector2
+            closerV = path.v[i - 1]
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
             Math.pow(currentV[1] - closerV[1], 2))
@@ -91,9 +91,9 @@ export class RoundCornersModifier extends ShapeModifier {
           index++
 
           if (i === len - 1) {
-            closerV = path.v[0] as Vector2
+            closerV = path.v[0]
           } else {
-            closerV = path.v[i + 1] as Vector2
+            closerV = path.v[i + 1]
           }
           distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
             Math.pow(currentV[1] - closerV[1], 2))
@@ -136,10 +136,6 @@ export class RoundCornersModifier extends ShapeModifier {
       for (let i = 0; i < length; i++) {
         shapeData = this.shapes[i]
 
-        if (!shapeData) {
-          continue
-        }
-
         localShapeCollection = shapeData.localShapeCollection
         if (!(!shapeData.shape?._mdf && !this._mdf && !_isFirstFrame)) {
           localShapeCollection?.releaseShapes()
@@ -151,7 +147,7 @@ export class RoundCornersModifier extends ShapeModifier {
           const jLen = shapeData.shape?.paths?._length || 0
 
           for (let j = 0; j < jLen; j++) {
-            localShapeCollection?.addShape(this.processPath(shapePaths[j] as ShapePath, rd as number))
+            localShapeCollection?.addShape(this.processPath(shapePaths[j], rd as number))
           }
         }
         if (shapeData.shape) {

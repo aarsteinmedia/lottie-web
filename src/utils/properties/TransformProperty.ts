@@ -128,10 +128,6 @@ export class TransformProperty extends BaseProperty {
         for (let i = 0; i < length; i++) {
           const thisK = data.or.k[i]
 
-          if (!thisK) {
-            continue
-          }
-
           thisK.to = null
           thisK.ti = null
         }
@@ -230,7 +226,7 @@ export class TransformProperty extends BaseProperty {
     this._mdf = Boolean(this._mdf)
     if (this.a) {
       mat.translate(
-        -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
+        -this.a.v[0], -this.a.v[1], this.a.v[2]
       )
     }
     if (this.s) {
@@ -294,7 +290,7 @@ export class TransformProperty extends BaseProperty {
       this.v.cloneFromProps(this.pre.props)
       if (this.appliedTransformations < 1 && this.a) {
         this.v.translate(
-          -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
+          -this.a.v[0], -this.a.v[1], this.a.v[2]
         )
       }
       if (this.appliedTransformations < 2 && this.s) {
@@ -328,7 +324,7 @@ export class TransformProperty extends BaseProperty {
           ) {
             v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
               0) as Vector2
-            v2 = this.p.getValueAtTime(Number(this.p.keyframes[0]?.t) / frameRate,
+            v2 = this.p.getValueAtTime(this.p.keyframes[0]?.t / frameRate,
               0) as Vector2
           } else if (
             Number(this.p._caching?.lastFrame) + this.p.offsetTime >=
@@ -364,7 +360,7 @@ export class TransformProperty extends BaseProperty {
               0) as number
             v2[0] = px.getValueAtTime((pxKeyframes[0]?.t ?? 0) / frameRate,
               0) as number
-            v2[1] = py.getValueAtTime(Number(pyKeyframes[0]?.t) / frameRate,
+            v2[1] = py.getValueAtTime(pyKeyframes[0]?.t / frameRate,
               0) as number
           } else if (
             Number(px._caching?.lastFrame) + px.offsetTime >=
@@ -435,7 +431,7 @@ export class TransformProperty extends BaseProperty {
     }
 
     this.pre.translate(
-      -(this.a.v[0] as number), -(this.a.v[1] as number), this.a.v[2]
+      -this.a.v[0], -this.a.v[1], this.a.v[2]
     )
     this.appliedTransformations = 1
 
