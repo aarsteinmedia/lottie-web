@@ -57,7 +57,7 @@
     "prebuild:types": "rimraf ./types ",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
-    "assets": "node preview/writeFiles.js",
+    "assets": "node preview/writeFiles.ts",
     "predev": "pnpm assets",
     "dev": "rollup -cw --configPlugin @rollup/plugin-typescript --environment NODE_ENV:development",
     "lint": "eslint ./src ./tests",
@@ -72,6 +72,7 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
+    "@aarsteinmedia/dotlottie-player": "^6.4.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
@@ -90,7 +91,7 @@
     "rollup": "^4.62.4",
     "rollup-plugin-dts": "^6.5.1",
     "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-opener": "^0.2.2",
+    "rollup-plugin-opener": "^0.2.3",
     "rollup-plugin-summary": "^3.0.1",
     "rollup-plugin-swc3": "^0.12.1",
     "rollup-plugin-typescript-paths": "^1.5.0",

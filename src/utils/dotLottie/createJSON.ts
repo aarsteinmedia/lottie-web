@@ -1,7 +1,7 @@
 import type { AnimationData } from '@/types'
 
 import {
-  addExt, createElementID, download
+  addExt, createElementID, devError, download
 } from '@/utils'
 
 interface CreateJSONProps {
@@ -34,7 +34,7 @@ export function createJSON({
 
     return jsonString
   } catch (error) {
-    console.error(error)
+    devError(error)
 
     return null
   }

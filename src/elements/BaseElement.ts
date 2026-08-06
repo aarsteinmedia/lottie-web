@@ -17,7 +17,7 @@ import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
 import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 import { EffectsManager } from '@/effects/EffectsManager'
-import { createElementID } from '@/utils'
+import { createElementID, devError } from '@/utils'
 import { getExpressionInterfaces } from '@/utils/expressions'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
@@ -160,7 +160,7 @@ export abstract class BaseElement {
         this.layerInterface.text = this.layerInterface.textInterface
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 

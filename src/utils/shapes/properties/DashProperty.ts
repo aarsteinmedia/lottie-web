@@ -7,7 +7,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 
 export class DashProperty extends DynamicPropertyContainer {
   dashArray: Float32Array
-  dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array
+  dashoffset = createTypedArray(ArrayType.Float32, 1) as Float32Array & { length: 1 }
   dashStr = ''
   dataProps: StrokeData[]
   elem: ElementInterfaceIntersect

@@ -286,6 +286,7 @@ function seedRandom(pool: number[], math: BMMath) {
   // End anonymous scope, and pass initial values.
 }
 
+// eslint-disable-next-line import/no-default-export
 export default function initialize(BMMath: BMMath) {
   seedRandom([], BMMath)
 }

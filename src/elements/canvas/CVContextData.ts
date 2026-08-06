@@ -1,3 +1,5 @@
+import type { Tuple } from '@/types'
+
 import { ArrayType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { Matrix } from '@/utils/Matrix'
@@ -11,7 +13,7 @@ class CanvasContext {
   miterLimit: number | string = ''
   opacity = -1
   strokeStyle = ''
-  transform = createTypedArray(ArrayType.Float32, 16) as number[]
+  transform = createTypedArray(ArrayType.Float32, 16) as Tuple<number, 16>
   constructor() {
     this.id = Math.random()
   }
@@ -201,12 +203,12 @@ export class CVContextData {
       this.appliedMiterLimit = prevStack.miterLimit
     }
     this.nativeContext?.setTransform(
-      transform[0] as number,
-      transform[1] as number,
-      transform[4] as number,
-      transform[5] as number,
-      transform[12] as number,
-      transform[13] as number
+      transform[0],
+      transform[1],
+      transform[4],
+      transform[5],
+      transform[12],
+      transform[13]
     )
     if (
       this.nativeContext &&

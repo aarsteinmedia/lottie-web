@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
+import { isDev } from '@/utils/helpers/constants'
 import { getIDPrefix } from '@/utils/helpers/prefix'
 
 interface DownloadOptions {
@@ -55,6 +56,15 @@ export const floatEqual = (a: number, b: number) =>
     }
 
     return Math.min(Math.max(n, min), max)
+  },
+
+  /**
+   * Only run devError on dev.
+   */
+  devError = (...args: unknown[]) => {
+    if (isDev) {
+      console.error(...args)
+    }
   },
 
   /**

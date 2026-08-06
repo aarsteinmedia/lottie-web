@@ -16,7 +16,9 @@ import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapePrope
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
-import { isArray, toRGBString } from '@/utils'
+import {
+  devError, isArray, toRGBString
+} from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
 import { RendererType } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
@@ -980,7 +982,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 

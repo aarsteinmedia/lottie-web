@@ -20,7 +20,7 @@ import { createTypedArray } from '@/utils/helpers/arrays'
  * All values are handled as floating point values.
  */
 export class Matrix {
-  props = createTypedArray(ArrayType.Float32, 16) as Float32Array
+  props = createTypedArray(ArrayType.Float32, 16) as Float32Array & { length: 16 }
   private _identity = true
   private _identityCalculated = false
 
@@ -96,7 +96,7 @@ export class Matrix {
     pt2: number[],
     pt3: number[]
   ): Float32Array {
-    const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array
+    const arr = createTypedArray(ArrayType.Float32, 6) as Float32Array & { length: 6 }
 
     if (this.isIdentity()) {
       arr.set([pt1[0] ?? 0,

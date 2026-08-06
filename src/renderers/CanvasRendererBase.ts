@@ -14,6 +14,7 @@ import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import { CVTextElement } from '@/elements/canvas/CVTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { SVGRenderer } from '@/renderers/SVGRenderer'
+import { devError } from '@/utils'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
@@ -336,7 +337,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         }
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
 
   }

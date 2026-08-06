@@ -154,7 +154,7 @@ export class TrimModifier extends ShapeModifier {
             (shapeSegment.s - addedLength) / currentLengthData.addedLength,
             (shapeSegment.e - addedLength) / currentLengthData.addedLength,
             lengths[j - 1] as BezierLength
-          ) as number[]
+          )
           this.addSegmentFromArray(
             segment, shapePath, segmentCount, isNewShape
           )
@@ -192,7 +192,7 @@ export class TrimModifier extends ShapeModifier {
               (shapeSegment.s - addedLength) / segmentLength,
               (shapeSegment.e - addedLength) / segmentLength,
               lengths[j - 1] as BezierLength
-            ) as number[]
+            )
             this.addSegmentFromArray(
               segment, shapePath, segmentCount, isNewShape
             )

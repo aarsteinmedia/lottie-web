@@ -1,3 +1,5 @@
+overrides:
+  '@aarsteinmedia/lottie-web': 'link:.'
 onlyBuiltDependencies:
   - '@swc/core'
   - esbuild

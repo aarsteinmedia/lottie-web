@@ -20,8 +20,6 @@ const ignores = [
     '**/node_modules/*',
     '**/types/*',
     'tsconfig.json',
-    'player.js',
-    'player-light.js',
   ],
   config = defineConfig(
     sheriff(sheriffOptions),

@@ -90,10 +90,10 @@ export class ExpressionPropertyInterface {
     if (!property || !('pv' in property)) {
       property = this.defaultMultidimensionalValue
     }
-    const mult = 1 / property?.mult
-    const len: number = property.data?.l ?? (property.pv as number[]).length
-    const expressionValue = createTypedArray(ArrayType.Float32, len)
-    const arrValue = createTypedArray(ArrayType.Float32, len)
+    const mult = 1 / property?.mult,
+      len: number = property.data?.l ?? (property.pv as number[]).length,
+      expressionValue = createTypedArray(ArrayType.Float32, len),
+      arrValue = createTypedArray(ArrayType.Float32, len)
 
     expressionValue.value = arrValue
     this.completeProperty(
@@ -120,8 +120,8 @@ export class ExpressionPropertyInterface {
       property = this.defaultUnidimensionalValue
     }
     const mult = 1 / property.mult
-    let val = property.pv * mult
-    let expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+    let val = property.pv * mult,
+      expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
 
     expressionValue.value = val
     this.completeProperty(

@@ -673,10 +673,13 @@ export interface LottieManifest {
   version?: undefined | string
 }
 
+export type Tuple<T, N extends number, R extends T[] = []> =
+  R['length'] extends N ? R : Tuple<T, N, [...R, T]>
+
 type Vector1 = number
-export type Vector2 = [number, number]
-export type Vector3 = [number, number, number]
-export type Vector4 = [number, number, number, number]
+export type Vector2 = Tuple<number, 2>
+export type Vector3 = Tuple<number, 3>
+export type Vector4 = Tuple<number, 4>
 
 export interface VectorProperty<T = Vector1> {
   _mdf?: boolean
@@ -1070,7 +1073,7 @@ export interface AnimationData {
   ao?: undefined | boolean | 0 | 1
   assets: LottieAsset[]
   /** Characters. */
-  chars: Character[] | null
+  chars?: Character[] | null
   /** Is three dimensional. */
   ddd: 0 | 1
   fonts?: undefined | { list: DocumentData[] }

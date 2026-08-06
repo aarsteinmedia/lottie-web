@@ -1,6 +1,6 @@
 import type { AnimationData, LottieManifest } from '@/types'
 
-import { getExt } from '@/utils'
+import { devError, getExt } from '@/utils'
 import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON'
 
 export async function getAnimationData(input: unknown): Promise<{
@@ -79,7 +79,7 @@ export async function getAnimationData(input: unknown): Promise<{
       manifest,
     }
   } catch (error) {
-    console.error(error)
+    devError(error)
 
     return {
       animations: undefined,

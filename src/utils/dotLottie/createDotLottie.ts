@@ -7,7 +7,7 @@ import type {
 } from '@/types'
 
 import {
-  addExt, createElementID, download, getExt, getExtFromB64, isAudio, isImage,
+  addExt, createElementID, devError, download, getExt, getExtFromB64, isAudio, isImage,
   parseBase64
 } from '@/utils'
 import { isServer } from '@/utils/helpers/constants'
@@ -207,7 +207,7 @@ export async function createDotLottie({
 
     return buffer
   } catch (error) {
-    console.error(error)
+    devError(error)
 
     return null
   }

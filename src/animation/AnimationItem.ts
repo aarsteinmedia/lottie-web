@@ -25,7 +25,9 @@ import { getRegisteredRenderer } from '@/renderers'
 import { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import { HybridRenderer } from '@/renderers/HybridRenderer'
 import { SVGRenderer } from '@/renderers/SVGRenderer'
-import { createElementID, isArray } from '@/utils'
+import {
+  createElementID, devError, isArray
+} from '@/utils'
 import audioControllerFactory from '@/utils/audio/AudioController'
 import {
   completeAnimation, loadAnimation, loadData
@@ -678,7 +680,7 @@ export class AnimationItem extends BaseEvent {
         this.trigger(PlayerEvent.Destroy)
       }
     } catch (error) {
-      console.error(`${this.constructor.name}:\n`, error)
+      devError(`${this.constructor.name}:\n`, error)
       throw new Error(`${this.constructor.name}: Could not set data`)
     }
   }
@@ -779,7 +781,7 @@ export class AnimationItem extends BaseEvent {
         params.path, this.configAnimation, this.onSetupError
       )
     } catch (error) {
-      console.error(`${this.constructor.name}:\n`, error)
+      devError(`${this.constructor.name}:\n`, error)
       throw new Error(`${this.constructor.name}: Could not set params`)
     }
   }
@@ -927,7 +929,7 @@ export class AnimationItem extends BaseEvent {
         }
       }
     } catch (error) {
-      console.error(`${this.constructor.name}:\n`, error)
+      devError(`${this.constructor.name}:\n`, error)
     }
   }
 
@@ -965,7 +967,7 @@ export class AnimationItem extends BaseEvent {
         [], documentData, index
       )
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 

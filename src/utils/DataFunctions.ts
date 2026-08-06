@@ -77,8 +77,8 @@ function completeLayers(layers: LottieLayer[],
   }
 }
 
-function completeChars(chars: Character[] | null,
-  assets: LottieLayer[]) {
+function completeChars(chars?: Character[] | null,
+  assets: LottieLayer[] = []) {
   if (!chars) {
     return
   }
@@ -617,4 +617,5 @@ const DataFunctions = {
   completeLayers
 }
 
+// eslint-disable-next-line import/no-default-export
 export default DataFunctions

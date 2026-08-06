@@ -3,6 +3,7 @@ import type {
   WorkerEvent
 } from '@/types'
 
+import { devError } from '@/utils'
 import { loadAsset } from '@/utils/AssetLoader'
 import DataFunctions from '@/utils/DataFunctions'
 import { isServer } from '@/utils/helpers/constants'
@@ -240,7 +241,7 @@ function createProcess(onComplete: (data: AnimationData) => void,
 
     return id
   } catch (error) {
-    console.error('DataManager}:\n', error)
+    devError('DataManager}:\n', error)
     throw new Error('Could not create animation proccess')
   }
 }
@@ -302,5 +303,5 @@ const DataManager = {
   loadData,
 }
 
-
+// eslint-disable-next-line import/no-default-export
 export default DataManager

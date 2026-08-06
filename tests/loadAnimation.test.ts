@@ -5,7 +5,7 @@ import {
 import { loadAnimation } from '@/animation/AnimationManager'
 import { PlayerEvent, RendererType } from '@/utils/enums'
 
-import animationData from '../assets/round-corners-modifier.json'
+import animationData from './lottie-fixtures/round-corners-modifier.json'
 
 // Registers the SVG renderer, modifiers, and expression plugin.
 import '@/LottieSvg'

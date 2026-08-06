@@ -12,7 +12,7 @@ import { SolidElement } from '@/elements/SolidElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
-import { createElementID } from '@/utils'
+import { createElementID, devError } from '@/utils'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { namespaceSVG } from '@/utils/helpers/constants'
@@ -211,7 +211,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
       this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
     } catch (error) {
-      console.error(`${this.constructor.name}:\n`, error)
+      devError(`${this.constructor.name}:\n`, error)
     }
   }
 
@@ -365,7 +365,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
         }
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 

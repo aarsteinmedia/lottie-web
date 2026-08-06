@@ -15,12 +15,14 @@ const degToRads = Math.PI / 180,
 
     return isTrue
   },
-  isSafari = _isSafari()
+  isSafari = _isSafari(),
+  isDev = typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
 
 export {
   degToRads,
   inBrowser,
   initialDefaultFrame,
+  isDev,
   isSafari,
   isServer,
   namespaceSVG,

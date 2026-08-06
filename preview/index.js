@@ -227,9 +227,9 @@ async function viewFile(e) {
 
 async function preview(full = true) {
   if (full) {
-    await import('./player.js')
+    await import('@aarsteinmedia/dotlottie-player')
   } else {
-    await import('./player-light.js')
+    await import('@aarsteinmedia/dotlottie-player/light')
   }
 
   handleRefresh()

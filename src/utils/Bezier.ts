@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
-  BezierLength, BezierPoint, SegmentLength, Vector2
+  BezierLength, BezierPoint, SegmentLength, Tuple, Vector2
 } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
@@ -12,7 +12,7 @@ import { segmentsLengthPool } from '@/utils/pooling/segmentLengthPool'
 
 interface StoredData { [key: string]: BezierData | undefined }
 
-const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8)
+const bezierSegmentPoints = createTypedArray(ArrayType.Float32, 8) as Tuple<number, 16>
 
 export function buildBezierData(
   pt1: Vector2,

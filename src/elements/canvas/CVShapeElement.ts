@@ -22,7 +22,7 @@ import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import { CVShapeData } from '@/elements/helpers/shapes/CVShapeData'
 import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformManager'
 import { ShapeElement } from '@/elements/ShapeElement'
-import { toRGBString } from '@/utils'
+import { devError, toRGBString } from '@/utils'
 import {
   lineCapEnum,
   lineJoinEnum,
@@ -243,7 +243,7 @@ export class CVShapeElement extends ShapeElement {
       return elementData
 
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
 
       return null
     }
@@ -388,7 +388,7 @@ export class CVShapeElement extends ShapeElement {
         renderer.restore()
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 
@@ -596,7 +596,7 @@ export class CVShapeElement extends ShapeElement {
         this.drawLayer()
       }
     } catch (error) {
-      console.error(this.constructor.name, error)
+      devError(this.constructor.name, error)
     }
   }
 

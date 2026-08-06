@@ -240,8 +240,8 @@ function applyEase(
   if ($bm_isInstanceOfArray(val1) && $bm_isInstanceOfArray(val2)) {
     let iKey
 
-    const lenKey = val1.length
-    const arr = createTypedArray(ArrayType.Float32, lenKey)
+    const lenKey = val1.length,
+      arr = createTypedArray(ArrayType.Float32, lenKey) as number[]
 
     for (iKey = 0; iKey < lenKey; iKey += 1) {
       arr[iKey] = (val2[iKey] as number - (val1[iKey] as number)) * mult + (val1[iKey] as number)

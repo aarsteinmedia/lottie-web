@@ -6,6 +6,7 @@ import type {
 } from '@/types'
 
 import { AnimationItem } from '@/animation/AnimationItem'
+import { devError } from '@/utils'
 import { PlayerEvent, RendererType } from '@/utils/enums'
 import { isServer } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
@@ -69,7 +70,7 @@ export function loadAnimation(params: AnimationConfiguration) {
 
     return animItem
   } catch (error) {
-    console.error('AnimationManager:\n', error)
+    devError('AnimationManager:\n', error)
     throw new Error('Could not load animation', { cause: error })
   }
 }
@@ -116,7 +117,7 @@ export function registerAnimation(element: HTMLElement | null,
 
     return animItem
   } catch (error) {
-    console.error('AnimationManager:\n', error)
+    devError('AnimationManager:\n', error)
     throw new Error('Could not register animation')
   }
 }

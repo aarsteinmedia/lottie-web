@@ -52,6 +52,10 @@ const isProd = process.env.NODE_ENV !== 'development',
       extensions: ['.ts'],
       preferBuiltins: true,
     }),
+    replace({
+      preventAssignment: true,
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
     swc(),
     serve({
       browser: 'firefox',
