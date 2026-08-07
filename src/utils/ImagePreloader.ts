@@ -22,6 +22,8 @@ export class ImagePreloader {
   private _elementHelper?: undefined | SVGElement
   private _footageLoaded
   private _imageLoaded
+  /** Off-DOM SVG used to decode SVG images without polluting animation `defs` (filters). */
+  private _preloadHost: SVGSVGElement | null = null
   private proxyImage: HTMLCanvasElement | null
   constructor() {
     this._imageLoaded = this.imageLoaded.bind(this)
@@ -66,19 +68,28 @@ export class ImagePreloader {
       img,
     }
 
+    // Intrinsic size helps Firefox decode before the layer mounts.
+    if (assetData.w) {
+      img.setAttribute('width', `${assetData.w}`)
+    }
+    if (assetData.h) {
+      img.setAttribute('height', `${assetData.h}`)
+    }
     img.setAttributeNS(
       namespaceXlink, 'href', path
     )
+
+    // Append as a rendered child of the private host (not <defs>) so the
+    // browser actually decodes the bitmap. Avoid the live animation defs —
+    // dumping images there breaks SVG filter stacks.
     if (this._elementHelper?.append) {
       this._elementHelper.append(img)
     } else {
       this._elementHelper?.appendChild(img)
     }
 
-    // Gate readiness on HTMLImageElement.decode(): SVGImageElement's `load`
-    // event can fire before the bitmap is paint-ready (notably in Firefox).
-    this.awaitDecodedImage(
-      path,
+    this.awaitSvgImageReady(
+      img,
       this._imageLoaded,
       () => {
         if (this.proxyImage) {
@@ -94,19 +105,13 @@ export class ImagePreloader {
   public destroy() {
     this.imagesLoadedCb = null
     this.cleanupElementHelper()
+    this.destroyPreloadHost()
     this.images.length = 0
   }
 
   public footageLoaded() {
     this.loadedFootagesCount++
-    if (
-      this.loadedAssets === this.totalImages &&
-      this.loadedFootagesCount === this.totalFootages &&
-      this.imagesLoadedCb
-    ) {
-      this.cleanupElementHelper()
-      this.imagesLoadedCb(null)
-    }
+    this.notifyIfComplete()
   }
 
   public getAsset(assetData: null | LottieAsset) {
@@ -125,14 +130,7 @@ export class ImagePreloader {
 
   public imageLoaded() {
     this.loadedAssets++
-    if (
-      this.loadedAssets === this.totalImages &&
-      this.loadedFootagesCount === this.totalFootages &&
-      this.imagesLoadedCb
-    ) {
-      this.cleanupElementHelper()
-      this.imagesLoadedCb(null)
-    }
+    this.notifyIfComplete()
   }
 
   public loadAssets(assets: LottieAsset[],
@@ -174,9 +172,10 @@ export class ImagePreloader {
     this.assetsPath = path || ''
   }
 
-  public setCacheType(type: RendererType, elementHelper?: SVGElement) {
+  public setCacheType(type: RendererType, _elementHelper?: SVGElement) {
     if (type === RendererType.SVG) {
-      this._elementHelper = elementHelper
+      // Intentionally ignore the animation's live <defs> — filters live there.
+      this._elementHelper = this.ensurePreloadHost()
       this._createImageData = this.createImageData.bind(this)
     } else {
       this._createImageData = this.createImgData.bind(this)
@@ -193,9 +192,6 @@ export class ImagePreloader {
     }
     const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
 
-    // if (!canvas) {
-    //   throw new Error(`${this.constructor.name}: Could not create canvas element`)
-    // }
     canvas.width = 1
     canvas.height = 1
     const ctx = canvas.getContext('2d')
@@ -211,12 +207,12 @@ export class ImagePreloader {
   }
 
   /**
-   * Wait until `path` has been loaded and decoded into a bitmap.
-   * Prefers HTMLImageElement.decode() so readiness matches paintability
-   * (Firefox may fire `load` before decode completes).
+   * Wait until the SVGImageElement itself is paint-ready.
+   * Decoding a separate HTMLImageElement does not warm Firefox's SVG image
+   * decoder, so we force-decode this element via drawImage / getBBox.
    */
-  private awaitDecodedImage(
-    path: string,
+  private awaitSvgImageReady(
+    img: SVGImageElement,
     onReady: () => void,
     onError: () => void
   ) {
@@ -226,33 +222,48 @@ export class ImagePreloader {
       return
     }
 
-    const img = createTag<HTMLImageElement>('img')
     let isSettled = false
+    let pollCount = 0
+    const poll = { id: undefined as ReturnType<typeof setInterval> | undefined }
+
     const settle = (cb: () => void) => {
       if (isSettled) {
         return
       }
       isSettled = true
+      if (poll.id !== undefined) {
+        clearInterval(poll.id)
+      }
       cb()
     }
-    const finish = () => {
-      if (typeof img.decode === 'function') {
-        img.decode()
-          .then(() => {
-            settle(onReady)
-          })
-          .catch(() => {
-            settle(onReady)
-          })
 
-        return
+    const tryForceDecode = () => {
+      try {
+        const canvas = createTag<HTMLCanvasElement>('canvas')
+
+        canvas.width = 1
+        canvas.height = 1
+        const ctx = canvas.getContext('2d')
+
+        // Sync-decode path used by canvas; succeeds once the SVG image has data.
+        ctx?.drawImage(
+          img, 0, 0, 1, 1
+        )
+
+        settle(onReady)
+
+        return true
+      } catch {
+        return false
       }
-      settle(onReady)
     }
 
-    img.crossOrigin = 'anonymous'
     img.addEventListener(
-      'load', finish, false
+      'load',
+      () => {
+        tryForceDecode()
+      },
+      false
     )
     img.addEventListener(
       'error',
@@ -261,22 +272,36 @@ export class ImagePreloader {
       },
       false
     )
-    img.src = path
 
-    if (img.complete) {
-      if (img.naturalWidth > 0) {
-        finish()
-      } else {
-        settle(onError)
-      }
+    // Data URIs often finish before listeners attach — try immediately.
+    if (tryForceDecode()) {
+      return
     }
+
+    poll.id = setInterval(() => {
+      if (tryForceDecode()) {
+        return
+      }
+      try {
+        const box = img.getBBox()
+
+        if (box.width > 0 || box.height > 0) {
+          settle(onReady)
+        }
+      } catch {
+        // Not ready / not in document yet.
+      }
+      pollCount++
+      if (pollCount > 500) {
+        settle(onReady)
+      }
+    },
+    50)
   }
 
   /**
-   * For SVG renderer we append temporary <image> nodes into `_elementHelper`
-   * so the browser starts fetching. These are moved into layer trees by
-   * ImageElement (reuse) or removed here if still attached when preload ends,
-   * to avoid duplicating large `data:` URLs in the live SVG output.
+   * Remove preload images still attached to the private host.
+   * Adopted images are moved into layers before this runs.
    */
   private cleanupElementHelper() {
     const helper = this._elementHelper
@@ -365,6 +390,43 @@ export class ImagePreloader {
     return obj
   }
 
+  private destroyPreloadHost() {
+    this._preloadHost?.remove()
+    this._preloadHost = null
+    this._elementHelper = undefined
+  }
+
+  /**
+   * Private 1×1 SVG in the document. Images are direct children (not in
+   * <defs>) so browsers decode them; opacity:0 avoids flash. Must not use
+   * display:none — Firefox skips decoding those images.
+   */
+  private ensurePreloadHost(): SVGElement {
+    if (this._elementHelper) {
+      return this._elementHelper
+    }
+
+    if (isServer) {
+      this._elementHelper = createNS('g')
+
+      return this._elementHelper
+    }
+
+    const svg = createNS<SVGSVGElement>('svg')
+
+    svg.setAttribute('aria-hidden', 'true')
+    svg.setAttribute('width', '1')
+    svg.setAttribute('height', '1')
+    svg.style.cssText =
+      'position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none'
+
+    document.documentElement.appendChild(svg)
+    this._preloadHost = svg
+    this._elementHelper = svg
+
+    return svg
+  }
+
   private getAssetsPath(
     assetData: LottieAsset,
     assetsPath: string,
@@ -389,5 +451,24 @@ export class ImagePreloader {
     path += assetData.p ?? ''
 
     return path
+  }
+
+  private notifyIfComplete() {
+    if (
+      this.loadedAssets !== this.totalImages ||
+      this.loadedFootagesCount !== this.totalFootages ||
+      !this.imagesLoadedCb
+    ) {
+      return
+    }
+
+    const cb = this.imagesLoadedCb
+
+    // Let ImageElement adopt preloaded nodes first, then detach leftovers.
+    cb(null)
+    this.cleanupElementHelper()
+    if (this._preloadHost && !this._preloadHost.hasChildNodes()) {
+      this.destroyPreloadHost()
+    }
   }
 }
