@@ -66,6 +66,7 @@ export class CVCompElement extends CompElement {
   setupGlobalData = CanvasRendererBase.prototype.setupGlobalData
   override show = CVBaseElement.prototype.show
   showElement = CVBaseElement.prototype.showElement
+  syncDevicePixelRatio = CanvasRendererBase.prototype.syncDevicePixelRatio
   updateContainerSize = CanvasRendererBase.prototype.updateContainerSize
 
   constructor(

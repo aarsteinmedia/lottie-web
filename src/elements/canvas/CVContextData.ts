@@ -171,14 +171,16 @@ export class CVContextData {
     }
     if (forceRestore) {
       this.nativeContext?.restore()
-      const prevStack = this.stack[this.cArrPos + 1]
-
-      this.appliedFillStyle = prevStack.fillStyle
-      this.appliedStrokeStyle = prevStack.strokeStyle
-      this.appliedLineWidth = prevStack.lineWidth
-      this.appliedLineCap = prevStack.lineCap
-      this.appliedLineJoin = prevStack.lineJoin
-      this.appliedMiterLimit = prevStack.miterLimit
+      // Native styles snap back to the pre-save() snapshot. The popped stack's
+      // fillStyle/strokeStyle can differ from that snapshot (e.g. a clipped
+      // solid set orange, then restore revived the previous teal). Invalidate
+      // applied* so the next fill/stroke pushes current* to the native context.
+      this.appliedFillStyle = ''
+      this.appliedStrokeStyle = ''
+      this.appliedLineWidth = ''
+      this.appliedLineCap = ''
+      this.appliedLineJoin = ''
+      this.appliedMiterLimit = ''
     }
     this.nativeContext?.setTransform(
       transform[0],

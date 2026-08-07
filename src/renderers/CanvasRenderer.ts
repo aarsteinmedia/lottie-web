@@ -8,6 +8,7 @@ import type {
 import { CVCompElement } from '@/elements/canvas/CVCompElement'
 import { CVContextData } from '@/elements/canvas/CVContextData'
 import { CanvasRendererBase } from '@/renderers/CanvasRendererBase'
+import { getDevicePixelRatio } from '@/utils'
 import { PreserveAspectRatio, RendererType } from '@/utils/enums'
 import { Matrix } from '@/utils/Matrix'
 
@@ -18,12 +19,17 @@ export class CanvasRenderer extends CanvasRendererBase {
   constructor(animationItem: AnimationItem, config?: CanvasRendererConfig) {
     super()
     this.animationItem = animationItem
+    this._dprLocked = typeof config?.dpr === 'number' && config.dpr > 0
+    // With a managed wrapper we follow the display DPR; external contexts stay
+    // at 1 unless the caller opts in via rendererSettings.dpr.
+    const shouldUseDisplayDpr = this._dprLocked || Boolean(animationItem.wrapper)
+
     this.renderConfig = {
       className: config?.className || '',
       clearCanvas: config?.clearCanvas ?? true,
       contentVisibility: config?.contentVisibility || 'visible',
       context: config?.context ?? null,
-      dpr: config?.dpr ?? 1,
+      dpr: shouldUseDisplayDpr ? getDevicePixelRatio(config?.dpr) : 1,
       id: config?.id || '',
       imagePreserveAspectRatio:
           config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
@@ -32,8 +38,8 @@ export class CanvasRenderer extends CanvasRendererBase {
       progressiveLoad: Boolean(config?.progressiveLoad),
       runExpressions: config?.runExpressions ?? true,
     }
-    if (this.animationItem.wrapper) {
-      this.renderConfig.dpr = config?.dpr || window.devicePixelRatio || 1
+    if (!shouldUseDisplayDpr) {
+      this._dprLocked = true
     }
     this.globalData = {
       _mdf: false,

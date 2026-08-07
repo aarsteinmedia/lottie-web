@@ -8,7 +8,10 @@ import type {
 } from '@/types'
 
 import { CVEffects } from '@/elements/canvas/CVEffects'
-import { CVMaskElement } from '@/elements/canvas/CVMaskElement'
+import {
+  CVMaskElement,
+  needsMaskIsolation,
+} from '@/elements/canvas/CVMaskElement'
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { EffectTypes } from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
@@ -62,7 +65,11 @@ export abstract class CVBaseElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented in globalData`)
     }
 
-    if (this.data.tt && this.data.tt >= 1) {
+    const hasMatte = Boolean(this.data.tt && this.data.tt >= 1),
+      hasComplexMasks = needsMaskIsolation(this.data.masksProperties)
+
+    // Isolate layer drawing when track mattes or complex masks need buffer compositing.
+    if (hasMatte || hasComplexMasks) {
       this.buffers = []
       const { canvasContext } = this.globalData,
         bufferCanvas = AssetManager.createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
@@ -71,7 +78,7 @@ export abstract class CVBaseElement extends RenderableElement {
       const bufferCanvas2 = AssetManager.createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas2)
-      if (this.data.tt >= 3 && !document._isProxy) {
+      if (hasMatte && this.data.tt !== undefined && this.data.tt >= 3 && !document._isProxy) {
         AssetManager.loadLumaCanvas()
       }
     }
@@ -202,21 +209,18 @@ export abstract class CVBaseElement extends RenderableElement {
     if (!this.canvasContext) {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
-
-    const matteMode = this.data.tt || 0
-
-    if (matteMode < 1) {
+    if (this.buffers.length === 0) {
       return
     }
+
     const buffer = this.buffers[0],
       bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
 
     this.clearCanvas(bufferCtx)
-    // on the first buffer we store the current state of the global drawing
+    // Store the current global drawing so this layer can be isolated.
     bufferCtx.drawImage(
       this.canvasContext.canvas, 0, 0
     )
-    // The next four lines are to clear the canvas
     // TODO: Check if there is a way to clear the canvas without resetting the transform
     this.currentTransform = this.canvasContext.getTransform()
     this.canvasContext.setTransform(
@@ -244,21 +248,41 @@ export abstract class CVBaseElement extends RenderableElement {
     this.renderRenderable()
     this.renderLocalTransform()
     this.setBlendMode()
-    const shouldForceRealStack = this.data.ty === 0
 
-    this.prepareLayer()
+    const hasMatte = (this.data.tt || 0) >= 1,
+      hasSimpleMasks = Boolean(this.maskManager?.hasMasks && this.maskManager.isSimple),
+      hasComplexMasks = Boolean(this.maskManager?.hasMasks && !this.maskManager.isSimple),
+      shouldForceRealStack = this.data.ty === 0 || hasSimpleMasks
+
+    if (hasMatte || hasComplexMasks) {
+      this.prepareLayer()
+    }
 
     const { renderer } = this.globalData as { renderer: CanvasRenderer }
 
     renderer.save(shouldForceRealStack)
     renderer.ctxTransform(this.finalTransform?.localMat.props as Float32Array)
     renderer.ctxOpacity(this.finalTransform?.localOpacity)
-    this.renderInnerContent()
-    renderer.restore(shouldForceRealStack)
-    this.exitLayer()
-    if (this.maskManager?.hasMasks) {
-      renderer.restore(true)
+
+    // Mask paths are layer-local — clip/apply after localMat, like SVG.
+    if (hasSimpleMasks) {
+      this.maskManager?.clipLocal()
     }
+
+    this.renderInnerContent()
+
+    if (hasComplexMasks) {
+      this.maskManager?.applyMasks()
+    }
+
+    renderer.restore(shouldForceRealStack)
+
+    if (hasMatte) {
+      this.exitLayer()
+    } else if (hasComplexMasks) {
+      this.restoreIsolatedLayer()
+    }
+
     if (this._isFirstFrame) {
       this._isFirstFrame = false
     }
@@ -266,6 +290,30 @@ export abstract class CVBaseElement extends RenderableElement {
 
   renderInnerContent() {
     throw new Error(notImplemented)
+  }
+
+  /**
+   * After complex mask compositing on an isolated canvas, put prior layers back underneath.
+   */
+  restoreIsolatedLayer() {
+    if (!this.canvasContext) {
+      throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
+    }
+    if (this.buffers.length === 0) {
+      return
+    }
+
+    this.canvasContext.setTransform(
+      1, 0, 0, 1, 0, 0
+    )
+    this.canvasContext.globalCompositeOperation = 'destination-over'
+    this.canvasContext.drawImage(
+      this.buffers[0], 0, 0
+    )
+    if (this.currentTransform) {
+      this.canvasContext.setTransform(this.currentTransform)
+    }
+    this.canvasContext.globalCompositeOperation = 'source-over'
   }
 
   // override renderLocalTransform() {

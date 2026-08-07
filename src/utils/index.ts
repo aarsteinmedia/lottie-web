@@ -5,7 +5,7 @@ import type {
 } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { isDev } from '@/utils/helpers/constants'
+import { isDev, isServer } from '@/utils/helpers/constants'
 import { getIDPrefix } from '@/utils/helpers/prefix'
 
 interface DownloadOptions {
@@ -88,6 +88,21 @@ export const floatEqual = (a: number, b: number) =>
       link.remove()
       URL.revokeObjectURL(dataURL)
     }, 1000)
+  },
+
+  /**
+   * Resolve canvas backing-store scale. Prefers an explicit config value,
+   * otherwise uses window.devicePixelRatio (retina / HiDPI).
+   */
+  getDevicePixelRatio = (explicit?: number) => {
+    if (typeof explicit === 'number' && explicit > 0) {
+      return explicit
+    }
+    if (!isServer && devicePixelRatio > 0) {
+      return devicePixelRatio
+    }
+
+    return 1
   },
 
   getExt = (str?: string) => {

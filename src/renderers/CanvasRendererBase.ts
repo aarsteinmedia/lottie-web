@@ -14,7 +14,7 @@ import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import { CVTextElement } from '@/elements/canvas/CVTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { SVGRenderer } from '@/renderers/SVGRenderer'
-import { devError } from '@/utils'
+import { devError, getDevicePixelRatio } from '@/utils'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
@@ -25,6 +25,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
   destroyed?: boolean
   renderConfig?: CanvasRendererConfig
   transformCanvas?: TransformCanvas
+  /** True when the user passed an explicit `dpr` in rendererSettings. */
+  protected _dprLocked = false
 
   override buildItem(pos: number) {
     const { elements, layers } = this
@@ -377,6 +379,14 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     this.animationItem.container.style.display = 'block'
   }
 
+  /** Refresh DPR from the environment unless the user locked it via config. */
+  syncDevicePixelRatio() {
+    if (!this.renderConfig || this._dprLocked) {
+      return
+    }
+    this.renderConfig.dpr = getDevicePixelRatio()
+  }
+
   updateContainerSize(width?: number, height?: number) {
     if (!this.animationItem) {
       throw new Error(`${this.constructor.name}: animationItem is not implemented`)
@@ -384,40 +394,69 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     if (!this.canvasContext) {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
-    if (!this.renderConfig?.dpr) {
-      throw new Error(`${this.constructor.name}: renderConfig -> dpr is not implemented`)
+    if (!this.renderConfig) {
+      throw new Error(`${this.constructor.name}: renderConfig is not implemented`)
     }
     if (!this.transformCanvas) {
       throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
     }
 
-    this.reset()
-    let elementWidth, elementHeight
+    // Pick up current display DPR (e.g. window moved between screens).
+    this.syncDevicePixelRatio()
 
-    if (width && height) {
-      elementWidth = width
-      elementHeight = height
-      this.canvasContext.canvas.width = elementWidth
-      this.canvasContext.canvas.height = elementHeight
-    } else {
-      if (this.animationItem.wrapper && this.animationItem.container) {
-        elementWidth = this.animationItem.wrapper.offsetWidth
-        elementHeight = this.animationItem.wrapper.offsetHeight
-      } else {
-        elementWidth = this.canvasContext.canvas.width
-        elementHeight = this.canvasContext.canvas.height
-      }
-      this.canvasContext.canvas.width = elementWidth * this.renderConfig.dpr
-      this.canvasContext.canvas.height = elementHeight * this.renderConfig.dpr
+    const { dpr, preserveAspectRatio } = this.renderConfig
+
+    if (!(typeof dpr === 'number' && dpr > 0)) {
+      throw new Error(`${this.constructor.name}: renderConfig -> dpr is not implemented`)
     }
 
-    let elementRel, animationRel
+    this.reset()
+    let elementWidth: number,
+      elementHeight: number
+
+    // width/height are always CSS pixels; backing store is CSS × dpr.
+    if (typeof width === 'number' && typeof height === 'number') {
+      elementWidth = width
+      elementHeight = height
+    } else if (this.animationItem.wrapper && this.animationItem.container) {
+      elementWidth = this.animationItem.wrapper.offsetWidth
+      elementHeight = this.animationItem.wrapper.offsetHeight
+    } else {
+      // External context: derive CSS size from current buffer if possible.
+      elementWidth = this.canvasContext.canvas.width / dpr
+      elementHeight = this.canvasContext.canvas.height / dpr
+    }
+
+    const { canvas } = this.canvasContext
+
+    canvas.width = Math.max(1, Math.round(elementWidth * dpr))
+    canvas.height = Math.max(1, Math.round(elementHeight * dpr))
+
+    // Always pin CSS size to the measured layout box. Canvas width/height attributes
+    // are the backing store; without an explicit CSS size they also act as the
+    // intrinsic layout size. With auto-sized wrappers (e.g. width/height: auto),
+    // that makes a dpr=2 buffer lay out at 2× CSS pixels and cancel HiDPI.
+    if (this.animationItem.container) {
+      const { style } = this.animationItem.container
+
+      style.width = `${elementWidth}px`
+      style.height = `${elementHeight}px`
+    }
+
+    // Prefer crisp downscales when drawing bitmaps into the HiDPI buffer.
+    this.canvasContext.imageSmoothingEnabled = true
+    if ('imageSmoothingQuality' in this.canvasContext) {
+      this.canvasContext.imageSmoothingQuality = 'high'
+    }
+
+    let elementRel,
+      animationRel
 
     if (
-      this.renderConfig.preserveAspectRatio.includes('meet') ||
-      this.renderConfig.preserveAspectRatio.includes('slice')
+      preserveAspectRatio.includes('meet') ||
+      preserveAspectRatio.includes('slice')
     ) {
-      const par = this.renderConfig.preserveAspectRatio.split(' '),
+      const par = preserveAspectRatio.split(' '),
         fillType = par[1] || 'meet',
         pos = par[0] || 'xMidYMid',
         xPos = pos.slice(0, 4),
@@ -430,14 +469,14 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         animationRel < elementRel && fillType === 'slice'
       ) {
         this.transformCanvas.sx =
-          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+          elementWidth / (this.transformCanvas.w / dpr)
         this.transformCanvas.sy =
-          elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+          elementWidth / (this.transformCanvas.w / dpr)
       } else {
         this.transformCanvas.sx =
-          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
+          elementHeight / (this.transformCanvas.h / dpr)
         this.transformCanvas.sy =
-          elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
+          elementHeight / (this.transformCanvas.h / dpr)
       }
 
       if (
@@ -449,7 +488,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
             2 *
-            this.renderConfig.dpr
+            dpr
       } else if (
         xPos === 'xMax' &&
         (animationRel < elementRel && fillType === 'meet' ||
@@ -458,7 +497,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.tx =
           (elementWidth -
             this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) *
-            this.renderConfig.dpr
+            dpr
       } else {
         this.transformCanvas.tx = 0
       }
@@ -471,7 +510,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
             2 *
-            this.renderConfig.dpr
+            dpr
       } else if (
         yPos === 'YMax' &&
         (animationRel > elementRel && fillType === 'meet' ||
@@ -480,20 +519,20 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         this.transformCanvas.ty =
           (elementHeight -
             this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) *
-            this.renderConfig.dpr
+            dpr
       } else {
         this.transformCanvas.ty = 0
       }
-    } else if (this.renderConfig.preserveAspectRatio === PreserveAspectRatio.Initial) {
+    } else if (preserveAspectRatio === PreserveAspectRatio.Initial) {
       this.transformCanvas.sx =
-        elementWidth / (this.transformCanvas.w / this.renderConfig.dpr)
+        elementWidth / (this.transformCanvas.w / dpr)
       this.transformCanvas.sy =
-        elementHeight / (this.transformCanvas.h / this.renderConfig.dpr)
+        elementHeight / (this.transformCanvas.h / dpr)
       this.transformCanvas.tx = 0
       this.transformCanvas.ty = 0
     } else {
-      this.transformCanvas.sx = this.renderConfig.dpr
-      this.transformCanvas.sy = this.renderConfig.dpr
+      this.transformCanvas.sx = dpr
+      this.transformCanvas.sy = dpr
       this.transformCanvas.tx = 0
       this.transformCanvas.ty = 0
     }
