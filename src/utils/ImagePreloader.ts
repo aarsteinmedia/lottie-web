@@ -3,7 +3,8 @@ import type { ImageData, LottieAsset } from '@/types'
 import { loadData } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import {
-  isSafari, isServer, namespaceXlink
+  isServer,
+  namespaceXlink,
 } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -25,7 +26,6 @@ export class ImagePreloader {
   constructor() {
     this._imageLoaded = this.imageLoaded.bind(this)
     this._footageLoaded = this.footageLoaded.bind(this)
-    this.testImageLoaded = this.testImageLoaded.bind(this)
     this.createFootageData = this.createFootageData.bind(this)
     this.proxyImage = this._createProxyImage()
   }
@@ -61,32 +61,11 @@ export class ImagePreloader {
     )
 
     const img = createNS<SVGImageElement>('image')
-
-    // if (!img) {
-    //   throw new Error(`${this.constructor.name}: Could not create SVG`)
-    // }
     const obj: ImageData = {
       assetData,
       img,
     }
 
-    if (isSafari) {
-      this.testImageLoaded(img)
-    } else {
-      img.addEventListener(
-        'load', this._imageLoaded, false
-      )
-    }
-    img.addEventListener(
-      'error',
-      () => {
-        if (this.proxyImage) {
-          obj.img = this.proxyImage
-        }
-        this._imageLoaded()
-      },
-      false
-    )
     img.setAttributeNS(
       namespaceXlink, 'href', path
     )
@@ -95,6 +74,19 @@ export class ImagePreloader {
     } else {
       this._elementHelper?.appendChild(img)
     }
+
+    // Gate readiness on HTMLImageElement.decode(): SVGImageElement's `load`
+    // event can fire before the bitmap is paint-ready (notably in Firefox).
+    this.awaitDecodedImage(
+      path,
+      this._imageLoaded,
+      () => {
+        if (this.proxyImage) {
+          obj.img = this.proxyImage
+        }
+        this._imageLoaded()
+      }
+    )
 
     return obj
   }
@@ -219,10 +211,72 @@ export class ImagePreloader {
   }
 
   /**
+   * Wait until `path` has been loaded and decoded into a bitmap.
+   * Prefers HTMLImageElement.decode() so readiness matches paintability
+   * (Firefox may fire `load` before decode completes).
+   */
+  private awaitDecodedImage(
+    path: string,
+    onReady: () => void,
+    onError: () => void
+  ) {
+    if (isServer) {
+      onReady()
+
+      return
+    }
+
+    const img = createTag<HTMLImageElement>('img')
+    let isSettled = false
+    const settle = (cb: () => void) => {
+      if (isSettled) {
+        return
+      }
+      isSettled = true
+      cb()
+    }
+    const finish = () => {
+      if (typeof img.decode === 'function') {
+        img.decode()
+          .then(() => {
+            settle(onReady)
+          })
+          .catch(() => {
+            settle(onReady)
+          })
+
+        return
+      }
+      settle(onReady)
+    }
+
+    img.crossOrigin = 'anonymous'
+    img.addEventListener(
+      'load', finish, false
+    )
+    img.addEventListener(
+      'error',
+      () => {
+        settle(onError)
+      },
+      false
+    )
+    img.src = path
+
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        finish()
+      } else {
+        settle(onError)
+      }
+    }
+  }
+
+  /**
    * For SVG renderer we append temporary <image> nodes into `_elementHelper`
-   * so the browser starts fetching and fires load/error events (and Safari can
-   * be polled via getBBox). These must be removed once preloading finishes to
-   * avoid duplicating large `data:` URLs in the live SVG output.
+   * so the browser starts fetching. These are moved into layer trees by
+   * ImageElement (reuse) or removed here if still attached when preload ends,
+   * to avoid duplicating large `data:` URLs in the live SVG output.
    */
   private cleanupElementHelper() {
     const helper = this._elementHelper
@@ -249,11 +303,7 @@ export class ImagePreloader {
     const path = this.getAssetsPath(
       assetData, this.assetsPath, this.path
     )
-    const img = createTag<HTMLMediaElement>('img')
-
-    // if (!img) {
-    //   throw new Error(`${this.constructor.name}: Could not create image element`)
-    // }
+    const img = createTag<HTMLImageElement>('img')
 
     const obj: ImageData = {
       assetData,
@@ -261,8 +311,32 @@ export class ImagePreloader {
     }
 
     img.crossOrigin = 'anonymous'
+
+    let isSettled = false
+    const settle = () => {
+      if (isSettled) {
+        return
+      }
+      isSettled = true
+      this._imageLoaded()
+    }
+    const onLoad = () => {
+      if (typeof img.decode === 'function') {
+        img.decode()
+          .then(() => {
+            settle()
+          })
+          .catch(() => {
+            settle()
+          })
+
+        return
+      }
+      settle()
+    }
+
     img.addEventListener(
-      'load', this._imageLoaded, false
+      'load', onLoad, false
     )
     img.addEventListener(
       'error',
@@ -271,12 +345,22 @@ export class ImagePreloader {
           obj.img = this.proxyImage
         }
 
-        this._imageLoaded()
+        settle()
       },
       false
     )
     img.src = path
 
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        onLoad()
+      } else {
+        if (this.proxyImage) {
+          obj.img = this.proxyImage
+        }
+        settle()
+      }
+    }
 
     return obj
   }
@@ -305,22 +389,5 @@ export class ImagePreloader {
     path += assetData.p ?? ''
 
     return path
-  }
-
-  private testImageLoaded(img: SVGGraphicsElement) {
-    if (isServer) {
-      return
-    }
-    let _count = 0
-    const intervalId = setInterval(() => {
-      const box = img.getBBox()
-
-      if (box.width || _count > 500) {
-        this._imageLoaded()
-        clearInterval(intervalId)
-      }
-      _count++
-    },
-    50)
   }
 }

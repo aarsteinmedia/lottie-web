@@ -196,11 +196,13 @@ export class AnimationItem extends BaseEvent {
   }
 
   public checkLoaded() {
+    // Wait for image decode on all renderers. SVG used to start early
+    // (upstream lottie-web), which causes first-load flicker for image
+    // sequences in Firefox where `load` can fire before paint-ready decode.
     if (
       this.isLoaded ||
       !this.renderer.globalData?.fontManager?.isLoaded ||
-      !this.imagePreloader.loadedImages() &&
-      this.renderer.rendererType === RendererType.Canvas ||
+      !this.imagePreloader.loadedImages() ||
       !this.imagePreloader.loadedFootages()
     ) {
       return

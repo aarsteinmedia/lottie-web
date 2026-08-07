@@ -40,28 +40,50 @@ export class ImageElement extends SVGBaseElement {
   }
 
   override createContent() {
+    if (!this.assetData) {
+      return
+    }
+
+    const preserveAspectRatio =
+      this.assetData.pr ||
+      this.globalData?.renderConfig?.imagePreserveAspectRatio ||
+      ''
+
+    const preloaded = this.globalData?.imageLoader?.getAsset(this.assetData)
+
+    // Reuse the SVGImageElement created during preload so decode work is not
+    // discarded and we avoid a second data:/network fetch for the same asset.
+    if (
+      preloaded &&
+      typeof SVGImageElement !== 'undefined' &&
+      preloaded instanceof SVGImageElement
+    ) {
+      this.innerElem = preloaded
+      this.innerElem.setAttribute('width', `${this.assetData.w}px`)
+      this.innerElem.setAttribute('height', `${this.assetData.h}px`)
+      this.innerElem.setAttribute('preserveAspectRatio', preserveAspectRatio)
+      this.layerElement?.appendChild(this.innerElem)
+
+      return
+    }
+
     let assetPath = ''
 
-    if (this.assetData && this.globalData?.getAssetsPath) {
+    if (this.globalData?.getAssetsPath) {
       assetPath = this.globalData.getAssetsPath(this.assetData)
     }
 
-    if (this.assetData) {
-      this.innerElem = createNS<SVGImageElement>('image')
-      this.innerElem.setAttribute('width', `${this.assetData.w}px`)
-      this.innerElem.setAttribute('height', `${this.assetData.h}px`)
-      this.innerElem.setAttribute('preserveAspectRatio',
-        this.assetData.pr ||
-        this.globalData?.renderConfig?.imagePreserveAspectRatio ||
-        '')
-      this.innerElem.setAttributeNS(
-        namespaceXlink,
-        'href',
-        assetPath
-      )
+    this.innerElem = createNS<SVGImageElement>('image')
+    this.innerElem.setAttribute('width', `${this.assetData.w}px`)
+    this.innerElem.setAttribute('height', `${this.assetData.h}px`)
+    this.innerElem.setAttribute('preserveAspectRatio', preserveAspectRatio)
+    this.innerElem.setAttributeNS(
+      namespaceXlink,
+      'href',
+      assetPath
+    )
 
-      this.layerElement?.appendChild(this.innerElem)
-    }
+    this.layerElement?.appendChild(this.innerElem)
   }
 
   override renderInnerContent() {

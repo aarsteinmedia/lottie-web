@@ -1244,7 +1244,7 @@ type LottieComp = LottieLayer | LottieAsset
 
 export interface ImageData {
   assetData: LottieAsset
-  img: null | SVGElement | HTMLCanvasElement | HTMLMediaElement
+  img: null | SVGElement | HTMLCanvasElement | HTMLImageElement | HTMLMediaElement
 }
 
 export interface CanvasItem {
