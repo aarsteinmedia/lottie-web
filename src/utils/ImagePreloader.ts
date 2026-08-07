@@ -59,6 +59,7 @@ export class ImagePreloader {
     const path = this.getAssetsPath(
       assetData, this.assetsPath, this.path
     )
+
     const img = createNS<SVGImageElement>('image')
 
     // if (!img) {

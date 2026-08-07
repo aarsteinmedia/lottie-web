@@ -72,7 +72,7 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
-    "@aarsteinmedia/dotlottie-player": "^6.4.0",
+    "@aarsteinmedia/dotlottie-player": "^6.4.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
