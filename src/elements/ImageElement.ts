@@ -86,8 +86,45 @@ export class ImageElement extends SVGBaseElement {
     this.layerElement?.appendChild(this.innerElem)
   }
 
+  /**
+   * Prefer visibility over display for image layers. Firefox drops decoded
+   * bitmaps for `display:none` images, which causes flicker in PNG sequences.
+   */
+  override hide() {
+    if (this.hidden || this.isInRange && !this.isTransparent) {
+      return
+    }
+    const elem = this.baseElement ?? this.layerElement
+
+    if (elem) {
+      elem.style.visibility = 'hidden'
+    }
+
+    this.hidden = true
+  }
+
   override renderInnerContent() {
     // Pass through
+  }
+
+  override show() {
+    if (!this.data) {
+      throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
+    }
+    if (!this.isInRange && this.isTransparent) {
+      return
+    }
+    if (!this.data.hd) {
+      const elem = this.baseElement ?? this.layerElement
+
+      if (!elem) {
+        throw new Error(`${this.constructor.name}: Neither baseElement or layerElement is implemented`)
+      }
+      elem.style.visibility = 'visible'
+      elem.style.display = 'block'
+    }
+    this.hidden = false
+    this._isFirstFrame = true
   }
 
   override sourceRectAtTime() {
