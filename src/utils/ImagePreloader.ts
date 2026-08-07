@@ -59,14 +59,14 @@ export class ImagePreloader {
 
   public createImageData(assetData: LottieAsset) {
     const path = this.getAssetsPath(
-      assetData, this.assetsPath, this.path
-    )
+        assetData, this.assetsPath, this.path
+      ),
 
-    const img = createNS<SVGImageElement>('image')
-    const obj: ImageData = {
-      assetData,
-      img,
-    }
+      img = createNS<SVGImageElement>('image'),
+      obj: ImageData = {
+        assetData,
+        img,
+      }
 
     // Intrinsic size helps Firefox decode before the layer mounts.
     if (assetData.w) {
