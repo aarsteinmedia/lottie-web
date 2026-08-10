@@ -24,7 +24,23 @@ const hasExt = (path?: string) => {
 /**
  * Exported functions.
  */
-export const floatEqual = (a: number, b: number) =>
+export const debounce = <F extends (...args: any[]) => void>(
+    fn: F,
+    delay = 300
+  ): (...args: Parameters<F>) => void => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    return (...args: Parameters<F>) => {
+      if (timeout !== undefined) {
+        clearTimeout(timeout)
+      }
+
+      timeout = setTimeout(() => {
+        fn(...args)
+      }, delay)
+    }
+  },
+  floatEqual = (a: number, b: number) =>
     Math.abs(a - b) * 100000 <= Math.min(Math.abs(a), Math.abs(b)),
 
   floatZero = (f: number) => Math.abs(f) <= 0.00001,

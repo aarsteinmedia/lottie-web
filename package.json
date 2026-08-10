@@ -72,13 +72,13 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
-    "@aarsteinmedia/dotlottie-player": "^6.4.1",
+    "@aarsteinmedia/dotlottie-player": "^6.4.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "@swc/core": "^1.15.47",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "eslint": "^9.39.5",
     "eslint-config-sheriff": "^31.4.0",
     "eslint-plugin-perfectionist": "^5.10.1",

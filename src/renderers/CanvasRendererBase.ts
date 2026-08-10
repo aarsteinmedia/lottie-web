@@ -14,7 +14,9 @@ import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import { CVTextElement } from '@/elements/canvas/CVTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { SVGRenderer } from '@/renderers/SVGRenderer'
-import { devError, getDevicePixelRatio } from '@/utils'
+import {
+  debounce, devError, getDevicePixelRatio
+} from '@/utils'
 import { PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
@@ -27,6 +29,37 @@ export abstract class CanvasRendererBase extends BaseRenderer {
   transformCanvas?: TransformCanvas
   /** True when the user passed an explicit `dpr` in rendererSettings. */
   protected _dprLocked = false
+
+  private _elementWidth = 0
+
+  private _resizeObserver?: undefined | ResizeObserver
+
+  addResizeObserver() {
+    if (
+      !this.animationItem?.wrapper ||
+      this._resizeObserver
+    ) {
+      return
+    }
+
+    // Use arrow function, to preserve `this` scope.
+    const debouncedUpdate = debounce((width: number, height: number) => {
+      this.updateContainerSize(width, height)
+    })
+
+    this._resizeObserver = new ResizeObserver(entries => {
+      const { contentBoxSize } = entries[0],
+        { blockSize: newHeight, inlineSize: newWidth } = contentBoxSize[0]
+
+      if (newWidth <= this._elementWidth) {
+        return
+      }
+
+      debouncedUpdate(newWidth, newHeight)
+    })
+
+    this._resizeObserver.observe(this.animationItem.wrapper)
+  }
 
   override buildItem(pos: number) {
     const { elements, layers } = this
@@ -104,6 +137,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     this.elements = createSizedArray(animData.layers.length)
 
     this.updateContainerSize()
+    this.addResizeObserver()
   }
 
   override createImage(data: LottieLayer) {
@@ -432,15 +466,18 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     canvas.width = Math.max(1, Math.round(elementWidth * dpr))
     canvas.height = Math.max(1, Math.round(elementHeight * dpr))
 
-    // Always pin CSS size to the measured layout box. Canvas width/height attributes
-    // are the backing store; without an explicit CSS size they also act as the
-    // intrinsic layout size. With auto-sized wrappers (e.g. width/height: auto),
-    // that makes a dpr=2 buffer lay out at 2× CSS pixels and cancel HiDPI.
+    // Make the canvas lay out like a responsive image: cap it at the size it
+    // was rendered for (so a dpr>1 buffer never inflates the layout box and
+    // cancels HiDPI), keep the aspect ratio locked, and let CSS scale the
+    // existing bitmap down when the container shrinks — no redraw needed.
+    // Only growing past the rendered size requires a resize() to re-render.
     if (this.animationItem.container) {
       const { style } = this.animationItem.container
 
       style.width = `${elementWidth}px`
-      style.height = `${elementHeight}px`
+      style.height = 'auto'
+      style.maxWidth = '100%'
+      style.aspectRatio = `${elementWidth} / ${elementHeight}`
     }
 
     // Prefer crisp downscales when drawing bitmaps into the HiDPI buffer.
@@ -536,6 +573,10 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       this.transformCanvas.tx = 0
       this.transformCanvas.ty = 0
     }
+
+    // Buffer this to check against ResizeObserver
+    this._elementWidth = elementWidth
+
     this.transformCanvas.props = [
       this.transformCanvas.sx,
       0,
