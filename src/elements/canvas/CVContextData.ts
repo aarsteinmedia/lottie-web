@@ -150,12 +150,36 @@ export class CVContextData {
   }
 
   reset() {
-    const thisStack = this.stack[this.cArrPos]
-
     this.cArrPos = 0
     this.cTr.reset()
 
+    // Setting canvas.width/height resets the native context to defaults
+    // (lineWidth=1, etc.). Drop every cached style so the next draw
+    // re-pushes current values instead of assuming the native side still
+    // matches (which produced 1px strokes after a resize).
+    this.appliedFillStyle = ''
+    this.appliedStrokeStyle = ''
+    this.appliedLineWidth = ''
+    this.appliedLineCap = ''
+    this.appliedLineJoin = ''
+    this.appliedMiterLimit = ''
+    this.currentFillStyle = ''
+    this.currentStrokeStyle = ''
+    this.currentLineWidth = ''
+    this.currentLineCap = ''
+    this.currentLineJoin = ''
+    this.currentMiterLimit = ''
+    this.currentOpacity = 1
+
+    const thisStack = this.stack[0]
+
     thisStack.opacity = 1
+    thisStack.fillStyle = ''
+    thisStack.strokeStyle = ''
+    thisStack.lineWidth = ''
+    thisStack.lineCap = ''
+    thisStack.lineJoin = ''
+    thisStack.miterLimit = ''
   }
 
   restore(forceRestore?: boolean) {

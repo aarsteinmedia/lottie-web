@@ -158,6 +158,10 @@ export class ImagePreloader {
         this.images.push(this.createFootageData(assets[i]))
       }
     }
+
+    // With no images or footages nothing will ever increment the counters,
+    // so report completion right away (fires the LoadedImages callback).
+    this.notifyIfComplete()
   }
 
   public loadedFootages() {

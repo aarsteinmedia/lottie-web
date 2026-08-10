@@ -302,6 +302,10 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     for (let i = length - 1; i >= 0; i -= 1) {
       this.elements[i]?.destroy()
     }
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect()
+      this._resizeObserver = undefined
+    }
     this.elements.length = 0
     this.globalData.canvasContext = null
     this.animationItem.container = null as unknown as HTMLCanvasElement

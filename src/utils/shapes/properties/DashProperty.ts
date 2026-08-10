@@ -68,7 +68,7 @@ export class DashProperty extends DynamicPropertyContainer {
     if (this.renderer === RendererType.SVG) {
       this.dashStr = ''
     }
-    for (let i = 0; i < len; i++) {
+    for (let i = 0, j = 0; i < len; i++) {
       if (this.dataProps[i]?.n === 'o') {
 
         this.dashoffset[0] = this.dataProps[i]?.p.v as number
@@ -80,7 +80,11 @@ export class DashProperty extends DynamicPropertyContainer {
         continue
       }
 
-      this.dashArray[i] = this.dataProps[i]?.p.v as number
+      // Use a separate index: dataProps includes the offset entry, but
+      // dashArray does not. Indexing with `i` left dashArray[0] at 0 and
+      // pushed the last gap past the end — setLineDash([0, …]) draws nothing.
+      this.dashArray[j] = this.dataProps[i]?.p.v as number
+      j++
     }
 
     return 0

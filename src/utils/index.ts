@@ -24,7 +24,7 @@ const hasExt = (path?: string) => {
 /**
  * Exported functions.
  */
-export const debounce = <F extends (...args: any[]) => void>(
+export const debounce = <F extends (...args: Parameters<F>) => void>(
     fn: F,
     delay = 300
   ): (...args: Parameters<F>) => void => {

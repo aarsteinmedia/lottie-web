@@ -144,13 +144,23 @@ export abstract class CVBaseElement extends RenderableElement {
     this.clearCanvas(this.canvasContext)
     this.canvasContext.setTransform(this.currentTransform)
 
-    let maskId = Number(this.data.ind) - 1
+    // We draw the mask
+    let mask: ReturnType<NonNullable<typeof this.comp>['getElementById']> = null
 
     if ('tp' in this.data && this.data.tp !== undefined) {
-      maskId = this.data.tp
+      mask = this.comp?.getElementById(this.data.tp) ?? null
+    } else {
+      // With no explicit `tp`, the matte source is the layer directly above
+      // in stacking order — same rule as the SVG renderer. Deriving it from
+      // `ind - 1` is unreliable: inds aren't guaranteed to be numbered
+      // consecutively downwards (e.g. the matte can sit at ind + 1).
+      const layers = this.comp?.layers ?? [],
+        pos = layers.indexOf(this.data)
+
+      if (pos > 0) {
+        mask = this.comp?.getElementById(Number(layers[pos - 1].ind)) ?? null
+      }
     }
-    // We draw the mask
-    const mask = this.comp?.getElementById(maskId)
 
     mask?.renderFrame(1)
     // We draw the second buffer (that contains the content of this layer)
