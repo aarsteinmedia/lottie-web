@@ -72,7 +72,7 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
-    "@aarsteinmedia/dotlottie-player": "^6.4.3",
+    "@aarsteinmedia/dotlottie-player": "^6.4.4",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
@@ -83,7 +83,7 @@
     "eslint-config-sheriff": "^31.4.0",
     "eslint-plugin-perfectionist": "^5.10.1",
     "fflate": "^0.8.3",
-    "globals": "^17.9.0",
+    "globals": "^17.10.0",
     "jiti": "^2.7.0",
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
