@@ -945,7 +945,7 @@ export interface TextData {
   }
   n?: any
   of: string
-  /** Text Follow Path TODO:. */
+  /** Text Follow Path. */
   p?: undefined | TextVectorData
   ps: null | Vector2
   r?: undefined | { v: number[] }

@@ -311,7 +311,7 @@ export class OffsetPathModifier extends ShapeModifier {
     ) as ValueProperty
     this.miterLimit = PropertyFactory.getProp(
       elem,
-      data.ml as unknown as VectorProperty, // TODO: Find if typing is wrong
+      data.ml as unknown as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect

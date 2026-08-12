@@ -19,7 +19,7 @@ export class RoundCornersModifier extends ShapeModifier {
     this.getValue = this.processKeys
     this.rd = PropertyFactory.getProp(
       elem,
-      data.r as unknown as VectorProperty, // TODO: Find out if typing is wrong
+      data.r as unknown as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect

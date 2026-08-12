@@ -22,9 +22,6 @@ export class CVEffects {
       const type = elem.data.ef?.[i]?.ty
 
       if (type && registeredEffects[type]) {
-        /**
-         * TODO:.
-         */
         const Effect = registeredEffects[type].effect
 
         // @ts-expect-error: missing container

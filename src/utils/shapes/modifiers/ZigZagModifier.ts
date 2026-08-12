@@ -146,14 +146,14 @@ export class ZigZagModifier extends ShapeModifier {
     ) as ValueProperty
     this.frequency = PropertyFactory.getProp(
       elem,
-      data.r as unknown as VectorProperty, // TODO: Fix typing
+      data.r as unknown as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.pointsType = PropertyFactory.getProp(
       elem,
-      data.pt as unknown as VectorProperty, // TODO: Fix typing
+      data.pt as unknown as VectorProperty,
       0,
       null,
       this as unknown as ElementInterfaceIntersect

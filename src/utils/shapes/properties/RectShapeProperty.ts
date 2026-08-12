@@ -49,7 +49,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
     ) as MultiDimensionalProperty
     this.r = PropertyFactory.getProp(
       elem,
-      data.r as unknown as VectorProperty<number[]>, // TODO: Find out if typing is wrong
+      data.r as unknown as VectorProperty,
       0,
       0,
       this as unknown as ElementInterfaceIntersect

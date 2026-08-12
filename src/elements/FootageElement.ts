@@ -4,6 +4,8 @@ import type {
   LottieAsset,
   LottieLayer,
 } from '@/types'
+import type { FootageInterface } from '@/utils/expressions/FootageInterface'
+import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { getExpressionInterfaces } from '@/utils/expressions'
@@ -46,10 +48,10 @@ export class FootageElement extends RenderableElement {
       return
     }
 
-    const footageInterface = expressionsInterfaces('footage')
+    const Footage = expressionsInterfaces('footage') as typeof FootageInterface
 
-    // @ts-expect-error TODO: see if typing can be stronger
-    this.layerInterface = new footageInterface(this)
+    // Footage layers expose FootageInterface via layerInterface (same slot as LayerExpressionInterface).
+    this.layerInterface = new Footage(this) as unknown as LayerExpressionInterface
   }
 
   prepareFrame() {

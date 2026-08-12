@@ -1,22 +1,24 @@
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { BaseProperty } from '@/utils/properties/BaseProperty'
 
+type ParentPropertyGroup = LayerExpressionInterface | PropertyGroupFactory
+
 export class PropertyGroupFactory {
 
   interfaceFunction: (val: string | number) => BaseProperty
-  parentPropertyGroup: LayerExpressionInterface
-  constructor(interfaceFunction: (val: number | string) => BaseProperty, parentPropertyGroup: LayerExpressionInterface) {
+  parentPropertyGroup: ParentPropertyGroup
+  constructor(interfaceFunction: (val: number | string) => BaseProperty, parentPropertyGroup: ParentPropertyGroup) {
     this.interfaceFunction = interfaceFunction
     this.parentPropertyGroup = parentPropertyGroup
   }
 
-  getInterface(val = 1) {
+  // Expression property groups are dynamically nested; keep this permissive.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getInterface(val = 1): any {
     if (val <= 0) {
       return this.interfaceFunction
     }
 
-    // @ts-expect-error: TODO:
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.parentPropertyGroup(val - 1)
+    return this.parentPropertyGroup.getInterface(val - 1)
   }
 }

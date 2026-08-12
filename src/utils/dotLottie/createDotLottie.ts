@@ -12,6 +12,12 @@ import {
 } from '@/utils'
 import { isServer } from '@/utils/helpers/constants'
 
+/** Transform prop that may carry a (possibly encoded) expression. */
+interface ExpressionProp {
+  e?: 0 | 1
+  x?: string
+}
+
 const getArrayBuffer = async (zippable: Zippable) => {
     const arrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
       zip(
@@ -163,26 +169,21 @@ export async function createDotLottie({
       const { length: kLen } = animations[i]?.layers ?? []
 
       for (let k = 0; k < kLen; k++) {
-        const { ks: shape } = animations[i]?.layers[k] ?? {},
-          props = Object.keys(shape) as (keyof Shape)[],
+        const { ks: transform } = animations[i]?.layers[k] ?? {},
+          props = Object.keys(transform) as (keyof Shape)[],
           { length: pLen } = props
 
         for (let p = 0; p < pLen; p++) {
-          const { x: expression } = shape[props[p]] as { x?: string }
+          const prop = transform[props[p]] as ExpressionProp | undefined,
+            expression = prop?.x
 
-          if (!expression) {
+          if (!prop || !expression) {
             continue
           }
 
-          const thisShape = animations[i]?.layers[k]?.ks[props[p]] as keyof Shape
-
           // Base64 Encode to handle compression
-          // @ts-expect-error: TODO:
-          thisShape.x = btoa(expression)
-
-          // Set e (encoded) to 1
-          // @ts-expect-error: TODO:
-          thisShape.e = 1
+          prop.x = btoa(expression)
+          prop.e = 1
         }
 
       }

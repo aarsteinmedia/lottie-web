@@ -112,7 +112,7 @@ pnpm prod       # typecheck + production build
 pnpm check      # lint, test, build, and verify version injection
 ```
 
-Sample Lottie JSON files live in [`assets/`](./assets) and are used by the preview app and test suite.
+`pnpm dev` expects a local `assets/` directory of sample `.json` / `.lottie` files (this repo tracks a symlink to a sibling `lottie-fixtures` folder). Tests use fixtures under `tests/lottie-fixtures/` and do not depend on `assets/`.
 
 ## License
 

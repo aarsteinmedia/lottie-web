@@ -8,6 +8,12 @@ import type {
 
 import { resolveAssets } from '@/utils/dotLottie/resolveAssets'
 
+/** Transform prop that may carry a (possibly encoded) expression. */
+interface ExpressionProp {
+  e?: 0 | 1
+  x?: string
+}
+
 const unzip = async (resp: Response): Promise<Unzipped> => {
     const u8 = new Uint8Array(await resp.arrayBuffer()),
       unzipped = await new Promise<Unzipped>((resolve, reject) => {
@@ -43,12 +49,7 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
       .replaceAll(/(["'])(.*?)\1/g, (
         _match, quote: string, content: string
       ) => {
-        /**
-         * TODO: This caused text layers and expressions to be mangled
-         * Consider a more nuanced sanitaiton, if at all.
-         */
-        // const replacedContent = content.replaceAll(/[^\w\s.#]/g, '')
-
+        // Avoid aggressive sanitization here — it mangled text layers and expressions.
         return `${quote}${content}${quote}`
       })
 
@@ -77,27 +78,20 @@ export async function getLottieJSON(resp: Response) {
     const { length: jLen } = lottie.layers
 
     for (let j = 0; j < jLen; j++) {
-      const { ks: shape } = lottie.layers[j] ?? {},
-        props = Object.keys(shape) as (keyof Shape)[],
+      const { ks: transform } = lottie.layers[j] ?? {},
+        props = Object.keys(transform) as (keyof Shape)[],
         { length: pLen } = props
 
       for (let p = 0; p < pLen; p++) {
-        const { e: isEncoded, x: expression } = shape[props[p]] as {
-          x?: string;
-          e?: 0 | 1
-        }
+        const prop = transform[props[p]] as ExpressionProp | undefined,
+          { e: isEncoded, x: expression } = prop ?? {}
 
-        if (!expression || !isEncoded) {
+        if (!expression || !isEncoded || !prop) {
           continue
         }
 
-        const keyofShape = lottie.layers[j]?.ks[props[p]]
-
         // Base64 Decode to handle compression
-        if (keyofShape) {
-          // @ts-expect-error
-          keyofShape.x = atob(expression)
-        }
+        prop.x = atob(expression)
       }
 
     }
