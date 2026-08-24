@@ -337,7 +337,7 @@ export class ShapeExpressionInterface {
     RoundCornersInterface.prototype.propertyIndex = shape.ix
     RoundCornersInterface.prototype.mn = shape.mn
 
-    const _propertyGroup = new PropertyGroupFactory(RoundCornersInterface, propertyGroup as LayerExpressionInterface),
+    const _propertyGroup = new PropertyGroupFactory(RoundCornersInterface, propertyGroup),
       prop = view
 
     prop.rd.setGroupProperty(new PropertyInterface('Radius', _propertyGroup))
