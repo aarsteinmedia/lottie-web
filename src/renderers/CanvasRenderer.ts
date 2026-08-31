@@ -30,12 +30,11 @@ export class CanvasRenderer extends CanvasRendererBase {
       contentVisibility: config?.contentVisibility || 'visible',
       context: config?.context ?? null,
       dpr: shouldUseDisplayDpr ? getDevicePixelRatio(config?.dpr) : 1,
-      hideOnTransparent: config?.hideOnTransparent !== false,
       id: config?.id || '',
       imagePreserveAspectRatio:
-          config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
+        config?.imagePreserveAspectRatio || PreserveAspectRatio.Cover,
       preserveAspectRatio:
-          config?.preserveAspectRatio || PreserveAspectRatio.Contain,
+        config?.preserveAspectRatio || PreserveAspectRatio.Contain,
       progressiveLoad: Boolean(config?.progressiveLoad),
       runExpressions: config?.runExpressions ?? true,
     }

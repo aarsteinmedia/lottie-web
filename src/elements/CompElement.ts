@@ -65,7 +65,6 @@ export abstract class CompElement extends RenderableDOMElement {
     this._mdf = false
     this.prepareRenderableFrame(val)
     this.prepareProperties(val, this.isInRange)
-    this.checkTransparency()
     if (!this.isInRange && !this.data.xt) {
       return
     }

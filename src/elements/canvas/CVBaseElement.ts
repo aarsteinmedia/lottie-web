@@ -15,12 +15,15 @@ import {
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { EffectTypes } from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
-import {
-  dilateMatteAlpha, erodeMatteAlpha, isStrokeOnlyMatteLayer
-} from '@/utils/helpers/canvasMatte'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
-const notImplemented = 'Method is not implemented'
+const operationsMap = {
+    1: 'source-in',
+    2: 'source-out',
+    3: 'source-in',
+    4: 'source-out',
+  },
+  notImplemented = 'Method is not implemented'
 
 export abstract class CVBaseElement extends RenderableElement {
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
@@ -34,22 +37,11 @@ export abstract class CVBaseElement extends RenderableElement {
   clearCanvas(canvasContext?:
     | CanvasRenderingContext2D
     | OffscreenCanvasRenderingContext2D
-    | null,
-  fullCanvas = false) {
-    if (!canvasContext) {
-      return
-    }
-    if (fullCanvas) {
-      canvasContext.clearRect(
-        0, 0, canvasContext.canvas.width, canvasContext.canvas.height
-      )
-
-      return
-    }
+    | null) {
     if (!this.transformCanvas) {
       throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
     }
-    canvasContext.clearRect(
+    canvasContext?.clearRect(
       this.transformCanvas.tx,
       this.transformCanvas.ty,
       this.transformCanvas.w * this.transformCanvas.sx,
@@ -57,7 +49,7 @@ export abstract class CVBaseElement extends RenderableElement {
     )
   }
 
-  createContainerElements () {
+  createContainerElements() {
     // If the layer is masked we will use two buffers to store each different states of the drawing
     // This solution is not ideal for several reason. But unfortunately, because of the recursive
     // nature of the render tree, it's the only simple way to make sure one inner mask doesn't override an outer mask.
@@ -141,7 +133,7 @@ export abstract class CVBaseElement extends RenderableElement {
     // (if it is a composition, it also includes the nested layers)
     const bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
 
-    this.clearCanvas(bufferCtx, true)
+    this.clearCanvas(bufferCtx)
     bufferCtx.drawImage(
       this.canvasContext.canvas, 0, 0
     )
@@ -149,7 +141,7 @@ export abstract class CVBaseElement extends RenderableElement {
     this.canvasContext.setTransform(
       1, 0, 0, 1, 0, 0
     )
-    this.clearCanvas(this.canvasContext, true)
+    this.clearCanvas(this.canvasContext)
     this.canvasContext.setTransform(this.currentTransform)
 
     // We draw the mask
@@ -170,84 +162,32 @@ export abstract class CVBaseElement extends RenderableElement {
       }
     }
 
-    const ctx = this.canvasContext,
-      isInvertedMatte = matteMode === 2 || matteMode === 4,
-      wasSmoothingEnabled = ctx.imageSmoothingEnabled
-
-    ctx.imageSmoothingEnabled = false
-    if (this.globalData) {
-      this.globalData.renderingTrackMatte = true
-    }
     mask?.renderFrame(1)
-    if (this.globalData) {
-      this.globalData.renderingTrackMatte = false
-    }
-
     // We draw the second buffer (that contains the content of this layer)
-    ctx.setTransform(
+    this.canvasContext.setTransform(
       1, 0, 0, 1, 0, 0
     )
 
-    const { canvas } = ctx,
-      { height, width } = canvas
-
-    let matteSource: CanvasImageSource = canvas
-
-    // Luma mattes need the color-matrix filter so luminance drives alpha.
+    // If the mask is a Luma matte, we need to do two extra painting operations
+    // the _isProxy check is to avoid drawing a fake canvas in workers that will throw an error
     if (matteMode >= 3 && !document._isProxy) {
-      const lumaBuffer = AssetManager.getLumaCanvas(canvas),
+      // We copy the painted mask to a buffer that has a color matrix filter applied to it
+      // that applies the rgb values to the alpha channel
+      const lumaBuffer = AssetManager.getLumaCanvas(this.canvasContext.canvas),
         lumaBufferCtx = lumaBuffer.getContext('2d')
 
       lumaBufferCtx?.drawImage(
-        canvas, 0, 0
+        this.canvasContext.canvas, 0, 0
       )
-      matteSource = lumaBuffer
-    } else {
-      // Alpha mattes: keep matte alpha but replace RGB with white so matte
-      // color does not bleed into the layer (lottie-web #3051).
-      const alphaMatte = AssetManager.createCanvas(width, height),
-        alphaMatteCtx = alphaMatte.getContext('2d') as CanvasRenderingContext2D | null
-
-      if (alphaMatteCtx) {
-        alphaMatteCtx.drawImage(
-          canvas, 0, 0
-        )
-        alphaMatteCtx.globalCompositeOperation = 'source-atop'
-        alphaMatteCtx.fillStyle = '#ffffff'
-        alphaMatteCtx.fillRect(
-          0, 0, width, height
-        )
-        const matteLayer = mask?.data
-
-        // Filled mattes erode to drop fringe; stroke-only td mattes dilate for closed tt fills.
-        if (matteLayer && matteLayer.ty !== 2) {
-          if (isStrokeOnlyMatteLayer(matteLayer)) {
-            dilateMatteAlpha(alphaMatteCtx, 2)
-          } else {
-            erodeMatteAlpha(alphaMatteCtx, 1)
-          }
-        }
-        matteSource = alphaMatte
-      }
+      this.clearCanvas(this.canvasContext)
+      // we repaint the context with the mask applied to it
+      this.canvasContext.drawImage(
+        lumaBuffer, 0, 0
+      )
     }
-
-    // Apply matte on the isolated layer buffer, not the full canvas, to avoid
-    // fringe pixels and color bleed from matte RGB (see lottie-web #3051).
-    const layerCtx = buffer.getContext('2d') as CanvasRenderingContext2D
-
-    layerCtx.setTransform(
-      1, 0, 0, 1, 0, 0
-    )
-    layerCtx.imageSmoothingEnabled = false
-    layerCtx.globalAlpha = 1
-    layerCtx.globalCompositeOperation = isInvertedMatte ? 'destination-out' : 'destination-in'
-    layerCtx.drawImage(
-      matteSource, 0, 0
-    )
-    layerCtx.globalCompositeOperation = 'source-over'
-
-    this.clearCanvas(this.canvasContext, true)
-    this.canvasContext.globalCompositeOperation = 'copy'
+    this.canvasContext.globalCompositeOperation = operationsMap[
+      matteMode as keyof typeof operationsMap
+    ] as GlobalCompositeOperation
     this.canvasContext.drawImage(
       buffer, 0, 0
     )
@@ -258,7 +198,6 @@ export abstract class CVBaseElement extends RenderableElement {
       this.buffers[0], 0, 0
     )
     this.canvasContext.setTransform(this.currentTransform)
-    ctx.imageSmoothingEnabled = wasSmoothingEnabled
     // We reset the globalCompositeOperation to source-over, the standard type of operation
     this.canvasContext.globalCompositeOperation = 'source-over'
   }
@@ -287,7 +226,8 @@ export abstract class CVBaseElement extends RenderableElement {
     const buffer = this.buffers[0],
       bufferCtx = buffer.getContext('2d') as CanvasRenderingContext2D
 
-    this.clearCanvas(bufferCtx, true)
+    this.clearCanvas(bufferCtx)
+    // Store the current global drawing so this layer can be isolated.
     bufferCtx.drawImage(
       this.canvasContext.canvas, 0, 0
     )
@@ -296,7 +236,7 @@ export abstract class CVBaseElement extends RenderableElement {
     this.canvasContext.setTransform(
       1, 0, 0, 1, 0, 0
     )
-    this.clearCanvas(this.canvasContext, true)
+    this.clearCanvas(this.canvasContext)
     this.canvasContext.setTransform(this.currentTransform)
   }
 
@@ -308,11 +248,7 @@ export abstract class CVBaseElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
 
-    if (this.data.hd) {
-      return
-    }
-    // Matte sources (td) must render when force-rendered even if hidden.
-    if (this.hidden && !forceRender) {
+    if (this.hidden || this.data.hd) {
       return
     }
     if (this.data.td === 1 && !forceRender) {

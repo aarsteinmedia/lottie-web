@@ -296,8 +296,7 @@ export class CVShapeElement extends ShapeElement {
 
       const { length } = this.stylesList,
         { renderer } = this.globalData as { renderer: CanvasRenderer },
-        ctx = this.globalData.canvasContext,
-        isMatteRender = Boolean(this.globalData.renderingTrackMatte)
+        ctx = this.globalData.canvasContext
       let currentStyle
 
       for (let i = 0; i < length; i++) {
@@ -306,7 +305,7 @@ export class CVShapeElement extends ShapeElement {
             co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
           } = currentStyle,
           isStroke =
-          type === ShapeType.Stroke || type === ShapeType.GradientStroke
+            type === ShapeType.Stroke || type === ShapeType.GradientStroke
 
         // Skipping style when
         // Stroke width equals 0
@@ -324,24 +323,7 @@ export class CVShapeElement extends ShapeElement {
         renderer.save()
         const elems = elements
 
-        if (isMatteRender) {
-          renderer.ctxFillStyle('rgb(255,255,255)')
-          if (isStroke) {
-            renderer.ctxStrokeStyle('rgb(255,255,255)')
-            renderer.ctxLineWidth(wi || 0)
-
-            if (lc) {
-              renderer.ctxLineCap(lc)
-            }
-
-            if (lj) {
-              renderer.ctxLineJoin(lj)
-            }
-
-            renderer.ctxMiterLimit(ml || 0)
-          }
-          renderer.ctxOpacity(1)
-        } else if (isStroke) {
+        if (isStroke) {
           renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
           renderer.ctxLineWidth(wi || 0)
 
@@ -356,11 +338,9 @@ export class CVShapeElement extends ShapeElement {
           renderer.ctxMiterLimit(ml || 0)
         } else {
           renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
-        // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
+          // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
         }
-        if (!isMatteRender) {
-          renderer.ctxOpacity(coOp)
-        }
+        renderer.ctxOpacity(coOp)
         if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
           ctx?.beginPath()
         }
@@ -398,9 +378,6 @@ export class CVShapeElement extends ShapeElement {
             }
           }
           if (isStroke) {
-            if (isMatteRender) {
-              ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
-            }
             // ctx.stroke();
             renderer.ctxStroke()
             if (da) {
@@ -409,7 +386,7 @@ export class CVShapeElement extends ShapeElement {
           }
         }
         if (!isStroke) {
-        // ctx.fill(currentStyle.r);
+          // ctx.fill(currentStyle.r);
           ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
         }
         renderer.restore()
