@@ -391,6 +391,7 @@ export type CanvasRendererConfig = BaseRendererConfig & {
   clearCanvas?: undefined | boolean
   context?: undefined | null | CanvasRenderingContext2D
   contentVisibility: string
+  hideOnTransparent?: undefined | boolean
   id: string
   imagePreserveAspectRatio: PreserveAspectRatio
   preserveAspectRatio: PreserveAspectRatio

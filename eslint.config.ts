@@ -71,7 +71,7 @@ const ignores = [
             trailingUnderscore: 'forbid',
           },
           {
-            format: ['camelCase'],
+            format: ['camelCase', 'UPPER_CASE'],
             leadingUnderscore: 'allowSingleOrDouble',
             modifiers: ['const'],
             selector: 'variable',
@@ -100,7 +100,8 @@ const ignores = [
               'has',
               'should',
               'can',
-              'needs'
+              'needs',
+              'was'
             ],
             selector: 'variable',
             trailingUnderscore: 'forbid',
