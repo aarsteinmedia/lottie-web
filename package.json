@@ -54,7 +54,7 @@
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "rollup -c --configPlugin @rollup/plugin-typescript",
-    "prebuild:types": "rimraf ./types ",
+    "prebuild:types": "rimraf ./types",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
     "prod": "pnpm build:types && pnpm build",
     "assets": "node preview/writeFiles.ts",
