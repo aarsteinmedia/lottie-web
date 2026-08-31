@@ -75,6 +75,7 @@ export class SVGTextLottieElement extends TextElement {
     const documentData = this.textProperty.currentData
 
     this.renderedLetters = createSizedArray(documentData.l.length || 0)
+
     if (documentData.fc) {
       this.layerElement.setAttribute('fill',
         this.buildColor(documentData.fc as Vector3))

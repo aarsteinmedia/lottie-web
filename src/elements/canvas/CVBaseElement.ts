@@ -38,10 +38,14 @@ export abstract class CVBaseElement extends RenderableElement {
     | CanvasRenderingContext2D
     | OffscreenCanvasRenderingContext2D
     | null) {
+    if (!canvasContext) {
+      return
+    }
+
     if (!this.transformCanvas) {
       throw new Error(`${this.constructor.name}: transformCanvas is not implemented`)
     }
-    canvasContext?.clearRect(
+    canvasContext.clearRect(
       this.transformCanvas.tx,
       this.transformCanvas.ty,
       this.transformCanvas.w * this.transformCanvas.sx,
