@@ -36,7 +36,7 @@ export class CVSolidElement extends CVBaseElement {
     }
 
     // var ctx = this.canvasContext;
-    ; (this.globalData.renderer as CanvasRenderer).ctxFillStyle(this.data.sc)
+    ; (this.globalData.renderer as CanvasRenderer).ctxFillStyle(this.globalData.renderingTrackMatte ? '#ffffff' : this.data.sc)
     // ctx.fillStyle = this.data.sc;
     ; (this.globalData.renderer as CanvasRenderer).ctxFillRect(
       0,

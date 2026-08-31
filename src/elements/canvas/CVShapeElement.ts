@@ -296,7 +296,8 @@ export class CVShapeElement extends ShapeElement {
 
       const { length } = this.stylesList,
         { renderer } = this.globalData as { renderer: CanvasRenderer },
-        ctx = this.globalData.canvasContext
+        ctx = this.globalData.canvasContext,
+        isMatteRender = Boolean(this.globalData.renderingTrackMatte)
       let currentStyle
 
       for (let i = 0; i < length; i++) {
@@ -323,7 +324,24 @@ export class CVShapeElement extends ShapeElement {
         renderer.save()
         const elems = elements
 
-        if (isStroke) {
+        if (isMatteRender) {
+          renderer.ctxFillStyle('rgb(255,255,255)')
+          if (isStroke) {
+            renderer.ctxStrokeStyle('rgb(255,255,255)')
+            renderer.ctxLineWidth(wi || 0)
+
+            if (lc) {
+              renderer.ctxLineCap(lc)
+            }
+
+            if (lj) {
+              renderer.ctxLineJoin(lj)
+            }
+
+            renderer.ctxMiterLimit(ml || 0)
+          }
+          renderer.ctxOpacity(1)
+        } else if (isStroke) {
           renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
           renderer.ctxLineWidth(wi || 0)
 
@@ -340,7 +358,9 @@ export class CVShapeElement extends ShapeElement {
           renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
         // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
         }
-        renderer.ctxOpacity(coOp)
+        if (!isMatteRender) {
+          renderer.ctxOpacity(coOp)
+        }
         if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
           ctx?.beginPath()
         }
@@ -378,7 +398,10 @@ export class CVShapeElement extends ShapeElement {
             }
           }
           if (isStroke) {
-          // ctx.stroke();
+            if (isMatteRender) {
+              ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
+            }
+            // ctx.stroke();
             renderer.ctxStroke()
             if (da) {
               ctx?.setLineDash(this.dashResetter)

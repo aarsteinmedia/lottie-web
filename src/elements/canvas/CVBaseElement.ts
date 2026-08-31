@@ -15,6 +15,9 @@ import {
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
 import { EffectTypes } from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
+import {
+  dilateMatteAlpha, erodeMatteAlpha, isStrokeOnlyMatteLayer
+} from '@/utils/helpers/canvasMatte'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
 const notImplemented = 'Method is not implemented'
@@ -28,13 +31,11 @@ export abstract class CVBaseElement extends RenderableElement {
   transformCanvas?: TransformCanvas | undefined
   transformEffects: GroupEffect[] = []
 
-  clearCanvas(
-    canvasContext?:
-      | CanvasRenderingContext2D
-      | OffscreenCanvasRenderingContext2D
-      | null,
-    fullCanvas = false
-  ) {
+  clearCanvas(canvasContext?:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null,
+  fullCanvas = false) {
     if (!canvasContext) {
       return
     }
@@ -174,7 +175,13 @@ export abstract class CVBaseElement extends RenderableElement {
       wasSmoothingEnabled = ctx.imageSmoothingEnabled
 
     ctx.imageSmoothingEnabled = false
+    if (this.globalData) {
+      this.globalData.renderingTrackMatte = true
+    }
     mask?.renderFrame(1)
+    if (this.globalData) {
+      this.globalData.renderingTrackMatte = false
+    }
 
     // We draw the second buffer (that contains the content of this layer)
     ctx.setTransform(
@@ -210,6 +217,16 @@ export abstract class CVBaseElement extends RenderableElement {
         alphaMatteCtx.fillRect(
           0, 0, width, height
         )
+        const matteLayer = mask?.data
+
+        // Filled mattes erode to drop fringe; stroke-only td mattes dilate for closed tt fills.
+        if (matteLayer && matteLayer.ty !== 2) {
+          if (isStrokeOnlyMatteLayer(matteLayer)) {
+            dilateMatteAlpha(alphaMatteCtx, 2)
+          } else {
+            erodeMatteAlpha(alphaMatteCtx, 1)
+          }
+        }
         matteSource = alphaMatte
       }
     }
@@ -230,6 +247,7 @@ export abstract class CVBaseElement extends RenderableElement {
     layerCtx.globalCompositeOperation = 'source-over'
 
     this.clearCanvas(this.canvasContext, true)
+    this.canvasContext.globalCompositeOperation = 'copy'
     this.canvasContext.drawImage(
       buffer, 0, 0
     )

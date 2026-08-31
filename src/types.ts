@@ -1341,6 +1341,7 @@ export interface GlobalData {
   registerExpressionProperty: (expression: ExpressionProperty) => void
   renderConfig?: undefined | SVGRendererConfig | CanvasRendererConfig | HTMLRendererConfig
   renderer?: undefined | CanvasRenderer | SVGRenderer
+  renderingTrackMatte?: undefined | boolean
   slotManager?: undefined | SlotManager
   transformCanvas?: undefined | TransformCanvas
 }
