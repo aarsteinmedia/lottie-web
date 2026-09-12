@@ -1409,7 +1409,7 @@ export interface AddAnimationParams {
 
 export interface Result {
   error?: undefined | string
-  result?: undefined | null | string | ArrayBuffer
+  result: null | string | ArrayBuffer
   success: boolean
 }
 

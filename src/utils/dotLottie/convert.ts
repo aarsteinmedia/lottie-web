@@ -69,6 +69,7 @@ export async function convert ({
   } catch (error) {
     return {
       error: (error as Error).message,
+      result: null,
       success: false,
     }
   }
