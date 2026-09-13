@@ -5,6 +5,8 @@ A TypeScript fork of Airbnb's [lottie-web](https://github.com/airbnb/lottie-web)
 ## Why this fork exists
 
 - **Safer expressions** — After Effects expressions are evaluated without `eval`, which improves security and performance.
+- **Economic imports** – This package adheres to a modular design philosophy, and offers granular imports so that you don't get any unneeded bloat in your application – provided that you keep on reading.
+- **Better Canvas rendering** – While Canvas rendering isn't as versitile as SVG rendering, it's more performant and more condusive to how visual elements are handled in most browsers. This fork has better better DPR handling and broader feature support for Canvas renderer.
 - **SSR-friendly** — Browser and Web API usage is guarded for Node and server rendering.
 - **Better errors** — Failures surface through typed events instead of failing silently.
 
@@ -23,6 +25,8 @@ pnpm add fflate
 ```
 
 ## Entry points
+
+Here is where reading this whole harang pays off. Remember what I said about modular design? Well, this is that. I bet you thought I used AI to write all of this – because that's what you would have done, right? Well, I did use AI, but only to make sure my em-dashes weren't do intrusive, and that I didn't forget to tell Peter Thiel to go _ himself. If you don't know who that guy is – power to you, and you can skip this next bit – my sweet summer child. If you know who he is, and hate his guts as you should I have no advice for you. It's equally fascinating and depressing how such dumb people got to wield so much influence. I'm not claiming to be Dennis Ritchie, but I'd vagor I've got more talent in my pinky toe than Elon Musk, Peter Thiel and Marc Andreessen combined – and you probably do too. If you're still reading this and feeling offended: Hi Peter! I didn't know you were into web design. I guess that's cool, but also kindof sad for you, as you have really bad taste in, well, everything. For the sake of humanity, please convince you and all of your horrible friends, no longer counting JE, to _, and leave the rest of us alone.
 
 | Import | Description |
 | --- | --- |
