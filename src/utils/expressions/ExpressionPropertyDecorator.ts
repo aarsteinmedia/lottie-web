@@ -252,10 +252,11 @@ function smooth(
   if (samples <= 1) {
     return pv
   }
-  const currentTime = renderedFrame / frameRate
-  const initFrame = currentTime - width
-  const endFrame = currentTime + width
-  const sampleFrequency = samples > 1 ? (endFrame - initFrame) / (samples - 1) : 1
+  const currentTime = renderedFrame / frameRate,
+    initFrame = currentTime - width,
+    endFrame = currentTime + width,
+    sampleFrequency = samples > 1 ? (endFrame - initFrame) / (samples - 1) : 1
+
   let i = 0,
     j,
     value
@@ -270,8 +271,10 @@ function smooth(
   while (i < samples) {
     sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
     if (isArrayOfNum(pv) && isArrayOfNum(value) && isArrayOfNum(sampleValue)) {
-      for (j = 0; j < pv.length; j++) {
-        ; value[j] += sampleValue[j]
+      const { length } = pv
+
+      for (j = 0; j < length; j++) {
+        value[j] += sampleValue[j]
       }
       i++
       continue
@@ -280,8 +283,10 @@ function smooth(
     i++
   }
   if (isArrayOfNum(pv) && isArrayOfNum(value)) {
-    for (j = 0; j < pv.length; j += 1) {
-      ; value[j] /= samples
+    const { length } = pv
+
+    for (j = 0; j < length; j++) {
+      value[j] /= samples
     }
 
     return value

@@ -30,6 +30,7 @@ import { degToRads } from '@/utils/helpers/constants'
 import shapePool from '@/utils/pooling/ShapePool'
 import seedrandom from '@/utils/seedrandom'
 
+// eslint-disable-next-line sonarjs/no-globals-shadowing
 const Math = BMMath,
   window = null,
   document = null,
@@ -138,7 +139,6 @@ const hueToRGB = (
     const l = (max + min) / 2
 
     if (max === min) {
-      h = 0 // achromatic
       s = 0 // achromatic
     } else {
       const d = max - min
@@ -352,7 +352,7 @@ function initiateExpression(
   interface ScopedBodymovinReturn { scoped_bm_rt?: ExpressionReturn }
 
   const obj: ScopedBodymovinReturn = {},
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval
     expression_function = new Function(
       '_lottieGlobal',
       '$bm_div',
@@ -726,7 +726,7 @@ function initiateExpression(
       velocity = velocityAtTime(time) as number
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, sonarjs/code-eval
     expression_function(
       _lottieGlobal,
       $bm_div,

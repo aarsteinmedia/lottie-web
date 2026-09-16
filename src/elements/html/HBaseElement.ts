@@ -9,11 +9,12 @@ import { styleDiv } from '@/utils'
 import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
+type HElement = null | SVGGElement | HTMLElement
 export class HBaseElement extends RenderableElement {
-  maskedElement: null | SVGGElement | HTMLElement = null
-  matteElement: null | SVGGElement | HTMLElement = null
+  maskedElement: HElement = null
+  matteElement: HElement = null
   svgElement: null | SVGSVGElement = null
-  transformedElement: null | SVGGElement | HTMLElement = null
+  transformedElement: HElement = null
   constructor() {
     super()
     const { getBaseElement } = SVGBaseElement.prototype,

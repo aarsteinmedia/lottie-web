@@ -15,6 +15,7 @@ class CanvasContext {
   strokeStyle = ''
   transform = createTypedArray(ArrayType.Float32, 16) as Tuple<number, 16>
   constructor() {
+    // eslint-disable-next-line sonarjs/pseudo-random
     this.id = Math.random()
   }
 }

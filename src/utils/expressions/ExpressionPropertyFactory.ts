@@ -4,6 +4,61 @@ import type { BaseProperty } from '@/utils/properties/BaseProperty'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
+/**
+ * Stand-in for a boxed Number: coerces to its numeric payload in arithmetic,
+ * comparisons and string contexts, while carrying the members After Effects
+ * exposes on a unidimensional property (value, numKeys, key(), velocity, …).
+ */
+export class NumericValue {
+  [index: number]: number
+
+  value: number
+
+  constructor(value: number) {
+    this.value = value
+    this[0] = value
+  }
+
+  set(value: number) {
+    this.value = value
+    this[0] = value
+
+    return this
+  }
+
+  [Symbol.toPrimitive](hint: string) {
+    return hint === 'string' ? `${this.value}` : this.value
+  }
+
+  toExponential(...args: Parameters<number['toExponential']>) {
+    return Number.prototype.toExponential.apply(this.value, args)
+  }
+
+  toFixed(...args: Parameters<number['toFixed']>) {
+    return Number.prototype.toFixed.apply(this.value, args)
+  }
+
+  toJSON() {
+    return this.value
+  }
+
+  toLocaleString(...args: Parameters<number['toLocaleString']>) {
+    return Number.prototype.toLocaleString.apply(this.value, args)
+  }
+
+  toPrecision(...args: Parameters<number['toPrecision']>) {
+    return Number.prototype.toPrecision.apply(this.value, args)
+  }
+
+  toString(...args: Parameters<number['toString']>) {
+    return Number.prototype.toString.apply(this.value, args)
+  }
+
+  valueOf() {
+    return this.value
+  }
+}
+
 export class ExpressionPropertyInterface {
   defaultMultidimensionalValue = {
     mult: 1,
@@ -21,7 +76,7 @@ export class ExpressionPropertyInterface {
   }
 
   completeProperty(
-    expressionValue: BaseProperty & { key: (pos: number) => unknown }, property: BaseProperty, type: PropType
+    expressionValue: NumericValue | number[], property: BaseProperty, type: PropType
   ) {
     Object.defineProperty(
       expressionValue, 'velocity', {
@@ -35,24 +90,30 @@ export class ExpressionPropertyInterface {
       if (!expressionValue.numKeys) {
         return 0
       }
+
+      const keyframes = property.keyframes ?? []
       let value
 
-      if (property.keyframes) {
-        if ('s' in property.keyframes[pos - 1]) {
-          value = property.keyframes[pos - 1].s
-        } else if ('e' in property.keyframes[pos - 2]) {
-          value = property.keyframes[pos - 2].e
-        } else {
-          value = property.keyframes[pos - 2].s
-        }
+      if ('s' in keyframes[pos - 1]) {
+        value = keyframes[pos - 1].s
+      } else if ('e' in keyframes[pos - 2]) {
+        value = keyframes[pos - 2].e
+      } else {
+        value = keyframes[pos - 2].s
       }
 
-      const valueProp: number = type === PropType.UniDimensional ? new Number(value) : { ...value }
+      const time = keyframes[pos - 1].t / (property.elem?.comp?.globalData?.frameRate ?? 60)
 
-      valueProp.time = Number(property.keyframes?.[pos - 1].t) / (property.elem?.comp?.globalData?.frameRate ?? 60)
-      valueProp.value = type === PropType.UniDimensional ? (value as number[])[0] : value
+      if (type === PropType.UniDimensional) {
+        return Object.assign(new NumericValue(Array.isArray(value) ? value[0] : value), { time })
+      }
 
-      return valueProp
+      return Object.assign(
+        {}, value, {
+          time,
+          value
+        }
+      )
     }
     expressionValue.valueAtTime = property.getValueAtTime
     expressionValue.speedAtTime = property.getSpeedAtTime
@@ -69,7 +130,7 @@ export class ExpressionPropertyInterface {
 
   getInterface (property?: BaseProperty) {
     if (!property) {
-      return this.defaultGetter
+      return () => this.defaultGetter()
     }
 
     if (property.propType === PropType.UniDimensional) {
@@ -114,11 +175,9 @@ export class ExpressionPropertyInterface {
     if (!property || !('pv' in property)) {
       property = this.defaultUnidimensionalValue
     }
-    const mult = 1 / property.mult
-    let val = property.pv * mult,
-      expressionValue = new Number(val)
+    const mult = 1 / property.mult,
+      expressionValue = new NumericValue(property.pv * mult)
 
-    expressionValue.value = val
     this.completeProperty(
       expressionValue, property, PropType.UniDimensional
     )
@@ -127,17 +186,8 @@ export class ExpressionPropertyInterface {
       if (property.k) {
         property.getValue()
       }
-      val = property.v * mult
-      if (expressionValue.value !== val) {
-        expressionValue = new Number(val)
-        expressionValue.value = val
-        expressionValue[0] = val
-        this.completeProperty(
-          expressionValue, property, PropType.UniDimensional
-        )
-      }
 
-      return expressionValue
+      return expressionValue.set(property.v * mult)
     }
   }
 }

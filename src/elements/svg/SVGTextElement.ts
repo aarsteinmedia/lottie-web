@@ -177,10 +177,12 @@ export class SVGTextLottieElement extends TextElement {
           span: null,
         } as any)
         if (!hasGlyphs || !isSingleShape || i === 0) {
+          const tag = hasGlyphs ? 'g' : 'text'
+
           tSpan =
             (cachedSpansLength > i
               ? this.textSpans[i]?.span
-              : createNS<SVGGElement | SVGTextElement>(hasGlyphs ? 'g' : 'text')) ?? null
+              : createNS<SVGGElement | SVGTextElement>(tag)) ?? null
 
           if (!tSpan) {
             throw new Error('Could not create tSpan')

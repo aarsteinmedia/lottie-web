@@ -14,6 +14,7 @@ export class TextExpressionInterface {
     const stringValue = this.elem.textProperty?.currentData.t
 
     if (!this._sourceText || stringValue !== this._sourceText.value) {
+      // eslint-disable-next-line sonarjs/no-primitive-wrappers
       this._sourceText = new String(stringValue) as unknown as { value: string }
       // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
       this._sourceText.value = (stringValue || String(stringValue)) as string
@@ -36,14 +37,10 @@ export class TextExpressionInterface {
   }
 
   getInterface (name: string) {
-    // eslint-disable-next-line sonarjs/no-small-switch
-    switch (name) {
-      case 'ADBE Text Document': {
-        return this.sourceText
-      }
-      default: {
-        return null
-      }
+    if (name.toLowerCase().includes('adbe text document')) {
+      return this.sourceText
     }
+
+    return null
   }
 }
