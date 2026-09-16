@@ -1,6 +1,6 @@
 import type { EllShapeProperty } from '@/utils/shapes/properties/EllShapeProperty'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 

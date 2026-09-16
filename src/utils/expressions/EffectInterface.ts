@@ -8,7 +8,7 @@ import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterfac
 import type { BaseProperty } from '@/utils/properties/BaseProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
 

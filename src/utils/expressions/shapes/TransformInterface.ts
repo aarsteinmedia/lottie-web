@@ -2,7 +2,7 @@ import type { SVGFillStyleData } from '@/elements/helpers/shapes/SVGFillStyleDat
 import type { SVGTransformData } from '@/elements/helpers/shapes/SVGTransformData'
 import type { ShapeType } from '@/utils/enums'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class TransformInterface extends BaseInterface {

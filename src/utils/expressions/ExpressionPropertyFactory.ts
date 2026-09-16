@@ -31,7 +31,7 @@ export class ExpressionPropertyInterface {
       }
     )
     expressionValue.numKeys = property.keyframes?.length ?? 0
-    expressionValue.key = function (pos: number) {
+    expressionValue.key = (pos: number) => {
       if (!expressionValue.numKeys) {
         return 0
       }
@@ -47,12 +47,7 @@ export class ExpressionPropertyInterface {
         }
       }
 
-      // @ts-expect-error
-      const valueProp: {
-        time: number
-        value: unknown
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      } = type === PropType.UniDimensional ? new Number(value) : { ...value }
+      const valueProp: number = type === PropType.UniDimensional ? new Number(value) : { ...value }
 
       valueProp.time = Number(property.keyframes?.[pos - 1].t) / (property.elem?.comp?.globalData?.frameRate ?? 60)
       valueProp.value = type === PropType.UniDimensional ? (value as number[])[0] : value
@@ -97,10 +92,10 @@ export class ExpressionPropertyInterface {
 
     expressionValue.value = arrValue
     this.completeProperty(
-      expressionValue, property, 'multidimensional'
+      expressionValue, property, PropType.MultiDimensional
     )
 
-    return function () {
+    return () => {
       if (property.k) {
         property.getValue()
       }
@@ -147,7 +142,6 @@ export class ExpressionPropertyInterface {
   }
 }
 
-// eslint-disable-next-line import/no-default-export
-export default function expressionPropertyFactory(property?: BaseProperty) {
+export function expressionPropertyFactory(property?: BaseProperty) {
   return new ExpressionPropertyInterface().getInterface(property)
 }

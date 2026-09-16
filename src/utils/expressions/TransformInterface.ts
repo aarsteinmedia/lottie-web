@@ -1,6 +1,6 @@
 import type { TransformProperty } from '@/utils/properties/TransformProperty'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 
 export class TransformExpressionInterface {
   transform: TransformProperty

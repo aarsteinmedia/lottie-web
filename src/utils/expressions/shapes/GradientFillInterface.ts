@@ -1,6 +1,6 @@
 import type { SVGGradientFillStyleData } from '@/elements/helpers/shapes/SVGGradientFillStyleData'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class GradientFillInterface extends BaseInterface {

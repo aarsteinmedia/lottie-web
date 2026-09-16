@@ -16,7 +16,7 @@ import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapePrope
 import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 import { ShapeType } from '@/utils/enums'
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
 import { ContentInterface } from '@/utils/expressions/shapes/ContentInterface'

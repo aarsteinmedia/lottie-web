@@ -2,7 +2,7 @@ import type { Vector3 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class FillInterface extends BaseInterface {

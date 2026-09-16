@@ -1,6 +1,6 @@
 import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 
@@ -19,7 +19,7 @@ export class TrimInterface extends BaseInterface {
   }
 
   override getInterface(val: string | number) {
-    if (val === this.shape?.e?.ix || val === 'End' || val === 'end') {
+    if (val === this.shape?.e?.ix || String(val).toLowerCase() === 'end') {
       return this.end
     }
     if (val === this.shape?.s?.ix) {

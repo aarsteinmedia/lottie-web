@@ -1,6 +1,6 @@
 import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapeProperty'
 
-import expressionPropertyFactory from '@/utils/expressions/ExpressionValueFactory'
+import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
 export class RectInterface extends BaseInterface {
