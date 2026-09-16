@@ -16,9 +16,11 @@ export class EllipseInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
+
     if (this.shape?.p?.ix === value) {
       return this.position
     }
+
     if (this.shape?.s?.ix === value) {
       return this.size
     }

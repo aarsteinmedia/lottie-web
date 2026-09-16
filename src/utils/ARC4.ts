@@ -41,7 +41,10 @@ export class ARC4 {
     }
 
     for (i = 0; i < this._width; i++) {
-      s[i] = s[j = this._mask & j + (key[i % keyLen] ?? 0) + (t = s[i] ?? 0)] ?? 0
+      const aKey = t = s[i] ?? 0,
+        bKey = j = this._mask & j + (key[i % keyLen] ?? 0) + aKey
+
+      s[i] = s[bKey] ?? 0
       s[j] = t
     }
   }
@@ -59,8 +62,15 @@ export class ARC4 {
     const s = this.S
 
     while (count--) {
-      t = s[this.i = this._mask & this.i + 1] ?? 0
-      r = r * this._width + (s[this._mask & (s[this.i] = s[this.j = this._mask & this.j + t] ?? 0) + (s[this.j] = t)] ?? 0)
+      const aKey = this.i = this._mask & this.i + 1
+
+      t = s[aKey] ?? 0
+
+      const bKey = this.j = this._mask & this.j + t,
+        cKey = s[this.i] = s[bKey] ?? 0,
+        dKey = s[this.j] = t
+
+      r = r * this._width + (s[this._mask & cKey + dKey] ?? 0)
     }
 
     return r

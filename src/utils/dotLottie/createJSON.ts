@@ -6,13 +6,13 @@ import {
 
 interface CreateJSONProps {
   animation?: undefined | AnimationData
-  fileName?: undefined | string
+  filename?: undefined | string
   shouldDownload?: undefined | boolean
 }
 
 export function createJSON({
   animation,
-  fileName,
+  filename,
   shouldDownload,
 }: CreateJSONProps) {
   try {
@@ -20,7 +20,7 @@ export function createJSON({
       throw new Error('createJSON: Missing or malformed required parameter(s):\n - animation\n\'')
     }
 
-    const name = addExt('json', fileName) || `${createElementID()}.json`,
+    const name = addExt('json', filename) || `${createElementID()}.json`,
       jsonString = JSON.stringify(animation)
 
     if (shouldDownload) {

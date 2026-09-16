@@ -10,7 +10,7 @@ import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
 export async function convert ({
   animations: animationsFromProps,
   currentAnimation = 0,
-  fileName: fileNameFromProps,
+  filename: filenameFromProps,
   generator,
   isDotLottie,
   manifest,
@@ -35,18 +35,18 @@ export async function convert ({
 
     if (typeCheck || isDotLottie) {
 
-      let fileName = getFilename(fileNameFromProps || toConvert || 'converted')
+      let filename = getFilename(filenameFromProps || toConvert || 'converted')
 
       if (animations.length > 1) {
-        fileName += `-${currentAnimation + 1}`
+        filename += `-${currentAnimation + 1}`
       }
 
-      fileName += '.json'
+      filename += '.json'
 
       return {
         result: createJSON({
           animation: animations[currentAnimation],
-          fileName,
+          filename,
           shouldDownload,
         }),
         success: true
@@ -56,7 +56,7 @@ export async function convert ({
     return {
       result: await createDotLottie({
         animations,
-        fileName: `${getFilename(fileNameFromProps || toConvert || 'converted')}.lottie`,
+        filename: `${getFilename(filenameFromProps || toConvert || 'converted')}.lottie`,
         manifest: {
           ...manifest ?? manifest,
           generator,

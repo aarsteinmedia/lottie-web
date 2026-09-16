@@ -238,15 +238,17 @@ export class TextProperty extends BaseProperty {
               ) || 0
           }
           if (lineWidth + cLength > boxWidth && finalText[i] !== ' ') {
+            let j = i
+
             if (lastSpaceIndex === -1) {
               len++
             } else {
-              i = lastSpaceIndex
+              j = lastSpaceIndex
             }
             currentHeight +=
               documentData.finalLineHeight || documentData.finalSize * 1.2
             finalText.splice(
-              i, lastSpaceIndex === i ? 1 : 0, '\r'
+              j, lastSpaceIndex === j ? 1 : 0, '\r'
             )
             lastSpaceIndex = -1
             lineWidth = 0
@@ -255,6 +257,7 @@ export class TextProperty extends BaseProperty {
             lineWidth += trackingOffset
           }
         }
+
         currentHeight +=
           Number(fontData.ascent) * documentData.finalSize / 100
         if (

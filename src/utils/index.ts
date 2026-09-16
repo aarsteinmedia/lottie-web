@@ -14,12 +14,19 @@ interface DownloadOptions {
 }
 
 const hasExt = (path?: string) => {
-  const lastDotIndex = path?.split('/').pop()?.lastIndexOf('.')
+    const lastDotIndex = path?.split('/').pop()?.lastIndexOf('.')
 
-  return (
-    (lastDotIndex ?? 0) > 1 && path && path.length - 1 > (lastDotIndex ?? 0)
-  )
-}
+    return (
+      (lastDotIndex ?? 0) > 1 && path && path.length - 1 > (lastDotIndex ?? 0)
+    )
+  },
+  untrailingslashit = (str: string): string => {
+    if (str.endsWith('/')) {
+      return untrailingslashit(str.slice(0, Math.max(0, str.length - 1)))
+    }
+
+    return str
+  }
 
 /**
  * Exported functions.
@@ -89,12 +96,12 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
   download = (data: string | ArrayBuffer,
     options?: DownloadOptions) => {
     const blob = new Blob([data], { type: options?.mimeType ?? '' }),
-      fileName = options?.name || createElementID(),
+      filename = options?.name || createElementID(),
       dataURL = URL.createObjectURL(blob),
       link = document.createElement('a')
 
     link.href = dataURL
-    link.download = fileName
+    link.download = filename
     link.hidden = true
     document.body.appendChild(link)
 
@@ -261,5 +268,9 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
       b = (v[2] ?? 0) | 0
 
     return `rgb(${r},${g},${b})`
+  },
+
+  trailingslashit = (str: string) => {
+    return `${untrailingslashit(str)}/`
   }
 

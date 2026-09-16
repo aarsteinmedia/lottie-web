@@ -10,6 +10,7 @@ export class GroupInterface extends BaseInterface {
     return this.shape?.nm
   }
 
+  // eslint-disable-next-line sonarjs/function-return-type
   override getInterface(value: string | number) {
     switch (value) {
       case 'ADBE Vectors Group':

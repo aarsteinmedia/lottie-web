@@ -96,7 +96,7 @@ export class AnimationItem extends BaseEvent {
   public wrapper: HTMLElement | null = null
   protected animType?: undefined | RendererType
   protected autoloadSegments = false
-  protected fileName?: undefined | string
+  protected filename?: undefined | string
 
   protected initialSegment?: undefined | Vector2
   protected onComplete: null | ((arg: unknown) => void) = null
@@ -472,7 +472,7 @@ export class AnimationItem extends BaseEvent {
     const segment = segments.shift()
 
     this.timeCompleted = Number(segment?.time) * this.frameRate
-    const segmentPath = `${this.path + (this.fileName || '')}_${this.segmentPos}.json`
+    const segmentPath = `${this.path + (this.filename || '')}_${this.segmentPos}.json`
 
     this.segmentPos++
     loadData(
@@ -776,9 +776,9 @@ export class AnimationItem extends BaseEvent {
       } else {
         this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
       }
-      this.fileName = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
-      this.fileName = this.fileName.slice(0,
-        Math.max(0, this.fileName.lastIndexOf('.json')))
+      this.filename = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
+      this.filename = this.filename.slice(0,
+        Math.max(0, this.filename.lastIndexOf('.json')))
       loadAnimation(
         params.path, this.configAnimation, this.onSetupError
       )

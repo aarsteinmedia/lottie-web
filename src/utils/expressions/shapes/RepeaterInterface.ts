@@ -15,9 +15,11 @@ export class RepeaterInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
+
     if (this.shape?.c?.ix === value || value === 'Copies') {
       return this.copies
     }
+
 
     if (this.shape?.o?.ix === value || value === 'Offset') {
       return this.offset

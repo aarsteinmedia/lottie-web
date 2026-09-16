@@ -1373,7 +1373,7 @@ export interface ConvertParams {
 
   currentAnimation?: undefined | number
 
-  fileName?: undefined | string
+  filename?: undefined | string
   generator?: undefined | string
 
   isDotLottie?: undefined | boolean
@@ -1398,7 +1398,7 @@ interface AnimationAttributes extends AnimationSettings {
 export interface AddAnimationParams {
   /** Animation(s) to add. */
   configs: AnimationAttributes[]
-  fileName?: undefined | string
+  filename?: undefined | string
   generator: string
   id?: undefined | string
   shouldDownload?: undefined | boolean

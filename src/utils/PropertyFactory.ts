@@ -6,13 +6,12 @@ import type {
   VectorProperty,
 } from '@/types'
 
+import { isArrayOfNum } from '@/utils'
 import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty'
 import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
 import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import { NoProperty } from '@/utils/properties/NoProperty'
 import { ValueProperty } from '@/utils/properties/ValueProperty'
-
-import { isArrayOfNum } from '.'
 
 function getProp<T = number | number[]>(
   elem: ElementInterfaceIntersect,
@@ -82,5 +81,4 @@ function getProp<T = number | number[]>(
 
 const PropertyFactory = { getProp }
 
-// eslint-disable-next-line import/no-default-export
 export default PropertyFactory

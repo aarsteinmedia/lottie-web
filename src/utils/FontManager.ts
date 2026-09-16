@@ -309,8 +309,8 @@ export class FontManager {
 
         const { length: len } = loadedSelector
 
-        for (i = 0; i < len; i++) {
-          if (loadedSelector[i].href.includes(fontList.fPath)) {
+        for (let j = 0; j < len; j++) {
+          if (loadedSelector[j].href.includes(fontList.fPath)) {
             shouldLoadFont = false
           }
         }
@@ -332,8 +332,8 @@ export class FontManager {
 
         const { length: len } = loadedSelector
 
-        for (i = 0; i < len; i++) {
-          if (fontList.fPath === loadedSelector[i].src) {
+        for (let j = 0; j < len; j++) {
+          if (fontList.fPath === loadedSelector[j].src) {
             shouldLoadFont = false
           }
         }
@@ -430,9 +430,9 @@ export class FontManager {
   }
 
   private checkLoadedFonts(): void {
-    let node: HTMLElement | undefined
-    let w: number
-    let loadedCount = this.fonts.length
+    let node: HTMLElement | undefined,
+      w: number,
+      loadedCount = this.fonts.length
 
     for (let i = 0; i < loadedCount; i++) {
 

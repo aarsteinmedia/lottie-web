@@ -11,7 +11,7 @@ import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
  */
 export async function addAnimation ({
   configs,
-  fileName,
+  filename,
   generator,
   id,
   shouldDownload = true,
@@ -59,7 +59,7 @@ export async function addAnimation ({
     return {
       result: await createDotLottie({
         animations,
-        fileName,
+        filename,
         manifest,
         shouldDownload,
       }),

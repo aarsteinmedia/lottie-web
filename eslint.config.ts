@@ -352,6 +352,8 @@ export default defineConfig({
     'perfectionist/sort-interfaces': 'warn',
     'perfectionist/sort-objects': 'warn',
     'simple-import-sort/imports': 0,
+    'sonarjs/cognitive-complexity': 'warn',
+    'sonarjs/different-types-comparison': 'off',
     'sonarjs/no-unused-vars': 0,
     'sonarjs/todo-tag': 1,
     'unicorn/catch-error-name': 2,

@@ -1,5 +1,5 @@
 import {
-  strToU8, zip, type Zippable
+  strToU8, zip, type DeflateOptions, type Zippable
 } from 'fflate'
 
 import type {
@@ -8,7 +8,8 @@ import type {
 
 import {
   addExt, createElementID, devError, download, getExt, getExtFromB64, isAudio, isImage,
-  parseBase64
+  parseBase64,
+  trailingslashit
 } from '@/utils'
 import { isServer } from '@/utils/helpers/constants'
 
@@ -76,21 +77,119 @@ const getArrayBuffer = async (zippable: Zippable) => {
     strToU8(isServer
       ? Buffer.from(parseBase64(str), 'base64').toString('binary')
       : atob(parseBase64(str)),
-    true)
+    true),
+
+  prepareLottie = (filename: string, manifest: LottieManifest) => {
+    const manifestCompressionLevel = 0,
+      name = addExt('lottie', filename) || `${createElementID()}.lottie`,
+      dotLottie: Zippable = {
+        'manifest.json': [
+          strToU8(JSON.stringify(manifest), true), { level: manifestCompressionLevel },
+        ],
+      }
+
+    return {
+      dotLottie,
+      name
+    }
+  },
+
+  prepareAssets = async (
+    animation: AnimationData,
+    dotLottie: Zippable,
+    animationCompressionLevel: DeflateOptions['level']
+  ) => {
+    const { length: jLen } = animation.assets
+
+    // Prepare assets
+    for (let j = 0; j < jLen; j++) {
+      const asset = animation.assets[j]
+
+      if (
+        !asset.p ||
+        !isImage(asset) &&
+        !isAudio(asset)
+      ) {
+        continue
+      }
+
+      const { p: file, u: path } = asset
+
+      if (!file) {
+        continue
+      }
+      // Original asset.id caused issues with multianimations
+      const assetId = createElementID(),
+        isEncoded = file.startsWith('data:'),
+        ext = isEncoded ? getExtFromB64(file) : getExt(file)
+      /**
+       * Check if the asset is already base64-encoded. If not, get path, fetch it, and encode it.
+       */
+      let dataURL = file
+
+      if (!isEncoded) {
+        let url = file
+
+        if (path) {
+          url = `${trailingslashit(path)}${file}`
+        }
+
+        dataURL = await fileToBase64(url)
+      }
+
+      // Asset is encoded
+      const thisAsset = animation.assets[j]
+
+      thisAsset.e = 1
+      thisAsset.p = `${assetId}.${ext}`
+      // Asset is embedded, so path empty string
+      thisAsset.u = ''
+
+      dotLottie[
+        `${isAudio(asset) ? 'audio' : 'i'}/${assetId}.${ext}`
+      ] = [
+        base64ToU8(dataURL), { level: animationCompressionLevel as any }
+      ]
+    }
+  },
+
+  prepareExpressions = (animation: AnimationData) => {
+    const { length: kLen } = animation.layers
+
+    for (let k = 0; k < kLen; k++) {
+      const { ks: transform } = animation.layers[k] ?? {},
+        props = Object.keys(transform) as (keyof Shape)[],
+        { length: pLen } = props
+
+      for (let p = 0; p < pLen; p++) {
+        const prop = transform[props[p]] as ExpressionProp | undefined,
+          expression = prop?.x
+
+        if (!prop || !expression) {
+          continue
+        }
+
+        // Base64 Encode to handle compression
+        prop.x = btoa(expression)
+        prop.e = 1
+      }
+
+    }
+  }
 
 /**
  * Convert a JSON Lottie to dotLottie or combine several animations and download new dotLottie file in your browser.
  */
 interface CreateDotLottieProps {
   animations?: undefined | AnimationData[]
-  fileName?: undefined | string
+  filename?: undefined | string
   manifest?: undefined | LottieManifest
   shouldDownload?: undefined | boolean
 }
 
 export async function createDotLottie({
   animations = [],
-  fileName,
+  filename = '',
   manifest,
   shouldDownload = true,
 }: CreateDotLottieProps) {
@@ -101,99 +200,27 @@ export async function createDotLottie({
       } ${manifest ? '- animations\n' : ''}`)
     }
 
-    const manifestCompressionLevel = 0,
-      animationCompressionLevel = 9,
-      /**
-       * Prepare the dotLottie file.
-       */
-      name = addExt('lottie', fileName) || `${createElementID()}.lottie`,
-      dotlottie: Zippable = {
-        'manifest.json': [
-          strToU8(JSON.stringify(manifest), true), { level: manifestCompressionLevel },
-        ],
-      }
+    const animationCompressionLevel = 9,
+      { dotLottie, name } = prepareLottie(filename, manifest)
 
 
     // Add animations and assets to the dotLottie file
     const { length } = animations
 
     for (let i = 0; i < length; i++) {
-      const { length: jLen } = animations[i]?.assets ?? []
+      await prepareAssets(
+        animations[i],
+        dotLottie,
+        animationCompressionLevel
+      )
+      prepareExpressions(animations[i])
 
-      // Prepare assets
-      for (let j = 0; j < jLen; j++) {
-        const asset = animations[i]?.assets[j]
-
-        if (
-          !asset.p ||
-          !isImage(asset) &&
-          !isAudio(asset)
-        ) {
-          continue
-        }
-
-        const { p: file, u: path } = asset
-
-        if (!file) {
-          continue
-        }
-        // Original asset.id caused issues with multianimations
-        const assetId = createElementID(),
-          isEncoded = file.startsWith('data:'),
-          ext = isEncoded ? getExtFromB64(file) : getExt(file),
-          /**
-           * Check if the asset is already base64-encoded. If not, get path, fetch it, and encode it.
-           */
-          dataURL = isEncoded
-            ? file
-            : await fileToBase64(path
-              ? path.endsWith('/') && `${path}${file}` ||
-              `${path}/${file}`
-              : file)
-
-        // Asset is encoded
-
-        const thisAsset = animations[i]?.assets[j]
-
-        thisAsset.e = 1
-        thisAsset.p = `${assetId}.${ext}`
-        // Asset is embedded, so path empty string
-        thisAsset.u = ''
-
-        dotlottie[
-          `${isAudio(asset) ? 'audio' : 'i'}/${assetId}.${ext}`
-        ] = [base64ToU8(dataURL), { level: animationCompressionLevel }]
-      }
-
-      // Prepare expressions
-      const { length: kLen } = animations[i]?.layers ?? []
-
-      for (let k = 0; k < kLen; k++) {
-        const { ks: transform } = animations[i]?.layers[k] ?? {},
-          props = Object.keys(transform) as (keyof Shape)[],
-          { length: pLen } = props
-
-        for (let p = 0; p < pLen; p++) {
-          const prop = transform[props[p]] as ExpressionProp | undefined,
-            expression = prop?.x
-
-          if (!prop || !expression) {
-            continue
-          }
-
-          // Base64 Encode to handle compression
-          prop.x = btoa(expression)
-          prop.e = 1
-        }
-
-      }
-
-      dotlottie[`a/${manifest.animations[i]?.id}.json`] = [
+      dotLottie[`a/${manifest.animations[i]?.id}.json`] = [
         strToU8(JSON.stringify(animations[i]), true), { level: animationCompressionLevel },
       ]
     }
 
-    const buffer = await getArrayBuffer(dotlottie)
+    const buffer = await getArrayBuffer(dotLottie)
 
     if (shouldDownload) {
       download(buffer, {

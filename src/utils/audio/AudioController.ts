@@ -99,7 +99,6 @@ export class AudioController {
 }
 
 
-// eslint-disable-next-line import/no-default-export
 export default function audioControllerFactory(factory?: AudioFactory) {
   return new AudioController(factory)
 }

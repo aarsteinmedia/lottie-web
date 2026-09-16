@@ -1,7 +1,9 @@
+/* eslint-disable sonarjs/function-return-type */
 import type NodeCrypto from 'node:crypto'
 
 import type { BMMath } from '@/types'
 
+import { devError } from '@/utils'
 import { ARC4 } from '@/utils/ARC4'
 /*
  Copyright 2014 David Bau.
@@ -119,6 +121,7 @@ function seedRandom(pool: number[], math: BMMath) {
     significance = math.pow(2, digits),
     overflow = significance * 2,
     mask = width - 1
+  // eslint-disable-next-line no-unassigned-vars
   let nodecrypto: undefined | typeof NodeCrypto
 
   //
@@ -236,8 +239,10 @@ function seedRandom(pool: number[], math: BMMath) {
       j = 0
 
     while (j < stringseed.length) {
+      smear ^= (key[mask & j] ?? 0) * 19
+
       key[mask & j] =
-        mask & (smear ^= (key[mask & j] ?? 0) * 19) + stringseed.charCodeAt(j++)
+        mask & smear + stringseed.charCodeAt(j++)
     }
 
     return tostring(key)
@@ -257,6 +262,7 @@ function seedRandom(pool: number[], math: BMMath) {
 
       return tostring(out as unknown as number[])
     } catch (error) {
+      devError(error)
       const { navigator: { plugins }, screen } = global
 
       return [
@@ -286,7 +292,6 @@ function seedRandom(pool: number[], math: BMMath) {
   // End anonymous scope, and pass initial values.
 }
 
-// eslint-disable-next-line import/no-default-export
 export default function initialize(BMMath: BMMath) {
   seedRandom([], BMMath)
 }
