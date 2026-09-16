@@ -4,7 +4,6 @@ import { defineConfig } from 'vitest/config'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-// eslint-disable-next-line import/no-default-export
 export default defineConfig({
   resolve: { alias: { '@': resolve(__dirname, 'src') } },
   test: {

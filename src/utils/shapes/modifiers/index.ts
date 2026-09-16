@@ -21,7 +21,7 @@ type Modifier =
   | typeof OffsetPathModifier
   | typeof MouseModifier
 
-interface Modifiers {[key: string]: Modifier | undefined}
+interface Modifiers { [key: string]: Modifier | undefined }
 
 const Modifiers: Modifiers = {}
 

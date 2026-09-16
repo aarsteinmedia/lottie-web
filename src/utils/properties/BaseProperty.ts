@@ -195,7 +195,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     }
     _caching.lastFrame = frameNum
 
-    // eslint-disable-next-line unicorn/consistent-destructuring
+
     return this.pv
   }
 
@@ -364,7 +364,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
       len = keyData.s?.length || 0
       endValue = (nextKeyData.s ?? keyData.e) as Vector3
-      // eslint-disable-next-line unicorn/consistent-destructuring
+
       if (this.sh && keyData.h !== 1) {
         if (frameNum >= nextKeyTime) {
           newValue[0] = endValue[0]

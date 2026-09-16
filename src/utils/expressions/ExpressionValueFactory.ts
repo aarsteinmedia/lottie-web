@@ -52,7 +52,7 @@ export class ExpressionPropertyInterface {
         time: number
         value: unknown
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      } = type === PropType.UniDimensional ? new Number(value) : { ...value } // eslint-disable-line no-new-wrappers
+      } = type === PropType.UniDimensional ? new Number(value) : { ...value }
 
       valueProp.time = Number(property.keyframes?.[pos - 1].t) / (property.elem?.comp?.globalData?.frameRate ?? 60)
       valueProp.value = type === PropType.UniDimensional ? (value as number[])[0] : value
@@ -121,7 +121,7 @@ export class ExpressionPropertyInterface {
     }
     const mult = 1 / property.mult
     let val = property.pv * mult,
-      expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+      expressionValue = new Number(val)
 
     expressionValue.value = val
     this.completeProperty(
@@ -134,7 +134,7 @@ export class ExpressionPropertyInterface {
       }
       val = property.v * mult
       if (expressionValue.value !== val) {
-        expressionValue = new Number(val) // eslint-disable-line no-new-wrappers
+        expressionValue = new Number(val)
         expressionValue.value = val
         expressionValue[0] = val
         this.completeProperty(

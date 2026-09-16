@@ -400,11 +400,11 @@ export class RepeaterModifier extends ShapeModifier {
         ; items[items.length - 1].transform.mProps._mdf = true
         items[items.length - 1].transform.op._mdf = true
         items[items.length - 1].transform.op.v =
-            this._currentCopies === 1
-              ? Number(this.so?.v)
-              : Number(this.so?.v) +
-                (Number(this.eo?.v) - Number(this.so?.v)) *
-                (i / (this._currentCopies - 1))
+          this._currentCopies === 1
+            ? Number(this.so?.v)
+            : Number(this.so?.v) +
+              (Number(this.eo?.v) - Number(this.so?.v)) *
+              (i / (this._currentCopies - 1))
       }
 
       if (iteration === 0) {

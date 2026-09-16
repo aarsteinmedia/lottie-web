@@ -963,7 +963,7 @@ function div(a: unknown, b: unknown) {
   return 0
 }
 
-function isNumerable(tOfV: string, v: unknown): v is (number | string) {
+function isNumerable(tOfV: string, v: unknown): v is number | string {
   return tOfV === 'number' || v instanceof Number || tOfV === 'boolean' || tOfV === 'string'
 }
 

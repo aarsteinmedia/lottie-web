@@ -31,3 +31,4 @@ minimumReleaseAgeExclude:
   - '@rollup/rollup-win32-x64-gnu@4.63.2'
   - '@rollup/rollup-win32-x64-msvc@4.63.2'
   - rollup@4.63.2
+  - rollup-plugin-opener@0.2.5

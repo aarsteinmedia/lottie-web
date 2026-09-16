@@ -448,8 +448,8 @@ export interface GradientColor {
   p: number
 }
 
-export type DynamicProperty = ({ hd?: boolean } &
-  VectorProperty<number | number[] | Keyframe[]>)
+export type DynamicProperty = { hd?: boolean } &
+  VectorProperty<number | number[] | Keyframe[]>
 
 type BoolInt = 0 | 1
 interface ShapeDataProperty {
@@ -487,7 +487,7 @@ export interface Shape {
   _processed?: boolean
   _shouldRender?: boolean
   /** Anchor point / Highlight angle for radial gradient. */
-  a?: undefined | VectorProperty<Vector1 | Vector2 | Vector3>
+  a?: undefined | VectorProperty<number | Vector2 | Vector3>
   /** Blend Mode. */
   bm?: undefined | number
   /** Color. */
@@ -676,12 +676,11 @@ export interface LottieManifest {
 export type Tuple<T, N extends number, R extends T[] = []> =
   R['length'] extends N ? R : Tuple<T, N, [...R, T]>
 
-type Vector1 = number
 export type Vector2 = Tuple<number, 2>
 export type Vector3 = Tuple<number, 3>
 export type Vector4 = Tuple<number, 4>
 
-export interface VectorProperty<T = Vector1> {
+export interface VectorProperty<T = number> {
   _mdf?: boolean
   a: 1 | 0
   ix?: undefined | number
@@ -1131,7 +1130,7 @@ export interface LottieLayer {
   /** In point. */
   ip: number
   ks: Shape
-  layers?: undefined | (LottieLayer[] & { __used?: boolean })
+  layers?: undefined | LottieLayer[] & { __used?: boolean }
   ln?: undefined | string
   masksProperties?: undefined | Shape[]
   mn?: undefined | string

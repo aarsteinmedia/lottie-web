@@ -43,7 +43,7 @@ const rgbToHSV = (
 
     switch (max) {
       case min: {
-        h = 0
+        // h = 0
         break
       }
       case r: {
@@ -262,7 +262,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             len = paths._length - 1
             let bezierData
 
-            totalLength = 0
+            // totalLength = 0
             for (i = 0; i < len; i++) {
               if (isArray(paths)) {
                 continue
@@ -297,9 +297,9 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         pathInfo = this._pathData.pi
 
         currentLength = this._pathData.f?.v ?? 0
-        segmentInd = 0
+        // segmentInd = 0
         pointInd = 1
-        segmentLength = 0
+        // segmentLength = 0
         // shouldMeasure = true
         segments = pathInfo?.segments ?? []
 
@@ -455,13 +455,13 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               switch (documentData.j) {
                 case 1: {
                   currentLength +=
-                  totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)
+                    totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)
                   break
                 }
                 case 2: {
                   currentLength +=
-                  (totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)) /
-                  2
+                    (totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)) /
+                    2
                   break
                 }
                 case undefined:
@@ -521,13 +521,13 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             // Force alignment only works with a single line for now
             if (this._pathData.a?.v) {
               currentLength =
-              (letters[0]?.an || 0) * 0.5 +
-              (totalLength -
-                Number(this._pathData.f?.v) -
-                (letters[0]?.an || 0) * 0.5 -
-                (letters[letters.length - 1]?.an ?? 0) * 0.5) *
-                ind /
-                (len - 1)
+                (letters[0]?.an || 0) * 0.5 +
+                (totalLength -
+                  Number(this._pathData.f?.v) -
+                  (letters[0]?.an || 0) * 0.5 -
+                  (letters[letters.length - 1]?.an ?? 0) * 0.5) *
+                  ind /
+                  (len - 1)
               currentLength += Number(this._pathData.f?.v)
             }
             while (shouldMeasure) {
@@ -536,16 +536,16 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 !points
               ) {
                 perc =
-                (currentLength + animatorOffset - segmentLength) /
-                (currentPoint?.partialLength || 0)
+                  (currentLength + animatorOffset - segmentLength) /
+                  (currentPoint?.partialLength || 0)
                 xPathPos =
-                Number(prevPoint?.point[0]) +
-                (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
-                perc
+                  Number(prevPoint?.point[0]) +
+                  (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
+                  perc
                 yPathPos =
-                Number(prevPoint?.point[1]) +
-                (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
-                perc
+                  Number(prevPoint?.point[1]) +
+                  (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
+                  perc
                 matrixHelper.translate(-alignment[0] * (letters[i]?.an ?? 0) * 0.005,
                   -(alignment[1] * yOff) * 0.01)
                 shouldMeasure = false
@@ -558,7 +558,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                   if (segments[segmentInd]) {
                     points = segments[segmentInd]?.points ?? []
                   } else if (mask?.v?.c) {
-                    pointInd = 0
+                    // pointInd = 0
                     segmentInd = 0
                     points = segments[segmentInd]?.points ?? []
                   } else {
@@ -731,10 +731,10 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             if (animatorProps.o?.propType) {
               if (isArray(mult)) {
                 elemOpacity +=
-                (Number(animatorProps.o.v) * (mult[0] ?? 1) - elemOpacity) * (mult[0] ?? 1)
+                  (Number(animatorProps.o.v) * (mult[0] ?? 1) - elemOpacity) * (mult[0] ?? 1)
               } else {
                 elemOpacity +=
-                (Number(animatorProps.o.v) * mult - elemOpacity) * mult
+                  (Number(animatorProps.o.v) * mult - elemOpacity) * mult
               }
             }
             if (documentData.strokeWidthAnim && animatorProps.sw?.propType) {
@@ -853,8 +853,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             )
             if (this._pathData.p?.v) {
               tanAngle =
-              (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) /
-              (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
+                (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) /
+                (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
               let rot = Math.atan(tanAngle) * 180 / Math.PI
 
               if (Number(currentPoint?.point[0]) < Number(prevPoint?.point[0])) {
@@ -869,7 +869,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             if (letters[i + 1] && ind !== letters[i + 1]?.ind) {
               currentLength += (letters[i]?.an ?? 0) / 2
               currentLength +=
-              documentData.tr * 0.001 * Number(documentData.finalSize)
+                documentData.tr * 0.001 * Number(documentData.finalSize)
             }
           } else {
             matrixHelper.translate(
@@ -922,8 +922,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               0
             )
             xPos +=
-            (letters[i]?.l ?? 0) +
-            documentData.tr * 0.001 * Number(documentData.finalSize)
+              (letters[i]?.l ?? 0) +
+              documentData.tr * 0.001 * Number(documentData.finalSize)
           }
           if (renderType === RendererType.HTML) {
             letterM = matrixHelper.toCSS()
@@ -970,14 +970,14 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
         letterValue = this.renderedLetters[i]
         this.lettersChangedFlag =
-        letterValue.update(
-          Number(letterO),
-          Number(letterSw),
-          letterSc,
-          letterFc,
-          letterM, // matrix()-string
-          letterP
-        ) || this.lettersChangedFlag
+          letterValue.update(
+            Number(letterO),
+            Number(letterSw),
+            letterSc,
+            letterFc,
+            letterM, // matrix()-string
+            letterP
+          ) || this.lettersChangedFlag
 
       }
     } catch (error) {
@@ -985,6 +985,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
     }
   }
 
+  // eslint-disable-next-line sonarjs/no-invariant-returns
   override getValue() {
     if (this._elem.globalData?.frameId === this._frameId) {
       return 0

@@ -1,4 +1,6 @@
-import type { ElementInterfaceIntersect, TextRangeValue } from '@/types'
+import type {
+  ElementInterfaceIntersect, TextRangeValue, Vector4
+} from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { getBezierEasing } from '@/utils/BezierFactory'
@@ -103,111 +105,17 @@ export class TextSelectorProperty extends BaseProperty {
   }
 
   getMult(indFromProps: number, _val?: number): number | number[] {
-    let ind = indFromProps
+    const ind = indFromProps
 
     if (
       this._currentTextLength !== this.elem.textProperty?.currentData.l.length
     ) {
       this.getValue()
     }
-    let x1 = 0,
-      y1 = 0,
-      x2 = 1,
-      y2 = 1
 
-    if (this.ne.v > 0) {
-      x1 = this.ne.v / 100.0
-    } else {
-      y1 = -this.ne.v / 100.0
-    }
-    if (this.xe.v > 0) {
-      x2 = 1.0 - this.xe.v / 100.0
-    } else {
-      y2 = 1.0 + this.xe.v / 100.0
-    }
-    const easer = getBezierEasing(
-      x1, y1, x2, y2
-    ).get
+    let mult = this._handleShapeType(ind)
 
-    let mult = 0
-    const s = this.finalS,
-      e = this.finalE,
-      type = this.data.sh
 
-    switch (type) {
-      case 2: {
-        if (e === s) {
-          mult = ind >= e ? 1 : 0
-        } else {
-          mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
-        }
-        mult = easer(mult)
-        break
-      }
-      case 3: {
-        if (e === s) {
-          mult = ind >= e ? 0 : 1
-        } else {
-          mult =
-            1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
-        }
-
-        mult = easer(mult)
-        break
-      }
-      case 4: {
-        if (e === s) {
-          mult = 0
-        } else {
-          mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
-          if (mult < 0.5) {
-            mult *= 2
-          } else {
-            mult = 1 - 2 * (mult - 0.5)
-          }
-        }
-        mult = easer(mult)
-        break
-      }
-      case 5: {
-        if (e === s) {
-          mult = 0
-        } else {
-          const tot = e - s
-
-          /* ind += 0.5;
-                  mult = -4/(tot*tot)*(ind*ind)+(4/tot)*ind; */
-          ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
-          const x = -tot / 2 + ind
-          const a = tot / 2
-
-          mult = Math.sqrt(1 - x * x / (a * a))
-        }
-        mult = easer(mult)
-        break
-      }
-      case 6: {
-        if (e === s) {
-          mult = 0
-        } else {
-          ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
-          mult = (1 + Math.cos(Math.PI + Math.PI * 2 * ind / (e - s))) / 2
-        }
-        mult = easer(mult)
-        break
-      }
-
-      default: {
-        if (ind >= Math.floor(s)) {
-          if (ind - s < 0) {
-            mult = Math.max(0, Math.min(Math.min(e, 1) - (s - ind), 1))
-          } else {
-            mult = Math.max(0, Math.min(e - ind, 1))
-          }
-        }
-        mult = easer(mult)
-      }
-    }
     // Smoothness implementation.
     // The smoothness represents a reduced range of the original [0; 1] range.
     // if smoothness is 25%, the new range will be [0.375; 0.625]
@@ -267,5 +175,108 @@ export class TextSelectorProperty extends BaseProperty {
     this.finalE = e
 
     return 0
+  }
+
+  private _getCoordinates(): Vector4 {
+    let x1 = 0,
+      y1 = 0,
+      x2 = 1,
+      y2 = 1
+
+    if (this.ne.v > 0) {
+      x1 = this.ne.v / 100.0
+    } else {
+      y1 = -this.ne.v / 100.0
+    }
+    if (this.xe.v > 0) {
+      x2 = 1.0 - this.xe.v / 100.0
+    } else {
+      y2 = 1.0 + this.xe.v / 100.0
+    }
+
+    return [x1,
+      y1,
+      x2,
+      y2]
+  }
+
+  private _handleShapeType(ind: number) {
+    const easer = getBezierEasing(...this._getCoordinates()).get
+
+    let mult = 0
+    const s = this.finalS,
+      e = this.finalE,
+      type = this.data.sh
+
+    switch (type) {
+      case 2: {
+        if (e === s) {
+          mult = ind >= e ? 1 : 0
+          break
+        }
+        mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+
+        break
+      }
+      case 3: {
+        if (e === s) {
+          mult = ind >= e ? 0 : 1
+          break
+        }
+        mult =
+          1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+
+        break
+      }
+      case 4: {
+        if (e === s) {
+          break
+        }
+        mult = Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+        if (mult < 0.5) {
+          mult *= 2
+          break
+        }
+        mult = 1 - 2 * (mult - 0.5)
+
+        break
+      }
+      case 5: {
+        if (e === s) {
+          break
+        }
+        const tot = e - s
+
+        ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
+        const x = -tot / 2 + ind,
+          a = tot / 2
+
+        mult = Math.sqrt(1 - x * x / (a * a))
+
+        break
+      }
+      case 6: {
+        if (e === s) {
+          break
+        }
+        ind = Math.min(Math.max(0, ind + 0.5 - s), e - s)
+        mult = (1 + Math.cos(Math.PI + Math.PI * 2 * ind / (e - s))) / 2
+
+        break
+      }
+
+      default: {
+        if (ind < Math.floor(s)) {
+          break
+        }
+        if (ind - s < 0) {
+          mult = Math.max(0, Math.min(Math.min(e, 1) - (s - ind), 1))
+          break
+        }
+        mult = Math.max(0, Math.min(e - ind, 1))
+      }
+    }
+
+    return easer(mult)
   }
 }

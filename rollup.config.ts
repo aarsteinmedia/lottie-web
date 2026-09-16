@@ -19,7 +19,7 @@ const isProd = process.env.NODE_ENV !== 'development',
   __dirname = dirname(fileURLToPath(url)),
   toPascalCase = (str: string) => {
     // Use regex to match words regardless of delimiter
-    const words = str.match(/[A-Z]{2,}(?=[A-Z][a-z]+\d|\b)|[A-Z]?[a-z]+\d*|[A-Z]|\d+/g)
+    const words = str.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])|\d+/g)
 
     // If no words are found, return an empty string
     if (!words) {
@@ -145,5 +145,4 @@ const isProd = process.env.NODE_ENV !== 'development',
     },
   ]
 
-// eslint-disable-next-line import/no-default-export
 export default isProd ? output : output[0]

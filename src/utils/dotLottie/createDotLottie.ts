@@ -148,7 +148,7 @@ export async function createDotLottie({
             ? file
             : await fileToBase64(path
               ? path.endsWith('/') && `${path}${file}` ||
-                `${path}/${file}`
+              `${path}/${file}`
               : file)
 
         // Asset is encoded

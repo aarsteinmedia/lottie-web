@@ -683,7 +683,7 @@ export class AnimationItem extends BaseEvent {
       }
     } catch (error) {
       devError(`${this.constructor.name}:\n`, error)
-      throw new Error(`${this.constructor.name}: Could not set data`)
+      throw new Error(`${this.constructor.name}: Could not set data`, { cause: error })
     }
   }
 
@@ -784,7 +784,7 @@ export class AnimationItem extends BaseEvent {
       )
     } catch (error) {
       devError(`${this.constructor.name}:\n`, error)
-      throw new Error(`${this.constructor.name}: Could not set params`)
+      throw new Error(`${this.constructor.name}: Could not set params`, { cause: error })
     }
   }
 

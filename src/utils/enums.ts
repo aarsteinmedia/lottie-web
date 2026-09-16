@@ -90,9 +90,7 @@ export enum ShapeType {
   ZigZag = 'zz',
 }
 
-export enum EffectTypes {
-  TransformEffect = 'transformEffect'
-}
+export enum EffectTypes { TransformEffect = 'transformEffect' }
 
 export enum PropType {
   MultiDimensional = 'multidimensiional',

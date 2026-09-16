@@ -446,6 +446,7 @@ export class TextProperty extends BaseProperty {
           letterData = letters[i] ?? {} as Letter
           if (currentInd !== letterData.anIndexes[j]) {
             currentInd = letterData.anIndexes[j] ?? 0
+            // eslint-disable-next-line sonarjs/pseudo-random
             newInd = indexes.splice(Math.floor(Math.random() * indexes.length),
               1)[0]
           }
@@ -503,6 +504,7 @@ export class TextProperty extends BaseProperty {
     return this.data.d?.k[this.keysIndex]?.s
   }
 
+  // eslint-disable-next-line sonarjs/no-invariant-returns
   override getValue(_finalValue?: unknown) {
     // if (!this.data) {
     //   throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)

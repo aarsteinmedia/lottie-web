@@ -113,7 +113,7 @@ export function registerAnimation(element: HTMLElement | null,
     return animItem
   } catch (error) {
     devError('AnimationManager:\n', error)
-    throw new Error('Could not register animation')
+    throw new Error('Could not register animation', { cause: error })
   }
 }
 export function resize() {
@@ -296,5 +296,4 @@ const AnimationManager = {
   unmute,
 }
 
-// eslint-disable-next-line import/no-default-export
 export default AnimationManager

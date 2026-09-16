@@ -96,7 +96,6 @@ const { Lottie, setSubframeRendering } = createLottie({
   ]
 })
 
-// eslint-disable-next-line import/no-default-export
 export default Lottie
 
 export { setSubframeRendering }

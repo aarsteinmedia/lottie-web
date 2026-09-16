@@ -33,10 +33,10 @@ export class Matrix {
     y: number,
     z: number
   ): {
-      x: number;
-      y: number;
-      z: number
-    } {
+    x: number;
+    y: number;
+    z: number
+  } {
     return {
       x:
         x * this.props[0] +
