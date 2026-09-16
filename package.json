@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.5.12",
+  "version": "1.6.0",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -66,7 +66,8 @@
     "test:watch": "vitest",
     "test:build": "vitest run tests/build.test.ts",
     "check": "pnpm lint && pnpm test && pnpm prod && pnpm test:build",
-    "deploy": "npm publish"
+    "deploy": "npm publish",
+    "clean": "pnpm pm clean && rm -rf dist types"
   },
   "peerDependencies": {
     "fflate": "^0.8.3"
