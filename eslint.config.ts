@@ -354,6 +354,8 @@ export default defineConfig({
     'simple-import-sort/imports': 0,
     'sonarjs/cognitive-complexity': 'warn',
     'sonarjs/different-types-comparison': 'off',
+    'sonarjs/function-return-type': 'warn',
+    'sonarjs/no-invariant-returns': 'warn',
     'sonarjs/no-unused-vars': 0,
     'sonarjs/todo-tag': 1,
     'unicorn/catch-error-name': 2,

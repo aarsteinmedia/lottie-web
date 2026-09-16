@@ -16,7 +16,7 @@ export class TextExpressionInterface {
     if (!this._sourceText || stringValue !== this._sourceText.value) {
       this._sourceText = new String(stringValue) as unknown as { value: string }
       // If stringValue is an empty string, eval returns undefined, so it has to be returned as a String primitive
-      this._sourceText.value = (stringValue || new String(stringValue)) as string
+      this._sourceText.value = (stringValue || String(stringValue)) as string
       Object.defineProperty(
         this._sourceText, 'style', {
           get() {

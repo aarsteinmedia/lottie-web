@@ -52,8 +52,6 @@ function getSpeedAtTime(this: BaseProperty, frameNum: number) {
       speed += Math.pow(v2[i] - v1[i], 2)
     }
     speed = Math.sqrt(speed) * 100
-  } else {
-    speed = 0
   }
 
   return speed

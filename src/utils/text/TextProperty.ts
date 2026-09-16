@@ -507,7 +507,7 @@ export class TextProperty extends BaseProperty {
     return this.data.d?.k[this.keysIndex]?.s
   }
 
-  // eslint-disable-next-line sonarjs/no-invariant-returns
+
   override getValue(_finalValue?: unknown) {
     // if (!this.data) {
     //   throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)

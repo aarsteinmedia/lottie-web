@@ -38,7 +38,7 @@ export class ExpressionValue extends BaseProperty {
       }
     } else if (elementProp.propType === PropType.UniDimensional) {
       val = elementProp.v as number * mult
-      this.value = new Number(val) as number
+      // this.value = new Number(val) as number
       this.value = val
     } else {
       const { length } = elementProp.pv as number[]

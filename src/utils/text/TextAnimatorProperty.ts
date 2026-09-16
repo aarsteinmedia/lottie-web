@@ -985,7 +985,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
     }
   }
 
-  // eslint-disable-next-line sonarjs/no-invariant-returns
+
   override getValue() {
     if (this._elem.globalData?.frameId === this._frameId) {
       return 0

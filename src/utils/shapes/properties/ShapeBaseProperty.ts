@@ -71,11 +71,6 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       keyPropS = kf[kf.length - 1]?.s
         ? kf[kf.length - 1]?.s?.[0]
         : kf[kf.length - 2]?.e[0]
-      /* if(kf[kf.length - 1].s){
-                keyPropS = kf[kf.length - 1].s[0];
-            }else{
-                keyPropS = kf[kf.length - 2].e[0];
-            } */
       isHold = true
     } else {
       let i = iterationIndex
@@ -106,9 +101,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       if (!isHold) {
         if (frameNum >= nextKeyData.t - this.offsetTime) {
           perc = 1
-        } else if (frameNum < keyData.t - this.offsetTime) {
-          perc = 0
-        } else {
+        } else if (frameNum >= keyData.t - this.offsetTime) {
           let fnc
 
           if (keyframeMetadata.__fnct) {

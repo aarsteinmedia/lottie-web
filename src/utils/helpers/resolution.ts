@@ -17,13 +17,13 @@ const curveSegments = { default: 150 },
           setDefaultCurveSegments(200)
           break
         }
-        default:
-        case 'medium': {
-          setDefaultCurveSegments(50)
-          break
-        }
         case 'low': {
           setDefaultCurveSegments(10)
+          break
+        }
+        case 'medium':
+        default: {
+          setDefaultCurveSegments(50)
           break
         }
       }
