@@ -156,7 +156,7 @@ export abstract class CVBaseElement extends RenderableElement {
     } else {
       // With no explicit `tp`, the matte source is the layer directly above
       // in stacking order — same rule as the SVG renderer. Deriving it from
-      // `ind - 1` is unreliable: inds aren't guaranteed to be numbered
+      // `ind - 1` is unreliable: indices aren't guaranteed to be numbered
       // consecutively downwards (e.g. the matte can sit at ind + 1).
       const layers = this.comp?.layers ?? [],
         pos = layers.indexOf(this.data)

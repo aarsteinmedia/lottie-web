@@ -7,7 +7,7 @@ import { createTypedArray } from '@/utils/helpers/arrays'
 /**
  * Stand-in for a boxed Number: coerces to its numeric payload in arithmetic,
  * comparisons and string contexts, while carrying the members After Effects
- * exposes on a unidimensional property (value, numKeys, key(), velocity, …).
+ * exposes on a uni-dimensional property (value, numKeys, key(), velocity, …).
  */
 export class NumericValue {
   [index: number]: number

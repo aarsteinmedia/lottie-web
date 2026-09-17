@@ -1163,7 +1163,7 @@ export interface LottieLayer {
   }
   /** TagName. */
   tg?: undefined | string
-  /** Time remappoing. */
+  /** Time remapping. */
   tm?: undefined | VectorProperty
   /** Matte reference (for shape). */
   tp?: undefined | number

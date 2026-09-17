@@ -682,7 +682,7 @@ export class AnimationItem extends BaseEvent {
         this.trigger(PlayerEvent.Destroy)
       }
     } catch (error) {
-      devError(`${this.constructor.name}:\n`, error)
+      devError(this.constructor.name, error)
       throw new Error(`${this.constructor.name}: Could not set data`, { cause: error })
     }
   }
@@ -783,7 +783,7 @@ export class AnimationItem extends BaseEvent {
         params.path, this.configAnimation, this.onSetupError
       )
     } catch (error) {
-      devError(`${this.constructor.name}:\n`, error)
+      devError(this.constructor.name, error)
       throw new Error(`${this.constructor.name}: Could not set params`, { cause: error })
     }
   }
@@ -931,7 +931,7 @@ export class AnimationItem extends BaseEvent {
         }
       }
     } catch (error) {
-      devError(`${this.constructor.name}:\n`, error)
+      devError(this.constructor.name, error)
     }
   }
 

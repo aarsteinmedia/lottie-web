@@ -63,9 +63,6 @@ const crossProduct = (a: number[], b: number[]) => [
       v4 = [end2[0],
         end2[1],
         1],
-      /**
-       *
-       */
       r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
 
     if (floatZero(r[2] ?? 0)) {

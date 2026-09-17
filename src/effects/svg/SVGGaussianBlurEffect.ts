@@ -43,9 +43,6 @@ export class SVGGaussianBlurEffect {
       //   1 -> horizontal & vertical
       //   2 -> horizontal only
       //   3 -> vertical only
-      /**
-       *
-       */
       dimensions = Number(this.filterManager.effectElements[1]?.p.v),
       sigmaX = dimensions === 3 ? 0 : sigma,
       sigmaY = dimensions === 2 ? 0 : sigma

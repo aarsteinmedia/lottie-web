@@ -284,8 +284,8 @@ function initiateExpression(
   property: KeyframedValueProperty
 ) {
   /**
-     * Bail out if we don't want expressions.
-     */
+   * Bail out if we don't want expressions.
+   */
   if (!elem.globalData?.renderConfig?.runExpressions) {
     return noOp
   }

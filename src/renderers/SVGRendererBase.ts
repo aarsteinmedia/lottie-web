@@ -211,7 +211,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
       this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
     } catch (error) {
-      devError(`${this.constructor.name}:\n`, error)
+      devError(this.constructor.name, error)
     }
   }
 
