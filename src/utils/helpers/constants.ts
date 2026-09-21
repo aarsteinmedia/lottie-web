@@ -8,13 +8,7 @@ const degToRads = Math.PI / 180,
   isServer = _isServer(),
   _inBrowser = () => typeof navigator !== 'undefined',
   inBrowser = _inBrowser(),
-  _isSafari = (): boolean => {
-    const isTrue = inBrowser
-      ? /^(?:(?!chrome|android).)*safari/i.test(navigator.userAgent)
-      : false
-
-    return isTrue
-  },
+  _isSafari = () => inBrowser && /^(?:(?!chrome|android).)*safari/i.test(navigator.userAgent),
   isSafari = _isSafari(),
   isDev = typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
 

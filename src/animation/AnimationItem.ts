@@ -750,12 +750,17 @@ export class AnimationItem extends BaseEvent {
       } else {
         this.loop = parseInt(`${params.loop}`, 10)
       }
-      this.autoplay = 'autoplay' in params ? Boolean(params.autoplay) : true
+      this.autoplay = true
+      if ('autoplay' in params) {
+        this.autoplay = Boolean(params.autoplay)
+      }
       this.name = params.name ?? ''
-      this.autoloadSegments = Boolean(Object.hasOwn(params,
-        'autoloadSegments')
-        ? params.autoloadSegments
-        : true)
+
+      this.autoloadSegments = true
+      if (Object.hasOwn(params,
+        'autoloadSegments')) {
+        this.autoloadSegments =Boolean(params.autoloadSegments)
+      }
       this.assetsPath = params.assetsPath ?? this.assetsPath
       this.initialSegment = params.initialSegment
       if (params.audioFactory) {
