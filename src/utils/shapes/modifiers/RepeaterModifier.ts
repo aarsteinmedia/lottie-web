@@ -214,7 +214,7 @@ export class RepeaterModifier extends ShapeModifier {
       while (this._groups.length < copies) {
         const group = {
           it: this.cloneElements(this._elements),
-          ty: 'gr',
+          ty: ShapeType.Group,
         } as Shape
 
         group.it?.push({

@@ -154,23 +154,10 @@ export class AnimationItem extends BaseEvent {
     // Checking if nextValue > totalFrames - 1 for addressing non looping and looping animations.
     // If animation won't loop, it should stop at totalFrames - 1. If it will loop it should complete the last frame and then loop.
     if (nextValue >= this.totalFrames - 1 && this.frameModifier > 0) {
-      if (!this.loop || this.playCount === this.loop) {
-        if (
-          !this.checkSegments(nextValue > this.totalFrames ? nextValue % this.totalFrames : 0)
-        ) {
-          _isComplete = true
-          nextValue = this.totalFrames - 1
-        }
-      } else if (nextValue >= this.totalFrames) {
-        this.playCount++
-        if (!this.checkSegments(nextValue % this.totalFrames)) {
-          this.setCurrentRawFrameValue(nextValue % this.totalFrames)
-          this._completedLoop = true
-          this.trigger(PlayerEvent.LoopComplete)
-        }
-      } else {
-        this.setCurrentRawFrameValue(nextValue)
-      }
+      const _loop = this._handleLoop(nextValue, _isComplete)
+
+      nextValue = _loop.nextValue
+      _isComplete = _loop._isComplete
     } else if (nextValue < 0) {
       if (!this.checkSegments(nextValue % this.totalFrames)) {
         if (this.loop && !(this.playCount-- <= 0 && this.loop !== true)) {
@@ -628,15 +615,15 @@ export class AnimationItem extends BaseEvent {
         wrapperAttributes.getNamedItem('bm-path')?.value ??
         ''
       const animType =
-        wrapperAttributes.getNamedItem('data-anim-type')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-type')?.value ??
-        wrapperAttributes.getNamedItem('bm-type')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-renderer')?.value ??
-        wrapperAttributes.getNamedItem('bm-renderer')?.value ??
-        getRegisteredRenderer()
+        (wrapperAttributes.getNamedItem('data-anim-type')?.value ??
+          wrapperAttributes.getNamedItem('data-bm-type')?.value ??
+          wrapperAttributes.getNamedItem('bm-type')?.value ??
+          wrapperAttributes.getNamedItem('data-bm-renderer')?.value ??
+          wrapperAttributes.getNamedItem('bm-renderer')?.value ??
+          getRegisteredRenderer()) as unknown as RendererType
 
-      if (Object.values(RendererType).includes(animType as RendererType)) {
-        params.animType = animType as RendererType
+      if (Object.values(RendererType).includes(animType)) {
+        params.animType = animType
       } else {
         params.animType = RendererType.Canvas
       }
@@ -995,5 +982,33 @@ export class AnimationItem extends BaseEvent {
       return
     }
     setTimeout(this.waitForFontsLoaded.bind(this), 20)
+  }
+
+  private _handleLoop(value: number, isComplete: boolean) {
+    let nextValue = value,
+      _isComplete = isComplete
+
+    if (!this.loop || this.playCount === this.loop) {
+      if (
+        !this.checkSegments(nextValue > this.totalFrames ? nextValue % this.totalFrames : 0)
+      ) {
+        _isComplete = true
+        nextValue = this.totalFrames - 1
+      }
+    } else if (nextValue >= this.totalFrames) {
+      this.playCount++
+      if (!this.checkSegments(nextValue % this.totalFrames)) {
+        this.setCurrentRawFrameValue(nextValue % this.totalFrames)
+        this._completedLoop = true
+        this.trigger(PlayerEvent.LoopComplete)
+      }
+    } else {
+      this.setCurrentRawFrameValue(nextValue)
+    }
+
+    return {
+      _isComplete,
+      nextValue
+    }
   }
 }

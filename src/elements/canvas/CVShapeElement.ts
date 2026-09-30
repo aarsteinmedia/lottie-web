@@ -743,7 +743,7 @@ export class CVShapeElement extends ShapeElement {
             itemsData[i] = this.createStyleElement(arr[i], ownTransforms)
           }
 
-          ownStyles.push(itemsData[i].style)
+          ownStyles.push(itemsData[i].style as unknown as CVStyleElement)
           break
         }
         case ShapeType.Group: {

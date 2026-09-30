@@ -26,8 +26,8 @@ export const registerRenderer = (key: RendererType, value: Renderer) => {
       { length } = keys
 
     for (let i = 0; i < length; i++) {
-      if (renderers[keys[i] as RendererType]) {
-        return keys[i] as RendererType
+      if (renderers[keys[i] as unknown as RendererType]) {
+        return keys[i] as unknown as RendererType
       }
     }
 
