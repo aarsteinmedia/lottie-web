@@ -7,7 +7,7 @@ import type {
 } from '@/types'
 
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
-import { namespaceXlink } from '@/utils/helpers/constants'
+import { namespaceXLink } from '@/utils/helpers/constants'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class ImageElement extends SVGBaseElement {
@@ -78,7 +78,7 @@ export class ImageElement extends SVGBaseElement {
     this.innerElem.setAttribute('height', `${this.assetData.h}px`)
     this.innerElem.setAttribute('preserveAspectRatio', preserveAspectRatio)
     this.innerElem.setAttributeNS(
-      namespaceXlink,
+      namespaceXLink,
       'href',
       assetPath
     )

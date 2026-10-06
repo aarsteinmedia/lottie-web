@@ -41,9 +41,6 @@ export class HSolidElement extends SolidElement {
     // this.initRendererElement = initRendererElement
     // this.renderFrame = renderFrame
     this.setMatte = setMatte
-    this.initElement(
-      data, globalData, comp
-    )
   }
 
   addEffects() {

@@ -4,10 +4,13 @@ import { loadData } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import {
   isServer,
-  namespaceXlink,
+  namespaceXLink,
 } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
+
+/** Same total wait as the previous 500 × 50 ms poll. */
+const maxImageWaitTime = 25_000
 
 export class ImagePreloader {
   assetsPath = ''
@@ -22,9 +25,12 @@ export class ImagePreloader {
   private _elementHelper?: undefined | SVGElement
   private _footageLoaded
   private _imageLoaded
+  /** One fallback timer per image still waiting for load/error. */
+  private _pendingTimeouts = new Set<ReturnType<typeof setTimeout>>()
   /** Off-DOM SVG used to decode SVG images without polluting animation `defs` (filters). */
   private _preloadHost: SVGSVGElement | null = null
   private proxyImage: HTMLCanvasElement | null
+
   constructor() {
     this._imageLoaded = this.imageLoaded.bind(this)
     this._footageLoaded = this.footageLoaded.bind(this)
@@ -76,7 +82,7 @@ export class ImagePreloader {
       img.setAttribute('height', `${assetData.h}`)
     }
     img.setAttributeNS(
-      namespaceXlink, 'href', path
+      namespaceXLink, 'href', path
     )
 
     // Append as a rendered child of the private host (not <defs>) so the
@@ -103,6 +109,11 @@ export class ImagePreloader {
   }
 
   public destroy() {
+    for (const timeout of this._pendingTimeouts) {
+      clearTimeout(timeout)
+    }
+    this._pendingTimeouts.clear()
+
     this.imagesLoadedCb = null
     this.cleanupElementHelper()
     this.destroyPreloadHost()
@@ -207,80 +218,58 @@ export class ImagePreloader {
     }
 
     let isSettled = false,
-      pollCount = 0
-    const poll = { id: undefined as ReturnType<typeof setInterval> | undefined }
+      fallback: ReturnType<typeof setTimeout> | undefined = undefined
 
     const settle = (cb: () => void) => {
-        if (isSettled) {
-          return
-        }
-        isSettled = true
-        if (poll.id !== undefined) {
-          clearInterval(poll.id)
-        }
-        cb()
-      },
-
-      tryForceDecode = () => {
-        try {
-          const canvas = createTag<HTMLCanvasElement>('canvas')
-
-          canvas.width = 1
-          canvas.height = 1
-          const ctx = canvas.getContext('2d')
-
-          // Sync-decode path used by canvas; succeeds once the SVG image has data.
-          ctx?.drawImage(
-            img, 0, 0, 1, 1
-          )
-
-          settle(onReady)
-
-          return true
-        } catch {
-          return false
-        }
+      if (isSettled) {
+        return
       }
+      isSettled = true
+      clearTimeout(fallback)
+      if (fallback !== undefined) {
+        this._pendingTimeouts.delete(fallback)
+      }
+      cb()
+    }
+
+    // Never block the animation on an image that neither loads nor errors.
+    fallback = setTimeout(() => {
+      settle(onReady)
+    }, maxImageWaitTime)
+    this._pendingTimeouts.add(fallback)
+
+    const tryForceDecode = () => {
+      try {
+        const ctx = createTag<HTMLCanvasElement>('canvas').getContext('2d')
+
+        // Sync-decode path used by canvas; succeeds once the SVG image has data.
+        ctx?.drawImage(
+          img, 0, 0, 1, 1
+        )
+      } catch {
+        // The image did load; failing to pre-decode only risks a flicker.
+      }
+
+      settle(onReady)
+    }
 
     img.addEventListener(
       'load',
       () => {
         tryForceDecode()
       },
-      false
+      { once: true }
     )
     img.addEventListener(
       'error',
       () => {
         settle(onError)
       },
-      false
+      { once: true }
     )
 
     // Data URIs often finish before listeners attach — try immediately.
-    if (tryForceDecode()) {
-      return
-    }
-
-    poll.id = setInterval(() => {
-      if (tryForceDecode()) {
-        return
-      }
-      try {
-        const box = img.getBBox()
-
-        if (box.width > 0 || box.height > 0) {
-          settle(onReady)
-        }
-      } catch {
-        // Not ready / not in document yet.
-      }
-      pollCount++
-      if (pollCount > 500) {
-        settle(onReady)
-      }
-    },
-    50)
+    tryForceDecode()
   }
 
   private _createProxyImage() {
@@ -332,12 +321,11 @@ export class ImagePreloader {
     const path = this.getAssetsPath(
       assetData, this.assetsPath, this.path
     )
-    const img = createTag<HTMLImageElement>('img')
-
-    const obj: ImageData = {
-      assetData,
-      img,
-    }
+    const img = createTag<HTMLImageElement>('img'),
+      obj: ImageData = {
+        assetData,
+        img,
+      }
 
     img.crossOrigin = 'anonymous'
 

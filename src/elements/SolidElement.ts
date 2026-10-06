@@ -1,25 +1,7 @@
-import type {
-  ElementInterfaceIntersect,
-  GlobalData,
-  LottieLayer,
-} from '@/types'
-
 import { ImageElement } from '@/elements/ImageElement'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SolidElement extends ImageElement {
-  constructor(
-    data: LottieLayer,
-    globalData: GlobalData,
-    comp: ElementInterfaceIntersect
-  ) {
-    super(
-      data, globalData, comp
-    )
-    this.initElement(
-      data, globalData, comp
-    )
-  }
 
   override createContent() {
     if (!this.data) {

@@ -144,7 +144,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
       this.svgElement.setAttribute('xmlns', namespaceSVG)
       // this.svgElement.setAttribute('xmlns:xlink',
-      //   namespaceXlink)
+      //   namespaceXLink)
       if (this.renderConfig.viewBoxSize) {
         this.svgElement.setAttribute('viewBox',
           this.renderConfig.viewBoxSize)

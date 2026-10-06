@@ -6,7 +6,7 @@ import { SVGEffects } from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
 import { featureSupport } from '@/utils/featureSupport'
 import FiltersFactory from '@/utils/FiltersFactory'
-import { namespaceXlink } from '@/utils/helpers/constants'
+import { namespaceXLink } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -156,7 +156,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
             matteType === 3 ? 'luminance' : 'alpha')
           useElement = createNS<SVGUseElement>('use')
           useElement.setAttributeNS(
-            namespaceXlink,
+            namespaceXLink,
             'href',
             `#${this.layerId}`
           )
@@ -216,7 +216,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         maskGrouper.appendChild(alphaRect)
         useElement = createNS<SVGUseElement>('use')
         useElement.setAttributeNS(
-          namespaceXlink,
+          namespaceXLink,
           'href',
           `#${this.layerId}`
         )

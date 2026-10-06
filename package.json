@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -111,7 +111,7 @@
     "tsc-alias": "^1.9.7",
     "tslib": "^2.8.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.0",
+    "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3",
     "vitest-canvas-mock": "^1.2.0"
   },
