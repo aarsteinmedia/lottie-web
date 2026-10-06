@@ -14,6 +14,7 @@ import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import { ShapeElement } from '@/elements/ShapeElement'
 import { createNS } from '@/utils/helpers/svgElements'
 
+// @ts-expect-error -- Hybrid renderer is unmaintained: HBaseElement DOM hooks are never mixed in, so construction throws
 export class HShapeElement extends ShapeElement {
   /**
    * List of animated components.

@@ -7,6 +7,7 @@ import type {
   GlobalData,
   LottieLayer,
   Shape,
+  SourceRect,
   Transformer
 } from '@/types'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
@@ -40,10 +41,6 @@ export abstract class BaseElement {
   shapesData: Shape[] = []
   type?: unknown
 
-  abstract buildAllItems(): void
-
-  abstract checkLayers(_frame?: number): void
-
   checkMasks() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not initialized`)
@@ -74,9 +71,13 @@ export abstract class BaseElement {
      */
   }
 
-  abstract destroyBaseElement(): void
-
-  abstract getBaseElement(): SVGElement | HTMLElement | null
+  /**
+   * Hook with a default: the DOM node renderers insert for this layer.
+   * Layers without their own node (null, audio, footage, canvas) keep the default.
+   */
+  getBaseElement(): SVGElement | HTMLElement | null {
+    return null
+  }
 
   getType() {
     return this.type
@@ -169,5 +170,11 @@ export abstract class BaseElement {
     elem.style.mixBlendMode = blendModeValue
   }
 
-  abstract sourceRectAtTime(): void
+  /**
+   * Hook with a default: called by expressions on any layer.
+   * Layers with visible content override this.
+   */
+  sourceRectAtTime(): SourceRect | null {
+    return null
+  }
 }

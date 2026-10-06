@@ -16,15 +16,16 @@ export class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
   addPendingElement = SVGRendererBase.prototype.addPendingElement
   appendElementInPos = SVGRendererBase.prototype.appendElementInPos
-  override buildAllItems = SVGRendererBase.prototype.buildAllItems
+  buildAllItems = SVGRendererBase.prototype.buildAllItems
   buildElementParenting = SVGRendererBase.prototype.buildElementParenting
   buildItem = SVGRendererBase.prototype.buildItem
-  override checkLayers = SVGRendererBase.prototype.checkLayers
+  checkLayers = SVGRendererBase.prototype.checkLayers
   checkPendingElements = SVGRendererBase.prototype.checkPendingElements
   completeLayers = false
   configAnimation = SVGRendererBase.prototype.configAnimation
   createAudio = SVGRendererBase.prototype.createAudio
   createCamera = SVGRendererBase.prototype.createCamera
+  override createContent = CompElement.prototype.createContent
   createFootage = SVGRendererBase.prototype.createFootage
   createImage = SVGRendererBase.prototype.createImage
   createItem = SVGRendererBase.prototype.createItem

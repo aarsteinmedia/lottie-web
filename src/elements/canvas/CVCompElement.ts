@@ -26,7 +26,6 @@ export class CVCompElement extends CompElement {
   createCamera = CanvasRendererBase.prototype.createCamera
   override createContainerElements = CVBaseElement.prototype.createContainerElements
   override createContent = CVBaseElement.prototype.createContent
-  createElements = CVBaseElement.prototype.createElements
   createFootage = CanvasRendererBase.prototype.createFootage
   createImage = CanvasRendererBase.prototype.createImage
   createItem = CanvasRendererBase.prototype.createItem
@@ -112,6 +111,19 @@ export class CVCompElement extends CompElement {
     }
     this.layers = null as unknown as LottieLayer[]
     this.elements = null as unknown as ElementInterfaceIntersect[]
+  }
+
+  /**
+   * Canvas layers draw into the shared context and own no DOM node.
+   * renderFrame and destroy are replaced by CVBaseElement's, so these
+   * DOM hooks inherited via RenderableDOMElement are never called.
+   */
+  override destroyBaseElement() {
+    // Intentionally empty
+  }
+
+  override renderElement() {
+    // Intentionally empty
   }
 
   override renderInnerContent() {

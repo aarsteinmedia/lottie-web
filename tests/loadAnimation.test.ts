@@ -45,6 +45,10 @@ describe('loadAnimation', () => {
     expect(animation.totalFrames).toBe(60)
     expect(animation.frameRate).toBe(30)
     expect(container.querySelector('svg')).not.toBeNull()
+    // SVG used to inherit a throwing updateContainerSize stub
+    expect(() => {
+      animation.resize()
+    }).not.toThrow()
 
     animation.destroy()
   })

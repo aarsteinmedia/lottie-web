@@ -14,6 +14,7 @@ import { HybridRendererBase } from '@/renderers/HybridRendererBase'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
+// @ts-expect-error -- Hybrid renderer is unmaintained: methods are copied in the constructor, which TS cannot see
 export class HCompElement extends CompElement {
   pendingElements: ElementInterfaceIntersect[]
   supports3d?: boolean

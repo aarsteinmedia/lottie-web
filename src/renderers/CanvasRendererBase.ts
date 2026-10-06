@@ -13,7 +13,6 @@ import { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import { CVTextElement } from '@/elements/canvas/CVTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
-import { SVGRenderer } from '@/renderers/SVGRenderer'
 import {
   debounce, devError, getDevicePixelRatio
 } from '@/utils'
@@ -614,5 +613,3 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     this.renderFrame(this.renderedFrame, true)
   }
 }
-
-CanvasRendererBase.prototype.createNull = SVGRenderer.prototype.createNull

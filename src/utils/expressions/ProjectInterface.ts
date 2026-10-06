@@ -9,12 +9,15 @@ export class ProjectInterface {
     const { length } = this.compositions
 
     while (i < length) {
-      if (this.compositions[i]?.data && this.compositions[i]?.data?.nm === name) {
-        if (this.compositions[i]?.data?.xt) {
-          this.compositions[i]?.prepareFrame(this.currentFrame)
+      const comp = this.compositions[i]
+
+      // The root renderer is registered too, but has no layer data, so it never matches here
+      if (comp.data && comp.data.nm === name) {
+        if (comp.data.xt && 'prepareFrame' in comp) {
+          comp.prepareFrame(this.currentFrame)
         }
 
-        return this.compositions[i]?.compInterface
+        return comp.compInterface
       }
       i++
     }

@@ -10,7 +10,6 @@ import type { HImageElement } from '@/elements/html/HImageElement'
 import type { HShapeElement } from '@/elements/html/HShapeElement'
 import type { HTextElement } from '@/elements/html/HTextElement'
 import type { ImageElement } from '@/elements/ImageElement'
-import type { NullElement } from '@/elements/NullElement'
 import type { SolidElement } from '@/elements/SolidElement'
 import type { SVGCompElement } from '@/elements/svg/SVGCompElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
@@ -26,6 +25,7 @@ import type { ProjectInterface } from '@/utils/expressions/ProjectInterface'
 import { AudioElement } from '@/elements/AudioElement'
 import { FootageElement } from '@/elements/FootageElement'
 import { FrameElement } from '@/elements/helpers/FrameElement'
+import { NullElement } from '@/elements/NullElement'
 import { FontManager } from '@/utils/FontManager'
 import { slotFactory } from '@/utils/SlotManager'
 
@@ -41,7 +41,7 @@ export abstract class BaseRenderer extends FrameElement {
     this.pendingElements.push(element)
   }
 
-  override buildAllItems() {
+  buildAllItems() {
     const { length } = this.layers
 
     for (let i = 0; i < length; i++) {
@@ -95,7 +95,7 @@ export abstract class BaseRenderer extends FrameElement {
     throw new Error(`${this.constructor.name}: Method buildItem not yet implemented`)
   }
 
-  override checkLayers(val?: number) {
+  checkLayers(val?: number) {
     this.completeLayers = true
     const { length } = this.layers
 
@@ -189,7 +189,17 @@ export abstract class BaseRenderer extends FrameElement {
     }
   }
 
-  abstract createNull(_layer: LottieLayer): NullElement
+  createNull(data: LottieLayer) {
+    if (!this.globalData) {
+      throw new Error(`${this.constructor.name}: Can't access globalData`)
+    }
+
+    return new NullElement(
+      data,
+      this.globalData,
+      this as unknown as ElementInterfaceIntersect
+    )
+  }
 
   abstract createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement
 
@@ -255,8 +265,6 @@ export abstract class BaseRenderer extends FrameElement {
       this.buildAllItems()
     }
   }
-
-  abstract prepareFrame(_num: number): void
 
   searchExtraCompositions(assets: LottieLayer[]) {
     const { length } = assets

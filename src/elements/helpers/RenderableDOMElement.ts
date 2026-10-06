@@ -20,6 +20,9 @@ export abstract class RenderableDOMElement extends RenderableElement {
     this.destroyBaseElement()
   }
 
+  /** Called by destroy() to tear down this layer's DOM nodes. */
+  abstract destroyBaseElement(): void
+
   override hide() {
     if (this.hidden || this.isInRange && !this.isTransparent) {
       return

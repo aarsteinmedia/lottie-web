@@ -21,6 +21,7 @@ export abstract class HBaseElement extends RenderableElement {
       { buildElementParenting } = BaseRenderer.prototype
 
     this.getBaseElement = getBaseElement
+    // @ts-expect-error -- Hybrid renderer is unmaintained: destroyBaseElement now lives on RenderableDOMElement
     this.destroyBaseElement = this.destroy
     this.buildElementParenting = buildElementParenting
   }

@@ -15,6 +15,18 @@ export abstract class CompElement extends RenderableDOMElement {
   layers: LottieLayer[] = []
   tm?: ValueProperty
 
+  abstract buildAllItems(): void
+
+  abstract checkLayers(frame?: number): void
+
+  /**
+   * A comp has no content of its own: its children are built by buildAllItems,
+   * and initElement below never calls this.
+   */
+  override createContent() {
+    // Intentionally empty
+  }
+
   override destroy() {
     this.destroyElements()
     this.destroyBaseElement()
@@ -108,7 +120,7 @@ export abstract class CompElement extends RenderableDOMElement {
     }
   }
 
-  setElements(elems: ElementInterfaceIntersect[]) {
-    this.elements = elems
+  setElements(elements: ElementInterfaceIntersect[]) {
+    this.elements = elements
   }
 }

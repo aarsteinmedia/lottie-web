@@ -7,7 +7,6 @@ import type {
 } from '@/types'
 
 import { ImageElement } from '@/elements/ImageElement'
-import { NullElement } from '@/elements/NullElement'
 import { SolidElement } from '@/elements/SolidElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
@@ -227,18 +226,6 @@ export abstract class SVGRendererBase extends BaseRenderer {
     )
   }
 
-  override createNull(data: LottieLayer) {
-    if (!this.globalData) {
-      throw new Error(`${this.constructor.name}: Can't access globalData`)
-    }
-
-    return new NullElement(
-      data,
-      this.globalData,
-      this as unknown as ElementInterfaceIntersect
-    )
-  }
-
   override createShape(data: LottieLayer) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
@@ -376,5 +363,11 @@ export abstract class SVGRendererBase extends BaseRenderer {
     this.layerElement.style.display = 'block'
   }
 
-  abstract updateContainerSize(_width?: number, _height?: number): void
+  /**
+   * SVG scales itself through viewBox and preserveAspectRatio,
+   * so there is nothing to recalculate on resize.
+   */
+  updateContainerSize(_width?: number, _height?: number) {
+    // Intentionally empty
+  }
 }

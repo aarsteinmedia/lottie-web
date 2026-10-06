@@ -23,7 +23,6 @@ export class CVTextElement extends TextElement {
   clearCanvas = CVBaseElement.prototype.clearCanvas
   override createContainerElements = CVBaseElement.prototype.createContainerElements
   override createContent = CVBaseElement.prototype.createContent
-  createElements = CVBaseElement.prototype.createElements
   override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
   currentRender: unknown = null
   override destroy = CVBaseElement.prototype.destroy
@@ -233,6 +232,19 @@ export class CVTextElement extends TextElement {
       }
       cnt++
     }
+  }
+
+  /**
+   * Canvas layers draw into the shared context and own no DOM node.
+   * renderFrame and destroy are replaced by CVBaseElement's, so these
+   * DOM hooks inherited via RenderableDOMElement are never called.
+   */
+  override destroyBaseElement() {
+    // Intentionally empty
+  }
+
+  override renderElement() {
+    // Intentionally empty
   }
 
   override renderInnerContent() {

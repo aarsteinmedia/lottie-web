@@ -95,8 +95,6 @@ export abstract class CVBaseElement extends RenderableElement {
     // Pass through?
   }
 
-  abstract createElements(): void
-
   createRenderableComponents() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
