@@ -79,9 +79,7 @@ export abstract class TextElement extends RenderableDOMElement {
     return `rgb(${r},${g},${b})`
   }
 
-  buildNewText() {
-    throw new Error(`${this.constructor.name}: Method buildNewText is not implemented`)
-  }
+  abstract buildNewText(): void
 
   canResizeFont(_canResize: boolean) {
     this.textProperty?.canResizeFont(_canResize)

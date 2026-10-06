@@ -43,7 +43,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "target": "ES2024",
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": false,
     "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,

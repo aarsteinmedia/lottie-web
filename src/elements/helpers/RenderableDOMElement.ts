@@ -9,17 +9,11 @@ import { RenderableElement } from '@/elements/helpers/RenderableElement'
 export abstract class RenderableDOMElement extends RenderableElement {
   innerElem: SVGGraphicsElement | HTMLElement | null = null
 
-  createContainerElements() {
-    throw new Error(`${this.constructor.name}: Method createContainerElements is not implemented`)
-  }
+  abstract createContainerElements(): void
 
-  createContent() {
-    throw new Error(`${this.constructor.name}: Method createContent is not implemented`)
-  }
+  abstract createContent(): void
 
-  createRenderableComponents() {
-    throw new Error(`${this.constructor.name}: Method createRenderableComponents is not implemented`)
-  }
+  abstract createRenderableComponents(): void
 
   override destroy() {
     this.innerElem = null
@@ -58,9 +52,7 @@ export abstract class RenderableDOMElement extends RenderableElement {
     this.hide()
   }
 
-  initRendererElement() {
-    throw new Error(`${this.constructor.name}: Method initRendererElement is not implemented`)
-  }
+  abstract initRendererElement(): void
 
   prepareFrame(num: number) {
     this._mdf = false
@@ -69,9 +61,7 @@ export abstract class RenderableDOMElement extends RenderableElement {
     this.checkTransparency()
   }
 
-  renderElement() {
-    throw new Error(`${this.constructor.name}: Method renderElement is not implemented`)
-  }
+  abstract renderElement(): void
 
   renderFrame(_val?: number) {
     if (!this.data) {
@@ -92,10 +82,7 @@ export abstract class RenderableDOMElement extends RenderableElement {
     }
   }
 
-  renderInnerContent() {
-    // TODO: Pass through?
-    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
-  }
+  abstract renderInnerContent(): void
 
   override show() {
     if (!this.data) {

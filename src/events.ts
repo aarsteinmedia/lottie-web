@@ -171,10 +171,11 @@ export abstract class BaseEvent {
     if (!this._cbs[eventName]) {
       return
     }
-    const { length } = this._cbs[eventName]
+    const callBacks = [...this._cbs[eventName]],
+      { length } = callBacks
 
     for (let i = 0; i < length; i++) {
-      this._cbs[eventName][i]?.(ev)
+      callBacks[i]?.(ev)
     }
   }
 }

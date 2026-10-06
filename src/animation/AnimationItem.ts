@@ -105,7 +105,9 @@ export class AnimationItem extends BaseEvent {
   protected onLoopComplete: null | ((arg: unknown) => void) = null
   protected onSegmentStart: null | ((arg: unknown) => void) = null
   private _completedLoop = false
+  private _fontsLoadTimeout?: undefined | ReturnType<typeof setTimeout>
   private _idle = true
+
   constructor() {
     super()
     this._cbs = {}
@@ -219,6 +221,8 @@ export class AnimationItem extends BaseEvent {
     return false
   }
 
+  // private _isDestroyed = false
+
   public configAnimation(animData: AnimationData) {
     // if (!this.renderer) {
     //   return
@@ -258,6 +262,11 @@ export class AnimationItem extends BaseEvent {
     if (name && this.name !== name) {
       return
     }
+    if (this._fontsLoadTimeout) {
+      clearTimeout(this._fontsLoadTimeout)
+      this._fontsLoadTimeout = undefined
+    }
+
     this.renderer.destroy()
     this.imagePreloader.destroy()
     this.trigger(PlayerEvent.Destroy)
@@ -271,6 +280,8 @@ export class AnimationItem extends BaseEvent {
     this.expressionsPlugin = null // as unknown as typeof Expressions
     this.imagePreloader = null as unknown as ImagePreloader
     this.projectInterface = null as unknown as ProjectInterface
+
+    // this._isDestroyed = true
   }
 
   public getAssetData(id?: string) {
@@ -981,7 +992,7 @@ export class AnimationItem extends BaseEvent {
 
       return
     }
-    setTimeout(this.waitForFontsLoaded.bind(this), 20)
+    this._fontsLoadTimeout = setTimeout(this.waitForFontsLoaded.bind(this), 20)
   }
 
   private _handleLoop(value: number, isComplete: boolean) {

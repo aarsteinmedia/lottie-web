@@ -18,12 +18,11 @@ import AssetManager from '@/utils/helpers/AssetManager'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
 const operationsMap = {
-    1: 'source-in',
-    2: 'source-out',
-    3: 'source-in',
-    4: 'source-out',
-  },
-  notImplemented = 'Method is not implemented'
+  1: 'source-in',
+  2: 'source-out',
+  3: 'source-in',
+  4: 'source-out',
+}
 
 export abstract class CVBaseElement extends RenderableElement {
   buffers: (HTMLCanvasElement | OffscreenCanvas)[] = []
@@ -57,7 +56,7 @@ export abstract class CVBaseElement extends RenderableElement {
     // If the layer is masked we will use two buffers to store each different states of the drawing
     // This solution is not ideal for several reason. But unfortunately, because of the recursive
     // nature of the render tree, it's the only simple way to make sure one inner mask doesn't override an outer mask.
-    // TODO: try to reduce the size of these buffers to the size of the composition contaning the layer
+    // TODO: try to reduce the size of these buffers to the size of the composition containing the layer
     // It might be challenging because the layer most likely is transformed in some way
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
@@ -96,9 +95,7 @@ export abstract class CVBaseElement extends RenderableElement {
     // Pass through?
   }
 
-  createElements() {
-    throw new Error(`${this.constructor.name}: createElements is not implemented`)
-  }
+  abstract createElements(): void
 
   createRenderableComponents() {
     if (!this.data) {
@@ -302,9 +299,7 @@ export abstract class CVBaseElement extends RenderableElement {
     }
   }
 
-  renderInnerContent() {
-    throw new Error(notImplemented)
-  }
+  abstract renderInnerContent(): void
 
   /**
    * After complex mask compositing on an isolated canvas, put prior layers back underneath.

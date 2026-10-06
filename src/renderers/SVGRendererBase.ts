@@ -376,7 +376,5 @@ export abstract class SVGRendererBase extends BaseRenderer {
     this.layerElement.style.display = 'block'
   }
 
-  updateContainerSize(_width?: number, _height?: number) {
-    throw new Error(`${this.constructor.name}: Method updateContainerSize is not implemented`)
-  }
+  abstract updateContainerSize(_width?: number, _height?: number): void
 }

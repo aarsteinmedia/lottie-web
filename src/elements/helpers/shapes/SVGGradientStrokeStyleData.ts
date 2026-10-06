@@ -39,7 +39,7 @@ export class SVGGradientStrokeStyleData extends SVGGradientFillStyleData {
       (data.d || []) as StrokeData[],
       RendererType.SVG,
       this as unknown as ElementInterfaceIntersect
-    ) // TODO
+    )
     this.initGradientData(
       elem, data, styleData
     )

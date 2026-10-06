@@ -40,13 +40,9 @@ export abstract class BaseElement {
   shapesData: Shape[] = []
   type?: unknown
 
-  buildAllItems() {
-    throw new Error(`${this.constructor.name}: Method buildAllItems is not implemented`)
-  }
+  abstract buildAllItems(): void
 
-  checkLayers(_frame?: number) {
-    throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
-  }
+  abstract checkLayers(_frame?: number): void
 
   checkMasks() {
     if (!this.data) {
@@ -71,20 +67,16 @@ export abstract class BaseElement {
     return false
   }
 
-  destroy() {
+  destroy(): void {
     /**
      * If method is not implemented, it probably shouldn't throw an error
      * Pass through.
      */
   }
 
-  destroyBaseElement() {
-    throw new Error(`${this.constructor.name}: Method destroyBaseElement is not implemented`)
-  }
+  abstract destroyBaseElement(): void
 
-  getBaseElement(): SVGElement | HTMLElement | null {
-    throw new Error(`${this.constructor.name}: Method getBaseElement is not implemented`)
-  }
+  abstract getBaseElement(): SVGElement | HTMLElement | null
 
   getType() {
     return this.type
@@ -177,7 +169,5 @@ export abstract class BaseElement {
     elem.style.mixBlendMode = blendModeValue
   }
 
-  sourceRectAtTime() {
-    throw new Error(`${this.constructor.name}: Method sourceRectAtTime is not implemented`)
-  }
+  abstract sourceRectAtTime(): void
 }

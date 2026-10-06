@@ -10,7 +10,7 @@ import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
 type HElement = null | SVGGElement | HTMLElement
-export class HBaseElement extends RenderableElement {
+export abstract class HBaseElement extends RenderableElement {
   maskedElement: HElement = null
   matteElement: HElement = null
   svgElement: null | SVGSVGElement = null
@@ -29,13 +29,11 @@ export class HBaseElement extends RenderableElement {
     // TODO: Pass Through
   }
 
-  buildElementParenting(
+  abstract buildElementParenting(
     _element: ElementInterfaceIntersect,
     _parentName?: number,
     _hierarchy?: ElementInterfaceIntersect[]
-  ) {
-    throw new Error(`${this.constructor.name}: Method buildElementParenting is not implemented`)
-  }
+  ): void
 
   checkBlendMode() {
     // TODO: Pass Through
@@ -121,9 +119,7 @@ export class HBaseElement extends RenderableElement {
     }
   }
 
-  renderInnerContent() {
-    throw new Error(`${this.constructor.name}: Method renderInnerContent is not implemented`)
-  }
+  abstract renderInnerContent(): void
 
   setMatte() {
     // TODO: Pass Through

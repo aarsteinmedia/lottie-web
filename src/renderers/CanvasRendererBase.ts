@@ -484,7 +484,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       style.aspectRatio = `${elementWidth} / ${elementHeight}`
     }
 
-    // Prefer crisp downscales when drawing bitmaps into the HiDPI buffer.
+    // Prefer crisp down-scales when drawing bitmaps into the HiDPI buffer.
     this.canvasContext.imageSmoothingEnabled = true
     if ('imageSmoothingQuality' in this.canvasContext) {
       this.canvasContext.imageSmoothingQuality = 'high'

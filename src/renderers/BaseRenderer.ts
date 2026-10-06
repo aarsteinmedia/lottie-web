@@ -115,9 +115,7 @@ export abstract class BaseRenderer extends FrameElement {
     this.checkPendingElements()
   }
 
-  checkPendingElements() {
-    throw new Error(`${this.constructor.name}: Method checkPendingElements not yet implemented`)
-  }
+  abstract checkPendingElements(): void
 
   createAudio(data: LottieLayer) {
     if (!this.globalData) {
@@ -135,14 +133,12 @@ export abstract class BaseRenderer extends FrameElement {
     throw new Error('You\'re using a 3d camera. Try the html renderer.')
   }
 
-  createComp(
+  abstract createComp(
     _data: LottieLayer,
     _container?: HTMLElement,
     _comp?: CompElementInterface,
     _?: unknown
-  ): SVGCompElement | CVCompElement | HCompElement {
-    throw new Error(`${this.constructor.name}: Method createComp not yet implemented`)
-  }
+  ): SVGCompElement | CVCompElement | HCompElement
 
   createFootage(data: LottieLayer) {
     if (!this.globalData) {
@@ -156,9 +152,7 @@ export abstract class BaseRenderer extends FrameElement {
     )
   }
 
-  createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement {
-    throw new Error(`${this.constructor.name}: Method createImage is not implemented`)
-  }
+  abstract createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement
 
   createItem(layer: LottieLayer) {
     switch (layer.ty) {
@@ -195,21 +189,13 @@ export abstract class BaseRenderer extends FrameElement {
     }
   }
 
-  createNull(_layer: LottieLayer): NullElement {
-    throw new Error(`${this.constructor.name}: Method createNull not implemented`)
-  }
+  abstract createNull(_layer: LottieLayer): NullElement
 
-  createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement {
-    throw new Error(`${this.constructor.name}: Method createShape not implemented`)
-  }
+  abstract createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement
 
-  createSolid(_layer: LottieLayer): CVSolidElement | SolidElement {
-    throw new Error(`${this.constructor.name}: Method createSolid not implemented`)
-  }
+  abstract createSolid(_layer: LottieLayer): CVSolidElement | SolidElement
 
-  createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement | HTextElement {
-    throw new Error(`${this.constructor.name}: Method createText not implemented`)
-  }
+  abstract createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement | HTextElement
 
   getElementById(ind: number): null | ElementInterfaceIntersect {
     const { length } = this.elements
@@ -270,9 +256,7 @@ export abstract class BaseRenderer extends FrameElement {
     }
   }
 
-  prepareFrame(_num: number) {
-    throw new Error(`${this.constructor.name}: Method prepareFrame not yet implemented`)
-  }
+  abstract prepareFrame(_num: number): void
 
   searchExtraCompositions(assets: LottieLayer[]) {
     const { length } = assets

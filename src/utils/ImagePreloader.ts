@@ -88,7 +88,7 @@ export class ImagePreloader {
       this._elementHelper?.appendChild(img)
     }
 
-    this.awaitSvgImageReady(
+    this._awaitSvgImageReady(
       img,
       this._imageLoaded,
       () => {
@@ -190,32 +190,12 @@ export class ImagePreloader {
     this.path = path || ''
   }
 
-  private _createProxyImage() {
-    if (isServer) {
-      return null
-    }
-    const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
-
-    canvas.width = 1
-    canvas.height = 1
-    const ctx = canvas.getContext('2d')
-
-    if (ctx) {
-      ctx.fillStyle = 'rgba(0,0,0,0)'
-      ctx.fillRect(
-        0, 0, 1, 1
-      )
-    }
-
-    return canvas
-  }
-
   /**
    * Wait until the SVGImageElement itself is paint-ready.
    * Decoding a separate HTMLImageElement does not warm Firefox's SVG image
    * decoder, so we force-decode this element via drawImage / getBBox.
    */
-  private awaitSvgImageReady(
+  private _awaitSvgImageReady(
     img: SVGImageElement,
     onReady: () => void,
     onError: () => void
@@ -226,41 +206,41 @@ export class ImagePreloader {
       return
     }
 
-    let isSettled = false
-    let pollCount = 0
+    let isSettled = false,
+      pollCount = 0
     const poll = { id: undefined as ReturnType<typeof setInterval> | undefined }
 
     const settle = (cb: () => void) => {
-      if (isSettled) {
-        return
+        if (isSettled) {
+          return
+        }
+        isSettled = true
+        if (poll.id !== undefined) {
+          clearInterval(poll.id)
+        }
+        cb()
+      },
+
+      tryForceDecode = () => {
+        try {
+          const canvas = createTag<HTMLCanvasElement>('canvas')
+
+          canvas.width = 1
+          canvas.height = 1
+          const ctx = canvas.getContext('2d')
+
+          // Sync-decode path used by canvas; succeeds once the SVG image has data.
+          ctx?.drawImage(
+            img, 0, 0, 1, 1
+          )
+
+          settle(onReady)
+
+          return true
+        } catch {
+          return false
+        }
       }
-      isSettled = true
-      if (poll.id !== undefined) {
-        clearInterval(poll.id)
-      }
-      cb()
-    }
-
-    const tryForceDecode = () => {
-      try {
-        const canvas = createTag<HTMLCanvasElement>('canvas')
-
-        canvas.width = 1
-        canvas.height = 1
-        const ctx = canvas.getContext('2d')
-
-        // Sync-decode path used by canvas; succeeds once the SVG image has data.
-        ctx?.drawImage(
-          img, 0, 0, 1, 1
-        )
-
-        settle(onReady)
-
-        return true
-      } catch {
-        return false
-      }
-    }
 
     img.addEventListener(
       'load',
@@ -301,6 +281,26 @@ export class ImagePreloader {
       }
     },
     50)
+  }
+
+  private _createProxyImage() {
+    if (isServer) {
+      return null
+    }
+    const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
+
+    canvas.width = 1
+    canvas.height = 1
+    const ctx = canvas.getContext('2d')
+
+    if (ctx) {
+      ctx.fillStyle = 'rgba(0,0,0,0)'
+      ctx.fillRect(
+        0, 0, 1, 1
+      )
+    }
+
+    return canvas
   }
 
   /**
