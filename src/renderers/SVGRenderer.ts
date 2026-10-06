@@ -1,5 +1,6 @@
 import type { AnimationItem } from '@/animation/AnimationItem'
 import type {
+  CompElementInterface,
   GlobalData,
   LottieLayer,
   SVGRendererConfig,
@@ -82,7 +83,9 @@ export class SVGRenderer extends SVGRendererBase {
     } as GlobalData
   }
 
-  override createComp(data: LottieLayer) {
+  override createComp(
+    data: LottieLayer, _container?: HTMLElement, comp?: CompElementInterface
+  ) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Can't access globalData`)
     }
@@ -90,7 +93,7 @@ export class SVGRenderer extends SVGRendererBase {
     return new SVGCompElement(
       data,
       this.globalData,
-      this
+      comp ?? this
     )
   }
 }

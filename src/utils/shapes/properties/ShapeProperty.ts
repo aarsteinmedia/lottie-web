@@ -54,7 +54,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   }
 }
 
-export class KeyframedShapeProperty extends ShapeBaseProperty {
+export class KeyframeShapeProperty extends ShapeBaseProperty {
   public lastFrame = initialDefaultFrame
   constructor(
     elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number

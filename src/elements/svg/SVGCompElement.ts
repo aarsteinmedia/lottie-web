@@ -75,7 +75,9 @@ export class SVGCompElement extends SVGBaseElement {
     ) : { _placeholder: true }) as KeyframeValueProperty
   }
 
-  createComp(data: LottieLayer) {
+  createComp(
+    data: LottieLayer, _container?: HTMLElement, comp?: CompElementInterface
+  ) {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: Cannot access global data`)
     }
@@ -83,7 +85,7 @@ export class SVGCompElement extends SVGBaseElement {
     return new SVGCompElement(
       data,
       this.globalData,
-      this
+      comp ?? this
     )
   }
 }

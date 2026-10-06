@@ -56,7 +56,6 @@ import type {
   PreserveAspectRatio,
 } from '@/utils/enums'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
-// import type { EffectInterface } from '@/effects/EffectsManager'
 import type { FootageInterface } from '@/utils/expressions/FootageInterface'
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { ProjectInterface } from '@/utils/expressions/ProjectInterface'
@@ -76,7 +75,7 @@ import type { EllShapeProperty } from '@/utils/shapes/properties/EllShapePropert
 import type { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
 import type { RectShapeProperty } from '@/utils/shapes/properties/RectShapeProperty'
 import type {
-  KeyframedShapeProperty,
+  KeyframeShapeProperty,
   ShapeProperty,
 } from '@/utils/shapes/properties/ShapeProperty'
 import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
@@ -607,7 +606,7 @@ export interface ViewData {
   op: ValueProperty
   prop:
     | ShapeProperty
-    | KeyframedShapeProperty
+    | KeyframeShapeProperty
     | RectShapeProperty
     | EllShapeProperty
     | StarShapeProperty
@@ -983,7 +982,7 @@ export interface TextPathData {
   a?: undefined | ValueProperty
   f?: undefined | ValueProperty
   l: ValueProperty
-  m?: undefined | null | ShapeProperty | KeyframedShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty
+  m?: undefined | null | ShapeProperty | KeyframeShapeProperty | RectShapeProperty | EllShapeProperty | StarShapeProperty
   n?: undefined | ValueProperty
   p?: undefined | ValueProperty
   pi?: undefined | PathInfo

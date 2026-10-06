@@ -1,5 +1,8 @@
 
+import type { SVGCompElement } from '@/elements/svg/SVGCompElement'
+import type { SVGRenderer } from '@/renderers/SVGRenderer'
 import type {
+  CompElementInterface,
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
@@ -10,7 +13,6 @@ import type {
 import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
-import { SVGCompElement } from '@/elements/svg/SVGCompElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { TextElement } from '@/elements/TextElement'
 import { RendererType } from '@/utils/enums'
@@ -245,10 +247,10 @@ export class SVGTextLottieElement extends TextElement {
 
           // t === 1 means the character has been replaced with an animated shaped
           if (charData?.t === 1) {
-            glyphElement = new SVGCompElement(
+            glyphElement = (this.comp as SVGCompElement | SVGRenderer).createComp(
               charData.data as LottieLayer,
-              this.globalData,
-              this as unknown as ElementInterfaceIntersect
+              undefined,
+              this as unknown as CompElementInterface
             )
           } else {
             let data = emptyShapeData

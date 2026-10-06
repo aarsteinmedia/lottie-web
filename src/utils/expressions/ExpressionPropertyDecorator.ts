@@ -480,12 +480,12 @@ function addPropertyDecorator() {
   }
 
   const ShapePropertyConstructorFunction = ShapePropertyFactory.getConstructorFunction()
-  const KeyframedShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframedConstructorFunction()
+  const KeyframeShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframeConstructorFunction()
 
   extendPrototype([ShapeExpressions], ShapePropertyConstructorFunction)
-  extendPrototype([ShapeExpressions], KeyframedShapePropertyConstructorFunction)
-  KeyframedShapePropertyConstructorFunction.prototype.getValueAtTime = getShapeValueAtTime
-  KeyframedShapePropertyConstructorFunction.prototype.initiateExpression = ExpressionManager.initiateExpression
+  extendPrototype([ShapeExpressions], KeyframeShapePropertyConstructorFunction)
+  KeyframeShapePropertyConstructorFunction.prototype.getValueAtTime = getShapeValueAtTime
+  KeyframeShapePropertyConstructorFunction.prototype.initiateExpression = ExpressionManager.initiateExpression
 
   const propertyGetShapeProp = ShapePropertyFactory.getShapeProp
 

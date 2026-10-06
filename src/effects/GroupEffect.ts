@@ -5,7 +5,6 @@ import type {
 import {
   AngleEffect, CheckboxEffect, ColorEffect, LayerIndexEffect, MaskIndexEffect, NoValueEffect, PointEffect, SliderEffect
 } from '@/effects'
-import { EffectsManager } from '@/effects/EffectsManager'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 export class GroupEffect extends DynamicPropertyContainer {
@@ -81,7 +80,9 @@ export class GroupEffect extends DynamicPropertyContainer {
           break
         }
         case 5: {
-          eff = new EffectsManager(layer, element)
+          eff = new GroupEffect(
+            effects[i] as unknown as Effect, element, layer
+          )
           break
         }
         default: {

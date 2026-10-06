@@ -38,10 +38,10 @@ function addDecorator() {
   }
 
   TextProperty.prototype.searchProperty = function () {
-    const isKeyframed = this.searchKeyframes()
+    const isKeyframe = this.searchKeyframes()
     const hasExpressions = this.searchExpressions()
 
-    this.kf = Boolean(isKeyframed || hasExpressions)
+    this.kf = Boolean(isKeyframe || hasExpressions)
 
     return this.kf
   }

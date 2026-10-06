@@ -8,15 +8,15 @@ import type {
 
 import { EllShapeProperty } from '@/utils/shapes/properties/EllShapeProperty'
 import { RectShapeProperty } from '@/utils/shapes/properties/RectShapeProperty'
-import { KeyframedShapeProperty, ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
+import { KeyframeShapeProperty, ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 function getConstructorFunction() {
   return ShapeProperty
 }
 
-function getKeyframedConstructorFunction() {
-  return KeyframedShapeProperty
+function getKeyframeConstructorFunction() {
+  return KeyframeShapeProperty
 }
 
 function getShapeProp(
@@ -35,7 +35,7 @@ function getShapeProp(
         keys = dataProp?.k
 
       if (keys?.length) {
-        prop = new KeyframedShapeProperty(
+        prop = new KeyframeShapeProperty(
           elem, data, type
         )
         break
@@ -67,7 +67,7 @@ function getShapeProp(
 
 const ShapePropertyFactory = {
   getConstructorFunction,
-  getKeyframedConstructorFunction,
+  getKeyframeConstructorFunction,
   getShapeProp,
 }
 
