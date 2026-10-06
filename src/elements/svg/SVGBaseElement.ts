@@ -123,7 +123,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
     this.maskManager?.destroy()
   }
 
-  override getBaseElement() {
+  override getBaseElement(): SVGElement | HTMLElement | null {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }

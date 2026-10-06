@@ -1,3 +1,4 @@
+import type { HierarchyElement } from '@/elements/helpers/HierarchyElement'
 import type {
   AnimationData,
   ElementInterfaceIntersect,
@@ -133,7 +134,7 @@ export class HCompElement extends CompElement {
   }
 
   buildElementParenting(
-    _element: ElementInterfaceIntersect,
+    _element: HierarchyElement,
     _parentName?: number,
     _hierarchy: ElementInterfaceIntersect[] = []
   ) {

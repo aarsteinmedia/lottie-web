@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
@@ -8,10 +9,16 @@ import type {
 import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import { ImageElement } from '@/elements/ImageElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { mixin } from '@/utils/functionExtensions'
+
+const svgShapeMethods = ['initElement'] as const satisfies readonly (keyof SVGShapeElement)[],
+  imageMethods = ['prepareFrame'] as const satisfies readonly (keyof ImageElement)[]
+
+export interface CVSolidElement
+  extends Pick<SVGShapeElement, typeof svgShapeMethods[number]>,
+  Pick<ImageElement, typeof imageMethods[number]> {}
 
 export class CVSolidElement extends CVBaseElement {
-  initElement = SVGShapeElement.prototype.initElement
-  prepareFrame = ImageElement.prototype.prepareFrame
 
   constructor(
     data: LottieLayer,
@@ -48,3 +55,12 @@ export class CVSolidElement extends CVBaseElement {
     //
   }
 }
+
+
+mixin(
+  CVSolidElement, SVGShapeElement, svgShapeMethods
+)
+
+mixin(
+  CVSolidElement, ImageElement, imageMethods
+)

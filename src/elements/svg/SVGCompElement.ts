@@ -9,55 +9,73 @@ import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProp
 import { CompElement } from '@/elements/CompElement'
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import { SVGRendererBase } from '@/renderers/SVGRendererBase'
+import { mixin } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import PropertyFactory from '@/utils/PropertyFactory'
 
+/**
+ * A SVG pre-comp is a layer (SVGBaseElement) that also manages child layers
+ * like a renderer does. It borrows that behavior from SVGRendererBase and CompElement.
+ * Each list below drives both the type (interface) and the runtime copy (mixin).
+ */
+const rendererMethods = [
+  'addPendingElement',
+  'appendElementInPos',
+  'buildAllItems',
+  'buildElementParenting',
+  'buildItem',
+  'checkLayers',
+  'checkPendingElements',
+  'configAnimation',
+  'createAudio',
+  'createCamera',
+  'createFootage',
+  'createImage',
+  'createItem',
+  'createNull',
+  'createShape',
+  'createSolid',
+  'createText',
+  'findIndexByInd',
+  'getElementById',
+  'getElementByPath',
+  'includeLayers',
+  'initItems',
+  'searchExtraCompositions',
+  'setProjectInterface',
+  'setupGlobalData',
+  'updateContainerSize',
+] as const satisfies readonly (keyof SVGRendererBase)[],
+  compMethods = [
+    'createContent',
+    'destroy',
+    'destroyElements',
+    'getElements',
+    'hide',
+    'initElement',
+    'prepareFrame',
+    'renderFrame',
+    'renderInnerContent',
+    'setElements',
+    'show',
+  ] as const satisfies readonly (keyof CompElement)[]
+
+// Declaration merging: tells the compiler about the methods mixed in at the bottom of this file.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export interface SVGCompElement
+  extends Pick<SVGRendererBase, typeof rendererMethods[number]>,
+  Pick<CompElement, typeof compMethods[number]> {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SVGCompElement extends SVGBaseElement {
   _debug?: boolean
-  addPendingElement = SVGRendererBase.prototype.addPendingElement
-  appendElementInPos = SVGRendererBase.prototype.appendElementInPos
-  buildAllItems = SVGRendererBase.prototype.buildAllItems
-  buildElementParenting = SVGRendererBase.prototype.buildElementParenting
-  buildItem = SVGRendererBase.prototype.buildItem
-  checkLayers = SVGRendererBase.prototype.checkLayers
-  checkPendingElements = SVGRendererBase.prototype.checkPendingElements
   completeLayers = false
-  configAnimation = SVGRendererBase.prototype.configAnimation
-  createAudio = SVGRendererBase.prototype.createAudio
-  createCamera = SVGRendererBase.prototype.createCamera
-  override createContent = CompElement.prototype.createContent
-  createFootage = SVGRendererBase.prototype.createFootage
-  createImage = SVGRendererBase.prototype.createImage
-  createItem = SVGRendererBase.prototype.createItem
-  createNull = SVGRendererBase.prototype.createNull
-  createShape = SVGRendererBase.prototype.createShape
-  createSolid = SVGRendererBase.prototype.createSolid
-  createText = SVGRendererBase.prototype.createText
   currentFrame = 0
-  override destroy = CompElement.prototype.destroy
-  destroyElements = CompElement.prototype.destroyElements
   elements: ElementInterfaceIntersect[]
-  findIndexByInd = SVGRendererBase.prototype.findIndexByInd
-  getElementById = SVGRendererBase.prototype.getElementById
-  getElementByPath = SVGRendererBase.prototype.getElementByPath
-  getElements = CompElement.prototype.getElements
-  override hide = CompElement.prototype.hide
-  includeLayers = SVGRendererBase.prototype.includeLayers
-  override initElement = CompElement.prototype.initElement
-  initItems = SVGRendererBase.prototype.initItems
   layers?: undefined | LottieLayer[]
   pendingElements: ElementInterfaceIntersect[] = []
-  override prepareFrame = CompElement.prototype.prepareFrame
-  override renderFrame = CompElement.prototype.renderFrame
-  override renderInnerContent = CompElement.prototype.renderInnerContent
-  searchExtraCompositions = SVGRendererBase.prototype.searchExtraCompositions
-  setElements = CompElement.prototype.setElements
-  setProjectInterface = SVGRendererBase.prototype.setProjectInterface
-  setupGlobalData = SVGRendererBase.prototype.setupGlobalData
-  override show = CompElement.prototype.show
   supports3d = true
   tm?: KeyframeValueProperty
-  updateContainerSize = SVGRendererBase.prototype.updateContainerSize
 
   constructor(
     data: LottieLayer,
@@ -90,3 +108,10 @@ export class SVGCompElement extends SVGBaseElement {
     )
   }
 }
+
+mixin(
+  SVGCompElement, SVGRendererBase, rendererMethods
+)
+mixin(
+  SVGCompElement, CompElement, compMethods
+)

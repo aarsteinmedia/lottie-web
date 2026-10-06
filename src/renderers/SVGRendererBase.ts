@@ -104,7 +104,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
       element?.checkParenting()
 
-      if (element?.data.tt) {
+      if (element?.data?.tt) {
 
         let i = 0
 

@@ -1,8 +1,37 @@
 import type { Constructor } from '@/types'
 
+interface MixinTarget {
+  name: string
+  prototype: object
+}
+
+interface MixinSource<S> { prototype: S }
+
 interface PrototypeProps {
   name: string
   prop: string
+}
+
+/**
+ * Copy methods from `source`'s prototype onto `target`'s, once per class
+ * rather than once per instance. `keys` is checked against `source`, so a
+ * typo or a renamed method fails to compile. Pair it with an interface named
+ * like the target class (declaration merging) so the compiler sees the methods.
+ */
+export const mixin = <S extends object, K extends keyof S & string>(
+  target: MixinTarget,
+  source: MixinSource<S>,
+  keys: readonly K[]
+) => {
+  const from = source.prototype,
+    to = target.prototype as Record<string, unknown>
+
+  for (const key of keys) {
+    if (Object.hasOwn(to, key)) {
+      throw new Error(`mixin: ${target.name}.${key} is already defined on the class`)
+    }
+    to[key] = from[key]
+  }
 }
 
 export const extendPrototype = (sources: Constructor[], destination: Constructor) => {

@@ -479,8 +479,8 @@ function addPropertyDecorator() {
     return prop
   }
 
-  const ShapePropertyConstructorFunction = ShapePropertyFactory.getConstructorFunction()
-  const KeyframeShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframeConstructorFunction()
+  const ShapePropertyConstructorFunction = ShapePropertyFactory.getConstructorFunction(),
+    KeyframeShapePropertyConstructorFunction = ShapePropertyFactory.getKeyframeConstructorFunction()
 
   extendPrototype([ShapeExpressions], ShapePropertyConstructorFunction)
   extendPrototype([ShapeExpressions], KeyframeShapePropertyConstructorFunction)

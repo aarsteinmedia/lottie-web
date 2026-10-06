@@ -132,13 +132,6 @@ export interface Transformer {
   opacity: number
 }
 
-// export type ElementInterfaceUnion = ReturnType<
-//   typeof BaseRenderer.prototype.createItem
-// >
-
-// type UnionToIntersection<U> =
-//   (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
-
 type RendererIntersect = SVGRenderer & CanvasRenderer & HybridRenderer
 
 export type ElementInterfaceIntersect = CompElementInterface &

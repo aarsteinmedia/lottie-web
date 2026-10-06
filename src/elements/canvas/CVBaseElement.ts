@@ -323,18 +323,6 @@ export abstract class CVBaseElement extends RenderableElement {
     this.canvasContext.globalCompositeOperation = 'source-over'
   }
 
-  // override renderLocalTransform() {
-  //   // Pass through
-  // }
-
-  // override renderRenderable() {
-  //   // Pass through
-  // }
-
-  // override searchEffectTransforms() {
-  //   // Pass through
-  // }
-
   override setBlendMode() {
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)

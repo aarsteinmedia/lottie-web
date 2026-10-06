@@ -33,6 +33,7 @@ import {
   RendererType,
   ShapeType,
 } from '@/utils/enums'
+import { mixin } from '@/utils/functionExtensions'
 import { degToRads } from '@/utils/helpers/constants'
 import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -40,20 +41,23 @@ import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifie
 import { DashProperty } from '@/utils/shapes/properties/DashProperty'
 import { GradientProperty } from '@/utils/shapes/properties/GradientProperty'
 
+const canvasMethods = [
+  'clearCanvas',
+  'createContainerElements',
+  'createRenderableComponents',
+  'exitLayer',
+  'hide',
+  'initRendererElement',
+  'prepareLayer',
+  'renderFrame',
+  'setBlendMode',
+  'show'
+] as const satisfies readonly (keyof CVBaseElement)[]
+
 export class CVShapeElement extends ShapeElement {
   canvasContext?: CanvasRenderingContext2D
-  clearCanvas = CVBaseElement.prototype.clearCanvas
-  override createContainerElements = CVBaseElement.prototype.createContainerElements
-  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
   dashResetter: number[] = []
-  exitLayer = CVBaseElement.prototype.exitLayer
-  override hide = CVBaseElement.prototype.hide
-  override initRendererElement = CVBaseElement.prototype.initRendererElement
-  prepareLayer = CVBaseElement.prototype.prepareLayer
   prevViewData: ShapeGroupData[] = []
-  override renderFrame = CVBaseElement.prototype.renderFrame
-  override setBlendMode = CVBaseElement.prototype.setBlendMode
-  override show = CVBaseElement.prototype.show
   stylesList: CVStyleElement[] = []
   transformHelper = {
     _opMdf: false,
@@ -834,3 +838,7 @@ export class CVShapeElement extends ShapeElement {
     }
   }
 }
+
+mixin(
+  CVShapeElement, CVBaseElement, canvasMethods
+)

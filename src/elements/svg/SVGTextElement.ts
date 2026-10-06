@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 
 import type { SVGCompElement } from '@/elements/svg/SVGCompElement'
 import type { SVGRenderer } from '@/renderers/SVGRenderer'
@@ -16,10 +17,24 @@ import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { TextElement } from '@/elements/TextElement'
 import { RendererType } from '@/utils/enums'
+import { mixin } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createNS } from '@/utils/helpers/svgElements'
 
-const emptyShapeData = { shapes: [] } as unknown as LottieLayer
+const emptyShapeData = { shapes: [] } as unknown as LottieLayer,
+  baseMethods = [
+    'createContainerElements',
+    'createRenderableComponents',
+    'destroyBaseElement',
+    'getBaseElement',
+    'getMatte',
+    'initRendererElement',
+    'renderElement',
+    'setMatte',
+  ] as const satisfies readonly (keyof SVGBaseElement)[]
+
+export interface SVGTextLottieElement
+  extends Pick<SVGBaseElement, typeof baseMethods[number]> {}
 
 export class SVGTextLottieElement extends TextElement {
   _sizeChanged?: boolean
@@ -29,15 +44,7 @@ export class SVGTextLottieElement extends TextElement {
     top: number
     width: number
   }
-  override createContainerElements = SVGBaseElement.prototype.createContainerElements
-  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
-  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
-  override getBaseElement = SVGBaseElement.prototype.getBaseElement
-  getMatte = SVGBaseElement.prototype.getMatte
-  override initRendererElement = SVGBaseElement.prototype.initRendererElement
   renderedLetters: string[] = []
-  override renderElement = SVGBaseElement.prototype.renderElement
-  setMatte = SVGBaseElement.prototype.setMatte
   textContainer?: SVGTextElement
   textSpans: TextSpan[] = []
 
@@ -419,38 +426,39 @@ export class SVGTextLottieElement extends TextElement {
     }
     this.textAnimator?.getMeasures(this.textProperty.currentData,
       this.lettersChangedFlag)
-    if (this.lettersChangedFlag || this.textAnimator?.lettersChangedFlag) {
-      this._sizeChanged = true
-      const renderedLetters = this.textAnimator?.renderedLetters,
-        letters = this.textProperty.currentData.l,
-        { length } = letters
-      let renderedLetter, textSpan, glyphElement
+    if (!this.lettersChangedFlag && !this.textAnimator?.lettersChangedFlag) {
+      return
+    }
+    this._sizeChanged = true
+    const renderedLetters = this.textAnimator?.renderedLetters,
+      letters = this.textProperty.currentData.l,
+      { length } = letters
+    let renderedLetter, textSpan, glyphElement
 
-      for (let i = 0; i < length; i++) {
-        if (letters[i]?.n) {
-          continue
-        }
-        renderedLetter = renderedLetters?.[i]
-        textSpan = this.textSpans[i]?.span
-        glyphElement = this.textSpans[i]?.glyph
-        if (glyphElement) {
-          glyphElement.renderFrame()
-        }
-        if (renderedLetter?._mdf.m) {
-          textSpan?.setAttribute('transform', renderedLetter.m as string)
-        }
-        if (renderedLetter?._mdf.o) {
-          textSpan?.setAttribute('opacity', `${renderedLetter.o ?? 1}`)
-        }
-        if (renderedLetter?._mdf.sw) {
-          textSpan?.setAttribute('stroke-width', `${renderedLetter.sw || 0}`)
-        }
-        if (renderedLetter?._mdf.sc) {
-          textSpan?.setAttribute('stroke', renderedLetter.sc as string)
-        }
-        if (renderedLetter?._mdf.fc) {
-          textSpan?.setAttribute('fill', renderedLetter.fc as string)
-        }
+    for (let i = 0; i < length; i++) {
+      if (letters[i]?.n) {
+        continue
+      }
+      renderedLetter = renderedLetters?.[i]
+      textSpan = this.textSpans[i]?.span
+      glyphElement = this.textSpans[i]?.glyph
+      if (glyphElement) {
+        glyphElement.renderFrame()
+      }
+      if (renderedLetter?._mdf.m) {
+        textSpan?.setAttribute('transform', renderedLetter.m as string)
+      }
+      if (renderedLetter?._mdf.o) {
+        textSpan?.setAttribute('opacity', `${renderedLetter.o ?? 1}`)
+      }
+      if (renderedLetter?._mdf.sw) {
+        textSpan?.setAttribute('stroke-width', `${renderedLetter.sw || 0}`)
+      }
+      if (renderedLetter?._mdf.sc) {
+        textSpan?.setAttribute('stroke', renderedLetter.sc as string)
+      }
+      if (renderedLetter?._mdf.fc) {
+        textSpan?.setAttribute('fill', renderedLetter.fc as string)
       }
     }
   }
@@ -484,3 +492,7 @@ export class SVGTextLottieElement extends TextElement {
     return null
   }
 }
+
+mixin(
+  SVGTextLottieElement, SVGBaseElement, baseMethods
+)

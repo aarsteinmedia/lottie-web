@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type {
   AnimatedContent,
   ElementInterfaceIntersect,
@@ -27,6 +28,7 @@ import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import {
   lineCapEnum, lineJoinEnum, ShapeType
 } from '@/utils/enums'
+import { mixin } from '@/utils/functionExtensions'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { Matrix } from '@/utils/Matrix'
@@ -34,25 +36,31 @@ import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import { getModifier } from '@/utils/shapes/modifiers'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
+const baseMethods = [
+  'createContainerElements',
+  'createRenderableComponents',
+  'destroyBaseElement',
+  'getBaseElement',
+  'getMatte',
+  'initRendererElement',
+  'renderElement',
+  'setMatte'
+] as const satisfies readonly (keyof SVGBaseElement)[]
+
+export interface SVGShapeElement
+  extends Pick<SVGBaseElement, typeof baseMethods[number]> {}
+
 export class SVGShapeElement extends ShapeElement {
   _debug?: boolean
   /**
    * List of animated components.
    */
   animatedContents: AnimatedContent[] = []
-  override createContainerElements = SVGBaseElement.prototype.createContainerElements
-  override createRenderableComponents = SVGBaseElement.prototype.createRenderableComponents
-  override destroyBaseElement = SVGBaseElement.prototype.destroyBaseElement
-  override getBaseElement = SVGBaseElement.prototype.getBaseElement
-  getMatte = SVGBaseElement.prototype.getMatte
   identityMatrix = new Matrix()
-  override initRendererElement = SVGBaseElement.prototype.initRendererElement
   /**
    * List of elements that have been created.
    */
   prevViewData: SVGElementInterface[] = []
-  override renderElement = SVGBaseElement.prototype.renderElement
-  setMatte = SVGBaseElement.prototype.setMatte
   /**
    * List of styles that will be applied to shapes.
    */
@@ -591,4 +599,6 @@ export class SVGShapeElement extends ShapeElement {
   }
 }
 
-// console.log(Object.getOwnPropertyNames(SVGShapeElement.prototype))
+mixin(
+  SVGShapeElement, SVGBaseElement, baseMethods
+)

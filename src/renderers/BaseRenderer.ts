@@ -11,6 +11,7 @@ import type { HShapeElement } from '@/elements/html/HShapeElement'
 import type { HTextElement } from '@/elements/html/HTextElement'
 import type { ImageElement } from '@/elements/ImageElement'
 import type { SolidElement } from '@/elements/SolidElement'
+import type { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import type { SVGCompElement } from '@/elements/svg/SVGCompElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
@@ -35,9 +36,9 @@ export abstract class BaseRenderer extends FrameElement {
   currentFrame = 0
   elements: (ElementInterfaceIntersect | undefined)[] = []
   layers: LottieLayer[] = []
-  pendingElements: ElementInterfaceIntersect[] = []
+  pendingElements: SVGBaseElement[] = []
 
-  addPendingElement(element: ElementInterfaceIntersect) {
+  addPendingElement(element: SVGBaseElement) {
     this.pendingElements.push(element)
   }
 
@@ -51,7 +52,7 @@ export abstract class BaseRenderer extends FrameElement {
   }
 
   buildElementParenting(
-    element: ElementInterfaceIntersect,
+    element: SVGBaseElement,
     parentName?: number,
     hierarchy: ElementInterfaceIntersect[] = []
   ) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
 import type {
   ElementInterfaceIntersect,
@@ -12,36 +13,41 @@ import type { LetterProps } from '@/utils/text/LetterProps'
 import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import { TextElement } from '@/elements/TextElement'
 import { RendererType, ShapeType } from '@/utils/enums'
+import { mixin } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
 
-const transparent = 'rgba(0,0,0,0)'
+const transparent = 'rgba(0,0,0,0)',
+  canvasMethods = [
+    'clearCanvas',
+    'createContainerElements',
+    'createContent',
+    'createRenderableComponents',
+    'hide',
+    'hideElement',
+    'initRendererElement',
+    'destroy',
+    'exitLayer',
+    'prepareLayer',
+    'renderFrame',
+    'renderLocalTransform',
+    'renderRenderable',
+    'searchEffectTransforms',
+    'setBlendMode',
+    'show',
+    'showElement',
+  ] as const satisfies readonly (keyof CVBaseElement)[]
+
+export interface CVTextElement
+  extends Pick<CVBaseElement, typeof canvasMethods[number]> {}
 
 export class CVTextElement extends TextElement {
-
   canvasContext?: CanvasRenderingContext2D
-  clearCanvas = CVBaseElement.prototype.clearCanvas
-  override createContainerElements = CVBaseElement.prototype.createContainerElements
-  override createContent = CVBaseElement.prototype.createContent
-  override createRenderableComponents = CVBaseElement.prototype.createRenderableComponents
   currentRender: unknown = null
-  override destroy = CVBaseElement.prototype.destroy
-  exitLayer = CVBaseElement.prototype.exitLayer
   fill = false
   fillColorAnim = false
-  override hide = CVBaseElement.prototype.hide
-  hideElement = CVBaseElement.prototype.hideElement
-  override initRendererElement = CVBaseElement.prototype.initRendererElement
   justifyOffset = 0
-  prepareLayer = CVBaseElement.prototype.prepareLayer
   renderedLetters: LetterProps[] = []
-  override renderFrame = CVBaseElement.prototype.renderFrame
-  override renderLocalTransform = CVBaseElement.prototype.renderLocalTransform
-  override renderRenderable = CVBaseElement.prototype.renderRenderable
-  override searchEffectTransforms = CVBaseElement.prototype.searchEffectTransforms
-  override setBlendMode = CVBaseElement.prototype.setBlendMode
-  override show = CVBaseElement.prototype.show
-  showElement = CVBaseElement.prototype.showElement
   stroke = false
   strokeColorAnim = false
   strokeWidthAnim = false
@@ -392,3 +398,7 @@ export class CVTextElement extends TextElement {
     }
   }
 }
+
+mixin(
+  CVTextElement, CVBaseElement, canvasMethods
+)

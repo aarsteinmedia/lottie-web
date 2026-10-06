@@ -3,6 +3,7 @@
  *
  */
 
+import type { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import type { ElementInterfaceIntersect } from '@/types'
 
 import { TransformElement } from '@/elements/helpers/TransformElement'
@@ -22,7 +23,7 @@ export abstract class HierarchyElement extends TransformElement {
     }
 
     this.comp.buildElementParenting(
-      this as unknown as ElementInterfaceIntersect,
+      this as unknown as SVGBaseElement,
       this.data.parent,
       []
     )
