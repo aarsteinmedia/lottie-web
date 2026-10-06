@@ -2,7 +2,7 @@ import type { ElementInterfaceIntersect, ExpressionProperty } from '@/types'
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 import type { BaseProperty } from '@/utils/properties/BaseProperty'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 
 import { isArrayOfNum } from '@/utils'
 import { ArrayType } from '@/utils/enums'
@@ -10,7 +10,7 @@ import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { createTypedArray } from '@/utils/helpers/arrays'
 
 function searchExpressions(
-  elem: ElementInterfaceIntersect, data?: ExpressionProperty, prop?: KeyframedValueProperty
+  elem: ElementInterfaceIntersect, data?: ExpressionProperty, prop?: KeyframeValueProperty
 ) {
   if (!data?.x || !prop) {
     return

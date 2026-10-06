@@ -4,7 +4,7 @@ import type {
   GlobalData,
   LottieLayer,
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 
 import { CompElement } from '@/elements/CompElement'
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
@@ -55,7 +55,7 @@ export class SVGCompElement extends SVGBaseElement {
   setupGlobalData = SVGRendererBase.prototype.setupGlobalData
   override show = CompElement.prototype.show
   supports3d = true
-  tm?: KeyframedValueProperty
+  tm?: KeyframeValueProperty
   updateContainerSize = SVGRendererBase.prototype.updateContainerSize
 
   constructor(
@@ -72,7 +72,7 @@ export class SVGCompElement extends SVGBaseElement {
     )
     this.tm = (data.tm ? PropertyFactory.getProp(
       this as unknown as ElementInterfaceIntersect, data.tm, 0, globalData.frameRate, this as unknown as ElementInterfaceIntersect
-    ) : { _placeholder: true }) as KeyframedValueProperty
+    ) : { _placeholder: true }) as KeyframeValueProperty
   }
 
   createComp(data: LottieLayer) {

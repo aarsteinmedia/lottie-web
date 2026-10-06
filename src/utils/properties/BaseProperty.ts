@@ -16,7 +16,7 @@ import type {
 } from '@/types'
 import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterface'
 import type { Matrix } from '@/utils/Matrix'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
@@ -208,7 +208,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   }
 
   initiateExpression(
-    _elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframedValueProperty
+    _elem: ElementInterfaceIntersect, _data: ExpressionProperty, _property: KeyframeValueProperty
   ): EffectFunction {
     throw new Error('Method not implemented')
   }

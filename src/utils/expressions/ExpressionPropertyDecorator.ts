@@ -1,7 +1,7 @@
 import type {
   Caching, ElementInterfaceIntersect, ExpressionProperty, Vector3
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
@@ -20,7 +20,7 @@ import PropertyFactory from '@/utils/PropertyFactory'
 import ShapePropertyFactory from '@/utils/shapes/properties'
 
 function loopOut(
-  this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
+  this: KeyframeValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
 ) {
   if (!this.k || this.keyframes?.length === 0) {
     return this.pv
@@ -127,7 +127,7 @@ function loopOut(
 }
 
 function loopIn(
-  this: KeyframedValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
+  this: KeyframeValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean
 ) {
   if (!this.k) {
     return this.pv
@@ -232,7 +232,7 @@ function loopIn(
 }
 
 function smooth(
-  this: KeyframedValueProperty, widthFromProps: number, samplesFromProps: number
+  this: KeyframeValueProperty, widthFromProps: number, samplesFromProps: number
 ) {
 
   const {
@@ -470,7 +470,7 @@ function addPropertyDecorator() {
       value,
     } as Caching
     expressionHelpers.searchExpressions(
-      elem, data as ExpressionProperty, prop as KeyframedValueProperty
+      elem, data as ExpressionProperty, prop as KeyframeValueProperty
     )
     if (prop.k) {
       container?.addDynamicProperty(prop)
@@ -504,11 +504,11 @@ function addPropertyDecorator() {
     prop.lock = false
     if (type === 3) {
       expressionHelpers.searchExpressions(
-        elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframeValueProperty
       )
     } else if (type === 4) {
       expressionHelpers.searchExpressions(
-        elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframedValueProperty
+        elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframeValueProperty
       )
     }
     if (prop.k) {

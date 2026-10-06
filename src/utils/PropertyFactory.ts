@@ -7,8 +7,8 @@ import type {
 } from '@/types'
 
 import { isArrayOfNum } from '@/utils'
-import { KeyframedMultidimensionalProperty } from '@/utils/properties/KeyframedMultidimensionalProperty'
-import { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import { KeyframeMultidimensionalProperty } from '@/utils/properties/KeyframeMultidimensionalProperty'
+import { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import { NoProperty } from '@/utils/properties/NoProperty'
 import { ValueProperty } from '@/utils/properties/ValueProperty'
@@ -48,7 +48,7 @@ function getProp<T = number | number[]>(
   } else {
     switch (type) {
       case 0: {
-        p = new KeyframedValueProperty(
+        p = new KeyframeValueProperty(
           elem,
           data as VectorProperty<Keyframe[]>,
           mult,
@@ -57,7 +57,7 @@ function getProp<T = number | number[]>(
         break
       }
       case 1: {
-        p = new KeyframedMultidimensionalProperty(
+        p = new KeyframeMultidimensionalProperty(
           elem,
           data as VectorProperty<Keyframe[]>,
           mult,

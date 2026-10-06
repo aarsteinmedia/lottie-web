@@ -2,7 +2,7 @@ import type {
   ElementInterfaceIntersect, ExpressionProperty, TextRangeValue,
   Vector3
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 
 import { PropType } from '@/utils/enums'
 import expressionHelpers from '@/utils/expressions/expressionHelpers'
@@ -32,8 +32,8 @@ export class TextExpressionSelectorPropFactory extends BaseProperty {
       1]
     this.k = true
     this.x = true
-    this.getValue = ExpressionManager.initiateExpression.bind(this as unknown as KeyframedValueProperty)(
-      elem, data, this as unknown as KeyframedValueProperty
+    this.getValue = ExpressionManager.initiateExpression.bind(this as unknown as KeyframeValueProperty)(
+      elem, data, this as unknown as KeyframeValueProperty
     )
     this.getMult = this.getValueProxy
     this.getVelocityAtTime = expressionHelpers.getVelocityAtTime
@@ -51,7 +51,7 @@ export class TextExpressionSelectorPropFactory extends BaseProperty {
 
   getTextSelectorProp(
     _elem: ElementInterfaceIntersect, _data: TextRangeValue, _arr: unknown[]
-  ): KeyframedValueProperty {
+  ): KeyframeValueProperty {
     throw new Error(notImplemented)
   }
 

@@ -1,5 +1,5 @@
 import type { DocumentData, ExpressionProperty } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 
 import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { TextProperty } from '@/utils/text/TextProperty'
@@ -7,8 +7,8 @@ import { TextProperty } from '@/utils/text/TextProperty'
 function searchExpressions(this: TextProperty) {
   if (this.data.d?.x) {
     // @ts-expect-error
-    this.calculateExpression = ExpressionManager.initiateExpression.bind(this as unknown as KeyframedValueProperty)(
-      this.elem, this.data.d as unknown as ExpressionProperty, this as unknown as KeyframedValueProperty
+    this.calculateExpression = ExpressionManager.initiateExpression.bind(this as unknown as KeyframeValueProperty)(
+      this.elem, this.data.d as unknown as ExpressionProperty, this as unknown as KeyframeValueProperty
     )
     // @ts-expect-error
     this.addEffect(this.getExpressionValue.bind(this))

@@ -13,7 +13,7 @@ import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeI
 import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
 import type { TransformExpressionInterface } from '@/utils/expressions/TransformInterface'
 import type { BaseProperty } from '@/utils/properties/BaseProperty'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
@@ -278,10 +278,10 @@ function ease(
 }
 
 function initiateExpression(
-  this: KeyframedValueProperty,
+  this: KeyframeValueProperty,
   elem: ElementInterfaceIntersect,
   data: ExpressionProperty,
-  property: KeyframedValueProperty
+  property: KeyframeValueProperty
 ) {
   /**
    * Bail out if we don't want expressions.
@@ -675,7 +675,7 @@ function initiateExpression(
     value = valueAtTime(time)
   }
 
-  function executeExpression(this: KeyframedValueProperty, _value: number) {
+  function executeExpression(this: KeyframeValueProperty, _value: number) {
     // globalData.pushExpression();
     value = _value
 

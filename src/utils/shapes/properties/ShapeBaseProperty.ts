@@ -6,7 +6,7 @@ import type {
   Shape,
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
@@ -45,7 +45,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   initiateExpression(
     _elem: ElementInterfaceIntersect,
     _data: ExpressionProperty,
-    _property: KeyframedValueProperty
+    _property: KeyframeValueProperty
   ) {
     throw new Error(`${this.constructor.name}: Method initiateExpression is not implemented`)
   }

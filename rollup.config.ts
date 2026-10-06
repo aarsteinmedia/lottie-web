@@ -111,18 +111,11 @@ const isProd = process.env.NODE_ENV !== 'development',
     ),
   ])),
 
-  onwarn: RollupOptions['onwarn'] = (warning, warn) => {
-    if (warning.code === 'CIRCULAR_DEPENDENCY') {
-      return
-    }
-    warn(warning)
-  },
   output: RollupOptions[] = [
     // Build all JS entrypoints together so shared modules (e.g. enums) become shared chunks.
     {
       external: ['fflate'],
       input: jsInput,
-      onwarn,
       output: {
         chunkFileNames: 'chunks/[name]-[hash].js',
         dir: resolve(__dirname, 'dist'),
@@ -134,7 +127,6 @@ const isProd = process.env.NODE_ENV !== 'development',
     }, {
       // Build all d.ts entrypoints together so shared declarations are de-duplicated.
       input: dtsInput,
-      onwarn,
       output: {
         chunkFileNames: 'chunks/[name]-[hash].d.ts',
         dir: resolve(__dirname, 'dist'),

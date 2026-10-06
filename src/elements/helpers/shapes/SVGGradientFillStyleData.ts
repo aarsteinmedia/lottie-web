@@ -9,7 +9,7 @@ import type {
   Transformer,
   VectorProperty,
 } from '@/types'
-import type { KeyframedValueProperty } from '@/utils/properties/KeyframedValueProperty'
+import type { KeyframeValueProperty } from '@/utils/properties/KeyframeValueProperty'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
@@ -31,7 +31,7 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
   g?: undefined | GradientProperty
   gf?: undefined | SVGGradientElement
   gr?: undefined | SVGGElement
-  h?: undefined | KeyframedValueProperty
+  h?: undefined | KeyframeValueProperty
   it: ShapeDataInterface[] = []
   maskId?: undefined | string
   ms?: undefined | SVGMaskElement
@@ -82,14 +82,14 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as MultiDimensionalProperty
-    this.h = PropertyFactory.getProp<KeyframedValueProperty>(
+    this.h = PropertyFactory.getProp<KeyframeValueProperty>(
       elem,
       // @ts-expect-error: ignore
-      data.h ?? ({ k: 0 } as unknown as VectorProperty<KeyframedValueProperty>),
+      data.h ?? ({ k: 0 } as unknown as VectorProperty<KeyframeValueProperty>),
       0,
       0.01,
       this as unknown as ElementInterfaceIntersect
-    ) as KeyframedValueProperty
+    ) as KeyframeValueProperty
     this.a = PropertyFactory.getProp(
       elem,
       data.a ?? ({ k: 0 } as VectorProperty),
