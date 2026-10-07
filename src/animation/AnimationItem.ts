@@ -23,7 +23,6 @@ import {
 } from '@/events'
 import { getRegisteredRenderer } from '@/renderers'
 import { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import { HybridRenderer } from '@/renderers/HybridRenderer'
 import { SVGRenderer } from '@/renderers/SVGRenderer'
 import {
   createElementID, devError, isArray
@@ -88,7 +87,7 @@ export class AnimationItem extends BaseEvent {
   public playDirection: AnimationDirection = 1
   public playSpeed = 1
   public projectInterface = new ProjectInterface()
-  public renderer = null as unknown as SVGRenderer | CanvasRenderer | HybridRenderer
+  public renderer = null as unknown as SVGRenderer | CanvasRenderer
   public segmentPos = 0
   public segments: Vector2[] = []
   public timeCompleted = 0
@@ -99,14 +98,16 @@ export class AnimationItem extends BaseEvent {
   protected filename?: undefined | string
 
   protected initialSegment?: undefined | Vector2
-  protected onComplete: null | ((arg: unknown) => void) = null
-  protected onDestroy: null | ((arg: unknown) => void) = null
-  protected onEnterFrame: null | ((arg: unknown) => void) = null
-  protected onLoopComplete: null | ((arg: unknown) => void) = null
-  protected onSegmentStart: null | ((arg: unknown) => void) = null
+  // protected onComplete: null | ((arg: unknown) => void) = null
+  // protected onDestroy: null | ((arg: unknown) => void) = null
+  // protected onEnterFrame: null | ((arg: unknown) => void) = null
+  // protected onLoopComplete: null | ((arg: unknown) => void) = null
+  // protected onSegmentStart: null | ((arg: unknown) => void) = null
   private _completedLoop = false
   private _fontsLoadTimeout?: undefined | ReturnType<typeof setTimeout>
   private _idle = true
+
+  private _isDestroyed = false
 
   constructor() {
     super()
@@ -221,8 +222,6 @@ export class AnimationItem extends BaseEvent {
     return false
   }
 
-  // private _isDestroyed = false
-
   public configAnimation(animData: AnimationData) {
     // if (!this.renderer) {
     //   return
@@ -259,7 +258,7 @@ export class AnimationItem extends BaseEvent {
   }
 
   public destroy(name?: string) {
-    if (name && this.name !== name) {
+    if (this._isDestroyed || name && this.name !== name) {
       return
     }
     if (this._fontsLoadTimeout) {
@@ -271,17 +270,17 @@ export class AnimationItem extends BaseEvent {
     this.imagePreloader.destroy()
     this.trigger(PlayerEvent.Destroy)
     this._cbs = {}
-    this.onEnterFrame = null
-    this.onLoopComplete = null
-    this.onComplete = null
-    this.onSegmentStart = null
-    this.onDestroy = null
+    // this.onEnterFrame = null
+    // this.onLoopComplete = null
+    // this.onComplete = null
+    // this.onSegmentStart = null
+    // this.onDestroy = null
     this.renderer = null as unknown as SVGRenderer
     this.expressionsPlugin = null // as unknown as typeof Expressions
     this.imagePreloader = null as unknown as ImagePreloader
     this.projectInterface = null as unknown as ProjectInterface
 
-    // this._isDestroyed = true
+    this._isDestroyed = true
   }
 
   public getAssetData(id?: string) {
@@ -328,7 +327,7 @@ export class AnimationItem extends BaseEvent {
     return isFrame ? this.totalFrames : this.totalFrames / this.frameRate
   }
 
-  public getMarkerData(markerName: number) {
+  public getMarkerData(markerName: number | string) {
     for (let i = 0; i < this.markers.length; i++) {
       if (this.markers[i]?.payload?.name === markerName) {
         return this.markers[i]
@@ -347,14 +346,14 @@ export class AnimationItem extends BaseEvent {
   }
 
   public goToAndPlay(
-    value: number, isFrame?: boolean, name?: string
+    value: number | string, isFrame?: boolean, name?: string
   ) {
     if (name && this.name !== name) {
       return
     }
     const numValue = value
 
-    if (isNaN(numValue)) {
+    if (typeof numValue !== 'number' || isNaN(numValue)) {
       const marker = this.getMarkerData(value)
 
       if (marker) {
@@ -373,23 +372,23 @@ export class AnimationItem extends BaseEvent {
   }
 
   public goToAndStop(
-    value: number, isFrame?: boolean, name?: string
+    value: number | string, isFrame?: boolean, name?: string
   ) {
     if (name && this.name !== name) {
       return
     }
     const numValue = value
 
-    if (isNaN(numValue)) {
+    if (typeof numValue !== 'number' || isNaN(numValue)) {
       const marker = this.getMarkerData(value)
 
       if (marker) {
         this.goToAndStop(marker.time, true)
       }
     } else if (isFrame) {
-      this.setCurrentRawFrameValue(value)
+      this.setCurrentRawFrameValue(numValue)
     } else {
-      this.setCurrentRawFrameValue(value * this.frameModifier)
+      this.setCurrentRawFrameValue(numValue * this.frameModifier)
     }
     this.pause()
   }
@@ -720,10 +719,6 @@ export class AnimationItem extends BaseEvent {
           this.renderer = new CanvasRenderer(this, params.rendererSettings as CanvasRendererConfig)
           break
         }
-        case RendererType.HTML: {
-          this.renderer = new HybridRenderer(this, params.rendererSettings)
-          break
-        }
         default: {
           throw new Error(`Unknown renderer type: ${animType as string}`)
         }
@@ -880,7 +875,7 @@ export class AnimationItem extends BaseEvent {
           legacyEv.currentTime = this.currentFrame
           legacyEv.totalTime = this.totalFrames
           legacyEv.direction = this.frameMult < 0 ? -1 : 1
-          this.onEnterFrame?.(legacyEv)
+          // this.onEnterFrame?.(legacyEv)
           break
         }
         case PlayerEvent.DrawnFrame: {
@@ -901,17 +896,17 @@ export class AnimationItem extends BaseEvent {
               this.playCount,
               this.frameMult
             ))
-          this.onLoopComplete?.(new CompleteLoopEvent(
-            name,
-            this.loop,
-            this.playCount,
-            this.frameMult
-          ))
+          // this.onLoopComplete?.(new CompleteLoopEvent(
+          //   name,
+          //   this.loop,
+          //   this.playCount,
+          //   this.frameMult
+          // ))
           break
         }
         case PlayerEvent.Complete: {
           this.triggerEvent(name, new CompleteEvent(name, this.frameMult))
-          this.onComplete?.(new CompleteEvent(name, this.frameMult))
+          // this.onComplete?.(new CompleteEvent(name, this.frameMult))
           break
         }
         case PlayerEvent.SegmentStart: {
@@ -919,14 +914,14 @@ export class AnimationItem extends BaseEvent {
             new SegmentStartEvent(
               name, this.firstFrame, this.totalFrames
             ))
-          this.onSegmentStart?.(new SegmentStartEvent(
-            name, this.firstFrame, this.totalFrames
-          ))
+          // this.onSegmentStart?.(new SegmentStartEvent(
+          //   name, this.firstFrame, this.totalFrames
+          // ))
           break
         }
         case PlayerEvent.Destroy: {
           this.triggerEvent(name, new DestroyEvent(name, this))
-          this.onDestroy?.(new DestroyEvent(name, this))
+          // this.onDestroy?.(new DestroyEvent(name, this))
           break
         }
         default: {

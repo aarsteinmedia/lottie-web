@@ -3,6 +3,40 @@ import type { AnimationData, LottieManifest } from '@/types'
 import { devError, getExt } from '@/utils'
 import { getLottieJSON } from '@/utils/dotLottie/getLottieJSON'
 
+const _isZipStream = async (response: Response) => {
+    const reader = response.clone().body?.getReader()
+    const { value } = await reader?.read() ?? {}
+
+    await reader?.cancel() // Clean up stream
+
+    if (!value || value.length < 4) {
+      return false
+    }
+
+    return (
+      value[0] === 0x50 &&
+      value[1] === 0x4b &&
+      (
+        value[2] === 0x03 && value[3] === 0x04 ||
+        value[2] === 0x05 && value[3] === 0x06 ||
+        value[2] === 0x07 && value[3] === 0x08
+      )
+    )
+  },
+  _isJSON = async (response: Response) => {
+    const contentType = response.headers.get('content-type') ?? ''
+
+    if (contentType.toLowerCase().includes('json')) {
+      return true
+    }
+
+    if (contentType.toLowerCase().includes('zip') || await _isZipStream(response)) {
+      return false
+    }
+
+    return true
+  }
+
 export async function getAnimationData(input: unknown): Promise<{
   animations?: undefined | AnimationData[]
   manifest: LottieManifest | null
@@ -23,7 +57,12 @@ export async function getAnimationData(input: unknown): Promise<{
       }
     }
 
-    const result = await fetch(input, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } })
+    const result = await fetch(input, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    })
 
     if (!result.ok) {
       const error = new Error(result.statusText)
@@ -36,12 +75,7 @@ export async function getAnimationData(input: unknown): Promise<{
      * than by parsing filename, then – if filename has no extension – by
      * cloning the response and parsing response for content.
      */
-    let isJSON = true
-    const contentType = result.headers.get('content-type')
-
-    if (contentType === 'application/zip+dotlottie') {
-      isJSON = false
-    }
+    const isJSON = await _isJSON(result)
 
     if (isJSON) {
       const ext = getExt(input)

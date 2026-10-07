@@ -21,6 +21,8 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
           (err, file) => {
             if (err) {
               reject(err)
+
+              return
             }
             resolve(file)
           })
@@ -45,7 +47,7 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
 
   prepareString = (str: string) =>
     str
-      .replaceAll(new RegExp(/"""/, 'g'), '""')
+      // .replaceAll(new RegExp(/"""/, 'g'), '""')
       .replaceAll(/(["'])(.*?)\1/g, (
         _match, quote: string, content: string
       ) => {

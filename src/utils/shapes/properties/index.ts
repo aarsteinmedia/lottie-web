@@ -1,5 +1,4 @@
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import type { HShapeElement } from '@/elements/html/HShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   ElementInterfaceIntersect,
@@ -20,7 +19,7 @@ function getKeyframeConstructorFunction() {
 }
 
 function getShapeProp(
-  elem: SVGShapeElement | CVShapeElement | HShapeElement,
+  elem: SVGShapeElement | CVShapeElement,
   data: Shape,
   type: number,
   _arr?: any[],

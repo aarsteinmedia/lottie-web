@@ -35,6 +35,15 @@ const Math = BMMath,
   window = null,
   document = null,
   XMLHttpRequest = null,
+  // eslint-disable-next-line sonarjs/no-globals-shadowing, no-shadow-restricted-names
+  globalThis = null,
+  // self = null,
+  top = null,
+  parent = null,
+  location = null,
+  navigator = null,
+  // eval = null,
+  // Function = null,
   fetch = null,
   frames = null
 let _lottieGlobal = {}
@@ -442,6 +451,14 @@ function initiateExpression(
       'wiggle',
       'window',
       'XMLHttpRequest',
+      'globalThis',
+      // 'self',
+      'top',
+      'parent',
+      'location',
+      'navigator',
+      // 'eval',
+      // 'Function',
       /* JavaScript */ `
       ${val}
       obj.scoped_bm_rt = $bm_rt;`
@@ -535,45 +552,51 @@ function initiateExpression(
       iKey
 
     const lenKey = k.length
-    let timeIndex
-    let keyTime
+    let timeIndex: number,
+      keyTime = 0
 
     if (k.length === 0 || typeof k[0] === 'number') {
-      timeIndex = 0
-      keyTime = 0
-    } else {
-      timeIndex = -1
-      timeKey *= frameRate
-      if (timeKey < (k[0]?.t ?? 0)) {
-        timeIndex = 1
-        keyTime = k[0]?.t ?? 0
-      } else {
-        for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
-          if (timeKey === k[iKey]?.t) {
-            timeIndex = iKey + 1
-            keyTime = k[iKey]?.t ?? 0
-            break
-          } else if (timeKey > (k[iKey]?.t ?? 0) && timeKey < (k[iKey + 1]?.t ?? 0)) {
-            if (timeKey - (k[iKey]?.t ?? 0) > (k[iKey + 1]?.t ?? 0) - timeKey) {
-              timeIndex = iKey + 2
-              keyTime = k[iKey + 1]?.t ?? 0
-            } else {
-              timeIndex = iKey + 1
-              keyTime = k[iKey]?.t ?? 0
-            }
-            break
-          }
-        }
-        if (timeIndex === -1) {
-          timeIndex = iKey + 1
-          keyTime = data.k[iKey]?.t ?? 0
-        }
+
+      return {
+        index: 0,
+        time: 0
       }
+
+    }
+    timeIndex = -1
+    timeKey *= frameRate
+    if (timeKey < (k[0]?.t ?? 0)) {
+
+      return {
+        index: 1,
+        time: (k[0]?.t ?? 0) / frameRate
+      }
+
+    }
+    for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
+      if (timeKey === k[iKey]?.t) {
+        timeIndex = iKey + 1
+        keyTime = k[iKey]?.t ?? 0
+        break
+      } else if (timeKey > (k[iKey]?.t ?? 0) && timeKey < (k[iKey + 1]?.t ?? 0)) {
+        if (timeKey - (k[iKey]?.t ?? 0) > (k[iKey + 1]?.t ?? 0) - timeKey) {
+          timeIndex = iKey + 2
+          keyTime = k[iKey + 1]?.t ?? 0
+        } else {
+          timeIndex = iKey + 1
+          keyTime = k[iKey]?.t ?? 0
+        }
+        break
+      }
+    }
+    if (timeIndex === -1) {
+      timeIndex = iKey + 1
+      keyTime = data.k[iKey]?.t ?? 0
     }
 
     return {
       index: timeIndex,
-      time: keyTime || 0 / frameRate
+      time: keyTime / frameRate
     }
   }
 
@@ -665,7 +688,7 @@ function initiateExpression(
 
   const index = elem.data.ind
   let hasParent = elem.hierarchy.length > 0,
-    parent: null | LayerExpressionInterface = null
+    parentInterface: null | LayerExpressionInterface = null
 
   randSeed = Math.floor(Math.random() * 1000000)
   const { globalData } = elem
@@ -715,8 +738,8 @@ function initiateExpression(
     }
     effect = effect ?? thisLayer?.getInterface(4) as GroupEffectInterface
     hasParent = elem.hierarchy.length > 0
-    if (hasParent && !parent) {
-      parent = elem.hierarchy[0]?.layerInterface ?? null
+    if (hasParent && !parentInterface) {
+      parentInterface = elem.hierarchy[0]?.layerInterface ?? null
     }
     time = (this.comp?.renderedFrame ?? 0) / (this.comp?.globalData?.frameRate ?? 60)
     if (_needsRandom) {
@@ -816,6 +839,14 @@ function initiateExpression(
       wiggle,
       window,
       XMLHttpRequest,
+      globalThis,
+      // self,
+      top,
+      parent,
+      location,
+      navigator,
+      // eval,
+      // Function,
     )
     this.frameExpressionId = globalData.frameId
 
@@ -857,10 +888,10 @@ function linear(
   if (t >= tMax) {
     return value2
   }
-  const perc = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
+  const factor = tMax === tMin ? 0 : (t - tMin) / (tMax - tMin)
 
   if (!isArray(value1) && !isArray(value2)) {
-    return value1 + (value2 - value1) * perc
+    return value1 + (value2 - value1) * factor
   }
 
   if (isArray(value1) && isArray(value2)) {
@@ -868,7 +899,7 @@ function linear(
       arr = createTypedArray(ArrayType.Float32, len)
 
     for (let i = 0; i < len; i += 1) {
-      arr[i] = (value1[i] ?? 0) + ((value2[i] ?? 0) - (value1[i] ?? 0)) * perc
+      arr[i] = (value1[i] ?? 0) + ((value2[i] ?? 0) - (value1[i] ?? 0)) * factor
     }
 
     return arr
@@ -912,9 +943,9 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
   }
 
   min = min ?? 0
-  const rndm = Math.random()
+  const pseudorandom = Math.random()
 
-  return min as number + rndm * (max - (min as number))
+  return min as number + pseudorandom * (max - (min as number))
 }
 
 function resetFrame() {

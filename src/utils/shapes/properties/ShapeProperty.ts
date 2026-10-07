@@ -1,6 +1,5 @@
 
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import type { HShapeElement } from '@/elements/html/HShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   Caching,
@@ -28,7 +27,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   public totalShapeLength?: number
   public x?: boolean
   constructor(
-    elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement, data: Shape, type: number
   ) {
     super()
     this.propType = PropType.Shape
@@ -57,7 +56,7 @@ export class ShapeProperty extends ShapeBaseProperty {
 export class KeyframeShapeProperty extends ShapeBaseProperty {
   public lastFrame = initialDefaultFrame
   constructor(
-    elem: SVGShapeElement | CVShapeElement | HShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement, data: Shape, type: number
   ) {
     super()
     this.data = data

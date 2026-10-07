@@ -18,6 +18,7 @@ interface RegisteredAnimation {
 
 let _isFrozen = false,
   _isStopped = true,
+  _rafID: number | undefined,
   initTime = 0,
   len = 0,
   playingAnimationsNum = 0
@@ -45,7 +46,7 @@ export function getRegisteredAnimations() {
 }
 
 export function goToAndStop(
-  value: number,
+  value: number | string,
   isFrame?: boolean,
   animation?: string
 ) {
@@ -183,6 +184,11 @@ export function stop(animation?: string) {
   for (let i = 0; i < len; i++) {
     registeredAnimations[i]?.animation.stop(animation)
   }
+
+  if (_rafID !== undefined) {
+    cancelAnimationFrame(_rafID)
+  }
+
   _isStopped = true
 }
 
@@ -208,7 +214,7 @@ function activate() {
     return
   }
 
-  requestAnimationFrame(first)
+  _rafID = requestAnimationFrame(first)
   _isStopped = false
 }
 
@@ -220,7 +226,7 @@ function addPlayingCount() {
 function first(nowTime: number) {
   initTime = nowTime
   if (!isServer) {
-    requestAnimationFrame(resume)
+    _rafID = requestAnimationFrame(resume)
   }
 }
 
@@ -253,7 +259,7 @@ function resume(nowTime: number) {
 
   if (playingAnimationsNum && !_isFrozen && !_isStopped) {
     if (!isServer) {
-      requestAnimationFrame(resume)
+      _rafID = requestAnimationFrame(resume)
     }
   } else {
     _isStopped = true

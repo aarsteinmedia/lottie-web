@@ -41,7 +41,7 @@ const { Lottie, setSubframeRendering } = createLottie({
     },
     {
       effect: SVGStrokeEffect,
-      id: 21,
+      id: 22,
     },
     {
       countsAsEffect: true,

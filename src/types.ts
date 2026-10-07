@@ -35,7 +35,6 @@ import type { SVGShapeData } from '@/elements/helpers/shapes/SVGShapeData'
 import type { SVGStrokeStyleData } from '@/elements/helpers/shapes/SVGStrokeStyleData'
 import type { SVGStyleData } from '@/elements/helpers/shapes/SVGStyleData'
 import type { SVGTransformData } from '@/elements/helpers/shapes/SVGTransformData'
-import type { HCompElement } from '@/elements/html/HCompElement'
 import type { ImageElement } from '@/elements/ImageElement'
 import type { MaskElement } from '@/elements/MaskElement'
 import type { ShapeElement } from '@/elements/ShapeElement'
@@ -45,7 +44,6 @@ import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
 import type { BaseRenderer } from '@/renderers/BaseRenderer'
 import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import type { HybridRenderer } from '@/renderers/HybridRenderer'
 import type { SVGRenderer } from '@/renderers/SVGRenderer'
 import type { AudioController } from '@/utils/audio/AudioController'
 import type { BezierData } from '@/utils/Bezier'
@@ -132,7 +130,7 @@ export interface Transformer {
   opacity: number
 }
 
-type RendererIntersect = SVGRenderer & CanvasRenderer & HybridRenderer
+type RendererIntersect = SVGRenderer & CanvasRenderer
 
 export type ElementInterfaceIntersect = CompElementInterface &
   RenderableComponentIntersect &
@@ -283,7 +281,6 @@ export interface AnimatedContent {
 export type CompElementInterface =
   | BaseRenderer
   | CVCompElement
-  | HCompElement
   | SVGCompElement
 
 export interface CVStyleElement {

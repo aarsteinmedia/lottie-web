@@ -1,5 +1,4 @@
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
-import type { HShapeElement } from '@/elements/html/HShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata,
@@ -24,7 +23,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public comp?: CompElementInterface | undefined
   public override data?: Shape = undefined
   public effectsSequence: ((arg: unknown) => ShapePath | undefined)[] = []
-  public elem?: SVGShapeElement | CVShapeElement | HShapeElement
+  public elem?: SVGShapeElement | CVShapeElement
   public frameId?: number
   public k?: boolean
   public keyframesMetadata: KeyframesMetadata[] = []

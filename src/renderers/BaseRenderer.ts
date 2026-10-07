@@ -4,11 +4,6 @@ import type { CVImageElement } from '@/elements/canvas/CVImageElement'
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { CVSolidElement } from '@/elements/canvas/CVSolidElement'
 import type { CVTextElement } from '@/elements/canvas/CVTextElement'
-import type { HCameraElement } from '@/elements/html/HCameraElement'
-import type { HCompElement } from '@/elements/html/HCompElement'
-import type { HImageElement } from '@/elements/html/HImageElement'
-import type { HShapeElement } from '@/elements/html/HShapeElement'
-import type { HTextElement } from '@/elements/html/HTextElement'
 import type { ImageElement } from '@/elements/ImageElement'
 import type { SolidElement } from '@/elements/SolidElement'
 import type { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
@@ -130,8 +125,9 @@ export abstract class BaseRenderer extends FrameElement {
     )
   }
 
-  createCamera(_data: LottieLayer): HCameraElement {
-    throw new Error('You\'re using a 3d camera. Try the html renderer.')
+  // Stub method.
+  createCamera(_data: LottieLayer): HTMLElement {
+    throw new Error('3D camera is not supported by this package.')
   }
 
   abstract createComp(
@@ -139,7 +135,7 @@ export abstract class BaseRenderer extends FrameElement {
     _container?: HTMLElement,
     _comp?: CompElementInterface,
     _?: unknown
-  ): SVGCompElement | CVCompElement | HCompElement
+  ): SVGCompElement | CVCompElement
 
   createFootage(data: LottieLayer) {
     if (!this.globalData) {
@@ -153,7 +149,7 @@ export abstract class BaseRenderer extends FrameElement {
     )
   }
 
-  abstract createImage(_layer: LottieLayer): CVImageElement | ImageElement | HImageElement
+  abstract createImage(_layer: LottieLayer): CVImageElement | ImageElement
 
   createItem(layer: LottieLayer) {
     switch (layer.ty) {
@@ -202,11 +198,11 @@ export abstract class BaseRenderer extends FrameElement {
     )
   }
 
-  abstract createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement | HShapeElement
+  abstract createShape(_layer: LottieLayer): CVShapeElement | SVGShapeElement
 
   abstract createSolid(_layer: LottieLayer): CVSolidElement | SolidElement
 
-  abstract createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement | HTextElement
+  abstract createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement
 
   getElementById(ind: number): null | ElementInterfaceIntersect {
     const { length } = this.elements
