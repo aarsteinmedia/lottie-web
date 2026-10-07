@@ -66,6 +66,22 @@ interface CreateLottie {
   renderers: RendererParams[]
 }
 
+function checkReady() {
+  if (isServer || hasScannedDOM) {
+    return
+  }
+  hasScannedDOM = true
+  if (document.readyState === 'complete') {
+    searchAnimations()
+  } else {
+    addEventListener(
+      'DOMContentLoaded', () => {
+        searchAnimations()
+      }, { once: true }
+    )
+  }
+}
+
 export function createLottie({
   effects,
   expressions,
@@ -127,26 +143,11 @@ export function createLottie({
     }
   })
 
+  checkReady()
+
   return {
     installPlugin: expressions?.installPlugin,
     Lottie,
     setSubframeRendering
   }
 }
-
-(function checkReady() {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isServer || hasScannedDOM) {
-    return
-  }
-  hasScannedDOM = true
-  if (document.readyState === 'complete') {
-    searchAnimations()
-  } else {
-    addEventListener(
-      'DOMContentLoaded', () => {
-        searchAnimations()
-      }, { once: true }
-    )
-  }
-})()

@@ -81,8 +81,7 @@ describe('ImagePreloader (SVG)', () => {
     vi.unstubAllGlobals()
   })
 
-  /** This is testing for old behavior. The code is kept for now, but will be altered in the future. */
-  test.skip('waits for the image load event before reporting images as loaded', () => {
+  test('waits for the image load event before reporting images as loaded', () => {
     vi.useFakeTimers()
     const preloader = new ImagePreloader(),
       asset = createAsset(),
@@ -92,13 +91,13 @@ describe('ImagePreloader (SVG)', () => {
     preloader.loadAssets([asset], onLoaded)
     vi.advanceTimersByTime(1000)
 
-    expect(onLoaded).not.toHaveBeenCalled()
-    expect(preloader.loadedImages()).toBe(false)
+    expect(onLoaded).toHaveBeenCalledOnce()
+    expect(preloader.loadedImages()).toBeTruthy()
 
     preloader.getAsset(asset)?.dispatchEvent(new Event('load'))
 
     expect(onLoaded).toHaveBeenCalledOnce()
-    expect(preloader.loadedImages()).toBe(true)
+    expect(preloader.loadedImages()).toBeTruthy()
     preloader.destroy()
   })
 

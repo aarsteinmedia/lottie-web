@@ -4,7 +4,7 @@ A TypeScript fork of Airbnb's [lottie-web](https://github.com/airbnb/lottie-web)
 
 ## Why this fork exists
 
-- **Safer expressions** — After Effects expressions are evaluated with `new Function` instead of `eval`, which slightly improves security and performance. However for untrusted input, `/light` is recommended.
+- **Safer expressions** — After Effects expressions are evaluated with `new Function` instead of `eval`, which slightly improves security and performance. For untrusted input, however, `/light` is recommended.
 - **Economic imports** – This package adheres to a modular design philosophy, and offers granular imports so that you don't get any unneeded bloat in your application – provided that you keep on reading.
 - **Better Canvas rendering** – While Canvas rendering isn't as versatile as SVG rendering, it's more performant and more conducive to how visual elements are handled in most browsers. This fork has better better DPR handling and broader feature support for Canvas renderer.
 - **SSR-friendly** — Browser and Web API usage is guarded for Node and server rendering.
