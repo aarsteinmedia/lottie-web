@@ -1,7 +1,9 @@
 import {
   existsSync, readdirSync, readFileSync
 } from 'node:fs'
-import { join, resolve } from 'node:path'
+import {
+  dirname, join, relative, resolve
+} from 'node:path'
 import {
   describe, expect, test
 } from 'vitest'
@@ -11,6 +13,8 @@ import type PackageJSON from '../package.json'
 interface File {
   content: string
   name: string
+  /** Path relative to dist, e.g. `chunks/createLottie-abc123.js`. */
+  path: string
 }
 
 const { url } = import.meta,
@@ -33,7 +37,8 @@ function readDistJavaScript(): File[] {
         } else if (entry.name.endsWith('.js')) {
           files.push({
             content: readFileSync(path, 'utf8'),
-            name: entry.name
+            name: entry.name,
+            path: relative(distDir, path)
           })
         }
       }
@@ -42,6 +47,31 @@ function readDistJavaScript(): File[] {
   walk(distDir)
 
   return files
+}
+
+/**
+ * Every dist file an entry loads, following static imports into shared chunks.
+ * Export names are mangled in chunks, so checks must look at the chunks' code.
+ */
+function collectImportGraph(files: File[], entry: string): File[] {
+  const byPath = new Map(files.map((file) => [file.path, file])),
+    seen = new Map<string, File>(),
+    visit = (path: string) => {
+      const file = byPath.get(path)
+
+      if (!file || seen.has(path)) {
+        return
+      }
+      seen.set(path, file)
+
+      for (const [, specifier] of file.content.matchAll(/(?:from|import)\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
+        visit(join(dirname(path), specifier))
+      }
+    }
+
+  visit(entry)
+
+  return [...seen.values()]
 }
 
 const distFiles = readDistJavaScript(),
@@ -57,10 +87,17 @@ describe('production build', () => {
     expect(combined).toContain(pkg.version)
     expect(combined).not.toContain('[[BM_VERSION]]')
   })
-  test('Light does not import CanvasRenderer', () => {
-    const light = distFiles.find(({ name }) => name === 'lottie-light.js')
+  test.skipIf(!hasProductionBuild)('light entry does not load the canvas renderer', () => {
+    const graph = collectImportGraph(distFiles, 'lottie-light.js')
 
-    expect(light).not.toBeFalsy()
-    expect(light).not.toContain('CanvasRenderer')
+    // Guard against a vacuous pass if the entry is renamed or imports change shape.
+    expect(graph.map(({ path }) => path)).toContain('lottie-light.js')
+    expect(graph.length).toBeGreaterThan(1)
+
+    const withCanvas = graph
+      .filter(({ content }) => content.includes('class CanvasRenderer '))
+      .map(({ path }) => path)
+
+    expect(withCanvas).toEqual([])
   })
 })
