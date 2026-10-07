@@ -63,7 +63,6 @@ export enum PreserveAspectRatio {
 
 export enum RendererType {
   Canvas = 'canvas',
-  HTML = 'html',
   SVG = 'svg',
 }
 

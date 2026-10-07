@@ -402,7 +402,6 @@ export type HTMLRendererConfig = BaseRendererConfig & {
 export interface AnimationConfiguration<
   T extends RendererType =
     | RendererType.Canvas
-    | RendererType.HTML
     | RendererType.SVG,
 > {
   animationData?: undefined | AnimationData
@@ -422,7 +421,6 @@ export interface AnimationConfiguration<
   rendererSettings?: undefined | {
     svg: SVGRendererConfig
     canvas: CanvasRendererConfig
-    html: HTMLRendererConfig
   }[T]
   wrapper?: undefined | HTMLElement
 }

@@ -149,5 +149,12 @@
     "type": "paypal",
     "url": "https://www.paypal.me/aarsteinmedia"
   },
-  "packageManager": "pnpm@12.9.1"
+  "packageManager": "pnpm@12.9.1",
+  "sideEffects": [
+    "./dist/lottie.js",
+    "./dist/lottie-light.js",
+    "./dist/lottie-svg.js",
+    "./dist/lottie-canvas.js",
+    "./dist/chunks/*.js"
+  ]
 }

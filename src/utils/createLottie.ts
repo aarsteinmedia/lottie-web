@@ -44,6 +44,8 @@ const version = '[[BM_VERSION]]',
     setSubframeEnabled(flag)
   }
 
+let hasScannedDOM = false
+
 interface RendererParams {
   renderer: Renderer
   rendererType: RendererType
@@ -63,21 +65,6 @@ interface CreateLottie {
   expressions?: ExpressionParams
   renderers: RendererParams[]
 }
-
-(function checkReady() {
-  if (isServer) {
-    return
-  }
-  if (document.readyState === 'complete') {
-    searchAnimations()
-  } else {
-    addEventListener(
-      'DOMContentLoaded', () => {
-        searchAnimations()
-      }, { once: true }
-    )
-  }
-})()
 
 export function createLottie({
   effects,
@@ -146,3 +133,20 @@ export function createLottie({
     setSubframeRendering
   }
 }
+
+(function checkReady() {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (isServer || hasScannedDOM) {
+    return
+  }
+  hasScannedDOM = true
+  if (document.readyState === 'complete') {
+    searchAnimations()
+  } else {
+    addEventListener(
+      'DOMContentLoaded', () => {
+        searchAnimations()
+      }, { once: true }
+    )
+  }
+})()

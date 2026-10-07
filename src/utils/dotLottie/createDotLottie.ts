@@ -7,7 +7,14 @@ import type {
 } from '@/types'
 
 import {
-  addExt, createElementID, devError, download, getExt, getExtFromB64, isAudio, isImage,
+  addExt,
+  createElementID,
+  devError,
+  download,
+  getExt,
+  getExtFromB64,
+  isAudio,
+  isImage,
   parseBase64,
   trailingslashit
 } from '@/utils'

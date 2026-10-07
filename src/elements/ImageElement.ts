@@ -39,7 +39,7 @@ export class ImageElement extends SVGBaseElement {
     }
   }
 
-  override createContent() {
+  public override createContent() {
     if (!this.assetData) {
       return
     }
@@ -49,15 +49,11 @@ export class ImageElement extends SVGBaseElement {
       this.globalData?.renderConfig?.imagePreserveAspectRatio ||
       ''
 
-    const preloaded = this.globalData?.imageLoader?.getAsset(this.assetData)
+    const preloaded = this.globalData?.imageLoader?.adoptSvgImage(this.assetData)
 
     // Reuse the SVGImageElement created during preload so decode work is not
     // discarded and we avoid a second data:/network fetch for the same asset.
-    if (
-      preloaded &&
-      typeof SVGImageElement !== 'undefined' &&
-      preloaded instanceof SVGImageElement
-    ) {
+    if (preloaded) {
       this.innerElem = preloaded
       this.innerElem.setAttribute('width', `${this.assetData.w}px`)
       this.innerElem.setAttribute('height', `${this.assetData.h}px`)
@@ -90,7 +86,7 @@ export class ImageElement extends SVGBaseElement {
    * Prefer visibility over display for image layers. Firefox drops decoded
    * bitmaps for `display:none` images, which causes flicker in PNG sequences.
    */
-  override hide() {
+  public override hide() {
     if (this.hidden || this.isInRange && !this.isTransparent) {
       return
     }
@@ -107,7 +103,7 @@ export class ImageElement extends SVGBaseElement {
     // Pass through
   }
 
-  override show() {
+  public override show() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
@@ -127,7 +123,7 @@ export class ImageElement extends SVGBaseElement {
     this._isFirstFrame = true
   }
 
-  override sourceRectAtTime() {
+  public override sourceRectAtTime() {
     return this.sourceRect
   }
 }

@@ -21,14 +21,20 @@ export class ImagePreloader {
   path = ''
   totalFootages = 0
   totalImages = 0
+  /** Preloaded SVG images already handed to a layer */
+  private _adoptedImages = new WeakSet<SVGImageElement>()
   private _createImageData?: (assetData: LottieAsset) => ImageData | undefined
   private _elementHelper?: undefined | SVGElement
   private _footageLoaded
+  private _hasNotified = false
   private _imageLoaded
+  /** True while loadAssets is still counting assets */
+  private _isRegistering = false
   /** One fallback timer per image still waiting for load/error. */
   private _pendingTimeouts = new Set<ReturnType<typeof setTimeout>>()
   /** Off-DOM SVG used to decode SVG images without polluting animation `defs` (filters). */
   private _preloadHost: SVGSVGElement | null = null
+
   private proxyImage: HTMLCanvasElement | null
 
   constructor() {
@@ -38,7 +44,32 @@ export class ImagePreloader {
     this.proxyImage = this._createProxyImage()
   }
 
-  createFootageData(data: LottieAsset) {
+  /**
+   * Hand a preloaded SVG image to a layer. A node can only have one parent,
+   * so the first layer gets the preloaded node and later layers using the
+   * same asset get a clone.
+   */
+  public adoptSvgImage(assetData: null | LottieAsset) {
+    const img = this.getAsset(assetData)
+
+    if (
+      !img ||
+      typeof SVGImageElement === 'undefined' ||
+      !(img instanceof SVGImageElement)
+    ) {
+      return null
+    }
+
+    if (this._adoptedImages.has(img)) {
+      return img.cloneNode(true) as SVGImageElement
+    }
+
+    this._adoptedImages.add(img)
+
+    return img
+  }
+
+  public createFootageData(data: LottieAsset) {
     const obj: ImageData = {
       assetData: data,
       img: null,
@@ -147,6 +178,8 @@ export class ImagePreloader {
   public loadAssets(assets: LottieAsset[],
     cb: ImagePreloader['imagesLoadedCb']) {
     this.imagesLoadedCb = cb
+    this._hasNotified = false
+    this._isRegistering = true
     const { length } = assets
 
     for (let i = 0; i < length; i++) {
@@ -172,6 +205,7 @@ export class ImagePreloader {
 
     // With no images or footages nothing will ever increment the counters,
     // so report completion right away (fires the LoadedImages callback).
+    this._isRegistering = false
     this.notifyIfComplete()
   }
 
@@ -447,6 +481,8 @@ export class ImagePreloader {
 
   private notifyIfComplete() {
     if (
+      this._isRegistering ||
+      this._hasNotified ||
       this.loadedAssets !== this.totalImages ||
       this.loadedFootagesCount !== this.totalFootages ||
       !this.imagesLoadedCb
@@ -456,6 +492,7 @@ export class ImagePreloader {
 
     const cb = this.imagesLoadedCb
 
+    this._hasNotified = true
     // Let ImageElement adopt preloaded nodes first, then detach leftovers.
     cb(null)
     this.cleanupElementHelper()

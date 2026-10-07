@@ -1,8 +1,9 @@
+import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import type { SVGRenderer } from '@/renderers/SVGRenderer'
 import type {
   AnimationConfiguration,
   AnimationData,
   AnimationDirection,
-  CanvasRendererConfig,
   DocumentData,
   LottieAsset,
   LottieLayer,
@@ -21,9 +22,7 @@ import {
   RenderFrameErrorEvent,
   SegmentStartEvent,
 } from '@/events'
-import { getRegisteredRenderer } from '@/renderers'
-import { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import { SVGRenderer } from '@/renderers/SVGRenderer'
+import { getRegisteredRenderer, getRenderer } from '@/renderers'
 import {
   createElementID, devError, isArray
 } from '@/utils'
@@ -635,7 +634,7 @@ export class AnimationItem extends BaseEvent {
       if (Object.values(RendererType).includes(animType)) {
         params.animType = animType
       } else {
-        params.animType = RendererType.Canvas
+        params.animType = getRegisteredRenderer()
       }
 
       const loop =
@@ -644,13 +643,23 @@ export class AnimationItem extends BaseEvent {
         wrapperAttributes.getNamedItem('bm-loop')?.value ??
         ''
 
-      if (loop === 'false') {
-        params.loop = false
-      } else if (loop === 'true') {
-        params.loop = true
-      } else if (loop !== '') {
-        params.loop = parseInt(loop, 10)
+      switch (loop) {
+        case 'false': {
+          params.loop = false
+          break
+        }
+        case 'true': {
+          params.loop = true
+          break
+        }
+        case '': {
+          break
+        }
+        default: {
+          params.loop = parseInt(loop, 10)
+        }
       }
+
       const autoplay =
         wrapperAttributes.getNamedItem('data-anim-autoplay')?.value ??
         wrapperAttributes.getNamedItem('data-bm-autoplay')?.value ??
@@ -675,9 +684,10 @@ export class AnimationItem extends BaseEvent {
       }
       if (params.path) {
         this.setParams(params)
-      } else {
-        this.trigger(PlayerEvent.Destroy)
+
+        return
       }
+      this.trigger(PlayerEvent.Destroy)
     } catch (error) {
       devError(this.constructor.name, error)
       throw new Error(`${this.constructor.name}: Could not set data`, { cause: error })
@@ -708,21 +718,10 @@ export class AnimationItem extends BaseEvent {
       } else if (params.renderer) {
         animType = params.renderer
       }
-      // const RendererClass = getRenderer(animType)
 
-      switch (animType) {
-        case RendererType.SVG: {
-          this.renderer = new SVGRenderer(this, params.rendererSettings)
-          break
-        }
-        case RendererType.Canvas: {
-          this.renderer = new CanvasRenderer(this, params.rendererSettings as CanvasRendererConfig)
-          break
-        }
-        default: {
-          throw new Error(`Unknown renderer type: ${animType as string}`)
-        }
-      }
+      const Renderer = getRenderer(animType) as typeof SVGRenderer
+
+      this.renderer = new Renderer(this, params.rendererSettings)
 
       this.imagePreloader.setCacheType(animType,
         this.renderer.globalData?.defs)

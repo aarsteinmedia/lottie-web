@@ -242,7 +242,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         segments: BezierData[] = [],
         partialLength = 0,
         totalLength = 0,
-        perc,
+        factor,
         tanAngle,
         mask: null | ShapeProperty | StarShapeProperty | RectShapeProperty | EllShapeProperty = null
 
@@ -343,7 +343,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
       let mult: number | number[] | undefined,
         ind = -1,
-        offf: number,
+        off: number,
         xPathPos = 0,
         yPathPos = 0
       const initPathPos = currentLength,
@@ -535,17 +535,17 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 segmentLength + partialLength >= currentLength + animatorOffset ||
                 !points
               ) {
-                perc =
+                factor =
                   (currentLength + animatorOffset - segmentLength) /
                   (currentPoint?.partialLength || 0)
                 xPathPos =
                   Number(prevPoint?.point[0]) +
                   (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
-                  perc
+                  factor
                 yPathPos =
                   Number(prevPoint?.point[1]) +
                   (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
-                  perc
+                  factor
                 matrixHelper.translate(-alignment[0] * (letters[i]?.an ?? 0) * 0.005,
                   -(alignment[1] * yOff) * 0.01)
                 shouldMeasure = false
@@ -573,14 +573,14 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 }
               }
             }
-            offf = (letters[i]?.an ?? 0) / 2 - (letters[i]?.add ?? 0)
+            off = (letters[i]?.an ?? 0) / 2 - (letters[i]?.add ?? 0)
             matrixHelper.translate(
-              -offf, 0, 0
+              -off, 0, 0
             )
           } else {
-            offf = (letters[i]?.an ?? 0) / 2 - (letters[i]?.add ?? 0)
+            off = (letters[i]?.an ?? 0) / 2 - (letters[i]?.add ?? 0)
             matrixHelper.translate(
-              -offf, 0, 0
+              -off, 0, 0
             )
 
             // Grouping alignment
@@ -914,7 +914,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             }
             matrixHelper.translate(0, -Number(documentData.ls))
             matrixHelper.translate(
-              offf, 0, 0
+              off, 0, 0
             )
             matrixHelper.translate(
               alignment[0] * letters[i]?.an * 0.005,
@@ -925,9 +925,11 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               (letters[i]?.l ?? 0) +
               documentData.tr * 0.001 * Number(documentData.finalSize)
           }
-          if (renderType === RendererType.HTML) {
-            letterM = matrixHelper.toCSS()
-          } else if (renderType === RendererType.SVG) {
+          // if (renderType === RendererType.HTML) {
+          //   letterM = matrixHelper.toCSS()
+          // }
+
+          if (renderType === RendererType.SVG) {
             letterM = matrixHelper.to2dCSS()
           } else {
             letterP = [

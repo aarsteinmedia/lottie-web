@@ -47,13 +47,13 @@ const unzip = async (resp: Response): Promise<Unzipped> => {
 
   prepareString = (str: string) =>
     str
-      // .replaceAll(new RegExp(/"""/, 'g'), '""')
-      .replaceAll(/(["'])(.*?)\1/g, (
-        _match, quote: string, content: string
-      ) => {
-        // Avoid aggressive sanitization here — it mangled text layers and expressions.
-        return `${quote}${content}${quote}`
-      })
+      .replaceAll(new RegExp(/"""/, 'g'), '""')
+      // .replaceAll(/(["'])(.*?)\1/g, (
+      //   _match, quote: string, content: string
+      // ) => {
+      //   // Avoid aggressive sanitization here — it mangled text layers and expressions.
+      //   return `${quote}${content}${quote}`
+      // })
 
 export async function getLottieJSON(resp: Response) {
   const unzipped = await unzip(resp),

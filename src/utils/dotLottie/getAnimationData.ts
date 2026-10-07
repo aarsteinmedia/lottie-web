@@ -57,12 +57,7 @@ export async function getAnimationData(input: unknown): Promise<{
       }
     }
 
-    const result = await fetch(input, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    })
+    const result = await fetch(input, { headers: { 'Accept': 'application/json' } })
 
     if (!result.ok) {
       const error = new Error(result.statusText)

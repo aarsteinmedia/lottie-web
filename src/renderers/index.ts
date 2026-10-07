@@ -1,6 +1,5 @@
-import type { CanvasRenderer } from '@/renderers/CanvasRenderer'
-import type { SVGRenderer } from '@/renderers/SVGRenderer'
-
+import { CanvasRenderer } from '@/renderers/CanvasRenderer'
+import { SVGRenderer } from '@/renderers/SVGRenderer'
 import { RendererType } from '@/utils/enums'
 
 export type Renderer =
@@ -30,4 +29,17 @@ export const registerRenderer = (key: RendererType, value: Renderer) => {
     }
 
     return RendererType.SVG
+  },
+  getRenderer = (type: RendererType) => {
+    switch (type) {
+      case RendererType.SVG: {
+        return SVGRenderer
+      }
+      case RendererType.Canvas: {
+        return CanvasRenderer
+      }
+      default: {
+        throw new Error(`Unknown renderer type: ${type as string}`)
+      }
+    }
   }
