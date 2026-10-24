@@ -1,6 +1,6 @@
 {
   "name": "@aarsteinmedia/lottie-web",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "Play animations generated in After Effects in the browser",
   "type": "module",
   "exports": {
@@ -52,11 +52,10 @@
   ],
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "prebuild": "rimraf ./dist",
+    "prebuild": "rimraf ./dist && pnpm build:types",
     "build": "rollup -c --configPlugin @rollup/plugin-typescript",
     "prebuild:types": "rimraf ./types ",
     "build:types": "tsc -p tsconfig.build.json && tsc-alias",
-    "prod": "pnpm build:types && pnpm build",
     "assets": "node preview/writeFiles.ts",
     "predev": "pnpm assets",
     "dev": "rollup -cw --configPlugin @rollup/plugin-typescript --environment NODE_ENV:development",
