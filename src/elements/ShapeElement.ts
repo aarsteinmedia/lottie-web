@@ -31,18 +31,15 @@ export abstract class ShapeElement extends RenderableDOMElement {
   }
 
   addShapeToModifiers(data: SVGShapeData | CVShapeData) {
-    const { length } = this.shapeModifiers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.shapeModifiers.length; i++) {
       this.shapeModifiers[i]?.addShape(data)
     }
   }
 
   isShapeInAnimatedModifiers(data: Shape) {
     let i = 0
-    const { length } = this.shapeModifiers
 
-    while (i < length) {
+    while (i < this.shapeModifiers.length) {
       if (this.shapeModifiers[i]?.isAnimatedWithShape(data)) {
         return true
       }
@@ -61,16 +58,14 @@ export abstract class ShapeElement extends RenderableDOMElement {
     if (this.shapeModifiers.length === 0) {
       return
     }
-    const { length } = this.shapes
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.shapes.length; i++) {
       this.shapes[i]?.sh?.reset()
     }
 
-    const { length: len } = this.shapeModifiers
     let shouldBreakProcess
 
-    for (let i = len - 1; i >= 0; i--) {
+    for (let i = this.shapeModifiers.length - 1; i >= 0; i--) {
       shouldBreakProcess = this.shapeModifiers[i]?.processShapes(Boolean(this._isFirstFrame))
       // workaround to fix cases where a repeater resets the shape so the following processes get called twice
       // TODO: find a better solution for this

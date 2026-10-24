@@ -535,11 +535,11 @@ export class TextProperty extends BaseProperty {
     }
     this.lock = true
     this._mdf = false
-    const { length } = this.effectsSequence
+
     let finalValue =
       (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex]?.s
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.effectsSequence.length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
         finalValue = this.effectsSequence[i]?.(this.currentData,

@@ -32,9 +32,8 @@ export class SVGMatte3Effect {
 
   findSymbol(mask: ElementInterfaceIntersect) {
     let i = 0
-    const { length } = _svgMatteSymbols
 
-    while (i < length) {
+    while (i < _svgMatteSymbols.length) {
       if (_svgMatteSymbols[i] === mask) {
         return _svgMatteSymbols[i]
       }
@@ -48,9 +47,8 @@ export class SVGMatte3Effect {
     const ind = this.filterManager.effectElements[0]?.p.v
     const elements = this.elem.comp?.elements ?? []
     let i = 0
-    const { length } = elements
 
-    while (i < length) {
+    while (i < elements.length) {
       const element = elements[i]
 
       if (element && element.data.ind === ind) {
@@ -75,9 +73,8 @@ export class SVGMatte3Effect {
     }
     const { children } = parentNode
     let i = 0
-    const { length } = children
 
-    while (i < length) {
+    while (i < children.length) {
       if (children[i] === mask.layerElement) {
         break
       }
@@ -85,7 +82,7 @@ export class SVGMatte3Effect {
     }
     let nextChild
 
-    if (i <= length - 2) {
+    if (i <= children.length - 2) {
       nextChild = children[i + 1]
     }
     const useElem = createNS<SVGUseElement>('use')

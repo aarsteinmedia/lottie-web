@@ -108,9 +108,7 @@ export class GradientProperty extends DynamicPropertyContainer {
       }
     }
     if (this.o.length > 0) {
-      const { length } = this.prop.v
-
-      for (let i = this.data.p * 4; i < length; i++) {
+      for (let i = this.data.p * 4; i < this.prop.v.length; i++) {
         // mult = i % 2 === 0 ? 100 : 1
         val = i % 2 === 0 ? Math.round((this.prop.v[i] ?? 0) * 100) : this.prop.v[i]
         if (this.o[i - this.data.p * 4] !== val) {

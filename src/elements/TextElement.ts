@@ -88,9 +88,8 @@ export abstract class TextElement extends RenderableDOMElement {
   createPathShape(matrixHelper: Matrix, shapes: Shape[]) {
     let pathNodes: ShapePath,
       shapeStr = ''
-    const { length } = shapes
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < shapes.length; i++) {
       if (shapes[i]?.ty !== ShapeType.Path || !shapes[i]?.ks?.k) {
         continue
       }

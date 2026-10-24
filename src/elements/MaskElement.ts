@@ -145,10 +145,9 @@ export class MaskElement {
         x,
       }
       if (properties[i]?.mode === 'i') {
-        const { length: jLen } = currentMasks,
-          g = createNS<SVGGElement>('g')
+        const g = createNS<SVGGElement>('g')
 
-        for (let j = 0; j < jLen; j++) {
+        for (let j = 0; j < currentMasks.length; j++) {
           g.appendChild(currentMasks[j])
         }
         const mask = createNS<SVGMaskElement>('mask')
@@ -197,9 +196,7 @@ export class MaskElement {
 
     this.maskElement = createNS(maskType)
 
-    const { length: cLen } = currentMasks
-
-    for (let i = 0; i < cLen; i++) {
+    for (let i = 0; i < currentMasks.length; i++) {
       this.maskElement.appendChild(currentMasks[i])
     }
 

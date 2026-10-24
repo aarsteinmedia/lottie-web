@@ -296,9 +296,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     if (this.renderConfig?.clearCanvas && this.animationItem.wrapper) {
       this.animationItem.wrapper.innerText = ''
     }
-    const { length } = this.layers
 
-    for (let i = length - 1; i >= 0; i -= 1) {
+    for (let i = this.layers.length - 1; i >= 0; i -= 1) {
       this.elements[i]?.destroy()
     }
     if (this._resizeObserver) {

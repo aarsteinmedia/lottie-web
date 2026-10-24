@@ -22,9 +22,8 @@ export class SVGShapeData extends ShapeData {
     this._isAnimated = Boolean(shape.k)
     // TODO: commenting this for now since all shapes are animated
     let i = 0
-    const { length } = transformers
 
-    while (i < length) {
+    while (i < transformers.length) {
       if ((transformers[i]?.mProps.dynamicProperties.length ?? 0) > 0) {
         this._isAnimated = true
         break

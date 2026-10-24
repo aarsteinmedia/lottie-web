@@ -91,11 +91,10 @@ export class CVMaskElement {
     this.masksProperties = this.data.masksProperties ?? []
     this.viewData = createSizedArray(this.masksProperties.length)
     this.opacityData = createSizedArray(this.masksProperties.length)
-    const { length } = this.masksProperties
     let hasMasks = false
     const elem = this.element as unknown as ElementInterfaceIntersect
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.masksProperties.length; i++) {
       if (this.masksProperties[i]?.mode !== 'n') {
         hasMasks = true
       }
@@ -234,9 +233,8 @@ export class CVMaskElement {
     }
 
     ctx.beginPath()
-    const { length } = this.masksProperties
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.masksProperties.length; i++) {
       if (this.masksProperties[i]?.mode === 'n') {
         continue
       }

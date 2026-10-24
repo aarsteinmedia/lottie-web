@@ -90,9 +90,8 @@ export class SVGShapeElement extends ShapeElement {
 
   addToAnimatedContents(data: Shape, element: SVGElementInterface) {
     let i = 0
-    const { length } = this.animatedContents
 
-    while (i < length) {
+    while (i < this.animatedContents.length) {
       if (this.animatedContents[i]?.element === element) {
         return
       }
@@ -300,17 +299,15 @@ export class SVGShapeElement extends ShapeElement {
   * This method searches for multiple shapes that affect a single element and one of them is animated.
    */
   filterUniqueShapes() {
-    const { length } = this.shapes,
-      jLen = this.stylesList.length,
-      tempShapes = []
+    const tempShapes = []
     let style,
       areAnimated
 
-    for (let j = 0; j < jLen; j++) {
+    for (let j = 0; j < this.stylesList.length; j++) {
       style = this.stylesList[j]
       areAnimated = false
       tempShapes.length = 0
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         if (this.shapes[i].styles.includes(style)) {
           tempShapes.push(this.shapes[i])
           areAnimated = this.shapes[i]?._isAnimated || areAnimated
@@ -334,9 +331,7 @@ export class SVGShapeElement extends ShapeElement {
     //   throw new Error(`${this.constructor.name}: Could not access shapesData`)
     // }
     this._isFirstFrame = true
-    const { length } = this.itemsData
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.itemsData.length; i++) {
       this.prevViewData[i] = this.itemsData[i] as any
     }
     this.searchShapes(
@@ -349,9 +344,8 @@ export class SVGShapeElement extends ShapeElement {
       true
     )
     this.filterUniqueShapes()
-    const { length: dLength } = this.dynamicProperties
 
-    for (let i = 0; i < dLength; i++) {
+    for (let i = 0; i < this.dynamicProperties.length; i++) {
       this.dynamicProperties[i]?.getValue()
     }
     this.renderModifiers()
@@ -379,9 +373,7 @@ export class SVGShapeElement extends ShapeElement {
   }
 
   renderShape() {
-    const { length } = this.animatedContents
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.animatedContents.length; i++) {
       if (
         !this._isFirstFrame &&
         !this.animatedContents[i]?.element._isAnimated ||
@@ -409,14 +401,13 @@ export class SVGShapeElement extends ShapeElement {
     shouldRenderFromProps: boolean
   ) {
     let shouldRender = shouldRenderFromProps
-    // Make a clone of transfomers
+    // Make a clone of transforms
     const ownTransformers = [...transformers],
       ownStyles = [],
       ownModifiers = []
     let currentTransform, Modifier: TrimModifier | RepeaterModifier
-    const { length } = arr
 
-    for (let i = length - 1; i >= 0; i--) {
+    for (let i = arr.length - 1; i >= 0; i--) {
       const processedPos = this.searchProcessedElement(arr[i])
 
       if (processedPos) {
@@ -562,9 +553,8 @@ export class SVGShapeElement extends ShapeElement {
       this.addProcessedElement(arr[i] as unknown as ElementInterfaceIntersect,
         i + 1)
     }
-    const { length: sLen } = ownStyles
 
-    for (let i = 0; i < sLen; i++) {
+    for (let i = 0; i < ownStyles.length; i++) {
       const ownStyle = ownStyles[i]
 
       if (ownStyle) {
@@ -573,17 +563,13 @@ export class SVGShapeElement extends ShapeElement {
 
     }
 
-    const { length: mLen } = ownModifiers
-
-    for (let i = 0; i < mLen; i++) {
+    for (let i = 0; i < ownModifiers.length; i++) {
       ; (ownModifiers[i] as TrimModifier).closed = true
     }
   }
 
   setElementStyles(elementData: SVGShapeData) {
-    const { length } = this.stylesList
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.stylesList.length; i++) {
       if (!this.stylesList[i]?.closed) {
         elementData.styles.push(this.stylesList[i])
       }
@@ -591,9 +577,7 @@ export class SVGShapeElement extends ShapeElement {
   }
 
   setShapesAsAnimated(shapes: ShapeDataInterface[]) {
-    const { length } = shapes
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < shapes.length; i++) {
       shapes[i]?.setAsAnimated()
     }
   }

@@ -6,9 +6,8 @@ export abstract class SVGComposableEffect {
 
     feMerge.setAttribute('result', resultId)
     let feMergeNode
-    const { length } = ins
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < ins.length; i++) {
       feMergeNode = createNS<SVGFEMergeNodeElement>('feMergeNode')
       feMergeNode.setAttribute('in', ins[i])
       feMerge.appendChild(feMergeNode)

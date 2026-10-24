@@ -80,9 +80,7 @@ export class CVShapeElement extends ShapeElement {
   }
 
   addTransformToStyleList(transform: Transformer) {
-    const { length } = this.stylesList
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.stylesList.length; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.push(transform)
       }
@@ -90,9 +88,7 @@ export class CVShapeElement extends ShapeElement {
   }
 
   closeStyles(styles: CVStyleElement[]) {
-    const { length } = styles
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < styles.length; i++) {
       styles[i].closed = true
     }
   }
@@ -298,12 +294,11 @@ export class CVShapeElement extends ShapeElement {
         throw new Error(`${this.constructor.name} renderer is not implemented`)
       }
 
-      const { length } = this.stylesList,
-        { renderer } = this.globalData as { renderer: CanvasRenderer },
+      const { renderer } = this.globalData as { renderer: CanvasRenderer },
         ctx = this.globalData.canvasContext
       let currentStyle
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.stylesList.length; i++) {
         currentStyle = this.stylesList[i]
         const {
             co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
@@ -350,9 +345,8 @@ export class CVShapeElement extends ShapeElement {
         }
 
         renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
-        const { length: jLen } = elems
 
-        for (let j = 0; j < jLen; j++) {
+        for (let j = 0; j < elems.length; j++) {
           if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
             ctx?.beginPath()
             if (ctx && da) {
@@ -402,9 +396,8 @@ export class CVShapeElement extends ShapeElement {
 
   reloadShapes() {
     this._isFirstFrame = true
-    const { length } = this.itemsData
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.itemsData.length; i++) {
       this.prevViewData[i] = this.itemsData[i]
     }
     this.searchShapes(
@@ -414,9 +407,8 @@ export class CVShapeElement extends ShapeElement {
       true,
       []
     )
-    const { length: len } = this.dynamicProperties
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < this.dynamicProperties.length; i++) {
       this.dynamicProperties[i].getValue()
     }
     this.renderModifiers()
@@ -424,9 +416,7 @@ export class CVShapeElement extends ShapeElement {
   }
 
   removeTransformFromStyleList() {
-    const { length } = this.stylesList
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.stylesList.length; i++) {
       if (!this.stylesList[i].closed) {
         this.stylesList[i].transforms.pop()
       }
@@ -532,9 +522,8 @@ export class CVShapeElement extends ShapeElement {
     if (pathData.hd === true || !pathData._shouldRender || !itemData.sh) {
       return
     }
-    const { length } = itemData.styledShapes
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < itemData.styledShapes.length; i++) {
       this.renderStyledShape(itemData.styledShapes[i], itemData.sh)
     }
   }
@@ -752,9 +741,7 @@ export class CVShapeElement extends ShapeElement {
         }
         case ShapeType.Group: {
           if (processedPos) {
-            const { length: jLen } = itemsData[i].it
-
-            for (let j = 0; j < jLen; j++) {
+            for (let j = 0; j < itemsData[i].it.length; j++) {
               itemsData[i].prevViewData[j] = itemsData[i].it[j]
             }
           } else {
@@ -831,9 +818,8 @@ export class CVShapeElement extends ShapeElement {
 
     this.removeTransformFromStyleList()
     this.closeStyles(ownStyles)
-    const { length } = ownModifiers
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < ownModifiers.length; i++) {
       ownModifiers[i].closed = true
     }
   }

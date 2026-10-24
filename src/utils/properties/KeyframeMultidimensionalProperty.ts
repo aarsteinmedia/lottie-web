@@ -21,13 +21,12 @@ export class KeyframeMultidimensionalProperty<
   ) {
     super()
     this.propType = PropType.MultiDimensional
-    const { length } = data.k
     let s: number[],
       e: number[],
       to: number[],
       ti: number[]
 
-    for (let i = 0; i < length - 1; i++) {
+    for (let i = 0; i < data.k.length - 1; i++) {
       if (!data.k[i]?.to || !data.k[i]?.s || !data.k[i + 1]?.s) {
         continue
       }

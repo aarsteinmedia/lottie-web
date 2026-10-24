@@ -45,10 +45,9 @@ export class CVShapeData extends ShapeData {
       data,
       ty
     )
-    const { length } = styles
     let styledShape
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < styles.length; i++) {
       if (!styles[i]?.closed) {
         styledShape = {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

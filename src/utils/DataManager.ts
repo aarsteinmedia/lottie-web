@@ -29,7 +29,7 @@ interface WorkerSelf {
 let _counterId = 1,
   workerFn: (e: WorkerEvent) => void
 
-const funcitonNotImplemented = 'Function not implemented.',
+const functionNotImplemented = 'Function not implemented.',
 
   workerProxy: Worker = {
     addEventListener: <K extends keyof WorkerEventMap>(
@@ -37,10 +37,10 @@ const funcitonNotImplemented = 'Function not implemented.',
       _listener: (ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | AddEventListenerOptions
     ): void => {
-      throw new Error(funcitonNotImplemented)
+      throw new Error(functionNotImplemented)
     },
     dispatchEvent: (_: Event): boolean => {
-      throw new Error(funcitonNotImplemented)
+      throw new Error(functionNotImplemented)
     },
     onerror: null,
     onmessage: (_: Message) => {
@@ -55,10 +55,10 @@ const funcitonNotImplemented = 'Function not implemented.',
       _listener: (ev: WorkerEventMap[K]) => unknown,
       _options?: boolean | EventListenerOptions
     ): void => {
-      throw new Error(funcitonNotImplemented)
+      throw new Error(functionNotImplemented)
     },
     terminate: (): void => {
-      throw new Error(funcitonNotImplemented)
+      throw new Error(functionNotImplemented)
     },
   },
   _workerSelf: WorkerSelf = {
@@ -71,23 +71,26 @@ const funcitonNotImplemented = 'Function not implemented.',
         bubbles: false,
         BUBBLING_PHASE: 3,
         cancelable: false,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         cancelBubble: false,
         CAPTURING_PHASE: 1,
         composed: false,
         composedPath: (): EventTarget[] => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
         currentTarget: null,
         data,
         defaultPrevented: false,
         eventPhase: 0,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         initEvent: (
           _type: string,
           _bubbles?: boolean,
           _cancelable?: boolean
         ): void => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         initMessageEvent: (
           _type: string,
           _bubbles?: boolean,
@@ -98,7 +101,7 @@ const funcitonNotImplemented = 'Function not implemented.',
           _source?: MessageEventSource | null,
           _ports?: MessagePort[]
         ): void => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
         isTrusted: false,
         lastEventId: '',
@@ -106,16 +109,18 @@ const funcitonNotImplemented = 'Function not implemented.',
         origin: '',
         ports: [],
         preventDefault: (): void => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         returnValue: false,
         source: null,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         srcElement: null,
         stopImmediatePropagation: (): void => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
         stopPropagation: (): void => {
-          throw new Error(funcitonNotImplemented)
+          throw new Error(functionNotImplemented)
         },
         target: null,
         timeStamp: 0,

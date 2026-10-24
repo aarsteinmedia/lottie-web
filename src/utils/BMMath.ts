@@ -56,9 +56,8 @@ const BMMath = {} as unknown as BMMathType
     'PI',
     'SQRT1_2',
     'SQRT2']
-  const { length } = propertyNames
 
-  for (let i = 0; i < length; i += 1) {
+  for (let i = 0; i < propertyNames.length; i += 1) {
     const propertyName = propertyNames[i]
 
     // @ts-expect-error: ts(2540)

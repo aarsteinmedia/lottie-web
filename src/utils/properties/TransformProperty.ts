@@ -123,9 +123,7 @@ export class TransformProperty extends BaseProperty {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       if (data.or?.k[0]?.ti) {
-        const { length } = data.or.k
-
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < data.or.k.length; i++) {
           const thisK = data.or.k[i]
 
           thisK.to = null

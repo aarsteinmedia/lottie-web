@@ -9,10 +9,9 @@ export class ShapeTransformManager {
   transform_key_count = 0
 
   addTransformSequence(transforms: { transform: Transformer }[]) {
-    const { length } = transforms
     let key = '_'
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < transforms.length; i++) {
 
       key += `${transforms[i]?.transform.key}_`
     }
@@ -67,9 +66,7 @@ export class ShapeTransformManager {
   }
 
   processSequences(isFirstFrame?: number | boolean) {
-    const { length } = this.sequenceList
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.sequenceList.length; i++) {
       this.processSequence(this.sequenceList[i], isFirstFrame)
     }
   }

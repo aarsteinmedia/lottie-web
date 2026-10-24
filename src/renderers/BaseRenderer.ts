@@ -38,9 +38,7 @@ export abstract class BaseRenderer extends FrameElement {
   }
 
   buildAllItems() {
-    const { length } = this.layers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.layers.length; i++) {
       this.buildItem(i)
     }
     this.checkPendingElements()
@@ -93,9 +91,8 @@ export abstract class BaseRenderer extends FrameElement {
 
   checkLayers(val?: number) {
     this.completeLayers = true
-    const { length } = this.layers
 
-    for (let i = length - 1; i >= 0; i--) {
+    for (let i = this.layers.length - 1; i >= 0; i--) {
       const layer = this.layers[i]
 
       if (!this.elements[i] &&
@@ -205,9 +202,7 @@ export abstract class BaseRenderer extends FrameElement {
   abstract createText(_layer: LottieLayer): SVGTextLottieElement | CVTextElement
 
   getElementById(ind: number): null | ElementInterfaceIntersect {
-    const { length } = this.elements
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.elements.length; i++) {
       if (this.elements[i]?.data.ind === ind) {
         return this.elements[i] ?? null
       }
@@ -223,9 +218,7 @@ export abstract class BaseRenderer extends FrameElement {
     if (typeof pathValue === 'number') {
       element = this.elements[pathValue]
     } else {
-      const { length } = this.elements
-
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.elements.length; i++) {
         if (this.elements[i]?.data.nm === pathValue) {
           element = this.elements[i]
           break
@@ -241,13 +234,11 @@ export abstract class BaseRenderer extends FrameElement {
 
   includeLayers(newLayers: LottieLayer[]) {
     this.completeLayers = false
-    const { length } = newLayers,
-      { length: jLen } = this.layers
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < newLayers.length; i++) {
       let j = 0
 
-      while (j < jLen) {
+      while (j < this.layers.length) {
         if (this.layers[j]?.id === newLayers[i]?.id) {
           this.layers[j] = newLayers[i]
           break
@@ -264,9 +255,7 @@ export abstract class BaseRenderer extends FrameElement {
   }
 
   searchExtraCompositions(assets: LottieLayer[]) {
-    const { length } = assets
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < assets.length; i++) {
       if (assets[i]?.xt) {
         const comp = this.createComp(assets[i])
 

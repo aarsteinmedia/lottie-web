@@ -34,10 +34,9 @@ export abstract class TransformElement extends BaseElement {
         shouldTransform = false
       }
     }
-    const { length } = transforms
     let ptNew
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < transforms.length; i++) {
       ptNew = transforms[i]?.mat.applyToPointArray(
         0, 0, 0
       )
@@ -190,9 +189,7 @@ export abstract class TransformElement extends BaseElement {
       this.finalTransform.localMat = new Matrix()
     }
 
-    const { length } = transformEffects
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < transformEffects.length; i++) {
       this.localTransforms.push(transformEffects[i] as unknown as Transformer)
     }
   }

@@ -361,11 +361,10 @@ export class SVGTextLottieElement extends TextElement {
 
   buildTextContents(textArray: string[]) {
     let i = 0
-    const { length } = textArray,
-      textContents = []
+    const textContents = []
     let currentTextContent = ''
 
-    while (i < length) {
+    while (i < textArray.length) {
       if (
         textArray[i] === String.fromCharCode(13) ||
         textArray[i] === String.fromCharCode(3)
@@ -398,11 +397,10 @@ export class SVGTextLottieElement extends TextElement {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
-    const { length } = this.textSpans
     let glyphElement
 
     this.renderedFrame = this.comp?.renderedFrame ?? -1
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.textSpans.length; i++) {
       glyphElement = this.textSpans[i]?.glyph
       if (glyphElement) {
         glyphElement.prepareFrame(Number(this.comp?.renderedFrame) - this.data.st)

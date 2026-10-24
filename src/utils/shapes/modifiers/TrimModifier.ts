@@ -25,9 +25,7 @@ export class TrimModifier extends ShapeModifier {
   sValue?: number
 
   addPaths(newPaths: ShapePath[], localShapeCollection: ShapeCollection) {
-    const { length } = newPaths
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < newPaths.length; i++) {
       localShapeCollection.addShape(newPaths[i])
     }
   }
@@ -555,9 +553,7 @@ export class TrimModifier extends ShapeModifier {
   }
 
   releasePathsData(pathsData: ShapePath[]) {
-    const { length } = pathsData
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < pathsData.length; i++) {
       segmentsLengthPool.release(pathsData[i])
     }
     pathsData.length = 0

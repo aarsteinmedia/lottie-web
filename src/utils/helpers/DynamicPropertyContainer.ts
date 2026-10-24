@@ -48,16 +48,15 @@ export abstract class DynamicPropertyContainer {
 
   iterateDynamicProperties(): unknown {
     this._mdf = false
-    const { length } = this.dynamicProperties
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.dynamicProperties.length; i++) {
       this.dynamicProperties[i]?.getValue()
       if (this.dynamicProperties[i]?._mdf) {
         this._mdf = true
       }
     }
 
-    return 0 // For type compability
+    return 0 // For type compatibility
   }
 
   setGroupProperty(_propertyInterface: PropertyGroupFactory) {

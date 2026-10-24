@@ -115,9 +115,7 @@ export class CVCompElement extends CompElement {
   }
 
   override destroy() {
-    const { length } = this.layers
-
-    for (let i = length - 1; i >= 0; i--) {
+    for (let i = this.layers.length - 1; i >= 0; i--) {
       this.elements[i]?.destroy()
     }
     this.layers = null as unknown as LottieLayer[]
@@ -157,9 +155,8 @@ export class CVCompElement extends CompElement {
     ctx.lineTo(0, data.h || 0)
     ctx.lineTo(0, 0)
     ctx.clip()
-    const { length } = layers
 
-    for (let i = length - 1; i >= 0; i--) {
+    for (let i = layers.length - 1; i >= 0; i--) {
       if (completeLayers || elements[i]) {
         elements[i]?.renderFrame()
       }

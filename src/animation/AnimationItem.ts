@@ -284,9 +284,8 @@ export class AnimationItem extends BaseEvent {
 
   public getAssetData(id?: string) {
     let i = 0
-    const { length } = this.assets
 
-    while (i < length) {
+    while (i < this.assets.length) {
       if (id === this.assets[i]?.id) {
         return this.assets[i]
       }
@@ -542,9 +541,7 @@ export class AnimationItem extends BaseEvent {
       this.segments.length = 0
     }
     if (isArray(arr[0])) {
-      const { length } = arr
-
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < arr.length; i++) {
         this.segments.push(arr[i] as Vector2)
       }
     } else {

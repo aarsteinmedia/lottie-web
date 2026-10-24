@@ -124,9 +124,8 @@ export class CVTextElement extends TextElement {
       yPos = 0,
       isFirstLine = true,
       cnt = 0
-    const { length } = documentData.finalText
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < documentData.finalText.length; i++) {
       const charData = this.globalData.fontManager.getCharData(
         documentData.finalText[i],
         fontData.fStyle,
@@ -324,15 +323,13 @@ export class CVTextElement extends TextElement {
           // ctx.fillStyle = this.values.fill;
         }
         commands = this.textSpans[i]?.elem ?? []
-        const { length: lLen } = commands
 
         this.globalData.canvasContext?.beginPath()
-        for (j = 0; j < lLen; j++) {
+        for (j = 0; j < commands.length; j++) {
           pathArr = commands[j] ?? []
-          const { length: mLen } = pathArr
 
           this.globalData.canvasContext?.moveTo(pathArr[0] ?? 0, pathArr[1] ?? 0)
-          for (k = 2; k < mLen; k += 6) {
+          for (k = 2; k < pathArr.length; k += 6) {
             this.globalData.canvasContext?.bezierCurveTo(
               pathArr[k] ?? 0,
               pathArr[k + 1] ?? 0,

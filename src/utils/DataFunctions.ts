@@ -14,9 +14,7 @@ function completeLayers(layers: LottieLayer[],
 
   let layerData: LottieLayer
 
-  const { length } = layers
-
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     layerData = layers[i]
     if (!('ks' in layerData) || layerData.completed) {
       continue
@@ -39,9 +37,7 @@ function completeLayers(layers: LottieLayer[],
           continue
         }
 
-        const { length: kLen } = shapePath
-
-        for (let k = 0; k < kLen; k++) {
+        for (let k = 0; k < shapePath.length; k++) {
           const ePaths = shapePath[k]?.e ?? [],
             sPaths = shapePath[k]?.s ?? []
 
@@ -82,9 +78,8 @@ function completeChars(chars?: Character[] | null,
   if (!chars) {
     return
   }
-  const { length } = chars
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < chars.length; i++) {
     if (chars[i]?.t !== 1) {
       continue
     }
@@ -99,9 +94,8 @@ function completeChars(chars?: Character[] | null,
 
 function findComp(id: string, comps: LottieLayer[]) {
   let i = 0
-  const { length } = comps
 
-  while (i < length) {
+  while (i < comps.length) {
     if (comps[i]?.id === id) {
       return comps[i]
     }
@@ -131,9 +125,7 @@ function findCompLayers(id?: string, comps?: LottieLayer[]) {
 }
 
 function completeShapes(arr: Shape[] = []) {
-  const { length } = arr
-
-  for (let i = length - 1; i >= 0; i--) {
+  for (let i = arr.length - 1; i >= 0; i--) {
     if (arr[i]?.ty === ShapeType.Group) {
       completeShapes(arr[i]?.it)
       continue
@@ -146,9 +138,8 @@ function completeShapes(arr: Shape[] = []) {
 
         continue
       }
-      const { length: jLen } = shapePath
 
-      for (let j = 0; j < jLen; j++) {
+      for (let j = 0; j < shapePath.length; j++) {
         const ePaths = shapePath[j]?.e,
           sPaths = shapePath[j]?.s
 
@@ -168,9 +159,7 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
     return
   }
 
-  const { length } = path.i
-
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < path.i.length; i++) {
     path.i[i][0] += path.v[i]?.[0] ?? 0
     path.i[i][1] += path.v[i]?.[1] ?? 0
     path.o[i][0] += path.v[i]?.[0] ?? 0
@@ -210,9 +199,7 @@ function checkVersion(minimum: Vector3, animVersionString: string) {
 const iterateLayers = (
   layers: LottieLayer[], updateData: (layer: LottieLayer) => void, type: number
 ) => {
-  const { length } = layers
-
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     if (layers[i]?.ty === type) {
       updateData(layers[i])
     }
@@ -246,9 +233,8 @@ const checkText = (() => {
     iterateLayers(
       animationData.layers, updateTextLayer, 5
     )
-    const { length } = animationData.assets
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         iterateLayers(
           animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, 5
@@ -268,9 +254,7 @@ const checkChars = (() => {
       return
     }
 
-    const { length } = animationData.chars
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animationData.chars.length; i++) {
       const charData = animationData.chars[i]
 
       if (!charData.data?.shapes) {
@@ -382,9 +366,7 @@ const checkPathProperties = (() => {
       animationData.layers, updateTextLayer, 5
     )
 
-    const { length } = animationData.assets
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         iterateLayers(
           animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, 5
@@ -400,9 +382,8 @@ const checkColors = (() => {
     9] as Vector3
 
   const iterateShapes = (shapes: Shape[]) => {
-      const { length } = shapes
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < shapes.length; i++) {
         if (shapes[i]?.ty === ShapeType.Group) {
           iterateShapes(shapes[i]?.it ?? [])
 
@@ -428,9 +409,8 @@ const checkColors = (() => {
           continue
         }
 
-        const { length: jLen } = shapeColorValue
 
-        for (let j = 0; j < jLen; j++) {
+        for (let j = 0; j < shapeColorValue.length; j++) {
           const colorValue = shapeColorValue[j] as ShapeColorValue
 
           colorValue.s[0] /= 255
@@ -511,10 +491,10 @@ const checkShapes = (() => {
             sPaths = shapePath[j]?.s ?? []
 
           if (ePaths.length > 0) {
-            ;ePaths[0].c = isClosed
+            ; ePaths[0].c = isClosed
           }
           if (sPaths.length > 0) {
-            ;sPaths[0].c = isClosed
+            ; sPaths[0].c = isClosed
           }
         }
       }
@@ -554,10 +534,10 @@ const checkShapes = (() => {
                 sPaths = shapePath[k]?.s ?? []
 
               if (ePaths.length > 0) {
-                ;ePaths[0].c = isClosed
+                ; ePaths[0].c = isClosed
               }
               if (sPaths.length > 0) {
-                ;sPaths[0].c = isClosed
+                ; sPaths[0].c = isClosed
               }
             }
           }

@@ -54,13 +54,12 @@ export class PuckerAndBloatModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes,
-      amount = this.amount?.v
+    const amount = this.amount?.v
 
     if (amount !== 0) {
       let shapePaths, shapeData, localShapeCollection
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         shapeData = this.shapes[i]
 
         localShapeCollection = shapeData.localShapeCollection

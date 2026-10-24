@@ -66,10 +66,9 @@ export class SVGEffects {
   }
 
   getEffects(type: EffectTypes) {
-    const { length } = this.filters,
-      effects = []
+    const effects = []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i]?.type === type) {
         effects.push(this.filters[i])
       }
@@ -79,9 +78,7 @@ export class SVGEffects {
   }
 
   renderFrame(frame?: number | boolean) {
-    const { length } = this.filters
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.filters.length; i++) {
       this.filters[i]?.renderFrame(frame)
     }
   }

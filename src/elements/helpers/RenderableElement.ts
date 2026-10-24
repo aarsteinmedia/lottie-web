@@ -109,9 +109,7 @@ export abstract class RenderableElement extends FrameElement {
   }
 
   renderRenderable() {
-    const { length } = this.renderableComponents
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.renderableComponents.length; i++) {
       this.renderableComponents[i]?.renderFrame(Number(this._isFirstFrame))
     }
     /* this.maskManager.renderFrame(this.finalTransform.mat);

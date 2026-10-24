@@ -127,13 +127,12 @@ export class RoundCornersModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes,
-      rd = this.rd?.v
+    const rd = this.rd?.v
 
     if (rd !== 0) {
       let shapeData, shapePaths, localShapeCollection
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         shapeData = this.shapes[i]
 
         localShapeCollection = shapeData.localShapeCollection

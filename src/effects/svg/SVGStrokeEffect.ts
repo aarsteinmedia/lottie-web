@@ -101,10 +101,9 @@ export class SVGStrokeEffect {
     if (!this.initialized) {
       this.initialize()
     }
-    const { length } = this.paths
     let mask, path
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.paths.length; i++) {
       if (this.paths[i]?.m === -1) {
         continue
       }

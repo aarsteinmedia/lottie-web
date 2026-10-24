@@ -37,10 +37,9 @@ export class CVEffects {
   }
 
   getEffects(type: string): GroupEffect[] {
-    const { length } = this.filters,
-      effects = []
+    const effects = []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.filters.length; i++) {
       const filter = this.filters[i]
 
       if (filter.type !== type) {
@@ -54,9 +53,7 @@ export class CVEffects {
   }
 
   renderFrame(_isFirstFrame?: number | boolean) {
-    const { length } = this.filters
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.filters.length; i++) {
       this.filters[i]?.renderFrame(_isFirstFrame)
     }
   }

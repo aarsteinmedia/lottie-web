@@ -33,9 +33,7 @@ export abstract class CompElement extends RenderableDOMElement {
   }
 
   destroyElements() {
-    const { length } = this.layers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.layers.length; i++) {
       this.elements[i]?.destroy()
     }
   }
@@ -91,8 +89,6 @@ export abstract class CompElement extends RenderableDOMElement {
       }
       this.renderedFrame = timeRemapped
     }
-    const { length } = this.elements
-
     if (!this.completeLayers) {
       // if (!this.checkLayers) {
       //   throw new Error(`${this.constructor.name}: Method checkLayers is not implemented`)
@@ -100,7 +96,7 @@ export abstract class CompElement extends RenderableDOMElement {
       this.checkLayers(this.renderedFrame)
     }
     // This iteration needs to be backwards because of how expressions connect between each other
-    for (let i = length - 1; i >= 0; i--) {
+    for (let i = this.elements.length - 1; i >= 0; i--) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i]?.prepareFrame(this.renderedFrame - (this.layers[i]?.st ?? 0))
         if (this.elements[i]?._mdf) {
@@ -111,9 +107,7 @@ export abstract class CompElement extends RenderableDOMElement {
   }
 
   override renderInnerContent() {
-    const { length } = this.layers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.layers.length; i++) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i]?.renderFrame()
       }

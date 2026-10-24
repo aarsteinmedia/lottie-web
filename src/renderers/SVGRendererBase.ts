@@ -108,9 +108,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
         let i = 0
 
-        const { length } = this.elements
-
-        while (i < length) {
+        while (i < this.elements.length) {
           if (this.elements[i] !== element) {
             i++
             continue
@@ -275,9 +273,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
     }
     this.layerElement = null
     this.globalData.defs = null as unknown as SVGDefsElement
-    const { length } = this.layers
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.layers.length; i++) {
       this.elements[i]?.destroy()
     }
     this.elements.length = 0
@@ -286,9 +283,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
   }
 
   findIndexByInd(ind?: number) {
-    const { length } = this.layers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.layers.length; i++) {
       if (this.layers[i]?.ind === ind) {
         return i
       }
