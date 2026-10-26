@@ -72,7 +72,7 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
-    "@aarsteinmedia/dotlottie-player": "^6.6.5",
+    "@aarsteinmedia/dotlottie-player": "^6.6.6",
     "@eslint/compat": "^2.1.1",
     "@eslint/core": "^1.2.1",
     "@eslint/js": "^10.0.1",
@@ -148,7 +148,7 @@
     "type": "paypal",
     "url": "https://www.paypal.me/aarsteinmedia"
   },
-  "packageManager": "pnpm@12.9.1",
+  "packageManager": "pnpm@12.15.0",
   "sideEffects": [
     "./dist/lottie.js",
     "./dist/lottie-light.js",
