@@ -155,10 +155,10 @@ export class Matrix {
     )
   }
 
-  clone(matr: Matrix): Matrix {
-    matr.props.set(this.props)
+  clone(matrix: Matrix): Matrix {
+    matrix.props.set(this.props)
 
-    return matr
+    return matrix
   }
 
   cloneFromProps(props: Float32Array): this {
@@ -167,8 +167,8 @@ export class Matrix {
     return this
   }
 
-  equals(matr?: Matrix): boolean {
-    return this.props.every((val, i) => val === matr?.props[i])
+  equals(matrix?: Matrix): boolean {
+    return this.props.every((val, i) => val === matrix?.props[i])
   }
 
   getInverseMatrix(): Matrix {
@@ -493,7 +493,6 @@ export class Matrix {
     tx: number, ty: number, tzFromProps?: number
   ) {
     // Reassign instead of default parameter, to normalize negative and catch NaN values
-    // eslint-disable-next-line unicorn/prefer-default-parameters
     const tz = tzFromProps || 0
 
     if (tx !== 0 || ty !== 0 || tz !== 0) {

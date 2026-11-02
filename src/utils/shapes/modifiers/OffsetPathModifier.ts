@@ -160,9 +160,7 @@ const crossProduct = (a: number[], b: number[]) => [
   },
 
   offsetSegment = (segment: Segment, amount: number) => {
-    let e: Vector2[]
-
-    e = linearOffset(
+    let e = linearOffset(
       segment.points[0], segment.points[1], amount
     )
     const p0 = e[0],
@@ -329,7 +327,7 @@ export class OffsetPathModifier extends ShapeModifier {
     let count = inputBezier.length()
 
     if (!inputBezier.c) {
-      count -= 1
+      count--
     }
     let segment: PolynomialBezier,
       multiSegments: PolynomialBezier[][] = []
@@ -340,7 +338,9 @@ export class OffsetPathModifier extends ShapeModifier {
     }
 
     if (!inputBezier.c) {
-      for (let i = count - 1; i >= 0; i--) {
+      let i = count
+
+      while (i--) {
         segment = shapeSegmentInverted(inputBezier, i)
         multiSegments.push(offsetSegmentSplit(segment, amount))
       }
@@ -352,9 +352,7 @@ export class OffsetPathModifier extends ShapeModifier {
     let lastPoint = null,
       lastSeg = null
 
-    const { length } = multiSegments
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < multiSegments.length; i++) {
       const multiSegment = multiSegments[i]
 
       if (lastSeg) {
@@ -369,9 +367,7 @@ export class OffsetPathModifier extends ShapeModifier {
 
       lastSeg = multiSegment[multiSegment.length - 1]
 
-      const { length: mLength } = multiSegment
-
-      for (let j = 0; j < mLength; j++) {
+      for (let j = 0; j < multiSegment.length; j++) {
         segment = multiSegment[j]
 
         if (lastPoint && pointEqual(segment.points[0], lastPoint)) {
@@ -407,7 +403,7 @@ export class OffsetPathModifier extends ShapeModifier {
       }
     }
 
-    if (length > 0 && lastSeg) {
+    if (multiSegments.length > 0 && lastSeg) {
       joinLines(
         outputBezier,
         lastSeg,

@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/consistent-destructuring */
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
   Cartesian3D,

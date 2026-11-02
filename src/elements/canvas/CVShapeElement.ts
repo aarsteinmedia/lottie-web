@@ -325,7 +325,6 @@ export class CVShapeElement extends ShapeElement {
           continue
         }
         renderer.save()
-        const elems = elements
 
         if (isStroke) {
           renderer.ctxStrokeStyle(type === ShapeType.Stroke ? co : grd)
@@ -350,7 +349,7 @@ export class CVShapeElement extends ShapeElement {
 
         renderer.ctxTransform(preTransforms.finalTransform?.props as Float32Array)
 
-        for (let j = 0; j < elems.length; j++) {
+        for (let j = 0; j < elements.length; j++) {
           if (type === ShapeType.Stroke || type === ShapeType.GradientStroke) {
             ctx?.beginPath()
             if (ctx && da) {
@@ -358,7 +357,7 @@ export class CVShapeElement extends ShapeElement {
               ctx.lineDashOffset = currentStyle.do || 0
             }
           }
-          const nodes = elems[j].trNodes,
+          const nodes = elements[j].trNodes,
             { length: kLen } = nodes
 
           for (let k = 0; k < kLen; k++) {
@@ -540,9 +539,10 @@ export class CVShapeElement extends ShapeElement {
   ) {
     try {
       const len = items.length - 1
-      let groupTransform: undefined | Transformer
 
-      groupTransform = parentTransform
+
+      let groupTransform: undefined | Transformer = parentTransform
+
       for (let i = len; i >= 0; i--) {
         switch (items[i].ty) {
           case ShapeType.Transform: {
