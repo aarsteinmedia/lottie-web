@@ -1,4 +1,4 @@
-import type { AnimationItem } from '@/Lottie'
+import type { AnimationItem } from '@/animation/AnimationItem'
 import type { ExpressionProperty } from '@/types'
 
 import { CompExpressionInterface } from '@/utils/expressions/CompInterface'

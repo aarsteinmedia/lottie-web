@@ -8,11 +8,10 @@ import type { GroupEffectInterface } from '@/utils/expressions/EffectInterface'
 import type { ShapeExpressionInterface } from '@/utils/expressions/shapes/ShapeInterface'
 import type { TextExpressionInterface } from '@/utils/expressions/TextInterface'
 
+import { LayerType } from '@/utils/enums'
 import { MaskManagerInterface } from '@/utils/expressions/MaskInterface'
 import { TransformExpressionInterface } from '@/utils/expressions/TransformInterface'
 import { Matrix } from '@/utils/Matrix'
-
-import { LayerType } from '../enums'
 
 export class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect

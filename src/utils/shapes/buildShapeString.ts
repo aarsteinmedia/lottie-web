@@ -1,4 +1,4 @@
-import type { Vector2 } from '@/Lottie'
+import type { Vector2 } from '@/types'
 import type { Matrix } from '@/utils/Matrix'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
