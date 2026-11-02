@@ -5,10 +5,11 @@ import { MaskElement } from '@/elements/MaskElement'
 import { SVGEffects } from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
 import {
+  BlendMode,
   LayerType, MatteMode, MatteModeName
 } from '@/utils/enums'
 import { featureSupport } from '@/utils/featureSupport'
-import FiltersFactory from '@/utils/FiltersFactory'
+import { createAlphaToLuminanceFilter, createFilter } from '@/utils/FiltersFactory'
 import { namespaceXLink } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -99,7 +100,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
           `url(${getLocationHref()}#${clipId})`)
       }
     }
-    if (this.data.bm !== 0) {
+    if (this.data.bm !== BlendMode.Normal) {
       this.setBlendMode()
     }
   }
@@ -170,9 +171,9 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
           }
           masker.setAttribute('mask-type', 'luminance')
           filId = createElementID()
-          fil = FiltersFactory.createFilter(filId)
+          fil = createFilter(filId)
           this.globalData?.defs.appendChild(fil)
-          fil.appendChild(FiltersFactory.createAlphaToLuminanceFilter())
+          fil.appendChild(createAlphaToLuminanceFilter())
           gg = createNS<SVGGElement>('g')
           gg.appendChild(useElement)
           masker.appendChild(gg)
@@ -189,8 +190,8 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
 
         maskGroup.appendChild(maskGrouper)
         filId = createElementID()
-        fil = FiltersFactory.createFilter(filId)
-        // / /
+        fil = createFilter(filId)
+
         const feCTr = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
 
         feCTr.setAttribute('in', 'SourceGraphic')
@@ -200,13 +201,10 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         feFunc.setAttribute('type', 'table')
         feFunc.setAttribute('tableValues', '1.0 0.0')
         feCTr.appendChild(feFunc)
-        // / /
+
         this.globalData?.defs.appendChild(fil)
         const alphaRect = createNS<SVGRectElement>('rect')
 
-        // if (!alphaRect) {
-        //   throw new Error(`${this.constructor.name}: Could not create RECT element`)
-        // }
         alphaRect.width.baseVal.value = this.comp?.data?.w || 0
         alphaRect.height.baseVal.value = this.comp?.data?.h || 0
         alphaRect.x.baseVal.value = 0
@@ -226,7 +224,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         maskGrouper.appendChild(useElement)
         if (!featureSupport.maskType) {
           maskGroup.setAttribute('mask-type', MatteModeName.Luminance)
-          fil.appendChild(FiltersFactory.createAlphaToLuminanceFilter())
+          fil.appendChild(createAlphaToLuminanceFilter())
           gg = createNS<SVGGElement>('g')
           maskGrouper.appendChild(alphaRect)
           if (this.layerElement) {

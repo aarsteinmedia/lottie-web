@@ -242,7 +242,7 @@ export class MouseModifier extends ShapeModifier {
           ))
         }
         if (shapeData.shape) {
-          shapeData.shape.paths = newPaths as unknown as ShapeCollection
+          shapeData.shape.paths = newPaths as ShapeCollection
         }
 
         shapeData.last = newPaths

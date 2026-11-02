@@ -25,7 +25,9 @@ let _isFrozen = false,
 const registeredAnimations: RegisteredAnimation[] = []
 
 export function destroy(animation?: string) {
-  for (let i = len - 1; i >= 0; i--) {
+  let i = len
+
+  while (i--) {
     registeredAnimations[i]?.animation.destroy(animation)
   }
 }

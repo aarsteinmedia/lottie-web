@@ -37,7 +37,7 @@ export class ShapeModifier extends DynamicPropertyContainer {
     }
     // Adding shape to dynamic properties. It covers the case where a shape has no effects applied, to reset it's _mdf state on every tick.
     data.sh?.container?.addDynamicProperty(data.sh)
-    const shapeData = {
+    const shapeData: ShapeProperty = {
       data,
       localShapeCollection: newShapeCollection(),
       shape: data.sh,

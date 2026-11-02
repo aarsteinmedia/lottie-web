@@ -6,6 +6,13 @@ export enum ArrayType {
   Uint8c = 'uint8c',
 }
 
+export enum BezierProperty {
+  Closed = 'c',
+  InTangents = 'i',
+  OutTangents = 'o',
+  Vertices = 'v'
+}
+
 export enum BlendMode {
   Normal = 0,
   Multiply = 1,

@@ -193,10 +193,6 @@ export class RepeaterModifier extends ShapeModifier {
       dir = 1
       while (cont) {
         items = this.elemsData[i]?.it ?? []
-        // if (!items) {
-        //   continue
-        // }
-        // itemsTransform = items[items.length - 1].transform.mProps.v.props
         items[items.length - 1].transform.mProps._mdf = false
         items[items.length - 1].transform.op._mdf = false
         cont--

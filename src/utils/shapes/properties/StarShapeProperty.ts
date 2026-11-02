@@ -1,5 +1,5 @@
 import type {
-  ElementInterfaceIntersect, Shape, StrokeData, Vector2, VectorProperty
+  ElementInterfaceIntersect, MaskShape, Shape, StrokeData, Vector2, VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
@@ -20,7 +20,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
   pt: ValueProperty
   r: ValueProperty
   s?: ValueProperty
-  constructor(elem: ElementInterfaceIntersect, data: Shape) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape | MaskShape) {
     super()
     this.v = newElement() as ShapePath
     this.v.setPathData(true, 0)
@@ -109,7 +109,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
       angle = Math.PI * 2 / numPts,
       rad = this.or.v,
       roundness = this.os.v,
-      perimSegment = 2 * Math.PI * rad / (numPts * 4)
+      perimeterSegment = 2 * Math.PI * rad / (numPts * 4)
     let currentAng = -Math.PI * 0.5
     const dir = this.data.d === 3 ? -1 : 1
 
@@ -130,10 +130,10 @@ export class StarShapeProperty extends ShapeBaseProperty {
       this.v?.setTripleAt(
         x,
         y,
-        x - ox * perimSegment * roundness * dir,
-        y - oy * perimSegment * roundness * dir,
-        x + ox * perimSegment * roundness * dir,
-        y + oy * perimSegment * roundness * dir,
+        x - ox * perimeterSegment * roundness * dir,
+        y - oy * perimeterSegment * roundness * dir,
+        x + ox * perimeterSegment * roundness * dir,
+        y + oy * perimeterSegment * roundness * dir,
         i,
         true
       )
@@ -154,19 +154,17 @@ export class StarShapeProperty extends ShapeBaseProperty {
 
     const numPts = Math.floor(this.pt.v) * 2,
       angle = Math.PI * 2 / numPts
-    /* this.v.v.length = numPts;
-              this.v.i.length = numPts;
-              this.v.o.length = numPts; */
+
     let isLong = true
     const longRad = this.or.v,
       shortRad = Number(this.ir?.v),
       longRound = this.os.v,
       shortRound = Number(this.is?.v),
-      longPerimSegment = 2 * Math.PI * longRad / (numPts * 2),
-      shortPerimSegment = 2 * Math.PI * shortRad / (numPts * 2)
+      longPerimeterSegment = 2 * Math.PI * longRad / (numPts * 2),
+      shortPerimeterSegment = 2 * Math.PI * shortRad / (numPts * 2)
     let rad,
       roundness,
-      perimSegment,
+      perimeterSegment,
       currentAng = -Math.PI / 2
 
     currentAng += this.r.v
@@ -176,7 +174,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
     for (let i = 0; i < numPts; i++) {
       rad = isLong ? longRad : shortRad
       roundness = isLong ? longRound : shortRound
-      perimSegment = isLong ? longPerimSegment : shortPerimSegment
+      perimeterSegment = isLong ? longPerimeterSegment : shortPerimeterSegment
       let x = rad * Math.cos(currentAng),
         y = rad * Math.sin(currentAng)
       const ox = x === 0 && y === 0 ? 0 : y / Math.sqrt(x * x + y * y),
@@ -188,10 +186,10 @@ export class StarShapeProperty extends ShapeBaseProperty {
       this.v.setTripleAt(
         x,
         y,
-        x - ox * perimSegment * roundness * dir,
-        y - oy * perimSegment * roundness * dir,
-        x + ox * perimSegment * roundness * dir,
-        y + oy * perimSegment * roundness * dir,
+        x - ox * perimeterSegment * roundness * dir,
+        y - oy * perimeterSegment * roundness * dir,
+        x + ox * perimeterSegment * roundness * dir,
+        y + oy * perimeterSegment * roundness * dir,
         i,
         true
       )

@@ -7,7 +7,7 @@ import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { getNewSegment, getSegmentsLength } from '@/utils/Bezier'
-import { StackingOrder } from '@/utils/enums'
+import { BezierProperty, StackingOrder } from '@/utils/enums'
 import { segmentsLengthPool } from '@/utils/pooling/segmentLengthPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -41,18 +41,18 @@ export class TrimModifier extends ShapeModifier {
     isNewShape?: boolean
   ) {
     shapePath.setXYAt(
-      pt2[0], pt2[1], 'o', pos
+      pt2[0], pt2[1], BezierProperty.OutTangents, pos
     )
     shapePath.setXYAt(
-      pt3[0], pt3[1], 'i', pos + 1
+      pt3[0], pt3[1], BezierProperty.InTangents, pos + 1
     )
     if (isNewShape) {
       shapePath.setXYAt(
-        pt1[0], pt1[1], 'v', pos
+        pt1[0], pt1[1], BezierProperty.Vertices, pos
       )
     }
     shapePath.setXYAt(
-      pt4[0], pt4[1], 'v', pos + 1
+      pt4[0], pt4[1], BezierProperty.Vertices, pos + 1
     )
   }
 
@@ -63,18 +63,18 @@ export class TrimModifier extends ShapeModifier {
     isNewShape?: boolean
   ) {
     shapePath.setXYAt(
-      points[1] ?? 0, points[5] ?? 0, 'o', pos
+      points[1] ?? 0, points[5] ?? 0, BezierProperty.OutTangents, pos
     )
     shapePath.setXYAt(
-      points[2] ?? 0, points[6] ?? 0, 'i', pos + 1
+      points[2] ?? 0, points[6] ?? 0, BezierProperty.InTangents, pos + 1
     )
     if (isNewShape) {
       shapePath.setXYAt(
-        points[0] ?? 0, points[4] ?? 0, 'v', pos
+        points[0] ?? 0, points[4] ?? 0, BezierProperty.Vertices, pos
       )
     }
     shapePath.setXYAt(
-      points[3] ?? 0, points[7] ?? 0, 'v', pos + 1
+      points[3] ?? 0, points[7] ?? 0, BezierProperty.Vertices, pos + 1
     )
   }
 
@@ -205,15 +205,15 @@ export class TrimModifier extends ShapeModifier {
       }
       if (shapePath._length) {
         shapePath.setXYAt(
-          (shapePath.v as unknown as number[][])[initPos]?.[0] ?? 0,
-          (shapePath.v as unknown as number[][])[initPos]?.[1] ?? 0,
-          'i',
+          shapePath.v[initPos]?.[0] ?? 0,
+          shapePath.v[initPos]?.[1] ?? 0,
+          BezierProperty.InTangents,
           initPos
         )
         shapePath.setXYAt(
-          (shapePath.v as unknown as number[][])[shapePath._length - 1]?.[0] ?? 0,
-          (shapePath.v as unknown as number[][])[shapePath._length - 1]?.[1] ?? 0,
-          'o',
+          shapePath.v[shapePath._length - 1]?.[0] ?? 0,
+          shapePath.v[shapePath._length - 1]?.[1] ?? 0,
+          BezierProperty.OutTangents,
           shapePath._length - 1
         )
       }
@@ -399,6 +399,7 @@ export class TrimModifier extends ShapeModifier {
           currentShape.pathsData.length = 0
         }
       }
+
     } else if (!(e === 1 && s === 0 || e === 0 && s === 1)) {
       const segments: {
         e: number;
@@ -406,8 +407,8 @@ export class TrimModifier extends ShapeModifier {
       }[] = []
       let shapeData, localShapeCollection
 
-      for (let i = 0; i < length; i++) {
-        shapeData = this.shapes[i]
+      for (let k = 0; k < length; k++) {
+        shapeData = this.shapes[k]
 
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
@@ -451,9 +452,10 @@ export class TrimModifier extends ShapeModifier {
       let shapeS = s,
         shapeE = e,
         addedLength = 0,
-        edges
+        edges,
+        i = length
 
-      for (let i = length - 1; i >= 0; i--) {
+      while (i--) {
         shapeData = this.shapes[i]
 
         if (shapeData.shape?._mdf) {
@@ -537,7 +539,7 @@ export class TrimModifier extends ShapeModifier {
       }
     } else if (this._mdf) {
       for (let i = 0; i < length; i++) {
-        // Reassign Trim Cached paths data when no trim applied in case shapes are modified in between.
+        // Reassign Trim cached paths data when no trim applied in case shapes are modified in between.
         // Don't remove this even if it's losing cached info.
         const currentShape = this.shapes[i]
 

@@ -269,13 +269,8 @@ export class AnimationItem extends BaseEvent {
     this.imagePreloader.destroy()
     this.trigger(PlayerEvent.Destroy)
     this._cbs = {}
-    // this.onEnterFrame = null
-    // this.onLoopComplete = null
-    // this.onComplete = null
-    // this.onSegmentStart = null
-    // this.onDestroy = null
     this.renderer = null as unknown as SVGRenderer
-    this.expressionsPlugin = null // as unknown as typeof Expressions
+    this.expressionsPlugin = null
     this.imagePreloader = null as unknown as ImagePreloader
     this.projectInterface = null as unknown as ProjectInterface
 

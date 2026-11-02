@@ -1,7 +1,7 @@
 import { GradientUnitName } from '@/utils/enums'
 import { createNS } from '@/utils/helpers/svgElements'
 
-function createAlphaToLuminanceFilter() {
+export function createAlphaToLuminanceFilter() {
   const feColorMatrix = createNS<SVGFEColorMatrixElement>('feColorMatrix')
 
   feColorMatrix.setAttribute('type', 'matrix')
@@ -12,7 +12,7 @@ function createAlphaToLuminanceFilter() {
   return feColorMatrix
 }
 
-function createFilter(filId: string, skipCoordinates?: boolean) {
+export function createFilter(filId: string, skipCoordinates?: boolean) {
   const fil = createNS<SVGFilterElement>('filter')
 
   fil.id = filId
@@ -26,11 +26,3 @@ function createFilter(filId: string, skipCoordinates?: boolean) {
 
   return fil
 }
-
-const FiltersFactory = {
-  createAlphaToLuminanceFilter,
-  createFilter
-}
-
-
-export default FiltersFactory

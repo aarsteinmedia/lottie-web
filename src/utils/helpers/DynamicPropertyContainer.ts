@@ -1,7 +1,7 @@
 import type {
   DynamicProperty,
   Effect,
-  ElementInterfaceIntersect, GradientColor, Keyframe, Shape, TextData, TextRangeValue, VectorProperty
+  ElementInterfaceIntersect, GradientColor, Keyframe, MaskShape, Shape, TextData, TextRangeValue, VectorProperty
 } from '@/types'
 import type { PropType } from '@/utils/enums'
 import type { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
@@ -14,6 +14,7 @@ export abstract class DynamicPropertyContainer {
   data?:
     | DynamicProperty
     | Shape
+    | MaskShape
     | TextProperty
     | TextData
     | TextRangeValue

@@ -5,6 +5,7 @@ import type {
   Caching,
   ElementInterfaceIntersect,
   Keyframe,
+  MaskShape,
   Shape,
 } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
@@ -27,7 +28,7 @@ export class ShapeProperty extends ShapeBaseProperty {
   public totalShapeLength?: number
   public x?: boolean
   constructor(
-    elem: SVGShapeElement | CVShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement, data: Shape | MaskShape, type: number
   ) {
     super()
     this.propType = PropType.Shape
@@ -56,7 +57,7 @@ export class ShapeProperty extends ShapeBaseProperty {
 export class KeyframeShapeProperty extends ShapeBaseProperty {
   public lastFrame = initialDefaultFrame
   constructor(
-    elem: SVGShapeElement | CVShapeElement, data: Shape, type: number
+    elem: SVGShapeElement | CVShapeElement, data: Shape | MaskShape, type: number
   ) {
     super()
     this.data = data

@@ -2,6 +2,7 @@ import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   ElementInterfaceIntersect,
+  MaskShape,
   Shape,
 } from '@/types'
 
@@ -20,7 +21,7 @@ function getKeyframeConstructorFunction() {
 
 function getShapeProp(
   elem: SVGShapeElement | CVShapeElement,
-  data: Shape,
+  data: Shape | MaskShape,
   type: number,
   _arr?: any[],
   _trims?: any[]
@@ -64,11 +65,8 @@ function getShapeProp(
   return prop
 }
 
-const ShapePropertyFactory = {
+export const ShapePropertyFactory = {
   getConstructorFunction,
   getKeyframeConstructorFunction,
   getShapeProp,
 }
-
-
-export default ShapePropertyFactory

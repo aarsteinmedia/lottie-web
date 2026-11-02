@@ -63,7 +63,7 @@ export class GradientProperty extends DynamicPropertyContainer {
         i++
       }
     } else if (
-      !this.comparePoints(this.data.k.k as unknown as number[], this.data.p)
+      !this.comparePoints(this.data.k.k as number[], this.data.p)
     ) {
       return false
     }

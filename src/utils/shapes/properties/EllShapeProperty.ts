@@ -1,4 +1,6 @@
-import type { ElementInterfaceIntersect, Shape } from '@/types'
+import type {
+  ElementInterfaceIntersect, MaskShape, Shape
+} from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
@@ -13,7 +15,7 @@ export class EllShapeProperty extends ShapeBaseProperty {
   public d?: number
   public s: MultiDimensionalProperty
 
-  constructor(elem: ElementInterfaceIntersect, data: Shape) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape | MaskShape) {
     super()
     this.v = newElement() as ShapePath
     this.v.setPathData(true, 4)

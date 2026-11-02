@@ -62,11 +62,6 @@ function completeLayers(layers: LottieLayer[],
 
         break
       }
-      case LayerType.Text: {
-        completeText(layerData)
-
-        break
-      }
       default:
       // Do nothing
     }
@@ -456,11 +451,33 @@ const checkShapes = (() => {
     4,
     18] as Vector3
 
-  const completeClosingShapes = (arr: Shape[]) => {
+  const completeCloseShapePath = (shapePath?: ShapePath | ShapePath[], isClosed = false) => {
+      if (!shapePath) {
+        return
+      }
 
-      const { length } = arr
+      if (!isArray(shapePath)) {
+        shapePath.c = isClosed
 
-      for (let i = length - 1; i >= 0; i--) {
+        return
+      }
+
+      for (let k = 0; k < shapePath.length; k++) {
+        const ePaths = shapePath[k]?.e ?? [],
+          sPaths = shapePath[k]?.s ?? []
+
+        if (ePaths.length > 0) {
+          ePaths[0].c = isClosed
+        }
+        if (sPaths.length > 0) {
+          sPaths[0].c = isClosed
+        }
+      }
+    },
+    completeClosingShapes = (arr: Shape[]) => {
+      let i = arr.length
+
+      while (i--) {
         if (arr[i]?.ty === ShapeType.Group) {
           completeClosingShapes(arr[i]?.it ?? [])
 
@@ -471,32 +488,7 @@ const checkShapes = (() => {
           continue
         }
 
-        const shapePath = arr[i]?.ks?.k
-
-        if (!shapePath) {
-          continue
-        }
-
-        const isClosed = Boolean(arr[i]?.closed)
-
-        if (!isArray(shapePath)) {
-          shapePath.c = isClosed
-          continue
-        }
-
-        const { length: jLen } = shapePath
-
-        for (let j = 0; j < jLen; j += 1) {
-          const ePaths = shapePath[j]?.e ?? [],
-            sPaths = shapePath[j]?.s ?? []
-
-          if (ePaths.length > 0) {
-            ; ePaths[0].c = isClosed
-          }
-          if (sPaths.length > 0) {
-            ; sPaths[0].c = isClosed
-          }
-        }
+        completeCloseShapePath(arr[i]?.ks?.k, arr[i].closed)
       }
     },
 
@@ -511,33 +503,7 @@ const checkShapes = (() => {
             { length: jLen } = maskProps ?? []
 
           for (let j = 0; j < jLen; j++) {
-            const shapePath = maskProps?.[j]?.pt?.k
-
-            if (!shapePath) {
-              continue
-            }
-
-
-            const isClosed = Boolean(maskProps[j]?.cl)
-
-            if (!isArray(shapePath)) {
-              shapePath.c = isClosed
-              continue
-            }
-
-            const { length: kLen } = shapePath
-
-            for (let k = 0; k < kLen; k++) {
-              const ePaths = shapePath[k]?.e ?? [],
-                sPaths = shapePath[k]?.s ?? []
-
-              if (ePaths.length > 0) {
-                ePaths[0].c = isClosed
-              }
-              if (sPaths.length > 0) {
-                sPaths[0].c = isClosed
-              }
-            }
+            completeCloseShapePath(maskProps?.[j]?.pt?.k, Boolean(maskProps?.[j]?.cl))
           }
         }
         if (layerData.ty === LayerType.Shape) {
@@ -569,18 +535,12 @@ function completeData(animationData: AnimationData) {
   checkChars(animationData)
   checkPathProperties(animationData)
   checkShapes(animationData)
-  completeLayers(animationData.layers, animationData.assets as unknown as LottieLayer[])
-  completeChars(animationData.chars, animationData.assets as unknown as LottieLayer[])
+  completeLayers(animationData.layers, animationData.assets as LottieLayer[])
+  completeChars(animationData.chars, animationData.assets as LottieLayer[])
   animationData.__complete = true
 }
 
-function completeText(data: LottieLayer) {
-  if (data.t?.a?.length === 0 && !('m' in (data.t.p ?? {}))) {
-    // data.singleShape = true;
-  }
-}
-
-const DataFunctions = {
+export const DataFunctions = {
   checkChars,
   checkColors,
   checkPathProperties,
@@ -588,6 +548,3 @@ const DataFunctions = {
   completeData,
   completeLayers
 }
-
-
-export default DataFunctions

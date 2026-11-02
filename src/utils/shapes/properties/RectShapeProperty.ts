@@ -1,5 +1,5 @@
 import type {
-  ElementInterfaceIntersect, Shape, VectorProperty
+  ElementInterfaceIntersect, MaskShape, Shape, VectorProperty
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
@@ -21,7 +21,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
   public r: ValueProperty
   public s: MultiDimensionalProperty
 
-  constructor(elem: ElementInterfaceIntersect, data: Shape) {
+  constructor(elem: ElementInterfaceIntersect, data: Shape | MaskShape) {
     super()
     this.v = newElement() as ShapePath
     this.v.c = true

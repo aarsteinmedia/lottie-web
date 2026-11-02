@@ -3,7 +3,7 @@ import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type {
   ElementInterfaceIntersect,
   LottieLayer,
-  Shape,
+  MaskShape,
 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
@@ -13,7 +13,7 @@ import { createSizedArray } from '@/utils/helpers/arrays'
 import AssetManager from '@/utils/helpers/AssetManager'
 import { emitShapePath } from '@/utils/helpers/emitShapePath'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapePropertyFactory } from '@/utils/shapes/properties'
 
 const modeOps: Record<string, GlobalCompositeOperation> = {
   a: 'source-over',
@@ -28,7 +28,7 @@ const modeOps: Record<string, GlobalCompositeOperation> = {
  * True when every active mask is add-only at full opacity with no invert —
  * safe to use a fast ctx.clip() instead of an alpha buffer.
  */
-export function isSimpleMaskStack(masks: Shape[] | undefined) {
+export function isSimpleMaskStack(masks: MaskShape[] | undefined) {
   if (!masks?.length) {
     return true
   }
@@ -57,7 +57,7 @@ export function isSimpleMaskStack(masks: Shape[] | undefined) {
   return true
 }
 
-export function needsMaskIsolation(masks: Shape[] | undefined) {
+export function needsMaskIsolation(masks: MaskShape[] | undefined) {
   if (!masks?.length) {
     return false
   }
@@ -79,7 +79,7 @@ export class CVMaskElement {
   /** Fast clip() path — only add masks at full opacity. */
   isSimple: boolean
 
-  masksProperties: Shape[]
+  masksProperties: MaskShape[]
   opacityData: ValueProperty[] = []
   viewData: ShapeProperty[]
 

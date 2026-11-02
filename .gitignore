@@ -13,3 +13,4 @@ node_modules
 packages/functional-tests/app/dotlottie-player.js
 
 .pnpm-store
+preview/files.js

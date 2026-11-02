@@ -55,7 +55,7 @@ export abstract class BaseElement {
     while (i < length) {
       if (
         this.data.masksProperties?.[i]?.mode !== MaskMode.None &&
-        this.data.masksProperties?.[i]?.cl !== (false as unknown as string)
+        this.data.masksProperties?.[i]?.cl !== 0
       ) {
         return true
       }

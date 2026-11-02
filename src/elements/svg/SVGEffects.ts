@@ -5,7 +5,7 @@ import type {
 import type { EffectTypes } from '@/utils/enums'
 
 import { createElementID } from '@/utils'
-import FiltersFactory from '@/utils/FiltersFactory'
+import { createFilter } from '@/utils/FiltersFactory'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 
 interface RegisteredEffects {
@@ -24,7 +24,7 @@ export class SVGEffects {
     let source = 'SourceGraphic'
 
     const filId = createElementID(),
-      fil = FiltersFactory.createFilter(filId, true)
+      fil = createFilter(filId, true)
 
     let count = 0,
       filterManager: null | GroupEffect

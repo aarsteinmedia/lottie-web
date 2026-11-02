@@ -9,6 +9,7 @@ import {
   floatZero,
   pointEqual,
 } from '@/utils'
+import { BezierProperty, StrokeLinejoin } from '@/utils/enums'
 import { roundCorner } from '@/utils/helpers/constants'
 import {
   PolynomialBezier,
@@ -79,14 +80,14 @@ const crossProduct = (a: number[], b: number[]) => [
     outputBezier: ShapePath,
     seg1: PolynomialBezier,
     seg2: PolynomialBezier,
-    lineJoin: number,
+    lineJoin: StrokeLinejoin,
     miterLimit: number
   ) => {
     const p0: Vector2 = seg1.points[3],
       p1: Vector2 = seg2.points[0]
 
     // Bevel
-    if (lineJoin === 3) {
+    if (lineJoin === StrokeLinejoin.Bevel) {
       return p0
     }
 
@@ -96,7 +97,7 @@ const crossProduct = (a: number[], b: number[]) => [
     }
 
     // Round
-    if (lineJoin === 2) {
+    if (lineJoin === StrokeLinejoin.Round) {
       const angleOut = -seg1.tangentAngle(1),
         angleIn = -seg2.tangentAngle(0) + Math.PI,
         center = lineIntersection(
@@ -116,7 +117,7 @@ const crossProduct = (a: number[], b: number[]) => [
       )
 
       outputBezier.setXYAt(
-        tan[0], tan[1], 'o', outputBezier.length() - 1
+        tan[0], tan[1], BezierProperty.OutTangents, outputBezier.length() - 1
       )
 
       tan = polarOffset(
@@ -253,13 +254,13 @@ const crossProduct = (a: number[], b: number[]) => [
     return null
   },
   pruneSegmentIntersection = (a: PolynomialBezier[], b: PolynomialBezier[]) => {
-    const outa = [...a],
-      outb = [...b]
+    const outA = [...a],
+      outB = [...b]
     let intersect = getIntersection(a[a.length - 1], b[0])
 
     if (intersect) {
-      outa[a.length - 1] = a[a.length - 1]?.split(intersect[0] ?? 0)[0]
-      outb[0] = b[0]?.split(intersect[1] ?? 0)[1]
+      outA[a.length - 1] = a[a.length - 1]?.split(intersect[0] ?? 0)[0]
+      outB[0] = b[0]?.split(intersect[1] ?? 0)[1]
     }
     if (a.length > 1 && b.length > 1) {
       intersect = getIntersection(a[0], b[b.length - 1])
@@ -270,7 +271,7 @@ const crossProduct = (a: number[], b: number[]) => [
       }
     }
 
-    return [outa, outb]
+    return [outA, outB]
   },
   pruneIntersections = (segments: PolynomialBezier[][]) => {
     let e
@@ -292,7 +293,7 @@ const crossProduct = (a: number[], b: number[]) => [
 
 export class OffsetPathModifier extends ShapeModifier {
   amount?: ValueProperty
-  lineJoin?: number | undefined
+  lineJoin = StrokeLinejoin.Miter
   miterLimit?: ValueProperty
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {
@@ -311,14 +312,18 @@ export class OffsetPathModifier extends ShapeModifier {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this.lineJoin = data.lj
+
+    if (data.lj) {
+      this.lineJoin = data.lj
+    }
+
     this._isAnimated = this.amount.effectsSequence.length > 0
   }
 
   processPath(
     inputBezier: ShapePath,
     amount: number,
-    lineJoin: number,
+    lineJoin: StrokeLinejoin,
     miterLimit: number
   ) {
     const outputBezier = newElement() as ShapePath
@@ -374,7 +379,7 @@ export class OffsetPathModifier extends ShapeModifier {
           outputBezier.setXYAt(
             segment.points[1][0],
             segment.points[1][1],
-            'o',
+            BezierProperty.OutTangents,
             outputBezier.length() - 1
           )
         } else {
@@ -417,15 +422,14 @@ export class OffsetPathModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    const { length } = this.shapes,
-      amount = Number(this.amount?.v),
+    const amount = Number(this.amount?.v),
       miterLimit = Number(this.miterLimit?.v),
-      lineJoin = Number(this.lineJoin)
+      { lineJoin } = this
 
     if (amount !== 0) {
       let shapePaths, shapeData, localShapeCollection
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         shapeData = this.shapes[i]
 
         localShapeCollection = shapeData.localShapeCollection

@@ -1,5 +1,6 @@
 import type { BezierLength, Vector2 } from '@/types'
 
+import { BezierProperty } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { pointPool } from '@/utils/pooling/pointPool'
 
@@ -65,18 +66,18 @@ export class ShapePath {
     replace?: boolean
   ) {
     this.setXYAt(
-      vX, vY, 'v', pos, replace
+      vX, vY, BezierProperty.Vertices, pos, replace
     )
     this.setXYAt(
-      oX, oY, 'o', pos, replace
+      oX, oY, BezierProperty.OutTangents, pos, replace
     )
     this.setXYAt(
-      iX, iY, 'i', pos, replace
+      iX, iY, BezierProperty.InTangents, pos, replace
     )
   }
 
   setXYAt(
-    x: number, y: number, type: string, pos: number, replace?: boolean
+    x: number, y: number, type: BezierProperty, pos: number, replace?: boolean
   ) {
     let arr: number[][]
 
@@ -85,15 +86,15 @@ export class ShapePath {
       this.doubleArrayLength()
     }
     switch (type) {
-      case 'v': {
+      case BezierProperty.Vertices: {
         arr = this.v
         break
       }
-      case 'i': {
+      case BezierProperty.InTangents: {
         arr = this.i
         break
       }
-      case 'o': {
+      case BezierProperty.OutTangents: {
         arr = this.o
         break
       }

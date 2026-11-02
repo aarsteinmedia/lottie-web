@@ -2,6 +2,7 @@ import type {
   ElementInterfaceIntersect,
   GlobalData,
   LottieLayer,
+  MaskShape,
   Shape,
   StoredData,
   ViewData,
@@ -19,14 +20,14 @@ import { createNS } from '@/utils/helpers/svgElements'
 import { Matrix } from '@/utils/Matrix'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { buildShapeString } from '@/utils/shapes/buildShapeString'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapePropertyFactory } from '@/utils/shapes/properties'
 
 export class MaskElement {
   data: LottieLayer
   element: ElementInterfaceIntersect
   globalData: GlobalData
   maskElement: SVGElement | null = null
-  masksProperties: Shape[] = []
+  masksProperties: MaskShape[] = []
   solidPath = ''
   storedData: StoredData[] = []
   viewData: ViewData[]
@@ -230,11 +231,11 @@ export class MaskElement {
     this.globalData = null as unknown as GlobalData
     this.maskElement = null
     this.data = null as unknown as LottieLayer
-    this.masksProperties = null as unknown as Shape[]
+    this.masksProperties = null as unknown as MaskShape[]
   }
 
   drawPath(
-    pathData: null | Shape, pathNodes: ShapePath, viewData: ViewData
+    pathData: null | Shape | MaskShape, pathNodes: ShapePath, viewData: ViewData
   ) {
 
     const len = pathNodes._length,

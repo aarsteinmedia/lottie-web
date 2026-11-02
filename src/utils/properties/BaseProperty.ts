@@ -371,11 +371,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
           newValue[1] = endValue[1]
           newValue[2] = endValue[2]
         } else if (frameNum <= keyTime && keyData.s) {
-          newValue[0] = keyData.s[0] as unknown as number
-          newValue[1] = keyData.s[1] as unknown as number
-          newValue[2] = keyData.s[2] as unknown as number
+          newValue[0] = keyData.s[0] as number
+          newValue[1] = keyData.s[1] as number
+          newValue[2] = keyData.s[2] as number
         } else {
-          const quatStart = createQuaternion(keyData.s as unknown as Vector3),
+          const quatStart = createQuaternion(keyData.s as Vector3),
             quatEnd = createQuaternion(endValue),
             time = (frameNum - keyTime) / (nextKeyTime - keyTime)
 

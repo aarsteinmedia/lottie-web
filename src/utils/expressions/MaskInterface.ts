@@ -1,13 +1,13 @@
 import type { CVMaskElement } from '@/elements/canvas/CVMaskElement'
 import type { MaskElement } from '@/elements/MaskElement'
 import type {
-  ElementInterfaceIntersect, Shape, ViewData
+  ElementInterfaceIntersect, MaskShape, ViewData
 } from '@/types'
 
 import { createSizedArray } from '@/utils/helpers/arrays'
 
 class MaskInterface {
-  _data: Shape
+  _data: MaskShape
   _mask: ViewData
   get maskOpacity() {
     if (this._mask.op.k) {
@@ -25,7 +25,7 @@ class MaskInterface {
     return this._mask.prop
   }
 
-  constructor(mask: ViewData, data: Shape) {
+  constructor(mask: ViewData, data: MaskShape) {
     this._mask = mask
     this._data = data
   }

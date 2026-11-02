@@ -17,8 +17,7 @@ export abstract class ShapeElement extends RenderableDOMElement {
     const { processedElements } = this
     let i = processedElements.length
 
-    while (i) {
-      i--
+    while (i--) {
       const processedElement = processedElements[i]
 
       if (processedElement.elem === elem) {

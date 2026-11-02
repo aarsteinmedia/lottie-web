@@ -37,7 +37,7 @@ import { getLocationHref } from '@/utils/helpers/locationHref'
 import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import { getModifier } from '@/utils/shapes/modifiers'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapePropertyFactory } from '@/utils/shapes/properties'
 
 const baseMethods = [
   'createContainerElements',
@@ -136,7 +136,7 @@ export class SVGShapeElement extends ShapeElement {
     if (data.ln) {
       elementData.gr.id = data.ln
     }
-    if (data.cl) {
+    if (typeof data.cl === 'string') {
       elementData.gr.classList.add(data.cl)
     }
     if (data.bm) {
@@ -251,7 +251,7 @@ export class SVGShapeElement extends ShapeElement {
     if (data.ln) {
       pathElement.id = data.ln
     }
-    if (data.cl) {
+    if (typeof data.cl === 'string') {
       pathElement.classList.add(data.cl)
     }
     if (data.bm) {

@@ -493,7 +493,7 @@ export interface Shape {
   /** Color. */
   c?: undefined | ShapeColor
   cix?: undefined | number
-  /** CSS Class. */
+  /** CSS Class */
   cl?: undefined | string
   closed?: undefined | boolean
   d?: undefined | number | StrokeData[]
@@ -521,12 +521,11 @@ export interface Shape {
   maxDist?: undefined | number
   ml?: undefined | number
   mn?: undefined | string
-  mode?: undefined | MaskMode
   nm?: undefined | string
   /** Number of properties. */
   np?: undefined | number
   /**
-   * O?: VectorProperty.
+   * o?: VectorProperty.
    */
   o?: undefined | {
     a: IntBool
@@ -570,6 +569,12 @@ export interface Shape {
     k: number
     ix?: number
   }
+}
+
+export interface MaskShape extends Omit<Shape, 'cl'> {
+  /** closed */
+  cl?: undefined | IntBool
+  mode?: undefined | MaskMode
 }
 
 export interface StoredData {
@@ -719,7 +724,7 @@ interface LayerStyle {
   }
   bm?: undefined | {
     a: IntBool
-    k: number
+    k: BlendMode
   }
   c: {
     a: IntBool
@@ -1093,7 +1098,7 @@ export interface LottieLayer {
   ao?: undefined | 0 | 1 | boolean
   au?: undefined | { lv?: { k: number[] } }
   /** Blend Mode. */
-  bm?: undefined | number
+  bm?: undefined | BlendMode
   chars?: undefined | Character[]
   cl?: undefined | string
   completed?: undefined | boolean
@@ -1115,7 +1120,7 @@ export interface LottieLayer {
   ks: Shape
   layers?: undefined | LottieLayer[] & { __used?: boolean }
   ln?: undefined | string
-  masksProperties?: undefined | Shape[]
+  masksProperties?: undefined | MaskShape[]
   mn?: undefined | string
   nm: string
   np?: undefined | string

@@ -459,7 +459,7 @@ export class ImagePreloader {
     originalPath: string
   ): string {
     if (assetData.e) {
-      return assetData.p || ''
+      return assetData.p ?? ''
     }
 
     if (assetsPath) {
@@ -469,7 +469,7 @@ export class ImagePreloader {
         imagePath = imagePath?.split('/')[1]
       }
 
-      return `${assetsPath}${imagePath || ''}`
+      return `${assetsPath}${imagePath ?? ''}`
     }
     let path = originalPath
 

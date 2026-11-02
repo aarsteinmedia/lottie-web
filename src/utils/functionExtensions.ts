@@ -58,14 +58,15 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
     return Object.getOwnPropertyDescriptor(object, prop)
   },
   logPrototype = (sources: Constructor[], destination?: Constructor) => {
-    const combinedPrototypes: PrototypeProps[] = [],
-      { length } = sources
+    const combinedPrototypes: PrototypeProps[] = []
 
     let sourcePrototype: Record<string, unknown>
 
     const destinationProperties = Object.getOwnPropertyNames(destination?.prototype as Record<string, unknown> | undefined ?? {})
 
-    for (let i = length - 1; i >= 0; i--) {
+    let i = sources.length
+
+    while (i--) {
       sourcePrototype = sources[i]?.prototype
 
       const { name } = sources[i] ?? { name: '' },

@@ -4,7 +4,7 @@ import type { CVStyleElement, Shape } from '@/types'
 
 import { ShapeData } from '@/elements/helpers/shapes/ShapeData'
 import { ShapeType } from '@/utils/enums'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapePropertyFactory } from '@/utils/shapes/properties'
 
 export class CVShapeData extends ShapeData {
   constructor(

@@ -96,7 +96,9 @@ export abstract class CompElement extends RenderableDOMElement {
       this.checkLayers(this.renderedFrame)
     }
     // This iteration needs to be backwards because of how expressions connect between each other
-    for (let i = this.elements.length - 1; i >= 0; i--) {
+    let i = this.elements.length
+
+    while (i--) {
       if (this.completeLayers || this.elements[i]) {
         this.elements[i]?.prepareFrame(this.renderedFrame - (this.layers[i]?.st ?? 0))
         if (this.elements[i]?._mdf) {

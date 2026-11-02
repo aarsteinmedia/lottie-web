@@ -2,6 +2,7 @@ import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {
   Caching, CompElementInterface, ElementInterfaceIntersect, ExpressionProperty, KeyframesMetadata,
+  MaskShape,
   Shape,
 } from '@/types'
 import type { ShapeType } from '@/utils/enums'
@@ -21,7 +22,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
   public _caching?: Caching
   public _cachingAtTime?: Caching
   public comp?: CompElementInterface | undefined
-  public override data?: Shape = undefined
+  public override data?: Shape | MaskShape = undefined
   public effectsSequence: ((arg: unknown) => ShapePath | undefined)[] = []
   public elem?: SVGShapeElement | CVShapeElement
   public frameId?: number

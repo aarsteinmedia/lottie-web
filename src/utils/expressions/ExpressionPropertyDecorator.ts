@@ -17,7 +17,7 @@ import { Matrix } from '@/utils/Matrix'
 import ShapePool from '@/utils/pooling/ShapePool'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
-import ShapePropertyFactory from '@/utils/shapes/properties'
+import { ShapePropertyFactory } from '@/utils/shapes/properties'
 
 function loopOut(
   this: KeyframeValueProperty, typeFromProps: string, durationFromProps: number, durationFlag?: boolean

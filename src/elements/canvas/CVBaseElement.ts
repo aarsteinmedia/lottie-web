@@ -338,9 +338,9 @@ export abstract class CVBaseElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented in globalData`)
     }
     if (globalData.blendMode !== data.bm) {
-      globalData.blendMode = data.bm as unknown as string
-      const blendModeValue = getBlendMode(data.bm)
+      const blendModeValue = getBlendMode(data.bm, true)
 
+      globalData.blendMode = blendModeValue
       globalData.canvasContext.globalCompositeOperation = blendModeValue as GlobalCompositeOperation
     }
   }
