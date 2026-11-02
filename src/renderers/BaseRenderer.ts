@@ -90,7 +90,7 @@ export abstract class BaseRenderer extends FrameElement {
     throw new Error(`${this.constructor.name}: Method buildItem not yet implemented`)
   }
 
-  checkLayers(val?: number) {
+  checkLayers(val = 0) {
     this.completeLayers = true
 
     for (let i = this.layers.length - 1; i >= 0; i--) {
@@ -98,13 +98,16 @@ export abstract class BaseRenderer extends FrameElement {
 
       if (!this.elements[i] &&
         (layer.ip - layer.st <=
-          Number(val) - layer.st &&
+          val - layer.st &&
           layer.op - layer.st >
-          Number(val) - layer.st)
+          val - layer.st)
       ) {
         this.buildItem(i)
       }
-      this.completeLayers = this.elements[i] ? this.completeLayers : false
+
+      if (!this.elements[i]) {
+        this.completeLayers = false
+      }
     }
     this.checkPendingElements()
   }
