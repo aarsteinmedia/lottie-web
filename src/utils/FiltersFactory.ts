@@ -1,3 +1,4 @@
+import { GradientUnitName } from '@/utils/enums'
 import { createNS } from '@/utils/helpers/svgElements'
 
 function createAlphaToLuminanceFilter() {
@@ -16,7 +17,7 @@ function createFilter(filId: string, skipCoordinates?: boolean) {
 
   fil.id = filId
   if (!skipCoordinates) {
-    fil.setAttribute('filterUnits', 'objectBoundingBox')
+    fil.setAttribute('filterUnits', GradientUnitName.ObjectBoundingBox)
     fil.setAttribute('x', '0%')
     fil.setAttribute('y', '0%')
     fil.setAttribute('width', '100%')

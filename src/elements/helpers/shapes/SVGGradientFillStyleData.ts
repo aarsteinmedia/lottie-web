@@ -15,7 +15,13 @@ import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { createElementID } from '@/utils'
 import {
-  lineCapEnum, lineJoinEnum, ShapeType
+  GradientType,
+  GradientTypeName,
+  GradientUnitName,
+  lineCapEnum, lineJoinEnum, ShapeType,
+  SpreadMethod,
+  StrokeLinecap,
+  StrokeLinejoin
 } from '@/utils/enums'
 import { degToRads } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
@@ -111,11 +117,11 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
 
   setGradientData(pathElement: SVGElement, data: Shape) {
     const gradientId = createElementID(),
-      gfill = createNS<SVGGradientElement>(data.t === 1 ? 'linearGradient' : 'radialGradient')
+      gfill = createNS<SVGGradientElement>(data.t === GradientType.Linear ? GradientTypeName.Linear : GradientTypeName.Radial)
 
     gfill.id = gradientId
-    gfill.setAttribute('spreadMethod', 'pad')
-    gfill.setAttribute('gradientUnits', 'userSpaceOnUse')
+    gfill.setAttribute('spreadMethod', SpreadMethod.Pad)
+    gfill.setAttribute('gradientUnits', GradientUnitName.UserSpaceOnUse)
     const stops: SVGStopElement[] = []
     let stop
     const jLen = (data.g?.p || 1) * 4
@@ -139,19 +145,16 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     const mask = createNS<SVGMaskElement>('mask'),
       maskElement = createNS<SVGPathElement>('path')
 
-    // if (!maskElement || !mask) {
-    //   throw new Error(`${this.constructor.name}: Could not create svg element`)
-    // }
     mask.appendChild(maskElement)
     const opacityId = createElementID(),
       maskId = createElementID()
 
     mask.id = maskId
-    const opFill = createNS(data.t === 1 ? 'linearGradient' : 'radialGradient')
+    const opFill = createNS(data.t === GradientType.Linear ? GradientTypeName.Linear : GradientTypeName.Radial)
 
     opFill.id = opacityId
-    opFill.setAttribute('spreadMethod', 'pad')
-    opFill.setAttribute('gradientUnits', 'userSpaceOnUse')
+    opFill.setAttribute('spreadMethod', SpreadMethod.Pad)
+    opFill.setAttribute('gradientUnits', GradientUnitName.UserSpaceOnUse)
     const jLen =
         ((data.g?.k.k as Stop[] | undefined)?.[0]?.s
           ? (data.g?.k.k as Stop[])[0]?.s.length
@@ -167,9 +170,9 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     maskElement.setAttribute(data.ty === ShapeType.GradientFill ? 'fill' : 'stroke',
       `url(${getLocationHref()}#${opacityId})`)
     if (data.ty === ShapeType.GradientStroke) {
-      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
-      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
-      if (data.lj === 1) {
+      maskElement.setAttribute('stroke-linecap', lineCapEnum[data.lc ?? StrokeLinecap.Round])
+      maskElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj ?? StrokeLinejoin.Round])
+      if (data.lj === StrokeLinejoin.Miter) {
         maskElement.setAttribute('stroke-miterlimit', `${Number(data.ml)}`)
       }
     }

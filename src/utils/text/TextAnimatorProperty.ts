@@ -339,8 +339,6 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         j,
         letterValue: LetterProps
 
-      const jLen = animators.length
-
       let mult: number | number[] | undefined,
         ind = -1,
         off: number,
@@ -386,7 +384,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             isNewLine = true
             continue
           }
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
             if (!animatorProps.t?.propType) {
               continue
@@ -481,7 +479,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             currentLength += alignment[0] * (letters[i]?.an || 0) * 0.005
             let animatorOffset = 0
 
-            for (j = 0; j < jLen; j++) {
+            for (j = 0; j < animators.length; j++) {
               animatorProps = animators[j]?.a
               if (animatorProps?.p.propType) {
                 animatorSelector = animators[j]?.s
@@ -591,7 +589,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             )
           }
 
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
             if (!animatorProps.t?.propType) {
               continue
@@ -640,7 +638,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               Number(documentData.fc[2]),
             ]
           }
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
             if (animatorProps.a?.propType) {
               animatorSelector = animators[j]?.s
@@ -665,7 +663,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               )
             }
           }
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
             if (animatorProps.s?.propType) {
               animatorSelector = animators[j]?.s
@@ -690,7 +688,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             }
           }
 
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
             animatorSelector = animators[j]?.s
             mult = animatorSelector?.getMult(letters[i]?.anIndexes[j],
@@ -796,7 +794,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             }
           }
 
-          for (j = 0; j < jLen; j++) {
+          for (j = 0; j < animators.length; j++) {
             animatorProps = animators[j]?.a ?? {}
 
             if (animatorProps.p?.propType) {

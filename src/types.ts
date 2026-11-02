@@ -52,6 +52,18 @@ import type {
   ShapeType,
   RendererType,
   PreserveAspectRatio,
+  StrokeAttribute,
+  StrokeAttributeName,
+  StackingOrder,
+  StrokeLinecap,
+  StrokeLinejoin,
+  BlendMode,
+  GradientType,
+  FillRule,
+  MatteMode,
+  LayerType,
+  EffectType,
+  MaskMode,
 } from '@/utils/enums'
 import type { CompExpressionInterface } from '@/utils/expressions/CompInterface'
 import type { FootageInterface } from '@/utils/expressions/FootageInterface'
@@ -82,6 +94,8 @@ import type { SlotManager } from '@/utils/SlotManager'
 import type { LetterProps } from '@/utils/text/LetterProps'
 import type { TextAnimatorDataProperty } from '@/utils/text/TextAnimatorDataProperty'
 import type { TextProperty } from '@/utils/text/TextProperty'
+
+type IntBool = 0 | 1
 
 export type AnimationDirection = 1 | -1
 
@@ -296,7 +310,7 @@ export interface CVStyleElement {
   lj?: undefined | CanvasLineJoin
   ml?: undefined | number
   preTransforms: TransformSequence
-  r?: 'evenodd' | 'nonzero'
+  r?: FillRule
   transforms: Transformer[]
   type: ShapeType
   wi?: undefined | number
@@ -428,7 +442,7 @@ export interface AnimationConfiguration<
 export interface Stop { s: number[] }
 export interface GradientColor {
   k: {
-    a: 1 | 0
+    a: IntBool
     k: number[] | Stop[]
   }
   /** Number of colors. */
@@ -438,10 +452,9 @@ export interface GradientColor {
 export type DynamicProperty = { hd?: boolean } &
   VectorProperty<number | number[] | Keyframe[]>
 
-type BoolInt = 0 | 1
 interface ShapeDataProperty {
   _mdf?: boolean
-  a: 1 | 0
+  a: IntBool
   ix?: undefined | number
   k: ShapePath | ShapePath[]
   paths: {
@@ -452,14 +465,14 @@ interface ShapeDataProperty {
 }
 
 export interface StrokeData {
-  n: 'o' | 'd' | 'g'
-  nm?: 'offset' | 'dash' | 'gap'
+  n: StrokeAttributeName
+  nm?: StrokeAttribute
   p: BaseProperty
   v?: VectorProperty
 }
 
 interface ShapeColor {
-  a: 1 | 0
+  a: IntBool
   ix?: undefined | number
   k: number | number[] | ShapeColorValue[]
 }
@@ -476,7 +489,7 @@ export interface Shape {
   /** Anchor point / Highlight angle for radial gradient. */
   a?: undefined | VectorProperty<number | Vector2 | Vector3>
   /** Blend Mode. */
-  bm?: undefined | number
+  bm?: undefined | BlendMode
   /** Color. */
   c?: undefined | ShapeColor
   cix?: undefined | number
@@ -500,15 +513,15 @@ export interface Shape {
   it?: undefined | Shape[]
   ix?: undefined | number
   ks?: undefined | ShapeDataProperty
-  lc?: 1 | 2 | 3
-  lj?: 1 | 2 | 3
+  lc?: StrokeLinecap
+  lj?: StrokeLinejoin
   ln?: undefined | string
   /** Stacking order. 1: Above 2: Below. */
-  m?: 1 | 2
+  m?: StackingOrder
   maxDist?: undefined | number
   ml?: undefined | number
   mn?: undefined | string
-  mode?: undefined | string
+  mode?: undefined | MaskMode
   nm?: undefined | string
   /** Number of properties. */
   np?: undefined | number
@@ -516,7 +529,7 @@ export interface Shape {
    * O?: VectorProperty.
    */
   o?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
     ix?: number
     x?: number
@@ -529,7 +542,7 @@ export interface Shape {
   /** Position. */
   p?: undefined | VectorProperty<Vector2>
   pt?: undefined | VectorProperty<ShapePath | ShapePath[]>
-  /** Rotation (for transforms) | Fill-rule (for fills). */
+  /** Rotation (for transforms) | FillAttribute (for fills). */
   r?: undefined | VectorProperty<{
     e: number;
     s: number;
@@ -548,34 +561,16 @@ export interface Shape {
   so?: undefined | VectorProperty
   sy?: undefined | number
   /** Gradient type. */
-  t?: undefined | number
+  t?: undefined | GradientType
   tr?: undefined | Shape
   ty: undefined | ShapeType
   w?: undefined | VectorProperty
   x?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
     ix?: number
   }
 }
-
-// export interface LottieTransform {
-//   /** Anchor Point */
-//   a: VectorProperty<Vector2>
-//   /** End Opacity (for repeater) */
-//   eo?: VectorProperty
-//   or?: VectorProperty<{ ti: unknown; to: unknown }[]>
-//   /** Position */
-//   p: VectorProperty<Vector2>
-//   /** Rotation */
-//   r: VectorProperty
-//   ry?: VectorProperty
-//   rz?: VectorProperty
-//   /** Scale */
-//   s: VectorProperty<Vector2>
-//   /** Start Opacity (for repeater) */
-//   so?: VectorProperty
-// }
 
 export interface StoredData {
   elem: SVGPathElement
@@ -604,7 +599,7 @@ export interface ViewData {
 export interface LottieAsset {
   __used?: boolean
   /** Whether the data is embedded/encoded. */
-  e?: undefined | BoolInt
+  e?: undefined | IntBool
   /** Height of image in pixels. */
   h?: undefined | number
 
@@ -669,7 +664,7 @@ export type Vector4 = Tuple<number, 4>
 
 export interface VectorProperty<T = number> {
   _mdf?: boolean
-  a: 1 | 0
+  a: IntBool
   ix?: undefined | number
   k: T
   s?: undefined | number
@@ -700,18 +695,18 @@ export interface Mask {
   mode: string
   nm: string
   o: {
-    a: 0 | 1
+    a: IntBool
     k: number
     ix?: number
     x?: number
   }
   pt: {
-    a: 0 | 1
+    a: IntBool
     k: MaskData | MaskData[]
     ix?: number
   }
   x: {
-    a: 0 | 1
+    a: IntBool
     k: number
     ix?: number
   }
@@ -719,37 +714,37 @@ export interface Mask {
 
 interface LayerStyle {
   a?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   bm?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   c: {
-    a: 0 | 1
+    a: IntBool
     k: Vector3 | Vector4
   }
   ch?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   d?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   mn: string
   nm: string
   no?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   o?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   s: {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   ty: number
@@ -816,48 +811,48 @@ export interface BezierPoint {
 export interface TextRangeValue {
   /** Max Amount. */
   a: {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   /** Based On. */
   b: number
   /** End. */
   e: {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   hd?: undefined | boolean
   /** Min Ease. */
   ne?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   /** Offset. */
   o?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   /** Range units. */
   r: number
   /** Randomize. */
-  rn: 0 | 1
+  rn: IntBool
   /** Start. */
   s?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
   /** Shape. */
   sh: number
   /** Smoothness. */
   sm?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
-  t: 0 | 1
+  t: IntBool
   totalChars: number
   /** Max Ease. */
   xe?: undefined | {
-    a: 0 | 1
+    a: IntBool
     k: number
   }
 }
@@ -923,7 +918,7 @@ export interface TextData {
     /** Grouping. */
     g: number
     a: {
-      a: 0 | 1
+      a: IntBool
       k: Vector2
       ix?: number
     }
@@ -1000,20 +995,20 @@ export type EffectElement =
 export interface EffectValue {
   ty: number
   v: {
-    a: 1 | 0
+    a: IntBool
     k: number | Vector3 | Vector4
   }
 }
 
 export interface Effect {
   ef: EffectValue[]
-  en: 1 | 0
+  en: IntBool
   fs?: undefined | FilterSizeConfig
   ix?: undefined | number
   mn?: undefined | string
   nm?: undefined | string
   np: number
-  ty: number
+  ty: EffectType
 }
 
 export interface FontList {
@@ -1049,7 +1044,8 @@ export interface Character {
   shapes: Shape[]
   size: number
   style?: undefined | string
-  t: number
+  /** Whether the character has been replaced with an animated shape */
+  t: IntBool
   w: number
 }
 
@@ -1061,7 +1057,7 @@ export interface AnimationData {
   /** Characters. */
   chars?: Character[] | null
   /** Is three dimensional. */
-  ddd: 0 | 1
+  ddd: IntBool
   fonts?: undefined | { list: DocumentData[] }
   /** Framerate. */
   fr: number
@@ -1102,8 +1098,8 @@ export interface LottieLayer {
   cl?: undefined | string
   completed?: undefined | boolean
   /** Whether transforms should be applied before or after masks. */
-  ct?: 0 | 1
-  ddd?: 0 | 1
+  ct?: IntBool
+  ddd?: IntBool
   ef?: undefined | Effect[]
   en?: undefined | number
   fonts?: undefined | { list: DocumentData[] }
@@ -1143,7 +1139,7 @@ export interface LottieLayer {
   /** Text Data. */
   t?: undefined | TextData
   /** Matte target: If set to 1 it means a layer is using this layer as a track matte. */
-  td?: 0 | 1
+  td?: IntBool
   textData?: undefined | {
     height: number
     width: number
@@ -1155,9 +1151,9 @@ export interface LottieLayer {
   /** Matte reference (for shape). */
   tp?: undefined | number
   /** Matte mode. */
-  tt?: undefined | number
+  tt?: undefined | MatteMode
   /** Layer type.*/
-  ty: number
+  ty: LayerType
   w?: undefined | number
   width?: undefined | number
   xt?: undefined | number

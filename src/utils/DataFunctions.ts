@@ -7,7 +7,7 @@ import type {
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { isArray, isArrayOfNum } from '@/utils'
-import { ShapeType } from '@/utils/enums'
+import { LayerType, ShapeType } from '@/utils/enums'
 
 function completeLayers(layers: LottieLayer[],
   comps: LottieLayer[]) {
@@ -51,18 +51,18 @@ function completeLayers(layers: LottieLayer[],
       }
     }
     switch (layerData.ty) {
-      case 0: { // Precomposition Layer
+      case LayerType.PreComposition: {
         layerData.layers = findCompLayers(layerData.refId, comps) as LottieLayer[]
         completeLayers(layerData.layers, comps)
 
         break
       }
-      case 4: { // Shape Layer
+      case LayerType.Shape: {
         completeShapes(layerData.shapes)
 
         break
       }
-      case 5: { // TextLayer
+      case LayerType.Text: {
         completeText(layerData)
 
         break
@@ -197,7 +197,7 @@ function checkVersion(minimum: Vector3, animVersionString: string) {
 }
 
 const iterateLayers = (
-  layers: LottieLayer[], updateData: (layer: LottieLayer) => void, type: number
+  layers: LottieLayer[], updateData: (layer: LottieLayer) => void, type: LayerType
 ) => {
   for (let i = 0; i < layers.length; i++) {
     if (layers[i]?.ty === type) {
@@ -231,13 +231,13 @@ const checkText = (() => {
       return
     }
     iterateLayers(
-      animationData.layers, updateTextLayer, 5
+      animationData.layers, updateTextLayer, LayerType.Text
     )
 
     for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         iterateLayers(
-          animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, 5
+          animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, LayerType.Text
         )
       }
     }
@@ -363,13 +363,13 @@ const checkPathProperties = (() => {
       return
     }
     iterateLayers(
-      animationData.layers, updateTextLayer, 5
+      animationData.layers, updateTextLayer, LayerType.Text
     )
 
     for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         iterateLayers(
-          animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, 5
+          animationData.assets[i]?.layers as LottieLayer[], updateTextLayer, LayerType.Text
         )
       }
     }
@@ -429,7 +429,7 @@ const checkColors = (() => {
       const { length } = layers
 
       for (let i = 0; i < length; i++) {
-        if (layers[i]?.ty === 4) {
+        if (layers[i]?.ty === LayerType.Shape) {
           iterateShapes(layers[i]?.shapes ?? [])
         }
       }
@@ -503,9 +503,7 @@ const checkShapes = (() => {
     _iterateLayers = (layers: LottieLayer[]) => {
       let layerData
 
-      const { length } = layers
-
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < layers.length; i++) {
         layerData = layers[i]
         if (layerData.hasMask) {
           const maskProps = layerData.masksProperties,
@@ -534,15 +532,15 @@ const checkShapes = (() => {
                 sPaths = shapePath[k]?.s ?? []
 
               if (ePaths.length > 0) {
-                ; ePaths[0].c = isClosed
+                ePaths[0].c = isClosed
               }
               if (sPaths.length > 0) {
-                ; sPaths[0].c = isClosed
+                sPaths[0].c = isClosed
               }
             }
           }
         }
-        if (layerData.ty === 4) {
+        if (layerData.ty === LayerType.Shape) {
           completeClosingShapes(layerData.shapes)
         }
       }
@@ -554,9 +552,7 @@ const checkShapes = (() => {
     }
     _iterateLayers(animationData.layers)
 
-    const { length } = animationData.assets
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         _iterateLayers(animationData.assets[i]?.layers as LottieLayer[])
       }

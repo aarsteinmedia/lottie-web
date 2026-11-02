@@ -13,7 +13,9 @@ import {
   needsMaskIsolation,
 } from '@/elements/canvas/CVMaskElement'
 import { RenderableElement } from '@/elements/helpers/RenderableElement'
-import { EffectTypes } from '@/utils/enums'
+import {
+  EffectTypes, LayerType, MatteMode
+} from '@/utils/enums'
 import AssetManager from '@/utils/helpers/AssetManager'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
@@ -68,7 +70,7 @@ export abstract class CVBaseElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented in globalData`)
     }
 
-    const hasMatte = Boolean(this.data.tt && this.data.tt >= 1),
+    const hasMatte = Object.values(MatteMode).includes(this.data.tt as MatteMode),
       hasComplexMasks = needsMaskIsolation(this.data.masksProperties)
 
     // Isolate layer drawing when track mattes or complex masks need buffer compositing.
@@ -81,7 +83,7 @@ export abstract class CVBaseElement extends RenderableElement {
       const bufferCanvas2 = AssetManager.createCanvas(canvasContext.canvas.width, canvasContext.canvas.height)
 
       this.buffers.push(bufferCanvas2)
-      if (hasMatte && this.data.tt !== undefined && this.data.tt >= 3 && !document._isProxy) {
+      if (hasMatte && this.data.tt === MatteMode.Luminance && !document._isProxy) {
         AssetManager.loadLumaCanvas()
       }
     }
@@ -121,9 +123,9 @@ export abstract class CVBaseElement extends RenderableElement {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
 
-    const matteMode = this.data.tt || 0
+    const matteMode = this.data.tt
 
-    if (matteMode < 1) {
+    if (!matteMode) {
       return
     }
     const buffer = this.buffers[1]
@@ -169,7 +171,7 @@ export abstract class CVBaseElement extends RenderableElement {
 
     // If the mask is a Luma matte, we need to do two extra painting operations
     // the _isProxy check is to avoid drawing a fake canvas in workers that will throw an error
-    if (matteMode >= 3 && !document._isProxy) {
+    if (matteMode === MatteMode.Luminance && !document._isProxy) {
       // We copy the painted mask to a buffer that has a color matrix filter applied to it
       // that applies the rgb values to the alpha channel
       const lumaBuffer = AssetManager.getLumaCanvas(this.canvasContext.canvas),
@@ -258,10 +260,10 @@ export abstract class CVBaseElement extends RenderableElement {
     this.renderLocalTransform()
     this.setBlendMode()
 
-    const hasMatte = (this.data.tt || 0) >= 1,
+    const hasMatte = Object.values(MatteMode).includes(this.data.tt as MatteMode),
       hasSimpleMasks = Boolean(this.maskManager?.hasMasks && this.maskManager.isSimple),
       hasComplexMasks = Boolean(this.maskManager?.hasMasks && !this.maskManager.isSimple),
-      shouldForceRealStack = this.data.ty === 0 || hasSimpleMasks
+      shouldForceRealStack = this.data.ty === LayerType.PreComposition || hasSimpleMasks
 
     if (hasMatte || hasComplexMasks) {
       this.prepareLayer()

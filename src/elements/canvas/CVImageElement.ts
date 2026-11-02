@@ -9,6 +9,7 @@ import type {
 import { CVBaseElement } from '@/elements/canvas/CVBaseElement'
 import { ImageElement } from '@/elements/ImageElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
+import { PreserveAspectRatio } from '@/utils/enums'
 import { mixin } from '@/utils/functionExtensions'
 import { createTag } from '@/utils/helpers/htmlElements'
 
@@ -71,8 +72,8 @@ export class CVImageElement extends CVBaseElement {
       this.globalData.renderConfig?.imagePreserveAspectRatio
 
     if (
-      imgRel > canvasRel && par === 'xMidYMid slice' ||
-      imgRel < canvasRel && par !== 'xMidYMid slice'
+      imgRel > canvasRel && par === PreserveAspectRatio.Cover ||
+      imgRel < canvasRel && par !== PreserveAspectRatio.Cover
     ) {
       heightCrop = imgH
       widthCrop = heightCrop * canvasRel

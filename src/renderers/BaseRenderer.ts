@@ -22,6 +22,7 @@ import { AudioElement } from '@/elements/AudioElement'
 import { FootageElement } from '@/elements/FootageElement'
 import { FrameElement } from '@/elements/helpers/FrameElement'
 import { NullElement } from '@/elements/NullElement'
+import { LayerType } from '@/utils/enums'
 import { FontManager } from '@/utils/FontManager'
 import { slotFactory } from '@/utils/SlotManager'
 
@@ -150,31 +151,31 @@ export abstract class BaseRenderer extends FrameElement {
 
   createItem(layer: LottieLayer) {
     switch (layer.ty) {
-      case 2: {
+      case LayerType.Image: {
         return this.createImage(layer)
       }
-      case 0: {
+      case LayerType.PreComposition: {
         return this.createComp(layer)
       }
-      case 1: {
+      case LayerType.SolidColor: {
         return this.createSolid(layer)
       }
-      case 3: {
+      case LayerType.Null: {
         return this.createNull(layer)
       }
-      case 4: {
+      case LayerType.Shape: {
         return this.createShape(layer)
       }
-      case 5: {
+      case LayerType.Text: {
         return this.createText(layer)
       }
-      case 6: {
+      case LayerType.Audio: {
         return this.createAudio(layer)
       }
-      case 13: {
+      case LayerType.Camera: {
         return this.createCamera(layer)
       }
-      case 15: {
+      case LayerType.Data: {
         return this.createFootage(layer)
       }
       default: {

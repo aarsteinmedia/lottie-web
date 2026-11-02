@@ -24,7 +24,9 @@ import {
 } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import BMMath from '@/utils/BMMath'
-import { ArrayType, PropType } from '@/utils/enums'
+import {
+  ArrayType, LayerType, PropType
+} from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
 import { degToRads } from '@/utils/helpers/constants'
 import shapePool from '@/utils/pooling/ShapePool'
@@ -733,7 +735,7 @@ function initiateExpression(
       }
     }
 
-    if (elemType === 4 && !content) {
+    if (elemType === LayerType.Shape && !content) {
       content = thisLayer?.getInterface('ADBE Root Vectors Group') as ShapeExpressionInterface
     }
     effect = effect ?? thisLayer?.getInterface(4) as GroupEffectInterface

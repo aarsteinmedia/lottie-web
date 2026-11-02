@@ -8,7 +8,7 @@ import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
 import { isArray } from '@/utils'
-import { ShapeType } from '@/utils/enums'
+import { ShapeType, StackingOrder } from '@/utils/enums'
 import { Matrix } from '@/utils/Matrix'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -384,8 +384,8 @@ export class RepeaterModifier extends ShapeModifier {
         iteration -= offsetModulo
       }
     }
-    i = this.data.m === 1 ? 0 : this._currentCopies - 1
-    dir = this.data.m === 1 ? 1 : -1
+    i = this.data.m === StackingOrder.Above ? 0 : this._currentCopies - 1
+    dir = this.data.m === StackingOrder.Above ? 1 : -1
     cont = this._currentCopies
     let j
 

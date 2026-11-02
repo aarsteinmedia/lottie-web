@@ -7,6 +7,7 @@ import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { getNewSegment, getSegmentsLength } from '@/utils/Bezier'
+import { StackingOrder } from '@/utils/enums'
 import { segmentsLengthPool } from '@/utils/pooling/segmentLengthPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -413,7 +414,7 @@ export class TrimModifier extends ShapeModifier {
           !shapeData.shape?._mdf &&
           !this._mdf &&
           !_isFirstFrame &&
-          this.m !== 2
+          this.m !== StackingOrder.Below
         ) {
           if (shapeData.shape) {
             shapeData.shape.paths = shapeData.localShapeCollection
@@ -461,7 +462,7 @@ export class TrimModifier extends ShapeModifier {
             throw new Error(`${this.constructor.name}: Could not set localShapeCollection`)
           }
           localShapeCollection.releaseShapes()
-          if (this.m === 2 && length > 1) {
+          if (this.m === StackingOrder.Below && length > 1) {
             edges = this.calculateShapeEdges(
               s,
               e,
@@ -536,7 +537,7 @@ export class TrimModifier extends ShapeModifier {
       }
     } else if (this._mdf) {
       for (let i = 0; i < length; i++) {
-        // Releasign Trim Cached paths data when no trim applied in case shapes are modified inbetween.
+        // Reassign Trim Cached paths data when no trim applied in case shapes are modified in between.
         // Don't remove this even if it's losing cached info.
         const currentShape = this.shapes[i]
 

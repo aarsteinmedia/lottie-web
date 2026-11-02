@@ -10,7 +10,7 @@ import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { toRGBString } from '@/utils'
-import { ShapeType } from '@/utils/enums'
+import { GradientType, ShapeType } from '@/utils/enums'
 import { Matrix } from '@/utils/Matrix'
 import { buildShapeString } from '@/utils/shapes/buildShapeString'
 
@@ -104,7 +104,7 @@ function renderGradient(
     itemData.style?.pElem.setAttribute(attr, `${itemData.o?.v}`)
   }
   if (itemData.s?._mdf || isFirstFrame) {
-    const attr1 = styleData.t === 1 ? 'x1' : 'cx',
+    const attr1 = styleData.t === GradientType.Linear ? 'x1' : 'cx',
       attr2 = attr1 === 'x1' ? 'y1' : 'cy'
 
     gfill?.setAttribute(attr1, `${pt1[0]}`)
@@ -145,7 +145,7 @@ function renderGradient(
       stop.setAttribute('stop-opacity', `${oValues[i * 2 + 1]}`)
     }
   }
-  if (styleData.t === 1) {
+  if (styleData.t === GradientType.Linear) {
     if (itemData.e?._mdf || isFirstFrame) {
       gfill?.setAttribute('x2', `${pt2[0]}`)
       gfill?.setAttribute('y2', `${pt2[1]}`)
@@ -193,7 +193,6 @@ function renderGradient(
         itemData.of?.setAttribute('fy', `${y}`)
       }
     }
-    // gfill.setAttribute('fy','200');
   }
 }
 

@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 
 import { FrameElement } from '@/elements/helpers/FrameElement'
+import { LayerType } from '@/utils/enums'
 
 export abstract class RenderableElement extends FrameElement {
   hidden = false
@@ -69,7 +70,7 @@ export abstract class RenderableElement extends FrameElement {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)
     }
-    if (this.data.ty === 5) {
+    if (this.data.ty === LayerType.Text) {
       return {
         h: Number(this.data.textData?.height),
         w: Number(this.data.textData?.width),

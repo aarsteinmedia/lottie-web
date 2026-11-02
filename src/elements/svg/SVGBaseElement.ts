@@ -4,6 +4,9 @@ import { RenderableDOMElement } from '@/elements/helpers/RenderableDOMElement'
 import { MaskElement } from '@/elements/MaskElement'
 import { SVGEffects } from '@/elements/svg/SVGEffects'
 import { createElementID } from '@/utils'
+import {
+  LayerType, MatteMode, MatteModeName
+} from '@/utils/enums'
 import { featureSupport } from '@/utils/featureSupport'
 import FiltersFactory from '@/utils/FiltersFactory'
 import { namespaceXLink } from '@/utils/helpers/constants'
@@ -66,7 +69,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
      * Clipping compositions to hide content that exceeds boundaries.
      * If collapsed transformations is on, component should not be clipped.
       */
-    if (this.data.ty === 0 && !this.data.hd) {
+    if (this.data.ty === LayerType.PreComposition && !this.data.hd) {
       const cp = createNS<SVGClipPathElement>('clipPath'),
         pt = createNS<SVGPathElement>('path')
 
@@ -134,7 +137,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
     return this.baseElement ?? null
   }
 
-  getMatte(matteType = 1): string {
+  getMatte(matteType = MatteMode.Add): string {
     // This should not be a common case. But for backward compatibility, we'll create the matte object.
     // It solves animations that have two consecutive layers marked as matte masks.
     // Which is an undefined behavior in AE.
@@ -146,14 +149,14 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
     let filId, fil, useElement, gg
 
     switch (matteType) {
-      case 1:
-      case 3: {
+      case MatteMode.Add:
+      case MatteMode.Luminance: {
         {
           const masker = createNS<SVGMaskElement>('mask')
 
           masker.id = id
           masker.setAttribute('mask-type',
-            matteType === 3 ? 'luminance' : 'alpha')
+            matteType === MatteMode.Luminance ? MatteModeName.Luminance : MatteModeName.Alpha)
           useElement = createNS<SVGUseElement>('use')
           useElement.setAttributeNS(
             namespaceXLink,
@@ -162,7 +165,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
           )
           masker.appendChild(useElement)
           this.globalData?.defs.appendChild(masker)
-          if (featureSupport.maskType || matteType !== 1) {
+          if (featureSupport.maskType || matteType !== MatteMode.Add) {
             break
           }
           masker.setAttribute('mask-type', 'luminance')
@@ -177,11 +180,11 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         }
         break
       }
-      case 2: {
+      case MatteMode.Subtract: {
         const maskGroup = createNS<SVGMaskElement>('mask')
 
         maskGroup.id = id
-        maskGroup.setAttribute('mask-type', 'alpha')
+        maskGroup.setAttribute('mask-type', MatteModeName.Alpha)
         const maskGrouper = createNS<SVGGElement>('g')
 
         maskGroup.appendChild(maskGrouper)
@@ -222,7 +225,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         )
         maskGrouper.appendChild(useElement)
         if (!featureSupport.maskType) {
-          maskGroup.setAttribute('mask-type', 'luminance')
+          maskGroup.setAttribute('mask-type', MatteModeName.Luminance)
           fil.appendChild(FiltersFactory.createAlphaToLuminanceFilter())
           gg = createNS<SVGGElement>('g')
           maskGrouper.appendChild(alphaRect)

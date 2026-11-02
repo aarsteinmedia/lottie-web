@@ -10,6 +10,9 @@ import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { createElementID } from '@/utils'
+import {
+  MaskMode, MatteModeName, ShapePropertyType
+} from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -55,7 +58,7 @@ export class MaskElement {
 
     for (let i = 0; i < length; i++) {
       if (
-        properties[i]?.mode !== 'a' && properties[i]?.mode !== 'n' ||
+        properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None ||
         properties[i]?.inv ||
         properties[i]?.o?.k !== 100 ||
         properties[i]?.o?.x
@@ -65,7 +68,7 @@ export class MaskElement {
       }
 
       if (
-        (properties[i]?.mode === 's' || properties[i]?.mode === 'i') &&
+        (properties[i]?.mode === MaskMode.Subtract || properties[i]?.mode === MaskMode.Intersect) &&
         count === 0
       ) {
         rect = createNS<SVGRectElement>('rect')
@@ -79,7 +82,7 @@ export class MaskElement {
 
       const path = createNS<SVGPathElement>('path')
 
-      if (properties[i]?.mode === 'n') {
+      if (properties[i]?.mode === MaskMode.None) {
         // TODO: move this to a factory or to a constructor
         this.viewData[i] = {
           elem: path,
@@ -94,7 +97,7 @@ export class MaskElement {
           prop: ShapePropertyFactory.getShapeProp(
             this.element,
             properties[i],
-            3
+            ShapePropertyType.Path
           ),
         }
         defs.appendChild(path)
@@ -103,7 +106,7 @@ export class MaskElement {
       count++
 
       path.setAttribute('fill',
-        properties[i]?.mode === 's' ? '#000000' : '#ffffff')
+        properties[i]?.mode === MaskMode.Subtract ? '#000000' : '#ffffff')
       path.setAttribute('clip-rule', 'nonzero')
       let filterID
 
@@ -121,17 +124,17 @@ export class MaskElement {
           this.element
         ) as ValueProperty
         filterID = createElementID()
-        const expansor = createNS<SVGFilterElement>('filter')
+        const expander = createNS<SVGFilterElement>('filter')
 
-        expansor.id = filterID
+        expander.id = filterID
         feMorph = createNS<SVGFEMorphologyElement>('feMorphology')
         feMorph.setAttribute('operator', 'erode')
         feMorph.setAttribute('in', 'SourceGraphic')
         feMorph.setAttribute('radius', '0')
-        expansor.appendChild(feMorph)
-        defs.appendChild(expansor)
+        expander.appendChild(feMorph)
+        defs.appendChild(expander)
         path.setAttribute('stroke',
-          properties[i]?.mode === 's' ? '#000000' : '#ffffff')
+          properties[i]?.mode === MaskMode.Subtract ? '#000000' : '#ffffff')
       }
 
       // TODO: move this to a factory or to a constructor
@@ -144,7 +147,7 @@ export class MaskElement {
         lastRadius: 0,
         x,
       }
-      if (properties[i]?.mode === 'i') {
+      if (properties[i]?.mode === MaskMode.Intersect) {
         const g = createNS<SVGGElement>('g')
 
         for (let j = 0; j < currentMasks.length; j++) {
@@ -152,7 +155,7 @@ export class MaskElement {
         }
         const mask = createNS<SVGMaskElement>('mask')
 
-        mask.setAttribute('mask-type', 'alpha')
+        mask.setAttribute('mask-type', MatteModeName.Alpha)
         mask.id = `${layerId}_${count}`
         mask.appendChild(path)
         defs.appendChild(mask)
@@ -278,7 +281,7 @@ export class MaskElement {
         this.viewData[i]?.elem.setAttribute('fill-opacity',
           `${this.viewData[i]?.op.v ?? 1}`)
       }
-      if (this.masksProperties[i]?.mode === 'n') {
+      if (this.masksProperties[i]?.mode === MaskMode.None) {
         continue
       }
       if (

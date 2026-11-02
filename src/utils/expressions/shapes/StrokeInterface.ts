@@ -24,18 +24,20 @@ export class StrokeInterface extends BaseInterface {
   }
 
   override getInterface(val: string | number) {
-    if (val === 'Color' || val === 'color') {
-      return this.color
+    switch (String(val).toLowerCase()) {
+      case 'color':
+      case 'colour': {
+        return this.color
+      }
+      case 'opacity': {
+        return this.opacity
+      }
+      case 'stroke width': {
+        return this.strokeWidth
+      }
+      default: {
+        return null
+      }
     }
-
-    if (val === 'Opacity' || val === 'opacity') {
-      return this.opacity
-    }
-
-    if (val === 'Stroke Width' || val === 'stroke width') {
-      return this.strokeWidth
-    }
-
-    return null
   }
 }

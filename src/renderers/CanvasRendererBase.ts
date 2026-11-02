@@ -16,7 +16,7 @@ import { BaseRenderer } from '@/renderers/BaseRenderer'
 import {
   debounce, devError, getDevicePixelRatio
 } from '@/utils'
-import { PreserveAspectRatio } from '@/utils/enums'
+import { LayerType, PreserveAspectRatio } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createTag } from '@/utils/helpers/htmlElements'
 
@@ -63,7 +63,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
   override buildItem(pos: number) {
     const { elements, layers } = this
 
-    if (elements[pos] || layers[pos]?.ty === 99) {
+    if (elements[pos] || layers[pos]?.ty === LayerType.None) {
       return
     }
     const element = this.createItem(layers[pos]) as ElementInterfaceIntersect

@@ -8,6 +8,7 @@ import type { LayerExpressionInterface } from '@/utils/expressions/LayerInterfac
 import type { BaseProperty } from '@/utils/properties/BaseProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
+import { EffectType } from '@/utils/enums'
 import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 import { PropertyInterface } from '@/utils/expressions/PropertyInterface'
@@ -55,6 +56,7 @@ export class EffectsExpressionInterface {
 
       for (let i = 0; i < len; i++) {
         this.effectElements.push(this.createGroupInterface(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment
           this.effectsData[i], elem.effectsManager.effectElements[i], propertyGroup, elem
         ))
       }
@@ -82,7 +84,7 @@ export class EffectsExpressionInterface {
           effects[i].mn,
           effects[i].ix
         ].includes(name)) {
-          if (effects[i].ty === 5) {
+          if (effects[i].ty === EffectType.Custom) {
             return this.effectElements[i]
           }
 
@@ -97,9 +99,9 @@ export class EffectsExpressionInterface {
       { length } = data.ef ?? []
 
     for (let i = 0; i < length; i += 1) {
-      if (data.ef?.[i].ty === 5) {
+      if (data.ef?.[i].ty === EffectType.Custom) {
         this.effectElements.push(this.createGroupInterface(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-enum-assignment
           data.ef[i], elements.effectElements[i], elements.effectElements[i].propertyGroup, elem
         ))
       } else {

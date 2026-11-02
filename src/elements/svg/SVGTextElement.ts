@@ -16,7 +16,9 @@ import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyCo
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { TextElement } from '@/elements/TextElement'
-import { RendererType } from '@/utils/enums'
+import {
+  lineCapEnum, lineJoinEnum, RendererType
+} from '@/utils/enums'
 import { mixin } from '@/utils/functionExtensions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -198,8 +200,8 @@ export class SVGTextLottieElement extends TextElement {
           }
 
           if (cachedSpansLength <= i) {
-            tSpan.setAttribute('stroke-linecap', 'butt')
-            tSpan.setAttribute('stroke-linejoin', 'round')
+            tSpan.setAttribute('stroke-linecap', lineCapEnum[1])
+            tSpan.setAttribute('stroke-linejoin', lineJoinEnum[2])
             tSpan.setAttribute('stroke-miterlimit', '4')
             if (this.textSpans[i]) {
               ; this.textSpans[i].span = tSpan
@@ -252,8 +254,7 @@ export class SVGTextLottieElement extends TextElement {
           )
           let glyphElement: SVGCompElement | SVGShapeElement
 
-          // t === 1 means the character has been replaced with an animated shaped
-          if (charData?.t === 1) {
+          if (charData?.t) {
             glyphElement = (this.comp as SVGCompElement | SVGRenderer).createComp(
               charData.data as LottieLayer,
               undefined,

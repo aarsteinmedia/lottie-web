@@ -38,25 +38,27 @@ export class TransformInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
-    if (this.shape?.a?.ix === value || value === 'Anchor Point') {
+    const normalizedValue = String(value).toLowerCase().trim()
+
+    if (this.shape?.a?.ix === value || normalizedValue === 'anchor point') {
       return this.anchorPoint
     }
-    if (this.shape?.o?.ix === value || value === 'Opacity') {
+    if (this.shape?.o?.ix === value || normalizedValue === 'opacity') {
       return this.opacity
     }
-    if (this.shape?.p?.ix === value || value === 'Position') {
+    if (this.shape?.p?.ix === value || normalizedValue === 'position') {
       return this.position
     }
-    if (this.shape?.r?.ix === value || value === 'Rotation' || value === 'ADBE Vector Rotation') {
+    if (this.shape?.r?.ix === value || normalizedValue.endsWith('rotation')) {
       return this.rotation
     }
-    if (this.shape?.s?.ix === value || value === 'Scale') {
+    if (this.shape?.s?.ix === value || normalizedValue === 'scale') {
       return this.scale
     }
-    if (this.shape?.sk?.ix === value || value === 'Skew') {
+    if (this.shape?.sk?.ix === value || normalizedValue === 'skew') {
       return this.skew
     }
-    if (this.shape?.sa?.ix === value || value === 'Skew Axis') {
+    if (this.shape?.sa?.ix === value || normalizedValue === 'skew axis') {
       return this.skewAxis
     }
 

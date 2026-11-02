@@ -26,7 +26,10 @@ import { SVGTransformData } from '@/elements/helpers/shapes/SVGTransformData'
 import { ShapeElement } from '@/elements/ShapeElement'
 import { SVGBaseElement } from '@/elements/svg/SVGBaseElement'
 import {
-  lineCapEnum, lineJoinEnum, ShapeType
+  FillAttribute,
+  FillRule,
+  lineCapEnum, lineJoinEnum, ShapeType,
+  StrokeLinejoin
 } from '@/utils/enums'
 import { mixin } from '@/utils/functionExtensions'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
@@ -235,14 +238,14 @@ export class SVGShapeElement extends ShapeElement {
       pathElement.setAttribute('stroke-linecap', lineCapEnum[data.lc || 2])
       pathElement.setAttribute('stroke-linejoin', lineJoinEnum[data.lj || 2])
       pathElement.setAttribute('fill-opacity', '0')
-      if (data.lj === 1 && data.ml) {
+      if (data.lj === StrokeLinejoin.Miter && data.ml) {
         pathElement.setAttribute('stroke-miterlimit', `${data.ml}`)
       }
 
     }
 
-    if (data.r === (2 as any)) {
-      pathElement.setAttribute('fill-rule', 'evenodd')
+    if (data.r as unknown as FillAttribute === FillAttribute.EvenOdd) {
+      pathElement.setAttribute('fill-rule', FillRule.EvenOdd)
     }
 
     if (data.ln) {

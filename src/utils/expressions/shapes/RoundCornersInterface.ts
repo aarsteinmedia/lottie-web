@@ -12,7 +12,9 @@ export class RoundCornersInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
-    if (this.shape?.r?.ix === value || value === 'Round Corners 1') {
+    const normalizedValue = String(value).toLowerCase().trim()
+
+    if (this.shape?.r?.ix === value || normalizedValue.startsWith('round corners')) {
       return this.radius
     }
 

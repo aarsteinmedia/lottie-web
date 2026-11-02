@@ -4,6 +4,7 @@ import type {
 } from '@/types'
 
 import { createElementID, toRGBString } from '@/utils'
+import { lineCapEnum } from '@/utils/enums'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -47,7 +48,7 @@ export class SVGStrokeEffect {
     const groupPath = createNS<SVGGElement>('g')
 
     groupPath.setAttribute('fill', 'none')
-    groupPath.setAttribute('stroke-linecap', 'round')
+    groupPath.setAttribute('stroke-linecap', lineCapEnum[2])
     groupPath.setAttribute('stroke-dashoffset', '1')
     for (i; i < len; i++) {
       path = createNS<SVGPathElement>('path')

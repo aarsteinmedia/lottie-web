@@ -131,10 +131,9 @@ export class ShapePath {
       )
       init = 1
     }
-    const { _length } = this
-    let cnt = _length - 1
+    let cnt = this._length - 1
 
-    for (let i = init; i < _length; i++) {
+    for (let i = init; i < this._length; i++) {
       newPath.setTripleAt(
         vertices[cnt]?.[0] ?? 0,
         vertices[cnt]?.[1] ?? 0,

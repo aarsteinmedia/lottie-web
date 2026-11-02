@@ -8,6 +8,7 @@ import type {
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
+import { FillRule, MaskMode } from '@/utils/enums'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import AssetManager from '@/utils/helpers/AssetManager'
 import { emitShapePath } from '@/utils/helpers/emitShapePath'
@@ -33,10 +34,10 @@ export function isSimpleMaskStack(masks: Shape[] | undefined) {
   }
 
   for (const mask of masks) {
-    if (mask.mode === 'n') {
+    if (mask.mode === MaskMode.None) {
       continue
     }
-    if (mask.mode !== 'a' || mask.inv) {
+    if (mask.mode !== MaskMode.Add || mask.inv) {
       return false
     }
     if (mask.o?.x) {
@@ -62,7 +63,7 @@ export function needsMaskIsolation(masks: Shape[] | undefined) {
   }
 
   for (const mask of masks) {
-    if (mask.mode !== 'n') {
+    if (mask.mode !== MaskMode.None) {
       return !isSimpleMaskStack(masks)
     }
   }
@@ -95,7 +96,7 @@ export class CVMaskElement {
     const elem = this.element as unknown as ElementInterfaceIntersect
 
     for (let i = 0; i < this.masksProperties.length; i++) {
-      if (this.masksProperties[i]?.mode !== 'n') {
+      if (this.masksProperties[i]?.mode !== MaskMode.None) {
         hasMasks = true
       }
       this.viewData[i] = ShapePropertyFactory.getShapeProp(
@@ -154,7 +155,7 @@ export class CVMaskElement {
 
     const firstMode = this.firstActiveMode()
 
-    if (firstMode === 's' || firstMode === 'i') {
+    if (firstMode === MaskMode.Subtract || firstMode === MaskMode.Intersect) {
       maskCtx.globalCompositeOperation = 'source-over'
       maskCtx.fillStyle = '#ffffff'
       maskCtx.fillRect(
@@ -165,7 +166,7 @@ export class CVMaskElement {
     for (let i = 0; i < length; i++) {
       const mask = this.masksProperties[i]
 
-      if (mask.mode === 'n') {
+      if (mask.mode === MaskMode.None) {
         continue
       }
 
@@ -195,7 +196,7 @@ export class CVMaskElement {
       }
       emitShapePath(pathCtx, data)
       pathCtx.fillStyle = `rgba(255,255,255,${opacity})`
-      pathCtx.fill(isInv ? 'evenodd' : 'nonzero')
+      pathCtx.fill(isInv ? FillRule.EvenOdd : FillRule.NonZero)
 
       maskCtx.setTransform(
         1, 0, 0, 1, 0, 0
@@ -235,7 +236,7 @@ export class CVMaskElement {
     ctx.beginPath()
 
     for (let i = 0; i < this.masksProperties.length; i++) {
-      if (this.masksProperties[i]?.mode === 'n') {
+      if (this.masksProperties[i]?.mode === MaskMode.None) {
         continue
       }
       const data = this.viewData[i]?.v
@@ -285,7 +286,7 @@ export class CVMaskElement {
 
   private firstActiveMode() {
     for (const mask of this.masksProperties) {
-      if (mask.mode && mask.mode !== 'n') {
+      if (mask.mode && mask.mode !== MaskMode.None) {
         return mask.mode
       }
     }

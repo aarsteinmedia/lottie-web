@@ -12,6 +12,8 @@ import { MaskManagerInterface } from '@/utils/expressions/MaskInterface'
 import { TransformExpressionInterface } from '@/utils/expressions/TransformInterface'
 import { Matrix } from '@/utils/Matrix'
 
+import { LayerType } from '../enums'
+
 export class LayerExpressionInterface {
   _elem: ElementInterfaceIntersect
   _name?: undefined | string
@@ -75,13 +77,14 @@ export class LayerExpressionInterface {
 
     this.toComp = this.toWorld
 
-    const { frameRate } = elem.comp?.globalData ?? { frameRate: 60 }
+    const { frameRate } = elem.comp?.globalData ?? { frameRate: 60 },
+      isPreComp = elem.data.ty === LayerType.PreComposition
 
     this.startTime = elem.data.st
     this.index = elem.data.ind
     this.source = elem.data.refId
-    this.height = elem.data.ty === 0 ? elem.data.h : 100
-    this.width = elem.data.ty === 0 ? elem.data.w : 100
+    this.height = isPreComp ? elem.data.h : 100
+    this.width = isPreComp ? elem.data.w : 100
     this.inPoint = elem.data.ip / frameRate
     this.outPoint = elem.data.op / frameRate
     this._name = elem.data.nm

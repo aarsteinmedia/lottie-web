@@ -28,10 +28,15 @@ import { ShapeTransformManager } from '@/elements/helpers/shapes/ShapeTransformM
 import { ShapeElement } from '@/elements/ShapeElement'
 import { devError, toRGBString } from '@/utils'
 import {
+  FillAttribute,
+  FillRule,
+  GradientType,
   lineCapEnum,
   lineJoinEnum,
   RendererType,
   ShapeType,
+  StrokeLinecap,
+  StrokeLinejoin,
 } from '@/utils/enums'
 import { mixin } from '@/utils/functionExtensions'
 import { degToRads } from '@/utils/helpers/constants'
@@ -205,9 +210,9 @@ export class CVShapeElement extends ShapeElement {
       ) as ValueProperty
 
       if (data.ty === ShapeType.Stroke || data.ty === ShapeType.GradientStroke) {
-        styleElem.lc = lineCapEnum[data.lc || 2]
-        styleElem.lj = lineJoinEnum[data.lj || 2]
-        if (data.lj === 1) {
+        styleElem.lc = lineCapEnum[data.lc ?? StrokeLinecap.Round]
+        styleElem.lj = lineJoinEnum[data.lj ?? StrokeLinejoin.Round]
+        if (data.lj === StrokeLinejoin.Miter) {
           styleElem.ml = data.ml
         }
         elementData.w = PropertyFactory.getProp(
@@ -235,7 +240,7 @@ export class CVShapeElement extends ShapeElement {
           }
         }
       } else {
-        styleElem.r = data.r === (2 as any) ? 'evenodd' : 'nonzero'
+        styleElem.r = data.r === FillAttribute.EvenOdd ? FillRule.EvenOdd : FillRule.NonZero
       }
       this.stylesList.push(styleElem)
       elementData.style = styleElem
@@ -337,7 +342,6 @@ export class CVShapeElement extends ShapeElement {
           renderer.ctxMiterLimit(ml || 0)
         } else {
           renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
-          // ctx.fillStyle = type === 'fl' ? currentStyle.co : currentStyle.grd;
         }
         renderer.ctxOpacity(coOp)
         if (type !== ShapeType.Stroke && type !== ShapeType.GradientStroke) {
@@ -452,13 +456,13 @@ export class CVShapeElement extends ShapeElement {
       itemData.g?._mdf ||
       itemData.s?._mdf ||
       itemData.e?._mdf ||
-      styleData.t !== 1 && (itemData.h?._mdf || itemData.a?._mdf)
+      styleData.t !== GradientType.Linear && (itemData.h?._mdf || itemData.a?._mdf)
     ) {
       const ctx = this.globalData.canvasContext,
         pt1 = itemData.s?.v ?? [0, 0],
         pt2 = itemData.e?.v ?? [0, 0]
 
-      if (styleData.t === 1) {
+      if (styleData.t === GradientType.Linear) {
         grd = ctx?.createLinearGradient(
           pt1[0], pt1[1], pt2[0], pt2[1]
         )

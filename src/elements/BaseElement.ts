@@ -19,6 +19,7 @@ import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyCo
 
 import { EffectsManager } from '@/effects/EffectsManager'
 import { createElementID, devError } from '@/utils'
+import { LayerType, MaskMode } from '@/utils/enums'
 import { getExpressionInterfaces } from '@/utils/expressions'
 import { getBlendMode } from '@/utils/helpers/getBlendMode'
 
@@ -53,7 +54,7 @@ export abstract class BaseElement {
 
     while (i < length) {
       if (
-        this.data.masksProperties?.[i]?.mode !== 'n' &&
+        this.data.masksProperties?.[i]?.mode !== MaskMode.None &&
         this.data.masksProperties?.[i]?.cl !== (false as unknown as string)
       ) {
         return true
@@ -133,12 +134,12 @@ export abstract class BaseElement {
 
       this.layerInterface.registerEffectsInterface(effectsInterface)
 
-      if (this.data.ty === 0 || this.data.xt) {
+      if (this.data.ty === LayerType.PreComposition || this.data.xt) {
         this.compInterface = new compExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
         return
       }
-      if (this.data.ty === 4) {
+      if (this.data.ty === LayerType.Shape) {
         this.layerInterface.shapeInterface = new shapeExpressionInterface(
           this.shapesData,
           this.itemsData as unknown as ShapeGroupData,
@@ -148,7 +149,7 @@ export abstract class BaseElement {
 
         return
       }
-      if (this.data.ty === 5) {
+      if (this.data.ty === LayerType.Text) {
         this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
         this.layerInterface.text = this.layerInterface.textInterface
       }

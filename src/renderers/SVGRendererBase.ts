@@ -12,6 +12,7 @@ import { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import { SVGTextLottieElement } from '@/elements/svg/SVGTextElement'
 import { BaseRenderer } from '@/renderers/BaseRenderer'
 import { createElementID, devError } from '@/utils'
+import { LayerType } from '@/utils/enums'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { createSizedArray } from '@/utils/helpers/arrays'
 import { namespaceSVG } from '@/utils/helpers/constants'
@@ -56,7 +57,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
       elements, globalData, layers
     } = this
 
-    if (elements[pos] || layers[pos]?.ty === 99) {
+    if (elements[pos] || layers[pos]?.ty === LayerType.None) {
       return
     }
 
@@ -66,7 +67,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
     elements[pos] = element
     if (getExpressionsPlugin()) {
-      if (layers[pos]?.ty === 0) {
+      if (layers[pos]?.ty === LayerType.PreComposition) {
         globalData.projectInterface.registerComposition(element)
       }
       element.initExpressions()

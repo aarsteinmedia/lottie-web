@@ -1,6 +1,8 @@
 import type { ElementInterfaceIntersect, StrokeData } from '@/types'
 
-import { ArrayType, RendererType } from '@/utils/enums'
+import {
+  ArrayType, RendererType, StrokeAttributeName
+} from '@/utils/enums'
 import { createSizedArray, createTypedArray } from '@/utils/helpers/arrays'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -63,13 +65,12 @@ export class DashProperty extends DynamicPropertyContainer {
     if (!this._mdf) {
       return 0
     }
-    const len = this.dataProps.length
 
     if (this.renderer === RendererType.SVG) {
       this.dashStr = ''
     }
-    for (let i = 0, j = 0; i < len; i++) {
-      if (this.dataProps[i]?.n === 'o') {
+    for (let i = 0, j = 0; i < this.dataProps.length; i++) {
+      if (this.dataProps[i]?.n === StrokeAttributeName.Offset) {
 
         this.dashoffset[0] = this.dataProps[i]?.p.v as number
         continue
