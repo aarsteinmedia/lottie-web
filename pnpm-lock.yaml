@@ -170,8 +170,8 @@ importers:
   .:
     devDependencies:
       '@aarsteinmedia/dotlottie-player':
-        specifier: ^6.6.7
-        version: 6.6.7
+        specifier: ^6.6.8
+        version: 6.6.8
       '@eslint/compat':
         specifier: ^2.1.1
         version: 2.1.1(eslint@10.14.0(jiti@2.7.0))
@@ -298,8 +298,8 @@ importers:
 
 packages:
 
-  '@aarsteinmedia/dotlottie-player@6.6.7':
-    resolution: {integrity: sha512-wzQRZmgw22vcOFjTWaZxiOymTb2XZCRoz16NAVREBh5nJG3u2kFkB+tnWdpXiBpeD6YE8MOQ/tuudcw8Hucu3g==}
+  '@aarsteinmedia/dotlottie-player@6.6.8':
+    resolution: {integrity: sha512-ovUOL1keWRgPxkP5uxkhE+VNZFDiPReul7uEb1ujNoX+v7A2RI3k/yG1L/TRE8fZXhEOs9+4GACVM27My2X6Og==}
     peerDependencies:
       '@types/react': '>= 16.0.0'
     peerDependenciesMeta:
@@ -2646,7 +2646,7 @@ packages:
 
 snapshots:
 
-  '@aarsteinmedia/dotlottie-player@6.6.7':
+  '@aarsteinmedia/dotlottie-player@6.6.8':
     dependencies:
       '@aarsteinmedia/lottie-web': link:.
 
