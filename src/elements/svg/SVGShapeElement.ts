@@ -136,7 +136,7 @@ export class SVGShapeElement extends ShapeElement {
     if (data.ln) {
       elementData.gr.id = data.ln
     }
-    if (typeof data.cl === 'string') {
+    if (data.cl) {
       elementData.gr.classList.add(data.cl)
     }
     if (data.bm) {
@@ -251,7 +251,7 @@ export class SVGShapeElement extends ShapeElement {
     if (data.ln) {
       pathElement.id = data.ln
     }
-    if (typeof data.cl === 'string') {
+    if (data.cl) {
       pathElement.classList.add(data.cl)
     }
     if (data.bm) {
