@@ -112,7 +112,7 @@ pnpm install
 pnpm dev        # preview player with live reload
 pnpm lint       # eslint
 pnpm test       # vitest
-pnpm prod       # typecheck + production build
+pnpm build      # typecheck + production build
 pnpm check      # lint, test, build, and verify version injection
 ```
 

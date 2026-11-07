@@ -214,7 +214,7 @@ export class TransformProperty extends BaseProperty {
   }
 
   applyToMatrix(mat: Matrix) {
-    // This check is useful for develpment
+    // This check is useful for development
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
@@ -283,133 +283,7 @@ export class TransformProperty extends BaseProperty {
     this.iterateDynamicProperties()
 
     if (this._mdf || forceRender) {
-      // let frameRate
-
-      this.v.cloneFromProps(this.pre.props)
-      if (this.appliedTransformations < 1 && this.a) {
-        this.v.translate(
-          -this.a.v[0], -this.a.v[1], this.a.v[2]
-        )
-      }
-      if (this.appliedTransformations < 2 && this.s) {
-        this.v.scale(
-          this.s.v[0], this.s.v[1], this.s.v[2]
-        )
-      }
-      if (this.sk && this.appliedTransformations < 3) {
-        this.v.skewFromAxis(-this.sk.v, Number(this.sa?.v))
-      }
-      if (this.r && this.appliedTransformations < 4) {
-        this.v.rotate(-this.r.v)
-      } else if (!this.r && this.appliedTransformations < 4) {
-        this.v
-          .rotateZ(-Number(this.rz?.v))
-          .rotateY(Number(this.ry?.v))
-          .rotateX(Number(this.rx?.v))
-          .rotateZ(-Number(this.or?.v[2]))
-          .rotateY(Number(this.or?.v[1]))
-          .rotateX(Number(this.or?.v[0]))
-      }
-      if (this.autoOriented) {
-        let v1: Vector2, v2: Vector2
-
-        const { frameRate } = this.elem.globalData ?? { frameRate: 60 }
-
-        if (this.p?.keyframes) {
-          if (
-            Number(this.p._caching?.lastFrame) + this.p.offsetTime <=
-            (this.p.keyframes[0]?.t ?? 0)
-          ) {
-            v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
-              0) as Vector2
-            v2 = this.p.getValueAtTime(this.p.keyframes[0]?.t / frameRate,
-              0) as Vector2
-          } else if (
-            Number(this.p._caching?.lastFrame) + this.p.offsetTime >=
-            (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
-          ) {
-            v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) / frameRate,
-              0) as Vector2
-            v2 = this.p.getValueAtTime(((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) - 0.05) /
-              frameRate,
-            0) as Vector2
-          } else {
-            v1 = this.p.pv as Vector2
-            v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
-              this.p.offsetTime -
-              0.01) /
-              frameRate,
-            this.p.offsetTime) as Vector2
-          }
-        } else if (this.px?.keyframes && this.py?.keyframes) {
-          v1 = [0, 0]
-          v2 = [0, 0]
-          const { px, py } = this,
-            { keyframes: pxKeyframes = [] } = px,
-            { keyframes: pyKeyframes = [] } = py
-
-          if (
-            Number(px._caching?.lastFrame) + px.offsetTime <=
-            (pxKeyframes[0]?.t ?? 0)
-          ) {
-            v1[0] = px.getValueAtTime(((pxKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
-              0) as number
-            v1[1] = py.getValueAtTime(((pyKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
-              0) as number
-            v2[0] = px.getValueAtTime((pxKeyframes[0]?.t ?? 0) / frameRate,
-              0) as number
-            v2[1] = py.getValueAtTime(pyKeyframes[0]?.t / frameRate,
-              0) as number
-          } else if (
-            Number(px._caching?.lastFrame) + px.offsetTime >=
-            (pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
-          ) {
-            v1[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) /
-              frameRate,
-            0) as number
-            v1[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) /
-              frameRate,
-            0) as number
-            v2[0] = px.getValueAtTime(((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) -
-              0.01) /
-              frameRate,
-            0) as number
-            v2[1] = py.getValueAtTime(((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) -
-              0.01) /
-              frameRate,
-            0) as number
-          } else {
-            v1 = [px.pv, py.pv]
-            v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
-              frameRate,
-            px.offsetTime) as number
-            v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
-              frameRate,
-            py.offsetTime) as number
-          }
-        } else {
-          v2 = this.defaultVector
-          v1 = v2
-        }
-        this.v.rotate(-Math.atan2(v1[1] - v2[1], v1[0] - v2[0]))
-      }
-      if (this.data.p && 's' in this.data.p) {
-        if ('z' in this.data.p) {
-          this.v.translate(
-            Number(this.px?.v),
-            Number(this.py?.v),
-            -Number(this.pz?.v)
-          )
-        } else {
-          this.v.translate(
-            Number(this.px?.v), Number(this.py?.v), 0
-          )
-        }
-      } else if (this.p) {
-        this.v.translate(
-          this.p.v[0], this.p.v[1], -this.p.v[2]
-        )
-      }
+      this._applyTransforms()
     }
     this.frameId = this.elem.globalData?.frameId
 
@@ -477,6 +351,139 @@ export class TransformProperty extends BaseProperty {
         .rotateY(this.or?.v[1])
         .rotateX(this.or?.v[0])
       this.appliedTransformations = 4
+    }
+  }
+
+  private _applyTransforms() {
+    this.v.cloneFromProps(this.pre.props)
+    if (this.appliedTransformations < 1 && this.a) {
+      this.v.translate(
+        -this.a.v[0], -this.a.v[1], this.a.v[2]
+      )
+    }
+    if (this.appliedTransformations < 2 && this.s) {
+      this.v.scale(
+        this.s.v[0], this.s.v[1], this.s.v[2]
+      )
+    }
+    if (this.sk && this.appliedTransformations < 3) {
+      this.v.skewFromAxis(-this.sk.v, Number(this.sa?.v))
+    }
+    if (this.r && this.appliedTransformations < 4) {
+      this.v.rotate(-this.r.v)
+    } else if (!this.r && this.appliedTransformations < 4) {
+      this.v
+        .rotateZ(-Number(this.rz?.v))
+        .rotateY(Number(this.ry?.v))
+        .rotateX(Number(this.rx?.v))
+        .rotateZ(-Number(this.or?.v[2]))
+        .rotateY(Number(this.or?.v[1]))
+        .rotateX(Number(this.or?.v[0]))
+    }
+    if (this.autoOriented) {
+      let v1: Vector2, v2: Vector2
+
+      const { frameRate } = this.elem.globalData ?? { frameRate: 60 }
+
+      if (this.p?.keyframes) {
+        if (
+          Number(this.p._caching?.lastFrame) + this.p.offsetTime <=
+          (this.p.keyframes[0]?.t ?? 0)
+        ) {
+          v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
+            0) as Vector2
+          v2 = this.p.getValueAtTime(this.p.keyframes[0]?.t / frameRate,
+            0) as Vector2
+        } else if (
+          Number(this.p._caching?.lastFrame) + this.p.offsetTime >=
+          (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
+        ) {
+          v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) / frameRate,
+            0) as Vector2
+          v2 = this.p.getValueAtTime(((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) - 0.05) /
+            frameRate,
+          0) as Vector2
+        } else {
+          v1 = this.p.pv as Vector2
+          v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
+            this.p.offsetTime -
+            0.01) /
+            frameRate,
+          this.p.offsetTime) as Vector2
+        }
+      } else if (this.px?.keyframes && this.py?.keyframes) {
+        v1 = [0, 0]
+        v2 = [0, 0]
+        const { px, py } = this,
+          { keyframes: pxKeyframes = [] } = px,
+          { keyframes: pyKeyframes = [] } = py
+
+        if (
+          Number(px._caching?.lastFrame) + px.offsetTime <=
+          (pxKeyframes[0]?.t ?? 0)
+        ) {
+          v1[0] = px.getValueAtTime(((pxKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
+            0) as number
+          v1[1] = py.getValueAtTime(((pyKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
+            0) as number
+          v2[0] = px.getValueAtTime((pxKeyframes[0]?.t ?? 0) / frameRate,
+            0) as number
+          v2[1] = py.getValueAtTime(pyKeyframes[0]?.t / frameRate,
+            0) as number
+        } else if (
+          Number(px._caching?.lastFrame) + px.offsetTime >=
+          (pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
+        ) {
+          v1[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) /
+            frameRate,
+          0) as number
+          v1[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) /
+            frameRate,
+          0) as number
+          v2[0] = px.getValueAtTime(((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) -
+            0.01) /
+            frameRate,
+          0) as number
+          v2[1] = py.getValueAtTime(((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) -
+            0.01) /
+            frameRate,
+          0) as number
+        } else {
+          v1 = [px.pv, py.pv]
+          v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
+            frameRate,
+          px.offsetTime) as number
+          v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
+            frameRate,
+          py.offsetTime) as number
+        }
+      } else {
+        v2 = this.defaultVector
+        v1 = v2
+      }
+      this.v.rotate(-Math.atan2(v1[1] - v2[1], v1[0] - v2[0]))
+    }
+    if (this.data.p && 's' in this.data.p) {
+      if ('z' in this.data.p) {
+        this.v.translate(
+          Number(this.px?.v),
+          Number(this.py?.v),
+          -Number(this.pz?.v)
+        )
+
+        return
+      }
+      this.v.translate(
+        Number(this.px?.v), Number(this.py?.v), 0
+      )
+
+      return
+    }
+
+    if (this.p) {
+      this.v.translate(
+        this.p.v[0], this.p.v[1], -this.p.v[2]
+      )
     }
   }
 }
