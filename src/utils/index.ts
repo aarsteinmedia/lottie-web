@@ -5,7 +5,11 @@ import type {
 } from '@/types'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { isDev, isServer } from '@/utils/helpers/constants'
+import {
+  DEG_TO_RAD,
+  IS_SERVER,
+  IS_DEV
+} from '@/utils/helpers/constants'
 import { getIDPrefix } from '@/utils/helpers/prefix'
 
 interface DownloadOptions {
@@ -47,6 +51,7 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
       }, delay)
     }
   },
+  degToRad = (deg: number) => deg * DEG_TO_RAD,
   floatEqual = (a: number, b: number) =>
     Math.abs(a - b) * 100000 <= Math.min(Math.abs(a), Math.abs(b)),
 
@@ -85,7 +90,7 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
    * Only run devError on dev.
    */
   devError = (...args: unknown[]) => {
-    if (isDev) {
+    if (IS_DEV) {
       console.error(...args)
     }
   },
@@ -121,7 +126,7 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
     if (typeof explicit === 'number' && explicit > 0) {
       return explicit
     }
-    if (!isServer && devicePixelRatio > 0) {
+    if (!IS_SERVER && devicePixelRatio > 0) {
       return devicePixelRatio
     }
 
@@ -218,6 +223,8 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
   },
 
   parseBase64 = (str: string) => str.slice(Math.max(0, str.indexOf(',') + 1)),
+
+  radToDeg = (rad: number) => rad / DEG_TO_RAD,
 
   rgbToHex = (
     rVal: number, gVal: number, bVal: number

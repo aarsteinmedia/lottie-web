@@ -1,13 +1,14 @@
 import type {
   ElementInterfaceIntersect,
   TextRangeValue,
+  Vector2,
   VectorProperty,
 } from '@/types'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { NoProperty } from '@/utils/properties/NoProperty'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
-import { degToRads } from '@/utils/helpers/constants'
+import { DEG_TO_RAD } from '@/utils/helpers/constants'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { TextSelectorProperty } from '@/utils/text/TextSelectorProperty'
 
@@ -37,153 +38,39 @@ export class TextAnimatorDataProperty {
     container?: ElementInterfaceIntersect
   ) {
     const defaultData = { propType: false } as NoProperty,
-      textAnimatorAnimatables = animatorProps?.a
+      textAnimatorElements = animatorProps?.a,
+
+      parseValueProperty = (prop: undefined | ValueProperty | NoProperty, val: Vector2) => {
+        if (!prop) {
+          return defaultData
+        }
+
+        return PropertyFactory.getProp(
+          elem,
+          prop as unknown as VectorProperty,
+          val[0],
+          val[1],
+          container
+        )
+      }
 
     this.a = {
-      a: textAnimatorAnimatables?.a
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.a as unknown as VectorProperty,
-          1,
-          0,
-          container
-        )
-        : defaultData,
-      fb: textAnimatorAnimatables?.fb
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.fb as unknown as VectorProperty,
-          0,
-          0.01,
-          container
-        )
-        : defaultData,
-      fc: textAnimatorAnimatables?.fc
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.fc as unknown as VectorProperty,
-          1,
-          0,
-          container
-        )
-        : defaultData,
-      fh: textAnimatorAnimatables?.fh
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.fh as unknown as VectorProperty,
-          0,
-          0,
-          container
-        )
-        : defaultData,
-      fs: textAnimatorAnimatables?.fs
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.fs as unknown as VectorProperty,
-          0,
-          0.01,
-          container
-        )
-        : defaultData,
-      o: textAnimatorAnimatables?.o
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.o as unknown as VectorProperty,
-          0,
-          0.01,
-          container
-        )
-        : defaultData,
-      p: textAnimatorAnimatables?.p
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.p as unknown as VectorProperty,
-          1,
-          0,
-          container
-        )
-        : defaultData,
-      r: textAnimatorAnimatables?.r
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.r as unknown as VectorProperty,
-          0,
-          degToRads,
-          container
-        )
-        : defaultData,
-      rx: textAnimatorAnimatables?.rx
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.rx as unknown as VectorProperty,
-          0,
-          degToRads,
-          container
-        )
-        : defaultData,
-      ry: textAnimatorAnimatables?.ry
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.ry as unknown as VectorProperty,
-          0,
-          degToRads,
-          container
-        )
-        : defaultData,
-      s: textAnimatorAnimatables?.s
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.s as unknown as VectorProperty,
-          1,
-          0.01,
-          container
-        )
-        : defaultData,
-      sa: textAnimatorAnimatables?.sa
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.sa as unknown as VectorProperty,
-          0,
-          degToRads,
-          container
-        )
-        : defaultData,
-      sc: textAnimatorAnimatables?.sc
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.sc as unknown as VectorProperty,
-          1,
-          0,
-          container
-        )
-        : defaultData,
-      sk: textAnimatorAnimatables?.sk
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.sk as unknown as VectorProperty,
-          0,
-          degToRads,
-          container
-        )
-        : defaultData,
-      sw: textAnimatorAnimatables?.sw
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.sw as unknown as VectorProperty,
-          0,
-          0,
-          container
-        )
-        : defaultData,
-      t: textAnimatorAnimatables?.t
-        ? PropertyFactory.getProp(
-          elem,
-          textAnimatorAnimatables.t as unknown as VectorProperty,
-          0,
-          0,
-          container
-        )
-        : defaultData,
+      a: parseValueProperty(textAnimatorElements?.a, [1, 0]),
+      fb: parseValueProperty(textAnimatorElements?.fb, [0, 0.01]),
+      fc: parseValueProperty(textAnimatorElements?.fc, [1, 0]),
+      fh: parseValueProperty(textAnimatorElements?.fh, [0, 0]),
+      fs: parseValueProperty(textAnimatorElements?.fs, [0, 0.01]),
+      o: parseValueProperty(textAnimatorElements?.o, [0, 0.01]),
+      p: parseValueProperty(textAnimatorElements?.p, [1, 0]),
+      r: parseValueProperty(textAnimatorElements?.r, [0, DEG_TO_RAD]),
+      rx: parseValueProperty(textAnimatorElements?.rx, [0, DEG_TO_RAD]),
+      ry: parseValueProperty(textAnimatorElements?.ry, [0, DEG_TO_RAD]),
+      s: parseValueProperty(textAnimatorElements?.s, [1, 0.01]),
+      sa: parseValueProperty(textAnimatorElements?.sa, [0, DEG_TO_RAD]),
+      sc: parseValueProperty(textAnimatorElements?.sc, [1, 0]),
+      sk: parseValueProperty(textAnimatorElements?.sk, [0, DEG_TO_RAD]),
+      sw: parseValueProperty(textAnimatorElements?.sw, [0, 0]),
+      t: parseValueProperty(textAnimatorElements?.t, [0, 0]),
     }
 
     this.s = new TextSelectorProperty(elem, animatorProps?.s as unknown as TextRangeValue)

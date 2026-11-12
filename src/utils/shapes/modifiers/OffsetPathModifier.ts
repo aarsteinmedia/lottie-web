@@ -10,7 +10,7 @@ import {
   pointEqual,
 } from '@/utils'
 import { BezierProperty, StrokeLinejoin } from '@/utils/enums'
-import { roundCorner } from '@/utils/helpers/constants'
+import { ROUND_CORNER } from '@/utils/helpers/constants'
 import {
   PolynomialBezier,
   shapeSegment,
@@ -113,7 +113,7 @@ const crossProduct = (a: number[], b: number[]) => [
         radius = center ? pointDistance(center, p0) : pointDistance(p0, p1) / 2
 
       let tan = polarOffset(
-        p0, angleOut, 2 * radius * roundCorner
+        p0, angleOut, 2 * radius * ROUND_CORNER
       )
 
       outputBezier.setXYAt(
@@ -121,7 +121,7 @@ const crossProduct = (a: number[], b: number[]) => [
       )
 
       tan = polarOffset(
-        p1, angleIn, 2 * radius * roundCorner
+        p1, angleIn, 2 * radius * ROUND_CORNER
       )
       outputBezier.setTripleAt(
         p1[0],

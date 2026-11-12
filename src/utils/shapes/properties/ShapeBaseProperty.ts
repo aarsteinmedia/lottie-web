@@ -14,7 +14,7 @@ import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { isArray } from '@/utils'
 import { getBezierEasing } from '@/utils/BezierFactory'
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import { clone } from '@/utils/pooling/ShapePool'
 
@@ -179,7 +179,7 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     if (
       !(
-        lastFrame !== initialDefaultFrame &&
+        lastFrame !== INITIAL_DEFAULT_FRAME &&
         (lastFrame < initTime && frameNum < initTime ||
           lastFrame > endTime && frameNum > endTime)
       )

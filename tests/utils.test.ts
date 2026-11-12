@@ -6,13 +6,14 @@ import {
   addExt,
   clamp,
   createElementID,
+  degToRad,
   floatEqual,
   floatZero,
   getExt,
   getFilename,
   parseBase64,
 } from '@/utils'
-import { degToRads, isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 
 describe('utils', () => {
   test('compares floats with tolerance', () => {
@@ -65,10 +66,10 @@ describe('utils', () => {
 
 describe('constants', () => {
   test('exposes math helpers', () => {
-    expect(degToRads).toBeCloseTo(Math.PI / 180)
+    expect(degToRad(1)).toBeCloseTo(Math.PI / 180)
   })
 
   test('detects browser vs server at module load', () => {
-    expect(isServer).toBeFalsy()
+    expect(IS_SERVER).toBeFalsy()
   })
 })

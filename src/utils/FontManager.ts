@@ -5,7 +5,7 @@ import type {
 
 import { RendererType } from '@/utils/enums'
 import { getFontProperties } from '@/utils/getFontProperties'
-import { isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -148,7 +148,7 @@ interface NodeSetup {
 
 function setUpNode(font: string,
   family: string): NodeSetup | undefined {
-  if (isServer) {
+  if (IS_SERVER) {
     return
   }
   const parentNode = createTag('span')
@@ -254,7 +254,7 @@ export class FontManager {
     }
     const { length } = fontData.list
 
-    if (!isServer) {
+    if (!IS_SERVER) {
       this.isLoaded = true
 
       for (let i = 0; i < length; i++) {
@@ -486,7 +486,7 @@ export class FontManager {
 
   private createHelper(fontData: FontList,
     def?: HTMLElement | SVGDefsElement): { measureText: (text: string) => number } | undefined {
-    if (isServer) {
+    if (IS_SERVER) {
       return
     }
     const engine = def ? RendererType.SVG : RendererType.Canvas

@@ -21,12 +21,14 @@ import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimension
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { isArray } from '@/utils'
+import {
+  degToRad, isArray, radToDeg
+} from '@/utils'
 import { buildBezierData } from '@/utils/Bezier'
 import { getBezierEasing } from '@/utils/BezierFactory'
 import { ArrayType, PropType } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import { degToRads, initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 
 const quaternionToEuler = (out: Vector3, quat: Vector4) => {
@@ -40,14 +42,14 @@ const quaternionToEuler = (out: Vector3, quat: Vector4) => {
       bank = Math.atan2(2 * qx * qw - 2 * qy * qz,
         1 - 2 * qx * qx - 2 * qz * qz)
 
-    out[0] = heading / degToRads
-    out[1] = attitude / degToRads
-    out[2] = bank / degToRads
+    out[0] = radToDeg(heading)
+    out[1] = radToDeg(attitude)
+    out[2] = radToDeg(bank)
   },
   createQuaternion = (values: Vector3): Vector4 => {
-    const heading = values[0] * degToRads,
-      attitude = values[1] * degToRads,
-      bank = values[2] * degToRads,
+    const heading = degToRad(values[0]),
+      attitude = degToRad(values[1]),
+      bank = degToRad(values[2]),
       c1 = Math.cos(heading / 2),
       c2 = Math.cos(attitude / 2),
       c3 = Math.cos(bank / 2),
@@ -129,7 +131,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
   frameExpressionId?: number
   frameId?: undefined | number
   g?: unknown
-  initFrame = initialDefaultFrame
+  initFrame = INITIAL_DEFAULT_FRAME
   k?: boolean
   keyframesMetadata: KeyframesMetadata[] = []
   kf?: boolean | null
@@ -178,7 +180,7 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
     if (
       !(
         frameNum === lastFrame ||
-        lastFrame !== initialDefaultFrame &&
+        lastFrame !== INITIAL_DEFAULT_FRAME &&
         (lastFrame >= endTime && frameNum >= endTime ||
           lastFrame < initTime && frameNum < initTime)
       )

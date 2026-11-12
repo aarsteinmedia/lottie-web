@@ -12,7 +12,7 @@ import ExpressionManager from '@/utils/expressions/ExpressionManager'
 import { ShapeExpressions } from '@/utils/expressions/ShapeExpressions'
 import { extendPrototype } from '@/utils/functionExtensions'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { Matrix } from '@/utils/Matrix'
 import ShapePool from '@/utils/pooling/ShapePool'
 import TransformPropertyFactory, { type TransformProperty } from '@/utils/properties/TransformProperty'
@@ -393,7 +393,7 @@ function getShapeValueAtTime(
   // For now this caching object is created only when needed instead of creating it when the shape is initialized.
   this._cachingAtTime = this._cachingAtTime ?? {
     lastIndex: 0,
-    lastTime: initialDefaultFrame,
+    lastTime: INITIAL_DEFAULT_FRAME,
     shapeValue: ShapePool.clone(this.pv as ShapePath),
   } as Caching
 
@@ -465,7 +465,7 @@ function addPropertyDecorator() {
         data?.a === 1 ? (data.k as unknown as { s: number[] }[])[0]?.s.length : (data?.k as number[]).length) as number[]
     }
     prop._cachingAtTime = {
-      lastFrame: initialDefaultFrame,
+      lastFrame: INITIAL_DEFAULT_FRAME,
       lastIndex: 0,
       value,
     } as Caching

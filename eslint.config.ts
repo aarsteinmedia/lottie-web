@@ -249,17 +249,19 @@ export default defineConfig({
       },
       {
         format: ['PascalCase'],
+        leadingUnderscore: 'forbid',
+        selector: 'enum',
+        trailingUnderscore: 'forbid',
+      },
+      {
+        custom: {
+          match: true,
+          regex: '^(?i:is|in|has|can|should)'
+        },
+        format: ['camelCase',
+          'PascalCase',
+          'UPPER_CASE'],
         leadingUnderscore: 'allowSingleOrDouble',
-        prefix: [
-          'is',
-          'in',
-          'are',
-          'has',
-          'should',
-          'can',
-          'needs',
-          'was'
-        ],
         selector: 'variable',
         trailingUnderscore: 'forbid',
         types: ['boolean'],
@@ -415,11 +417,6 @@ export default defineConfig({
     'unicorn/throw-new-error': 2
   },
 },
-// {
-//   extends: [tseslint.configs.disableTypeChecked],
-//   files: ['**/*.{js,mjs}'],
-//   ignores,
-// },
 {
   files: [
     '**/*.config.ts',

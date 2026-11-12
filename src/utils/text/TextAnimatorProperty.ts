@@ -16,6 +16,7 @@ import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapeProperty'
 
 import {
+  degToRad,
   devError, isArray, toRGBString
 } from '@/utils'
 import { buildBezierData, type BezierData } from '@/utils/Bezier'
@@ -858,7 +859,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               if (Number(currentPoint?.point[0]) < Number(prevPoint?.point[0])) {
                 rot += 180
               }
-              matrixHelper.rotate(-rot * Math.PI / 180)
+              matrixHelper.rotate(degToRad(-rot))
             }
             matrixHelper.translate(
               xPathPos, yPathPos, 0

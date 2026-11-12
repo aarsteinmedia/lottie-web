@@ -5,7 +5,7 @@ import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimension
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { roundCorner } from '@/utils/helpers/constants'
+import { ROUND_CORNER } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -74,7 +74,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
       round = Math.min(
         v0, v1, this.r.v
       ),
-      cPoint = round * (1 - roundCorner)
+      cPoint = round * (1 - ROUND_CORNER)
 
     if (this.v) {
       this.v._length = 0

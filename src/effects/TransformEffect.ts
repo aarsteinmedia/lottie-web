@@ -2,8 +2,8 @@ import type { GroupEffect } from '@/effects/GroupEffect'
 import type { Vector2, Vector3 } from '@/types'
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
+import { degToRad } from '@/utils'
 import { EffectTypes } from '@/utils/enums'
-import { degToRads } from '@/utils/helpers/constants'
 import { Matrix } from '@/utils/Matrix'
 
 export abstract class TransformEffect {
@@ -48,8 +48,8 @@ export abstract class TransformEffect {
     this.matrix?.scale(
       scaleWidth * 0.01, scaleHeight * 0.01, 1
     )
-    this.matrix?.rotate(-rotation * degToRads)
-    this.matrix?.skewFromAxis(-skew * degToRads, (skewAxis + 90) * degToRads)
+    this.matrix?.rotate(degToRad(-rotation))
+    this.matrix?.skewFromAxis(degToRad(-skew), degToRad(skewAxis + 90))
     this.matrix?.translate(
       position[0], position[1], 0
     )

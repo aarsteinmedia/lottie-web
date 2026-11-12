@@ -39,7 +39,7 @@ import {
   StrokeLinejoin,
 } from '@/utils/enums'
 import { mixin } from '@/utils/functionExtensions'
-import { degToRads } from '@/utils/helpers/constants'
+import { DEG_TO_RAD } from '@/utils/helpers/constants'
 import TransformPropertyFactory from '@/utils/properties/TransformProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { getModifier, type ShapeModifierInterface } from '@/utils/shapes/modifiers'
@@ -185,7 +185,7 @@ export class CVShapeElement extends ShapeElement {
             this as unknown as ElementInterfaceIntersect,
             (data.a ?? { k: 0 }) as VectorProperty,
             0,
-            degToRads,
+            DEG_TO_RAD,
             this as unknown as ElementInterfaceIntersect
           ) as ValueProperty
           if (data.g) {

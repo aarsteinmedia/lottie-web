@@ -13,7 +13,7 @@ import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 import type { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
 import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 
@@ -64,7 +64,7 @@ export class ShapeModifier extends DynamicPropertyContainer {
     this.elem = elem
     this.initDynamicPropertyContainer(elem)
     this.initModifierProperties(elem, data)
-    this.frameId = initialDefaultFrame
+    this.frameId = INITIAL_DEFAULT_FRAME
     this.closed = false
     this.k = false
     if (this.dynamicProperties.length > 0) {

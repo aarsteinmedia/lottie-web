@@ -3,7 +3,7 @@ import {
 } from 'vitest'
 import 'vitest-canvas-mock'
 
-import { namespaceSVG } from '@/utils/helpers/constants'
+import { NAMESPACE_SVG } from '@/utils/helpers/constants'
 
 interface AnimatedLength {
   animVal: { value: number }
@@ -107,7 +107,7 @@ describe('setup', () => {
     // JSDOM creates SVG nodes via createElementNS but does not expose subtype
     // globals (SVGRectElement, etc.) or animated length properties (baseVal).
     // All SVG elements share the generic SVGElement prototype, so patch that.
-    const svgProto = Object.getPrototypeOf(document.createElementNS(namespaceSVG, 'rect')) as object
+    const svgProto = Object.getPrototypeOf(document.createElementNS(NAMESPACE_SVG, 'rect')) as object
 
     defineAnimatedLengthProperty(svgProto, 'x')
     defineAnimatedLengthProperty(svgProto, 'y')
@@ -125,7 +125,7 @@ describe('setup', () => {
   })
 
   test('polyfills SVG animated properties for JSDOM', () => {
-    const rect = document.createElementNS(namespaceSVG, 'rect')
+    const rect = document.createElementNS(NAMESPACE_SVG, 'rect')
 
     rect.width.baseVal.value = 10
     expect(rect.width.baseVal.value).toBe(10)

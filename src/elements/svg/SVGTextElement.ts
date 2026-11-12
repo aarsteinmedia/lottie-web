@@ -313,12 +313,6 @@ export class SVGTextLottieElement extends TextElement {
 
           tSpan.textContent = letters[i]?.val ?? ''
           tSpan.style.whiteSpace = 'preserve'
-
-          // tSpan.setAttributeNS(
-          //   namespaceXML,
-          //   'xml:space',
-          //   'preserve'
-          // )
         }
       }
       if (isSingleShape) {

@@ -25,7 +25,7 @@ import { registerEffect as registerCanvasEffect } from '@/elements/canvas/CVEffe
 import { registerEffect } from '@/elements/svg/SVGEffects'
 import { registerRenderer, type Renderer } from '@/renderers'
 import { type RendererType, Modifier } from '@/utils/enums'
-import { isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 import { setLocationHref } from '@/utils/helpers/locationHref'
 import { setIDPrefix as setPrefix } from '@/utils/helpers/prefix'
 import { setQuality } from '@/utils/helpers/resolution'
@@ -67,7 +67,7 @@ interface CreateLottie {
 }
 
 function checkReady() {
-  if (isServer || hasScannedDOM) {
+  if (IS_SERVER || hasScannedDOM) {
     return
   }
   hasScannedDOM = true

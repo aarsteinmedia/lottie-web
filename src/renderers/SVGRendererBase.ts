@@ -15,7 +15,7 @@ import { createElementID, devError } from '@/utils'
 import { LayerType } from '@/utils/enums'
 import { getExpressionsPlugin } from '@/utils/expressions'
 import { createSizedArray } from '@/utils/helpers/arrays'
-import { namespaceSVG } from '@/utils/helpers/constants'
+import { NAMESPACE_SVG } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -141,9 +141,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
         throw new Error(`${this.constructor.name}: Can't access svgElement`)
       }
 
-      this.svgElement.setAttribute('xmlns', namespaceSVG)
-      // this.svgElement.setAttribute('xmlns:xlink',
-      //   namespaceXLink)
+      this.svgElement.setAttribute('xmlns', NAMESPACE_SVG)
       if (this.renderConfig.viewBoxSize) {
         this.svgElement.setAttribute('viewBox',
           this.renderConfig.viewBoxSize)

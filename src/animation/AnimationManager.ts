@@ -8,7 +8,7 @@ import type {
 import { AnimationItem } from '@/animation/AnimationItem'
 import { devError } from '@/utils'
 import { PlayerEvent, RendererType } from '@/utils/enums'
-import { isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 
 interface RegisteredAnimation {
@@ -129,7 +129,7 @@ export function searchAnimations(
   standalone?: boolean,
   rendererFromProps?: RendererType
 ) {
-  if (isServer) {
+  if (IS_SERVER) {
     return
   }
   let renderer = rendererFromProps
@@ -211,7 +211,7 @@ export function unmute(animation?: string) {
 }
 
 function activate() {
-  if (_isFrozen || !playingAnimationsNum || !_isStopped || isServer) {
+  if (_isFrozen || !playingAnimationsNum || !_isStopped || IS_SERVER) {
     return
   }
 
@@ -226,7 +226,7 @@ function addPlayingCount() {
 
 function first(nowTime: number) {
   initTime = nowTime
-  if (!isServer) {
+  if (!IS_SERVER) {
     _rafID = requestAnimationFrame(resume)
   }
 }
@@ -259,7 +259,7 @@ function resume(nowTime: number) {
   initTime = nowTime
 
   if (playingAnimationsNum && !_isFrozen && !_isStopped) {
-    if (!isServer) {
+    if (!IS_SERVER) {
       _rafID = requestAnimationFrame(resume)
     }
   } else {

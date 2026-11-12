@@ -6,8 +6,7 @@ import type {
 } from '@/types'
 
 import { SVGComposableEffect } from '@/effects/svg/SVGComposableEffect'
-import { rgbToHex } from '@/utils'
-import { degToRads } from '@/utils/helpers/constants'
+import { degToRad, rgbToHex } from '@/utils'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SVGDropShadowEffect extends SVGComposableEffect {
@@ -110,7 +109,7 @@ export class SVGDropShadowEffect extends SVGComposableEffect {
     ) {
       const distance = this.filterManager.effectElements[3]?.p.v as number
       const angle =
-        ((this.filterManager.effectElements[2]?.p.v as number) - 90) * degToRads
+        degToRad((this.filterManager.effectElements[2]?.p.v as number) - 90)
       const x = distance * Math.cos(angle)
       const y = distance * Math.sin(angle)
 

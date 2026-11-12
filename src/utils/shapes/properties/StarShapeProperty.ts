@@ -5,7 +5,7 @@ import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimension
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { degToRads } from '@/utils/helpers/constants'
+import { DEG_TO_RAD } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -68,7 +68,7 @@ export class StarShapeProperty extends ShapeBaseProperty {
       elem,
       data.r,
       0,
-      degToRads,
+      DEG_TO_RAD,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.or = PropertyFactory.getProp(

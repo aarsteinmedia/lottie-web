@@ -23,7 +23,7 @@ import {
   StrokeLinecap,
   StrokeLinejoin
 } from '@/utils/enums'
-import { degToRads } from '@/utils/helpers/constants'
+import { DEG_TO_RAD } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -100,7 +100,7 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
       elem,
       data.a ?? ({ k: 0 } as VectorProperty),
       0,
-      degToRads,
+      DEG_TO_RAD,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
     this.g = new GradientProperty(

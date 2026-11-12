@@ -18,7 +18,7 @@ import {
   parseBase64,
   trailingslashit
 } from '@/utils'
-import { isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 
 /** Transform prop that may carry a (possibly encoded) expression. */
 interface ExpressionProp {
@@ -81,7 +81,7 @@ const getArrayBuffer = async (zippable: Zippable) => {
    * @returns UTF-8/Latin-1 binary.
    */
   base64ToU8 = (str: string) =>
-    strToU8(isServer
+    strToU8(IS_SERVER
       ? Buffer.from(parseBase64(str), 'base64').toString('binary')
       : atob(parseBase64(str)),
     true),
@@ -125,7 +125,7 @@ const getArrayBuffer = async (zippable: Zippable) => {
       if (!file) {
         continue
       }
-      // Original asset.id caused issues with multianimations
+      // Original asset.id caused issues with multi-animations
       const assetId = createElementID(),
         isEncoded = file.startsWith('data:'),
         ext = isEncoded ? getExtFromB64(file) : getExt(file)

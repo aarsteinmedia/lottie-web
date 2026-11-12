@@ -4,14 +4,14 @@ import type {
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { roundCorner } from '@/utils/helpers/constants'
+import { ROUND_CORNER } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
 
 export class EllShapeProperty extends ShapeBaseProperty {
-  public _cPoint = roundCorner
+  public _cPoint = ROUND_CORNER
   public d?: number
   public s: MultiDimensionalProperty
 

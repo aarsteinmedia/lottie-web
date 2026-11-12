@@ -7,7 +7,7 @@ import type {
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-import { roundCorner } from '@/utils/helpers/constants'
+import { ROUND_CORNER } from '@/utils/helpers/constants'
 import { newElement } from '@/utils/pooling/ShapePool'
 import PropertyFactory from '@/utils/PropertyFactory'
 import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
@@ -83,8 +83,8 @@ export class RoundCornersModifier extends ShapeModifier {
           vX = iX
           iY = currentV[1] - (currentV[1] - closerV[1]) * newPosPerc
           vY = iY
-          oX = vX - (vX - currentV[0]) * roundCorner
-          oY = vY - (vY - currentV[1]) * roundCorner
+          oX = vX - (vX - currentV[0]) * ROUND_CORNER
+          oY = vY - (vY - currentV[1]) * ROUND_CORNER
           clonedPath.setTripleAt(
             vX, vY, oX, oY, iX, iY, index
           )
@@ -102,8 +102,8 @@ export class RoundCornersModifier extends ShapeModifier {
           vX = oX
           oY = currentV[1] + (closerV[1] - currentV[1]) * newPosPerc
           vY = oY
-          iX = vX - (vX - currentV[0]) * roundCorner
-          iY = vY - (vY - currentV[1]) * roundCorner
+          iX = vX - (vX - currentV[0]) * ROUND_CORNER
+          iY = vY - (vY - currentV[1]) * ROUND_CORNER
           clonedPath.setTripleAt(
             vX, vY, oX, oY, iX, iY, index
           )

@@ -11,7 +11,7 @@ import type {
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import { PropType } from '@/utils/enums'
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 import { clone, newElement } from '@/utils/pooling/ShapePool'
 import { ShapeBaseProperty } from '@/utils/shapes/properties/ShapeBaseProperty'
@@ -55,7 +55,7 @@ export class ShapeProperty extends ShapeBaseProperty {
 }
 
 export class KeyframeShapeProperty extends ShapeBaseProperty {
-  public lastFrame = initialDefaultFrame
+  public lastFrame = INITIAL_DEFAULT_FRAME
   constructor(
     elem: SVGShapeElement | CVShapeElement, data: Shape | MaskShape, type: number
   ) {
@@ -82,7 +82,7 @@ export class KeyframeShapeProperty extends ShapeBaseProperty {
     this.paths = this.localShapeCollection
     this.paths.addShape(this.v)
     this._caching = {
-      lastFrame: initialDefaultFrame,
+      lastFrame: INITIAL_DEFAULT_FRAME,
       lastIndex: 0
     } as Caching
 

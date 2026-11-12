@@ -3,8 +3,8 @@ import type { ImageData, LottieAsset } from '@/types'
 import { loadData } from '@/utils/DataManager'
 import { RendererType } from '@/utils/enums'
 import {
-  isServer,
-  namespaceXLink,
+  IS_SERVER,
+  NAMESPACE_X_LINK,
 } from '@/utils/helpers/constants'
 import { createTag } from '@/utils/helpers/htmlElements'
 import { createNS } from '@/utils/helpers/svgElements'
@@ -113,7 +113,7 @@ export class ImagePreloader {
       img.setAttribute('height', `${assetData.h}`)
     }
     img.setAttributeNS(
-      namespaceXLink, 'href', path
+      NAMESPACE_X_LINK, 'href', path
     )
 
     // Append as a rendered child of the private host (not <defs>) so the
@@ -245,7 +245,7 @@ export class ImagePreloader {
     onReady: () => void,
     onError: () => void
   ) {
-    if (isServer) {
+    if (IS_SERVER) {
       onReady()
 
       return
@@ -307,7 +307,7 @@ export class ImagePreloader {
   }
 
   private _createProxyImage() {
-    if (isServer) {
+    if (IS_SERVER) {
       return null
     }
     const canvas = createTag<HTMLCanvasElement>(RendererType.Canvas)
@@ -432,7 +432,7 @@ export class ImagePreloader {
       return this._elementHelper
     }
 
-    if (isServer) {
+    if (IS_SERVER) {
       this._elementHelper = createNS('g')
 
       return this._elementHelper

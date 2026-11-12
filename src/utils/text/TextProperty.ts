@@ -17,7 +17,7 @@ import {
   isZeroWidthJoiner,
 } from '@/utils/FontManager'
 import { getFontProperties } from '@/utils/getFontProperties'
-import { initialDefaultFrame } from '@/utils/helpers/constants'
+import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { BaseProperty } from '@/utils/properties/BaseProperty'
 
 export class TextProperty extends BaseProperty {
@@ -35,7 +35,7 @@ export class TextProperty extends BaseProperty {
 
   constructor(elem: ElementInterfaceIntersect, data: TextData) {
     super()
-    this._frameId = initialDefaultFrame
+    this._frameId = INITIAL_DEFAULT_FRAME
     this.kf = false
     this._isFirstFrame = true
     this._mdf = false

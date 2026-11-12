@@ -19,8 +19,10 @@ import type { ShapePath } from '@/utils/shapes/ShapePath'
 
 import {
   clamp,
+  degToRad,
   isArray,
-  isArrayOfNum
+  isArrayOfNum,
+  radToDeg
 } from '@/utils'
 import BezierFactory from '@/utils/BezierFactory'
 import BMMath from '@/utils/BMMath'
@@ -28,7 +30,6 @@ import {
   ArrayType, LayerType, PropType
 } from '@/utils/enums'
 import { createTypedArray } from '@/utils/helpers/arrays'
-import { degToRads } from '@/utils/helpers/constants'
 import shapePool from '@/utils/pooling/ShapePool'
 import seedrandom from '@/utils/seedrandom'
 
@@ -541,8 +542,8 @@ function initiateExpression(
     const fVec: Vector3 = [elem2[0] - elem1[0],
       elem2[1] - elem1[1],
       elem2[2] - elem1[2]]
-    const pitch = Math.atan2(fVec[0], Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])) / degToRads
-    const yaw = -Math.atan2(fVec[1], fVec[2]) / degToRads
+    const pitch = Math.atan2(fVec[0], radToDeg(Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])))
+    const yaw = radToDeg(-Math.atan2(fVec[1], fVec[2]))
 
     return [yaw,
       pitch,
@@ -959,7 +960,7 @@ function $bm_isInstanceOfArray(arr: unknown): arr is number[] {
 }
 
 function degreesToRadians(val: number) {
-  return val * degToRads
+  return degToRad(val)
 }
 
 function div(a: unknown, b: unknown) {
@@ -1078,7 +1079,7 @@ function noOp(_value?: unknown) {
 }
 
 function radiansToDegrees(val: number) {
-  return val / degToRads
+  return radToDeg(val)
 }
 
 function sub(aFromProps: unknown, bFromProps: unknown) {

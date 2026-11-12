@@ -10,7 +10,7 @@ import {
 } from '@/utils/enums'
 import { featureSupport } from '@/utils/featureSupport'
 import { createAlphaToLuminanceFilter, createFilter } from '@/utils/FiltersFactory'
-import { namespaceXLink } from '@/utils/helpers/constants'
+import { NAMESPACE_X_LINK } from '@/utils/helpers/constants'
 import { getLocationHref } from '@/utils/helpers/locationHref'
 import { createNS } from '@/utils/helpers/svgElements'
 
@@ -160,7 +160,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
             matteType === MatteMode.Luminance ? MatteModeName.Luminance : MatteModeName.Alpha)
           useElement = createNS<SVGUseElement>('use')
           useElement.setAttributeNS(
-            namespaceXLink,
+            NAMESPACE_X_LINK,
             'href',
             `#${this.layerId}`
           )
@@ -217,7 +217,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         maskGrouper.appendChild(alphaRect)
         useElement = createNS<SVGUseElement>('use')
         useElement.setAttributeNS(
-          namespaceXLink,
+          NAMESPACE_X_LINK,
           'href',
           `#${this.layerId}`
         )

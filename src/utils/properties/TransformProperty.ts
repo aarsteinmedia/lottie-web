@@ -14,7 +14,7 @@ import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimension
 import type { ValueProperty } from '@/utils/properties/ValueProperty'
 
 import { PropType } from '@/utils/enums'
-import { degToRads } from '@/utils/helpers/constants'
+import { DEG_TO_RAD } from '@/utils/helpers/constants'
 import { Matrix } from '@/utils/Matrix'
 import { BaseProperty } from '@/utils/properties/BaseProperty'
 import PropertyFactory from '@/utils/PropertyFactory'
@@ -105,21 +105,21 @@ export class TransformProperty extends BaseProperty {
         elem,
         data.rx,
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.ry = PropertyFactory.getProp(
         elem,
         data.ry,
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.rz = PropertyFactory.getProp(
         elem,
         data.rz,
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       if (data.or?.k[0]?.ti) {
@@ -134,7 +134,7 @@ export class TransformProperty extends BaseProperty {
         elem,
         data.or as VectorProperty<Keyframe[]>,
         1,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as MultiDimensionalProperty<Vector3>
       this.or.sh = true as any
@@ -143,7 +143,7 @@ export class TransformProperty extends BaseProperty {
         elem,
         data.r ?? ({ k: 0 } as any),
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }
@@ -152,14 +152,14 @@ export class TransformProperty extends BaseProperty {
         elem,
         data.sk,
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.sa = PropertyFactory.getProp(
         elem,
         data.sa,
         0,
-        degToRads,
+        DEG_TO_RAD,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
     }

@@ -6,7 +6,7 @@ import {
   getExt, isAudio, isImage,
   parseBase64
 } from '@/utils'
-import { isServer } from '@/utils/helpers/constants'
+import { IS_SERVER } from '@/utils/helpers/constants'
 
 const getMimeFromExt = (ext?: string) => {
     switch (ext) {
@@ -86,7 +86,7 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
     toResolve.push(new Promise<void>((resolveAsset) => {
       let assetB64: string
 
-      if (isServer) {
+      if (IS_SERVER) {
         assetB64 = Buffer.from(u8).toString('base64')
       } else {
         let result = ''
