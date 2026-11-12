@@ -17,16 +17,16 @@ export {
   ArrayType, PlayerEvent, PlayMode, PreserveAspectRatio, RendererType, ShapeType
 } from '@/utils/enums'
 export {
-  DEG_TO_RAD,
   /** @deprecated use DEG_TO_RAD instead */
-  DEG_TO_RAD as degToRads,
-  IN_BROWSER,
+  degToRads,
+  DEG_TO_RAD,
   /** @deprecated use IN_BROWSER instead */
-  IN_BROWSER as inBrowser,
-  IS_SERVER,
+  inBrowser,
+  IN_BROWSER,
   /** @deprecated use IS_SERVER instead */
-  IS_SERVER as isServer,
-  NAMESPACE_SVG,
+  isServer,
+  IS_SERVER,
   /** @deprecated use NAMESPACE_SVG instead */
-  NAMESPACE_SVG as namespaceSVG
+  namespaceSVG,
+  NAMESPACE_SVG
 } from '@/utils/helpers/constants'

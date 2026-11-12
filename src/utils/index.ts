@@ -149,12 +149,11 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
   },
 
   /**
-     * Parse URL to get filename.
-     *
-     * @param src - The url string.
-     * @param keepExt - Whether to include file extension.
-     * @returns Filename, in lowercase.
-     */
+   * Parse URL to get filename.
+   * @param src - The url string.
+   * @param keepExt - Whether to include file extension.
+   * @returns Filename, in lowercase.
+   */
   getFilename = (src: string, keepExt?: boolean) => {
     // Because the regex strips all special characters, we need to extract the file extension, so we can add it later if we need it
     let ext = getExt(src)

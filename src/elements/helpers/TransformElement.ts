@@ -75,11 +75,6 @@ export abstract class TransformElement extends BaseElement {
     if (this.data.ao) {
       this.finalTransform.mProp.autoOriented = true
     }
-
-    // TODO: check TYPE 11: Guided elements
-    // if (this.data.ty !== 11) {
-    //   // this.createElements();
-    // }
   }
 
   renderLocalTransform() {

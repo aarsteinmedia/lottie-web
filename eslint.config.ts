@@ -11,6 +11,7 @@ import createNoRestrictedProperties from 'eslint-no-restricted/properties'
 import createNoRestrictedSyntax from 'eslint-no-restricted/syntax'
 import fsecond from 'eslint-plugin-fsecond'
 import { importX } from 'eslint-plugin-import-x'
+import { configs as jsdocConfigs } from 'eslint-plugin-jsdoc'
 import perfectionist from 'eslint-plugin-perfectionist'
 import regexp from 'eslint-plugin-regexp'
 import sonarjs, { configs as sonarConfigs } from 'eslint-plugin-sonarjs'
@@ -124,6 +125,7 @@ export default defineConfig({
     importX.flatConfigs.recommended,
     importX.flatConfigs.typescript,
     tsConfigs.strictTypeChecked,
+    jsdocConfigs['flat/recommended']
   ],
   files: ['**/*.{ts,js}'],
   ignores,
@@ -339,6 +341,11 @@ export default defineConfig({
     'import-x/no-duplicates': [2, { 'prefer-inline': true }],
     'import-x/no-named-as-default': 2,
     'import-x/no-useless-path-segments': [2, { noUselessIndex: true }],
+    'jsdoc/require-jsdoc': 0,
+    'jsdoc/require-param': 0,
+    'jsdoc/require-param-type': 0,
+    'jsdoc/require-returns': 0,
+    'jsdoc/require-returns-type': 0,
     'no-plusplus': 0,
     'no-restricted-globals': ['error',
       'event',

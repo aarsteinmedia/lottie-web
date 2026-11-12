@@ -44,7 +44,6 @@ const rgbToHSV = (
 
     switch (max) {
       case min: {
-        // h = 0
         break
       }
       case r: {
@@ -263,7 +262,6 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             len = paths._length - 1
             let bezierData
 
-            // totalLength = 0
             for (i = 0; i < len; i++) {
               if (isArray(paths)) {
                 continue
@@ -298,10 +296,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         pathInfo = this._pathData.pi
 
         currentLength = this._pathData.f?.v ?? 0
-        // segmentInd = 0
         pointInd = 1
-        // segmentLength = 0
-        // shouldMeasure = true
         segments = pathInfo?.segments ?? []
 
         if (currentLength > 0 && mask.v?.c) {
@@ -557,7 +552,6 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                   if (segments[segmentInd]) {
                     points = segments[segmentInd]?.points ?? []
                   } else if (mask?.v?.c) {
-                    // pointInd = 0
                     segmentInd = 0
                     points = segments[segmentInd]?.points ?? []
                   } else {
@@ -924,9 +918,6 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               (letters[i]?.l ?? 0) +
               documentData.tr * 0.001 * Number(documentData.finalSize)
           }
-          // if (renderType === RendererType.HTML) {
-          //   letterM = matrixHelper.toCSS()
-          // }
 
           if (renderType === RendererType.SVG) {
             letterM = matrixHelper.to2dCSS()
@@ -976,7 +967,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             Number(letterSw),
             letterSc,
             letterFc,
-            letterM, // matrix()-string
+            letterM,
             letterP
           ) || this.lettersChangedFlag
 

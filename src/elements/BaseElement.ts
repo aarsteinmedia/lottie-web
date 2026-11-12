@@ -123,10 +123,6 @@ export abstract class BaseElement {
 
       this.layerInterface = new layerExpressionInterface(this as unknown as ElementInterfaceIntersect)
 
-      // if (!this.layerInterface) {
-      //   throw new Error(`${this.constructor.name}: Could not set layerInterface`)
-      // }
-
       if (this.data.hasMask && this.maskManager) {
         this.layerInterface.registerMaskInterface(this.maskManager)
       }

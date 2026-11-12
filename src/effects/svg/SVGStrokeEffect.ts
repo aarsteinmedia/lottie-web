@@ -28,9 +28,6 @@ export class SVGStrokeEffect {
   }
 
   initialize() {
-    // if (!this.filterManager.effectElements) {
-    //   throw new Error(`${this.constructor.name}: Missing Effects Elements`)
-    // }
     let elemChildren = [...this.elem.layerElement?.children ??
       this.elem.layerElement?.childNodes ??
       []]
@@ -96,9 +93,6 @@ export class SVGStrokeEffect {
   }
 
   renderFrame(forceRender?: boolean) {
-    // if (!this.filterManager.effectElements) {
-    //   throw new Error(`${this.constructor.name}: Missing Effect element`)
-    // }
     if (!this.initialized) {
       this.initialize()
     }

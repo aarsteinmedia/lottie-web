@@ -18,9 +18,6 @@ export class GroupInterface extends BaseInterface {
       case 2: {
         return this.content
       }
-      // Not necessary for now. Keeping them here in case a new case appears
-      // case 'ADBE Vector Transform Group':
-      // case 3:
       default: {
         return this.transform
       }

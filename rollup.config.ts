@@ -2,6 +2,7 @@ import type { Plugin, RollupOptions } from 'rollup'
 
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
+import { parseSync, printSync } from '@swc/core'
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -13,6 +14,26 @@ import { swc } from 'rollup-plugin-swc3'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
 
 import type PackageJSON from './package.json'
+
+/**
+ * Strip all comments (incl. JSDoc) without minifying:
+ * parsing without comment tracking and re-printing drops them.
+ */
+const stripComments = (): Plugin => ({
+  name: 'strip-comments',
+  renderChunk(code) {
+    const ast = parseSync(code, {
+      comments: false,
+      syntax: 'ecmascript',
+      target: 'es2024'
+    })
+
+    return {
+      code: printSync(ast, { minify: false }).code,
+      map: null
+    }
+  }
+})
 
 const isProd = process.env.NODE_ENV !== 'development',
   { url } = import.meta,
@@ -45,6 +66,7 @@ const isProd = process.env.NODE_ENV !== 'development',
       preventAssignment: true
     }),
     swc(),
+    stripComments(),
     pluginSummary(),
   ] : [
     typescriptPaths(),
@@ -133,7 +155,7 @@ const isProd = process.env.NODE_ENV !== 'development',
         entryFileNames: '[name].d.ts',
         format: 'esm',
       },
-      plugins: [dts()],
+      plugins: [dts()]
     },
   ]
 

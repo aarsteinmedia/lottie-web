@@ -49,7 +49,6 @@ export class SVGTintFilter extends SVGComposableEffect {
   renderFrame(forceRender?: boolean) {
     if (
       !forceRender && !this.filterManager._mdf
-      // !this.filterManager.effectElements
     ) {
       return
     }

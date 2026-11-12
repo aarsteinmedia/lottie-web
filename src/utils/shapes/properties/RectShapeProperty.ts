@@ -302,7 +302,7 @@ export class RectShapeProperty extends ShapeBaseProperty {
 
   override getValue() {
     if (this.elem?.globalData?.frameId === this.frameId) {
-      return 0 // For type compability
+      return 0 // For type compatibility
     }
     if (this.elem?.globalData?.frameId) {
       this.frameId = this.elem.globalData.frameId
@@ -313,6 +313,6 @@ export class RectShapeProperty extends ShapeBaseProperty {
       this.convertRectToPath()
     }
 
-    return 0 // For type compability
+    return 0 // For type compatibility
   }
 }

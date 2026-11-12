@@ -62,7 +62,6 @@ export abstract class DynamicPropertyContainer {
 
   setGroupProperty(_propertyInterface: PropertyGroupFactory) {
     // Pass through
-    // throw new Error('Method is not implemented')
   }
 }
 

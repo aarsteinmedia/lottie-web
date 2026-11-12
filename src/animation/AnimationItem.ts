@@ -97,11 +97,6 @@ export class AnimationItem extends BaseEvent {
   protected filename?: undefined | string
 
   protected initialSegment?: undefined | Vector2
-  // protected onComplete: null | ((arg: unknown) => void) = null
-  // protected onDestroy: null | ((arg: unknown) => void) = null
-  // protected onEnterFrame: null | ((arg: unknown) => void) = null
-  // protected onLoopComplete: null | ((arg: unknown) => void) = null
-  // protected onSegmentStart: null | ((arg: unknown) => void) = null
   private _completedLoop = false
   private _fontsLoadTimeout?: undefined | ReturnType<typeof setTimeout>
   private _idle = true
@@ -222,9 +217,6 @@ export class AnimationItem extends BaseEvent {
   }
 
   public configAnimation(animData: AnimationData) {
-    // if (!this.renderer) {
-    //   return
-    // }
     try {
       this.animationData = animData
       if (this.initialSegment) {
@@ -413,9 +405,6 @@ export class AnimationItem extends BaseEvent {
   }
 
   public includeLayers(data: AnimationData) {
-    // if (!this.renderer) {
-    //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
-    // }
     if (this.animationData.op && data.op > this.animationData.op) {
       this.animationData.op = data.op
       this.totalFrames = Math.floor(data.op - (this.animationData.ip || 0))
@@ -581,9 +570,6 @@ export class AnimationItem extends BaseEvent {
   }
 
   public resize(width?: number, height?: number) {
-    // if (!this.renderer) {
-    //   throw new Error(`${this.constructor.name}: renderer is not implemented`)
-    // }
     // Adding this validation for backwards compatibility in case an event object was being passed down
     const _width = typeof width === 'number' ? width : undefined,
       _height = typeof height === 'number' ? height : undefined
@@ -866,7 +852,6 @@ export class AnimationItem extends BaseEvent {
           legacyEv.currentTime = this.currentFrame
           legacyEv.totalTime = this.totalFrames
           legacyEv.direction = this.frameMult < 0 ? -1 : 1
-          // this.onEnterFrame?.(legacyEv)
           break
         }
         case PlayerEvent.DrawnFrame: {
@@ -887,17 +872,10 @@ export class AnimationItem extends BaseEvent {
               this.playCount,
               this.frameMult
             ))
-          // this.onLoopComplete?.(new CompleteLoopEvent(
-          //   name,
-          //   this.loop,
-          //   this.playCount,
-          //   this.frameMult
-          // ))
           break
         }
         case PlayerEvent.Complete: {
           this.triggerEvent(name, new CompleteEvent(name, this.frameMult))
-          // this.onComplete?.(new CompleteEvent(name, this.frameMult))
           break
         }
         case PlayerEvent.SegmentStart: {
@@ -905,14 +883,10 @@ export class AnimationItem extends BaseEvent {
             new SegmentStartEvent(
               name, this.firstFrame, this.totalFrames
             ))
-          // this.onSegmentStart?.(new SegmentStartEvent(
-          //   name, this.firstFrame, this.totalFrames
-          // ))
           break
         }
         case PlayerEvent.Destroy: {
           this.triggerEvent(name, new DestroyEvent(name, this))
-          // this.onDestroy?.(new DestroyEvent(name, this))
           break
         }
         default: {
@@ -970,9 +944,6 @@ export class AnimationItem extends BaseEvent {
   }
 
   public waitForFontsLoaded() {
-    // if (!this.renderer) {
-    //   return
-    // }
     if (this.renderer.globalData?.fontManager?.isLoaded) {
       this.checkLoaded()
 

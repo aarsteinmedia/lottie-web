@@ -115,9 +115,6 @@ export class SVGShapeElement extends ShapeElement {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access Layer`)
     }
-    // if (!this.shapesData) {
-    //   throw new Error(`${this.constructor.name}: Could not access ShapesData`)
-    // }
     this.searchShapes(
       this.shapesData,
       this.itemsData as SVGElementInterface[],
@@ -263,10 +260,6 @@ export class SVGShapeElement extends ShapeElement {
 
     }
 
-    // if (data.ty === ShapeType.GradientFill) {
-    //   console.log(elementData)
-    // }
-
     return elementData
   }
 
@@ -299,7 +292,7 @@ export class SVGShapeElement extends ShapeElement {
 
   /**
    *
-  * This method searches for multiple shapes that affect a single element and one of them is animated.
+   * This method searches for multiple shapes that affect a single element and one of them is animated.
    */
   filterUniqueShapes() {
     const tempShapes = []
@@ -330,9 +323,6 @@ export class SVGShapeElement extends ShapeElement {
     if (!this.layerElement) {
       throw new Error(`${this.constructor.name}: Could not access layerElement`)
     }
-    // if (!this.shapesData) {
-    //   throw new Error(`${this.constructor.name}: Could not access shapesData`)
-    // }
     this._isFirstFrame = true
     for (let i = 0; i < this.itemsData.length; i++) {
       this.prevViewData[i] = this.itemsData[i] as any

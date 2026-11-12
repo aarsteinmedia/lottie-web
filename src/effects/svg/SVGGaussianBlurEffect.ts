@@ -1,6 +1,7 @@
 import type { GroupEffect } from '@/effects/GroupEffect'
 import type { ElementInterfaceIntersect } from '@/types'
 
+import { BlurDirection } from '@/utils/enums'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SVGGaussianBlurEffect {
@@ -29,7 +30,6 @@ export class SVGGaussianBlurEffect {
   renderFrame(forceRender?: boolean) {
     if (
       !forceRender && !this.filterManager._mdf
-      // !this.filterManager.effectElements
     ) {
       return
     }
@@ -39,13 +39,9 @@ export class SVGGaussianBlurEffect {
         (this.filterManager.effectElements[0]?.p.v as number) *
         kBlurrinessToSigma,
       // Dimensions mapping:
-      //
-      //   1 -> horizontal & vertical
-      //   2 -> horizontal only
-      //   3 -> vertical only
-      dimensions = Number(this.filterManager.effectElements[1]?.p.v),
-      sigmaX = dimensions === 3 ? 0 : sigma,
-      sigmaY = dimensions === 2 ? 0 : sigma
+      dimensions = Number(this.filterManager.effectElements[1]?.p.v) as unknown as BlurDirection,
+      sigmaX = dimensions === BlurDirection.Vertical ? 0 : sigma,
+      sigmaY = dimensions === BlurDirection.Horizontal ? 0 : sigma
 
 
     this.feGaussianBlur.setAttribute('stdDeviation', `${sigmaX} ${sigmaY}`)

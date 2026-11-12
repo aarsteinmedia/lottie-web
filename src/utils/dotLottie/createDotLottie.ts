@@ -76,7 +76,6 @@ const getArrayBuffer = async (zippable: Zippable) => {
 
   /**
    * Convert Base64 encoded string to Uint8Array.
-   *
    * @param str - Base64 encoded string.
    * @returns UTF-8/Latin-1 binary.
    */

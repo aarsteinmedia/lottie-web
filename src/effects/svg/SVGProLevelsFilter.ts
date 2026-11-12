@@ -22,10 +22,6 @@ export class SVGProLevelsFilter {
     this.filterManager = filterManager
     const { effectElements } = this.filterManager
 
-    // if (!effectElements) {
-    //   throw new Error(`${this.constructor.name}: Missing Effect Elements`)
-    // }
-
     let feComponentTransfer = createNS<SVGFEComponentTransferElement>('feComponentTransfer')
 
     // Red

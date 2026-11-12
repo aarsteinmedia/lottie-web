@@ -48,7 +48,6 @@ export class LetterProps {
     m?: string,
     p?: number[]
   ) {
-    // console.log('bar', sc)
     this._mdf.o = false
     this._mdf.sw = false
     this._mdf.sc = false

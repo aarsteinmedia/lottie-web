@@ -274,11 +274,8 @@ export class CVTextElement extends TextElement {
 
     ctx.font = this.values.fValue
     ; (this.globalData.renderer as CanvasRenderer | undefined)?.ctxLineCap('butt')
-    // ctx.lineCap = 'butt';
     ; (this.globalData.renderer as CanvasRenderer | undefined)?.ctxLineJoin('miter')
-    // ctx.lineJoin = 'miter';
     ; (this.globalData.renderer as CanvasRenderer | undefined)?.ctxMiterLimit(4)
-    // ctx.miterLimit = 4;
 
     if (!this.data.singleShape) {
       this.textAnimator.getMeasures(this.textProperty.currentData,
@@ -315,12 +312,10 @@ export class CVTextElement extends TextElement {
           if (lastFill !== renderedLetter.fc) {
             renderer.ctxFillStyle(renderedLetter.fc as string)
             lastFill = renderedLetter.fc
-            // ctx.fillStyle = renderedLetter.fc;
           }
         } else if (lastFill !== this.values.fill) {
           lastFill = this.values.fill
           renderer.ctxFillStyle(this.values.fill)
-          // ctx.fillStyle = this.values.fill;
         }
         commands = this.textSpans[i]?.elem ?? []
 
@@ -342,31 +337,25 @@ export class CVTextElement extends TextElement {
         }
         this.globalData.canvasContext?.closePath()
         renderer.ctxFill()
-        // this.globalData.canvasContext.fill();
-        // / ctx.fillText(this.textSpans[i].val,0,0);
       }
       if (this.stroke) {
         if (renderedLetter.sw) {
           if (lastStrokeW !== renderedLetter.sw) {
             lastStrokeW = renderedLetter.sw
             renderer.ctxLineWidth(renderedLetter.sw)
-            // ctx.lineWidth = renderedLetter.sw;
           }
         } else if (lastStrokeW !== this.values.sWidth) {
           lastStrokeW = this.values.sWidth
           renderer.ctxLineWidth(this.values.sWidth)
-          // ctx.lineWidth = this.values.sWidth;
         }
         if (renderedLetter.sc) {
           if (lastStroke !== renderedLetter.sc) {
             lastStroke = renderedLetter.sc
             renderer.ctxStrokeStyle(renderedLetter.sc as string)
-            // ctx.strokeStyle = renderedLetter.sc;
           }
         } else if (lastStroke !== this.values.stroke) {
           lastStroke = this.values.stroke
           renderer.ctxStrokeStyle(this.values.stroke)
-          // ctx.strokeStyle = this.values.stroke;
         }
         commands = this.textSpans[i]?.elem ?? []
         jLen = commands.length
@@ -388,8 +377,6 @@ export class CVTextElement extends TextElement {
         }
         this.globalData.canvasContext?.closePath()
         renderer.ctxStroke()
-        // this.globalData.canvasContext.stroke();
-        // / ctx.strokeText(letters[i].val,0,0);
       }
       ; (this.globalData.renderer as CanvasRenderer | undefined)?.restore()
     }

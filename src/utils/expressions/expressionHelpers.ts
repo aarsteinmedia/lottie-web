@@ -77,7 +77,6 @@ function getVelocityAtTime(this: BaseProperty, frameNum: number): number | numbe
     for (let i = 0; i < length; i++) {
       // removing frameRate
       // if needed, don't add it here
-      // velocity[i] = this.elem.globalData.frameRate*((v2[i] - v1[i])/delta);
       velocity[i] = (v2[i] - v1[i]) / delta
     }
 

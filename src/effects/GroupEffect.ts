@@ -34,7 +34,6 @@ export class GroupEffect extends DynamicPropertyContainer {
       { length } = effects
 
     for (let i = 0; i < length; i++) {
-      // eff = null
       switch (effects[i]?.ty) {
         case 0: {
           eff = new SliderEffect(

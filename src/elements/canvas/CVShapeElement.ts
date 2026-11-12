@@ -143,6 +143,8 @@ export class CVShapeElement extends ShapeElement {
         },
         elementData = {} as unknown as CVElement
 
+      console.log(data.ty)
+
       switch (data.ty) {
         case ShapeType.Fill:
         case ShapeType.Stroke: {
@@ -160,34 +162,25 @@ export class CVShapeElement extends ShapeElement {
         }
         case ShapeType.GradientFill:
         case ShapeType.GradientStroke: {
-          elementData.s = PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.s,
-            1,
-            null,
-            this as unknown as ElementInterfaceIntersect
-          ) as MultiDimensionalProperty
-          elementData.e = PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            data.e,
-            1,
-            null,
-            this as unknown as ElementInterfaceIntersect
-          ) as MultiDimensionalProperty
-          elementData.h = PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            (data.h ?? { k: 0 }) as VectorProperty,
-            0,
-            0.01,
-            this as unknown as ElementInterfaceIntersect
-          ) as ValueProperty
-          elementData.a = PropertyFactory.getProp(
-            this as unknown as ElementInterfaceIntersect,
-            (data.a ?? { k: 0 }) as VectorProperty,
-            0,
-            DEG_TO_RAD,
-            this as unknown as ElementInterfaceIntersect
-          ) as ValueProperty
+          const handleProperty = <T = MultiDimensionalProperty | ValueProperty>(prop: any, type: number, mult: null | number = null) => {
+            return PropertyFactory.getProp(
+              this as unknown as ElementInterfaceIntersect,
+              prop as VectorProperty,
+              type,
+              mult,
+              this as unknown as ElementInterfaceIntersect
+            ) as T
+          }
+
+          elementData.s = handleProperty(data.s, 1)
+          elementData.e = handleProperty(data.e, 1)
+          elementData.h = handleProperty(
+            data.h ?? { k: 0 }, 0, 0.01
+          )
+          elementData.a = handleProperty(
+            data.a ?? { k: 0 }, 0, DEG_TO_RAD
+          )
+
           if (data.g) {
             elementData.g = new GradientProperty(
               this as unknown as ElementInterfaceIntersect,
@@ -244,10 +237,6 @@ export class CVShapeElement extends ShapeElement {
       }
       this.stylesList.push(styleElem)
       elementData.style = styleElem
-
-      // if (data.ty === ShapeType.GradientFill) {
-      //   console.log(elementData)
-      // }
 
       return elementData
 
@@ -379,7 +368,6 @@ export class CVShapeElement extends ShapeElement {
             }
           }
           if (isStroke) {
-            // ctx.stroke();
             renderer.ctxStroke()
             if (da) {
               ctx?.setLineDash(this.dashResetter)
@@ -387,7 +375,6 @@ export class CVShapeElement extends ShapeElement {
           }
         }
         if (!isStroke) {
-          // ctx.fill(currentStyle.r);
           ; (this.globalData.renderer as CanvasRenderer).ctxFill(r)
         }
         renderer.restore()

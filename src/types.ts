@@ -312,7 +312,7 @@ export interface CVStyleElement {
   preTransforms: TransformSequence
   r?: FillRule
   transforms: Transformer[]
-  type: ShapeType
+  type: ShapeType | undefined
   wi?: undefined | number
 }
 
@@ -1033,8 +1033,8 @@ export interface FontList {
     w: number
   }
   origin: number /**
-   * 0 | 1.
-   */
+                  * 0 | 1.
+                  */
   sansCase?: undefined | {
     node: HTMLElement
     parent: HTMLElement

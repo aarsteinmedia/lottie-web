@@ -111,9 +111,6 @@ export class TrimModifier extends ShapeModifier {
     shapes.push(shapePath)
 
     for (let i = 0; i < len; i++) {
-      // if (!shapePath) {
-      //   continue
-      // }
       const { lengths } = pathsData[i] ?? { lengths: [] }
 
       shapePath.c = shapePaths[i]?.c

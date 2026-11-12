@@ -60,8 +60,6 @@ function loopOut(
     }
 
   } else {
-    // firstKeyFrame = lastKeyFrame - cycleDuration
-
     if (!duration || duration > keyframes.length - 1) {
       duration = keyframes.length - 1
     }

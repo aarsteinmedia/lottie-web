@@ -128,7 +128,6 @@ export class TextProperty extends BaseProperty {
           }
         }
       } else if (charCode > 0xdbff) {
-        // secondCharCode = text.charCodeAt(i + 1)
         if (isVariationSelector(charCode)) {
           shouldCombine = true
         }
@@ -138,7 +137,6 @@ export class TextProperty extends BaseProperty {
       }
       if (shouldCombine) {
         charactersArray[charactersArray.length - 1] += currentChars
-        // shouldCombine = false
       } else {
         charactersArray.push(currentChars)
       }
@@ -309,7 +307,6 @@ export class TextProperty extends BaseProperty {
         )
       }
 
-      //
       if (currentChar === ' ') {
         uncollapsedSpaces += cLength + trackingOffset
       } else {
@@ -485,10 +482,6 @@ export class TextProperty extends BaseProperty {
   }
 
   getKeyframeValue() {
-    // if (!this.data) {
-    //   throw new Error(`${this.constructor.name}: data (Shape) is not implemented`)
-    // }
-
     const textKeys = this.data.d?.k ?? [],
       frameNum = Number(this.elem.comp?.renderedFrame)
     let i = 0
@@ -509,10 +502,6 @@ export class TextProperty extends BaseProperty {
 
 
   override getValue(_finalValue?: unknown) {
-    // if (!this.data) {
-    //   throw new Error(`${this.constructor.name}: data (TextData) is not implemented`)
-    // }
-
     if (
       (this.elem.globalData?.frameId === this.frameId ||
         this.effectsSequence.length === 0) &&

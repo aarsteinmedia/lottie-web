@@ -98,25 +98,17 @@ function tostring(a: number[]) {
 }
 
 function seedRandom(pool: number[], math: BMMath) {
-  //
-  // The following constants are related to IEEE 754 limits.
-  //
+
   /**
-     * Node.js crypto module, initialized at the bottom.
-     */
+   * Node.js crypto module, initialized at the bottom.
+   */
   const width = 256,
     /**
      * Each RC4 output is 0 \<= x \< 256.
      */
-    chunks = 6, /**
-     * At least six RC4 outputs for each double.
-     */
-    digits = 52, /**
-     * There are 52 significant digits in a double.
-     */
-    rngname = 'random', /**
-     * Rngname: name for Math.random and Math.seedrandom.
-     */
+    chunks = 6, // At least six RC4 outputs for each double.
+    digits = 52, // There are 52 significant digits in a double.
+    rngname = 'random', // Rngname: name for Math.random and Math.seedrandom.
     startdenom = math.pow(width, chunks),
     significance = math.pow(2, digits),
     overflow = significance * 2,
@@ -124,8 +116,6 @@ function seedRandom(pool: number[], math: BMMath) {
   // eslint-disable-next-line no-unassigned-vars
   let nodecrypto: undefined | typeof NodeCrypto
 
-  //
-  // seedrandom()
   /**
    * This is the seedrandom function described above.
    */

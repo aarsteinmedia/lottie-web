@@ -69,7 +69,7 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
     /**
      * Clipping compositions to hide content that exceeds boundaries.
      * If collapsed transformations is on, component should not be clipped.
-      */
+     */
     if (this.data.ty === LayerType.PreComposition && !this.data.hd) {
       const cp = createNS<SVGClipPathElement>('clipPath'),
         pt = createNS<SVGPathElement>('path')

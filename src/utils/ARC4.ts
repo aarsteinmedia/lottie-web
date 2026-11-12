@@ -1,14 +1,15 @@
 
-/** ARC4.
-*
-* An ARC4 implementation.  The constructor takes a key in the form of
-* an array of at most (width) integers that should be 0 \<= x \< (width).
-*
-* The g(count) method returns a pseudorandom integer that concatenates
-* the next (count) outputs from ARC4.  Its return value is a number x
-* that is in the range 0 \<= x \< (width ^ count).
-*
-*/
+/**
+ * ARC4.
+ *
+ * An ARC4 implementation.  The constructor takes a key in the form of
+ * an array of at most (width) integers that should be 0 \<= x \< (width).
+ *
+ * The g(count) method returns a pseudorandom integer that concatenates
+ * the next (count) outputs from ARC4.  Its return value is a number x
+ * that is in the range 0 \<= x \< (width ^ count).
+ *
+ */
 
 export class ARC4 {
   public i = 0

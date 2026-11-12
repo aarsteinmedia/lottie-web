@@ -227,10 +227,6 @@ export class ZigZagModifier extends ShapeModifier {
   }
 
   processShapes(_isFirstFrame: boolean) {
-    // if (!this.shapes) {
-    //   throw new Error(`${this.constructor.name}: shapes is not initialized`)
-    // }
-
     const amplitude = Number(this.amplitude?.v),
       frequency = Math.max(0, Math.round(Number(this.frequency?.v))),
       pointType = Number(this.pointsType?.v)

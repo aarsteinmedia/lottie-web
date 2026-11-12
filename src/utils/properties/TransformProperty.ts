@@ -3,11 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
   ElementInterfaceIntersect,
-  Keyframe,
   Shape,
   Vector2,
   Vector3,
-  VectorProperty,
 } from '@/types'
 import type { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import type { MultiDimensionalProperty } from '@/utils/properties/MultiDimensionalProperty'
@@ -63,33 +61,36 @@ export class TransformProperty extends BaseProperty {
     this.data = data
     this.v = new Matrix()
     this.initDynamicPropertyContainer(container ?? elem)
+
+    const handleProp = <T = MultiDimensionalProperty | ValueProperty>(prop: any, type: number, mult: number, el = this as unknown as ElementInterfaceIntersect) => {
+      return PropertyFactory.getProp(
+        elem,
+        prop,
+        type,
+        mult,
+        el
+      ) as T
+    }
+
     if (data.p && 's' in data.p) {
-      this.px = PropertyFactory.getProp(
-        elem,
-        (data.p as any).x,
-        0,
-        0,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
-      this.py = PropertyFactory.getProp(
-        elem,
+      this.px = handleProp(
+        (data.p as any).x, 0, 0
+      )
+      this.py = handleProp(
         (data.p as any).y,
         0,
-        0,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+        0
+      )
+
       if ('z' in data.p) {
-        this.pz = PropertyFactory.getProp(
-          elem,
-          data.p.z as any,
+        this.pz = handleProp(
+          data.p.z,
           0,
-          0,
-          this as unknown as ElementInterfaceIntersect
-        ) as ValueProperty
+          0
+        )
       }
     } else {
-      this.p = PropertyFactory.getProp(
-        elem,
+      this.p = handleProp(
         data.p ?? ({
           k: [0,
             0,
@@ -97,31 +98,24 @@ export class TransformProperty extends BaseProperty {
         } as any),
         1,
         0,
-        this as unknown as ElementInterfaceIntersect
-      ) as MultiDimensionalProperty<Vector3>
+      )
     }
     if ('rx' in data) {
-      this.rx = PropertyFactory.getProp(
-        elem,
+      this.rx = handleProp(
         data.rx,
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
-      this.ry = PropertyFactory.getProp(
-        elem,
+      )
+      this.ry = handleProp(
         data.ry,
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
-      this.rz = PropertyFactory.getProp(
-        elem,
+      )
+      this.rz = handleProp(
         data.rz,
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      )
       if (data.or?.k[0]?.ti) {
         for (let i = 0; i < data.or.k.length; i++) {
           const thisK = data.or.k[i]
@@ -130,70 +124,57 @@ export class TransformProperty extends BaseProperty {
           thisK.ti = null
         }
       }
-      this.or = PropertyFactory.getProp(
-        elem,
-        data.or as VectorProperty<Keyframe[]>,
+      this.or = handleProp(
+        data.or,
         1,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as MultiDimensionalProperty<Vector3>
+      )
       this.or.sh = true as any
     } else {
-      this.r = PropertyFactory.getProp(
-        elem,
-        data.r ?? ({ k: 0 } as any),
+      this.r = handleProp(
+        data.r ?? { k: 0 },
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      )
     }
     if (data.sk) {
-      this.sk = PropertyFactory.getProp(
-        elem,
+      this.sk = handleProp(
         data.sk,
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
-      this.sa = PropertyFactory.getProp(
-        elem,
+      )
+      this.sa = handleProp(
         data.sa,
         0,
         DEG_TO_RAD,
-        this as unknown as ElementInterfaceIntersect
-      ) as ValueProperty
+      )
     }
-    this.a = PropertyFactory.getProp(
-      elem,
-      data.a ?? ({
+    this.a = handleProp(
+      data.a ?? {
         k: [0,
           0,
           0]
-      } as any),
+      },
       1,
       0,
-      this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector3>
-    this.s = PropertyFactory.getProp(
-      elem,
-      data.s ?? ({
+    )
+    this.s = handleProp(
+      data.s ?? {
         k: [100,
           100,
           100]
-      } as any),
+      },
       1,
       0.01,
-      this as unknown as ElementInterfaceIntersect
-    ) as MultiDimensionalProperty<Vector3>
+    )
     // Opacity is not part of the transform properties, that's why it won't use this.dynamicProperties. That way transforms won't get updated if opacity changes.
     if (data.o) {
-      this.o = PropertyFactory.getProp(
-        elem,
+      this.o = handleProp(
         data.o,
         0,
         0.01,
         elem
-      ) as ValueProperty
+      )
     } else {
       this.o = {
         _mdf: false,

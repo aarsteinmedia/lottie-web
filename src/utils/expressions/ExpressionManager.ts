@@ -40,13 +40,10 @@ const Math = BMMath,
   XMLHttpRequest = null,
   // eslint-disable-next-line sonarjs/no-globals-shadowing, no-shadow-restricted-names
   globalThis = null,
-  // self = null,
   top = null,
   parent = null,
   location = null,
   navigator = null,
-  // eval = null,
-  // Function = null,
   fetch = null,
   frames = null
 let _lottieGlobal = {}
@@ -843,13 +840,10 @@ function initiateExpression(
       window,
       XMLHttpRequest,
       globalThis,
-      // self,
       top,
       parent,
       location,
       navigator,
-      // eval,
-      // Function,
     )
     this.frameExpressionId = globalData.frameId
 
