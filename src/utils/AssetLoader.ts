@@ -36,16 +36,20 @@ export function loadAsset(
   try {
     // Hack to workaround banner validation
     xhr.open(
-      ['G',
+      [
+        'G',
         'E',
-        'T'].join(''), path, true
+        'T'
+      ].join(''), path, true
     )
   } catch (_) {
     // Hack to workaround banner validation
     xhr.open(
-      ['G',
+      [
+        'G',
         'E',
-        'T'].join(''), `${fullPath}/${path}`, true
+        'T'
+      ].join(''), `${fullPath}/${path}`, true
     )
   }
   xhr.send()

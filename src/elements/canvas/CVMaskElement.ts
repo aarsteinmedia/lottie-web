@@ -142,8 +142,7 @@ export class CVMaskElement {
       pathCtx = this.ensureBufferCtx(
         canvas.width, canvas.height, 'path'
       ),
-      currentTransform = ctx.getTransform(),
-      { length } = this.masksProperties
+      currentTransform = ctx.getTransform()
 
     maskCtx.setTransform(
       1, 0, 0, 1, 0, 0
@@ -163,7 +162,7 @@ export class CVMaskElement {
       )
     }
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.masksProperties.length; i++) {
       const mask = this.masksProperties[i]
 
       if (mask.mode === MaskMode.None) {

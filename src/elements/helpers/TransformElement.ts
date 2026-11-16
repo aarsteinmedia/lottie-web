@@ -41,9 +41,11 @@ export abstract class TransformElement extends BaseElement {
         0, 0, 0
       )
       // ptNew = transforms[i].mat.applyToPointArray(pt[0],pt[1],pt[2]);
-      pt = [pt[0] - Number(ptNew?.[0]),
+      pt = [
+        pt[0] - Number(ptNew?.[0]),
         pt[1] - Number(ptNew?.[1]),
-        0]
+        0
+      ]
     }
 
     return pt
@@ -85,11 +87,10 @@ export abstract class TransformElement extends BaseElement {
       throw new Error(`${this.constructor.name}: finalTransform is not initialized`)
     }
     let i = 0
-    const { length } = this.localTransforms
 
     this.finalTransform._localMatMdf = this.finalTransform._matMdf
     if (!this.finalTransform._localMatMdf || !this.finalTransform._opMdf) {
-      while (i < length) {
+      while (i < this.localTransforms.length) {
         if (this.localTransforms[i]?._mdf) {
           this.finalTransform._localMatMdf = true
         }
@@ -104,7 +105,7 @@ export abstract class TransformElement extends BaseElement {
       const { localMat, mat } = this.finalTransform
 
       this.localTransforms[0]?.matrix?.clone(localMat)
-      for (i = 1; i < length; i++) {
+      for (i = 1; i < this.localTransforms.length; i++) {
         const lmat = this.localTransforms[i]?.matrix
 
         if (lmat) {
@@ -116,7 +117,7 @@ export abstract class TransformElement extends BaseElement {
     if (this.finalTransform._opMdf) {
       let localOp = this.finalTransform.localOpacity
 
-      for (i = 0; i < length; i++) {
+      for (i = 0; i < this.localTransforms.length; i++) {
         localOp *= (this.localTransforms[i]?.opacity ?? 1) * 0.01
       }
       this.finalTransform.localOpacity = localOp
@@ -131,14 +132,13 @@ export abstract class TransformElement extends BaseElement {
     this.finalTransform._opMdf = Boolean(this.finalTransform.mProp.o?._mdf || this._isFirstFrame)
     this.finalTransform._matMdf = Boolean(this.finalTransform.mProp._mdf || this._isFirstFrame)
 
-    const finalMat = this.finalTransform.mat,
-      { length } = this.hierarchy
+    const finalMat = this.finalTransform.mat
 
     let i = 0
 
     // Checking if any of the transformation matrices in the hierarchy chain has changed.
     if (!this.finalTransform._matMdf) {
-      while (i < length) {
+      while (i < this.hierarchy.length) {
         if (this.hierarchy[i]?.finalTransform?.mProp._mdf) {
           this.finalTransform._matMdf = true
           break
@@ -151,7 +151,7 @@ export abstract class TransformElement extends BaseElement {
       const mat = this.finalTransform.mProp.v.props
 
       finalMat.cloneFromProps(mat)
-      for (i = 0; i < length; i++) {
+      for (i = 0; i < this.hierarchy.length; i++) {
         if (this.hierarchy[i]?.finalTransform?.mProp.v) {
           const { v: matrix } = this.hierarchy[i]?.finalTransform?.mProp ?? { v: null }
 

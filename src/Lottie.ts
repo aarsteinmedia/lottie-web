@@ -92,8 +92,7 @@ const { Lottie, setSubframeRendering } = createLottie({
   }, {
     renderer: CanvasRenderer,
     rendererType: RendererType.Canvas
-  }
-  ]
+  }]
 })
 
 export default Lottie

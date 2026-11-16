@@ -16,9 +16,7 @@ import { ShapeModifier } from '@/utils/shapes/modifiers/ShapeModifier'
 const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
     const vector = [pt2[0] - pt1[0], pt2[1] - pt1[1]],
       rot = -Math.PI * 0.5,
-      rotatedVector = [
-        Math.cos(rot) * (vector[0] ?? 0) - Math.sin(rot) * (vector[1] ?? 0), Math.sin(rot) * (vector[0] ?? 0) + Math.cos(rot) * (vector[1] ?? 0),
-      ]
+      rotatedVector = [Math.cos(rot) * (vector[0] ?? 0) - Math.sin(rot) * (vector[1] ?? 0), Math.sin(rot) * (vector[0] ?? 0) + Math.cos(rot) * (vector[1] ?? 0)]
 
     return rotatedVector
   },

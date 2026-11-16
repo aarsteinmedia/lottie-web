@@ -48,8 +48,7 @@ export class MouseModifier extends ShapeModifier {
       distI: number[]
     }
   ) {
-    const { length } = path.v,
-      vValues = [],
+    const vValues = [],
       oValues = [],
       iValues = [],
       { dc = 1, maxDist = 0 } = this.data as Shape | undefined ?? {}
@@ -57,7 +56,7 @@ export class MouseModifier extends ShapeModifier {
       x,
       y
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < path.v.length; i++) {
       if (!positions.v[i]) {
         positions.v[i] = [path.v[i][0], path.v[i][1]]
         positions.o[i] = [path.o[i][0], path.o[i][1]]
@@ -117,19 +116,19 @@ export class MouseModifier extends ShapeModifier {
     const { mouseX, mouseY = 0 } = this.elem?.globalData ?? {}
     let shapePaths
 
-    const { length } = this.shapes
-
     if (!mouseX) {
       return
     }
-    const localMouseCoords = this.elem?.globalToLocal([mouseX,
+    const localMouseCoords = this.elem?.globalToLocal([
+      mouseX,
       mouseY,
-      0])
+      0
+    ])
 
     let shapeData
     const newPaths = []
 
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapeData = this.shapes[i]
 
       if (!shapeData.shape?._mdf && !this._mdf) {

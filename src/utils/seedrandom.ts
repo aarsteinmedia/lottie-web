@@ -71,10 +71,9 @@ function flatten(obj: unknown, depth = 0) {
 
   if (depth && typ === 'object') {
 
-    const keys = Object.keys(obj as number[]),
-      { length } = keys
+    const keys = Object.keys(obj as number[])
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       try {
         result.push(flatten((obj as string[])[keys[i] as keyof typeof obj]) as number, depth - 1)
       } catch (error) {

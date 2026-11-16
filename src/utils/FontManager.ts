@@ -182,10 +182,9 @@ function setUpNode(font: string,
 
 function trimFontOptions(font: string): string {
   const familyArray = font.split(','),
-    { length } = familyArray,
     enabledFamilies = []
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < familyArray.length; i++) {
     if (familyArray[i] !== 'sans-serif' && familyArray[i] !== 'monospace') {
       enabledFamilies.push(familyArray[i])
     }
@@ -214,12 +213,11 @@ export class FontManager {
       return
     }
     this.chars = this.chars ?? []
-    const { length } = chars
     let j,
       { length: jLen } = this.chars,
       found: boolean
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < chars.length; i++) {
       j = 0
       found = false
       while (j < jLen) {
@@ -252,12 +250,11 @@ export class FontManager {
 
       return
     }
-    const { length } = fontData.list
 
     if (!IS_SERVER) {
       this.isLoaded = true
 
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < fontData.list.length; i++) {
         const fontList = fontData.list[i]
 
         fontList.helper = this.createHelper(fontList)
@@ -268,7 +265,7 @@ export class FontManager {
       return
     }
 
-    let _pendingFonts = length
+    let _pendingFonts = fontData.list.length
 
     for (let i = 0; i < _pendingFonts; i++) {
       let shouldLoadFont = true,

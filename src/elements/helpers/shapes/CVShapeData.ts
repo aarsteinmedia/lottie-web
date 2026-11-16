@@ -15,12 +15,14 @@ export class CVShapeData extends ShapeData {
   ) {
     super()
     this.styledShapes = []
-    this.tr = [0,
+    this.tr = [
       0,
       0,
       0,
       0,
-      0]
+      0,
+      0
+    ]
     let ty
 
     switch (data.ty) {

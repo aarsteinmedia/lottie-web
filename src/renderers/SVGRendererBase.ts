@@ -318,12 +318,11 @@ export abstract class SVGRendererBase extends BaseRenderer {
       this.globalData.frameId++
       this.globalData.projectInterface.currentFrame = num || 0
       this.globalData._mdf = false
-      const { length } = this.layers
 
       if (!this.completeLayers) {
         this.checkLayers(num)
       }
-      for (let i = length - 1; i >= 0; i--) {
+      for (let i = this.layers.length - 1; i >= 0; i--) {
         if (typeof this.elements[i] === 'boolean') {
           continue
         }
@@ -335,7 +334,7 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (this.globalData._mdf) {
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < this.layers.length; i++) {
           if (typeof this.elements[i] === 'boolean') {
             continue
           }

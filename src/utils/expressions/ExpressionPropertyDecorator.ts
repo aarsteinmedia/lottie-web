@@ -269,9 +269,7 @@ function smooth(
   while (i < samples) {
     sampleValue = this.getValueAtTime(initFrame + i * sampleFrequency)
     if (isArrayOfNum(pv) && isArrayOfNum(value) && isArrayOfNum(sampleValue)) {
-      const { length } = pv
-
-      for (j = 0; j < length; j++) {
+      for (j = 0; j < pv.length; j++) {
         value[j] += sampleValue[j]
       }
       i++
@@ -281,9 +279,7 @@ function smooth(
     i++
   }
   if (isArrayOfNum(pv) && isArrayOfNum(value)) {
-    const { length } = pv
-
-    for (j = 0; j < length; j++) {
+    for (j = 0; j < pv.length; j++) {
       value[j] /= samples
     }
 
@@ -304,9 +300,11 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
 
   matrix.cloneFromProps(this.pre.props)
   if (this.appliedTransformations < 1) {
-    const anchor = this.a?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+    const anchor = this.a?.getValueAtTime(time) as Vector3 | undefined ?? [
       0,
-      0]
+      0,
+      0
+    ]
 
     matrix.translate(
       -anchor[0] * aMult,
@@ -315,9 +313,11 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
     )
   }
   if (this.appliedTransformations < 2) {
-    const scale = this.s?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+    const scale = this.s?.getValueAtTime(time) as Vector3 | undefined ?? [
       0,
-      0]
+      0,
+      0
+    ]
 
     matrix.scale(
       scale[0] * sMult,
@@ -366,9 +366,11 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
       )
     }
   } else {
-    const position = this.p?.getValueAtTime(time) as Vector3 | undefined ?? [0,
+    const position = this.p?.getValueAtTime(time) as Vector3 | undefined ?? [
       0,
-      0]
+      0,
+      0
+    ]
 
     matrix.translate(
       position[0] * (this.p?.mult ?? 1),

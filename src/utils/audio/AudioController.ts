@@ -90,9 +90,7 @@ export class AudioController {
   }
 
   private _updateVolume() {
-    const { length } = this.audios
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.audios.length; i++) {
       this.audios[i]?.volume(this._volume * (this._isMuted ? 0 : 1))
     }
   }

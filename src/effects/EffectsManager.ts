@@ -22,10 +22,9 @@ export class EffectsManager {
   constructor(
     data: LottieLayer, element: ElementInterfaceIntersect, _dynamicProperties?: DynamicPropertyContainer[]
   ) {
-    const effects = data.ef ?? [],
-      { length } = effects
+    const effects = data.ef ?? []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < effects.length; i++) {
       const effectItem = new GroupEffect(
         effects[i], element, data
       )

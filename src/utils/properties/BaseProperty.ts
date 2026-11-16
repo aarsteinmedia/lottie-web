@@ -61,10 +61,12 @@ const quaternionToEuler = (out: Vector3, quat: Vector4) => {
       y = s1 * c2 * c3 + c1 * s2 * s3,
       z = c1 * s2 * c3 - s1 * c2 * s3
 
-    return [x,
+    return [
+      x,
       y,
       z,
-      w]
+      w
+    ]
   },
   /**
    * Based on Toji's https://github.com/toji/gl-matrix/.
@@ -72,10 +74,12 @@ const quaternionToEuler = (out: Vector3, quat: Vector4) => {
   slerp = (
     a: Vector4, b: Vector4, t: number
   ): Vector4 => {
-    const out: Vector4 = [0,
+    const out: Vector4 = [
         0,
         0,
-        0],
+        0,
+        0
+      ],
       ax = a[0],
       ay = a[1],
       az = a[2],
@@ -217,9 +221,11 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
   interpolateValue(frameNum: number, caching: Caching = {} as Caching) {
     const { offsetTime, pv } = this
-    let newValue: Vector3 | ShapePath = [0,
+    let newValue: Vector3 | ShapePath = [
       0,
-      0]
+      0,
+      0
+    ]
 
     if (this.propType === PropType.MultiDimensional && pv) {
       newValue = createTypedArray(ArrayType.Float32,

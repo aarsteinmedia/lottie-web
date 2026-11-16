@@ -27,12 +27,11 @@ export class MultiDimensionalProperty<
     this.k = false
     this.kf = false
     this.frameId = -1
-    const { length } = data.k
 
-    this.v = createTypedArray(ArrayType.Float32, length) as T
-    this.pv = createTypedArray(ArrayType.Float32, length) as T
-    this.vel = createTypedArray(ArrayType.Float32, length) as T
-    for (let i = 0; i < length; i++) {
+    this.v = createTypedArray(ArrayType.Float32, data.k.length) as T
+    this.pv = createTypedArray(ArrayType.Float32, data.k.length) as T
+    this.vel = createTypedArray(ArrayType.Float32, data.k.length) as T
+    for (let i = 0; i < data.k.length; i++) {
       this.v[i] = (data.k[i] ?? 0) * this.mult
       this.pv[i] = data.k[i] ?? 0
     }

@@ -23,10 +23,12 @@ export function getBezierEasing(
   if (beziers[str]) {
     return beziers[str]
   }
-  const bezEasing = new BezierEasing([a,
+  const bezEasing = new BezierEasing([
+    a,
     b,
     c,
-    d])
+    d
+  ])
 
   beziers[str] = bezEasing
 

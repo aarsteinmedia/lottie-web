@@ -90,13 +90,8 @@ export class LayerExpressionInterface {
   }
 
   applyPoint(matrix: Matrix, arr: number[]) {
-    if (this._elem.hierarchy.length > 0) {
-
-      const { length } = this._elem.hierarchy
-
-      for (let i = 0; i < length; i++) {
-        this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
-      }
+    for (let i = 0; i < this._elem.hierarchy.length; i++) {
+      this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
     }
 
     return matrix.applyToPointArray(
@@ -187,13 +182,8 @@ export class LayerExpressionInterface {
   }
 
   invertPoint(matrix: Matrix, arr: number[]) {
-    if (this._elem.hierarchy.length > 0) {
-
-      const { length } = this._elem.hierarchy
-
-      for (let i = 0; i < length; i++) {
-        this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
-      }
+    for (let i = 0; i < this._elem.hierarchy.length; i++) {
+      this._elem.hierarchy[i]?.finalTransform?.mProp.applyToMatrix(matrix)
     }
 
     return matrix.inversePoint(arr)
@@ -208,10 +198,12 @@ export class LayerExpressionInterface {
   }
 
   sampleImage() {
-    return [1,
+    return [
       1,
       1,
-      1]
+      1,
+      1
+    ]
   }
 
   toComp(_arr: number[], _time: number) {

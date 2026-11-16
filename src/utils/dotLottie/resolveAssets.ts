@@ -50,10 +50,9 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
     return
   }
 
-  const toResolve: Promise<void>[] = [],
-    { length } = assets
+  const toResolve: Promise<void>[] = []
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < assets.length; i++) {
     const asset = assets[i]
 
     if (!isAudio(asset) && !isImage(asset)) {

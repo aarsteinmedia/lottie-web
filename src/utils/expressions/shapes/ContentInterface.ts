@@ -9,9 +9,7 @@ export class ContentInterface extends BaseInterface {
   override getInterface(value: string | number) {
     let i = 0
 
-    const { length } = this.interfaces
-
-    while (i < length) {
+    while (i < this.interfaces.length) {
 
       if (this.interfaces[i]?._name === value || this.interfaces[i]?.mn === value || this.interfaces[i]?.propertyIndex === value || this.interfaces[i]?.ix === value || this.interfaces[i]?.ind === value) {
         return this.interfaces[i]

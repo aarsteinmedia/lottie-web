@@ -180,9 +180,8 @@ export class ImagePreloader {
     this.imagesLoadedCb = cb
     this._hasNotified = false
     this._isRegistering = true
-    const { length } = assets
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < assets.length; i++) {
       if (assets[i]?.layers) {
         continue
       }

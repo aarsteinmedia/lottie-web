@@ -42,10 +42,9 @@ export class MaskElement {
     this.element = element
     this.globalData = globalData
     this.masksProperties = this.data.masksProperties ?? []
-    const { defs } = this.globalData,
-      { length } = this.masksProperties
+    const { defs } = this.globalData
 
-    this.viewData = createSizedArray(length)
+    this.viewData = createSizedArray(this.masksProperties.length)
 
     const properties = this.masksProperties
     let count = 0
@@ -57,7 +56,7 @@ export class MaskElement {
       maskType = 'clipPath',
       maskRef = 'clip-path'
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.masksProperties.length; i++) {
       if (
         properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None ||
         properties[i]?.inv ||
@@ -265,10 +264,9 @@ export class MaskElement {
   }
 
   renderFrame(frame?: number | null) {
-    const finalMat = this.element.finalTransform?.mat,
-      { length } = this.masksProperties
+    const finalMat = this.element.finalTransform?.mat
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.masksProperties.length; i++) {
       const shapePath = this.viewData[i]?.prop?.v
 
       if (shapePath && (this.viewData[i]?.prop?._mdf || frame)) {

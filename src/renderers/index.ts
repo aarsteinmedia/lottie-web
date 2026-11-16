@@ -20,10 +20,9 @@ export const registerRenderer = (key: RendererType, value: Renderer) => {
     }
     // Returns any renderer that is registered
 
-    const keys = Object.keys(renderers),
-      { length } = keys
+    const keys = Object.keys(renderers)
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       if (renderers[keys[i] as unknown as RendererType]) {
         return keys[i] as unknown as RendererType
       }

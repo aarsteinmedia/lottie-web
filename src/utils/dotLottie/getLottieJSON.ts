@@ -59,8 +59,7 @@ export async function getLottieJSON(resp: Response) {
   const unzipped = await unzip(resp),
     manifest = getManifest(unzipped),
     data = [],
-    toResolve: Promise<void>[] = [],
-    { length } = manifest.animations
+    toResolve: Promise<void>[] = []
 
   /**
    * Check whether dotLottie is v.1.0 or v.2.0: if animations folder is abbreviated.
@@ -72,19 +71,16 @@ export async function getLottieJSON(resp: Response) {
     animationsFolder = 'a'
   }
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < manifest.animations.length; i++) {
     const str = strFromU8(unzipped[`${animationsFolder}/${manifest.animations[i]?.id}.json`]),
       lottie: AnimationData = JSON.parse(prepareString(str))
 
     // Handle Expressions
-    const { length: jLen } = lottie.layers
-
-    for (let j = 0; j < jLen; j++) {
+    for (let j = 0; j < lottie.layers.length; j++) {
       const { ks: transform } = lottie.layers[j] ?? {},
-        props = Object.keys(transform) as (keyof Shape)[],
-        { length: pLen } = props
+        props = Object.keys(transform) as (keyof Shape)[]
 
-      for (let p = 0; p < pLen; p++) {
+      for (let p = 0; p < props.length; p++) {
         const prop = transform[props[p]] as ExpressionProp | undefined,
           { e: isEncoded, x: expression } = prop ?? {}
 

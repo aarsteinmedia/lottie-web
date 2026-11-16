@@ -30,9 +30,7 @@ const crossProduct = (a: number[], b: number[]) => [
 
   polarOffset = (
     p: Vector2, angle: number, length: number
-  ): Vector2 => [
-    p[0] + Math.cos(angle) * length, p[1] - Math.sin(angle) * length,
-  ],
+  ): Vector2 => [p[0] + Math.cos(angle) * length, p[1] - Math.sin(angle) * length],
 
   linearOffset = (
     p1: Vector2, p2: Vector2, amount: number
@@ -52,18 +50,26 @@ const crossProduct = (a: number[], b: number[]) => [
     start2: Vector2,
     end2: Vector2
   ): Vector2 | null => {
-    const v1 = [start1[0],
+    const v1 = [
+        start1[0],
         start1[1],
-        1],
-      v2 = [end1[0],
+        1
+      ],
+      v2 = [
+        end1[0],
         end1[1],
-        1],
-      v3 = [start2[0],
+        1
+      ],
+      v3 = [
+        start2[0],
         start2[1],
-        1],
-      v4 = [end2[0],
+        1
+      ],
+      v4 = [
+        end2[0],
         end2[1],
-        1],
+        1
+      ],
       r = crossProduct(crossProduct(v1, v2), crossProduct(v3, v4))
 
     if (floatZero(r[2] ?? 0)) {
@@ -265,9 +271,7 @@ const crossProduct = (a: number[], b: number[]) => [
     if (a.length > 1 && b.length > 1) {
       intersect = getIntersection(a[0], b[b.length - 1])
       if (intersect) {
-        return [
-          [a[0]?.split(intersect[0] ?? 0)[0]], [b[b.length - 1]?.split(intersect[1] ?? 0)[1]],
-        ]
+        return [[a[0]?.split(intersect[0] ?? 0)[0]], [b[b.length - 1]?.split(intersect[1] ?? 0)[1]]]
       }
     }
 

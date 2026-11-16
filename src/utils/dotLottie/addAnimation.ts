@@ -26,9 +26,7 @@ export async function addAnimation ({
     animations = [],
     manifest = {
       animations: src
-        ? [
-          { id },
-        ]
+        ? [{ id }]
         : [],
     } as LottieManifest,
   } = src ? await getAnimationData(src) : {}
@@ -38,9 +36,8 @@ export async function addAnimation ({
       throw new Error('Manifest is not set')
     }
     manifest.generator = generator
-    const { length } = configs
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < configs.length; i++) {
       const { url } = configs[i] ?? {},
         { animations: animationsToAdd } = await getAnimationData(url)
 

@@ -29,9 +29,7 @@ function initExpressions(animation: AnimationItem) {
   }
 
   function releaseInstances() {
-    const { length } = registers
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < registers.length; i++) {
       registers[i]?.release?.()
     }
     registers.length = 0

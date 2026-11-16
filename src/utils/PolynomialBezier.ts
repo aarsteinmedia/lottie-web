@@ -49,13 +49,11 @@ const quadRoots = (
 
   lerpPoint = (
     p0: Vector2, p1: Vector2, amount: number
-  ): Vector2 => [
-    lerp(
-      p0[0], p1[0], amount
-    ), lerp(
-      p0[1], p1[1], amount
-    ),
-  ],
+  ): Vector2 => [lerp(
+    p0[0], p1[0], amount
+  ), lerp(
+    p0[1], p1[1], amount
+  )],
 
   boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
     Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
@@ -87,13 +85,11 @@ const quadRoots = (
       throw new Error('Could not set PolynomialBezier')
     }
 
-    return [
-      intersectData(
-        split[0], data.t1, data.t
-      ), intersectData(
-        split[1], data.t, data.t2
-      ),
-    ]
+    return [intersectData(
+      split[0], data.t1, data.t
+    ), intersectData(
+      split[1], data.t, data.t2
+    )]
   },
 
   intersectsImpl = (
@@ -199,10 +195,12 @@ export class PolynomialBezier {
     this.b = [coeffx[1], coeffy[1]]
     this.c = [coeffx[2], coeffy[2]]
     this.d = [coeffx[3], coeffy[3]]
-    this.points = [p0,
+    this.points = [
+      p0,
       p1,
       p2,
-      p3]
+      p3
+    ]
   }
 
   boundingBox() {
@@ -228,9 +226,7 @@ export class PolynomialBezier {
   }
 
   derivative(t: number) {
-    return [
-      (3 * t * this.a[0] + 2 * this.b[0]) * t + this.c[0], (3 * t * this.a[1] + 2 * this.b[1]) * t + this.c[1],
-    ]
+    return [(3 * t * this.a[0] + 2 * this.b[0]) * t + this.c[0], (3 * t * this.a[1] + 2 * this.b[1]) * t + this.c[1]]
   }
 
   inflectionPoints() {
@@ -296,9 +292,7 @@ export class PolynomialBezier {
   }
 
   point(t: number) {
-    return [
-      ((this.a[0] * t + this.b[0]) * t + this.c[0]) * t + this.d[0], ((this.a[1] * t + this.b[1]) * t + this.c[1]) * t + this.d[1],
-    ]
+    return [((this.a[0] * t + this.b[0]) * t + this.c[0]) * t + this.d[0], ((this.a[1] * t + this.b[1]) * t + this.c[1]) * t + this.d[1]]
   }
 
   split(t: number) {
@@ -327,13 +321,11 @@ export class PolynomialBezier {
         p20, p21, t
       )
 
-    return [
-      new PolynomialBezier(
-        this.points[0], p10, p20, p3, true
-      ), new PolynomialBezier(
-        p3, p21, p12, this.points[3], true
-      ),
-    ]
+    return [new PolynomialBezier(
+      this.points[0], p10, p20, p3, true
+    ), new PolynomialBezier(
+      p3, p21, p12, this.points[3], true
+    )]
   }
 
   tangentAngle(t: number) {
@@ -354,11 +346,10 @@ export class PolynomialBezier {
     }
     // Derivative roots to find min/max
     const f = quadRoots(
-        3 * (bez.a[comp] ?? 0), 2 * (bez.b[comp] ?? 0), bez.c[comp] ?? 0
-      ),
-      { length } = f
+      3 * (bez.a[comp] ?? 0), 2 * (bez.b[comp] ?? 0), bez.c[comp] ?? 0
+    )
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < f.length; i++) {
       if ((f[i] ?? 0) <= 0 || (f[i] ?? 0) >= 1) {
         continue
       }

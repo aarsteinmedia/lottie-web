@@ -35,20 +35,18 @@ export const mixin = <S extends object, K extends keyof S & string>(
 }
 
 export const extendPrototype = (sources: Constructor[], destination: Constructor) => {
-    const { length } = sources
     let sourcePrototype: Record<string, unknown>
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < sources.length; i++) {
       sourcePrototype = sources[i]?.prototype
-      const properties = Object.getOwnPropertyNames(sourcePrototype),
-        { length: jLen } = properties
+      const properties = Object.getOwnPropertyNames(sourcePrototype)
 
-      for (let j = 0; j < jLen; j++) {
+      for (let j = 0; j < properties.length; j++) {
         if (properties[j] === 'constructor') {
           continue
         }
         if (Object.hasOwn(sourcePrototype, properties[j] ?? '')) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           destination.prototype[properties[j] ?? ''] = sourcePrototype[properties[j] ?? '']
         }
       }
@@ -70,10 +68,9 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
       sourcePrototype = sources[i]?.prototype
 
       const { name } = sources[i] ?? { name: '' },
-        properties = Object.getOwnPropertyNames(sourcePrototype),
-        { length: jLen } = properties
+        properties = Object.getOwnPropertyNames(sourcePrototype)
 
-      for (let j = 0; j < jLen; j++) {
+      for (let j = 0; j < properties.length; j++) {
         if (
           properties[j] === 'constructor' ||
           combinedPrototypes.some(({ prop }) => prop === properties[j]) ||
@@ -87,6 +84,4 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
         })
       }
     }
-
-    console.debug(combinedPrototypes)
   }

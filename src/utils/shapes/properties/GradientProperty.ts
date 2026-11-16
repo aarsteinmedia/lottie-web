@@ -102,18 +102,20 @@ export class GradientProperty extends DynamicPropertyContainer {
     for (let i = 0; i < len; i++) {
       mult = i % 4 === 0 ? 100 : 255
       val = Math.round((this.prop.v[i] ?? 0) * mult)
-      if (this.c[i] !== val) {
-        this.c[i] = val
-        this._cmdf = !forceRender
+      if (this.c[i] === val) {
+        continue
       }
+      this.c[i] = val
+      this._cmdf = !forceRender
     }
     if (this.o.length > 0) {
       for (let i = this.data.p * 4; i < this.prop.v.length; i++) {
         val = i % 2 === 0 ? Math.round((this.prop.v[i] ?? 0) * 100) : this.prop.v[i]
-        if (this.o[i - this.data.p * 4] !== val) {
-          this.o[i - this.data.p * 4] = val
-          this._omdf = !forceRender
+        if (this.o[i - this.data.p * 4] === val) {
+          continue
         }
+        this.o[i - this.data.p * 4] = val
+        this._omdf = !forceRender
       }
     }
     this._mdf = !forceRender

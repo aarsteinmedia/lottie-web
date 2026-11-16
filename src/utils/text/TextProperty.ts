@@ -464,10 +464,9 @@ export class TextProperty extends BaseProperty {
   }
 
   copyData(obj: DocumentData, data: DocumentData | LetterProps) {
-    const keys = Object.keys(data),
-      { length } = keys
+    const keys = Object.keys(data)
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       if (Object.hasOwn(data, keys[i] ?? '')) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (obj as any)[keys[i] as keyof DocumentData] = data[keys[i] as keyof typeof data]

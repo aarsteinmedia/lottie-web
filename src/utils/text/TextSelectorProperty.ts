@@ -194,10 +194,12 @@ export class TextSelectorProperty extends BaseProperty {
       y2 = 1.0 + this.xe.v / 100.0
     }
 
-    return [x1,
+    return [
+      x1,
       y1,
       x2,
-      y2]
+      y2
+    ]
   }
 
   private _handleShapeType(ind: number) {

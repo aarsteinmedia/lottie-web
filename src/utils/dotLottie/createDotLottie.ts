@@ -88,11 +88,7 @@ const getArrayBuffer = async (zippable: Zippable) => {
   prepareLottie = (filename: string, manifest: LottieManifest) => {
     const manifestCompressionLevel = 0,
       name = addExt('lottie', filename) || `${createElementID()}.lottie`,
-      dotLottie: Zippable = {
-        'manifest.json': [
-          strToU8(JSON.stringify(manifest), true), { level: manifestCompressionLevel },
-        ],
-      }
+      dotLottie: Zippable = { 'manifest.json': [strToU8(JSON.stringify(manifest), true), { level: manifestCompressionLevel }] }
 
     return {
       dotLottie,
@@ -153,9 +149,7 @@ const getArrayBuffer = async (zippable: Zippable) => {
 
       dotLottie[
         `${isAudio(asset) ? 'audio' : 'i'}/${assetId}.${ext}`
-      ] = [
-        base64ToU8(dataURL), { level: animationCompressionLevel as any }
-      ]
+      ] = [base64ToU8(dataURL), { level: animationCompressionLevel as any }]
     }
   },
 
@@ -211,9 +205,7 @@ export async function createDotLottie({
 
 
     // Add animations and assets to the dotLottie file
-    const { length } = animations
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animations.length; i++) {
       await prepareAssets(
         animations[i],
         dotLottie,
@@ -221,9 +213,7 @@ export async function createDotLottie({
       )
       prepareExpressions(animations[i])
 
-      dotLottie[`a/${manifest.animations[i]?.id}.json`] = [
-        strToU8(JSON.stringify(animations[i]), true), { level: animationCompressionLevel },
-      ]
+      dotLottie[`a/${manifest.animations[i]?.id}.json`] = [strToU8(JSON.stringify(animations[i]), true), { level: animationCompressionLevel }]
     }
 
     const buffer = await getArrayBuffer(dotLottie)

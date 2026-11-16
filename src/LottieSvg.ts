@@ -82,8 +82,7 @@ const { Lottie, setSubframeRendering } = createLottie({
   renderers: [{
     renderer: SVGRenderer,
     rendererType: RendererType.SVG
-  }
-  ]
+  }]
 })
 
 export default Lottie

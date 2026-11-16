@@ -58,12 +58,14 @@ const $bm_div = div,
   degrees_to_radians = radiansToDegrees,
   radians_to_degrees = radiansToDegrees,
 
-  helperLengthArray = [0,
+  helperLengthArray = [
     0,
     0,
     0,
     0,
-    0],
+    0,
+    0
+  ],
   add = sum,
 
   easeInBez = BezierFactory.getBezierEasing(
@@ -128,10 +130,12 @@ const hueToRGB = (
       )
     }
 
-    return [r,
+    return [
+      r,
       g,
       b,
-      val[3] ?? 0]
+      val[3] ?? 0
+    ]
   },
   rgbToHsl = (val: Vector4) => {
     const r = val[0],
@@ -173,10 +177,12 @@ const hueToRGB = (
       h /= 6
     }
 
-    return [h,
+    return [
+      h,
       s,
       l,
-      val[3]]
+      val[3]
+    ]
   }
 
 function $bm_neg(a: unknown) {
@@ -536,15 +542,19 @@ function initiateExpression(
     { frameRate, projectInterface: comp } = elem.comp.globalData
 
   function lookAt(elem1: Vector3, elem2: Vector3) {
-    const fVec: Vector3 = [elem2[0] - elem1[0],
+    const fVec: Vector3 = [
+      elem2[0] - elem1[0],
       elem2[1] - elem1[1],
-      elem2[2] - elem1[2]]
+      elem2[2] - elem1[2]
+    ]
     const pitch = Math.atan2(fVec[0], radToDeg(Math.sqrt(fVec[1] * fVec[1] + fVec[2] * fVec[2])))
     const yaw = radToDeg(-Math.atan2(fVec[1], fVec[2]))
 
-    return [yaw,
+    return [
+      yaw,
       pitch,
-      0]
+      0
+    ]
   }
 
   function nearestKey(timeFromProps: number) {

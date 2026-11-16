@@ -231,17 +231,15 @@ export class RepeaterModifier extends ShapeModifier {
           r: {
             a: 1,
             ix: 6,
-            k: [
-              {
-                e: 0,
-                s: 0,
-                t: 0
-              }, {
-                e: 0,
-                s: 0,
-                t: 1
-              },
-            ],
+            k: [{
+              e: 0,
+              s: 0,
+              t: 0
+            }, {
+              e: 0,
+              s: 0,
+              t: 1
+            }],
           },
           s: {
             a: 0,
@@ -489,10 +487,8 @@ export class RepeaterModifier extends ShapeModifier {
   }
 
   resetElements(elements: Shape[]) {
-    const { length } = elements
-
-    for (let i = 0; i < length; i++) {
-      ; elements[i]._processed = false
+    for (let i = 0; i < elements.length; i++) {
+      elements[i]._processed = false
 
       const { it } = elements[i] ?? {}
 

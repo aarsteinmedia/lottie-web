@@ -424,11 +424,11 @@ export class SVGTextLottieElement extends TextElement {
     }
     this._sizeChanged = true
     const renderedLetters = this.textAnimator?.renderedLetters,
-      letters = this.textProperty.currentData.l,
-      { length } = letters
+      letters = this.textProperty.currentData.l
+
     let renderedLetter, textSpan, glyphElement
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < letters.length; i++) {
       if (letters[i]?.n) {
         continue
       }

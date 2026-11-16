@@ -26,7 +26,8 @@ export class TransformExpressionInterface {
     return [
       this._px?.(),
       this._py?.(),
-      this._pz?.() ?? 0]
+      this._pz?.() ?? 0
+    ]
   }
 
   get rotation() {

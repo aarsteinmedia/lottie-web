@@ -165,9 +165,11 @@ function convertPathsToAbsoluteValues(path?: ShapePath) {
 function checkVersion(minimum: Vector3, animVersionString: string) {
   const animVersion = (animVersionString
     ? animVersionString.split('.').map(Number)
-    : [100,
+    : [
       100,
-      100]) as Vector3
+      100,
+      100
+    ]) as Vector3
 
   if (minimum[0] > animVersion[0]) {
     return true
@@ -202,21 +204,21 @@ const iterateLayers = (
 }
 
 const checkText = (() => {
-  const minimumVersion = [4,
+  const minimumVersion = [
     4,
-    14] as Vector3
+    4,
+    14
+  ] as Vector3
 
   const updateTextLayer = (textLayer: LottieLayer) => {
     const documentData = textLayer.t?.d
 
     if (textLayer.t && documentData) {
       textLayer.t.d = {
-        k: [
-          {
-            s: documentData,
-            t: 0,
-          },
-        ],
+        k: [{
+          s: documentData,
+          t: 0,
+        }],
       } as DocumentData
     }
   }
@@ -240,9 +242,11 @@ const checkText = (() => {
 })()
 
 const checkChars = (() => {
-  const minimumVersion = [4,
+  const minimumVersion = [
+    4,
     7,
-    99] as Vector3
+    99
+  ] as Vector3
 
   return (animationData: AnimationData) => {
     if (!animationData.chars || checkVersion(minimumVersion, animationData.v)) {
@@ -322,9 +326,11 @@ const checkChars = (() => {
 })()
 
 const checkPathProperties = (() => {
-  const minimumVersion = [5,
+  const minimumVersion = [
+    5,
     7,
-    15] as Vector3
+    15
+  ] as Vector3
 
   const updateTextLayer = (textLayer: LottieLayer) => {
     const pathData = textLayer.t?.p
@@ -372,9 +378,11 @@ const checkPathProperties = (() => {
 })()
 
 const checkColors = (() => {
-  const minimumVersion = [4,
+  const minimumVersion = [
+    4,
     1,
-    9] as Vector3
+    9
+  ] as Vector3
 
   const iterateShapes = (shapes: Shape[]) => {
 
@@ -421,9 +429,7 @@ const checkColors = (() => {
     },
 
     _iterateLayers = (layers: LottieLayer[]) => {
-      const { length } = layers
-
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < layers.length; i++) {
         if (layers[i]?.ty === LayerType.Shape) {
           iterateShapes(layers[i]?.shapes ?? [])
         }
@@ -436,9 +442,7 @@ const checkColors = (() => {
     }
     _iterateLayers(animationData.layers)
 
-    const { length } = animationData.assets
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < animationData.assets.length; i++) {
       if (animationData.assets[i]?.layers) {
         _iterateLayers(animationData.assets[i]?.layers as LottieLayer[])
       }
@@ -447,9 +451,11 @@ const checkColors = (() => {
 })()
 
 const checkShapes = (() => {
-  const minimumVersion = [4,
+  const minimumVersion = [
     4,
-    18] as Vector3
+    4,
+    18
+  ] as Vector3
 
   const completeCloseShapePath = (shapePath?: ShapePath | ShapePath[], isClosed = false) => {
       if (!shapePath) {

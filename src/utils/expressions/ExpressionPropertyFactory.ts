@@ -62,12 +62,16 @@ export class NumericValue {
 export class ExpressionPropertyInterface {
   defaultMultidimensionalValue = {
     mult: 1,
-    pv: [0,
+    pv: [
       0,
-      0],
-    v: [0,
       0,
-      0]
+      0
+    ],
+    v: [
+      0,
+      0,
+      0
+    ]
   }
   defaultUnidimensionalValue = {
     mult: 1,

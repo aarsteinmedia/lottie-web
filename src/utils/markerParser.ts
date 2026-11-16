@@ -2,11 +2,11 @@ import type { Marker, MarkerData } from '@/types'
 
 const parsePayloadLines = (payload: string) => {
   const lines = payload.split('\r\n'),
-    keys: Record<string, string> = {},
-    { length } = lines
+    keys: Record<string, string> = {}
+
   let keysCount = 0
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < lines.length; i++) {
     const line = lines[i]?.split(':') ?? []
 
     if (line.length === 2) {
@@ -28,10 +28,9 @@ const parsePayloadLines = (payload: string) => {
 }
 
 export function markerParser(markersFromProps: (MarkerData | Marker)[]) {
-  const markers = [],
-    { length } = markersFromProps
+  const markers = []
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < markersFromProps.length; i++) {
     if ('duration' in (markersFromProps[i] ?? {})) {
       markers.push(markersFromProps[i])
       continue

@@ -5,9 +5,8 @@ export function getFontProperties(fontData: FontList) {
 
   let fWeight = 'normal',
     fStyle = 'normal'
-  const { length } = styles
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < styles.length; i++) {
     switch (styles[i]?.toLowerCase()) {
       case 'italic': {
         fStyle = 'italic'

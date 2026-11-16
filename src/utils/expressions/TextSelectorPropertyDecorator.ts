@@ -27,9 +27,11 @@ export class TextExpressionSelectorPropFactory extends BaseProperty {
     this.propType = PropType.TextSelector
     this.textTotal = data.totalChars
     this.selectorValue = 100
-    this.lastValue = [1,
+    this.lastValue = [
       1,
-      1]
+      1,
+      1
+    ]
     this.k = true
     this.x = true
     this.getValue = ExpressionManager.initiateExpression.bind(this as unknown as KeyframeValueProperty)(

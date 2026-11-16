@@ -26,9 +26,11 @@ const createAsset = () => ({
     ks: {
       a: {
         a: 0,
-        k: [0,
+        k: [
           0,
-          0]
+          0,
+          0
+        ]
       },
       o: {
         a: 0,
@@ -36,9 +38,11 @@ const createAsset = () => ({
       },
       p: {
         a: 0,
-        k: [0,
+        k: [
           0,
-          0]
+          0,
+          0
+        ]
       },
       r: {
         a: 0,
@@ -46,9 +50,11 @@ const createAsset = () => ({
       },
       s: {
         a: 0,
-        k: [100,
+        k: [
           100,
-          100]
+          100,
+          100
+        ]
       },
     },
     op: 10,
@@ -119,12 +125,10 @@ describe('ImagePreloader (SVG)', () => {
     const preloader = new ImagePreloader()
 
     preloader.setCacheType(RendererType.SVG)
-    preloader.loadAssets([
-      createAsset(), {
-        ...createAsset(),
-        id: 'image_1'
-      }
-    ], vi.fn())
+    preloader.loadAssets([createAsset(), {
+      ...createAsset(),
+      id: 'image_1'
+    }], vi.fn())
     preloader.destroy()
 
     expect(vi.getTimerCount()).toBe(0)

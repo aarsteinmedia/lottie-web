@@ -39,9 +39,8 @@ export class MaskManagerInterface {
   constructor(maskManager: MaskElement | CVMaskElement, _elem?: ElementInterfaceIntersect) {
     this.maskManager = maskManager
     this._masksInterfaces = createSizedArray(maskManager.viewData.length)
-    const { length } = maskManager.viewData
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < maskManager.viewData.length; i++) {
       this._masksInterfaces[i] = new MaskInterface(maskManager.viewData[i] as ViewData, maskManager.masksProperties[i])
     }
   }

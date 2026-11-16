@@ -60,9 +60,11 @@ export class Matrix {
     x: number, y: number, z: number
   ): number[] {
     if (this.isIdentity()) {
-      return [x,
+      return [
+        x,
         y,
-        z]
+        z
+      ]
     }
 
     return [
@@ -246,11 +248,7 @@ export class Matrix {
   }
 
   reset(): this {
-    this.props.set([1,
-      0,
-      0,
-      0,
-      0,
+    this.props.set([
       1,
       0,
       0,
@@ -261,7 +259,13 @@ export class Matrix {
       0,
       0,
       0,
-      1])
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ])
 
     return this
   }
@@ -336,7 +340,8 @@ export class Matrix {
     o: number,
     p: number
   ): this {
-    this.props.set([a,
+    this.props.set([
+      a,
       b,
       c,
       d,
@@ -351,7 +356,8 @@ export class Matrix {
       m,
       n,
       o,
-      p])
+      p
+    ])
 
     return this
   }

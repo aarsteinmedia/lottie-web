@@ -118,10 +118,9 @@ function renderGradient(
 
   if (itemData.g && (itemData.g._cmdf || isFirstFrame)) {
     stops = itemData.cst
-    const cValues = itemData.g.c,
-      { length } = stops
+    const cValues = itemData.g.c
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < stops.length; i++) {
       stop = stops[i]
       stop.setAttribute('offset', `${cValues[i * 4]}%`)
       stop.setAttribute('stop-color',
@@ -223,15 +222,15 @@ function renderPath(
   }
   let pathStringTransformed, shouldRedraw: boolean, pathNodes: ShapePath | undefined
   const {
-      caches, lvl, sh, styles, transformers
-    } = itemData,
-    { length } = styles
+    caches, lvl, sh, styles, transformers
+  } = itemData
+
   let paths: ShapeElement | ShapeCollection | undefined,
     mat: Matrix,
     iterations,
     k
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < styles.length; i++) {
     shouldRedraw = sh?._mdf || Boolean(isFirstFrame)
     const style = styles[i],
       // eslint-disable-next-line @typescript-eslint/naming-convention

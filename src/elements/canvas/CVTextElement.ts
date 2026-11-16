@@ -286,6 +286,7 @@ export class CVTextElement extends TextElement {
       jLen: number,
       k,
       kLen: number
+
     const { renderedLetters } = this.textAnimator
 
     const letters = this.textProperty.currentData.l
@@ -296,10 +297,9 @@ export class CVTextElement extends TextElement {
       lastStrokeW = null,
       commands: number[][],
       pathArr
-    const renderer = this.globalData.renderer as CanvasRenderer,
-      { length } = letters
+    const renderer = this.globalData.renderer as CanvasRenderer
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < letters.length; i++) {
       if (letters[i]?.n) {
         continue
       }

@@ -143,8 +143,6 @@ export class CVShapeElement extends ShapeElement {
         },
         elementData = {} as unknown as CVElement
 
-      console.log(data.ty)
-
       switch (data.ty) {
         case ShapeType.Fill:
         case ShapeType.Stroke: {

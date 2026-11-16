@@ -18,13 +18,11 @@ export const installPlugin = (type: string, plugin: typeof Expressions) => {
 }
 
 const { Lottie, setSubframeRendering } = createLottie({
-  effects: [
-    {
-      effect: CVTransformEffect,
-      id: 35,
-      isCanvas: true
-    }
-  ],
+  effects: [{
+    effect: CVTransformEffect,
+    id: 35,
+    isCanvas: true
+  }],
   expressions: {
     installPlugin,
     registerExpressions: () => {
@@ -37,8 +35,7 @@ const { Lottie, setSubframeRendering } = createLottie({
   renderers: [{
     renderer: CanvasRenderer,
     rendererType: RendererType.Canvas
-  }
-  ]
+  }]
 })
 
 export default Lottie

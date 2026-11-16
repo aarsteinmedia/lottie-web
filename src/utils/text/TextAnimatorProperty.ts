@@ -66,9 +66,11 @@ const rgbToHSV = (
       }
     }
 
-    return [h,
+    return [
+      h,
       s,
-      v]
+      v
+    ]
   },
   HSVtoRGB = (
     h: number, s: number, v: number
@@ -124,9 +126,11 @@ const rgbToHSV = (
       }
     }
 
-    return [r,
+    return [
+      r,
       g,
-      b]
+      b
+    ]
   },
   addBrightnessToRGB = (color: Vector3, offset: number) => {
     const hsv = rgbToHSV(
@@ -270,9 +274,7 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 paths.v[i],
                 paths.v[i + 1],
                 [(paths.o[i]?.[0] ?? 0) - (paths.v[i]?.[0] ?? 0), (paths.o[i]?.[1] ?? 0) - (paths.v[i]?.[1] ?? 0)],
-                [
-                  (paths.i[i + 1]?.[0] ?? 0) - (paths.v[i + 1]?.[0] ?? 0), (paths.i[i + 1]?.[1] ?? 0) - (paths.v[i + 1]?.[1] ?? 0),
-                ]
+                [(paths.i[i + 1]?.[0] ?? 0) - (paths.v[i + 1]?.[0] ?? 0), (paths.i[i + 1]?.[1] ?? 0) - (paths.v[i + 1]?.[1] ?? 0)]
               )
               pathInfo.tLength += bezierData.segmentLength
               pathInfo.segments.push(bezierData)
@@ -345,13 +347,17 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         initPointInd = pointInd
       let currentLine = -1,
         elemOpacity,
-        sc: Vector3 = [0,
+        sc: Vector3 = [
           0,
-          0],
+          0,
+          0
+        ],
         sw = 0,
-        fc: Vector3 = [0,
+        fc: Vector3 = [
           0,
-          0],
+          0,
+          0
+        ],
         k,
         letterSw,
         letterSc,
@@ -621,9 +627,11 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 documentData.sc[2],
               ]
             } else {
-              sc = [0,
+              sc = [
                 0,
-                0]
+                0,
+                0
+              ]
             }
           }
           if (documentData.fillColorAnim && documentData.fc) {

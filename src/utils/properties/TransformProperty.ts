@@ -92,9 +92,11 @@ export class TransformProperty extends BaseProperty {
     } else {
       this.p = handleProp(
         data.p ?? ({
-          k: [0,
+          k: [
             0,
-            0]
+            0,
+            0
+          ]
         } as any),
         1,
         0,
@@ -151,18 +153,22 @@ export class TransformProperty extends BaseProperty {
     }
     this.a = handleProp(
       data.a ?? {
-        k: [0,
+        k: [
           0,
-          0]
+          0,
+          0
+        ]
       },
       1,
       0,
     )
     this.s = handleProp(
       data.s ?? {
-        k: [100,
+        k: [
           100,
-          100]
+          100,
+          100
+        ]
       },
       1,
       0.01,

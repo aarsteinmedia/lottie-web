@@ -46,9 +46,7 @@ function getSpeedAtTime(this: BaseProperty, frameNum: number) {
   let speed = 0
 
   if (isArrayOfNum(v1) && isArrayOfNum(v2)) {
-    const { length } = v1
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < v1.length; i++) {
       speed += Math.pow(v2[i] - v1[i], 2)
     }
     speed = Math.sqrt(speed) * 100
@@ -70,11 +68,9 @@ function getVelocityAtTime(this: BaseProperty, frameNum: number): number | numbe
   let velocity
 
   if (isArrayOfNum(v1) && isArrayOfNum(v2)) {
-    const { length } = v1
+    velocity = createTypedArray(ArrayType.Float32, v1.length)
 
-    velocity = createTypedArray(ArrayType.Float32, length)
-
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < v1.length; i++) {
       // removing frameRate
       // if needed, don't add it here
       velocity[i] = (v2[i] - v1[i]) / delta

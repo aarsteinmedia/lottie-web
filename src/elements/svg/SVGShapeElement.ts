@@ -346,13 +346,12 @@ export class SVGShapeElement extends ShapeElement {
 
   override renderInnerContent() {
     this.renderModifiers()
-    const { length } = this.stylesList
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.stylesList.length; i++) {
       this.stylesList[i]?.reset()
     }
     this.renderShape()
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.stylesList.length; i++) {
       if (!this.stylesList[i]?._mdf && !this._isFirstFrame) {
         continue
       }

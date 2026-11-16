@@ -56,14 +56,13 @@ export function buildBezierData(
     ) {
       curveSegments = 2
     }
-    const bezierData = new BezierData(curveSegments),
-      { length } = pt3
+    const bezierData = new BezierData(curveSegments)
 
     for (let k = 0; k < curveSegments; k++) {
-      point = createSizedArray(length) as Vector2
+      point = createSizedArray(pt3.length) as Vector2
       perc = k / (curveSegments - 1)
       ptDistance = 0
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < pt3.length; i++) {
         ptCoord =
           Math.pow(1 - perc, 3) * (pt1[i] ?? 0) +
           3 * Math.pow(1 - perc, 2) * perc * ((pt1[i] ?? 0) + (pt3[i] ?? 0)) +
@@ -133,10 +132,9 @@ export function getNewSegment(
     u1u1u1 = u1 * u1 * u1,
     t1u1u1_3 = t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1,
     t1t1u1_3 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1,
-    t1t1t1 = t1 * t1 * t1,
-    { length } = pt1
+    t1t1t1 = t1 * t1 * t1
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < pt1.length; i++) {
     bezierSegmentPoints[i * 4] =
       Math.round((u0u0u0 * (pt1[i] ?? 0) +
         t0u0u0_3 * (pt3[i] ?? 0) +

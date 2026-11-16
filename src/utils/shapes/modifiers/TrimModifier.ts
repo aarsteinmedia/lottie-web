@@ -263,10 +263,9 @@ export class TrimModifier extends ShapeModifier {
         s: 0,
       })
     }
-    const shapeSegments = [],
-      { length } = segments
+    const shapeSegments = []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < segments.length; i++) {
       if (
         !(
           (segments[i]?.e ?? 0) * totalModifierLength < addedLength ||
@@ -377,10 +376,8 @@ export class TrimModifier extends ShapeModifier {
       totalShapeLength,
       totalModifierLength = 0
 
-    const { length } = this.shapes
-
     if (e === s) {
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         const currentShape = this.shapes[i]
 
         currentShape.localShapeCollection?.releaseShapes()
@@ -404,7 +401,7 @@ export class TrimModifier extends ShapeModifier {
       }[] = []
       let shapeData, localShapeCollection
 
-      for (let k = 0; k < length; k++) {
+      for (let k = 0; k < this.shapes.length; k++) {
         shapeData = this.shapes[k]
 
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
@@ -450,7 +447,7 @@ export class TrimModifier extends ShapeModifier {
         shapeE = e,
         addedLength = 0,
         edges,
-        i = length
+        i = this.shapes.length
 
       while (i--) {
         shapeData = this.shapes[i]
@@ -461,7 +458,7 @@ export class TrimModifier extends ShapeModifier {
             throw new Error(`${this.constructor.name}: Could not set localShapeCollection`)
           }
           localShapeCollection.releaseShapes()
-          if (this.m === StackingOrder.Below && length > 1) {
+          if (this.m === StackingOrder.Below && this.shapes.length > 1) {
             edges = this.calculateShapeEdges(
               s,
               e,
@@ -535,7 +532,7 @@ export class TrimModifier extends ShapeModifier {
         }
       }
     } else if (this._mdf) {
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < this.shapes.length; i++) {
         // Reassign Trim cached paths data when no trim applied in case shapes are modified in between.
         // Don't remove this even if it's losing cached info.
         const currentShape = this.shapes[i]

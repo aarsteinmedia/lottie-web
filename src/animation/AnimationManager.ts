@@ -133,12 +133,9 @@ export function searchAnimations(
     return
   }
   let renderer = rendererFromProps
-  const animElements = [
-      ...document.getElementsByClassName('lottie'), ...document.getElementsByClassName('bodymovin')
-    ] as HTMLElement[],
-    { length } = animElements
+  const animElements = [...document.getElementsByClassName('lottie'), ...document.getElementsByClassName('bodymovin')] as HTMLElement[]
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < animElements.length; i++) {
     const animElement = animElements[i]
 
     if (renderer) {

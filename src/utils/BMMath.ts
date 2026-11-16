@@ -13,7 +13,8 @@ const bmPow = Math.pow,
 const BMMath = {} as unknown as BMMathType
 
 (() => {
-  const propertyNames: (keyof Math)[] = ['abs',
+  const propertyNames: (keyof Math)[] = [
+    'abs',
     'acos',
     'acosh',
     'asin',
@@ -55,7 +56,8 @@ const BMMath = {} as unknown as BMMathType
     'LOG2E',
     'PI',
     'SQRT1_2',
-    'SQRT2']
+    'SQRT2'
+  ]
 
   for (let i = 0; i < propertyNames.length; i += 1) {
     const propertyName = propertyNames[i]
@@ -69,10 +71,9 @@ BMMath.random = Math.random
 
 BMMath.abs = (val: number | number[]) => {
   if (isArrayOfNum(val)) {
-    const absArr = createSizedArray<number>(val.length),
-      { length } = val
+    const absArr = createSizedArray<number>(val.length)
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < val.length; i++) {
       absArr[i] = Math.abs(val[i] ?? 0)
     }
 

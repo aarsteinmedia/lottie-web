@@ -30,10 +30,9 @@ export class GroupEffect extends DynamicPropertyContainer {
     this.effectElements = []
     this.initDynamicPropertyContainer(element)
     let eff
-    const effects = this.data.ef,
-      { length } = effects
+    const { ef: effects } = this.data
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < effects.length; i++) {
       switch (effects[i]?.ty) {
         case 0: {
           eff = new SliderEffect(

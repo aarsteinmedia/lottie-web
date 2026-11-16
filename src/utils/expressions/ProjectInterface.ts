@@ -6,9 +6,7 @@ export class ProjectInterface {
   getComposition(name?: string) {
     let i = 0
 
-    const { length } = this.compositions
-
-    while (i < length) {
+    while (i < this.compositions.length) {
       const comp = this.compositions[i]
 
       // The root renderer is registered too, but has no layer data, so it never matches here
