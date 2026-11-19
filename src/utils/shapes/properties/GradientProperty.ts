@@ -93,7 +93,7 @@ export class GradientProperty extends DynamicPropertyContainer {
     this._mdf = false
     this._cmdf = false
     this._omdf = false
-    if (!this.prop._mdf && !forceRender || !isArrayOfNum(this.prop.v)) {
+    if ((!this.prop._mdf && !forceRender) || !isArrayOfNum(this.prop.v)) {
       return 0
     }
     const len = this.data.p * 4

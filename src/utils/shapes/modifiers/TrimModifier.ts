@@ -112,7 +112,7 @@ export class TrimModifier extends ShapeModifier {
     shapes.push(shapePath)
 
     for (let i = 0; i < len; i++) {
-      const { lengths } = pathsData[i] ?? { lengths: [] }
+      const { lengths } = pathsData[i] ?? { lengths: [] } as Partial<ShapePath>
 
       shapePath.c = shapePaths[i]?.c
       jLen = shapePaths[i]?.c ? lengths.length : lengths.length + 1
@@ -406,7 +406,7 @@ export class TrimModifier extends ShapeModifier {
         }
       }
     }
-    else if (!(e === 1 && s === 0 || e === 0 && s === 1)) {
+    else if (!((e === 1 && s === 0) || (e === 0 && s === 1))) {
       const segments: {
         e: number
         s: number

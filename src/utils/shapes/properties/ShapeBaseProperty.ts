@@ -184,8 +184,8 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
     if (
       !(
         lastFrame !== INITIAL_DEFAULT_FRAME
-        && (lastFrame < initTime && frameNum < initTime
-          || lastFrame > endTime && frameNum > endTime)
+        && (((lastFrame < initTime) && (frameNum < initTime))
+          || ((lastFrame > endTime) && (frameNum > endTime)))
       )
     ) {
       this._caching.lastIndex

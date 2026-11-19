@@ -436,7 +436,6 @@ export class TextProperty extends BaseProperty {
       for (let i = 0; i < len; i++) {
         letterData = letters[i] ?? {} as Letter
         letterData.anIndexes[j] = ind
-        console.log('foo')
 
         if (
           (based === 1 && letterData.val !== '')

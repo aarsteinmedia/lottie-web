@@ -408,8 +408,8 @@ export class RepeaterModifier extends ShapeModifier {
       }
       else {
         if (
-          i !== 0 && dir === 1
-          || i !== this._currentCopies - 1 && dir === -1
+          (i !== 0 && dir === 1)
+          || (i !== this._currentCopies - 1 && dir === -1)
         ) {
           this.applyTransforms(
             this.pMatrix,
