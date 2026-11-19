@@ -329,11 +329,11 @@ export abstract class CanvasRendererBase extends BaseRenderer {
 
       if (
         num === false
-        || this.renderedFrame === num
-        && this.renderConfig?.clearCanvas === true
-        && !forceRender
-        || this.destroyed
-        || num === -1
+        || (this.renderedFrame === num
+          && this.renderConfig?.clearCanvas === true
+          && (!forceRender
+            || this.destroyed
+            || num === -1))
       ) {
         return
       }
@@ -343,13 +343,11 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       this.globalData._mdf = Boolean(!this.renderConfig?.clearCanvas || forceRender)
       this.globalData.projectInterface.currentFrame = num
 
-      const { length } = this.layers
-
       if (!this.completeLayers) {
         this.checkLayers(num)
       }
 
-      for (let i = length - 1; i >= 0; i--) {
+      for (let i = this.layers.length - 1; i >= 0; i--) {
         if (this.completeLayers || this.elements[i]) {
           this.elements[i]?.prepareFrame(num - (this.layers[i]?.st ?? 0))
         }
@@ -367,7 +365,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
         else {
           this.save()
         }
-        for (let i = length - 1; i >= 0; i--) {
+        for (let i = this.layers.length - 1; i >= 0; i--) {
           if (this.completeLayers || this.elements[i]) {
             this.elements[i]?.renderFrame()
           }
@@ -508,8 +506,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       elementRel = elementWidth / elementHeight
       animationRel = this.transformCanvas.w / this.transformCanvas.h
       if (
-        animationRel > elementRel && fillType === 'meet'
-        || animationRel < elementRel && fillType === 'slice'
+        (animationRel > elementRel && fillType === 'meet')
+        || (animationRel < elementRel && fillType === 'slice')
       ) {
         this.transformCanvas.sx
           = elementWidth / (this.transformCanvas.w / dpr)
@@ -525,8 +523,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
 
       if (
         xPos === 'xMid'
-        && (animationRel < elementRel && fillType === 'meet'
-          || animationRel > elementRel && fillType === 'slice')
+        && ((animationRel < elementRel && fillType === 'meet')
+          || (animationRel > elementRel && fillType === 'slice'))
       ) {
         this.transformCanvas.tx
           = (elementWidth
@@ -536,8 +534,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       }
       else if (
         xPos === 'xMax'
-        && (animationRel < elementRel && fillType === 'meet'
-          || animationRel > elementRel && fillType === 'slice')
+        && ((animationRel < elementRel && fillType === 'meet')
+          || (animationRel > elementRel && fillType === 'slice'))
       ) {
         this.transformCanvas.tx
           = (elementWidth
@@ -549,8 +547,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       }
       if (
         yPos === 'YMid'
-        && (animationRel > elementRel && fillType === 'meet'
-          || animationRel < elementRel && fillType === 'slice')
+        && ((animationRel > elementRel && fillType === 'meet')
+          || (animationRel < elementRel && fillType === 'slice'))
       ) {
         this.transformCanvas.ty
           = (elementHeight
@@ -560,8 +558,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       }
       else if (
         yPos === 'YMax'
-        && (animationRel > elementRel && fillType === 'meet'
-          || animationRel < elementRel && fillType === 'slice')
+        && ((animationRel > elementRel && fillType === 'meet')
+          || (animationRel < elementRel && fillType === 'slice'))
       ) {
         this.transformCanvas.ty
           = (elementHeight

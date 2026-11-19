@@ -17,9 +17,9 @@ const _isZipStream = async (response: Response) => {
       value[0] === 0x50
       && value[1] === 0x4b
       && (
-        value[2] === 0x03 && value[3] === 0x04
-        || value[2] === 0x05 && value[3] === 0x06
-        || value[2] === 0x07 && value[3] === 0x08
+        (value[2] === 0x03 && value[3] === 0x04)
+        || (value[2] === 0x05 && value[3] === 0x06)
+        || (value[2] === 0x07 && value[3] === 0x08)
       )
     )
   },
@@ -43,7 +43,7 @@ export async function getAnimationData(input: unknown): Promise<{
   isDotLottie: boolean
 }> {
   try {
-    if (!input || typeof input !== 'string' && typeof input !== 'object') {
+    if (!input || (typeof input !== 'string' && typeof input !== 'object')) {
       throw new Error('Broken file or invalid file format')
     }
 

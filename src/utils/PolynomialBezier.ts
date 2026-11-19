@@ -105,10 +105,10 @@ const quadRoots = (
     }
     if (
       depth >= maxRecursion
-      || d1.width <= tolerance
-      && d1.height <= tolerance
-      && d2.width <= tolerance
-      && d2.height <= tolerance
+      || (d1.width <= tolerance
+        && d1.height <= tolerance
+        && d2.width <= tolerance
+        && d2.height <= tolerance)
     ) {
       intersections.push([d1.t, d2.t])
 

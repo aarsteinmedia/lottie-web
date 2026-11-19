@@ -108,8 +108,8 @@ const getArrayBuffer = async (zippable: Zippable) => {
       const asset = animation.assets[j]
 
       if (
-        !asset.p
-        || !isImage(asset)
+        (!asset.p
+          || !isImage(asset))
         && !isAudio(asset)
       ) {
         continue

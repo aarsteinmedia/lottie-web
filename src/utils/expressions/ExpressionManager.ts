@@ -1141,7 +1141,7 @@ function sum(aFromProps: unknown, bFromProps: unknown) {
   const tOfA = typeof a,
     tOfB = typeof b
 
-  if (isNumerable(tOfA, a) && isNumerable(tOfB, b) || tOfA === 'string' || tOfB === 'string') {
+  if ((isNumerable(tOfA, a) && isNumerable(tOfB, b)) || tOfA === 'string' || tOfB === 'string') {
     return Number(a) + Number(b)
   }
   if ($bm_isInstanceOfArray(a) && isNumerable(tOfB, b)) {

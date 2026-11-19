@@ -258,7 +258,7 @@ export class AnimationItem extends BaseEvent {
   }
 
   public destroy(name?: string) {
-    if (this._isDestroyed || name && this.name !== name) {
+    if (this._isDestroyed || (name && this.name !== name)) {
       return
     }
     if (this._fontsLoadTimeout) {

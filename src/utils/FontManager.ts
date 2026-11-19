@@ -379,7 +379,7 @@ export class FontManager {
       i++
     }
     if (
-      (typeof char === 'string' && char.charCodeAt(0) !== 13 || !char)
+      ((typeof char === 'string' && char.charCodeAt(0) !== 13) || !char)
       && !this._warned
     ) {
       this._warned = true

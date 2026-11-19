@@ -184,10 +184,10 @@ export abstract class BaseProperty extends DynamicPropertyContainer {
 
     if (
       !(
-        frameNum === lastFrame
-        || lastFrame !== INITIAL_DEFAULT_FRAME
-        && (lastFrame >= endTime && frameNum >= endTime
-          || lastFrame < initTime && frameNum < initTime)
+        (frameNum === lastFrame
+          || lastFrame !== INITIAL_DEFAULT_FRAME)
+        && ((lastFrame >= endTime && frameNum >= endTime)
+          || (lastFrame < initTime && frameNum < initTime))
       )
     ) {
       if (lastFrame >= frameNum) {

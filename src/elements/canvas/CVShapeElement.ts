@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-class-instance-assignment */
 // @ts-nocheck
 import type { TransformEffect } from '@/effects/TransformEffect'
 import type { ShapeGroupData } from '@/elements/helpers/shapes/ShapeGroupData'
@@ -305,7 +306,7 @@ export class CVShapeElement extends ShapeElement {
         // current opacity equals 0
         // global opacity equals 0
         if (
-          isStroke && wi === 0
+          (isStroke && wi === 0)
           || !data._shouldRender
           || coOp === 0
           || this.globalData.currentGlobalAlpha === 0
@@ -445,7 +446,7 @@ export class CVShapeElement extends ShapeElement {
       || itemData.g?._mdf
       || itemData.s?._mdf
       || itemData.e?._mdf
-      || styleData.t !== GradientType.Linear && (itemData.h?._mdf || itemData.a?._mdf)
+      || (styleData.t !== GradientType.Linear && (itemData.h?._mdf || itemData.a?._mdf))
     ) {
       const ctx = this.globalData.canvasContext,
         pt1 = itemData.s?.v ?? [0, 0],

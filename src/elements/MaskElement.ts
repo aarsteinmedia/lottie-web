@@ -58,7 +58,7 @@ export class MaskElement {
 
     for (let i = 0; i < this.masksProperties.length; i++) {
       if (
-        properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None
+        (properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None)
         || properties[i]?.inv
         || properties[i]?.o?.k !== 100
         || properties[i]?.o?.x

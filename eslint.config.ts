@@ -313,6 +313,7 @@ export default defineConfig({
       ignoreFunctionTypeParameterNameValueShadow: true,
       ignoreTypeValueShadow: true
     }],
+    '@typescript-eslint/no-unnecessary-type-parameters': 0,
     '@typescript-eslint/no-unsafe-assignment': 0,
     '@typescript-eslint/no-unused-expressions': [2, {
       allowShortCircuit: true,

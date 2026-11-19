@@ -217,8 +217,8 @@ export class CVContextData {
     if (
       this.nativeContext
       && (forceRestore
-        || opacity !== -1
-        && this.currentOpacity !== opacity)
+        || (opacity !== -1
+          && this.currentOpacity !== opacity))
     ) {
       this.nativeContext.globalAlpha = opacity
       this.currentOpacity = opacity

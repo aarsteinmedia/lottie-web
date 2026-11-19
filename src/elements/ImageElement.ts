@@ -87,7 +87,7 @@ export class ImageElement extends SVGBaseElement {
    * bitmaps for `display:none` images, which causes flicker in PNG sequences.
    */
   public override hide() {
-    if (this.hidden || this.isInRange && !this.isTransparent) {
+    if (this.hidden || (this.isInRange && !this.isTransparent)) {
       return
     }
     const elem = this.baseElement ?? this.layerElement

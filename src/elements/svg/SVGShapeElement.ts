@@ -170,7 +170,7 @@ export class SVGShapeElement extends ShapeElement {
       elementData = new SVGShapeData(
         ownTransformers,
         level,
-        shapeProperty as ShapeProperty
+        shapeProperty as unknown as ShapeProperty
       )
 
     this.shapes.push(elementData)
@@ -366,9 +366,9 @@ export class SVGShapeElement extends ShapeElement {
     for (let i = 0; i < this.animatedContents.length; i++) {
       if (
         !this._isFirstFrame
-        && !this.animatedContents[i]?.element._isAnimated
-        || this.animatedContents[i]?.data === (true as unknown as Shape)
-        || !this.animatedContents[i]?.fn
+        && (!this.animatedContents[i]?.element._isAnimated
+          || this.animatedContents[i]?.data === (true as unknown as Shape)
+          || !this.animatedContents[i]?.fn)
       ) {
         continue
       }

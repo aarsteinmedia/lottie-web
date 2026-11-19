@@ -71,8 +71,8 @@ export class CVImageElement extends CVBaseElement {
         || this.globalData.renderConfig?.imagePreserveAspectRatio
 
     if (
-      imgRel > canvasRel && par === PreserveAspectRatio.Cover
-      || imgRel < canvasRel && par !== PreserveAspectRatio.Cover
+      (imgRel > canvasRel && par === PreserveAspectRatio.Cover)
+      || (imgRel < canvasRel && par !== PreserveAspectRatio.Cover)
     ) {
       heightCrop = imgH
       widthCrop = heightCrop * canvasRel

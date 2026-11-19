@@ -24,7 +24,7 @@ export abstract class RenderableDOMElement extends RenderableElement {
   abstract destroyBaseElement(): void
 
   override hide() {
-    if (this.hidden || this.isInRange && !this.isTransparent) {
+    if (this.hidden || (this.isInRange && !this.isTransparent)) {
       return
     }
     const elem = this.baseElement ?? this.layerElement
