@@ -315,6 +315,7 @@ export default defineConfig({
     }],
     '@typescript-eslint/no-unnecessary-type-parameters': 0,
     '@typescript-eslint/no-unsafe-assignment': 0,
+    '@typescript-eslint/no-unsafe-class-instance-assignment': 1,
     '@typescript-eslint/no-unused-expressions': [2, {
       allowShortCircuit: true,
       allowTaggedTemplates: true,

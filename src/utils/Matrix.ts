@@ -556,7 +556,7 @@ export class Matrix {
   private roundMatrixProperty(val: number): number {
     const v = 10000
 
-    if (val < 0.000001 && val > 0 || val > -0.000001 && val < 0) {
+    if ((val < 0.000001 && val > 0) || (val > -0.000001 && val < 0)) {
       return Math.round(val * v) / v
     }
 
