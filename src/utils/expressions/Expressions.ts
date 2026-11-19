@@ -51,5 +51,4 @@ const Expressions = {
   resetFrame
 }
 
-
 export default Expressions

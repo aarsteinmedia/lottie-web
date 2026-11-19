@@ -39,8 +39,8 @@ const getMimeFromExt = (ext?: string) => {
     if (!str) {
       return false
     }
-    const regex =
-      /^(?:[0-9a-z+/]{4})*(?:[0-9a-z+/]{2}==|[0-9a-z+/]{3}=)?$/i
+    const regex
+      = /^(?:[0-9a-z+/]{4})*(?:[0-9a-z+/]{2}==|[0-9a-z+/]{3}=)?$/i
 
     return regex.test(parseBase64(str))
   }
@@ -71,12 +71,12 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
      */
     if (assetPath && assetPath !== '') {
       u8 = unzipped?.[`${assetPath}${asset.p}`]
-    } else if (_isImage) {
+    }
+    else if (_isImage) {
       u8 = unzipped?.[`i/${asset.p}`]
     }
 
     u8 = u8 ?? unzipped?.[`${type}/${asset.p}`]
-
 
     if (!u8) {
       continue
@@ -87,7 +87,8 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
 
       if (IS_SERVER) {
         assetB64 = Buffer.from(u8).toString('base64')
-      } else {
+      }
+      else {
         let result = ''
         const { length: jLen } = u8
 
@@ -98,8 +99,8 @@ export async function resolveAssets(unzipped?: Unzipped, assets?: LottieAsset[])
         assetB64 = btoa(result)
       }
 
-      asset.p =
-        asset.p?.startsWith('data:') || isBase64(asset.p)
+      asset.p
+        = asset.p?.startsWith('data:') || isBase64(asset.p)
           ? asset.p
           : `data:${getMimeFromExt(getExt(asset.p))};base64,${assetB64}`
       asset.e = 1

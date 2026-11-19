@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import type {
   BezierLength, BezierPoint, SegmentLength, Tuple, Vector2
 } from '@/types'
@@ -35,17 +34,17 @@ export function buildBezierData(
 
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      pt1.length === 2 &&
-      (pt1[0] !== pt2[0] || pt1[1] !== pt2[1]) &&
-      pointOnLine2D(
+      pt1.length === 2
+      && (pt1[0] !== pt2[0] || pt1[1] !== pt2[1])
+      && pointOnLine2D(
         pt1[0],
         pt1[1],
         pt2[0],
         pt2[1],
         pt1[0] + pt3[0],
         pt1[1] + pt3[1]
-      ) &&
-      pointOnLine2D(
+      )
+      && pointOnLine2D(
         pt1[0],
         pt1[1],
         pt2[0],
@@ -63,11 +62,11 @@ export function buildBezierData(
       perc = k / (curveSegments - 1)
       ptDistance = 0
       for (let i = 0; i < pt3.length; i++) {
-        ptCoord =
-          Math.pow(1 - perc, 3) * (pt1[i] ?? 0) +
-          3 * Math.pow(1 - perc, 2) * perc * ((pt1[i] ?? 0) + (pt3[i] ?? 0)) +
-          3 * (1 - perc) * Math.pow(perc, 2) * ((pt2[i] ?? 0) + (pt4[i] ?? 0)) +
-          Math.pow(perc, 3) * (pt2[i] ?? 0)
+        ptCoord
+          = Math.pow(1 - perc, 3) * (pt1[i] ?? 0)
+            + 3 * Math.pow(1 - perc, 2) * perc * ((pt1[i] ?? 0) + (pt3[i] ?? 0))
+            + 3 * (1 - perc) * Math.pow(perc, 2) * ((pt2[i] ?? 0) + (pt4[i] ?? 0))
+            + Math.pow(perc, 3) * (pt2[i] ?? 0)
         point[i] = ptCoord
         if (lastPoint !== null) {
           ptDistance += Math.pow(point[i] - lastPoint[i], 2)
@@ -99,7 +98,8 @@ export function getNewSegment(
 
   if (startPerc < 0) {
     startPerc = 0
-  } else if (startPerc > 1) {
+  }
+  else if (startPerc > 1) {
     startPerc = 1
   }
   const t0 = getDistancePerc(startPerc, bezierData)
@@ -135,30 +135,30 @@ export function getNewSegment(
     t1t1t1 = t1 * t1 * t1
 
   for (let i = 0; i < pt1.length; i++) {
-    bezierSegmentPoints[i * 4] =
-      Math.round((u0u0u0 * (pt1[i] ?? 0) +
-        t0u0u0_3 * (pt3[i] ?? 0) +
-        t0t0u0_3 * (pt4[i] ?? 0) +
-        t0t0t0 * (pt2[i] ?? 0)) *
-        1000) / 1000
-    bezierSegmentPoints[i * 4 + 1] =
-      Math.round((u0u0u1 * (pt1[i] ?? 0) +
-        t0u0u1_3 * (pt3[i] ?? 0) +
-        t0t0u1_3 * (pt4[i] ?? 0) +
-        t0t0t1 * (pt2[i] ?? 0)) *
-        1000) / 1000
-    bezierSegmentPoints[i * 4 + 2] =
-      Math.round((u0u1u1 * (pt1[i] ?? 0) +
-        t0u1u1_3 * (pt3[i] ?? 0) +
-        t0t1u1_3 * (pt4[i] ?? 0) +
-        t0t1t1 * (pt2[i] ?? 0)) *
-        1000) / 1000
-    bezierSegmentPoints[i * 4 + 3] =
-      Math.round((u1u1u1 * (pt1[i] ?? 0) +
-        t1u1u1_3 * (pt3[i] ?? 0) +
-        t1t1u1_3 * (pt4[i] ?? 0) +
-        t1t1t1 * (pt2[i] ?? 0)) *
-        1000) / 1000
+    bezierSegmentPoints[i * 4]
+      = Math.round((u0u0u0 * (pt1[i] ?? 0)
+        + t0u0u0_3 * (pt3[i] ?? 0)
+        + t0t0u0_3 * (pt4[i] ?? 0)
+        + t0t0t0 * (pt2[i] ?? 0))
+      * 1000) / 1000
+    bezierSegmentPoints[i * 4 + 1]
+      = Math.round((u0u0u1 * (pt1[i] ?? 0)
+        + t0u0u1_3 * (pt3[i] ?? 0)
+        + t0t0u1_3 * (pt4[i] ?? 0)
+        + t0t0t1 * (pt2[i] ?? 0))
+      * 1000) / 1000
+    bezierSegmentPoints[i * 4 + 2]
+      = Math.round((u0u1u1 * (pt1[i] ?? 0)
+        + t0u1u1_3 * (pt3[i] ?? 0)
+        + t0t1u1_3 * (pt4[i] ?? 0)
+        + t0t1t1 * (pt2[i] ?? 0))
+      * 1000) / 1000
+    bezierSegmentPoints[i * 4 + 3]
+      = Math.round((u1u1u1 * (pt1[i] ?? 0)
+        + t1u1u1_3 * (pt3[i] ?? 0)
+        + t1t1u1_3 * (pt4[i] ?? 0)
+        + t1t1t1 * (pt2[i] ?? 0))
+      * 1000) / 1000
   }
 
   return bezierSegmentPoints
@@ -174,18 +174,18 @@ export function getPointInSegment(
 ): Vector2 {
   const t1 = getDistancePerc(percent, bezierData),
     u1 = 1 - t1,
-    ptX =
-      Math.round((u1 * u1 * u1 * pt1[0] +
-        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] +
-        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] +
-        t1 * t1 * t1 * pt2[0]) *
-        1000) / 1000,
-    ptY =
-      Math.round((u1 * u1 * u1 * pt1[1] +
-        (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] +
-        (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] +
-        t1 * t1 * t1 * pt2[1]) *
-        1000) / 1000
+    ptX
+      = Math.round((u1 * u1 * u1 * pt1[0]
+        + (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0]
+        + (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0]
+        + t1 * t1 * t1 * pt2[0])
+      * 1000) / 1000,
+    ptY
+      = Math.round((u1 * u1 * u1 * pt1[1]
+        + (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1]
+        + (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1]
+        + t1 * t1 * t1 * pt2[1])
+      * 1000) / 1000
 
   return [ptX, ptY]
 }
@@ -261,12 +261,15 @@ export function pointOnLine3D(
   if (dist1 > dist2) {
     if (dist1 > dist3) {
       diffDist = dist1 - dist2 - dist3
-    } else {
+    }
+    else {
       diffDist = dist3 - dist2 - dist1
     }
-  } else if (dist3 > dist2) {
+  }
+  else if (dist3 > dist2) {
     diffDist = dist3 - dist2 - dist1
-  } else {
+  }
+  else {
     diffDist = dist2 - dist1 - dist3
   }
 
@@ -293,11 +296,11 @@ function getBezierLength(
     perc = k / (curveSegments - 1)
     ptDistance = 0
     for (let i = 0; i < len; i++) {
-      ptCoord =
-        Math.pow(1 - perc, 3) * (pt1[i] ?? 0) +
-        3 * Math.pow(1 - perc, 2) * perc * (pt3[i] ?? 0) +
-        3 * (1 - perc) * Math.pow(perc, 2) * (pt4[i] ?? 0) +
-        Math.pow(perc, 3) * (pt2[i] ?? 0)
+      ptCoord
+        = Math.pow(1 - perc, 3) * (pt1[i] ?? 0)
+          + 3 * Math.pow(1 - perc, 2) * perc * (pt3[i] ?? 0)
+          + 3 * (1 - perc) * Math.pow(perc, 2) * (pt4[i] ?? 0)
+          + Math.pow(perc, 3) * (pt2[i] ?? 0)
       point[i] = ptCoord
       if (typeof lastPoint[i] === 'number') {
         ptDistance += Math.pow((point[i] ?? 0) - (lastPoint[i] ?? 0), 2)
@@ -326,9 +329,9 @@ function getDistancePerc(perc: number,
   let lPerc = 0
 
   if (
-    initPos === length - 1 ||
-    initPos === 0 ||
-    lengthPos === lengths[initPos]
+    initPos === length - 1
+    || initPos === 0
+    || lengthPos === lengths[initPos]
   ) {
     return percents[initPos]
   }
@@ -337,11 +340,12 @@ function getDistancePerc(perc: number,
 
   while (shouldIterate) {
     if ((lengths[initPos] ?? 0) <= lengthPos && (lengths[initPos + 1] ?? 0) > lengthPos) {
-      lPerc =
-        (lengthPos - (lengths[initPos] ?? 0)) /
-        ((lengths[initPos + 1] ?? 0) - (lengths[initPos] ?? 0))
+      lPerc
+        = (lengthPos - (lengths[initPos] ?? 0))
+          / ((lengths[initPos + 1] ?? 0) - (lengths[initPos] ?? 0))
       shouldIterate = false
-    } else {
+    }
+    else {
       initPos += dir
     }
     if (initPos < 0 || initPos >= length - 1) {
@@ -381,6 +385,5 @@ const Bezier = {
   pointOnLine2D,
   pointOnLine3D,
 }
-
 
 export default Bezier

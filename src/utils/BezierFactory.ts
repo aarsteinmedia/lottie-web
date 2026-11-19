@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 const beziers: Record<string, BezierEasing | undefined> = {}
 
 /**
@@ -88,8 +87,8 @@ class BezierEasing {
     const lastSample = this.kSplineTableSize - 1
 
     while (
-      currentSample !== lastSample &&
-      Number(mSampleValues[currentSample]) <= aX
+      currentSample !== lastSample
+      && Number(mSampleValues[currentSample]) <= aX
     ) {
       intervalStart += this.kSampleStepSize
 
@@ -98,10 +97,10 @@ class BezierEasing {
     --currentSample
 
     // Interpolate to provide an initial guess for t
-    const dist =
-      (aX - Number(mSampleValues[currentSample])) /
-      (Number(mSampleValues[currentSample + 1]) -
-        Number(mSampleValues[currentSample]))
+    const dist
+      = (aX - Number(mSampleValues[currentSample]))
+        / (Number(mSampleValues[currentSample + 1])
+          - Number(mSampleValues[currentSample]))
     const guessForT = intervalStart + dist * this.kSampleStepSize
 
     const initialSlope = this.getSlope(
@@ -191,12 +190,13 @@ class BezierEasing {
       ) - aX
       if (currentX > 0.0) {
         aB = currentT
-      } else {
+      }
+      else {
         aA = currentT
       }
     } while (
-      Math.abs(currentX) > this.SUBDIVISION_PRECISION &&
-      ++i < this.SUBDIVISION_MAX_ITERATIONS
+      Math.abs(currentX) > this.SUBDIVISION_PRECISION
+      && ++i < this.SUBDIVISION_MAX_ITERATIONS
     )
 
     return currentT
@@ -224,9 +224,9 @@ class BezierEasing {
     aT: number, aA1: number, aA2: number
   ) {
     return (
-      3.0 * this.A(aA1, aA2) * aT * aT +
-      2.0 * this.B(aA1, aA2) * aT +
-      this.C(aA1)
+      3.0 * this.A(aA1, aA2) * aT * aT
+      + 2.0 * this.B(aA1, aA2) * aT
+      + this.C(aA1)
     )
   }
 
@@ -258,6 +258,5 @@ class BezierEasing {
 }
 
 const BezierFactory = { getBezierEasing }
-
 
 export default BezierFactory

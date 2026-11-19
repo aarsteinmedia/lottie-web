@@ -91,7 +91,6 @@ export async function getLottieJSON(resp: Response) {
         // Base64 Decode to handle compression
         prop.x = atob(expression)
       }
-
     }
 
     toResolve.push(resolveAssets(unzipped, lottie.assets))

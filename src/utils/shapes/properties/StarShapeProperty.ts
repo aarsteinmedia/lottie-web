@@ -47,7 +47,8 @@ export class StarShapeProperty extends ShapeBaseProperty {
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
       this.convertToPath = this.convertStarToPath
-    } else {
+    }
+    else {
       this.convertToPath = this.convertPolygonToPath
     }
     this.pt = PropertyFactory.getProp(
@@ -90,7 +91,8 @@ export class StarShapeProperty extends ShapeBaseProperty {
     this.paths = this.localShapeCollection
     if (this.dynamicProperties.length > 0) {
       this.k = true
-    } else {
+    }
+    else {
       this.k = false
       this.convertToPath()
     }

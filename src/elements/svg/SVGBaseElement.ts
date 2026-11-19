@@ -52,12 +52,14 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
 
       layerElementParent = gg
       this.globalData.defs.appendChild(gg)
-    } else if (this.data.tt) {
+    }
+    else if (this.data.tt) {
       this.matteElement.appendChild(this.layerElement)
 
       layerElementParent = this.matteElement
       this.baseElement = this.matteElement
-    } else {
+    }
+    else {
       this.baseElement = this.layerElement
     }
     if (this.data.ln) {
@@ -92,10 +94,12 @@ export abstract class SVGBaseElement extends RenderableDOMElement {
         this.transformedElement = cpGroup
         if (layerElementParent) {
           layerElementParent.appendChild(this.transformedElement)
-        } else {
+        }
+        else {
           this.baseElement = this.transformedElement
         }
-      } else {
+      }
+      else {
         this.layerElement.setAttribute('clip-path',
           `url(${getLocationHref()}#${clipId})`)
       }

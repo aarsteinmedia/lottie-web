@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/naming-convention */
 import type {
   Cartesian3D,
@@ -115,7 +114,8 @@ const hueToRGB = (
       r = l // achromatic
       b = l // achromatic
       g = l // achromatic
-    } else {
+    }
+    else {
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s
       const p = 2 * l - q
 
@@ -153,7 +153,8 @@ const hueToRGB = (
 
     if (max === min) {
       s = 0 // achromatic
-    } else {
+    }
+    else {
       const d = max - min
 
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
@@ -192,7 +193,6 @@ function $bm_neg(a: unknown) {
     return -(a as number)
   }
   if ($bm_isInstanceOfArray(a)) {
-
     const { length: lenA } = a,
       retArr: number[] = []
 
@@ -212,7 +212,6 @@ function $bm_neg(a: unknown) {
 function createPath(
   points: Vector2[], inTangents: Vector2[], outTangents: Vector2[], closed?: boolean
 ) {
-
   const { length: len } = points
   const path = shapePool.newElement() as ShapePath
 
@@ -242,12 +241,14 @@ function applyEase(
   if (val1 === undefined) {
     val1 = tMin
     val2 = tMax
-  } else {
+  }
+  else {
     t = (t - tMin) / (tMax - tMin)
   }
   if (t > 1) {
     t = 1
-  } else if (t < 0) {
+  }
+  else if (t < 0) {
     t = 0
   }
   const mult = fn(t)
@@ -566,33 +567,31 @@ function initiateExpression(
       keyTime = 0
 
     if (k.length === 0 || typeof k[0] === 'number') {
-
       return {
         index: 0,
         time: 0
       }
-
     }
     timeIndex = -1
     timeKey *= frameRate
     if (timeKey < (k[0]?.t ?? 0)) {
-
       return {
         index: 1,
         time: (k[0]?.t ?? 0) / frameRate
       }
-
     }
     for (iKey = 0; iKey < lenKey - 1; iKey += 1) {
       if (timeKey === k[iKey]?.t) {
         timeIndex = iKey + 1
         keyTime = k[iKey]?.t ?? 0
         break
-      } else if (timeKey > (k[iKey]?.t ?? 0) && timeKey < (k[iKey + 1]?.t ?? 0)) {
+      }
+      else if (timeKey > (k[iKey]?.t ?? 0) && timeKey < (k[iKey + 1]?.t ?? 0)) {
         if (timeKey - (k[iKey]?.t ?? 0) > (k[iKey + 1]?.t ?? 0) - timeKey) {
           timeIndex = iKey + 2
           keyTime = k[iKey + 1]?.t ?? 0
-        } else {
+        }
+        else {
           timeIndex = iKey + 1
           keyTime = k[iKey]?.t ?? 0
         }
@@ -630,7 +629,6 @@ function initiateExpression(
     const arr = (Object.hasOwn(data.k[ind] ?? {}, 's') ? data.k[ind]?.s : data.k[ind - 1]?.e) ?? [],
 
       { length: lenKey } = arr
-
 
     for (let iKey = 0; iKey < lenKey; iKey += 1) {
       obKey[iKey] = arr[iKey]
@@ -927,13 +925,13 @@ function random(minFromProps?: number | number[], maxFormProps?: number | number
     if (min === undefined) {
       min = 0
       max = 1
-    } else {
+    }
+    else {
       max = min
       min = undefined
     }
   }
   if (isArrayOfNum(max)) {
-
     const { length: len } = max
 
     if (!min) {
@@ -1007,7 +1005,6 @@ function isNumerable(tOfV: string, v: unknown): v is number | string {
 
 function length(arr1: number | number[], arr2FromProps?: number | number[]) {
   let arr2 = arr2FromProps
-
 
   if (typeof arr1 === 'number' || arr1 instanceof Number) {
     arr2 = arr2 || 0
@@ -1186,6 +1183,5 @@ const ExpressionManager = {
   initiateExpression,
   resetFrame
 }
-
 
 export default ExpressionManager

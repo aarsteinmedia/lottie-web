@@ -43,7 +43,8 @@ export class EllShapeProperty extends ShapeBaseProperty {
     ) as MultiDimensionalProperty
     if (this.dynamicProperties.length > 0) {
       this.k = true
-    } else {
+    }
+    else {
       this.k = false
       this.convertEllToPath()
     }

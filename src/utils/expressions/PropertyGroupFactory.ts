@@ -4,7 +4,6 @@ import type { BaseProperty } from '@/utils/properties/BaseProperty'
 type ParentPropertyGroup = LayerExpressionInterface | PropertyGroupFactory
 
 export class PropertyGroupFactory {
-
   interfaceFunction: (val: string | number) => BaseProperty
   parentPropertyGroup: ParentPropertyGroup
   constructor(interfaceFunction: (val: number | string) => BaseProperty, parentPropertyGroup: ParentPropertyGroup) {

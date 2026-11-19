@@ -3,7 +3,6 @@ import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-
 export class TrimInterface extends BaseInterface {
   override prop?: TrimModifier = undefined
   get end() {

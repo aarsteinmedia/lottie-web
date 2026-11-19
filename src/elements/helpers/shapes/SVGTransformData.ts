@@ -26,7 +26,7 @@ export class SVGTransformData {
       mProps,
       op,
     } as Transformer
-    this._isAnimated = this.transform.mProps.dynamicProperties.length > 0 ||
-      this.transform.op.effectsSequence.length > 0
+    this._isAnimated = this.transform.mProps.dynamicProperties.length > 0
+      || this.transform.op.effectsSequence.length > 0
   }
 }

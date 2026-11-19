@@ -31,7 +31,6 @@ class MaskInterface {
   }
 }
 
-
 export class MaskManagerInterface {
   _masksInterfaces: MaskInterface[]
   maskManager: MaskElement | CVMaskElement
@@ -57,5 +56,4 @@ export class MaskManagerInterface {
 
     return null
   }
-
 }

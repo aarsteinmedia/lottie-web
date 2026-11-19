@@ -12,7 +12,6 @@ export const segmentsLengthPool = (() =>
       totalLength: 0,
     }),
     (element: PoolElement) => {
-
       if (!isShapePath(element)) {
         return
       }

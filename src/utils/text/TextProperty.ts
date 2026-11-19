@@ -80,7 +80,6 @@ export class TextProperty extends BaseProperty {
       this.copyData(this.currentData, newData)
     }
 
-
     if (!this.searchProperty()) {
       this.completeTextData(this.currentData)
     }
@@ -109,35 +108,41 @@ export class TextProperty extends BaseProperty {
       if (isCombinedCharacter(charCode)) {
         shouldCombine = true
         // It's a potential surrogate pair (this is the High surrogate)
-      } else if (charCode >= 0xd800 && charCode <= 0xdbff) {
+      }
+      else if (charCode >= 0xd800 && charCode <= 0xdbff) {
         if (isRegionalFlag(text, i)) {
           currentChars = text.slice(i, 14)
-        } else {
+        }
+        else {
           secondCharCode = text.charCodeAt(i + 1)
           // It's a surrogate pair (this is the Low surrogate)
           if (secondCharCode >= 0xdc00 && secondCharCode <= 0xdfff) {
-
             if (isModifier(charCode, secondCharCode)) {
               currentChars = text.slice(i, 2)
               shouldCombine = true
-            } else if (isFlagEmoji(text.slice(i, 4))) {
+            }
+            else if (isFlagEmoji(text.slice(i, 4))) {
               currentChars = text.slice(i, 4)
-            } else {
+            }
+            else {
               currentChars = text.slice(i, 2)
             }
           }
         }
-      } else if (charCode > 0xdbff) {
+      }
+      else if (charCode > 0xdbff) {
         if (isVariationSelector(charCode)) {
           shouldCombine = true
         }
-      } else if (isZeroWidthJoiner(charCode)) {
+      }
+      else if (isZeroWidthJoiner(charCode)) {
         shouldCombine = true
         shouldCombineNext = true
       }
       if (shouldCombine) {
         charactersArray[charactersArray.length - 1] += currentChars
-      } else {
+      }
+      else {
         charactersArray.push(currentChars)
       }
       i += currentChars.length
@@ -212,11 +217,12 @@ export class TextProperty extends BaseProperty {
           newLineFlag = false
           if (finalText[i] === ' ') {
             lastSpaceIndex = i
-          } else if (charCode === 13 || charCode === 3) {
+          }
+          else if (charCode === 13 || charCode === 3) {
             lineWidth = 0
             newLineFlag = true
-            currentHeight +=
-              documentData.finalLineHeight || documentData.finalSize * 1.2
+            currentHeight
+              += documentData.finalLineHeight || documentData.finalSize * 1.2
           }
           if (fontManager.chars) {
             charData = fontManager.getCharData(
@@ -227,9 +233,10 @@ export class TextProperty extends BaseProperty {
             cLength = newLineFlag
               ? 0
               : charData.w * documentData.finalSize / 100
-          } else {
-            cLength =
-              fontManager.measureText(
+          }
+          else {
+            cLength
+              = fontManager.measureText(
                 finalText[i] ?? '',
                 documentData.f,
                 documentData.finalSize
@@ -240,33 +247,36 @@ export class TextProperty extends BaseProperty {
 
             if (lastSpaceIndex === -1) {
               len++
-            } else {
+            }
+            else {
               j = lastSpaceIndex
             }
-            currentHeight +=
-              documentData.finalLineHeight || documentData.finalSize * 1.2
+            currentHeight
+              += documentData.finalLineHeight || documentData.finalSize * 1.2
             finalText.splice(
               j, lastSpaceIndex === j ? 1 : 0, '\r'
             )
             lastSpaceIndex = -1
             lineWidth = 0
-          } else {
+          }
+          else {
             lineWidth += cLength
             lineWidth += trackingOffset
           }
         }
 
-        currentHeight +=
-          Number(fontData.ascent) * documentData.finalSize / 100
+        currentHeight
+          += Number(fontData.ascent) * documentData.finalSize / 100
         if (
-          canResize &&
-          documentData.finalSize > minimumFontSize &&
-          boxHeight < currentHeight
+          canResize
+          && documentData.finalSize > minimumFontSize
+          && boxHeight < currentHeight
         ) {
           documentData.finalSize -= 1
-          documentData.finalLineHeight =
-            documentData.finalSize * documentData.lh / documentData.s
-        } else {
+          documentData.finalLineHeight
+            = documentData.finalSize * documentData.lh / documentData.s
+        }
+        else {
           documentData.finalText = finalText
           len = documentData.finalText.length
           shouldComplete = false
@@ -289,7 +299,8 @@ export class TextProperty extends BaseProperty {
         val = ''
         newLineFlag = true
         currentLine++
-      } else {
+      }
+      else {
         val = currentChar
       }
       if (fontManager.chars) {
@@ -299,7 +310,8 @@ export class TextProperty extends BaseProperty {
           fontManager.getFontByName(documentData.f).fFamily
         )
         cLength = newLineFlag ? 0 : charData.w * documentData.finalSize / 100
-      } else {
+      }
+      else {
         cLength = fontManager.measureText(
           val,
           documentData.f,
@@ -309,7 +321,8 @@ export class TextProperty extends BaseProperty {
 
       if (currentChar === ' ') {
         uncollapsedSpaces += cLength + trackingOffset
-      } else {
+      }
+      else {
         lineWidth += cLength + trackingOffset + uncollapsedSpaces
         uncollapsedSpaces = 0
       }
@@ -340,7 +353,8 @@ export class TextProperty extends BaseProperty {
           index++
           currentSize = 0
         }
-      } else if (anchorGrouping === 3) {
+      }
+      else if (anchorGrouping === 3) {
         currentSize += cLength
         if (val === '' || i === len - 1) {
           if (val === '') {
@@ -357,7 +371,8 @@ export class TextProperty extends BaseProperty {
           currentSize = 0
           index++
         }
-      } else {
+      }
+      else {
         const letter = letters[index]
 
         letter.ind = index
@@ -371,7 +386,8 @@ export class TextProperty extends BaseProperty {
     if (documentData.sz) {
       documentData.boxWidth = documentData.sz[0]
       documentData.justifyOffset = 0
-    } else {
+    }
+    else {
       documentData.boxWidth = maxLineWidth
       switch (documentData.j) {
         case 1: {
@@ -408,10 +424,10 @@ export class TextProperty extends BaseProperty {
         documentData.strokeWidthAnim = true
       }
       if (
-        animatorData.a?.fc ||
-        animatorData.a?.fh ||
-        animatorData.a?.fs ||
-        animatorData.a?.fb
+        animatorData.a?.fc
+        || animatorData.a?.fh
+        || animatorData.a?.fs
+        || animatorData.a?.fb
       ) {
         documentData.fillColorAnim = true
       }
@@ -420,12 +436,14 @@ export class TextProperty extends BaseProperty {
       for (let i = 0; i < len; i++) {
         letterData = letters[i] ?? {} as Letter
         letterData.anIndexes[j] = ind
+        console.log('foo')
+
         if (
-          based === 1 && letterData.val !== '' ||
-          based === 2 && letterData.val !== '' && letterData.val !== ' ' ||
-          based === 3 &&
-          (letterData.n || letterData.val === ' ' || i === len - 1) ||
-          based === 4 && (letterData.n || i === len - 1)
+          (based === 1 && letterData.val !== '')
+          || (based === 2 && letterData.val !== '' && letterData.val !== ' ')
+          || ((based === 3
+            && (letterData.n || letterData.val === ' ' || i === len - 1))
+          || (based === 4 && (letterData.n || i === len - 1)))
         ) {
           if (Number(animatorData.s?.rn) === 1) {
             indexes.push(ind)
@@ -456,11 +474,11 @@ export class TextProperty extends BaseProperty {
         }
       }
     }
-    documentData.yOffset =
-      documentData.finalLineHeight || documentData.finalSize * 1.2
+    documentData.yOffset
+      = documentData.finalLineHeight || documentData.finalSize * 1.2
     documentData.ls = documentData.ls || 0
-    documentData.ascent =
-      Number(fontData.ascent) * documentData.finalSize / 100
+    documentData.ascent
+      = Number(fontData.ascent) * documentData.finalSize / 100
   }
 
   copyData(obj: DocumentData, data: DocumentData | LetterProps) {
@@ -499,12 +517,11 @@ export class TextProperty extends BaseProperty {
     return this.data.d?.k[this.keysIndex]?.s
   }
 
-
   override getValue(_finalValue?: unknown) {
     if (
-      (this.elem.globalData?.frameId === this.frameId ||
-        this.effectsSequence.length === 0) &&
-        !_finalValue
+      (this.elem.globalData?.frameId === this.frameId
+        || this.effectsSequence.length === 0)
+      && !_finalValue
     ) {
       return 0
     }
@@ -524,15 +541,16 @@ export class TextProperty extends BaseProperty {
     this.lock = true
     this._mdf = false
 
-    let finalValue =
-      (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex]?.s
+    let finalValue
+      = (_finalValue as DocumentData | undefined) ?? this.data.d?.k[this.keysIndex]?.s
 
     for (let i = 0; i < this.effectsSequence.length; i++) {
       // Checking if index changed to prevent creating a new object every time the expression updates.
       if (currentIndex === this.keysIndex) {
         finalValue = this.effectsSequence[i]?.(this.currentData,
           finalValue?.t as string)
-      } else {
+      }
+      else {
         finalValue = this.effectsSequence[i]?.(finalValue as DocumentData,
           finalValue?.t as string)
       }
@@ -588,8 +606,8 @@ export class TextProperty extends BaseProperty {
       this.completeTextData(data)
     }
     this.currentData = data
-    this.currentData.boxWidth =
-      this.currentData.boxWidth || this.defaultBoxWidth
+    this.currentData.boxWidth
+      = this.currentData.boxWidth || this.defaultBoxWidth
     this._mdf = true
   }
 

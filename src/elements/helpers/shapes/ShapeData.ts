@@ -11,7 +11,6 @@ import type { ShapeProperty } from '@/utils/shapes/properties/ShapeProperty'
 import type { ShapeCollection } from '@/utils/shapes/ShapeCollection'
 import type { ShapePath } from '@/utils/shapes/ShapePath'
 
-
 export abstract class ShapeData {
   _isAnimated?: boolean
   _length?: number
@@ -42,5 +41,4 @@ export abstract class ShapeData {
   setAsAnimated() {
     this._isAnimated = true
   }
-
 }

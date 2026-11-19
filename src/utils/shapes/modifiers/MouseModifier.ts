@@ -17,7 +17,6 @@ export class MouseModifier extends ShapeModifier {
     this.positions.push([])
   }
 
-
   override initModifierProperties(_elem: ElementInterfaceIntersect, data: Shape | Shape[]) {
     this.getValue = this.processKeys
     this.data = data
@@ -135,7 +134,8 @@ export class MouseModifier extends ShapeModifier {
         if (shapeData.shape) {
           shapeData.shape.paths = shapeData.last
         }
-      } else {
+      }
+      else {
         if (shapeData.shape) {
           shapeData.shape._mdf = true
         }

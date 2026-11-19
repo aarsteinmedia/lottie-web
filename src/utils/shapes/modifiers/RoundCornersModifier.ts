@@ -51,10 +51,10 @@ export class RoundCornersModifier extends ShapeModifier {
       currentO = path.o[i]
       currentI = path.i[i]
       if (
-        currentV[0] === currentO[0] &&
-        currentV[1] === currentO[1] &&
-        currentV[0] === currentI[0] &&
-        currentV[1] === currentI[1]
+        currentV[0] === currentO[0]
+        && currentV[1] === currentO[1]
+        && currentV[0] === currentI[0]
+        && currentV[1] === currentI[1]
       ) {
         if ((i === 0 || i === len - 1) && !path.c) {
           clonedPath.setTripleAt(
@@ -70,14 +70,16 @@ export class RoundCornersModifier extends ShapeModifier {
                 clonedPath.o[index] = currentO;
                 clonedPath.i[index] = currentI; */
           index++
-        } else {
+        }
+        else {
           if (i === 0) {
             closerV = path.v[len - 1]
-          } else {
+          }
+          else {
             closerV = path.v[i - 1]
           }
-          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
-            Math.pow(currentV[1] - closerV[1], 2))
+          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2)
+            + Math.pow(currentV[1] - closerV[1], 2))
           newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
           iX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
           vX = iX
@@ -92,11 +94,12 @@ export class RoundCornersModifier extends ShapeModifier {
 
           if (i === len - 1) {
             closerV = path.v[0]
-          } else {
+          }
+          else {
             closerV = path.v[i + 1]
           }
-          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2) +
-            Math.pow(currentV[1] - closerV[1], 2))
+          distance = Math.sqrt(Math.pow(currentV[0] - closerV[0], 2)
+            + Math.pow(currentV[1] - closerV[1], 2))
           newPosPerc = distance ? Math.min(distance / 2, round) / distance : 0
           oX = currentV[0] + (closerV[0] - currentV[0]) * newPosPerc
           vX = oX
@@ -109,7 +112,8 @@ export class RoundCornersModifier extends ShapeModifier {
           )
           index++
         }
-      } else {
+      }
+      else {
         clonedPath.setTripleAt(
           path.v[i]?.[0] ?? 0,
           path.v[i]?.[1] ?? 0,
@@ -152,7 +156,6 @@ export class RoundCornersModifier extends ShapeModifier {
         if (shapeData.shape) {
           shapeData.shape.paths = shapeData.localShapeCollection
         }
-
       }
     }
     if (this.dynamicProperties.length === 0) {

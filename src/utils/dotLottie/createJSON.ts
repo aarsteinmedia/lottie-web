@@ -33,7 +33,8 @@ export function createJSON({
     }
 
     return jsonString
-  } catch (error) {
+  }
+  catch (error) {
     devError(error)
 
     return null

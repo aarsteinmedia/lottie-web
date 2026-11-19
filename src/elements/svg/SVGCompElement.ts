@@ -89,9 +89,11 @@ export class SVGCompElement extends SVGBaseElement {
     this.initElement(
       data, globalData, comp
     )
-    this.tm = (data.tm ? PropertyFactory.getProp(
-      this as unknown as ElementInterfaceIntersect, data.tm, 0, globalData.frameRate, this as unknown as ElementInterfaceIntersect
-    ) : { _placeholder: true }) as KeyframeValueProperty
+    this.tm = (data.tm
+      ? PropertyFactory.getProp(
+        this as unknown as ElementInterfaceIntersect, data.tm, 0, globalData.frameRate, this as unknown as ElementInterfaceIntersect
+      )
+      : { _placeholder: true }) as KeyframeValueProperty
   }
 
   createComp(

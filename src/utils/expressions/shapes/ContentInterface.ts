@@ -2,7 +2,6 @@ import type { ShapePathInterface } from '@/utils/expressions/shapes/ShapePathInt
 
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-
 export class ContentInterface extends BaseInterface {
   interfaces: ShapePathInterface[] = []
 
@@ -10,7 +9,6 @@ export class ContentInterface extends BaseInterface {
     let i = 0
 
     while (i < this.interfaces.length) {
-
       if (this.interfaces[i]?._name === value || this.interfaces[i]?.mn === value || this.interfaces[i]?.propertyIndex === value || this.interfaces[i]?.ix === value || this.interfaces[i]?.ind === value) {
         return this.interfaces[i]
       }

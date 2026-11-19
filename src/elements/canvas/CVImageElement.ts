@@ -40,7 +40,6 @@ export class CVImageElement extends CVBaseElement {
     )
   }
 
-
   override createContent() {
     if (!this.assetData) {
       throw new Error(`${this.constructor.name}: assetData is not implemented`)
@@ -49,10 +48,10 @@ export class CVImageElement extends CVBaseElement {
       throw new Error(`${this.constructor.name}: globalData is not implemented`)
     }
     if (
-      !this.img.width ||
-      !(
-        this.assetData.w !== this.img.width ||
-        this.assetData.h !== this.img.height
+      !this.img.width
+      || !(
+        this.assetData.w !== this.img.width
+        || this.assetData.h !== this.img.height
       )
     ) {
       return
@@ -67,17 +66,18 @@ export class CVImageElement extends CVBaseElement {
       imgRel = imgW / imgH,
       canvasRel = Number(this.assetData.w) / Number(this.assetData.h)
     let widthCrop, heightCrop
-    const par =
-      this.assetData.pr ||
-      this.globalData.renderConfig?.imagePreserveAspectRatio
+    const par
+      = this.assetData.pr
+        || this.globalData.renderConfig?.imagePreserveAspectRatio
 
     if (
-      imgRel > canvasRel && par === PreserveAspectRatio.Cover ||
-      imgRel < canvasRel && par !== PreserveAspectRatio.Cover
+      imgRel > canvasRel && par === PreserveAspectRatio.Cover
+      || imgRel < canvasRel && par !== PreserveAspectRatio.Cover
     ) {
       heightCrop = imgH
       widthCrop = heightCrop * canvasRel
-    } else {
+    }
+    else {
       widthCrop = imgW
       heightCrop = widthCrop / canvasRel
     }

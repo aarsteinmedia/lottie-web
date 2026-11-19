@@ -97,7 +97,8 @@ export class CVTextElement extends TextElement {
     if (documentData.fc) {
       hasFill = true
       this.values.fill = this.buildColor(documentData.fc as Vector3)
-    } else {
+    }
+    else {
       this.values.fill = 'rgba(0,0,0,0)'
     }
     this.fill = hasFill
@@ -232,7 +233,8 @@ export class CVTextElement extends TextElement {
       }
       if (this.textSpans[cnt]) {
         this.textSpans[cnt].elem = commands as number[][]
-      } else {
+      }
+      else {
         this.textSpans[cnt] = { elem: commands } as TextSpan
       }
       cnt++
@@ -313,7 +315,8 @@ export class CVTextElement extends TextElement {
             renderer.ctxFillStyle(renderedLetter.fc as string)
             lastFill = renderedLetter.fc
           }
-        } else if (lastFill !== this.values.fill) {
+        }
+        else if (lastFill !== this.values.fill) {
           lastFill = this.values.fill
           renderer.ctxFillStyle(this.values.fill)
         }
@@ -344,7 +347,8 @@ export class CVTextElement extends TextElement {
             lastStrokeW = renderedLetter.sw
             renderer.ctxLineWidth(renderedLetter.sw)
           }
-        } else if (lastStrokeW !== this.values.sWidth) {
+        }
+        else if (lastStrokeW !== this.values.sWidth) {
           lastStrokeW = this.values.sWidth
           renderer.ctxLineWidth(this.values.sWidth)
         }
@@ -353,7 +357,8 @@ export class CVTextElement extends TextElement {
             lastStroke = renderedLetter.sc
             renderer.ctxStrokeStyle(renderedLetter.sc as string)
           }
-        } else if (lastStroke !== this.values.stroke) {
+        }
+        else if (lastStroke !== this.values.stroke) {
           lastStroke = this.values.stroke
           renderer.ctxStrokeStyle(this.values.stroke)
         }

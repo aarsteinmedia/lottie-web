@@ -20,7 +20,6 @@ function searchExpressions(this: TextProperty) {
 }
 
 function addDecorator() {
-
   TextProperty.prototype.getExpressionValue = function (currentValue, text: string) {
     const newValue = this.calculateExpression(text)
 
@@ -52,6 +51,5 @@ function addDecorator() {
 function initialize() {
   addDecorator()
 }
-
 
 export default initialize

@@ -38,14 +38,16 @@ function getProp<T = number | number[]>(
       mult,
       container
     )
-  } else if (isArrayOfNum(data.k)) {
+  }
+  else if (isArrayOfNum(data.k)) {
     p = new MultiDimensionalProperty(
       elem,
       data as VectorProperty<number[]>,
       mult,
       container
     )
-  } else {
+  }
+  else {
     switch (type) {
       case 0: {
         p = new KeyframeValueProperty(

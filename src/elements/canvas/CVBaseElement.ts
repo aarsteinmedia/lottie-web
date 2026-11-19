@@ -150,7 +150,8 @@ export abstract class CVBaseElement extends RenderableElement {
 
     if ('tp' in this.data && this.data.tp !== undefined) {
       mask = this.comp?.getElementById(this.data.tp) ?? null
-    } else {
+    }
+    else {
       // With no explicit `tp`, the matte source is the layer directly above
       // in stacking order — same rule as the SVG renderer. Deriving it from
       // `ind - 1` is unreliable: indices aren't guaranteed to be numbered
@@ -290,7 +291,8 @@ export abstract class CVBaseElement extends RenderableElement {
 
     if (hasMatte) {
       this.exitLayer()
-    } else if (hasComplexMasks) {
+    }
+    else if (hasComplexMasks) {
       this.restoreIsolatedLayer()
     }
 

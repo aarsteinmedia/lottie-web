@@ -34,7 +34,8 @@ function readDistJavaScript(): File[] {
 
         if (entry.isDirectory()) {
           walk(path)
-        } else if (entry.name.endsWith('.js')) {
+        }
+        else if (entry.name.endsWith('.js')) {
           files.push({
             content: readFileSync(path, 'utf8'),
             name: entry.name,
@@ -54,7 +55,7 @@ function readDistJavaScript(): File[] {
  * Export names are mangled in chunks, so checks must look at the chunks' code.
  */
 function collectImportGraph(files: File[], entry: string): File[] {
-  const byPath = new Map(files.map((file) => [file.path, file])),
+  const byPath = new Map(files.map(file => [file.path, file])),
     seen = new Map<string, File>(),
     visit = (path: string) => {
       const file = byPath.get(path)
@@ -75,8 +76,8 @@ function collectImportGraph(files: File[], entry: string): File[] {
 }
 
 const distFiles = readDistJavaScript(),
-  hasProductionBuild = distFiles.some((file) => file.content.includes(pkg.version)) &&
-    !distFiles.some((file) => file.content.includes('[[BM_VERSION]]'))
+  hasProductionBuild = distFiles.some(file => file.content.includes(pkg.version))
+    && !distFiles.some(file => file.content.includes('[[BM_VERSION]]'))
 
 describe('production build', () => {
   test.skipIf(!hasProductionBuild)('injects the package version into dist output', () => {

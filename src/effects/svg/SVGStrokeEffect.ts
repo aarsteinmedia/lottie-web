@@ -15,7 +15,7 @@ export class SVGStrokeEffect {
   masker?: SVGMaskElement
   pathMasker?: SVGGElement
   paths: {
-    m: number;
+    m: number
     p: SVGPathElement
   }[] = []
   constructor(
@@ -28,9 +28,9 @@ export class SVGStrokeEffect {
   }
 
   initialize() {
-    let elemChildren = [...this.elem.layerElement?.children ??
-      this.elem.layerElement?.childNodes ??
-      []]
+    let elemChildren = [...this.elem.layerElement?.children
+      ?? this.elem.layerElement?.childNodes
+      ?? []]
     let path
     let i
     let len
@@ -38,7 +38,8 @@ export class SVGStrokeEffect {
     if (this.filterManager.effectElements[1]?.p.v === 1) {
       len = this.elem.maskManager?.masksProperties.length || 0
       i = 0
-    } else {
+    }
+    else {
       i = (this.filterManager.effectElements[0]?.p.v as number) - 1
       len = i + 1
     }
@@ -72,14 +73,15 @@ export class SVGStrokeEffect {
       this.elem.layerElement?.appendChild(g)
       this.masker = mask
       groupPath.setAttribute('stroke', '#fff')
-    } else if (
-      this.filterManager.effectElements[10]?.p.v === 1 ||
-      this.filterManager.effectElements[10]?.p.v === 2
+    }
+    else if (
+      this.filterManager.effectElements[10]?.p.v === 1
+      || this.filterManager.effectElements[10]?.p.v === 2
     ) {
       if (this.filterManager.effectElements[10].p.v === 2) {
-        elemChildren = [...this.elem.layerElement?.children ??
-        this.elem.layerElement?.childNodes ??
-        []]
+        elemChildren = [...this.elem.layerElement?.children
+        ?? this.elem.layerElement?.childNodes
+        ?? []]
         while (elemChildren.length > 0) {
           this.elem.layerElement?.removeChild(elemChildren[0])
         }
@@ -105,56 +107,57 @@ export class SVGStrokeEffect {
       mask = this.elem.maskManager?.viewData[this.paths[i]?.m ?? 0] as ViewData | undefined
       path = this.paths[i]?.p
       if (
-        mask &&
-        (forceRender || this.filterManager._mdf || mask.prop?._mdf)
+        mask
+        && (forceRender || this.filterManager._mdf || mask.prop?._mdf)
       ) {
         path.setAttribute('d', mask.lastPath)
       }
       if (
-        forceRender ||
-        this.filterManager.effectElements[9]?.p._mdf ||
-        this.filterManager.effectElements[4]?.p._mdf ||
-        this.filterManager.effectElements[7]?.p._mdf ||
-        this.filterManager.effectElements[8]?.p._mdf ||
-        mask?.prop?._mdf
+        forceRender
+        || this.filterManager.effectElements[9]?.p._mdf
+        || this.filterManager.effectElements[4]?.p._mdf
+        || this.filterManager.effectElements[7]?.p._mdf
+        || this.filterManager.effectElements[8]?.p._mdf
+        || mask?.prop?._mdf
       ) {
         let dasharrayValue
 
         if (
-          this.filterManager.effectElements[7]?.p.v !== 0 ||
-          this.filterManager.effectElements[8]?.p.v !== 100
+          this.filterManager.effectElements[7]?.p.v !== 0
+          || this.filterManager.effectElements[8]?.p.v !== 100
         ) {
-          const s =
-            Math.min(this.filterManager.effectElements[7]?.p.v as number,
+          const s
+            = Math.min(this.filterManager.effectElements[7]?.p.v as number,
               this.filterManager.effectElements[8]?.p.v as number) * 0.01
-          const e =
-            Math.max(this.filterManager.effectElements[7]?.p.v as number,
+          const e
+            = Math.max(this.filterManager.effectElements[7]?.p.v as number,
               this.filterManager.effectElements[8]?.p.v as number) * 0.01
           const l = path.getTotalLength()
 
           dasharrayValue = `0 0 0 ${l * s} `
           const lineLength = l * (e - s),
-            segment =
-              1 +
-              (this.filterManager.effectElements[4]?.p.v as number) *
-              2 *
-              (this.filterManager.effectElements[9]?.p.v as number) *
-              0.01
+            segment
+              = 1
+                + (this.filterManager.effectElements[4]?.p.v as number)
+                * 2
+                * (this.filterManager.effectElements[9]?.p.v as number)
+                * 0.01
           const units = Math.floor(lineLength / segment)
 
           for (let j = 0; j < units; j++) {
-            dasharrayValue += `1 ${(this.filterManager.effectElements[4]?.p.v as number) *
-            2 *
-            (this.filterManager.effectElements[9]?.p.v as number) *
-            0.01
+            dasharrayValue += `1 ${(this.filterManager.effectElements[4]?.p.v as number)
+            * 2
+            * (this.filterManager.effectElements[9]?.p.v as number)
+            * 0.01
             } `
           }
           dasharrayValue += `0 ${l * 10} 0 0`
-        } else {
-          dasharrayValue = `1 ${(this.filterManager.effectElements[4]?.p.v as number) *
-          2 *
-          (this.filterManager.effectElements[9]?.p.v as number) *
-          0.01
+        }
+        else {
+          dasharrayValue = `1 ${(this.filterManager.effectElements[4]?.p.v as number)
+          * 2
+          * (this.filterManager.effectElements[9]?.p.v as number)
+          * 0.01
           }`
         }
         path.setAttribute('stroke-dasharray', dasharrayValue)
@@ -169,9 +172,9 @@ export class SVGStrokeEffect {
       this.pathMasker?.setAttribute('opacity',
         `${Number(this.filterManager.effectElements[6]?.p.v)}`)
     }
-    if ((this.filterManager.effectElements[10]?.p.v === 1 ||
-      this.filterManager.effectElements[10]?.p.v === 2) &&
-      (forceRender || this.filterManager.effectElements[3]?.p._mdf)
+    if ((this.filterManager.effectElements[10]?.p.v === 1
+      || this.filterManager.effectElements[10]?.p.v === 2)
+    && (forceRender || this.filterManager.effectElements[3]?.p._mdf)
     ) {
       this.pathMasker?.setAttribute('stroke',
         toRGBString(this.filterManager.effectElements[3]?.p.v as Vector3))

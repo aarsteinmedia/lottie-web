@@ -40,7 +40,6 @@ function _create() {
 }
 
 function _release(shapePath: PoolElement) {
-
   if (!isShapePath(shapePath)) {
     return
   }
@@ -63,6 +62,5 @@ const ShapePool = {
   clone,
   newElement
 }
-
 
 export default ShapePool

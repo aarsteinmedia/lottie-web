@@ -55,10 +55,10 @@ export class FootageElement extends RenderableElement {
   }
 
   prepareFrame() {
-    /* Pass Through*/
+    /* Pass Through */
   }
 
   renderFrame() {
-    /* Pass Through*/
+    /* Pass Through */
   }
 }

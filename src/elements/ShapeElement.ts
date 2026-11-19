@@ -13,7 +13,6 @@ export abstract class ShapeElement extends RenderableDOMElement {
   shapes: (SVGShapeData | CVShapeData)[] = []
 
   addProcessedElement(elem: ElementInterfaceIntersect, pos: number) {
-
     const { processedElements } = this
     let i = processedElements.length
 

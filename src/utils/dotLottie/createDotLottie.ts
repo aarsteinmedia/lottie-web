@@ -65,8 +65,8 @@ const getArrayBuffer = async (zippable: Zippable) => {
           reject(new Error('Could not create bas64'))
         }
         reader.readAsDataURL(blob)
-      } catch (error) {
-
+      }
+      catch (error) {
         if (error instanceof Error) {
           reject(error)
         }
@@ -108,9 +108,9 @@ const getArrayBuffer = async (zippable: Zippable) => {
       const asset = animation.assets[j]
 
       if (
-        !asset.p ||
-        !isImage(asset) &&
-        !isAudio(asset)
+        !asset.p
+        || !isImage(asset)
+        && !isAudio(asset)
       ) {
         continue
       }
@@ -173,7 +173,6 @@ const getArrayBuffer = async (zippable: Zippable) => {
         prop.x = btoa(expression)
         prop.e = 1
       }
-
     }
   }
 
@@ -203,7 +202,6 @@ export async function createDotLottie({
     const animationCompressionLevel = 9,
       { dotLottie, name } = prepareLottie(filename, manifest)
 
-
     // Add animations and assets to the dotLottie file
     for (let i = 0; i < animations.length; i++) {
       await prepareAssets(
@@ -228,7 +226,8 @@ export async function createDotLottie({
     }
 
     return buffer
-  } catch (error) {
+  }
+  catch (error) {
     devError(error)
 
     return null

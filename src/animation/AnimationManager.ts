@@ -66,7 +66,8 @@ export function loadAnimation(params: AnimationConfiguration) {
     animItem.setParams(params)
 
     return animItem
-  } catch (error) {
+  }
+  catch (error) {
     devError('AnimationManager:\n', error)
     throw new Error('Could not load animation', { cause: error })
   }
@@ -100,8 +101,8 @@ export function registerAnimation(element: HTMLElement | null,
 
     while (i < len) {
       if (
-        registeredAnimations[i]?.elem === element &&
-        registeredAnimations[i]?.elem !== null
+        registeredAnimations[i]?.elem === element
+        && registeredAnimations[i]?.elem !== null
       ) {
         return registeredAnimations[i]?.animation
       }
@@ -113,7 +114,8 @@ export function registerAnimation(element: HTMLElement | null,
     animItem.setData(element, animationData)
 
     return animItem
-  } catch (error) {
+  }
+  catch (error) {
     devError('AnimationManager:\n', error)
     throw new Error('Could not register animation', { cause: error })
   }
@@ -259,7 +261,8 @@ function resume(nowTime: number) {
     if (!IS_SERVER) {
       _rafID = requestAnimationFrame(resume)
     }
-  } else {
+  }
+  else {
     _isStopped = true
   }
 }

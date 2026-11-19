@@ -1,7 +1,6 @@
 import type { PropertyGroupFactory } from '@/utils/expressions/PropertyGroupFactory'
 
 export class PropertyInterface {
-
   _name: string
   propertyGroup: PropertyGroupFactory
 

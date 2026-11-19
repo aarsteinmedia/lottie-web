@@ -3,7 +3,6 @@ import type { EllShapeProperty } from '@/utils/shapes/properties/EllShapePropert
 import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-
 export class EllipseInterface extends BaseInterface {
   override prop?: EllShapeProperty = undefined
 
@@ -16,7 +15,6 @@ export class EllipseInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
-
     if (this.shape?.p?.ix === value) {
       return this.position
     }

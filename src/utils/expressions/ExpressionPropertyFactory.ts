@@ -84,7 +84,7 @@ export class ExpressionPropertyInterface {
   ) {
     Object.defineProperty(
       expressionValue, 'velocity', {
-        get () {
+        get() {
           return property.getVelocityAtTime(property.comp?.currentFrame ?? 0)
         },
       }
@@ -100,9 +100,11 @@ export class ExpressionPropertyInterface {
 
       if ('s' in keyframes[pos - 1]) {
         value = keyframes[pos - 1].s
-      } else if ('e' in keyframes[pos - 2]) {
+      }
+      else if ('e' in keyframes[pos - 2]) {
         value = keyframes[pos - 2].e
-      } else {
+      }
+      else {
         value = keyframes[pos - 2].s
       }
 
@@ -132,7 +134,7 @@ export class ExpressionPropertyInterface {
     return this.defaultUnidimensionalValue
   }
 
-  getInterface (property?: BaseProperty) {
+  getInterface(property?: BaseProperty) {
     if (!property) {
       return () => this.defaultGetter()
     }

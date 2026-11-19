@@ -3,7 +3,6 @@ import type { StarShapeProperty } from '@/utils/shapes/properties/StarShapePrope
 import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-
 export class StarInterface extends BaseInterface {
   override prop?: StarShapeProperty = undefined
 

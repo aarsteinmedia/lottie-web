@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
@@ -89,7 +88,8 @@ export class TransformProperty extends BaseProperty {
           0
         )
       }
-    } else {
+    }
+    else {
       this.p = handleProp(
         data.p ?? ({
           k: [
@@ -132,7 +132,8 @@ export class TransformProperty extends BaseProperty {
         DEG_TO_RAD,
       )
       this.or.sh = true as any
-    } else {
+    }
+    else {
       this.r = handleProp(
         data.r ?? { k: 0 },
         0,
@@ -181,7 +182,8 @@ export class TransformProperty extends BaseProperty {
         0.01,
         elem
       )
-    } else {
+    }
+    else {
       this.o = {
         _mdf: false,
         v: 1
@@ -224,7 +226,8 @@ export class TransformProperty extends BaseProperty {
     }
     if (this.r) {
       mat.rotate(-this.r.v)
-    } else {
+    }
+    else {
       mat
         .rotateZ(-Number(this.rz?.v))
         .rotateY(Number(this.ry?.v))
@@ -240,12 +243,14 @@ export class TransformProperty extends BaseProperty {
           Number(this.py?.v),
           -Number(this.pz?.v)
         )
-      } else {
+      }
+      else {
         mat.translate(
           Number(this.px?.v), Number(this.py?.v), 0
         )
       }
-    } else {
+    }
+    else {
       mat.translate(
         Number(this.p?.v[0]),
         Number(this.p?.v[1]),
@@ -302,7 +307,6 @@ export class TransformProperty extends BaseProperty {
       throw new Error(`${this.constructor.name}: Cannot read 's' value`)
     }
 
-
     this.pre.scale(
       this.s.v[0], this.s.v[1], this.s.v[2]
     )
@@ -325,10 +329,10 @@ export class TransformProperty extends BaseProperty {
     }
 
     if (
-      !this.rz?.effectsSequence.length &&
-      !this.ry?.effectsSequence.length &&
-      !this.rx?.effectsSequence.length &&
-      !this.or?.effectsSequence.length
+      !this.rz?.effectsSequence.length
+      && !this.ry?.effectsSequence.length
+      && !this.rx?.effectsSequence.length
+      && !this.or?.effectsSequence.length
     ) {
       this.pre
         .rotateZ(-Number(this.rz?.v))
@@ -358,7 +362,8 @@ export class TransformProperty extends BaseProperty {
     }
     if (this.r && this.appliedTransformations < 4) {
       this.v.rotate(-this.r.v)
-    } else if (!this.r && this.appliedTransformations < 4) {
+    }
+    else if (!this.r && this.appliedTransformations < 4) {
       this.v
         .rotateZ(-Number(this.rz?.v))
         .rotateY(Number(this.ry?.v))
@@ -374,31 +379,34 @@ export class TransformProperty extends BaseProperty {
 
       if (this.p?.keyframes) {
         if (
-          Number(this.p._caching?.lastFrame) + this.p.offsetTime <=
-          (this.p.keyframes[0]?.t ?? 0)
+          Number(this.p._caching?.lastFrame) + this.p.offsetTime
+          <= (this.p.keyframes[0]?.t ?? 0)
         ) {
           v1 = this.p.getValueAtTime(((this.p.keyframes[0]?.t ?? 0) + 0.01) / frameRate,
             0) as Vector2
           v2 = this.p.getValueAtTime(this.p.keyframes[0]?.t / frameRate,
             0) as Vector2
-        } else if (
-          Number(this.p._caching?.lastFrame) + this.p.offsetTime >=
-          (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
+        }
+        else if (
+          Number(this.p._caching?.lastFrame) + this.p.offsetTime
+          >= (this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0)
         ) {
           v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) / frameRate,
             0) as Vector2
-          v2 = this.p.getValueAtTime(((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) - 0.05) /
-            frameRate,
+          v2 = this.p.getValueAtTime(((this.p.keyframes[this.p.keyframes.length - 1]?.t ?? 0) - 0.05)
+            / frameRate,
           0) as Vector2
-        } else {
+        }
+        else {
           v1 = this.p.pv as Vector2
-          v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame) +
-            this.p.offsetTime -
-            0.01) /
-            frameRate,
+          v2 = this.p.getValueAtTime((Number(this.p._caching?.lastFrame)
+            + this.p.offsetTime
+            - 0.01)
+          / frameRate,
           this.p.offsetTime) as Vector2
         }
-      } else if (this.px?.keyframes && this.py?.keyframes) {
+      }
+      else if (this.px?.keyframes && this.py?.keyframes) {
         v1 = [0, 0]
         v2 = [0, 0]
         const { px, py } = this,
@@ -406,8 +414,8 @@ export class TransformProperty extends BaseProperty {
           { keyframes: pyKeyframes = [] } = py
 
         if (
-          Number(px._caching?.lastFrame) + px.offsetTime <=
-          (pxKeyframes[0]?.t ?? 0)
+          Number(px._caching?.lastFrame) + px.offsetTime
+          <= (pxKeyframes[0]?.t ?? 0)
         ) {
           v1[0] = px.getValueAtTime(((pxKeyframes[0]?.t ?? 0) + 0.01) / frameRate,
             0) as number
@@ -417,34 +425,37 @@ export class TransformProperty extends BaseProperty {
             0) as number
           v2[1] = py.getValueAtTime(pyKeyframes[0]?.t / frameRate,
             0) as number
-        } else if (
-          Number(px._caching?.lastFrame) + px.offsetTime >=
-          (pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
+        }
+        else if (
+          Number(px._caching?.lastFrame) + px.offsetTime
+          >= (pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
         ) {
-          v1[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) /
-            frameRate,
+          v1[0] = px.getValueAtTime((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
+            / frameRate,
           0) as number
-          v1[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) /
-            frameRate,
+          v1[1] = py.getValueAtTime((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0)
+            / frameRate,
           0) as number
-          v2[0] = px.getValueAtTime(((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0) -
-            0.01) /
-            frameRate,
+          v2[0] = px.getValueAtTime(((pxKeyframes[pxKeyframes.length - 1]?.t ?? 0)
+            - 0.01)
+          / frameRate,
           0) as number
-          v2[1] = py.getValueAtTime(((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0) -
-            0.01) /
-            frameRate,
+          v2[1] = py.getValueAtTime(((pyKeyframes[pyKeyframes.length - 1]?.t ?? 0)
+            - 0.01)
+          / frameRate,
           0) as number
-        } else {
+        }
+        else {
           v1 = [px.pv, py.pv]
-          v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01) /
-            frameRate,
+          v2[0] = px.getValueAtTime((Number(px._caching?.lastFrame) + px.offsetTime - 0.01)
+            / frameRate,
           px.offsetTime) as number
-          v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01) /
-            frameRate,
+          v2[1] = py.getValueAtTime((Number(py._caching?.lastFrame) + py.offsetTime - 0.01)
+            / frameRate,
           py.offsetTime) as number
         }
-      } else {
+      }
+      else {
         v2 = this.defaultVector
         v1 = v2
       }
@@ -484,6 +495,5 @@ const TransformPropertyFactory = {
     elem, data, container
   ),
 }
-
 
 export default TransformPropertyFactory

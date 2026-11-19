@@ -72,9 +72,9 @@ export const extendPrototype = (sources: Constructor[], destination: Constructor
 
       for (let j = 0; j < properties.length; j++) {
         if (
-          properties[j] === 'constructor' ||
-          combinedPrototypes.some(({ prop }) => prop === properties[j]) ||
-          destinationProperties.includes(properties[j] ?? '')
+          properties[j] === 'constructor'
+          || combinedPrototypes.some(({ prop }) => prop === properties[j])
+          || destinationProperties.includes(properties[j] ?? '')
         ) {
           continue
         }

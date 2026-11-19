@@ -13,7 +13,8 @@ export function loadAsset(
   try {
     // This crashes on Android WebView prior to KitKat
     xhr.responseType = 'json'
-  } catch (_) {
+  }
+  catch (_) {
     /* Nothing */
   }
   xhr.onreadystatechange = () => {
@@ -29,7 +30,8 @@ export function loadAsset(
     try {
       response = formatResponse(xhr)
       callback(response)
-    } catch (error) {
+    }
+    catch (error) {
       errorCallback?.(error)
     }
   }
@@ -42,7 +44,8 @@ export function loadAsset(
         'T'
       ].join(''), path, true
     )
-  } catch (_) {
+  }
+  catch (_) {
     // Hack to workaround banner validation
     xhr.open(
       [
@@ -61,9 +64,9 @@ function formatResponse(xhr: XMLHttpRequest) {
   const contentTypeHeader = xhr.getResponseHeader('content-type')
 
   if (
-    contentTypeHeader &&
-    xhr.responseType === 'json' &&
-    contentTypeHeader.includes('json')
+    contentTypeHeader
+    && xhr.responseType === 'json'
+    && contentTypeHeader.includes('json')
   ) {
     return xhr.response as AnimationData
   }

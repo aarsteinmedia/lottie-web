@@ -215,8 +215,8 @@ function setupWorker() {
     const {
         id, payload, status
       } = data as {
-        id: string;
-        status: string;
+        id: string
+        status: string
         payload: AnimationData
       },
       process = processes[id]
@@ -245,7 +245,8 @@ function createProcess(onComplete: (data: AnimationData) => void,
     }
 
     return id
-  } catch (error) {
+  }
+  catch (error) {
     devError('DataManager}:\n', error)
     throw new Error('Could not create animation process', { cause: error })
   }

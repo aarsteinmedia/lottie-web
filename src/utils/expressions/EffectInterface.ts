@@ -72,7 +72,6 @@ export class EffectsExpressionInterface {
   private createGroupInterface(
     data: LottieLayer, elements: EffectsManager, propertyGroup: (val: number | string) => BaseProperty, elem: ElementInterfaceIntersect
   ) {
-
     const groupInterface = (name: string | number) => {
       const effects = data.ef ?? []
       let i = 0
@@ -104,7 +103,8 @@ export class EffectsExpressionInterface {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-enum-assignment
           data.ef[i], elements.effectElements[i], elements.effectElements[i].propertyGroup, elem
         ))
-      } else {
+      }
+      else {
         this.effectElements.push(this.createValueInterface(
           elements.effectElements[i], data.ef[i].ty, elem, _propertyGroup
         ))
@@ -114,7 +114,7 @@ export class EffectsExpressionInterface {
     if (data.mn === 'ADBE Color Control') {
       Object.defineProperty(
         groupInterface, 'color', {
-          get () {
+          get() {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
             return this.effectElements[0]()
           },
@@ -124,7 +124,7 @@ export class EffectsExpressionInterface {
     Object.defineProperties(groupInterface, {
       _name: { value: data.nm },
       numProperties: {
-        get () {
+        get() {
           return data.np
         },
       },

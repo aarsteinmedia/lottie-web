@@ -90,7 +90,8 @@ export class AudioElement extends RenderableElement {
     this.prepareProperties(num, true)
     if (this.tm._placeholder) {
       this._currentTime = num / Number(this.data.sr)
-    } else {
+    }
+    else {
       this._currentTime = this.tm.v
     }
     this._volume = this.lv.v[0]
@@ -115,9 +116,9 @@ export class AudioElement extends RenderableElement {
     }
 
     if (
-      !this.audio.playing() ||
-      Math.abs(this._currentTime / Number(this.globalData?.frameRate) -
-        this.audio.seek()) > 0.1
+      !this.audio.playing()
+      || Math.abs(this._currentTime / Number(this.globalData?.frameRate)
+        - this.audio.seek()) > 0.1
     ) {
       this.audio.seek(this._currentTime / Number(this.globalData?.frameRate))
     }

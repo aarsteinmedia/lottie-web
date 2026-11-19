@@ -56,8 +56,8 @@ const quadRoots = (
   )],
 
   boxIntersect = (b1: SVGGeometry, b2: SVGGeometry) =>
-    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width &&
-    Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
+    Math.abs(b1.cx - b2.cx) * 2 < b1.width + b2.width
+    && Math.abs(b1.cy - b2.cy) * 2 < b1.height + b2.height,
 
   intersectData = (
     bez: PolynomialBezier,
@@ -104,11 +104,11 @@ const quadRoots = (
       return
     }
     if (
-      depth >= maxRecursion ||
-      d1.width <= tolerance &&
-      d1.height <= tolerance &&
-      d2.width <= tolerance &&
-      d2.height <= tolerance
+      depth >= maxRecursion
+      || d1.width <= tolerance
+      && d1.height <= tolerance
+      && d2.width <= tolerance
+      && d2.height <= tolerance
     ) {
       intersections.push([d1.t, d2.t])
 
@@ -235,11 +235,11 @@ export class PolynomialBezier {
     if (floatZero(denom)) {
       return []
     }
-    const tcusp =
-        -0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1]) / denom,
-      square =
-        tcusp * tcusp -
-        1 / 3 * (this.b[1] * this.c[0] - this.b[0] * this.c[1]) / denom
+    const tcusp
+        = -0.5 * (this.a[1] * this.c[0] - this.a[0] * this.c[1]) / denom,
+      square
+        = tcusp * tcusp
+          - 1 / 3 * (this.b[1] * this.c[0] - this.b[0] * this.c[1]) / denom
 
     if (square < 0) {
       return []
@@ -254,7 +254,7 @@ export class PolynomialBezier {
       return []
     }
 
-    return [tcusp - root, tcusp + root].filter((r) => r > 0 && r < 1)
+    return [tcusp - root, tcusp + root].filter(r => r > 0 && r < 1)
   }
 
   intersections(

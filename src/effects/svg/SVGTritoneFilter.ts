@@ -48,7 +48,7 @@ export class SVGTritoneFilter {
 
   renderFrame(forceRender?: boolean) {
     if (
-      !forceRender && !this.filterManager._mdf //||
+      !forceRender && !this.filterManager._mdf // ||
       // !this.filterManager.effectElements
     ) {
       return

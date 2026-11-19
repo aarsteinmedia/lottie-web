@@ -82,14 +82,14 @@ export class LetterProps {
       isUpdated = true
     }
     if (
-      p &&
-      p.length > 0 &&
-      ((this.p as number[])[0] !== p[0] ||
-        (this.p as number[])[1] !== p[1] ||
-        (this.p as number[])[4] !== p[4] ||
-        (this.p as number[])[5] !== p[5] ||
-        (this.p as number[])[12] !== p[12] ||
-        (this.p as number[])[13] !== p[13])
+      p
+      && p.length > 0
+      && ((this.p as number[])[0] !== p[0]
+        || (this.p as number[])[1] !== p[1]
+        || (this.p as number[])[4] !== p[4]
+        || (this.p as number[])[5] !== p[5]
+        || (this.p as number[])[12] !== p[12]
+        || (this.p as number[])[13] !== p[13])
     ) {
       this.p = p
       this._mdf.p = true

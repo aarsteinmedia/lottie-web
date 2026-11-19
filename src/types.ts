@@ -119,14 +119,14 @@ export interface TextSpan {
   style?: undefined | CSSStyleDeclaration
 }
 
-export type SVGElementInterface =
-  | SVGShapeData
-  | SVGTransformData
-  | SVGFillStyleData
-  | SVGStrokeStyleData
-  | SVGNoStyleData
-  | SVGGradientFillStyleData
-  | SVGGradientStrokeStyleData
+export type SVGElementInterface
+  = | SVGShapeData
+    | SVGTransformData
+    | SVGFillStyleData
+    | SVGStrokeStyleData
+    | SVGNoStyleData
+    | SVGGradientFillStyleData
+    | SVGGradientStrokeStyleData
 export interface Transformer {
   _localMatMdf: boolean
   _matMdf: boolean
@@ -146,32 +146,32 @@ export interface Transformer {
 
 type RendererIntersect = SVGRenderer & CanvasRenderer
 
-export type ElementInterfaceIntersect = CompElementInterface &
-  RenderableComponentIntersect &
-  RendererIntersect &
-  AnimationItem
+export type ElementInterfaceIntersect = CompElementInterface
+  & RenderableComponentIntersect
+  & RendererIntersect
+  & AnimationItem
 
-type RenderableComponentIntersect =
-  ImageElement
-  & AudioElement
-  & SVGShapeElement
-  & SVGMaskElement
-  & SVGEffects
-  & SVGTextLottieElement
-  & CVMaskElement
-  & CVEffects
-  & CVTextElement
+type RenderableComponentIntersect
+  = ImageElement
+    & AudioElement
+    & SVGShapeElement
+    & SVGMaskElement
+    & SVGEffects
+    & SVGTextLottieElement
+    & CVMaskElement
+    & CVEffects
+    & CVTextElement
 
-export type RenderableComponent =
-  | ImageElement
-  | AudioElement
-  | MaskElement
-  | SVGShapeElement
-  | SVGEffects
-  | SVGTextLottieElement
-  | CVMaskElement
-  | CVEffects
-  | CVTextElement
+export type RenderableComponent
+  = | ImageElement
+    | AudioElement
+    | MaskElement
+    | SVGShapeElement
+    | SVGEffects
+    | SVGTextLottieElement
+    | CVMaskElement
+    | CVEffects
+    | CVTextElement
 
 export interface TransformCanvas {
   h: number
@@ -266,8 +266,8 @@ export type GetInterface = (
   type: keyof ExpressionInterfaces
 ) => ExpressionInterface
 
-export type ExpressionInterface =
-  ExpressionInterfaces[keyof ExpressionInterfaces]
+export type ExpressionInterface
+  = ExpressionInterfaces[keyof ExpressionInterfaces]
 export interface ExpressionInterfaces {
   comp: typeof CompExpressionInterface
   /**
@@ -292,10 +292,10 @@ export interface AnimatedContent {
   fn: null | CreateRenderFunction
 }
 
-export type CompElementInterface =
-  | BaseRenderer
-  | CVCompElement
-  | SVGCompElement
+export type CompElementInterface
+  = | BaseRenderer
+    | CVCompElement
+    | SVGCompElement
 
 export interface CVStyleElement {
   closed: boolean
@@ -414,8 +414,7 @@ export type HTMLRendererConfig = BaseRendererConfig & {
 }
 
 export interface AnimationConfiguration<
-  T extends RendererType =
-    | RendererType.Canvas
+  T extends RendererType = | RendererType.Canvas
     | RendererType.SVG,
 > {
   animationData?: undefined | AnimationData
@@ -449,8 +448,8 @@ export interface GradientColor {
   p: number
 }
 
-export type DynamicProperty = { hd?: boolean } &
-  VectorProperty<number | number[] | Keyframe[]>
+export type DynamicProperty = { hd?: boolean }
+  & VectorProperty<number | number[] | Keyframe[]>
 
 interface ShapeDataProperty {
   _mdf?: boolean
@@ -543,8 +542,8 @@ export interface Shape {
   pt?: undefined | VectorProperty<ShapePath | ShapePath[]>
   /** Rotation (for transforms) | FillAttribute (for fills). */
   r?: undefined | VectorProperty<{
-    e: number;
-    s: number;
+    e: number
+    s: number
     t: number
   }[]>
   rx?: undefined | VectorProperty
@@ -660,8 +659,8 @@ export interface LottieManifest {
   version?: undefined | string
 }
 
-export type Tuple<T, N extends number, R extends T[] = []> =
-  R['length'] extends N ? R : Tuple<T, N, [...R, T]>
+export type Tuple<T, N extends number, R extends T[] = []>
+  = R['length'] extends N ? R : Tuple<T, N, [...R, T]>
 
 export type Vector2 = Tuple<number, 2>
 export type Vector3 = Tuple<number, 3>
@@ -810,7 +809,7 @@ export interface TransformNode {
 
 export interface BezierPoint {
   partialLength: number
-  point: number[];
+  point: number[]
 }
 
 export interface TextRangeValue {
@@ -949,8 +948,8 @@ export interface TextData {
 }
 
 export interface PathInfo {
-  segments: BezierData[],
-  tLength: 0,
+  segments: BezierData[]
+  tLength: 0
 }
 
 export interface TextVectorData {
@@ -978,25 +977,25 @@ export interface TextPathData {
   v?: undefined | ValueProperty
 }
 
-export type EffectElement =
-  | typeof SliderEffect
-  | typeof AngleEffect
-  | typeof ColorEffect
-  | typeof PointEffect
-  | typeof CheckboxEffect
-  | typeof NoValueEffect
-  | typeof LayerIndexEffect
-  | typeof MaskIndexEffect
-  | typeof SVGTintFilter
-  | typeof SVGFillFilter
-  | typeof SVGStrokeEffect
-  | typeof SVGTritoneFilter
-  | typeof SVGProLevelsFilter
-  | typeof SVGDropShadowEffect
-  | typeof SVGMatte3Effect
-  | typeof SVGGaussianBlurEffect
-  | typeof SVGTransformEffect
-  | typeof CVTransformEffect
+export type EffectElement
+  = | typeof SliderEffect
+    | typeof AngleEffect
+    | typeof ColorEffect
+    | typeof PointEffect
+    | typeof CheckboxEffect
+    | typeof NoValueEffect
+    | typeof LayerIndexEffect
+    | typeof MaskIndexEffect
+    | typeof SVGTintFilter
+    | typeof SVGFillFilter
+    | typeof SVGStrokeEffect
+    | typeof SVGTritoneFilter
+    | typeof SVGProLevelsFilter
+    | typeof SVGDropShadowEffect
+    | typeof SVGMatte3Effect
+    | typeof SVGGaussianBlurEffect
+    | typeof SVGTransformEffect
+    | typeof CVTransformEffect
 export interface EffectValue {
   ty: number
   v: {
@@ -1157,7 +1156,7 @@ export interface LottieLayer {
   tp?: undefined | number
   /** Matte mode. */
   tt?: undefined | MatteMode
-  /** Layer type.*/
+  /** Layer type. */
   ty: LayerType
   w?: undefined | number
   width?: undefined | number

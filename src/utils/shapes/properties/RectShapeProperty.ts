@@ -56,7 +56,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
     ) as ValueProperty
     if (this.dynamicProperties.length > 0) {
       this.k = true
-    } else {
+    }
+    else {
       this.k = false
       this.convertRectToPath()
     }
@@ -79,7 +80,6 @@ export class RectShapeProperty extends ShapeBaseProperty {
     if (this.v) {
       this.v._length = 0
     }
-
 
     if (this.d === 2 || this.d === 1) {
       this.v?.setTripleAt(
@@ -121,7 +121,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
           p1 - v1,
           3
         )
-      } else {
+      }
+      else {
         this.v?.setTripleAt(
           p0 + v0 - round,
           p1 + v1,
@@ -183,7 +184,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
           true
         )
       }
-    } else {
+    }
+    else {
       this.v?.setTripleAt(
         p0 + v0,
         p1 - v1 + round,
@@ -225,7 +227,8 @@ export class RectShapeProperty extends ShapeBaseProperty {
           3,
           true
         )
-      } else {
+      }
+      else {
         this.v?.setTripleAt(
           p0 + v0 - round,
           p1 - v1,

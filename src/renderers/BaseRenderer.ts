@@ -63,8 +63,8 @@ export abstract class BaseRenderer extends FrameElement {
       const el = elements[i]
 
       if (
-        !el ||
-        el === true as any
+        !el
+        || el === true as any
       ) {
         this.buildItem(i)
 
@@ -96,11 +96,11 @@ export abstract class BaseRenderer extends FrameElement {
     for (let i = this.layers.length - 1; i >= 0; i--) {
       const layer = this.layers[i]
 
-      if (!this.elements[i] &&
-        (layer.ip - layer.st <=
-          val - layer.st &&
-          layer.op - layer.st >
-          val - layer.st)
+      if (!this.elements[i]
+        && (layer.ip - layer.st
+          <= val - layer.st
+          && layer.op - layer.st
+          > val - layer.st)
       ) {
         this.buildItem(i)
       }
@@ -221,7 +221,8 @@ export abstract class BaseRenderer extends FrameElement {
 
     if (typeof pathValue === 'number') {
       element = this.elements[pathValue]
-    } else {
+    }
+    else {
       for (let i = 0; i < this.elements.length; i++) {
         if (this.elements[i]?.data.nm === pathValue) {
           element = this.elements[i]

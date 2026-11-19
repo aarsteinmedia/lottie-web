@@ -6,25 +6,24 @@ import type { RepeaterModifier } from '@/utils/shapes/modifiers/RepeaterModifier
 import type { TrimModifier } from '@/utils/shapes/modifiers/TrimModifier'
 import type { ZigZagModifier } from '@/utils/shapes/modifiers/ZigZagModifier'
 
-export type ShapeModifierInterface =
-  | TrimModifier
-  | PuckerAndBloatModifier
-  | RepeaterModifier
-  | ZigZagModifier
-  | OffsetPathModifier
+export type ShapeModifierInterface
+  = | TrimModifier
+    | PuckerAndBloatModifier
+    | RepeaterModifier
+    | ZigZagModifier
+    | OffsetPathModifier
 
-type Modifier =
-  | typeof TrimModifier
-  | typeof PuckerAndBloatModifier
-  | typeof RepeaterModifier
-  | typeof ZigZagModifier
-  | typeof OffsetPathModifier
-  | typeof MouseModifier
+type Modifier
+  = | typeof TrimModifier
+    | typeof PuckerAndBloatModifier
+    | typeof RepeaterModifier
+    | typeof ZigZagModifier
+    | typeof OffsetPathModifier
+    | typeof MouseModifier
 
 interface Modifiers { [key: string]: Modifier | undefined }
 
 const Modifiers: Modifiers = {}
-
 
 export function getModifier<T extends ShapeModifierInterface>(
   nm: string,
@@ -46,6 +45,5 @@ const ShapeModifiers = {
   getModifier,
   registerModifier
 }
-
 
 export default ShapeModifiers

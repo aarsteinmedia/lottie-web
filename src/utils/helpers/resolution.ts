@@ -27,7 +27,8 @@ const curveSegments = { default: 150 },
           break
         }
       }
-    } else if (!isNaN(value) && value > 1) {
+    }
+    else if (!isNaN(value) && value > 1) {
       setDefaultCurveSegments(value)
     }
 

@@ -67,12 +67,14 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       keyPropS = kf[0]?.s?.[0] ?? 0
       isHold = true
       iterationIndex = 0
-    } else if (frameNum >= (kf[kf.length - 1]?.t ?? 0) - this.offsetTime) {
+    }
+    else if (frameNum >= (kf[kf.length - 1]?.t ?? 0) - this.offsetTime) {
       keyPropS = kf[kf.length - 1]?.s
         ? kf[kf.length - 1]?.s?.[0]
         : kf[kf.length - 2]?.e[0]
       isHold = true
-    } else {
+    }
+    else {
       let i = iterationIndex
       const len = kf.length - 1
       let shouldInterpolate = true,
@@ -87,7 +89,8 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
         }
         if (i < len - 1) {
           i++
-        } else {
+        }
+        else {
           shouldInterpolate = false
         }
       }
@@ -101,16 +104,18 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       if (!isHold) {
         if (frameNum >= nextKeyData.t - this.offsetTime) {
           perc = 1
-        } else if (frameNum >= keyData.t - this.offsetTime) {
+        }
+        else if (frameNum >= keyData.t - this.offsetTime) {
           let fnc
 
           if (keyframeMetadata.__fnct) {
             fnc = keyframeMetadata.__fnct
-          } else if (
-            typeof keyData.o.x === 'number' &&
-            typeof keyData.o.y === 'number' &&
-            typeof keyData.i.x === 'number' &&
-            typeof keyData.i.y === 'number'
+          }
+          else if (
+            typeof keyData.o.x === 'number'
+            && typeof keyData.o.y === 'number'
+            && typeof keyData.i.x === 'number'
+            && typeof keyData.i.y === 'number'
           ) {
             fnc = getBezierEasing(
               keyData.o.x,
@@ -120,11 +125,11 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
             ).get
             keyframeMetadata.__fnct = fnc
           }
-          perc =
-            (fnc?.((frameNum - (keyData.t - this.offsetTime)) /
-              (nextKeyData.t -
-                this.offsetTime -
-                (keyData.t - this.offsetTime))) || 0) as number
+          perc
+            = (fnc?.((frameNum - (keyData.t - this.offsetTime))
+              / (nextKeyData.t
+                - this.offsetTime
+                - (keyData.t - this.offsetTime))) || 0) as number
         }
         keyPropE = nextKeyData.s ? nextKeyData.s[0] : keyData.e[0]
       }
@@ -134,7 +139,6 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
       !keyPropS || typeof keyPropS === 'number' || isArray(keyPropS)
       || typeof keyPropE === 'number'
     ) {
-
       return
     }
 
@@ -174,18 +178,18 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     const frameNum = Number(this.comp?.renderedFrame) - this.offsetTime,
       initTime = (this.keyframes[0]?.t ?? 0) - this.offsetTime,
-      endTime = (this.keyframes[this.keyframes.length - 1]?.t ?? 0)- this.offsetTime,
+      endTime = (this.keyframes[this.keyframes.length - 1]?.t ?? 0) - this.offsetTime,
       { lastFrame, lastIndex } = this._caching
 
     if (
       !(
-        lastFrame !== INITIAL_DEFAULT_FRAME &&
-        (lastFrame < initTime && frameNum < initTime ||
-          lastFrame > endTime && frameNum > endTime)
+        lastFrame !== INITIAL_DEFAULT_FRAME
+        && (lastFrame < initTime && frameNum < initTime
+          || lastFrame > endTime && frameNum > endTime)
       )
     ) {
-      this._caching.lastIndex =
-        lastFrame < frameNum ? lastIndex : 0
+      this._caching.lastIndex
+        = lastFrame < frameNum ? lastIndex : 0
       this.interpolateShape(
         frameNum, this.pv, this._caching
       )
@@ -219,9 +223,11 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     if (this.kf) {
       finalValue = this.pv
-    } else if (this.data.ks) {
+    }
+    else if (this.data.ks) {
       finalValue = this.data.ks.k
-    } else {
+    }
+    else {
       finalValue = this.data.pt?.k
     }
     let i
@@ -265,12 +271,12 @@ export abstract class ShapeBaseProperty extends DynamicPropertyContainer {
 
     for (let i = 0; i < len; i++) {
       if (
-        shape1.v[i]?.[0] !== shape2.v[i]?.[0] ||
-        shape1.v[i]?.[1] !== shape2.v[i]?.[1] ||
-        shape1.o[i]?.[0] !== shape2.o[i]?.[0] ||
-        shape1.o[i]?.[1] !== shape2.o[i]?.[1] ||
-        shape1.i[i]?.[0] !== shape2.i[i]?.[0] ||
-        shape1.i[i]?.[1] !== shape2.i[i]?.[1]
+        shape1.v[i]?.[0] !== shape2.v[i]?.[0]
+        || shape1.v[i]?.[1] !== shape2.v[i]?.[1]
+        || shape1.o[i]?.[0] !== shape2.o[i]?.[0]
+        || shape1.o[i]?.[1] !== shape2.o[i]?.[1]
+        || shape1.i[i]?.[0] !== shape2.i[i]?.[0]
+        || shape1.i[i]?.[1] !== shape2.i[i]?.[1]
       ) {
         return false
       }

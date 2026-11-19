@@ -1,7 +1,7 @@
-import type { Plugin } from '@eslint/core'
-
 import {
-  fixupPluginRules, fixupConfigRules, type FixupConfigArray
+  fixupPluginRules, fixupConfigRules,
+  type FixupConfig,
+  type FixupPluginDefinition
 } from '@eslint/compat'
 import eslintJs from '@eslint/js'
 import preferEarlyReturn from '@regru/eslint-plugin-prefer-early-return'
@@ -119,12 +119,13 @@ const __filename = fileURLToPath(import.meta.url),
 
 export default defineConfig({
   extends: [
-    fixupConfigRules(noRestrictedSyntax.configs.recommended as FixupConfigArray),
-    fixupConfigRules(noRestrictedProperties.configs.recommended as FixupConfigArray),
+    fixupConfigRules(noRestrictedSyntax.configs.recommended as FixupConfig),
+    fixupConfigRules(noRestrictedProperties.configs.recommended as FixupConfig),
     eslintJs.configs.recommended,
     importX.flatConfigs.recommended,
     importX.flatConfigs.typescript,
     tsConfigs.strictTypeChecked,
+    stylistic.configs.recommended,
     jsdocConfigs['flat/recommended']
   ],
   files: ['**/*.{ts,js}'],
@@ -143,8 +144,7 @@ export default defineConfig({
   },
   plugins: {
     '@regru/prefer-early-return': preferEarlyReturn,
-    '@stylistic': stylistic,
-    fsecond: fixupPluginRules(fsecond as unknown as Plugin),
+    'fsecond': fixupPluginRules(fsecond as unknown as FixupPluginDefinition),
     'import-x': importX,
     perfectionist,
     regexp,
@@ -152,6 +152,7 @@ export default defineConfig({
     unicorn,
     vitest
   },
+
   rules: {
     ...sonarConfigs.recommended.rules,
     '@regru/prefer-early-return/prefer-early-return': [2, { maximumStatements: 1 }],
@@ -216,21 +217,30 @@ export default defineConfig({
     '@typescript-eslint/consistent-type-assertions': 2,
     '@typescript-eslint/consistent-type-definitions': 2,
     '@typescript-eslint/consistent-type-exports': [2, { fixMixedExportsWithInlineTypeSpecifier: true }],
-    '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
+    '@typescript-eslint/consistent-type-imports': [2, { fixStyle: 'inline-type-imports' }],
     '@typescript-eslint/default-param-last': 2,
     '@typescript-eslint/dot-notation': 2,
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/method-signature-style': 2,
     '@typescript-eslint/naming-convention': [
-      'error',
+      2,
       {
-        format: ['camelCase', 'PascalCase'],
+        format: [
+          'camelCase',
+          'UPPER_CASE',
+          'PascalCase',
+          'snake_case'
+        ],
         leadingUnderscore: 'allowSingleOrDouble',
         selector: 'default',
         trailingUnderscore: 'forbid',
       },
       {
-        format: ['camelCase', 'UPPER_CASE'],
+        format: [
+          'camelCase',
+          'UPPER_CASE',
+          'snake_case'
+        ],
         leadingUnderscore: 'allowSingleOrDouble',
         modifiers: ['const'],
         selector: 'variable',
@@ -284,11 +294,11 @@ export default defineConfig({
     '@typescript-eslint/no-array-constructor': 0,
     '@typescript-eslint/no-empty-function': 2,
     '@typescript-eslint/no-empty-object-type': [2, { allowInterfaces: 'with-single-extends' }],
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 1,
     '@typescript-eslint/no-import-type-side-effects': 2,
     '@typescript-eslint/no-inferrable-types': 2,
     '@typescript-eslint/no-loop-func': 2,
-    '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
+    '@typescript-eslint/no-namespace': [2, { allowDeclarations: true }],
     '@typescript-eslint/no-require-imports': 0,
     '@typescript-eslint/no-shadow': [2, {
       allow: [
@@ -296,27 +306,28 @@ export default defineConfig({
         'reject',
         'done',
         'next',
-        'err',
+        'warn',
         'error'
       ],
       hoist: 'all',
       ignoreFunctionTypeParameterNameValueShadow: true,
       ignoreTypeValueShadow: true
     }],
-    '@typescript-eslint/no-unnecessary-type-parameters': 0,
     '@typescript-eslint/no-unsafe-assignment': 0,
     '@typescript-eslint/no-unused-expressions': [2, {
       allowShortCircuit: true,
       allowTaggedTemplates: true,
       allowTernary: true,
+      enforceForJSX: true
     }],
-    '@typescript-eslint/no-unused-vars': ['error', {
+    '@typescript-eslint/no-unused-private-class-members': 2,
+    '@typescript-eslint/no-unused-vars': [2, {
       argsIgnorePattern: '^_',
       caughtErrors: 'none',
       caughtErrorsIgnorePattern: '^_',
       varsIgnorePattern: '^_',
     }],
-    '@typescript-eslint/no-use-before-define': ['error', {
+    '@typescript-eslint/no-use-before-define': [2, {
       classes: false,
       functions: false
     }],
@@ -324,8 +335,8 @@ export default defineConfig({
     '@typescript-eslint/prefer-nullish-coalescing': [2, { ignorePrimitives: true }],
     '@typescript-eslint/prefer-optional-chain': 2,
     '@typescript-eslint/prefer-string-starts-ends-with': 2,
-    '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
-    '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
+    '@typescript-eslint/restrict-template-expressions': [2, { allowNumber: true }],
+    '@typescript-eslint/switch-exhaustiveness-check': [2, { considerDefaultExhaustiveForUnions: true }],
     '@typescript-eslint/unbound-method': 0,
     '@typescript-eslint/use-unknown-in-catch-callback-variable': 0,
     'arrow-return-style/arrow-return-style': 0,
@@ -353,7 +364,7 @@ export default defineConfig({
     }],
     'no-plusplus': 0,
     'no-restricted-globals': [
-      'error',
+      2,
       'event',
       'fdescribe'
     ],
@@ -362,11 +373,11 @@ export default defineConfig({
     'no-restricted-syntax/noEnums': 0,
     'no-void': 0,
     'operator-assignment': 0,
-    'perfectionist/sort-classes': 'warn',
-    'perfectionist/sort-enums': 'warn',
-    'perfectionist/sort-imports': 'warn',
-    'perfectionist/sort-interfaces': 'warn',
-    'perfectionist/sort-objects': 'warn',
+    'perfectionist/sort-classes': 1,
+    'perfectionist/sort-enums': 1,
+    'perfectionist/sort-imports': 1,
+    'perfectionist/sort-interfaces': 1,
+    'perfectionist/sort-objects': 1,
     'simple-import-sort/imports': 0,
     'sonarjs/cognitive-complexity': 'warn',
     'sonarjs/different-types-comparison': 'off',
@@ -382,7 +393,7 @@ export default defineConfig({
     'unicorn/error-message': 2,
     'unicorn/explicit-length-check': 2,
     'unicorn/no-array-push-push': 2,
-    'unicorn/no-array-reduce': ['error', { allowSimpleOperations: true }],
+    'unicorn/no-array-reduce': [2, { allowSimpleOperations: true }],
     'unicorn/no-array-reverse': 2,
     'unicorn/no-array-sort': 2,
     'unicorn/no-await-expression-member': 2,
@@ -427,7 +438,7 @@ export default defineConfig({
     'unicorn/prefer-type-error': 2,
     'unicorn/require-passive-events': 2,
     'unicorn/switch-case-braces': 2,
-    'unicorn/template-indent': 'warn',
+    'unicorn/template-indent': 1,
     'unicorn/throw-new-error': 2
   },
 },

@@ -11,7 +11,6 @@ import { LayerType, ShapeType } from '@/utils/enums'
 
 function completeLayers(layers: LottieLayer[],
   comps: LottieLayer[]) {
-
   let layerData: LottieLayer
 
   for (let i = 0; i < layers.length; i++) {
@@ -25,7 +24,6 @@ function completeLayers(layers: LottieLayer[],
         { length: jLen } = maskProps ?? []
 
       for (let j = 0; j < jLen; j++) {
-
         const shapePath = maskProps?.[j]?.pt?.k
 
         if (!shapePath) {
@@ -258,7 +256,6 @@ const checkChars = (() => {
 
       if (!charData.data?.shapes) {
         continue
-
       }
       completeShapes(charData.data.shapes)
       charData.data.ip = 0
@@ -385,7 +382,6 @@ const checkColors = (() => {
   ] as Vector3
 
   const iterateShapes = (shapes: Shape[]) => {
-
       for (let i = 0; i < shapes.length; i++) {
         if (shapes[i]?.ty === ShapeType.Group) {
           iterateShapes(shapes[i]?.it ?? [])
@@ -411,7 +407,6 @@ const checkColors = (() => {
 
           continue
         }
-
 
         for (let j = 0; j < shapeColorValue.length; j++) {
           const colorValue = shapeColorValue[j] as ShapeColorValue

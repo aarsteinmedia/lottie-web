@@ -14,12 +14,12 @@ const _isZipStream = async (response: Response) => {
     }
 
     return (
-      value[0] === 0x50 &&
-      value[1] === 0x4b &&
-      (
-        value[2] === 0x03 && value[3] === 0x04 ||
-        value[2] === 0x05 && value[3] === 0x06 ||
-        value[2] === 0x07 && value[3] === 0x08
+      value[0] === 0x50
+      && value[1] === 0x4b
+      && (
+        value[2] === 0x03 && value[3] === 0x04
+        || value[2] === 0x05 && value[3] === 0x06
+        || value[2] === 0x07 && value[3] === 0x08
       )
     )
   },
@@ -57,7 +57,7 @@ export async function getAnimationData(input: unknown): Promise<{
       }
     }
 
-    const result = await fetch(input, { headers: { 'Accept': 'application/json' } })
+    const result = await fetch(input, { headers: { Accept: 'application/json' } })
 
     if (!result.ok) {
       const error = new Error(result.statusText)
@@ -94,8 +94,8 @@ export async function getAnimationData(input: unknown): Promise<{
           isDotLottie: false,
           manifest: null,
         }
-
-      } catch (error) {
+      }
+      catch (error) {
         /* empty */
       }
     }
@@ -107,7 +107,8 @@ export async function getAnimationData(input: unknown): Promise<{
       isDotLottie: true,
       manifest,
     }
-  } catch (error) {
+  }
+  catch (error) {
     devError(error)
 
     return {

@@ -7,7 +7,7 @@ export class FootageInterface {
   dataInterface: FootageInterface
   elem: FootageElement
 
-  constructor (elem: FootageElement) {
+  constructor(elem: FootageElement) {
     this.elem = elem
     this._name = 'Data'
     this.dataInterface = this.dataInterfaceFactory(elem)

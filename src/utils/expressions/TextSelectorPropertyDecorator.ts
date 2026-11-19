@@ -16,7 +16,7 @@ export class TextExpressionSelectorPropFactory extends BaseProperty {
   lastValue: Vector3
   selectorValue: number
 
-  constructor (
+  constructor(
     elem: ElementInterfaceIntersect, data: TextRangeValue & ExpressionProperty, _arr?: unknown[]
   ) {
     super()
@@ -41,7 +41,8 @@ export class TextExpressionSelectorPropFactory extends BaseProperty {
     this.getVelocityAtTime = expressionHelpers.getVelocityAtTime
     if (this.kf) {
       this.getValueAtTime = expressionHelpers.getValueAtTime.bind(this)
-    } else {
+    }
+    else {
       this.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(this)
     }
     this.setGroupProperty = expressionHelpers.setGroupProperty
@@ -83,4 +84,3 @@ TextSelectorProperty.prototype.getTextSelectorProp = function (
 
   return null
 }
-

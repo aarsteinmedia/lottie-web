@@ -90,14 +90,14 @@ export class SVGMatte3Effect {
     useElem.setAttribute('href', `#${symbolId}`)
     if (nextChild) {
       parentNode.insertBefore(useElem, nextChild)
-    } else {
+    }
+    else {
       parentNode.appendChild(useElem)
     }
   }
 
   setElementAsMask(elem: ElementInterfaceIntersect,
     mask: ElementInterfaceIntersect) {
-
     if (!this.findSymbol(mask)) {
       const symbolId = createElementID(),
         masker = createNS<SVGMaskElement>('mask')

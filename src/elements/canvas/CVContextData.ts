@@ -91,7 +91,6 @@ export class CVContextData {
     this.currentFillStyle = value
 
     thisStack.fillStyle = value
-
   }
 
   lineCap(value: string) {
@@ -216,10 +215,10 @@ export class CVContextData {
       transform[13]
     )
     if (
-      this.nativeContext &&
-      (forceRestore ||
-        opacity !== -1 &&
-        this.currentOpacity !== opacity)
+      this.nativeContext
+      && (forceRestore
+        || opacity !== -1
+        && this.currentOpacity !== opacity)
     ) {
       this.nativeContext.globalAlpha = opacity
       this.currentOpacity = opacity

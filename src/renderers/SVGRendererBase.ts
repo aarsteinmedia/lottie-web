@@ -48,7 +48,6 @@ export abstract class SVGRendererBase extends BaseRenderer {
   }
 
   override buildItem(pos: number) {
-
     if (!this.globalData) {
       throw new Error(`${this.constructor.name}: globalData it not implemented`)
     }
@@ -74,8 +73,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
     }
     this.appendElementInPos(element, pos)
     if (layers[pos]?.tt) {
-      const elementIndex =
-        'tp' in layers[pos]
+      const elementIndex
+        = 'tp' in layers[pos]
           ? this.findIndexByInd(layers[pos].tp)
           : pos - 1
 
@@ -83,9 +82,9 @@ export abstract class SVGRendererBase extends BaseRenderer {
         return
       }
       if (
-        !elements[elementIndex] ||
-        elements[elementIndex] ===
-        (true as unknown as ElementInterfaceIntersect)
+        !elements[elementIndex]
+        || elements[elementIndex]
+        === (true as unknown as ElementInterfaceIntersect)
       ) {
         this.buildItem(elementIndex)
         this.addPendingElement(element)
@@ -106,7 +105,6 @@ export abstract class SVGRendererBase extends BaseRenderer {
       element?.checkParenting()
 
       if (element?.data?.tt) {
-
         let i = 0
 
         while (i < this.elements.length) {
@@ -145,7 +143,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
       if (this.renderConfig.viewBoxSize) {
         this.svgElement.setAttribute('viewBox',
           this.renderConfig.viewBoxSize)
-      } else {
+      }
+      else {
         this.svgElement.setAttribute('viewBox', `0 0 ${animData.w} ${animData.h}`)
       }
 
@@ -156,8 +155,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
         this.svgElement.style.height = '100%'
         this.svgElement.style.transform = 'translate3d(0,0,0)'
         if (this.renderConfig.contentVisibility) {
-          this.svgElement.style.contentVisibility =
-            this.renderConfig.contentVisibility
+          this.svgElement.style.contentVisibility
+            = this.renderConfig.contentVisibility
         }
       }
       if (this.renderConfig.width) {
@@ -206,7 +205,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
       defs.appendChild(maskElement)
       this.layers = animData.layers
       this.elements = createSizedArray(animData.layers.length)
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
@@ -301,9 +301,9 @@ export abstract class SVGRendererBase extends BaseRenderer {
   renderFrame(numFromProps?: number | false) {
     try {
       if (
-        !this.globalData ||
-        this.renderedFrame === numFromProps ||
-        this.destroyed
+        !this.globalData
+        || this.renderedFrame === numFromProps
+        || this.destroyed
       ) {
         return
       }
@@ -311,7 +311,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
 
       if (num === false) {
         num = this.renderedFrame
-      } else {
+      }
+      else {
         this.renderedFrame = Number(num)
       }
       this.globalData.frameNum = num
@@ -344,7 +345,8 @@ export abstract class SVGRendererBase extends BaseRenderer {
           }
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }

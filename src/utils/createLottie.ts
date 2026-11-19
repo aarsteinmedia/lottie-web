@@ -73,7 +73,8 @@ function checkReady() {
   hasScannedDOM = true
   if (document.readyState === 'complete') {
     searchAnimations()
-  } else {
+  }
+  else {
     addEventListener(
       'DOMContentLoaded', () => {
         searchAnimations()
@@ -136,7 +137,8 @@ export function createLottie({
   }) => {
     if (isCanvas) {
       registerCanvasEffect(id, effect)
-    } else {
+    }
+    else {
       registerEffect(
         id, effect, countsAsEffect
       )

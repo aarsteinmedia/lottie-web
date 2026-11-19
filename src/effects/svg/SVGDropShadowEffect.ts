@@ -25,8 +25,8 @@ export class SVGDropShadowEffect extends SVGComposableEffect {
     const globalFilterSize = (
         filterManager.container?.globalData?.renderConfig as SVGRendererConfig
       ).filterSize,
-      filterSize = filterManager.data?.fs ??
-        globalFilterSize ?? {
+      filterSize = filterManager.data?.fs
+        ?? globalFilterSize ?? {
         height: '100%',
         width: '100%',
         x: '0%',
@@ -86,7 +86,6 @@ export class SVGDropShadowEffect extends SVGComposableEffect {
       const stdDeviation = (this.filterManager.effectElements[4]?.p.v as number) / 4
 
       this.feGaussianBlur.setStdDeviation(stdDeviation, stdDeviation)
-
     }
     if (forceRender || this.filterManager.effectElements[0]?.p._mdf) {
       const col = this.filterManager.effectElements[0]?.p.v as Vector3
@@ -103,13 +102,13 @@ export class SVGDropShadowEffect extends SVGComposableEffect {
         `${(this.filterManager.effectElements[1]?.p.v as number) / 255}`)
     }
     if (
-      forceRender ||
-      this.filterManager.effectElements[2]?.p._mdf ||
-      this.filterManager.effectElements[3]?.p._mdf
+      forceRender
+      || this.filterManager.effectElements[2]?.p._mdf
+      || this.filterManager.effectElements[3]?.p._mdf
     ) {
       const distance = this.filterManager.effectElements[3]?.p.v as number
-      const angle =
-        degToRad((this.filterManager.effectElements[2]?.p.v as number) - 90)
+      const angle
+        = degToRad((this.filterManager.effectElements[2]?.p.v as number) - 90)
       const x = distance * Math.cos(angle)
       const y = distance * Math.sin(angle)
 

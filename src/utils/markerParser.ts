@@ -43,10 +43,12 @@ export function markerParser(markersFromProps: (MarkerData | Marker)[]) {
 
     try {
       markerData.payload = JSON.parse((markersFromProps[i] as Marker).cm)
-    } catch (_) {
+    }
+    catch (_) {
       try {
         markerData.payload = parsePayloadLines((markersFromProps[i] as Marker).cm)
-      } catch (error) {
+      }
+      catch (error) {
         markerData.payload = { name: (markersFromProps[i] as Marker).cm }
       }
     }

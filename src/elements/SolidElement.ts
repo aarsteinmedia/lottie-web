@@ -2,7 +2,6 @@ import { ImageElement } from '@/elements/ImageElement'
 import { createNS } from '@/utils/helpers/svgElements'
 
 export class SolidElement extends ImageElement {
-
   override createContent() {
     if (!this.data) {
       throw new Error(`${this.constructor.name}: data (LottieLayer) is not implemented`)

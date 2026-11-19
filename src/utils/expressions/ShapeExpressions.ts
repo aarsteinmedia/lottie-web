@@ -91,7 +91,8 @@ export abstract class ShapeExpressions extends ShapeProperty {
     // perc doesn't use triple equality because it can be a Number object as well as a primitive.
     if (perc == 1) {
       perc = Number(this.v?.c)
-    } else if (perc == 0) {
+    }
+    else if (perc == 0) {
       perc = 0.999
     }
     const pt1 = this.pointOnPath(perc, time) ?? []
@@ -126,7 +127,8 @@ export abstract class ShapeExpressions extends ShapeProperty {
     for (let i = 0; i < len; i += 1) {
       if (prop === 'i' || prop === 'o') {
         arr[i] = [vertices[i][0] - points[i][0], vertices[i][1] - points[i][1]]
-      } else {
+      }
+      else {
         arr[i] = [vertices[i][0], vertices[i][1]]
       }
     }

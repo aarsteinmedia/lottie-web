@@ -1,7 +1,6 @@
 import type { ElementInterfaceIntersect } from '@/types'
 
 export class TextExpressionInterface {
-
   _sourceText?: {
     value: string
     style?: { fillColor: string }
@@ -32,11 +31,10 @@ export class TextExpressionInterface {
   }
 
   constructor(elem: ElementInterfaceIntersect) {
-
     this.elem = elem
   }
 
-  getInterface (name: string) {
+  getInterface(name: string) {
     if (name.toLowerCase().includes('adbe text document')) {
       return this.sourceText
     }

@@ -117,7 +117,8 @@ export class AnimationItem extends BaseEvent {
       if (this.frameModifier > 0) {
         if (this.playSpeed < 0) {
           this.setSpeed(-this.playSpeed)
-        } else {
+        }
+        else {
           this.setDirection(-1)
         }
       }
@@ -125,11 +126,13 @@ export class AnimationItem extends BaseEvent {
       this.timeCompleted = this.totalFrames
       this.firstFrame = arr[1]
       this.setCurrentRawFrameValue(this.totalFrames - 0.001 - offset)
-    } else if (arr[1] > arr[0]) {
+    }
+    else if (arr[1] > arr[0]) {
       if (this.frameModifier < 0) {
         if (this.playSpeed < 0) {
           this.setSpeed(-this.playSpeed)
-        } else {
+        }
+        else {
           this.setDirection(1)
         }
       }
@@ -155,21 +158,25 @@ export class AnimationItem extends BaseEvent {
 
       nextValue = _loop.nextValue
       _isComplete = _loop._isComplete
-    } else if (nextValue < 0) {
+    }
+    else if (nextValue < 0) {
       if (!this.checkSegments(nextValue % this.totalFrames)) {
         if (this.loop && !(this.playCount-- <= 0 && this.loop !== true)) {
           this.setCurrentRawFrameValue(this.totalFrames + nextValue % this.totalFrames)
           if (this._completedLoop) {
             this.trigger(PlayerEvent.LoopComplete)
-          } else {
+          }
+          else {
             this._completedLoop = true
           }
-        } else {
+        }
+        else {
           _isComplete = true
           nextValue = 0
         }
       }
-    } else {
+    }
+    else {
       this.setCurrentRawFrameValue(nextValue)
     }
     if (_isComplete) {
@@ -184,10 +191,10 @@ export class AnimationItem extends BaseEvent {
     // (upstream lottie-web), which causes first-load flicker for image
     // sequences in Firefox where `load` can fire before paint-ready decode.
     if (
-      this.isLoaded ||
-      !this.renderer.globalData?.fontManager?.isLoaded ||
-      !this.imagePreloader.loadedImages() ||
-      !this.imagePreloader.loadedFootages()
+      this.isLoaded
+      || !this.renderer.globalData?.fontManager?.isLoaded
+      || !this.imagePreloader.loadedImages()
+      || !this.imagePreloader.loadedFootages()
     ) {
       return
     }
@@ -222,7 +229,8 @@ export class AnimationItem extends BaseEvent {
       if (this.initialSegment) {
         this.totalFrames = Math.floor(this.initialSegment[1] - this.initialSegment[0])
         this.firstFrame = Math.round(this.initialSegment[0])
-      } else {
+      }
+      else {
         this.totalFrames = Math.floor((this.animationData.op || 1) - (this.animationData.ip || 0))
         this.firstFrame = Math.round(this.animationData.ip || 0)
       }
@@ -243,7 +251,8 @@ export class AnimationItem extends BaseEvent {
       if (this.isPaused) {
         this.audioController.pause()
       }
-    } catch (error) {
+    }
+    catch (error) {
       this.triggerConfigError(error)
     }
   }
@@ -290,7 +299,8 @@ export class AnimationItem extends BaseEvent {
 
     if (assetData.e) {
       path = assetData.p || ''
-    } else if (this.assetsPath) {
+    }
+    else if (this.assetsPath) {
       let imagePath = assetData.p
 
       if (
@@ -299,7 +309,8 @@ export class AnimationItem extends BaseEvent {
         imagePath = imagePath?.split('/')[1]
       }
       path = this.assetsPath + (imagePath || '')
-    } else {
+    }
+    else {
       path = this.path
       path += assetData.u ?? ''
       path += assetData.p ?? ''
@@ -344,11 +355,13 @@ export class AnimationItem extends BaseEvent {
       if (marker) {
         if (marker.duration) {
           this.playSegments([marker.time, marker.time + marker.duration], true)
-        } else {
+        }
+        else {
           this.goToAndStop(marker.time, true)
         }
       }
-    } else {
+    }
+    else {
       this.goToAndStop(
         numValue, isFrame, name
       )
@@ -370,9 +383,11 @@ export class AnimationItem extends BaseEvent {
       if (marker) {
         this.goToAndStop(marker.time, true)
       }
-    } else if (isFrame) {
+    }
+    else if (isFrame) {
       this.setCurrentRawFrameValue(numValue)
-    } else {
+    }
+    else {
       this.setCurrentRawFrameValue(numValue * this.frameModifier)
     }
     this.pause()
@@ -385,8 +400,8 @@ export class AnimationItem extends BaseEvent {
       : ~~this.currentRawFrame
 
     if (
-      this.timeCompleted !== this.totalFrames &&
-      this.currentFrame > this.timeCompleted
+      this.timeCompleted !== this.totalFrames
+      && this.currentFrame > this.timeCompleted
     ) {
       this.currentFrame = this.timeCompleted
     }
@@ -509,7 +524,6 @@ export class AnimationItem extends BaseEvent {
     }
 
     if (this.isPaused) {
-
       this.isPaused = false
       this.trigger(PlayerEvent.Play)
       this.audioController.resume()
@@ -528,7 +542,8 @@ export class AnimationItem extends BaseEvent {
       for (let i = 0; i < arr.length; i++) {
         this.segments.push(arr[i] as Vector2)
       }
-    } else {
+    }
+    else {
       this.segments.push(arr as Vector2)
     }
     if (this.segments.length > 0 && forceFlag) {
@@ -556,7 +571,8 @@ export class AnimationItem extends BaseEvent {
     try {
       this.expressionsPlugin?.resetFrame()
       this.renderer.renderFrame(frameToRender)
-    } catch (error) {
+    }
+    catch (error) {
       this.triggerRenderFrameError(error)
     }
   }
@@ -596,30 +612,31 @@ export class AnimationItem extends BaseEvent {
       }
       const { attributes: wrapperAttributes } = wrapper
 
-      params.path =
-        wrapperAttributes.getNamedItem('data-animation-path')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-path')?.value ??
-        wrapperAttributes.getNamedItem('bm-path')?.value ??
-        ''
-      const animType =
-        (wrapperAttributes.getNamedItem('data-anim-type')?.value ??
-          wrapperAttributes.getNamedItem('data-bm-type')?.value ??
-          wrapperAttributes.getNamedItem('bm-type')?.value ??
-          wrapperAttributes.getNamedItem('data-bm-renderer')?.value ??
-          wrapperAttributes.getNamedItem('bm-renderer')?.value ??
-          getRegisteredRenderer()) as unknown as RendererType
+      params.path
+        = wrapperAttributes.getNamedItem('data-animation-path')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-path')?.value
+          ?? wrapperAttributes.getNamedItem('bm-path')?.value
+          ?? ''
+      const animType
+        = (wrapperAttributes.getNamedItem('data-anim-type')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-type')?.value
+          ?? wrapperAttributes.getNamedItem('bm-type')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-renderer')?.value
+          ?? wrapperAttributes.getNamedItem('bm-renderer')?.value
+          ?? getRegisteredRenderer()) as unknown as RendererType
 
       if (Object.values(RendererType).includes(animType)) {
         params.animType = animType
-      } else {
+      }
+      else {
         params.animType = getRegisteredRenderer()
       }
 
-      const loop =
-        wrapperAttributes.getNamedItem('data-anim-loop')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-loop')?.value ??
-        wrapperAttributes.getNamedItem('bm-loop')?.value ??
-        ''
+      const loop
+        = wrapperAttributes.getNamedItem('data-anim-loop')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-loop')?.value
+          ?? wrapperAttributes.getNamedItem('bm-loop')?.value
+          ?? ''
 
       switch (loop) {
         case 'false': {
@@ -638,24 +655,24 @@ export class AnimationItem extends BaseEvent {
         }
       }
 
-      const autoplay =
-        wrapperAttributes.getNamedItem('data-anim-autoplay')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-autoplay')?.value ??
-        wrapperAttributes.getNamedItem('bm-autoplay')?.value ??
-        true
+      const autoplay
+        = wrapperAttributes.getNamedItem('data-anim-autoplay')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-autoplay')?.value
+          ?? wrapperAttributes.getNamedItem('bm-autoplay')?.value
+          ?? true
 
       params.autoplay = autoplay !== 'false'
 
-      params.name =
-        wrapperAttributes.getNamedItem('data-name')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-name')?.value ??
-        wrapperAttributes.getNamedItem('bm-name')?.value ??
-        ''
-      const prerender =
-        wrapperAttributes.getNamedItem('data-anim-prerender')?.value ??
-        wrapperAttributes.getNamedItem('data-bm-prerender')?.value ??
-        wrapperAttributes.getNamedItem('bm-prerender')?.value ??
-        ''
+      params.name
+        = wrapperAttributes.getNamedItem('data-name')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-name')?.value
+          ?? wrapperAttributes.getNamedItem('bm-name')?.value
+          ?? ''
+      const prerender
+        = wrapperAttributes.getNamedItem('data-anim-prerender')?.value
+          ?? wrapperAttributes.getNamedItem('data-bm-prerender')?.value
+          ?? wrapperAttributes.getNamedItem('bm-prerender')?.value
+          ?? ''
 
       if (prerender === 'false') {
         params.prerender = false
@@ -666,7 +683,8 @@ export class AnimationItem extends BaseEvent {
         return
       }
       this.trigger(PlayerEvent.Destroy)
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
       throw new Error(`${this.constructor.name}: Could not set data`, { cause: error })
     }
@@ -693,7 +711,8 @@ export class AnimationItem extends BaseEvent {
 
       if (params.animType) {
         animType = params.animType
-      } else if (params.renderer) {
+      }
+      else if (params.renderer) {
         animType = params.renderer
       }
 
@@ -715,9 +734,11 @@ export class AnimationItem extends BaseEvent {
         1
       ].includes(params.loop)) {
         this.loop = true
-      } else if (params.loop === false) {
+      }
+      else if (params.loop === false) {
         this.loop = false
-      } else {
+      }
+      else {
         this.loop = parseInt(`${params.loop}`, 10)
       }
       this.autoplay = true
@@ -729,7 +750,7 @@ export class AnimationItem extends BaseEvent {
       this.autoloadSegments = true
       if (Object.hasOwn(params,
         'autoloadSegments')) {
-        this.autoloadSegments =Boolean(params.autoloadSegments)
+        this.autoloadSegments = Boolean(params.autoloadSegments)
       }
       this.assetsPath = params.assetsPath ?? this.assetsPath
       this.initialSegment = params.initialSegment
@@ -748,7 +769,8 @@ export class AnimationItem extends BaseEvent {
       if (params.path.includes('\\')) {
         this.path = params.path.slice(0,
           Math.max(0, params.path.lastIndexOf('\\') + 1))
-      } else {
+      }
+      else {
         this.path = params.path.slice(0, Math.max(0, params.path.lastIndexOf('/') + 1))
       }
       this.filename = params.path.slice(Math.max(0, params.path.lastIndexOf('/') + 1))
@@ -757,7 +779,8 @@ export class AnimationItem extends BaseEvent {
       loadAnimation(
         params.path, this.configAnimation, this.onSetupError
       )
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
       throw new Error(`${this.constructor.name}: Could not set params`, { cause: error })
     }
@@ -769,7 +792,8 @@ export class AnimationItem extends BaseEvent {
     if (this.isPaused) {
       if (this.currentRawFrame + this.firstFrame < init) {
         pendingFrame = init
-      } else if (this.currentRawFrame + this.firstFrame > end) {
+      }
+      else if (this.currentRawFrame + this.firstFrame > end) {
         pendingFrame = end - init
       }
     }
@@ -825,7 +849,8 @@ export class AnimationItem extends BaseEvent {
     }
     if (this.isPaused) {
       this.play()
-    } else {
+    }
+    else {
       this.pause()
     }
   }
@@ -893,7 +918,8 @@ export class AnimationItem extends BaseEvent {
           this.triggerEvent(name)
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
@@ -931,15 +957,16 @@ export class AnimationItem extends BaseEvent {
       element?.updateDocumentData(
         [], documentData, index
       )
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
 
   public updateFrameModifier() {
-    this.frameModifier = (this.frameMult *
-      this.playSpeed *
-      this.playDirection) as AnimationDirection
+    this.frameModifier = (this.frameMult
+      * this.playSpeed
+      * this.playDirection) as AnimationDirection
     this.audioController.setRate(this.playSpeed * this.playDirection)
   }
 
@@ -963,14 +990,16 @@ export class AnimationItem extends BaseEvent {
         _isComplete = true
         nextValue = this.totalFrames - 1
       }
-    } else if (nextValue >= this.totalFrames) {
+    }
+    else if (nextValue >= this.totalFrames) {
       this.playCount++
       if (!this.checkSegments(nextValue % this.totalFrames)) {
         this.setCurrentRawFrameValue(nextValue % this.totalFrames)
         this._completedLoop = true
         this.trigger(PlayerEvent.LoopComplete)
       }
-    } else {
+    }
+    else {
       this.setCurrentRawFrameValue(nextValue)
     }
 

@@ -74,8 +74,8 @@ export function isCombinedCharacter(char: number): boolean {
 
 export function isFlagEmoji(string: string): boolean {
   return (
-    isRegionalCode(string.slice(0, 2)) &&
-    isRegionalCode(string.slice(2, 2))
+    isRegionalCode(string.slice(0, 2))
+    && isRegionalCode(string.slice(2, 2))
   )
 }
 
@@ -90,8 +90,8 @@ export function isRegionalCode(string: string): boolean {
   const codePoint = getCodePoint(string)
 
   return (
-    codePoint >= REGIONAL_CHARACTER_A_CODE_POINT &&
-    codePoint <= REGIONAL_CHARACTER_Z_CODE_POINT
+    codePoint >= REGIONAL_CHARACTER_A_CODE_POINT
+    && codePoint <= REGIONAL_CHARACTER_Z_CODE_POINT
   )
 }
 
@@ -141,8 +141,8 @@ function getCodePoint(string: string): number {
 }
 
 interface NodeSetup {
-  node: HTMLElement;
-  parent: HTMLElement;
+  node: HTMLElement
+  parent: HTMLElement
   w: number
 }
 
@@ -222,9 +222,9 @@ export class FontManager {
       found = false
       while (j < jLen) {
         if (
-          this.chars[j]?.style === chars[i]?.style &&
-          this.chars[j]?.fFamily === chars[i]?.fFamily &&
-          this.chars[j]?.ch === chars[i]?.ch
+          this.chars[j]?.style === chars[i]?.style
+          && this.chars[j]?.fFamily === chars[i]?.fFamily
+          && this.chars[j]?.ch === chars[i]?.ch
         ) {
           found = true
         }
@@ -281,7 +281,8 @@ export class FontManager {
       if (!fontList.fPath) {
         fontList.loaded = true
         _pendingFonts -= 1
-      } else if (
+      }
+      else if (
         fontList.fOrigin === 'p' || fontList.origin === 3
       ) {
         loadedSelector = document.querySelectorAll(`style[f-forigin="p"][f-family="${fontList.fFamily}"], style[f-origin="3"][f-family="${fontList.fFamily}"]`)
@@ -299,7 +300,8 @@ export class FontManager {
           s.innerText = `@font-face {font-family: ${fontList.fFamily}; font-style: normal; src: url('${fontList.fPath}');}`
           defs?.appendChild(s)
         }
-      } else if (
+      }
+      else if (
         fontList.fOrigin === 'g' || fontList.origin === 1
       ) {
         loadedSelector = document.querySelectorAll<HTMLLinkElement>('link[f-forigin="g"], link[f-origin="1"]')
@@ -322,7 +324,8 @@ export class FontManager {
           link.href = fontList.fPath
           document.body.appendChild(link)
         }
-      } else if (
+      }
+      else if (
         fontList.fOrigin === 't' || fontList.origin === 2
       ) {
         loadedSelector = document.querySelectorAll<HTMLScriptElement>('script[f-forigin="t"], script[f-origin="2"]')
@@ -351,7 +354,8 @@ export class FontManager {
     }
     if (_pendingFonts === 0) {
       this.isLoaded = true
-    } else {
+    }
+    else {
       setTimeout(this.checkLoadedFonts.bind(this), 100)
     }
   }
@@ -366,17 +370,17 @@ export class FontManager {
 
     while (i < length) {
       if (
-        this.chars?.[i]?.ch === char &&
-        this.chars[i]?.style === style &&
-        this.chars[i]?.fFamily === font
+        this.chars?.[i]?.ch === char
+        && this.chars[i]?.style === style
+        && this.chars[i]?.fFamily === font
       ) {
         return this.chars[i]
       }
       i++
     }
     if (
-      (typeof char === 'string' && char.charCodeAt(0) !== 13 || !char) &&
-      !this._warned
+      (typeof char === 'string' && char.charCodeAt(0) !== 13 || !char)
+      && !this._warned
     ) {
       this._warned = true
       console.warn(
@@ -418,7 +422,8 @@ export class FontManager {
           singleSize = Number(tHelper?.measureText('||'))
 
         fontData.cache[index] = (doubleSize - singleSize) / 100
-      } else {
+      }
+      else {
         fontData.cache[index] = Number(tHelper?.measureText(char)) / 100
       }
     }
@@ -432,7 +437,6 @@ export class FontManager {
       loadedCount = this.fonts.length
 
     for (let i = 0; i < loadedCount; i++) {
-
       const font = this.fonts[i]
 
       if (font.loaded) {
@@ -453,7 +457,8 @@ export class FontManager {
           loadedCount -= 1
           font.loaded = true
         }
-      } else {
+      }
+      else {
         loadedCount -= 1
         font.loaded = true
       }
@@ -469,7 +474,6 @@ export class FontManager {
       if (monoCase) {
         monoCase.parent.parentNode?.removeChild(monoCase.parent)
       }
-
     }
 
     if (loadedCount !== 0 && Date.now() - this.initTime < maxWaitingTime) {
@@ -501,12 +505,14 @@ export class FontManager {
       if (fontData.fClass) {
         tHelper.style.fontFamily = 'inherit'
         tHelper.classList.add(fontData.fClass)
-      } else {
+      }
+      else {
         tHelper.style.fontFamily = fontData.fFamily
       }
       def?.appendChild(tHelper)
       helper = tHelper
-    } else {
+    }
+    else {
       const tCanvasHelper = new OffscreenCanvas(500, 500).getContext('2d')
 
       if (tCanvasHelper) {

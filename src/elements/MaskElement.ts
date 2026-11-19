@@ -58,25 +58,26 @@ export class MaskElement {
 
     for (let i = 0; i < this.masksProperties.length; i++) {
       if (
-        properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None ||
-        properties[i]?.inv ||
-        properties[i]?.o?.k !== 100 ||
-        properties[i]?.o?.x
+        properties[i]?.mode !== MaskMode.Add && properties[i]?.mode !== MaskMode.None
+        || properties[i]?.inv
+        || properties[i]?.o?.k !== 100
+        || properties[i]?.o?.x
       ) {
         maskType = 'mask'
         maskRef = 'mask'
       }
 
       if (
-        (properties[i]?.mode === MaskMode.Subtract || properties[i]?.mode === MaskMode.Intersect) &&
-        count === 0
+        (properties[i]?.mode === MaskMode.Subtract || properties[i]?.mode === MaskMode.Intersect)
+        && count === 0
       ) {
         rect = createNS<SVGRectElement>('rect')
         rect.setAttribute('fill', '#ffffff')
         rect.setAttribute('width', `${Number(this.element.comp?.data?.w)}`)
         rect.setAttribute('height', `${Number(this.element.comp?.data?.h)}`)
         currentMasks.push(rect)
-      } else {
+      }
+      else {
         rect = null
       }
 
@@ -113,7 +114,8 @@ export class MaskElement {
       if (properties[i]?.x?.k === 0) {
         feMorph = null
         x = null
-      } else {
+      }
+      else {
         maskType = 'mask'
         maskRef = 'mask'
         x = PropertyFactory.getProp(
@@ -163,7 +165,8 @@ export class MaskElement {
 
         currentMasks.length = 0
         currentMasks.push(g)
-      } else {
+      }
+      else {
         currentMasks.push(path)
       }
       if (properties[i]?.inv && !this.solidPath) {
@@ -236,7 +239,6 @@ export class MaskElement {
   drawPath(
     pathData: null | Shape | MaskShape, pathNodes: ShapePath, viewData: ViewData
   ) {
-
     const len = pathNodes._length,
       pathString = buildShapeString(
         pathNodes, len, pathNodes.c, this._identityMat
@@ -284,8 +286,8 @@ export class MaskElement {
         continue
       }
       if (
-        this.viewData[i]?.invRect &&
-        (this.element.finalTransform?.mProp._mdf || frame)
+        this.viewData[i]?.invRect
+        && (this.element.finalTransform?.mProp._mdf || frame)
         && finalMat
       ) {
         this.viewData[i]?.invRect?.setAttribute('transform',
@@ -294,8 +296,8 @@ export class MaskElement {
       const storedData = this.storedData[i]
 
       if (
-        !storedData.x ||
-        !(storedData.x._mdf || frame)
+        !storedData.x
+        || !(storedData.x._mdf || frame)
       ) {
         continue
       }

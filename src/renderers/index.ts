@@ -3,9 +3,9 @@ import type { SVGRenderer } from '@/renderers/SVGRenderer'
 
 import { RendererType } from '@/utils/enums'
 
-export type Renderer =
-  | typeof SVGRenderer
-  | typeof CanvasRenderer
+export type Renderer
+  = | typeof SVGRenderer
+    | typeof CanvasRenderer
 const renderers: {
   [key in RendererType]?: Renderer
 } = {}

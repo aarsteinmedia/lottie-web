@@ -90,7 +90,8 @@ export class SVGTextLottieElement extends TextElement {
     if (documentData.fc) {
       this.layerElement.setAttribute('fill',
         this.buildColor(documentData.fc as Vector3))
-    } else {
+    }
+    else {
       this.layerElement.setAttribute('fill', 'rgba(0,0,0,0)')
     }
     if (documentData.sc) {
@@ -103,7 +104,8 @@ export class SVGTextLottieElement extends TextElement {
 
     if (fontData?.fClass) {
       this.layerElement.classList.add(fontData.fClass)
-    } else {
+    }
+    else {
       if (fontData?.fFamily) {
         this.layerElement.setAttribute('font-family', fontData.fFamily)
       }
@@ -128,8 +130,8 @@ export class SVGTextLottieElement extends TextElement {
     let xPos = 0,
       yPos = 0,
       isFirstLine = true
-    const trackingOffset =
-      documentData.tr * 0.001 * Number(documentData.finalSize)
+    const trackingOffset
+      = documentData.tr * 0.001 * Number(documentData.finalSize)
 
     if (isSingleShape && !hasGlyphs && !documentData.sz) {
       const tElement = this.textContainer
@@ -159,7 +161,6 @@ export class SVGTextLottieElement extends TextElement {
         ? documentData.ps[1] + Number(documentData.ascent)
         : 0
       for (i = 0; i < len; i++) {
-
         tSpan = this.textSpans[i]?.span ?? createNS<SVGTSpanElement>('tspan')
         tSpan.textContent = textContent[i] ?? ''
         tSpan.setAttribute('x', '0')
@@ -177,7 +178,8 @@ export class SVGTextLottieElement extends TextElement {
       if (tElement) {
         this.layerElement.appendChild(tElement)
       }
-    } else {
+    }
+    else {
       const cachedSpansLength = this.textSpans.length
       let charData
 
@@ -190,8 +192,8 @@ export class SVGTextLottieElement extends TextElement {
         if (!hasGlyphs || !isSingleShape || i === 0) {
           const tag = hasGlyphs ? 'g' : 'text'
 
-          tSpan =
-            (cachedSpansLength > i
+          tSpan
+            = (cachedSpansLength > i
               ? this.textSpans[i]?.span
               : createNS<SVGGElement | SVGTextElement>(tag)) ?? null
 
@@ -215,7 +217,6 @@ export class SVGTextLottieElement extends TextElement {
               if (this.textSpans[i]) {
                 ; this.textSpans[i].childSpan = childSpan
               }
-
             }
 
             if (this.textSpans[i]) {
@@ -260,7 +261,8 @@ export class SVGTextLottieElement extends TextElement {
               undefined,
               this as unknown as CompElementInterface
             )
-          } else {
+          }
+          else {
             let data = emptyShapeData
 
             if (charData?.data?.shapes) {
@@ -284,7 +286,6 @@ export class SVGTextLottieElement extends TextElement {
               glyph.destroy()
             }
 
-
             ; this.textSpans[i].glyph = glyphElement
           }
           glyphElement._debug = true
@@ -293,7 +294,6 @@ export class SVGTextLottieElement extends TextElement {
           if (glyphElement.layerElement) {
             this.textSpans[i]?.childSpan?.appendChild(glyphElement.layerElement)
           }
-
 
           // when using animated shapes, the layer will be scaled instead of replacing the internal scale
           // this might have issues with strokes and might need a different solution
@@ -329,7 +329,6 @@ export class SVGTextLottieElement extends TextElement {
       }
     }
 
-
     this._sizeChanged = true
   }
 
@@ -361,12 +360,13 @@ export class SVGTextLottieElement extends TextElement {
 
     while (i < textArray.length) {
       if (
-        textArray[i] === String.fromCharCode(13) ||
-        textArray[i] === String.fromCharCode(3)
+        textArray[i] === String.fromCharCode(13)
+        || textArray[i] === String.fromCharCode(3)
       ) {
         textContents.push(currentTextContent)
         currentTextContent = ''
-      } else {
+      }
+      else {
         currentTextContent += textArray[i] ?? ''
       }
       i++

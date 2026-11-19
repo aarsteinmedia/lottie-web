@@ -18,7 +18,6 @@ export class RectInterface extends BaseInterface {
   }
 
   override getInterface(value: string | number) {
-
     if (this.shape?.p?.ix === value) {
       return this.position
     }

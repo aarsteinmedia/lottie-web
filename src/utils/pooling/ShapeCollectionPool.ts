@@ -15,7 +15,8 @@ export function newShapeCollection() {
   if (_length) {
     _length -= 1
     shapeCollection = pool[_length]
-  } else {
+  }
+  else {
     shapeCollection = new ShapeCollection()
   }
 
@@ -42,6 +43,5 @@ const ShapeCollectionPool = {
   newShapeCollection,
   releaseShape
 }
-
 
 export default ShapeCollectionPool

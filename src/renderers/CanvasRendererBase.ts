@@ -35,8 +35,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
 
   addResizeObserver() {
     if (
-      !this.animationItem?.wrapper ||
-      this._resizeObserver
+      !this.animationItem?.wrapper
+      || this._resizeObserver
     ) {
       return
     }
@@ -46,7 +46,7 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       this.updateContainerSize(width, height)
     })
 
-    this._resizeObserver = new ResizeObserver(entries => {
+    this._resizeObserver = new ResizeObserver((entries) => {
       const { contentBoxSize } = entries[0],
         { blockSize: newHeight, inlineSize: newWidth } = contentBoxSize[0]
 
@@ -112,7 +112,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       if (this.renderConfig.id) {
         this.animationItem.container.id = this.renderConfig.id
       }
-    } else {
+    }
+    else {
       this.canvasContext = this.renderConfig.context
     }
     this.contextData?.setContext(this.canvasContext)
@@ -266,12 +267,12 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       throw new Error(`${this.constructor.name}: canvasContext is not implemented`)
     }
     if (
-      props[0] === 1 &&
-      props[1] === 0 &&
-      props[4] === 0 &&
-      props[5] === 1 &&
-      props[12] === 0 &&
-      props[13] === 0
+      props[0] === 1
+      && props[1] === 0
+      && props[4] === 0
+      && props[5] === 1
+      && props[12] === 0
+      && props[13] === 0
     ) {
       return
     }
@@ -327,12 +328,12 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       }
 
       if (
-        num === false ||
-        this.renderedFrame === num &&
-        this.renderConfig?.clearCanvas === true &&
-        !forceRender ||
-        this.destroyed ||
-        num === -1
+        num === false
+        || this.renderedFrame === num
+        && this.renderConfig?.clearCanvas === true
+        && !forceRender
+        || this.destroyed
+        || num === -1
       ) {
         return
       }
@@ -362,7 +363,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
             this.transformCanvas?.w || 0,
             this.transformCanvas?.h || 0
           )
-        } else {
+        }
+        else {
           this.save()
         }
         for (let i = length - 1; i >= 0; i--) {
@@ -374,10 +376,10 @@ export abstract class CanvasRendererBase extends BaseRenderer {
           this.restore()
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
-
   }
 
   reset() {
@@ -454,10 +456,12 @@ export abstract class CanvasRendererBase extends BaseRenderer {
     if (typeof width === 'number' && typeof height === 'number') {
       elementWidth = width
       elementHeight = height
-    } else if (this.animationItem.wrapper && this.animationItem.container) {
+    }
+    else if (this.animationItem.wrapper && this.animationItem.container) {
       elementWidth = this.animationItem.wrapper.offsetWidth
       elementHeight = this.animationItem.wrapper.offsetHeight
-    } else {
+    }
+    else {
       // External context: derive CSS size from current buffer if possible.
       elementWidth = this.canvasContext.canvas.width / dpr
       elementHeight = this.canvasContext.canvas.height / dpr
@@ -492,8 +496,8 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       animationRel
 
     if (
-      preserveAspectRatio.includes('meet') ||
-      preserveAspectRatio.includes('slice')
+      preserveAspectRatio.includes('meet')
+      || preserveAspectRatio.includes('slice')
     ) {
       const par = preserveAspectRatio.split(' '),
         fillType = par[1] || 'meet',
@@ -504,72 +508,79 @@ export abstract class CanvasRendererBase extends BaseRenderer {
       elementRel = elementWidth / elementHeight
       animationRel = this.transformCanvas.w / this.transformCanvas.h
       if (
-        animationRel > elementRel && fillType === 'meet' ||
-        animationRel < elementRel && fillType === 'slice'
+        animationRel > elementRel && fillType === 'meet'
+        || animationRel < elementRel && fillType === 'slice'
       ) {
-        this.transformCanvas.sx =
-          elementWidth / (this.transformCanvas.w / dpr)
-        this.transformCanvas.sy =
-          elementWidth / (this.transformCanvas.w / dpr)
-      } else {
-        this.transformCanvas.sx =
-          elementHeight / (this.transformCanvas.h / dpr)
-        this.transformCanvas.sy =
-          elementHeight / (this.transformCanvas.h / dpr)
+        this.transformCanvas.sx
+          = elementWidth / (this.transformCanvas.w / dpr)
+        this.transformCanvas.sy
+          = elementWidth / (this.transformCanvas.w / dpr)
+      }
+      else {
+        this.transformCanvas.sx
+          = elementHeight / (this.transformCanvas.h / dpr)
+        this.transformCanvas.sy
+          = elementHeight / (this.transformCanvas.h / dpr)
       }
 
       if (
-        xPos === 'xMid' &&
-        (animationRel < elementRel && fillType === 'meet' ||
-          animationRel > elementRel && fillType === 'slice')
+        xPos === 'xMid'
+        && (animationRel < elementRel && fillType === 'meet'
+          || animationRel > elementRel && fillType === 'slice')
       ) {
-        this.transformCanvas.tx =
-          (elementWidth -
-            this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) /
-            2 *
-            dpr
-      } else if (
-        xPos === 'xMax' &&
-        (animationRel < elementRel && fillType === 'meet' ||
-          animationRel > elementRel && fillType === 'slice')
+        this.transformCanvas.tx
+          = (elementWidth
+            - this.transformCanvas.w * (elementHeight / this.transformCanvas.h))
+          / 2
+          * dpr
+      }
+      else if (
+        xPos === 'xMax'
+        && (animationRel < elementRel && fillType === 'meet'
+          || animationRel > elementRel && fillType === 'slice')
       ) {
-        this.transformCanvas.tx =
-          (elementWidth -
-            this.transformCanvas.w * (elementHeight / this.transformCanvas.h)) *
-            dpr
-      } else {
+        this.transformCanvas.tx
+          = (elementWidth
+            - this.transformCanvas.w * (elementHeight / this.transformCanvas.h))
+          * dpr
+      }
+      else {
         this.transformCanvas.tx = 0
       }
       if (
-        yPos === 'YMid' &&
-        (animationRel > elementRel && fillType === 'meet' ||
-          animationRel < elementRel && fillType === 'slice')
+        yPos === 'YMid'
+        && (animationRel > elementRel && fillType === 'meet'
+          || animationRel < elementRel && fillType === 'slice')
       ) {
-        this.transformCanvas.ty =
-          (elementHeight -
-            this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) /
-            2 *
-            dpr
-      } else if (
-        yPos === 'YMax' &&
-        (animationRel > elementRel && fillType === 'meet' ||
-          animationRel < elementRel && fillType === 'slice')
+        this.transformCanvas.ty
+          = (elementHeight
+            - this.transformCanvas.h * (elementWidth / this.transformCanvas.w))
+          / 2
+          * dpr
+      }
+      else if (
+        yPos === 'YMax'
+        && (animationRel > elementRel && fillType === 'meet'
+          || animationRel < elementRel && fillType === 'slice')
       ) {
-        this.transformCanvas.ty =
-          (elementHeight -
-            this.transformCanvas.h * (elementWidth / this.transformCanvas.w)) *
-            dpr
-      } else {
+        this.transformCanvas.ty
+          = (elementHeight
+            - this.transformCanvas.h * (elementWidth / this.transformCanvas.w))
+          * dpr
+      }
+      else {
         this.transformCanvas.ty = 0
       }
-    } else if (preserveAspectRatio === PreserveAspectRatio.Initial) {
-      this.transformCanvas.sx =
-        elementWidth / (this.transformCanvas.w / dpr)
-      this.transformCanvas.sy =
-        elementHeight / (this.transformCanvas.h / dpr)
+    }
+    else if (preserveAspectRatio === PreserveAspectRatio.Initial) {
+      this.transformCanvas.sx
+        = elementWidth / (this.transformCanvas.w / dpr)
+      this.transformCanvas.sy
+        = elementHeight / (this.transformCanvas.h / dpr)
       this.transformCanvas.tx = 0
       this.transformCanvas.ty = 0
-    } else {
+    }
+    else {
       this.transformCanvas.sx = dpr
       this.transformCanvas.sy = dpr
       this.transformCanvas.tx = 0

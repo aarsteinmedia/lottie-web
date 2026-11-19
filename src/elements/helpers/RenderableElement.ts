@@ -24,8 +24,8 @@ export abstract class RenderableElement extends FrameElement {
       return
     }
     if (
-      this.data.ip - this.data.st <= num &&
-      this.data.op - this.data.st > num
+      this.data.ip - this.data.st <= num
+      && this.data.op - this.data.st > num
     ) {
       if (!this.isInRange) {
         this.globalData._mdf = true
@@ -50,8 +50,8 @@ export abstract class RenderableElement extends FrameElement {
     }
     if (Number(this.finalTransform.mProp.o?.v) <= 0) {
       if (
-        !this.isTransparent &&
-        (this.globalData?.renderConfig as SVGRendererConfig).hideOnTransparent
+        !this.isTransparent
+        && (this.globalData?.renderConfig as SVGRendererConfig).hideOnTransparent
       ) {
         this.isTransparent = true
         this.hide()

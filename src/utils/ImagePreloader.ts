@@ -53,9 +53,9 @@ export class ImagePreloader {
     const img = this.getAsset(assetData)
 
     if (
-      !img ||
-      typeof SVGImageElement === 'undefined' ||
-      !(img instanceof SVGImageElement)
+      !img
+      || typeof SVGImageElement === 'undefined'
+      || !(img instanceof SVGImageElement)
     ) {
       return null
     }
@@ -121,7 +121,8 @@ export class ImagePreloader {
     // dumping images there breaks SVG filter stacks.
     if (this._elementHelper?.append) {
       this._elementHelper.append(img)
-    } else {
+    }
+    else {
       this._elementHelper?.appendChild(img)
     }
 
@@ -225,7 +226,8 @@ export class ImagePreloader {
       // Intentionally ignore the animation's live <defs> — filters live there.
       this._elementHelper = this.ensurePreloadHost()
       this._createImageData = this.createImageData.bind(this)
-    } else {
+    }
+    else {
       this._createImageData = this.createImgData.bind(this)
     }
   }
@@ -279,7 +281,8 @@ export class ImagePreloader {
         ctx?.drawImage(
           img, 0, 0, 1, 1
         )
-      } catch {
+      }
+      catch {
         // The image did load; failing to pre-decode only risks a flicker.
       }
 
@@ -340,10 +343,10 @@ export class ImagePreloader {
       const img = this.images[i]?.img
 
       if (
-        img &&
-        typeof SVGImageElement !== 'undefined' &&
-        img instanceof SVGImageElement &&
-        img.parentNode === helper
+        img
+        && typeof SVGImageElement !== 'undefined'
+        && img instanceof SVGImageElement
+        && img.parentNode === helper
       ) {
         helper.removeChild(img)
       }
@@ -404,7 +407,8 @@ export class ImagePreloader {
     if (img.complete) {
       if (img.naturalWidth > 0) {
         onLoad()
-      } else {
+      }
+      else {
         if (this.proxyImage) {
           obj.img = this.proxyImage
         }
@@ -442,8 +446,8 @@ export class ImagePreloader {
     svg.setAttribute('aria-hidden', 'true')
     svg.setAttribute('width', '1')
     svg.setAttribute('height', '1')
-    svg.style.cssText =
-      'position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none'
+    svg.style.cssText
+      = 'position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none'
 
     document.documentElement.appendChild(svg)
     this._preloadHost = svg
@@ -480,11 +484,11 @@ export class ImagePreloader {
 
   private notifyIfComplete() {
     if (
-      this._isRegistering ||
-      this._hasNotified ||
-      this.loadedAssets !== this.totalImages ||
-      this.loadedFootagesCount !== this.totalFootages ||
-      !this.imagesLoadedCb
+      this._isRegistering
+      || this._hasNotified
+      || this.loadedAssets !== this.totalImages
+      || this.loadedFootagesCount !== this.totalFootages
+      || !this.imagesLoadedCb
     ) {
       return
     }

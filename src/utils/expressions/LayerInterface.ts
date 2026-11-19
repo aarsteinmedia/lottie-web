@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import type { CVMaskElement } from '@/elements/canvas/CVMaskElement'
 import type { MaskElement } from '@/elements/MaskElement'
 import type {
@@ -171,8 +170,8 @@ export class LayerExpressionInterface {
       const transformMat = this._elem.finalTransform?.mProp
 
       transformMat?.applyToMatrix(toWorldMat)
-
-    } else {
+    }
+    else {
       const propMatrix = this._elem.finalTransform?.mProp.getValueAtTime(time) as Matrix
 
       propMatrix.clone(toWorldMat)

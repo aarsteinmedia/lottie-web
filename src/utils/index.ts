@@ -188,17 +188,17 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
 
   /** Check if value is array. Made to work with typed arrays as well as regular. */
   isArrayOfNum = (input: unknown): input is number[] => {
-    return isArray(input) &&
-      typeof input[0] === 'number'
+    return isArray(input)
+      && typeof input[0] === 'number'
   },
 
   isAudio = (asset: LottieAsset) =>
-    !('h' in asset) &&
-    !('w' in asset) &&
-    'p' in asset &&
-    'e' in asset &&
-    'u' in asset &&
-    'id' in asset,
+    !('h' in asset)
+    && !('w' in asset)
+    && 'p' in asset
+    && 'e' in asset
+    && 'u' in asset
+    && 'id' in asset,
 
   isImage = (asset: LottieAsset) =>
     'w' in asset && 'h' in asset && !('xt' in asset) && 'p' in asset,
@@ -212,13 +212,11 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
   },
 
   isShapePath = (el?: PoolElement): el is ShapePath => {
-
     if (!el || isArray(el)) {
       return false
     }
 
     return '_type' in el && el._type === 'ShapePath'
-
   },
 
   parseBase64 = (str: string) => str.slice(Math.max(0, str.indexOf(',') + 1)),
@@ -279,4 +277,3 @@ export const debounce = <F extends (...args: Parameters<F>) => void>(
   trailingslashit = (str: string) => {
     return `${untrailingslashit(str)}/`
   }
-

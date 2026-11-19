@@ -54,8 +54,8 @@ export abstract class BaseElement {
 
     while (i < length) {
       if (
-        this.data.masksProperties?.[i]?.mode !== MaskMode.None &&
-        this.data.masksProperties?.[i]?.cl !== 0
+        this.data.masksProperties?.[i]?.mode !== MaskMode.None
+        && this.data.masksProperties?.[i]?.cl !== 0
       ) {
         return true
       }
@@ -149,7 +149,8 @@ export abstract class BaseElement {
         this.layerInterface.textInterface = new textExpressionInterface(this as unknown as ElementInterfaceIntersect)
         this.layerInterface.text = this.layerInterface.textInterface
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }

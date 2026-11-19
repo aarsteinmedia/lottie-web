@@ -386,7 +386,8 @@ export class OffsetPathModifier extends ShapeModifier {
             BezierProperty.OutTangents,
             outputBezier.length() - 1
           )
-        } else {
+        }
+        else {
           outputBezier.setTripleAt(
             segment.points[0][0],
             segment.points[0][1],
@@ -462,8 +463,6 @@ export class OffsetPathModifier extends ShapeModifier {
         if (shapeData.shape) {
           shapeData.shape.paths = shapeData.localShapeCollection
         }
-
-
       }
     }
     if (this.dynamicProperties.length === 0) {

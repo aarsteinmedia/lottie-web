@@ -125,7 +125,6 @@ export class RepeaterModifier extends ShapeModifier {
 
   override initModifierProperties(elem: ElementInterfaceIntersect,
     data: Shape) {
-
     this.getValue = this.processKeys
     this.c = PropertyFactory.getProp(
       elem,
@@ -268,7 +267,8 @@ export class RepeaterModifier extends ShapeModifier {
 
         if (this._currentCopies) {
           this._currentCopies++
-        } else {
+        }
+        else {
           this._currentCopies = 1
         }
       }
@@ -292,11 +292,11 @@ export class RepeaterModifier extends ShapeModifier {
 
         if (transformData.transform.op.v === 0) {
           transformData.transform.op._mdf = false
-        } else {
+        }
+        else {
           transformData.transform.op._mdf = true
           transformData.transform.op.v = 0
         }
-
       }
       cont++
     }
@@ -304,11 +304,11 @@ export class RepeaterModifier extends ShapeModifier {
     this._currentCopies = copies
 
     if (
-      !this.matrix ||
-      !this.pMatrix ||
-      !this.rMatrix ||
-      !this.sMatrix ||
-      !this.tMatrix
+      !this.matrix
+      || !this.pMatrix
+      || !this.rMatrix
+      || !this.sMatrix
+      || !this.tMatrix
     ) {
       throw new Error(`${this.constructor.name}: Could not set Matrix`)
     }
@@ -354,7 +354,8 @@ export class RepeaterModifier extends ShapeModifier {
         )
         iteration += offsetModulo
       }
-    } else if (offset < 0) {
+    }
+    else if (offset < 0) {
       while (iteration > roundOffset) {
         this.applyTransforms(
           this.pMatrix,
@@ -391,12 +392,12 @@ export class RepeaterModifier extends ShapeModifier {
       if (items[items.length - 1]) {
         ; items[items.length - 1].transform.mProps._mdf = true
         items[items.length - 1].transform.op._mdf = true
-        items[items.length - 1].transform.op.v =
-          this._currentCopies === 1
+        items[items.length - 1].transform.op.v
+          = this._currentCopies === 1
             ? Number(this.so?.v)
-            : Number(this.so?.v) +
-              (Number(this.eo?.v) - Number(this.so?.v)) *
-              (i / (this._currentCopies - 1))
+            : Number(this.so?.v)
+              + (Number(this.eo?.v) - Number(this.so?.v))
+              * (i / (this._currentCopies - 1))
       }
 
       if (iteration === 0) {
@@ -404,10 +405,11 @@ export class RepeaterModifier extends ShapeModifier {
         for (j = 0; j < jLen; j++) {
           itemsTransform[j] = this.matrix.props[j] ?? 0
         }
-      } else {
+      }
+      else {
         if (
-          i !== 0 && dir === 1 ||
-          i !== this._currentCopies - 1 && dir === -1
+          i !== 0 && dir === 1
+          || i !== this._currentCopies - 1 && dir === -1
         ) {
           this.applyTransforms(
             this.pMatrix,

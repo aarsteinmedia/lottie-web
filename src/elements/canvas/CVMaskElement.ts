@@ -49,7 +49,8 @@ export function isSimpleMaskStack(masks: MaskShape[] | undefined) {
       if (k !== 100) {
         return false
       }
-    } else if (Array.isArray(k)) {
+    }
+    else if (Array.isArray(k)) {
       return false
     }
   }
@@ -275,7 +276,8 @@ export class CVMaskElement {
       buffer = AssetManager.createCanvas(width, height)
       if (which === 'mask') {
         this.maskBuffer = buffer
-      } else {
+      }
+      else {
         this.pathBuffer = buffer
       }
     }

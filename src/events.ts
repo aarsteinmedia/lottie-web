@@ -67,7 +67,6 @@ export class CompleteLoopEvent {
     this.currentLoop = currentLoop
     this.totalLoops = totalLoops
     this.direction = frameMultiplier < 0 ? -1 : 1
-
   }
 }
 
@@ -179,13 +178,13 @@ export abstract class BaseEvent {
   }
 }
 
-export type LottieEvent =
-  | AnimationConfigErrorEvent
-  | EnterFrameEvent
-  | CompleteEvent
-  | CompleteLoopEvent
-  | SegmentStartEvent
+export type LottieEvent
+  = | AnimationConfigErrorEvent
+    | EnterFrameEvent
+    | CompleteEvent
+    | CompleteLoopEvent
+    | SegmentStartEvent
 
-  | ConfigErrorEvent
-  | DestroyEvent
-  | DrawnFrameEvent
+    | ConfigErrorEvent
+    | DestroyEvent
+    | DrawnFrameEvent

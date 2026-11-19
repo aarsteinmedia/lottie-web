@@ -78,7 +78,6 @@ export class PuckerAndBloatModifier extends ShapeModifier {
             if (shapePath) {
               localShapeCollection?.addShape(this.processPath(shapePath, amount || 0))
             }
-
           }
         }
         if (shapeData.localShapeCollection && shapeData.shape) {

@@ -34,14 +34,14 @@ export class EffectsManager {
   }
 }
 
-export type EffectInterface =
-  | GroupEffect
-  | EffectsManager
-  | SliderEffect
-  | AngleEffect
-  | ColorEffect
-  | PointEffect
-  | CheckboxEffect
-  | LayerIndexEffect
-  | MaskIndexEffect
-  | NoValueEffect
+export type EffectInterface
+  = | GroupEffect
+    | EffectsManager
+    | SliderEffect
+    | AngleEffect
+    | ColorEffect
+    | PointEffect
+    | CheckboxEffect
+    | LayerIndexEffect
+    | MaskIndexEffect
+    | NoValueEffect

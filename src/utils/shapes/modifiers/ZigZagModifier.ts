@@ -69,15 +69,15 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
       point = path.v[cur % path._length],
       prevPoint = path.v[cur === 0 ? path._length - 1 : cur - 1],
       nextPoint = path.v[(cur + 1) % path._length],
-      prevDist =
-        pointType === 2
-          ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2) +
-            Math.pow(point[1] - prevPoint[1], 2))
+      prevDist
+        = pointType === 2
+          ? Math.sqrt(Math.pow(point[0] - prevPoint[0], 2)
+            + Math.pow(point[1] - prevPoint[1], 2))
           : 0,
-      nextDist =
-        pointType === 2
-          ? Math.sqrt(Math.pow(point[0] - nextPoint[0], 2) +
-            Math.pow(point[1] - nextPoint[1], 2))
+      nextDist
+        = pointType === 2
+          ? Math.sqrt(Math.pow(point[0] - nextPoint[0], 2)
+            + Math.pow(point[1] - nextPoint[1], 2))
           : 0
 
     setPoint(
@@ -103,10 +103,10 @@ const getPerpendicularVector = (pt1: Vector2, pt2: Vector2) => {
 
     for (let i = 0; i < frequency; i++) {
       const t = (i + 1) / (frequency + 1),
-        dist =
-          pointType === 2
-            ? Math.sqrt(Math.pow(segment.points[3][0] - segment.points[0][0], 2) +
-              Math.pow(segment.points[3][1] - segment.points[0][1], 2))
+        dist
+          = pointType === 2
+            ? Math.sqrt(Math.pow(segment.points[3][0] - segment.points[0][0], 2)
+              + Math.pow(segment.points[3][1] - segment.points[0][1], 2))
             : 0,
         angle = segment.normalAngle(t),
         point = segment.point(t) as Vector2
@@ -156,10 +156,10 @@ export class ZigZagModifier extends ShapeModifier {
       null,
       this as unknown as ElementInterfaceIntersect
     ) as ValueProperty
-    this._isAnimated =
-      this.amplitude.effectsSequence.length > 0 ||
-      this.frequency.effectsSequence.length > 0 ||
-      this.pointsType.effectsSequence.length > 0
+    this._isAnimated
+      = this.amplitude.effectsSequence.length > 0
+        || this.frequency.effectsSequence.length > 0
+        || this.pointsType.effectsSequence.length > 0
   }
 
   processPath(
@@ -206,7 +206,8 @@ export class ZigZagModifier extends ShapeModifier {
 
       if (i === count - 1 && !path.c) {
         segment = null as unknown as PolynomialBezier
-      } else {
+      }
+      else {
         segment = shapeSegment(path, (i + 1) % count)
       }
 
@@ -253,7 +254,6 @@ export class ZigZagModifier extends ShapeModifier {
         if (shapeData.shape) {
           shapeData.shape.paths = shapeData.localShapeCollection
         }
-
       }
     }
     if (this.dynamicProperties.length === 0) {

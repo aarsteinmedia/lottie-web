@@ -22,7 +22,6 @@ function searchExpressions(
   prop.effectsSequence.push(prop.initiateExpression(
     elem, data, prop
   ).bind(prop))
-
 }
 
 function getValueAtTime(this: BaseProperty, frameNumFromProps: number) {
@@ -93,7 +92,6 @@ function setGroupProperty(this: BaseProperty, propertyGroup: PropertyGroupFactor
   this.propertyGroup = propertyGroup as unknown as LayerExpressionInterface
 }
 
-
 const expressionHelpers = {
   getSpeedAtTime,
   getStaticValueAtTime,
@@ -102,6 +100,5 @@ const expressionHelpers = {
   searchExpressions,
   setGroupProperty,
 }
-
 
 export default expressionHelpers

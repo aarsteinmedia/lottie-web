@@ -96,7 +96,6 @@ export class AudioController {
   }
 }
 
-
 export default function audioControllerFactory(factory?: AudioFactory) {
   return new AudioController(factory)
 }

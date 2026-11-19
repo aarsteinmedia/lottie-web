@@ -42,7 +42,6 @@ export class ShapePathInterface {
     this.mn = shape.mn
     this.propertyGroup = propertyGroup
     this.propertyIndex = shape.ix
-
   }
 
   getInterface(val: string | number) {

@@ -42,7 +42,6 @@ export abstract class CompElement extends RenderableDOMElement {
     return this.elements
   }
 
-
   override initElement(
     data: LottieLayer,
     globalData: GlobalData,
@@ -81,7 +80,8 @@ export abstract class CompElement extends RenderableDOMElement {
 
     if (this.tm?._placeholder) {
       this.renderedFrame = val / Number(this.data.sr)
-    } else {
+    }
+    else {
       let timeRemapped = this.tm?.v || 0
 
       if (timeRemapped === this.data.op) {

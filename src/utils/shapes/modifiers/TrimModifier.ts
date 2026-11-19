@@ -103,7 +103,8 @@ export class TrimModifier extends ShapeModifier {
     if (shapePath) {
       segmentCount = shapePath._length
       initPos = shapePath._length
-    } else {
+    }
+    else {
       shapePath = newElement() as ShapePath
       segmentCount = 0
       initPos = 0
@@ -127,8 +128,8 @@ export class TrimModifier extends ShapeModifier {
           break
         }
         if (
-          shapeSegment.s <= addedLength &&
-          shapeSegment.e >= addedLength + currentLengthData.addedLength
+          shapeSegment.s <= addedLength
+          && shapeSegment.e >= addedLength + currentLengthData.addedLength
         ) {
           this.addSegment(
             shapePaths[i]?.v[j - 1],
@@ -140,7 +141,8 @@ export class TrimModifier extends ShapeModifier {
             isNewShape
           )
           isNewShape = false
-        } else {
+        }
+        else {
           segment = getNewSegment(
             shapePaths[i]?.v[j - 1],
             shapePaths[i]?.v[j],
@@ -165,8 +167,8 @@ export class TrimModifier extends ShapeModifier {
           const segmentLength = lengths[j - 1]?.addedLength ?? 0
 
           if (
-            shapeSegment.s <= addedLength &&
-            shapeSegment.e >= addedLength + segmentLength
+            shapeSegment.s <= addedLength
+            && shapeSegment.e >= addedLength + segmentLength
           ) {
             this.addSegment(
               shapePaths[i]?.v[j - 1],
@@ -178,7 +180,8 @@ export class TrimModifier extends ShapeModifier {
               isNewShape
             )
             isNewShape = false
-          } else {
+          }
+          else {
             segment = getNewSegment(
               shapePaths[i]?.v[j - 1],
               shapePaths[i]?.v[0],
@@ -194,7 +197,8 @@ export class TrimModifier extends ShapeModifier {
             isNewShape = false
             shapePath.c = false
           }
-        } else {
+        }
+        else {
           shapePath.c = false
         }
         addedLength += currentLengthData.addedLength
@@ -223,7 +227,6 @@ export class TrimModifier extends ShapeModifier {
 
         shapes.push(shapePath)
 
-
         segmentCount = 0
       }
     }
@@ -249,12 +252,14 @@ export class TrimModifier extends ShapeModifier {
         e,
         s,
       })
-    } else if (s >= 1) {
+    }
+    else if (s >= 1) {
       segments.push({
         e: e - 1,
         s: s - 1,
       })
-    } else {
+    }
+    else {
       segments.push({
         e: 1,
         s,
@@ -268,8 +273,8 @@ export class TrimModifier extends ShapeModifier {
     for (let i = 0; i < segments.length; i++) {
       if (
         !(
-          (segments[i]?.e ?? 0) * totalModifierLength < addedLength ||
-          (segments[i]?.s ?? 0) * totalModifierLength > addedLength + shapeLength
+          (segments[i]?.e ?? 0) * totalModifierLength < addedLength
+          || (segments[i]?.s ?? 0) * totalModifierLength > addedLength + shapeLength
         )
       ) {
         let shapeS
@@ -277,15 +282,17 @@ export class TrimModifier extends ShapeModifier {
 
         if ((segments[i]?.s ?? 0) * totalModifierLength <= addedLength) {
           shapeS = 0
-        } else {
-          shapeS =
-            ((segments[i]?.s ?? 0) * totalModifierLength - addedLength) / shapeLength
+        }
+        else {
+          shapeS
+            = ((segments[i]?.s ?? 0) * totalModifierLength - addedLength) / shapeLength
         }
         if ((segments[i]?.e ?? 0) * totalModifierLength >= addedLength + shapeLength) {
           shapeE = 1
-        } else {
-          shapeE =
-            ((segments[i]?.e ?? 0) * totalModifierLength - addedLength) / shapeLength
+        }
+        else {
+          shapeE
+            = ((segments[i]?.e ?? 0) * totalModifierLength - addedLength) / shapeLength
         }
         shapeSegments.push([shapeS, shapeE])
       }
@@ -324,10 +331,10 @@ export class TrimModifier extends ShapeModifier {
     this.eValue = 0
     this.getValue = this.processKeys
     this.m = data.m
-    this._isAnimated =
-      this.s.effectsSequence.length > 0 ||
-      this.e.effectsSequence.length > 0 ||
-      this.o.effectsSequence.length > 0
+    this._isAnimated
+      = this.s.effectsSequence.length > 0
+        || this.e.effectsSequence.length > 0
+        || this.o.effectsSequence.length > 0
   }
 
   processShapes(_isFirstFrame: boolean) {
@@ -341,16 +348,20 @@ export class TrimModifier extends ShapeModifier {
       }
       if (Number(this.s?.v) > 1) {
         s = 1 + o
-      } else if (Number(this.s?.v) < 0) {
+      }
+      else if (Number(this.s?.v) < 0) {
         s = 0 + o
-      } else {
+      }
+      else {
         s = Number(this.s?.v) + o
       }
       if (Number(this.e?.v) > 1) {
         e = 1 + o
-      } else if (Number(this.e?.v) < 0) {
+      }
+      else if (Number(this.e?.v) < 0) {
         e = 0 + o
-      } else {
+      }
+      else {
         e = Number(this.e?.v) + o
       }
 
@@ -364,7 +375,8 @@ export class TrimModifier extends ShapeModifier {
       e = Math.round(e * 10000) * 0.0001
       this.sValue = s
       this.eValue = e
-    } else {
+    }
+    else {
       s = this.sValue || 0
       e = this.eValue || 0
     }
@@ -393,10 +405,10 @@ export class TrimModifier extends ShapeModifier {
           currentShape.pathsData.length = 0
         }
       }
-
-    } else if (!(e === 1 && s === 0 || e === 0 && s === 1)) {
+    }
+    else if (!(e === 1 && s === 0 || e === 0 && s === 1)) {
       const segments: {
-        e: number;
+        e: number
         s: number
       }[] = []
       let shapeData, localShapeCollection
@@ -406,22 +418,23 @@ export class TrimModifier extends ShapeModifier {
 
         // if shape hasn't changed and trim properties haven't changed, cached previous path can be used
         if (
-          !shapeData.shape?._mdf &&
-          !this._mdf &&
-          !_isFirstFrame &&
-          this.m !== StackingOrder.Below
+          !shapeData.shape?._mdf
+          && !this._mdf
+          && !_isFirstFrame
+          && this.m !== StackingOrder.Below
         ) {
           if (shapeData.shape) {
             shapeData.shape.paths = shapeData.localShapeCollection
           }
-
-        } else {
+        }
+        else {
           shapePaths = shapeData.shape?.paths as ShapeCollection | undefined
           jLen = shapePaths?._length || 0
           totalShapeLength = 0
           if (!shapeData.shape?._mdf && shapeData.pathsData.length > 0) {
             totalShapeLength = shapeData.totalShapeLength
-          } else {
+          }
+          else {
             pathsData = this.releasePathsData(shapeData.pathsData)
             for (j = 0; j < jLen; j++) {
               if (!shapePaths) {
@@ -440,7 +453,6 @@ export class TrimModifier extends ShapeModifier {
           if (shapeData.shape) {
             shapeData.shape._mdf = true
           }
-
         }
       }
       let shapeS = s,
@@ -467,7 +479,8 @@ export class TrimModifier extends ShapeModifier {
               totalModifierLength
             )
             addedLength += Number(shapeData.totalShapeLength)
-          } else {
+          }
+          else {
             edges = [[shapeS, shapeE]]
           }
           jLen = edges.length
@@ -480,12 +493,14 @@ export class TrimModifier extends ShapeModifier {
                 e: Number(shapeData.totalShapeLength) * shapeE,
                 s: Number(shapeData.totalShapeLength) * shapeS,
               })
-            } else if (shapeS >= 1) {
+            }
+            else if (shapeS >= 1) {
               segments.push({
                 e: Number(shapeData.totalShapeLength) * (shapeE - 1),
                 s: Number(shapeData.totalShapeLength) * (shapeS - 1),
               })
-            } else {
+            }
+            else {
               segments.push({
                 e: Number(shapeData.totalShapeLength),
                 s: Number(shapeData.totalShapeLength) * shapeS,
@@ -494,7 +509,6 @@ export class TrimModifier extends ShapeModifier {
                 e: Number(shapeData.totalShapeLength) * (shapeE - 1),
                 s: 0,
               })
-
             }
 
             const emptySegment = {
@@ -506,8 +520,8 @@ export class TrimModifier extends ShapeModifier {
 
             if (segments[0]?.s !== segments[0]?.e) {
               if (segments.length > 1) {
-                const lastShapeInCollection =
-                  shapeData.shape.paths?.shapes[
+                const lastShapeInCollection
+                  = shapeData.shape.paths?.shapes[
                     shapeData.shape.paths._length - 1
                   ]
 
@@ -520,7 +534,8 @@ export class TrimModifier extends ShapeModifier {
                     segments[1] ?? emptySegment,
                     lastShape
                   )
-                } else {
+                }
+                else {
                   this.addPaths(newShapesData, localShapeCollection)
                   newShapesData = this.addShapes(shapeData, segments[1] ?? emptySegment)
                 }
@@ -531,7 +546,8 @@ export class TrimModifier extends ShapeModifier {
           shapeData.shape.paths = localShapeCollection
         }
       }
-    } else if (this._mdf) {
+    }
+    else if (this._mdf) {
       for (let i = 0; i < this.shapes.length; i++) {
         // Reassign Trim cached paths data when no trim applied in case shapes are modified in between.
         // Don't remove this even if it's losing cached info.
@@ -544,7 +560,6 @@ export class TrimModifier extends ShapeModifier {
         if (shape) {
           shape._mdf = true
         }
-
       }
     }
   }

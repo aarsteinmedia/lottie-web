@@ -9,7 +9,7 @@ import { getAnimationData } from '@/utils/dotLottie/getAnimationData'
  * Creates a new dotLottie file, by combining several animations.
  * If set to false the function returns an ArrayBuffer. Defaults to true.
  */
-export async function addAnimation ({
+export async function addAnimation({
   configs,
   filename,
   generator,
@@ -17,7 +17,6 @@ export async function addAnimation ({
   shouldDownload = true,
   src,
 }: AddAnimationParams): Promise<Result> {
-
   /**
    * Initialize meta object for animation, with fallbacks for
    * when the method is called independently.
@@ -44,7 +43,7 @@ export async function addAnimation ({
       if (!animationsToAdd) {
         throw new Error('No animation loaded')
       }
-      if (manifest.animations.some((anim) => anim.id === configs[i]?.id)) {
+      if (manifest.animations.some(anim => anim.id === configs[i]?.id)) {
         throw new Error('Duplicate id for animation')
       }
 
@@ -62,7 +61,8 @@ export async function addAnimation ({
       }),
       success: true,
     }
-  } catch (error) {
+  }
+  catch (error) {
     return {
       error: (error as Error).message,
       result: null,

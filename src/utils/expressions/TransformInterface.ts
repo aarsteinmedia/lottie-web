@@ -9,7 +9,6 @@ export class TransformExpressionInterface {
     return expressionPropertyFactory(this.transform.a)
   }
 
-
   get opacity() {
     return expressionPropertyFactory(this.transform.o)
   }
@@ -58,7 +57,6 @@ export class TransformExpressionInterface {
     return expressionPropertyFactory(this.transform.py)
   }
 
-
   get yRotation() {
     return expressionPropertyFactory(this.transform.ry)
   }
@@ -79,22 +77,22 @@ export class TransformExpressionInterface {
 
   private _transformFactory
 
-  constructor (transform: TransformProperty) {
+  constructor(transform: TransformProperty) {
     this.transform = transform
 
     if (transform.p) {
       this._transformFactory = expressionPropertyFactory(transform.p)
-    } else {
+    }
+    else {
       this._px = expressionPropertyFactory(transform.px)
       this._py = expressionPropertyFactory(transform.py)
       if (transform.pz) {
         this._pz = expressionPropertyFactory(transform.pz)
       }
     }
-
   }
 
-  getInterface (name: string | number) {
+  getInterface(name: string | number) {
     switch (name) {
       case 'scale':
       case 'Scale':

@@ -3,7 +3,6 @@ import type { RoundCornersModifier } from '@/utils/shapes/modifiers/RoundCorners
 import { expressionPropertyFactory } from '@/utils/expressions/ExpressionPropertyFactory'
 import { BaseInterface } from '@/utils/expressions/shapes/BaseInterface'
 
-
 export class RoundCornersInterface extends BaseInterface {
   override prop?: RoundCornersModifier = undefined
 

@@ -70,13 +70,13 @@ function flatten(obj: unknown, depth = 0) {
     typ = typeof obj
 
   if (depth && typ === 'object') {
-
     const keys = Object.keys(obj as number[])
 
     for (let i = 0; i < keys.length; i++) {
       try {
         result.push(flatten((obj as string[])[keys[i] as keyof typeof obj]) as number, depth - 1)
-      } catch (error) {
+      }
+      catch (error) {
         //
       }
     }
@@ -97,7 +97,6 @@ function tostring(a: number[]) {
 }
 
 function seedRandom(pool: number[], math: BMMath) {
-
   /**
    * Node.js crypto module, initialized at the bottom.
    */
@@ -133,7 +132,8 @@ function seedRandom(pool: number[], math: BMMath) {
 
     if (options && options.entropy) {
       seed = [seedFromProps ?? '', tostring(pool)]
-    } else {seed = seed ?? autoseed()}
+    }
+    else { seed = seed ?? autoseed() }
     const shortseed = mixkey(flatten(seed, 3) as number, key)
 
     // Use the seed to initialize an ARC4 generator.
@@ -200,7 +200,8 @@ function seedRandom(pool: number[], math: BMMath) {
 
     if (options && options.pass) {
       handler = options.pass
-    } else if (callback) {
+    }
+    else if (callback) {
       handler = callback
     }
 
@@ -230,8 +231,8 @@ function seedRandom(pool: number[], math: BMMath) {
     while (j < stringseed.length) {
       smear ^= (key[mask & j] ?? 0) * 19
 
-      key[mask & j] =
-        mask & smear + stringseed.charCodeAt(j++)
+      key[mask & j]
+        = mask & smear + stringseed.charCodeAt(j++)
     }
 
     return tostring(key)
@@ -250,7 +251,8 @@ function seedRandom(pool: number[], math: BMMath) {
       global.crypto.getRandomValues(out)
 
       return tostring(out as unknown as number[])
-    } catch (error) {
+    }
+    catch (error) {
       devError(error)
       const { navigator: { plugins }, screen } = global
 

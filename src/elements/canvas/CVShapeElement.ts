@@ -230,15 +230,16 @@ export class CVShapeElement extends ShapeElement {
             styleElem.do = elementData.d.dashoffset[0]
           }
         }
-      } else {
+      }
+      else {
         styleElem.r = data.r === FillAttribute.EvenOdd ? FillRule.EvenOdd : FillRule.NonZero
       }
       this.stylesList.push(styleElem)
       elementData.style = styleElem
 
       return elementData
-
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
 
       return null
@@ -295,8 +296,8 @@ export class CVShapeElement extends ShapeElement {
         const {
             co, coOp, da, data, elements, grd, lc, lj, ml, preTransforms, r, type, wi
           } = currentStyle,
-          isStroke =
-            type === ShapeType.Stroke || type === ShapeType.GradientStroke
+          isStroke
+            = type === ShapeType.Stroke || type === ShapeType.GradientStroke
 
         // Skipping style when
         // Stroke width equals 0
@@ -304,10 +305,10 @@ export class CVShapeElement extends ShapeElement {
         // current opacity equals 0
         // global opacity equals 0
         if (
-          isStroke && wi === 0 ||
-          !data._shouldRender ||
-          coOp === 0 ||
-          this.globalData.currentGlobalAlpha === 0
+          isStroke && wi === 0
+          || !data._shouldRender
+          || coOp === 0
+          || this.globalData.currentGlobalAlpha === 0
         ) {
           continue
         }
@@ -326,7 +327,8 @@ export class CVShapeElement extends ShapeElement {
           }
 
           renderer.ctxMiterLimit(ml || 0)
-        } else {
+        }
+        else {
           renderer.ctxFillStyle(type === ShapeType.Fill ? co : grd)
         }
         renderer.ctxOpacity(coOp)
@@ -352,7 +354,8 @@ export class CVShapeElement extends ShapeElement {
 
             if (nodes[k].t === 'm') {
               ctx?.moveTo(point[0], point[1])
-            } else if (nodes[k].t === 'c') {
+            }
+            else if (nodes[k].t === 'c') {
               ctx?.bezierCurveTo(
                 points[0],
                 points[1],
@@ -361,7 +364,8 @@ export class CVShapeElement extends ShapeElement {
                 points[4],
                 points[5]
               )
-            } else {
+            }
+            else {
               ctx?.closePath()
             }
           }
@@ -377,7 +381,8 @@ export class CVShapeElement extends ShapeElement {
         }
         renderer.restore()
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
@@ -436,11 +441,11 @@ export class CVShapeElement extends ShapeElement {
     let grd: CanvasGradient | undefined
 
     if (
-      !styleElem?.grd ||
-      itemData.g?._mdf ||
-      itemData.s?._mdf ||
-      itemData.e?._mdf ||
-      styleData.t !== GradientType.Linear && (itemData.h?._mdf || itemData.a?._mdf)
+      !styleElem?.grd
+      || itemData.g?._mdf
+      || itemData.s?._mdf
+      || itemData.e?._mdf
+      || styleData.t !== GradientType.Linear && (itemData.h?._mdf || itemData.a?._mdf)
     ) {
       const ctx = this.globalData.canvasContext,
         pt1 = itemData.s?.v ?? [0, 0],
@@ -450,7 +455,8 @@ export class CVShapeElement extends ShapeElement {
         grd = ctx?.createLinearGradient(
           pt1[0], pt1[1], pt2[0], pt2[1]
         )
-      } else {
+      }
+      else {
         const rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2)),
           ang = Math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
 
@@ -458,7 +464,8 @@ export class CVShapeElement extends ShapeElement {
 
         if (percent >= 1) {
           percent = 0.99
-        } else if (percent <= -1) {
+        }
+        else if (percent <= -1) {
           percent = -0.99
         }
         const dist = rad * percent,
@@ -486,7 +493,6 @@ export class CVShapeElement extends ShapeElement {
       if (styleElem) {
         styleElem.grd = grd
       }
-
     }
     if (styleElem) {
       styleElem.coOp = (itemData.o?.v ?? 0) * groupTransform.opacity
@@ -524,7 +530,6 @@ export class CVShapeElement extends ShapeElement {
   ) {
     try {
       const len = items.length - 1
-
 
       let groupTransform: undefined | Transformer = parentTransform
 
@@ -581,7 +586,8 @@ export class CVShapeElement extends ShapeElement {
       if (isMain) {
         this.drawLayer()
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
@@ -589,9 +595,9 @@ export class CVShapeElement extends ShapeElement {
   renderShapeTransform(parentTransform: Transformer,
     groupTransform: Transformer) {
     if (
-      !parentTransform._opMdf &&
-      !groupTransform.op._mdf &&
-      !this._isFirstFrame
+      !parentTransform._opMdf
+      && !groupTransform.op._mdf
+      && !this._isFirstFrame
     ) {
       return
     }
@@ -710,7 +716,8 @@ export class CVShapeElement extends ShapeElement {
 
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
-      } else {
+      }
+      else {
         arr[i]._shouldRender = shouldRender
       }
 
@@ -721,7 +728,8 @@ export class CVShapeElement extends ShapeElement {
         case ShapeType.GradientStroke: {
           if (processedPos) {
             itemsData[i].style.closed = false
-          } else {
+          }
+          else {
             itemsData[i] = this.createStyleElement(arr[i], ownTransforms)
           }
 
@@ -733,7 +741,8 @@ export class CVShapeElement extends ShapeElement {
             for (let j = 0; j < itemsData[i].it.length; j++) {
               itemsData[i].prevViewData[j] = itemsData[i].it[j]
             }
-          } else {
+          }
+          else {
             itemsData[i] = this.createGroupElement(arr[i])
           }
           this.searchShapes(
@@ -771,7 +780,8 @@ export class CVShapeElement extends ShapeElement {
           if (processedPos) {
             modifier = itemsData[i]
             modifier.closed = false
-          } else {
+          }
+          else {
             modifier = getModifier(arr[i].ty)
             modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
             itemsData[i] = modifier
@@ -784,7 +794,8 @@ export class CVShapeElement extends ShapeElement {
           if (processedPos) {
             modifier = itemsData[i]
             modifier.closed = true
-          } else {
+          }
+          else {
             modifier = getModifier(arr[i].ty)
             itemsData[i] = modifier
             modifier.init(

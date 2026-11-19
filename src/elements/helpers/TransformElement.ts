@@ -30,7 +30,8 @@ export abstract class TransformElement extends BaseElement {
           )
         }
         comp = comp.comp
-      } else {
+      }
+      else {
         shouldTransform = false
       }
     }
@@ -158,7 +159,6 @@ export abstract class TransformElement extends BaseElement {
           if (matrix) {
             finalMat.multiply(matrix)
           }
-
         }
       }
     }

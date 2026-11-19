@@ -31,8 +31,8 @@ export abstract class FrameElement extends HierarchyElement {
   prepareProperties(_number: number, isVisible?: boolean) {
     for (let i = 0; i < this.dynamicProperties.length; i++) {
       if (
-        !isVisible &&
-        !(this._isParent && this.dynamicProperties[i]?.propType === PropType.Transform)
+        !isVisible
+        && !(this._isParent && this.dynamicProperties[i]?.propType === PropType.Transform)
       ) {
         continue
       }

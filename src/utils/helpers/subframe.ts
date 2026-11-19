@@ -5,7 +5,6 @@ const isSubframeEnabled = { current: true },
   },
   getSubframeEnabled = () => isSubframeEnabled.current
 
-
 export {
   getSubframeEnabled,
   setSubframeEnabled

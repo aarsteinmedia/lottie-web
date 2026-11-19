@@ -5,14 +5,13 @@ import { Matrix } from '@/utils/Matrix'
 export class ShapeTransformManager {
   sequenceList: TransformSequence[] = []
   sequences: TransformSequence = {}
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+
   transform_key_count = 0
 
   addTransformSequence(transforms: { transform: Transformer }[]) {
     let key = '_'
 
     for (let i = 0; i < transforms.length; i++) {
-
       key += `${transforms[i]?.transform.key}_`
     }
     let sequence = this.sequences[key]

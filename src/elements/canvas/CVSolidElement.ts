@@ -19,7 +19,6 @@ export interface CVSolidElement
   Pick<ImageElement, typeof imageMethods[number]> {}
 
 export class CVSolidElement extends CVBaseElement {
-
   constructor(
     data: LottieLayer,
     globalData: GlobalData,
@@ -55,7 +54,6 @@ export class CVSolidElement extends CVBaseElement {
     //
   }
 }
-
 
 mixin(
   CVSolidElement, SVGShapeElement, svgShapeMethods

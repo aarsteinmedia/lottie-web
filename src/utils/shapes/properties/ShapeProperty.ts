@@ -1,4 +1,3 @@
-
 import type { CVShapeElement } from '@/elements/canvas/CVShapeElement'
 import type { SVGShapeElement } from '@/elements/svg/SVGShapeElement'
 import type {

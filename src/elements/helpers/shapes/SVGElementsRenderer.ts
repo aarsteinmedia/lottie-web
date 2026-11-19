@@ -132,7 +132,8 @@ function renderGradient(
 
     if (itemData.g._collapsable) {
       stops = itemData.cst
-    } else {
+    }
+    else {
       stops = itemData.ost
     }
 
@@ -153,7 +154,8 @@ function renderGradient(
         itemData.of?.setAttribute('y2', `${pt2[1]}`)
       }
     }
-  } else {
+  }
+  else {
     let rad = 0
 
     if (itemData.s?._mdf || itemData.e?._mdf || isFirstFrame) {
@@ -164,10 +166,10 @@ function renderGradient(
       }
     }
     if (
-      itemData.e?._mdf ||
-      itemData.h?._mdf ||
-      itemData.a?._mdf ||
-      isFirstFrame
+      itemData.e?._mdf
+      || itemData.h?._mdf
+      || itemData.a?._mdf
+      || isFirstFrame
     ) {
       if (!rad) {
         rad = Math.sqrt(Math.pow(pt1[0] - pt2[0], 2) + Math.pow(pt1[1] - pt2[1], 2))
@@ -178,7 +180,8 @@ function renderGradient(
 
       if (percent >= 1) {
         percent = 0.99
-      } else if (percent <= -1) {
+      }
+      else if (percent <= -1) {
         percent = -0.99
       }
       const dist = rad * percent,
@@ -254,7 +257,8 @@ function renderPath(
           k--
         }
       }
-    } else {
+    }
+    else {
       mat = _identityMatrix
     }
     paths = sh?.paths as ShapeCollection | undefined
@@ -274,14 +278,14 @@ function renderPath(
         }
       }
       caches[i] = pathStringTransformed
-    } else {
+    }
+    else {
       pathStringTransformed = caches[i]
     }
     style.d += styleData.hd === true ? '' : pathStringTransformed
     style._mdf = shouldRedraw || _mdf
   }
 }
-
 
 function renderStroke(
   _: Shape,

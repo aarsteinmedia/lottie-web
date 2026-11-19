@@ -140,7 +140,8 @@ const rgbToHSV = (
     hsv[2] += offset
     if (hsv[2] > 1) {
       hsv[2] = 1
-    } else if (hsv[2] < 0) {
+    }
+    else if (hsv[2] < 0) {
       hsv[2] = 0
     }
 
@@ -156,7 +157,8 @@ const rgbToHSV = (
     hsv[0] += offset / 360
     if (hsv[0] > 1) {
       hsv[0] -= 1
-    } else if (hsv[0] < 0) {
+    }
+    else if (hsv[0] < 0) {
       hsv[0]++
     }
 
@@ -172,7 +174,8 @@ const rgbToHSV = (
     hsv[1] += offset
     if (hsv[1] > 1) {
       hsv[1] = 1
-    } else if (hsv[1] <= 0) {
+    }
+    else if (hsv[1] <= 0) {
       hsv[1] = 0
     }
 
@@ -213,10 +216,10 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
     try {
       this.lettersChangedFlag = Boolean(lettersChangedFlag)
       if (
-        !this._mdf &&
-        !this._isFirstFrame &&
-        !lettersChangedFlag &&
-        (!this._hasMaskedPath || !this._pathData.m?._mdf)
+        !this._mdf
+        && !this._isFirstFrame
+        && !lettersChangedFlag
+        && (!this._hasMaskedPath || !this._pathData.m?._mdf)
       ) {
         return
       }
@@ -324,7 +327,6 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         prevPoint = points[pointInd - 1]
         currentPoint = points[pointInd]
         partialLength = currentPoint.partialLength
-
       }
 
       len = letters.length || 0
@@ -406,14 +408,14 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
             if (mult !== undefined) {
               if (isArray(mult)) {
-                animatorJustifyOffset +=
-                  animVal * (mult[0] ?? 1) * justifyOffsetMult
-              } else {
-                animatorJustifyOffset +=
-                  animVal * mult * justifyOffsetMult
+                animatorJustifyOffset
+                  += animVal * (mult[0] ?? 1) * justifyOffsetMult
+              }
+              else {
+                animatorJustifyOffset
+                  += animVal * mult * justifyOffsetMult
               }
             }
-
           }
           isNewLine = false
         }
@@ -449,19 +451,20 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
           letterSw = ''
           letterO = ''
           letterP = this.defaultPropsArray
-        } else {
+        }
+        else {
           if (this._hasMaskedPath) {
             if (currentLine !== letters[i]?.line) {
               switch (documentData.j) {
                 case 1: {
-                  currentLength +=
-                    totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)
+                  currentLength
+                    += totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)
                   break
                 }
                 case 2: {
-                  currentLength +=
-                    (totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0)) /
-                    2
+                  currentLength
+                    += (totalLength - (documentData.lineWidths[letters[i]?.line ?? 0] ?? 0))
+                      / 2
                   break
                 }
                 case undefined:
@@ -493,7 +496,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 if (isArray(animatorProps.p.v)) {
                   if (isArray(mult)) {
                     animatorOffset += animatorProps.p.v[0] * (mult[0] ?? 1)
-                  } else {
+                  }
+                  else {
                     animatorOffset += animatorProps.p.v[0] * mult
                   }
                 }
@@ -520,36 +524,37 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
 
             // Force alignment only works with a single line for now
             if (this._pathData.a?.v) {
-              currentLength =
-                (letters[0]?.an || 0) * 0.5 +
-                (totalLength -
-                  Number(this._pathData.f?.v) -
-                  (letters[0]?.an || 0) * 0.5 -
-                  (letters[letters.length - 1]?.an ?? 0) * 0.5) *
-                  ind /
-                  (len - 1)
+              currentLength
+                = (letters[0]?.an || 0) * 0.5
+                  + (totalLength
+                    - Number(this._pathData.f?.v)
+                    - (letters[0]?.an || 0) * 0.5
+                    - (letters[letters.length - 1]?.an ?? 0) * 0.5)
+                  * ind
+                  / (len - 1)
               currentLength += Number(this._pathData.f?.v)
             }
             while (shouldMeasure) {
               if (
-                segmentLength + partialLength >= currentLength + animatorOffset ||
-                !points
+                segmentLength + partialLength >= currentLength + animatorOffset
+                || !points
               ) {
-                factor =
-                  (currentLength + animatorOffset - segmentLength) /
-                  (currentPoint?.partialLength || 0)
-                xPathPos =
-                  Number(prevPoint?.point[0]) +
-                  (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0])) *
-                  factor
-                yPathPos =
-                  Number(prevPoint?.point[1]) +
-                  (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) *
-                  factor
+                factor
+                  = (currentLength + animatorOffset - segmentLength)
+                    / (currentPoint?.partialLength || 0)
+                xPathPos
+                  = Number(prevPoint?.point[0])
+                    + (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
+                    * factor
+                yPathPos
+                  = Number(prevPoint?.point[1])
+                    + (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1]))
+                    * factor
                 matrixHelper.translate(-alignment[0] * (letters[i]?.an ?? 0) * 0.005,
                   -(alignment[1] * yOff) * 0.01)
                 shouldMeasure = false
-              } else if (points.length > 0) {
+              }
+              else if (points.length > 0) {
                 segmentLength += Number(currentPoint?.partialLength)
                 pointInd++
                 if (pointInd >= points.length) {
@@ -557,10 +562,12 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                   segmentInd++
                   if (segments[segmentInd]) {
                     points = segments[segmentInd]?.points ?? []
-                  } else if (mask?.v?.c) {
+                  }
+                  else if (mask?.v?.c) {
                     segmentInd = 0
                     points = segments[segmentInd]?.points ?? []
-                  } else {
+                  }
+                  else {
                     segmentLength -= Number(currentPoint?.partialLength)
                     points = null
                   }
@@ -576,7 +583,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             matrixHelper.translate(
               -off, 0, 0
             )
-          } else {
+          }
+          else {
             off = (letters[i]?.an ?? 0) / 2 - (letters[i]?.add ?? 0)
             matrixHelper.translate(
               -off, 0, 0
@@ -603,7 +611,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               if (this._hasMaskedPath) {
                 if (isArray(mult)) {
                   currentLength += Number(animatorProps.t.v) * (mult[0] ?? 1)
-                } else {
+                }
+                else {
                   currentLength += Number(animatorProps.t.v) * Number(mult)
                 }
                 continue
@@ -626,7 +635,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 documentData.sc[1],
                 documentData.sc[2],
               ]
-            } else {
+            }
+            else {
               sc = [
                 0,
                 0,
@@ -703,7 +713,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               if (isArray(mult)) {
                 matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * (mult[0] ?? 1),
                   Number(animatorProps.sa?.v) * (mult[1] ?? 1))
-              } else {
+              }
+              else {
                 matrixHelper.skewFromAxis(-Number(animatorProps.sk.v) * mult,
                   Number(animatorProps.sa?.v) * mult)
               }
@@ -711,49 +722,55 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             if (animatorProps.r?.propType) {
               if (isArray(mult)) {
                 matrixHelper.rotateZ(-Number(animatorProps.r.v) * (mult[2] ?? 1))
-              } else {
+              }
+              else {
                 matrixHelper.rotateZ(-Number(animatorProps.r.v) * mult)
               }
             }
             if (animatorProps.ry?.propType) {
               if (isArray(mult)) {
                 matrixHelper.rotateY(Number(animatorProps.ry.v) * (mult[1] ?? 1))
-              } else {
+              }
+              else {
                 matrixHelper.rotateY(Number(animatorProps.ry.v) * mult)
               }
             }
             if (animatorProps.rx?.propType) {
               if (isArray(mult)) {
                 matrixHelper.rotateX(Number(animatorProps.rx.v) * (mult[0] ?? 1))
-              } else {
+              }
+              else {
                 matrixHelper.rotateX(Number(animatorProps.rx.v) * mult)
               }
             }
             if (animatorProps.o?.propType) {
               if (isArray(mult)) {
-                elemOpacity +=
-                  (Number(animatorProps.o.v) * (mult[0] ?? 1) - elemOpacity) * (mult[0] ?? 1)
-              } else {
-                elemOpacity +=
-                  (Number(animatorProps.o.v) * mult - elemOpacity) * mult
+                elemOpacity
+                  += (Number(animatorProps.o.v) * (mult[0] ?? 1) - elemOpacity) * (mult[0] ?? 1)
+              }
+              else {
+                elemOpacity
+                  += (Number(animatorProps.o.v) * mult - elemOpacity) * mult
               }
             }
             if (documentData.strokeWidthAnim && animatorProps.sw?.propType) {
               if (isArray(mult)) {
                 sw += Number(animatorProps.sw.v) * (mult[0] ?? 1)
-              } else {
+              }
+              else {
                 sw += Number(animatorProps.sw.v) * mult
               }
             }
             if (
-              documentData.strokeColorAnim &&
-              animatorProps.sc?.propType &&
-              isArray(animatorProps.sc.v)
+              documentData.strokeColorAnim
+              && animatorProps.sc?.propType
+              && isArray(animatorProps.sc.v)
             ) {
               for (k = 0; k < 3; k++) {
                 if (isArray(mult)) {
                   ;sc[k] += ((animatorProps.sc.v[k] ?? 0) - (sc[k] ?? 0)) * (mult[0] ?? 1)
-                } else {
+                }
+                else {
                   ;sc[k] += ((animatorProps.sc.v[k] ?? 0) - (sc[k] ?? 0)) * mult
                 }
               }
@@ -766,7 +783,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                   }
                   if (isArray(mult)) {
                     ;fc[k] += ((animatorProps.fc.v[k] ?? 0) - (fc[k] ?? 0)) * (mult[0] ?? 1)
-                  } else {
+                  }
+                  else {
                     ;fc[k] += ((animatorProps.fc.v[k] ?? 0) - (fc[k] ?? 0)) * mult
                   }
                 }
@@ -774,7 +792,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               if (animatorProps.fh?.propType) {
                 if (isArray(mult)) {
                   fc = addHueToRGB(fc, Number(animatorProps.fh.v) * (mult[0] ?? 1))
-                } else {
+                }
+                else {
                   fc = addHueToRGB(fc, Number(animatorProps.fh.v) * mult)
                 }
               }
@@ -782,7 +801,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 if (isArray(mult)) {
                   fc = addSaturationToRGB(fc,
                     Number(animatorProps.fs.v) * (mult[0] ?? 1))
-                } else {
+                }
+                else {
                   fc = addSaturationToRGB(fc, Number(animatorProps.fs.v) * mult)
                 }
               }
@@ -790,7 +810,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                 if (isArray(mult)) {
                   fc = addBrightnessToRGB(fc,
                     Number(animatorProps.fb.v) * (mult[0] ?? 1))
-                } else {
+                }
+                else {
                   fc = addBrightnessToRGB(fc, Number(animatorProps.fb.v) * mult)
                 }
               }
@@ -814,20 +835,23 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
                     animatorProps.p.v[1] * mult[0],
                     -animatorProps.p.v[2] * mult[1]
                   )
-                } else {
+                }
+                else {
                   matrixHelper.translate(
                     0,
                     animatorProps.p.v[1] * mult,
                     -animatorProps.p.v[2] * mult
                   )
                 }
-              } else if (isArray(mult)) {
+              }
+              else if (isArray(mult)) {
                 matrixHelper.translate(
                   animatorProps.p.v[0] * mult[0],
                   animatorProps.p.v[1] * mult[1],
                   -animatorProps.p.v[2] * mult[2]
                 )
-              } else {
+              }
+              else {
                 matrixHelper.translate(
                   animatorProps.p.v[0] * mult,
                   animatorProps.p.v[1] * mult,
@@ -853,9 +877,9 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               0, alignment[1] * yOff * 0.01 + yPos, 0
             )
             if (this._pathData.p?.v) {
-              tanAngle =
-                (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1])) /
-                (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
+              tanAngle
+                = (Number(currentPoint?.point[1]) - Number(prevPoint?.point[1]))
+                  / (Number(currentPoint?.point[0]) - Number(prevPoint?.point[0]))
               let rot = Math.atan(tanAngle) * 180 / Math.PI
 
               if (Number(currentPoint?.point[0]) < Number(prevPoint?.point[0])) {
@@ -869,10 +893,11 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             currentLength -= alignment[0] * (letters[i]?.an ?? 0) * 0.005
             if (letters[i + 1] && ind !== letters[i + 1]?.ind) {
               currentLength += (letters[i]?.an ?? 0) / 2
-              currentLength +=
-                documentData.tr * 0.001 * Number(documentData.finalSize)
+              currentLength
+                += documentData.tr * 0.001 * Number(documentData.finalSize)
             }
-          } else {
+          }
+          else {
             matrixHelper.translate(
               xPos, yPos, 0
             )
@@ -887,10 +912,10 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             switch (documentData.j) {
               case 1: {
                 matrixHelper.translate(
-                  (letters[i]?.animatorJustifyOffset ?? 0) +
-                  Number(documentData.justifyOffset) +
-                  (Number(documentData.boxWidth) -
-                    documentData.lineWidths[letters[i]?.line ?? 0]),
+                  (letters[i]?.animatorJustifyOffset ?? 0)
+                  + Number(documentData.justifyOffset)
+                  + (Number(documentData.boxWidth)
+                    - documentData.lineWidths[letters[i]?.line ?? 0]),
                   0,
                   0
                 )
@@ -898,11 +923,11 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               }
               case 2: {
                 matrixHelper.translate(
-                  (letters[i]?.animatorJustifyOffset ?? 0) +
-                  Number(documentData.justifyOffset) +
-                  (Number(documentData.boxWidth) -
-                    documentData.lineWidths[letters[i]?.line ?? 0]) /
-                    2,
+                  (letters[i]?.animatorJustifyOffset ?? 0)
+                  + Number(documentData.justifyOffset)
+                  + (Number(documentData.boxWidth)
+                    - documentData.lineWidths[letters[i]?.line ?? 0])
+                  / 2,
                   0,
                   0
                 )
@@ -922,14 +947,15 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
               alignment[1] * yOff * 0.01,
               0
             )
-            xPos +=
-              (letters[i]?.l ?? 0) +
-              documentData.tr * 0.001 * Number(documentData.finalSize)
+            xPos
+              += (letters[i]?.l ?? 0)
+                + documentData.tr * 0.001 * Number(documentData.finalSize)
           }
 
           if (renderType === RendererType.SVG) {
             letterM = matrixHelper.to2dCSS()
-          } else {
+          }
+          else {
             letterP = [
               matrixHelper.props[0],
               matrixHelper.props[1],
@@ -969,8 +995,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         }
 
         letterValue = this.renderedLetters[i]
-        this.lettersChangedFlag =
-          letterValue.update(
+        this.lettersChangedFlag
+          = letterValue.update(
             Number(letterO),
             Number(letterSw),
             letterSc,
@@ -978,13 +1004,12 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
             letterM,
             letterP
           ) || this.lettersChangedFlag
-
       }
-    } catch (error) {
+    }
+    catch (error) {
       devError(this.constructor.name, error)
     }
   }
-
 
   override getValue() {
     if (this._elem.globalData?.frameId === this._frameId) {
@@ -1028,8 +1053,8 @@ export class TextAnimatorProperty extends DynamicPropertyContainer {
         ) as ValueProperty,
       }
       this._hasMaskedPath = true
-
-    } else {
+    }
+    else {
       this._hasMaskedPath = false
     }
     this._moreOptions.alignment = getProp(

@@ -202,8 +202,8 @@ export class SVGShapeElement extends ShapeElement {
       }
       case ShapeType.GradientFill:
       case ShapeType.GradientStroke: {
-        const GradientConstructor =
-          data.ty === ShapeType.GradientFill
+        const GradientConstructor
+          = data.ty === ShapeType.GradientFill
             ? SVGGradientFillStyleData
             : SVGGradientStrokeStyleData
 
@@ -238,7 +238,6 @@ export class SVGShapeElement extends ShapeElement {
       if (data.lj === StrokeLinejoin.Miter && data.ml) {
         pathElement.setAttribute('stroke-miterlimit', `${data.ml}`)
       }
-
     }
 
     if (data.r as unknown as FillAttribute === FillAttribute.EvenOdd) {
@@ -257,7 +256,6 @@ export class SVGShapeElement extends ShapeElement {
     this.stylesList.push(styleOb)
     if (elementData) {
       this.addToAnimatedContents(data, elementData)
-
     }
 
     return elementData
@@ -367,10 +365,10 @@ export class SVGShapeElement extends ShapeElement {
   renderShape() {
     for (let i = 0; i < this.animatedContents.length; i++) {
       if (
-        !this._isFirstFrame &&
-        !this.animatedContents[i]?.element._isAnimated ||
-        this.animatedContents[i]?.data === (true as unknown as Shape) ||
-        !this.animatedContents[i]?.fn
+        !this._isFirstFrame
+        && !this.animatedContents[i]?.element._isAnimated
+        || this.animatedContents[i]?.data === (true as unknown as Shape)
+        || !this.animatedContents[i]?.fn
       ) {
         continue
       }
@@ -404,7 +402,8 @@ export class SVGShapeElement extends ShapeElement {
 
       if (processedPos) {
         itemsData[i] = prevViewData[processedPos - 1]
-      } else {
+      }
+      else {
         arr[i]._shouldRender = shouldRender
       }
 
@@ -420,7 +419,8 @@ export class SVGShapeElement extends ShapeElement {
             if (style) {
               style.closed = false
             }
-          } else {
+          }
+          else {
             itemsData[i] = this.createStyleElement(arr[i],
               level) as SVGElementInterface
           }
@@ -430,7 +430,6 @@ export class SVGShapeElement extends ShapeElement {
             if (pElem) {
               container.appendChild(pElem)
             }
-
           }
           ownStyles.push(itemsData[i]?.style)
           break
@@ -451,7 +450,8 @@ export class SVGShapeElement extends ShapeElement {
 
               ; (pr as unknown as ShapeDataInterface[])[j] = it[j]
             }
-          } else {
+          }
+          else {
             itemsData[i] = this.createGroupElement(arr[i]) as SVGElementInterface
           }
           this.searchShapes(
@@ -470,7 +470,6 @@ export class SVGShapeElement extends ShapeElement {
             if (gr) {
               container.appendChild(gr)
             }
-
           }
 
           break
@@ -509,7 +508,8 @@ export class SVGShapeElement extends ShapeElement {
           if (processedPos) {
             Modifier = itemsData[i] as unknown as TrimModifier
             Modifier.closed = false
-          } else {
+          }
+          else {
             Modifier = getModifier<TrimModifier>(arr[i]?.ty ?? ShapeType.Unknown)
             Modifier.init(this as unknown as ElementInterfaceIntersect, arr[i])
             ; (itemsData as unknown as TrimModifier[])[i] = Modifier
@@ -552,7 +552,6 @@ export class SVGShapeElement extends ShapeElement {
       if (ownStyle) {
         ownStyle.closed = true
       }
-
     }
 
     for (let i = 0; i < ownModifiers.length; i++) {

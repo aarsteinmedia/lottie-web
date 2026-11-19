@@ -17,11 +17,9 @@ export class RepeaterInterface extends BaseInterface {
   override getInterface(value: string | number) {
     const normalizedValue = String(value).toLowerCase().trim()
 
-
     if (this.shape?.c?.ix === value || normalizedValue === 'copies') {
       return this.copies
     }
-
 
     if (this.shape?.o?.ix === value || normalizedValue === 'offset') {
       return this.offset

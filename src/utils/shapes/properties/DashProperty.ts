@@ -71,12 +71,10 @@ export class DashProperty extends DynamicPropertyContainer {
     }
     for (let i = 0, j = 0; i < this.dataProps.length; i++) {
       if (this.dataProps[i]?.n === StrokeAttributeName.Offset) {
-
         this.dashoffset[0] = this.dataProps[i]?.p.v as number
         continue
       }
       if (this.renderer === RendererType.SVG) {
-
         this.dashStr += ` ${this.dataProps[i]?.p.v as string}`
         continue
       }

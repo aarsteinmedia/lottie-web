@@ -48,7 +48,8 @@ export class TextSelectorProperty extends BaseProperty {
         0,
         this as unknown as ElementInterfaceIntersect
       ) as ValueProperty
-    } else {
+    }
+    else {
       this.e = { v: 100 }
     }
     this.o = PropertyFactory.getProp(
@@ -115,7 +116,6 @@ export class TextSelectorProperty extends BaseProperty {
 
     let mult = this._handleShapeType(ind)
 
-
     // Smoothness implementation.
     // The smoothness represents a reduced range of the original [0; 1] range.
     // if smoothness is 25%, the new range will be [0.375; 0.625]
@@ -136,7 +136,8 @@ export class TextSelectorProperty extends BaseProperty {
 
       if (mult < threshold) {
         mult = 0
-      } else {
+      }
+      else {
         mult = (mult - threshold) / smoothness
         if (mult > 1) {
           mult = 1
@@ -185,12 +186,14 @@ export class TextSelectorProperty extends BaseProperty {
 
     if (this.ne.v > 0) {
       x1 = this.ne.v / 100.0
-    } else {
+    }
+    else {
       y1 = -this.ne.v / 100.0
     }
     if (this.xe.v > 0) {
       x2 = 1.0 - this.xe.v / 100.0
-    } else {
+    }
+    else {
       y2 = 1.0 + this.xe.v / 100.0
     }
 
@@ -225,8 +228,8 @@ export class TextSelectorProperty extends BaseProperty {
           mult = ind >= e ? 0 : 1
           break
         }
-        mult =
-          1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
+        mult
+          = 1 - Math.max(0, Math.min(0.5 / (e - s) + (ind - s) / (e - s), 1))
 
         break
       }

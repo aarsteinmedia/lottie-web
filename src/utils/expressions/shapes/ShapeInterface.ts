@@ -33,7 +33,6 @@ import { StrokeInterface } from '@/utils/expressions/shapes/StrokeInterface'
 import { TransformInterface } from '@/utils/expressions/shapes/TransformInterface'
 import { TrimInterface } from '@/utils/expressions/shapes/TrimInterface'
 
-
 export class ShapeExpressionInterface {
   _name = 'Contents'
   arr = []
@@ -55,7 +54,6 @@ export class ShapeExpressionInterface {
   contentsInterfaceFactory(
     shape: Shape, view: ShapeGroupData, propertyGroup: PropertyGroupFactory
   ) {
-
     ContentInterface.prototype.propertyGroup = new PropertyGroupFactory(ContentInterface, propertyGroup)
 
     this.interfaces = this.iterateElements(
@@ -80,13 +78,11 @@ export class ShapeExpressionInterface {
   ellipseInterfaceFactory(
     shape: Shape, view: SVGShapeData, propertyGroup: PropertyGroupFactory
   ) {
-
     const _propertyGroup = new PropertyGroupFactory(EllipseInterface, propertyGroup)
 
     EllipseInterface.prototype.shape = shape
     EllipseInterface.prototype.propertyIndex = shape.ix
     const prop: EllShapeProperty = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
-
 
     prop.s.setGroupProperty(new PropertyInterface('Size', _propertyGroup))
     prop.p?.setGroupProperty(new PropertyInterface('Position', _propertyGroup))
@@ -101,7 +97,6 @@ export class ShapeExpressionInterface {
   fillInterfaceFactory(
     shape: Shape, view: SVGFillStyleData, propertyGroup: PropertyGroupFactory
   ) {
-
     FillInterface.prototype._name = shape.nm
     FillInterface.prototype.c = view.c
     FillInterface.prototype.mn = shape.mn
@@ -141,11 +136,9 @@ export class ShapeExpressionInterface {
   gradientFillInterfaceFactory(
     shape: Shape, view: SVGGradientFillStyleData, propertyGroup: PropertyGroupFactory
   ) {
-
     GradientFillInterface.prototype._name = shape.nm
     GradientFillInterface.prototype.prop = view
     GradientFillInterface.prototype.mn = shape.mn
-
 
     view.s?.setGroupProperty(new PropertyInterface('Start Point', propertyGroup))
     view.e?.setGroupProperty(new PropertyInterface('End Point', propertyGroup))
@@ -157,8 +150,6 @@ export class ShapeExpressionInterface {
   groupInterfaceFactory(
     shape: Shape, view: ShapeGroupData, propertyGroup: PropertyGroupFactory
   ) {
-
-
     GroupInterface.prototype.propertyGroup = new PropertyGroupFactory(GroupInterface, propertyGroup)
     const content = this.contentsInterfaceFactory(
       shape, view, GroupInterface.prototype.propertyGroup
@@ -290,7 +281,6 @@ export class ShapeExpressionInterface {
   rectInterfaceFactory(
     shape: Shape, view: SVGShapeData, propertyGroup: PropertyGroupFactory
   ) {
-
     RectInterface.prototype.shape = shape
     const _propertyGroup = new PropertyGroupFactory(RectInterface, propertyGroup),
       prop: RectShapeProperty = view.sh?.ty === ShapeType.Trim ? view.sh.prop : view.sh
@@ -311,7 +301,6 @@ export class ShapeExpressionInterface {
   repeaterInterfaceFactory(
     shape: Shape, view: RepeaterModifier, propertyGroup: LayerExpressionInterface
   ) {
-
     RepeaterInterface.prototype.shape = shape
     RepeaterInterface.prototype.propertyIndex = shape.ix
     RepeaterInterface.prototype._name = shape.nm
@@ -331,7 +320,6 @@ export class ShapeExpressionInterface {
   roundedInterfaceFactory(
     shape: Shape, view: RoundCornersModifier, propertyGroup: PropertyGroupFactory
   ) {
-
     RoundCornersInterface.prototype.shape = shape
     RoundCornersInterface.prototype._name = shape.nm
     RoundCornersInterface.prototype.propertyIndex = shape.ix
@@ -348,7 +336,6 @@ export class ShapeExpressionInterface {
   starInterfaceFactory(
     shape: Shape, view: ShapeData, propertyGroup: PropertyGroupFactory,
   ) {
-
     StarInterface.prototype.shape = shape
 
     const _propertyGroup = new PropertyGroupFactory(StarInterface, propertyGroup),
@@ -407,7 +394,6 @@ export class ShapeExpressionInterface {
   transformInterfaceFactory(
     shape: Shape, view: SVGTransformData | SVGFillStyleData, propertyGroup: PropertyGroupFactory
   ) {
-
     TransformInterface.prototype.shape = shape
     const _propertyGroup = new PropertyGroupFactory(TransformInterface, propertyGroup)
 
@@ -435,7 +421,6 @@ export class ShapeExpressionInterface {
   trimInterfaceFactory(
     shape: Shape, view: TrimModifier, propertyGroup: PropertyGroupFactory
   ) {
-
     TrimInterface.prototype.shape = shape
     const _propertyGroup = new PropertyGroupFactory(TrimInterface, propertyGroup)
 

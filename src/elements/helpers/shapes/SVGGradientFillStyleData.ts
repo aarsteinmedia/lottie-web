@@ -155,8 +155,8 @@ export class SVGGradientFillStyleData extends DynamicPropertyContainer {
     opFill.id = opacityId
     opFill.setAttribute('spreadMethod', SpreadMethod.Pad)
     opFill.setAttribute('gradientUnits', GradientUnitName.UserSpaceOnUse)
-    const jLen =
-        ((data.g?.k.k as Stop[] | undefined)?.[0]?.s
+    const jLen
+        = ((data.g?.k.k as Stop[] | undefined)?.[0]?.s
           ? (data.g?.k.k as Stop[])[0]?.s.length
           : data.g?.k.k.length) || 0,
       { stops } = this

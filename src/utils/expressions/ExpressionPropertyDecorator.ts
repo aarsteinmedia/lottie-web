@@ -54,12 +54,12 @@ function loopOut(
   if (durationFlag) {
     if (duration) {
       cycleDuration = Math.abs(lastKeyFrame - frameRate * duration)
-
-    } else {
+    }
+    else {
       cycleDuration = Math.max(0, lastKeyFrame - elem.data.ip)
     }
-
-  } else {
+  }
+  else {
     if (!duration || duration > keyframes.length - 1) {
       duration = keyframes.length - 1
     }
@@ -160,11 +160,13 @@ function loopIn(
   if (durationFlag) {
     if (duration) {
       cycleDuration = Math.abs(frameRate * duration)
-    } else {
+    }
+    else {
       cycleDuration = Math.max(0, elem.data.op - firstKeyFrame)
     }
     lastKeyFrame = firstKeyFrame + cycleDuration
-  } else {
+  }
+  else {
     if (!duration || duration > keyframes.length - 1) {
       duration = keyframes.length - 1
     }
@@ -226,13 +228,11 @@ function loopIn(
   }
 
   return this.getValueAtTime((cycleDuration - ((firstKeyFrame - currentFrame) % cycleDuration + firstKeyFrame)) / frameRate, 0)
-
 }
 
 function smooth(
   this: KeyframeValueProperty, widthFromProps: number, samplesFromProps: number
 ) {
-
   const {
     comp, k: shouldProcess, pv
   } = this
@@ -261,7 +261,8 @@ function smooth(
 
   if (isArrayOfNum(pv)) {
     value = createTypedArray(ArrayType.Float32, pv.length)
-  } else {
+  }
+  else {
     value = 0
   }
   let sampleValue
@@ -335,7 +336,8 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
     const rotation = this.r.getValueAtTime(time) as number
 
     matrix.rotate(-rotation * (this.r.mult ?? 1))
-  } else if (!this.r && this.appliedTransformations < 4) {
+  }
+  else if (!this.r && this.appliedTransformations < 4) {
     const rotationZ = Number(this.rz?.getValueAtTime(time)),
       rotationY = Number(this.ry?.getValueAtTime(time)),
       rotationX = Number(this.rx?.getValueAtTime(time)),
@@ -360,12 +362,14 @@ function getTransformValueAtTime(this: TransformProperty, time: number) {
         positionY * (this.py?.mult ?? 1),
         -positionZ * (this.pz?.mult ?? 1)
       )
-    } else {
+    }
+    else {
       matrix.translate(
         positionX * (this.px?.mult ?? 1), positionY * (this.py?.mult ?? 1), 0
       )
     }
-  } else {
+  }
+  else {
     const position = this.p?.getValueAtTime(time) as Vector3 | undefined ?? [
       0,
       0,
@@ -413,7 +417,6 @@ function getShapeValueAtTime(
 }
 
 function addPropertyDecorator() {
-
   const { getTransformProperty } = TransformPropertyFactory
 
   TransformPropertyFactory.getTransformProperty = function (
@@ -425,7 +428,8 @@ function addPropertyDecorator() {
 
     if (prop.dynamicProperties.length > 0) {
       prop.getValueAtTime = getTransformValueAtTime.bind(prop)
-    } else {
+    }
+    else {
       prop.getValueAtTime = getTransformStaticValueAtTime.bind(prop)
     }
     prop.setGroupProperty = expressionHelpers.setGroupProperty
@@ -447,7 +451,8 @@ function addPropertyDecorator() {
     // prop.loopIn = loopIn;
     if (prop.kf) {
       prop.getValueAtTime = expressionHelpers.getValueAtTime.bind(prop)
-    } else {
+    }
+    else {
       prop.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(prop)
     }
     prop.setGroupProperty = expressionHelpers.setGroupProperty
@@ -506,7 +511,8 @@ function addPropertyDecorator() {
       expressionHelpers.searchExpressions(
         elem as ElementInterfaceIntersect, data.pt as unknown as ExpressionProperty, prop as unknown as KeyframeValueProperty
       )
-    } else if (type === 4) {
+    }
+    else if (type === 4) {
       expressionHelpers.searchExpressions(
         elem as ElementInterfaceIntersect, data.ks as unknown as ExpressionProperty, prop as unknown as KeyframeValueProperty
       )
@@ -522,6 +528,5 @@ function addPropertyDecorator() {
 function initialize() {
   addPropertyDecorator()
 }
-
 
 export default initialize

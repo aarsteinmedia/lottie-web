@@ -33,26 +33,26 @@ export class Matrix {
     y: number,
     z: number
   ): {
-    x: number;
-    y: number;
+    x: number
+    y: number
     z: number
   } {
     return {
       x:
-        x * this.props[0] +
-        y * this.props[4] +
-        z * this.props[8] +
-        this.props[12],
+        x * this.props[0]
+        + y * this.props[4]
+        + z * this.props[8]
+        + this.props[12],
       y:
-        x * this.props[1] +
-        y * this.props[5] +
-        z * this.props[9] +
-        this.props[13],
+        x * this.props[1]
+        + y * this.props[5]
+        + z * this.props[9]
+        + this.props[13],
       z:
-        x * this.props[2] +
-        y * this.props[6] +
-        z * this.props[10] +
-        this.props[14],
+        x * this.props[2]
+        + y * this.props[6]
+        + z * this.props[10]
+        + this.props[14],
     }
   }
 
@@ -68,18 +68,18 @@ export class Matrix {
     }
 
     return [
-      x * this.props[0] +
-      y * this.props[4] +
-      z * this.props[8] +
-      this.props[12],
-      x * this.props[1] +
-      y * this.props[5] +
-      z * this.props[9] +
-      this.props[13],
-      x * this.props[2] +
-      y * this.props[6] +
-      z * this.props[10] +
-      this.props[14],
+      x * this.props[0]
+      + y * this.props[4]
+      + z * this.props[8]
+      + this.props[12],
+      x * this.props[1]
+      + y * this.props[5]
+      + z * this.props[9]
+      + this.props[13],
+      x * this.props[2]
+      + y * this.props[6]
+      + z * this.props[10]
+      + this.props[14],
     ]
   }
 
@@ -109,7 +109,8 @@ export class Matrix {
         pt3[0],
         pt3[1]
       ])
-    } else {
+    }
+    else {
       const p0 = this.props[0],
         p1 = this.props[1],
         p4 = this.props[4],
@@ -150,10 +151,10 @@ export class Matrix {
     x: number, y: number, z: number
   ): number {
     return (
-      x * this.props[2] +
-      y * this.props[6] +
-      z * this.props[10] +
-      this.props[14]
+      x * this.props[2]
+      + y * this.props[6]
+      + z * this.props[10]
+      + this.props[14]
     )
   }
 
@@ -174,18 +175,18 @@ export class Matrix {
   }
 
   getInverseMatrix(): Matrix {
-    const determinant =
-      this.props[0] * this.props[5] - this.props[1] * this.props[4]
+    const determinant
+      = this.props[0] * this.props[5] - this.props[1] * this.props[4]
     const a = this.props[5] / determinant
     const b = -this.props[1] / determinant
     const c = -this.props[4] / determinant
     const d = this.props[0] / determinant
-    const e =
-      (this.props[4] * this.props[13] - this.props[5] * this.props[12]) /
-      determinant
-    const f =
-      -(this.props[0] * this.props[13] - this.props[1] * this.props[12]) /
-      determinant
+    const e
+      = (this.props[4] * this.props[13] - this.props[5] * this.props[12])
+        / determinant
+    const f
+      = -(this.props[0] * this.props[13] - this.props[1] * this.props[12])
+        / determinant
 
     const inverseMatrix = new Matrix()
 
@@ -197,8 +198,8 @@ export class Matrix {
   }
 
   inversePoint(pt: number[]): {
-    x: number;
-    y: number;
+    x: number
+    y: number
     z: number
   } {
     const inverseMatrix = this.getInverseMatrix()
@@ -209,32 +210,32 @@ export class Matrix {
   }
 
   inversePoints(pts: number[][]): {
-    x: number;
-    y: number;
+    x: number
+    y: number
     z: number
   }[] {
-    return pts.map((pt) => this.inversePoint(pt))
+    return pts.map(pt => this.inversePoint(pt))
   }
 
   isIdentity(): boolean {
     if (!this._identityCalculated) {
       this._identity = !(
-        this.props[0] !== 1 ||
-        this.props[1] !== 0 ||
-        this.props[2] !== 0 ||
-        this.props[3] !== 0 ||
-        this.props[4] !== 0 ||
-        this.props[5] !== 1 ||
-        this.props[6] !== 0 ||
-        this.props[7] !== 0 ||
-        this.props[8] !== 0 ||
-        this.props[9] !== 0 ||
-        this.props[10] !== 1 ||
-        this.props[11] !== 0 ||
-        this.props[12] !== 0 ||
-        this.props[13] !== 0 ||
-        this.props[14] !== 0 ||
-        this.props[15] !== 1
+        this.props[0] !== 1
+        || this.props[1] !== 0
+        || this.props[2] !== 0
+        || this.props[3] !== 0
+        || this.props[4] !== 0
+        || this.props[5] !== 1
+        || this.props[6] !== 0
+        || this.props[7] !== 0
+        || this.props[8] !== 0
+        || this.props[9] !== 0
+        || this.props[10] !== 1
+        || this.props[11] !== 0
+        || this.props[12] !== 0
+        || this.props[13] !== 0
+        || this.props[14] !== 0
+        || this.props[15] !== 1
       )
       this._identityCalculated = true
     }
@@ -431,18 +432,18 @@ export class Matrix {
     const _p = this.props
 
     if (
-      a2 === 1 &&
-      b2 === 0 &&
-      c2 === 0 &&
-      d2 === 0 &&
-      e2 === 0 &&
-      f2 === 1 &&
-      g2 === 0 &&
-      h2 === 0 &&
-      i2 === 0 &&
-      j2 === 0 &&
-      k2 === 1 &&
-      l2 === 0
+      a2 === 1
+      && b2 === 0
+      && c2 === 0
+      && d2 === 0
+      && e2 === 0
+      && f2 === 1
+      && g2 === 0
+      && h2 === 0
+      && i2 === 0
+      && j2 === 0
+      && k2 === 1
+      && l2 === 0
     ) {
       _p[12] = _p[12] * a2 + _p[15] * m2
       _p[13] = _p[13] * f2 + _p[15] * n2

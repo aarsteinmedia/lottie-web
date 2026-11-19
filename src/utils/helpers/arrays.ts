@@ -1,7 +1,6 @@
 import { ArrayType } from '@/utils/enums'
 
 const createTypedArray = (() => {
-
   function createRegularArray(type: ArrayType, len: number) {
     const arr = []
     let value
@@ -41,8 +40,8 @@ const createTypedArray = (() => {
     return createRegularArray(type, len)
   }
   if (
-    typeof Uint8ClampedArray === 'function' &&
-    typeof Float32Array === 'function'
+    typeof Uint8ClampedArray === 'function'
+    && typeof Float32Array === 'function'
   ) {
     return createTypedArrayFactory
   }

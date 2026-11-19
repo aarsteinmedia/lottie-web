@@ -43,9 +43,9 @@ export abstract class TextElement extends RenderableDOMElement {
     switch (documentData.j) {
       case 1: {
         matrixHelper.translate(
-          Number(documentData.justifyOffset) +
-          (Number(documentData.boxWidth) -
-            documentData.lineWidths[lineNumber]),
+          Number(documentData.justifyOffset)
+          + (Number(documentData.boxWidth)
+            - documentData.lineWidths[lineNumber]),
           0,
           0
         )
@@ -53,10 +53,10 @@ export abstract class TextElement extends RenderableDOMElement {
       }
       case 2: {
         matrixHelper.translate(
-          Number(documentData.justifyOffset) +
-          (Number(documentData.boxWidth) -
-            documentData.lineWidths[lineNumber]) /
-            2,
+          Number(documentData.justifyOffset)
+          + (Number(documentData.boxWidth)
+            - documentData.lineWidths[lineNumber])
+          / 2,
           0,
           0
         )

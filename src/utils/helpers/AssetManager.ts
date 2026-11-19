@@ -77,5 +77,4 @@ const AssetManager = {
   loadLumaCanvas,
 }
 
-
 export default AssetManager

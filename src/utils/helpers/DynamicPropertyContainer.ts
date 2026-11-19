@@ -64,5 +64,3 @@ export abstract class DynamicPropertyContainer {
     // Pass through
   }
 }
-
-

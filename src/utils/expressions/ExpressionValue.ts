@@ -36,11 +36,13 @@ export class ExpressionValue extends BaseProperty {
         }
         this.value = arrValue
       }
-    } else if (elementProp.propType === PropType.UniDimensional) {
+    }
+    else if (elementProp.propType === PropType.UniDimensional) {
       val = elementProp.v as number * mult
       // this.value = new Number(val) as number
       this.value = val
-    } else {
+    }
+    else {
       const { length } = elementProp.pv as number[]
 
       expressionValue = createTypedArray(ArrayType.Float32, length)

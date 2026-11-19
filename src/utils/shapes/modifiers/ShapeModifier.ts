@@ -17,13 +17,13 @@ import { INITIAL_DEFAULT_FRAME } from '@/utils/helpers/constants'
 import { DynamicPropertyContainer } from '@/utils/helpers/DynamicPropertyContainer'
 import { newShapeCollection } from '@/utils/pooling/ShapeCollectionPool'
 
-export type ModifierInterface =
-  | OffsetPathModifier
-  | PuckerAndBloatModifier
-  | RepeaterModifier
-  | RoundCornersModifier
-  | TrimModifier
-  | ZigZagModifier
+export type ModifierInterface
+  = | OffsetPathModifier
+    | PuckerAndBloatModifier
+    | RepeaterModifier
+    | RoundCornersModifier
+    | TrimModifier
+    | ZigZagModifier
 
 export class ShapeModifier extends DynamicPropertyContainer {
   closed?: boolean
@@ -69,7 +69,8 @@ export class ShapeModifier extends DynamicPropertyContainer {
     this.k = false
     if (this.dynamicProperties.length > 0) {
       this.k = true
-    } else {
+    }
+    else {
       this.getValue(true)
     }
   }

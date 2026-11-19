@@ -21,7 +21,6 @@ export class ProjectInterface {
     }
 
     return null
-
   }
 
   registerComposition(comp: CompElementInterface) {

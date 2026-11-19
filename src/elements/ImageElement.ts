@@ -44,10 +44,10 @@ export class ImageElement extends SVGBaseElement {
       return
     }
 
-    const preserveAspectRatio =
-      this.assetData.pr ||
-      this.globalData?.renderConfig?.imagePreserveAspectRatio ||
-      ''
+    const preserveAspectRatio
+      = this.assetData.pr
+        || this.globalData?.renderConfig?.imagePreserveAspectRatio
+        || ''
 
     const preloaded = this.globalData?.imageLoader?.adoptSvgImage(this.assetData)
 
